@@ -1,0 +1,22 @@
+{
+  "name": "@omenai/shared-ui-components",
+  "version": "1.0.0",
+  "description": "Shared UI components",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@omenai/shared-hooks": "*",
+    "@omenai/shared-json": "*",
+    "@omenai/shared-lib": "*",
+    "@omenai/shared-services": "*",
+    "@omenai/shared-state-store": "*",
+    "@omenai/shared-types": "*",
+    "@omenai/shared-utils": "*",
+    "@omenai/tailwind-config": "*",
+    "@omenai/typescript-config": "*",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15"
+  },
+  "dependencies": {}
+}

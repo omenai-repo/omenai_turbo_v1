@@ -1,0 +1,9 @@
+{
+  "name": "@omenai/url-config",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/shared-json": "*"
+  }
+}

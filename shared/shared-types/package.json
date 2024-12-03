@@ -1,0 +1,10 @@
+{
+  "name": "@omenai/shared-types",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.d.ts",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}

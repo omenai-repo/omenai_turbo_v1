@@ -1,0 +1,12 @@
+{
+  "name": "@omenai/package-provider",
+  "version": "1.0.0",
+  "description": "React Query Provider",
+  "private": true,
+  "main": "./index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-types": "*"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@omenai/shared-models",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@omenai/shared-types": "*",
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-utils": "*"
+  },
+  "dependencies": {
+    "mongoose": "^8.8.2",
+    "uuid": "^11.0.3"
+  }
+}

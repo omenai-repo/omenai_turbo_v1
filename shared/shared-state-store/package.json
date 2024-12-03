@@ -1,0 +1,14 @@
+{
+  "name": "@omenai/shared-state-store",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-types": "*",
+    "@omenai/shared-json": "*"
+  },
+  "dependencies": {
+    "zustand": "^5.0.1"
+  }
+}

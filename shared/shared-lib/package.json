@@ -1,0 +1,24 @@
+{
+  "name": "@omenai/shared-lib",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node-forge": "^1.3.11",
+    "@upstash/ratelimit": "^2.0.4",
+    "@upstash/redis": "^1.34.3"
+  },
+  "dependencies": {
+    "@omenai/appwrite-config": "*",
+    "@upstash/ratelimit": "^2.0.4",
+    "@upstash/redis": "^1.34.3",
+    "bcrypt": "^5.1.1",
+    "mongoose": "^8.8.2",
+    "node-forge": "^1.3.1",
+    "sonner": "^1.7.0",
+    "stripe": "^17.4.0",
+    "zod": "^3.23.8"
+  }
+}

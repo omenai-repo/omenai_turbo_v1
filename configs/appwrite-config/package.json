@@ -1,0 +1,12 @@
+{
+  "name": "@omenai/appwrite-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "appwrite",
+  "dependencies": {
+    "appwrite": "^16.0.2"
+  },
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}

@@ -1,0 +1,19 @@
+import { getApiUrl } from "@omenai/url-config/src/config.ts";
+
+export async function loginAdmin(payload: { email: string; password: string }) {
+  try {
+    const url = getApiUrl();
+    const result = await fetch(`${url}/api/auth/admin/login`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-type": "application/json",
+      },
+      credentials: "include",
+    });
+    const response = await result.json();
+    return { isOk: result.ok, message: response.message };
+  } catch (error) {
+    return { isOk: false, message: "Something went wrong" };
+  }
+}

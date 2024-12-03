@@ -1,0 +1,9 @@
+{
+  "name": "@omenai/shared-json",
+  "private": true,
+  "version": "1.0.0",
+  "files": [],
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}

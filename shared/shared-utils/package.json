@@ -1,0 +1,14 @@
+{
+  "name": "@omenai/shared-utils",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "crypto-random-string": "^5.0.0",
+    "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "@omenai/shared-json": "*",
+    "crypto-random-string": "^5.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@omenai/shared-hooks",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/shared-state-store": "*",
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-services": "*",
+    "@omenai/shared-auth": "*"
+  }
+}

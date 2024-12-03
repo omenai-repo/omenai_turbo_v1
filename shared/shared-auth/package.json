@@ -1,0 +1,17 @@
+{
+  "name": "@omenai/shared-auth",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 8080"
+  },
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-types": "*",
+    "@omenai/url-config": "*",
+    "@types/react": "18.3.12"
+  },
+  "dependencies": {
+    "jose": "^5.9.6"
+  }
+}

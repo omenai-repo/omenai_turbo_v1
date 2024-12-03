@@ -1,0 +1,22 @@
+{
+  "name": "@omenai/api-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 8080",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-auth": "*",
+    "@omenai/shared-hooks": "*",
+    "@omenai/package-provider": "*",
+    "@omenai/shared-emails": "*",
+    "@omenai/shared-lib": "*",
+    "@omenai/shared-models": "*",
+    "@omenai/shared-utils": "*",
+    "@omenai/shared-services": "*"
+  }
+}

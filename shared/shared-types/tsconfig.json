@@ -1,0 +1,4 @@
+{
+  "extends": "@omenai/typescript-config/base.json",
+  "include": ["./index.d.ts"]
+}

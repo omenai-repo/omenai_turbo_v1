@@ -1,0 +1,3 @@
+{
+  "extends": "@omenai/typescript-config/base.json"
+}

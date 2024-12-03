@@ -1,0 +1,12 @@
+{
+  "name": "@omenai/shared-services",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@omenai/url-config": "*",
+    "@omenai/shared-utils": "*",
+    "@omenai/appwrite-config": "*"
+  }
+}
