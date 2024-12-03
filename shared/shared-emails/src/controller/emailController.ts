@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend("re_cB7pHY8M_7EDLfsuAKN6iY3RzQ19SwfSg");
 
 type EmailPayload = {
   prefix: string;
