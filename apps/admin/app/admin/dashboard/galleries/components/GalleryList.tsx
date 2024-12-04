@@ -12,7 +12,6 @@ export default function GalleryList() {
     queryKey: ["fetch_non_verified_galleries"],
     queryFn: async () => {
       const res = await fetchGalleriesOnVerifStatus(false);
-      console.log(res);
 
       if (res?.isOk) {
         return res.data;

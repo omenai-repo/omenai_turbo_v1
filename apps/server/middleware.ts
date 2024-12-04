@@ -9,10 +9,7 @@ export async function middleware(request: NextRequest) {
   // Handle preflight (OPTIONS) requests
   if (request.method === "OPTIONS") {
     const preflightResponse = NextResponse.json({}, { status: 200 });
-    preflightResponse.headers.set(
-      "Access-Control-Allow-Origin",
-      "https://admin.omenai.app"
-    );
+    preflightResponse.headers.set("Access-Control-Allow-Origin", origin);
     preflightResponse.headers.set("Access-Control-Allow-Credentials", "true");
     preflightResponse.headers.set(
       "Access-Control-Allow-Methods",
