@@ -1,4 +1,3 @@
-import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { NextRequest, NextResponse } from "next/server";
 const allowedOrigins = [
   "http://omenai.local:3000",
@@ -13,7 +12,6 @@ const corsOptions = {
 export async function middleware(request: NextRequest) {
   // Check the origin from the request
   const origin = request.headers.get("origin") ?? "";
-  console.log(origin);
   const isAllowedOrigin = allowedOrigins.includes(origin);
 
   // Handle preflighted requests
@@ -53,9 +51,6 @@ export async function middleware(request: NextRequest) {
   //       );
   //     }
   //   }
-
-  const session = await getSession();
-  console.log(session);
 
   // if (session === undefined)
   //   return NextResponse.json(
