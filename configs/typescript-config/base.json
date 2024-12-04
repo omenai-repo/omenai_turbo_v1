@@ -17,6 +17,7 @@
     "target": "ES2022",
     "jsx": "preserve",
     "emitDeclarationOnly": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "noEmit": false
   }
 }
