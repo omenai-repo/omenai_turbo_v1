@@ -13,7 +13,7 @@ const cookie = {
     secure: true,
     sameSite: "lax",
     path: "/",
-    domain: "omenai.local",
+    domain: ".omenai.app",
   },
 };
 
@@ -40,7 +40,7 @@ export async function createSession(payload: UserType) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    domain: "omenai.local",
+    domain: ".omenai.app",
     expires,
   });
 }
