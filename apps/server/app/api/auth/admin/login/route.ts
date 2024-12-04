@@ -35,14 +35,14 @@ export async function POST(request: Request) {
     const isPasswordMatch = bcrypt.compareSync(password, user.password);
 
     if (!isPasswordMatch) throw new ConflictError("Invalid credentials");
-    const session_paload = {
+    const session_payload = {
       name: user.name,
       email: user.email,
       admin_id: user.admin_id,
       role: user.role,
     };
 
-    await createSession(session_paload);
+    await createSession(session_payload);
 
     return res.json(
       {

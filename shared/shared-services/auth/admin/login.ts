@@ -7,7 +7,7 @@ export async function loginAdmin(payload: { email: string; password: string }) {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
       credentials: "include",
     });

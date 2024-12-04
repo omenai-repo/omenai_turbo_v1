@@ -1,47 +1,42 @@
 import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { NextRequest, NextResponse } from "next/server";
 
-const allowedOrigins = [
-  "http://omenai.local:3000",
-  "http://localhost:3000",
-  "https://admin.omenai.app",
-];
-
-const corsHeaders = {
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
 export async function middleware(request: NextRequest) {
-  const origin = request.headers.get("origin") ?? "";
-
-  // Check if the origin is allowed
-  const isAllowedOrigin = allowedOrigins.includes(origin);
-
-  // Handle preflight requests
-  if (request.method === "OPTIONS") {
-    return NextResponse.json(
-      {},
-      {
-        headers: {
-          ...(isAllowedOrigin && { "Access-Control-Allow-Origin": origin }),
-          ...corsHeaders,
-        },
-      }
-    );
-  }
-
   // Handle other requests
   const response = NextResponse.next();
+  const origin = request.headers.get("origin") ?? "";
 
-  if (isAllowedOrigin) {
-    response.headers.set("Access-Control-Allow-Origin", origin);
+  // Handle preflight (OPTIONS) requests
+  if (request.method === "OPTIONS") {
+    const preflightResponse = NextResponse.json({}, { status: 200 });
+    preflightResponse.headers.set(
+      "Access-Control-Allow-Origin",
+      "https://admin.omenai.app"
+    );
+    preflightResponse.headers.set("Access-Control-Allow-Credentials", "true");
+    preflightResponse.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, DELETE, PATCH, POST, PUT, OPTIONS"
+    );
+    preflightResponse.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, Content-Length"
+    );
+    return preflightResponse;
   }
 
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
-
+  if (origin) {
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, DELETE, PATCH, POST, PUT, OPTIONS"
+    );
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, Content-Length"
+    );
+  }
   if (request.nextUrl.pathname.includes("/api/auth")) return response;
 
   const session = await getSession();

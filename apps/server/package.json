@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "devDependencies": {
-    "@omenai/typescript-config": "*",
-    "@omenai/shared-auth": "*",
-    "@omenai/shared-hooks": "*",
     "@omenai/package-provider": "*",
+    "@omenai/shared-auth": "*",
     "@omenai/shared-emails": "*",
+    "@omenai/shared-hooks": "*",
     "@omenai/shared-lib": "*",
     "@omenai/shared-models": "*",
+    "@omenai/shared-services": "*",
     "@omenai/shared-utils": "*",
-    "@omenai/shared-services": "*"
+    "@omenai/typescript-config": "*"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
   }
 }
