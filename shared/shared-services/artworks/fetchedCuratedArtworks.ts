@@ -1,5 +1,5 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
-import { filterOptionsType } from "@omenai/shared-types/index.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { filterOptionsType } from "@omenai/shared-types/index";
 export const fetchCuratedArtworks = async (
   page: number,
   preferences: string[],

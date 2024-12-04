@@ -2,7 +2,7 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { UserType } from "@omenai/shared-types/index.js";
+import { UserType } from "@omenai/shared-types/index";
 const secret_key = "secret";
 const key = new TextEncoder().encode(secret_key);
 

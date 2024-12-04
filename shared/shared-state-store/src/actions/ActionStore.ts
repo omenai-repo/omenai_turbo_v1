@@ -1,4 +1,4 @@
-import { country_and_states } from "@omenai/shared-json/src/countryAndStateList.js";
+import { country_and_states } from "@omenai/shared-json/src/countryAndStateList";
 import { create } from "zustand";
 import {
   ArtworkSchemaTypes,

@@ -1,9 +1,9 @@
-import { checkLabel } from "./checkLabel.ts";
-import { validateConfirmPassword } from "./confirmPasswordValidator.ts";
-import { validateEmail } from "./emailValidator.ts";
-import { validataGeneralText } from "./generalValidator.ts";
-import { validatePassword } from "./passwordValidator.ts";
-import { validateText } from "./textValidator.ts";
+import { checkLabel } from "./checkLabel";
+import { validateConfirmPassword } from "./confirmPasswordValidator";
+import { validateEmail } from "./emailValidator";
+import { validataGeneralText } from "./generalValidator";
+import { validatePassword } from "./passwordValidator";
+import { validateText } from "./textValidator";
 
 type ValidationFunction = (value: string) => string[];
 

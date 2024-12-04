@@ -1,6 +1,6 @@
 "use client";
-import { updateArtworkImpressions } from "@omenai/shared-services/artworks/updateArtworkImpressions.js";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore.js";
+import { updateArtworkImpressions } from "@omenai/shared-services/artworks/updateArtworkImpressions";
+import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 

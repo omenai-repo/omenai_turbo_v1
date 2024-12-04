@@ -1,5 +1,5 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
-import { Filter } from "@omenai/shared-utils/src/isFilterEmpty.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { Filter } from "@omenai/shared-utils/src/isFilterEmpty";
 
 export async function fetchFilterResults(filters: Filter) {
   try {

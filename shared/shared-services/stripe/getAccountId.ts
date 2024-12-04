@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function getAccountId(email: string) {
   try {

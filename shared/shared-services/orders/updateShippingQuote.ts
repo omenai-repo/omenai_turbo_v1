@@ -1,5 +1,5 @@
 import { ShippingQuoteTypes } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const updateShippingQuote = async (
   data: ShippingQuoteTypes,

@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function validateCharge(data: { otp: string; flw_ref: string }) {
   try {

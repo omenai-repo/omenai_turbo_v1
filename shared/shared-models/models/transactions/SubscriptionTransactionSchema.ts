@@ -1,5 +1,5 @@
 import { SubscriptionTransactionModelSchemaTypes } from "@omenai/shared-types";
-import { generateDigit } from "@omenai/shared-utils/src/generateToken.ts";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import mongoose, { Schema } from "mongoose";
 
 const subscription_transaction =

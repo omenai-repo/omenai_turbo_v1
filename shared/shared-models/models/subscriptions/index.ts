@@ -1,3 +1,3 @@
-import { SubscriptionPlan } from "./PlanSchema.ts";
-import { Subscriptions } from "./SubscriptionSchema.ts";
+import { SubscriptionPlan } from "./PlanSchema";
+import { Subscriptions } from "./SubscriptionSchema";
 export { SubscriptionPlan, Subscriptions };

@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const confirmOrderDelivery = async (
   confirm_delivery: boolean,

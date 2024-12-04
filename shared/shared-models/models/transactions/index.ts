@@ -1,4 +1,4 @@
-import { SubscriptionTransactions } from "./SubscriptionTransactionSchema.ts";
-import { PurchaseTransactions } from "./TransactionSchema.ts";
+import { SubscriptionTransactions } from "./SubscriptionTransactionSchema";
+import { PurchaseTransactions } from "./TransactionSchema";
 
 export { SubscriptionTransactions, PurchaseTransactions };

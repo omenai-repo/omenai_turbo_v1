@@ -2,7 +2,7 @@ import {
   appwrite_image_format,
   appwrite_image_gravity,
   storage,
-} from "@omenai/appwrite-config/appwrite.ts";
+} from "@omenai/appwrite-config/appwrite";
 
 export const getImageFileView = (
   fileId: string,

@@ -1,7 +1,7 @@
-import { getArtworkHighlightData } from "./getArtworkHighlightData.ts";
-import { getImpressionHighlightData } from "./getImpressionHighlightData.ts";
-import { getSalesHighlightData } from "./getSalesHighlightData.ts";
-import { getSubscriptionHighlightData } from "./getSubscriptionHighlightData.ts";
+import { getArtworkHighlightData } from "./getArtworkHighlightData";
+import { getImpressionHighlightData } from "./getImpressionHighlightData";
+import { getSalesHighlightData } from "./getSalesHighlightData";
+import { getSubscriptionHighlightData } from "./getSubscriptionHighlightData";
 
 export async function fetchHighlightData(
   tag: string,

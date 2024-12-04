@@ -1,5 +1,5 @@
-import { sendMailVerification } from "../../controller/emailController.ts";
-import OrderRequestReminder from "../../views/order/OrderRequessstReminder.tsx";
+import { sendMailVerification } from "../../controller/emailController";
+import OrderRequestReminder from "../../views/order/OrderRequessstReminder";
 
 type EmailData = {
   name: string;

@@ -1,3 +1,3 @@
-import QueryProvider from "./QueryProvider.tsx";
-import { SessionProvider } from "./SessionProvider.tsx";
+import QueryProvider from "./QueryProvider";
+import { SessionProvider } from "./SessionProvider";
 export { QueryProvider, SessionProvider };

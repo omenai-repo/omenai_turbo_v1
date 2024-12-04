@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const checkLockStatus = async (art_id: string, user_id: string) => {
   const url = getApiUrl();

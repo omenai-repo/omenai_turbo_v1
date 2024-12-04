@@ -1,6 +1,6 @@
-import { sendMailVerification } from "../../controller/emailController.ts";
-import RequestPriceEmail from "../../views/order/RequestPriceEmail.tsx";
-import { ArtworkSchemaTypes } from "@omenai/shared-types/index.ts";
+import { sendMailVerification } from "../../controller/emailController";
+import RequestPriceEmail from "../../views/order/RequestPriceEmail";
+import { ArtworkSchemaTypes } from "@omenai/shared-types/index";
 
 type EmailData = {
   name: string;

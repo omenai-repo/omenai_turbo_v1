@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config.js";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchViewHistory(user_id: string) {
   try {

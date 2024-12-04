@@ -1,5 +1,5 @@
-import { sendMailVerification } from "../../controller/emailController.ts";
-import PasswordRecoveryEmail from "../../views/recovery/PasswordRecoveryEmail.tsx";
+import { sendMailVerification } from "../../controller/emailController";
+import PasswordRecoveryEmail from "../../views/recovery/PasswordRecoveryEmail";
 
 type EmailData = {
   name: string;

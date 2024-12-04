@@ -1,5 +1,5 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function uploadArtworkData(
   data: Omit<ArtworkSchemaTypes, "art_id" | "availability">

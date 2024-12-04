@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function updateLogo(payload: { id: string; url: string }) {
   const url = getApiUrl();

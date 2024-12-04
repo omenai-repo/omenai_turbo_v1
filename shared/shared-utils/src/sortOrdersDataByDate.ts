@@ -1,4 +1,4 @@
-import { CreateOrderModelTypes } from "@omenai/shared-types/index.ts";
+import { CreateOrderModelTypes } from "@omenai/shared-types/index";
 interface FormattedObject extends CreateOrderModelTypes {
   createdAt: string; // Updated type for formatted date
 }

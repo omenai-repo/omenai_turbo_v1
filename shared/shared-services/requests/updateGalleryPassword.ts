@@ -1,5 +1,5 @@
 import { RouteIdentifier } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 import { getSession } from "next-auth/react";
 
 export async function updatePassword(

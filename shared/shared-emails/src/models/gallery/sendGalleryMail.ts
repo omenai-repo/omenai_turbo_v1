@@ -1,5 +1,5 @@
-import { sendMailVerification } from "../../controller/emailController.ts";
-import GalleryVerificationEmail from "../../views/gallery/verifyGallery.tsx";
+import { sendMailVerification } from "../../controller/emailController";
+import GalleryVerificationEmail from "../../views/gallery/verifyGallery";
 
 type EmailData = {
   name: string;

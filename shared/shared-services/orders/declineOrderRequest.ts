@@ -1,5 +1,5 @@
 import { OrderAcceptedStatusTypes } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const declineOrderRequest = async (
   data: OrderAcceptedStatusTypes,

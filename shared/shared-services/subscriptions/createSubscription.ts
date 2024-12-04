@@ -1,5 +1,5 @@
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
-import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 
 export const createSubscription = async (email: string, name: string) => {
   const url = getApiUrl();

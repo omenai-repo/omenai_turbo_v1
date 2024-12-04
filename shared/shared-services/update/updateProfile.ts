@@ -3,7 +3,7 @@ import {
   GalleryProfileUpdateData,
   IndividualProfileUpdateData,
 } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function updateProfile(
   route: RouteIdentifier,

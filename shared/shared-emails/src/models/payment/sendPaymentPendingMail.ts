@@ -1,5 +1,5 @@
-import { sendMailVerification } from "../../controller/emailController.ts";
-import PaymentPendingMail from "../../views/payment/PaymentPendingMail.tsx";
+import { sendMailVerification } from "../../controller/emailController";
+import PaymentPendingMail from "../../views/payment/PaymentPendingMail";
 
 type EmailData = {
   email: string;

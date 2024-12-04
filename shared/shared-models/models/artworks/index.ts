@@ -1,4 +1,4 @@
-import { ArtworkImpressions } from "./ArtworkImpressionSchema.ts";
-import { RecentView } from "./RecentlyViewed.ts";
-import { Artworkuploads } from "./UploadArtworkSchema.ts";
+import { ArtworkImpressions } from "./ArtworkImpressionSchema";
+import { RecentView } from "./RecentlyViewed";
+import { Artworkuploads } from "./UploadArtworkSchema";
 export { ArtworkImpressions, RecentView, Artworkuploads };

@@ -1,5 +1,5 @@
 import { PromotionalDataUpdateTypes } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config.ts";
+import { getApiUrl } from "@omenai/url-config/src/config";
 import { ObjectId } from "mongoose";
 
 export async function updatePromotionalData(

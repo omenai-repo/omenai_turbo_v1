@@ -1,5 +1,5 @@
 "use client";
-import { UserType } from "@omenai/shared-types/index.js";
+import { UserType } from "@omenai/shared-types/index";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type Session = UserType | undefined;

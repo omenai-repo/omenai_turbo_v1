@@ -1,5 +1,5 @@
-import { getCurrencySymbol } from "./getCurrencySymbol.ts";
-import { formatPrice } from "./priceFormatter.ts";
+import { getCurrencySymbol } from "./getCurrencySymbol";
+import { formatPrice } from "./priceFormatter";
 
 const currency = getCurrencySymbol("USD");
 export const salesDataAlgorithm = (salesData: any) => {

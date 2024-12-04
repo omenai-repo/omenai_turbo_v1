@@ -3,7 +3,7 @@ import {
   GallerySignupData,
   AdminSignupData,
 } from "@omenai/shared-types";
-import { hashPassword } from "../hash/hashPassword.ts";
+import { hashPassword } from "../hash/hashPassword";
 type data =
   | Omit<IndividualRegisterData, "confirmPassword">
   | Omit<GallerySignupData, "confirmPassword">

@@ -1,5 +1,5 @@
-import { getApiUrl } from "@omenai/url-config/src/config.js";
-import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear.js";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 
 export async function getSalesActivityData(id: string) {
   const { year } = getCurrentMonthAndYear();

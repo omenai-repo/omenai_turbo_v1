@@ -1,4 +1,4 @@
-import { generateDigit } from "@omenai/shared-utils/src/generateToken.ts";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
 import mongoose, { Schema } from "mongoose";
 

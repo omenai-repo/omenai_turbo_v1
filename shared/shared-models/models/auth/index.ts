@@ -1,8 +1,8 @@
-import { AccountAdmin } from "./AccountAdmin.ts";
-import { AccountGallery } from "./GallerySchema.ts";
-import { AccountIndividual } from "./IndividualSchema.ts";
-import { RejectedGallery } from "./RejectedGalleryScema.ts";
-import { VerificationCodes } from "./verification/codeTimeoutSchema.ts";
+import { AccountAdmin } from "./AccountAdmin";
+import { AccountGallery } from "./GallerySchema";
+import { AccountIndividual } from "./IndividualSchema";
+import { RejectedGallery } from "./RejectedGalleryScema";
+import { VerificationCodes } from "./verification/codeTimeoutSchema";
 
 export {
   AccountAdmin,

@@ -1,8 +1,8 @@
-import { validateMeasurement } from "./validateMeasurement.ts";
-import { validatePrice } from "./validatePrice.ts";
-import { validateBasicText } from "./validateText.ts";
-import { validateWeight } from "./validateWeight.ts";
-import { validateYear } from "./validateYear.ts";
+import { validateMeasurement } from "./validateMeasurement";
+import { validatePrice } from "./validatePrice";
+import { validateBasicText } from "./validateText";
+import { validateWeight } from "./validateWeight";
+import { validateYear } from "./validateYear";
 
 type ValidationFunction = (value: string) => string[];
 
