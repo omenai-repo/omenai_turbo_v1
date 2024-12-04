@@ -9,16 +9,14 @@
     "lib": ["es2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleDetection": "force",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noUncheckedIndexedAccess": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2022",
     "jsx": "preserve",
-    "noEmit": false,
-    "baseUrl": ".",
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true
+    "emitDeclarationOnly": true,
+    "baseUrl": "."
   }
 }
