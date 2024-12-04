@@ -11,7 +11,7 @@ const cookie = {
   options: {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "lax",
     path: "/",
     domain: ".omenai.app",
   },
@@ -38,7 +38,7 @@ export async function createSession(payload: UserType) {
   (await cookies()).set(cookie.name, session, {
     httpOnly: true,
     secure: false,
-    sameSite: "none",
+    sameSite: "lax",
     path: "/",
     domain: ".omenai.app",
     expires,
