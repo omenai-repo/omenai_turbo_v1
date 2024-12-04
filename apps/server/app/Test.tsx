@@ -5,7 +5,7 @@ export default function Test() {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const res = await fetch("http://localhost:3000/api/auth/login", {
+    const res = await fetch("https://api.omenai.app/api/auth/login", {
       method: "POST",
       credentials: "include",
     });

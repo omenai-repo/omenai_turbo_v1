@@ -1,3 +1,4 @@
+import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { NextRequest, NextResponse } from "next/server";
 const allowedOrigins = [
   "http://omenai.local:3000",
@@ -13,6 +14,7 @@ export async function middleware(request: NextRequest) {
   // Check the origin from the request
   const origin = request.headers.get("origin") ?? "";
   const isAllowedOrigin = allowedOrigins.includes(origin);
+  console.log(origin);
 
   // Handle preflighted requests
   const isPreflight = request.method === "OPTIONS";
@@ -52,6 +54,8 @@ export async function middleware(request: NextRequest) {
   //     }
   //   }
 
+  const session = await getSession();
+  console.log(session);
   // if (session === undefined)
   //   return NextResponse.json(
   //     { message: "Session expired, please login" },
