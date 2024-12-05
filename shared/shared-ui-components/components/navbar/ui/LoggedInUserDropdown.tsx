@@ -9,14 +9,13 @@ import { RiAuctionLine } from "react-icons/ri";
 import { CiSettings } from "react-icons/ci";
 import Link from "next/link";
 import { UserDashboardNavigationStore } from "@omenai/shared-state-store/src/user/navigation/NavigationStore";
-import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 import { BiUser } from "react-icons/bi";
-
+import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+import { useRouter } from "next/navigation";
 const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
   const [open, setOpen] = useState(false);
   const { setSelected } = UserDashboardNavigationStore();
-
   return (
     <div className=" flex items-center justify-center bg-white">
       <motion.div animate={open ? "open" : "closed"} className="relative">
@@ -87,17 +86,23 @@ const Option = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   setSelectedTab: (label: string) => void;
 }) => {
-  function handleSignout() {
-    signOut({ callbackUrl: "/" });
-    toast.success("Operation successful", {
-      description: "Successfully signed out...redirecting",
-      style: {
-        background: "green",
-        color: "white",
-      },
-      className: "class",
-    });
-    setOpen(false);
+  const router = useRouter();
+
+  async function handleSignout() {
+    toast.info("Signing you out...");
+    const res = await signOut();
+
+    if (res.isOk) {
+      toast.info("Operation successful", {
+        description: "Successfully signed out...redirecting",
+      });
+      router.replace("https://auth.omenai.app");
+    } else {
+      toast.error("Operation successful", {
+        description:
+          "Something went wrong, please try again or contact support",
+      });
+    }
   }
   return (
     <>

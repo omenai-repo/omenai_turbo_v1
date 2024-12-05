@@ -1,15 +1,16 @@
-import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   // Handle other requests
   const response = NextResponse.next();
   const origin = request.headers.get("origin") ?? "";
+  const allowedOrigin =
+    process.env.NODE_ENV === "production" ? "https://admin.omenai.app" : origin;
 
   // Handle preflight (OPTIONS) requests
   if (request.method === "OPTIONS") {
     const preflightResponse = NextResponse.json({}, { status: 200 });
-    preflightResponse.headers.set("Access-Control-Allow-Origin", origin);
+    preflightResponse.headers.set("Access-Control-Allow-Origin", allowedOrigin);
     preflightResponse.headers.set("Access-Control-Allow-Credentials", "true");
     preflightResponse.headers.set(
       "Access-Control-Allow-Methods",
@@ -24,7 +25,7 @@ export async function middleware(request: NextRequest) {
 
   if (origin) {
     response.headers.set("Access-Control-Allow-Credentials", "true");
-    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
     response.headers.set(
       "Access-Control-Allow-Methods",
       "GET, DELETE, PATCH, POST, PUT, OPTIONS"
@@ -35,9 +36,6 @@ export async function middleware(request: NextRequest) {
     );
   }
   if (request.nextUrl.pathname.includes("/api/auth")) return response;
-
-  const session = await getSession();
-  console.log(session);
 
   return response;
 }

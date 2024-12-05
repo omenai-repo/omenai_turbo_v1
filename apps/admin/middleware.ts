@@ -7,8 +7,7 @@ import {
 const adminRoute = /\/admin\/dashboard\/.*/;
 
 export async function middleware(request: NextRequest) {
-  const session: UserType = await getSession();
-  console.log(session);
+  const session: UserType | undefined = await getSession();
 
   const isAdminRoute = adminRoute.test(request.nextUrl.pathname);
 

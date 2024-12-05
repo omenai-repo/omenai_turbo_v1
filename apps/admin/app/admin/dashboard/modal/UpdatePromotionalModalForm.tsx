@@ -5,6 +5,7 @@ import { updatePromotionalData } from "@omenai/shared-services/promotionals/upda
 import { promotionalStore } from "@omenai/shared-state-store/src/promotionals/PromotionalStore";
 import { PromotionalDataUpdateTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -37,6 +38,22 @@ export default function UpdatePromotionalModalForm() {
 
   const handlePromotionalDataUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const session = await checkSession();
+
+    if (!session) {
+      toast.error("Error notification", {
+        description: "Admin session expired. Please login again",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      setOpenModal(false);
+      router.replace("/auth/login/secure/admin");
+      return;
+    }
+
     if (data === null) return;
     setLoading(true);
 
@@ -73,6 +90,23 @@ export default function UpdatePromotionalModalForm() {
   const handleDeletePromotionalData = async () => {
     if (data === null) return;
     setDeleteLoading(true);
+
+    const session = await checkSession();
+
+    if (!session) {
+      toast.error("Error notification", {
+        description: "Admin session expired. Please login again",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      setOpenModal(false);
+      setDeleteLoading(false);
+      router.replace("/auth/login/secure/admin");
+      return;
+    }
 
     const response = await deletePromotionalData(data.id);
     if (!response?.isOk) {

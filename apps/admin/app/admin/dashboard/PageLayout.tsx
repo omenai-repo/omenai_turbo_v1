@@ -1,21 +1,30 @@
 "use client";
-import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { BsArrowLeftShort } from "react-icons/bs";
-
-import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 import { navMockData } from "./mocks/NavigationMockData";
 import NavigationItem from "./NavigationItem";
 import { adminNavigationActions } from "@omenai/shared-state-store/src/admin/AdminNavigationStore";
-
+import { useRouter } from "next/navigation";
+import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 export default function PageLayout() {
   const { open, setOpen } = adminNavigationActions();
 
-  function handleSignout() {
-    signOut({ callbackUrl: "/auth/login/" });
-    toast.info("Operation successful", {
-      description: "Successfully signed out...redirecting",
-    });
+  const router = useRouter();
+  async function handleSignout() {
+    toast.info("Signing you out...");
+    const res = await signOut();
+
+    if (res.isOk) {
+      toast.info("Operation successful", {
+        description: "Successfully signed out...redirecting",
+      });
+      router.replace("/auth/login/secure/admin");
+    } else {
+      toast.error("Operation successful", {
+        description:
+          "Something went wrong, please try again or contact support",
+      });
+    }
   }
 
   return (

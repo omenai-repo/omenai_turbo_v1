@@ -17,7 +17,7 @@ export default function LayoutWrapper({
   session,
 }: {
   children: React.ReactNode;
-  session: UserType;
+  session: UserType | undefined;
 }) {
   const { open } = adminNavigationActions();
   const { width } = useWindowSize();

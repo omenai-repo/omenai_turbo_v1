@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@omenai/shared-json": "*",
-    "crypto-random-string": "^5.0.0"
+    "crypto-random-string": "^5.0.0",
+    "@omenai/shared-auth": "*"
   }
 }

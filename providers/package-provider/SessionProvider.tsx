@@ -17,7 +17,7 @@ export function SessionProvider({
   session,
 }: {
   children: React.ReactNode;
-  session: UserType;
+  session: UserType | undefined;
 }) {
   return (
     <SessionContext.Provider value={{ session }}>

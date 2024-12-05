@@ -36,7 +36,8 @@
     "NEXT_PUBLIC_BASIC_PLAN",
     "NEXT_PUBLIC_PRO_PLAN",
     "NEXT_PUBLIC_PREMIUM_PLAN",
-    "NEXT_PUBLIC_TINYMCE_API_KEY"
+    "NEXT_PUBLIC_TINYMCE_API_KEY",
+    "NODE_ENV"
   ],
   "tasks": {
     "build": {
@@ -44,6 +45,7 @@
       "inputs": ["$TURBO_DEFAULT$", ".env", ".env.local"],
       "outputs": [".next/**", "!.next/cache/**"],
       "env": [
+        "NODE_ENV",
         "NEXT_PUBLIC_URL_API_DEVELOPMENT",
         "MONGODB_URI",
         "MONGODB_PASSWORD",

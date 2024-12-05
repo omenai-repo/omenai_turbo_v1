@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { editorial_storage } from "@omenai/appwrite-config";
 import { EditorialSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
 
 export default function Upload_Editorial() {
   const router = useRouter();
@@ -37,6 +38,21 @@ export default function Upload_Editorial() {
 
   const handleEditorialUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const session = await checkSession();
+
+    if (!session) {
+      toast.error("Error notification", {
+        description: "Admin session expired. Please login again",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      router.replace("/auth/login/secure/admin");
+      return;
+    }
 
     if (
       upload_data.title === "" ||

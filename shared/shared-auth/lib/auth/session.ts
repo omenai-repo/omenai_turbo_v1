@@ -13,7 +13,7 @@ const cookie = {
     secure: true,
     sameSite: "lax",
     path: "/",
-    domain: ".omenai.app",
+    domain: process.env.NODE_ENV === "production" ? ".omenai.app" : "localhost",
   },
 };
 
@@ -40,7 +40,7 @@ export async function createSession(payload: UserType) {
     secure: false,
     sameSite: "lax",
     path: "/",
-    domain: ".omenai.app",
+    domain: process.env.NODE_ENV === "production" ? ".omenai.app" : "localhost",
     expires,
   });
 }
@@ -69,7 +69,7 @@ export async function getSession() {
 
   if (!cookie_packet || cookie_packet === undefined) return undefined;
 
-  const session = await decrypt(cookie_packet);
+  const session: UserType = await decrypt(cookie_packet);
 
   return { ...session };
 }

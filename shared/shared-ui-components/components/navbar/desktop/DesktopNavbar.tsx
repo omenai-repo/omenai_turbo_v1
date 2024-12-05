@@ -5,15 +5,15 @@ import NavbarActionButtons from "../ui/NavbarActionButtons";
 import { CiMenuFries } from "react-icons/ci";
 import MobileNavbar from "../mobile/MobileNavbar";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { useSession } from "next-auth/react";
 import LoggedInUser from "../ui/LoggedInUser";
 import SearchInput from "../ui/SearchInput";
 import { SlMenu } from "react-icons/sl";
-
+import { useContext } from "react";
+import { SessionContext } from "@omenai/package-provider/SessionProvider";
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();
-  const session = useSession();
 
+  const { session } = useContext(SessionContext);
   return (
     <>
       <div className="sticky top-0 z-30 bg-white mb-4 pb-4">
@@ -53,16 +53,13 @@ export default function DesktopNavbar() {
             </ul>
 
             <div className="flex items-center space-x-4">
-              {session.status === "authenticated" &&
-                session.data.user.role === "user" && (
-                  <LoggedInUser user={session.data?.user.name} />
-                )}
-              {((session.data &&
-                (session.data.user.role === "gallery" ||
-                  session.data?.user.role === "admin")) ||
-                session.status === "unauthenticated") && (
-                <NavbarActionButtons />
+              {session && session.role === "user" && (
+                <LoggedInUser user={session.name} />
               )}
+              {session &&
+                (session.role === "gallery" || session.role === "admin") && (
+                  <NavbarActionButtons />
+                )}
               <div className="lg:hidden block">
                 <SlMenu
                   className="text-sm"

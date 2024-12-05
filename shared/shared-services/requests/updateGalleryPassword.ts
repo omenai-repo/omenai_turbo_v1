@@ -1,6 +1,5 @@
 import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { getSession } from "next-auth/react";
 
 export async function updatePassword(
   password: string,
@@ -8,7 +7,6 @@ export async function updatePassword(
   route: RouteIdentifier,
   session_id: string
 ) {
-  const session = await getSession();
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/requests/${route}/updatePassword`, {
