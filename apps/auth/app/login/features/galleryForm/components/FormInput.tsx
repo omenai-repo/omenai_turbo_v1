@@ -13,11 +13,11 @@ import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/Gal
 import { Form } from "@omenai/shared-types";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-
+import { login_url } from "@omenai/url-config/src/config";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
-
+  const auth_url = login_url();
   //simple state to show password visibility
 
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
@@ -42,7 +42,7 @@ export default function FormInput() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace("https://auth.omenai.app/login");
+      router.replace(auth_url);
     } else {
       toast.error("Operation successful", {
         description:

@@ -5,19 +5,21 @@ import { toast } from "sonner";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { useRouter } from "next/navigation";
+import { login_url } from "@omenai/url-config/src/config";
 
 export default function PageLayout() {
   const router = useRouter();
   async function handleSignout() {
     toast.info("Signing you out...");
 
+    const auth_url = login_url();
     const res = await signOut();
 
     if (res.isOk) {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace("https://auth.omenai.app/login");
+      router.replace(auth_url);
     } else {
       toast.error("Operation successful", {
         description:

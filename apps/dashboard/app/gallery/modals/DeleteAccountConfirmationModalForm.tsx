@@ -9,11 +9,13 @@ import router from "next/router";
 import { useContext, useState } from "react";
 import { IoWarning } from "react-icons/io5";
 import { toast } from "sonner";
+import { login_url } from "@omenai/url-config/src/config";
 
 export default function DeleteAccountConfirmationModalForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const { session } = useContext(SessionContext);
 
+  const auth_url = login_url();
   async function handleSignout() {
     toast.info("Signing you out...");
     const res = await signOut();
@@ -22,7 +24,7 @@ export default function DeleteAccountConfirmationModalForm() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace("https://auth.omenai.app/login");
+      router.replace(auth_url);
     } else {
       toast.error("Operation successful", {
         description:

@@ -26,6 +26,7 @@
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
     "autoprefixer": "^10.4.20",
+    "@omenai/url-config": "*",
     "eslint": "^9",
     "eslint-config-next": "15.0.4",
     "postcss": "^8.4.49",

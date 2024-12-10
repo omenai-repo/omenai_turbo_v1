@@ -12,6 +12,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { useRouter } from "next/navigation";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+import { login_url } from "@omenai/url-config/src/config";
 
 export default function UpdatePasswordModalForm() {
   const { updatePasswordModalPopup } = actionStore();
@@ -25,6 +26,7 @@ export default function UpdatePasswordModalForm() {
   const { session } = useContext(SessionContext);
 
   const [errorList, setErrorList] = useState<string[]>([]);
+  const auth_url = login_url();
 
   async function handleSignout() {
     toast.info("Signing you out...");
@@ -34,7 +36,7 @@ export default function UpdatePasswordModalForm() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace("https://auth.omenai.app/login");
+      router.replace(auth_url);
     } else {
       toast.error("Operation successful", {
         description:

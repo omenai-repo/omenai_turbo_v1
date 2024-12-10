@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { BiUser } from "react-icons/bi";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { useRouter } from "next/navigation";
+import { login_url } from "@omenai/url-config/src/config";
+
 const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
   const [open, setOpen] = useState(false);
   const { setSelected } = UserDashboardNavigationStore();
@@ -87,6 +89,7 @@ const Option = ({
   setSelectedTab: (label: string) => void;
 }) => {
   const router = useRouter();
+  const auth_url = login_url();
 
   async function handleSignout() {
     toast.info("Signing you out...");
@@ -96,7 +99,7 @@ const Option = ({
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace("https://auth.omenai.app");
+      router.replace(auth_url);
     } else {
       toast.error("Operation successful", {
         description:
