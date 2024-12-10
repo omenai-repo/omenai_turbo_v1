@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { getSession } from "@omenai/shared-auth/lib/auth/session";
+import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import LayoutWrapper from "./LayoutWrapper";
 const nunito_sans = Inter({
   subsets: ["latin"],
@@ -12,7 +12,7 @@ export default async function DashboardRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const session = await getServerSession();
   return (
     <html lang="en">
       <body className={`${nunito_sans.className} flex flex-col justify-center`}>

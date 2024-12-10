@@ -9,10 +9,13 @@ export async function POST(request: Request) {
     await connectMongoDB();
 
     const { id } = await request.json();
+    console.log(id);
 
     const orders = await CreateOrder.find({ gallery_id: id })
       .sort({ updatedAt: -1 })
       .exec();
+
+    console.log(orders);
 
     if (!orders) throw new ServerError("No orders were found");
 

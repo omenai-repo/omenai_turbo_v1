@@ -18,7 +18,7 @@ let artTypes = [
 ];
 export default function Preferences() {
   return (
-    <AnimatePresence key={"art_types_key"}>
+    <AnimatePresence>
       <label
         htmlFor="artType-preferences"
         className="text-xs font-normal text-dark"
@@ -33,8 +33,12 @@ export default function Preferences() {
           transition={{ duration: 0.33 }}
         >
           <div className="flex flex-wrap  gap-y-[1rem] gap-x-[0.5rem] text-xs">
-            {artTypes.map((art) => {
-              return <Pill key={art} text={art} />;
+            {artTypes.map((art, index) => {
+              return (
+                <div key={art + index}>
+                  <Pill text={art} />
+                </div>
+              );
             })}
           </div>
         </motion.div>

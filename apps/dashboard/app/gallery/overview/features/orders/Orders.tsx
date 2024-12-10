@@ -9,8 +9,10 @@ import { useQuery } from "@tanstack/react-query";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-
+import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useContext } from "react";
 export default function Orders() {
+  const { session } = useContext(SessionContext);
   const { data: orders, isLoading } = useQuery({
     queryKey: ["get_overview_order"],
     queryFn: async () => {

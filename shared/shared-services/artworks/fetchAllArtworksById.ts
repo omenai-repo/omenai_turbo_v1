@@ -1,9 +1,7 @@
-"use server";
-import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { getApiUrl } from "@omenai/url-config/src/config";
-
+import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 export async function getAllArtworksById() {
-  const session = await getSession();
+  const session = await getServerSession();
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/artworks/getAllArtworksbyId`, {

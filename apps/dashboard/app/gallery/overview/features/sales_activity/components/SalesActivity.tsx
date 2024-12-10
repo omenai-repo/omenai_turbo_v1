@@ -1,14 +1,12 @@
 "use client";
 
 import {
-
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-
   ComposedChart,
   Bar,
 } from "recharts";
@@ -22,7 +20,6 @@ function CustomTooltip({
   label: any;
   active: any;
 }) {
-  console.log(payload);
   if (active) {
     return (
       <div className="custom-tooltip bg-dark text-white p-5 rounded-md border border-white">

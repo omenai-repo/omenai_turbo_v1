@@ -2,11 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, refreshSession } from "./lib/auth/session";
 import { login_url } from "@omenai/url-config/src/config";
 
+const allowed_origins = [
+  "https://auth.omenai.app",
+  "https://dashboard.omenai.app",
+  "https://admin.omenai.app",
+  "https://omenai.app",
+  "http://localhost",
+];
+
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
-const url = login_url();
 function redirect(url: string) {
   return NextResponse.redirect(new URL(url));
 }
@@ -19,6 +26,7 @@ export async function middleware(request: NextRequest) {
   //     return NextResponse.next(); // Skip middleware for auth.omenai.app
   //   }
   const session = await getSession();
+  const url = login_url();
 
   if (!session) {
     return redirect(url);
@@ -56,6 +64,7 @@ export async function middleware(request: NextRequest) {
 
   if (session) {
     // Refresh session expiry
+
     await refreshSession(session);
   }
 }

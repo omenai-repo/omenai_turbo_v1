@@ -43,6 +43,8 @@ export async function createSession(payload: UserType) {
     domain: process.env.NODE_ENV === "production" ? ".omenai.app" : "localhost",
     expires,
   });
+
+  return session;
 }
 
 export async function verifySession() {
@@ -75,5 +77,6 @@ export async function getSession() {
 }
 
 export async function refreshSession(payload: UserType) {
-  await createSession(payload);
+  const { expires, ...rest } = payload;
+  const session = await createSession(rest);
 }

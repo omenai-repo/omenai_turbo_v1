@@ -1,15 +1,15 @@
-"use server";
-import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { getApiUrl } from "@omenai/url-config/src/config";
+import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
+import { GallerySchemaTypes } from "@omenai/shared-types";
 
 export async function getOverviewOrders() {
-  const session = await getSession();
+  const session = await getServerSession();
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/orders/getOrdersByGalleryId`, {
       method: "POST",
       body: JSON.stringify({
-        id: session?.gallery_id,
+        id: (session as GallerySchemaTypes).gallery_id,
       }),
     });
     const result = await res.json();

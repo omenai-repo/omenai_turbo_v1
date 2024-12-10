@@ -68,8 +68,6 @@ export default function FormInput() {
         });
       } else {
         const session = await getServerSession();
-        console.log(session);
-
         if (session && session.role === "user") {
           toast.success("Operation successful", {
             description: "Login successful... redirecting!",
