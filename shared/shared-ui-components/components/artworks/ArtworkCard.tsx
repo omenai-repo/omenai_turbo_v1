@@ -68,7 +68,7 @@ export default function ArtworkCard({
               </p>
               {/* <HiPencil /> */}
               {isDashboard && (
-                <Link href={`/dashboard/gallery/artworks/edit?id=${name}`}>
+                <Link href={`/gallery/artworks/edit?id=${name}`}>
                   <button
                     className={`disabled:cursor-not-allowed disabled:text-dark/20 text-xs font-normal underline cursor-pointer`}
                   >

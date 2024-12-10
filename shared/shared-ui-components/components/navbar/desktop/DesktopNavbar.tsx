@@ -1,8 +1,6 @@
 "use client";
-import { IndividualLogo } from "../../logo/Logo";
 import NavbarLink from "../ui/NavbarLink";
 import NavbarActionButtons from "../ui/NavbarActionButtons";
-import { CiMenuFries } from "react-icons/ci";
 import MobileNavbar from "../mobile/MobileNavbar";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import LoggedInUser from "../ui/LoggedInUser";
@@ -10,6 +8,7 @@ import SearchInput from "../ui/SearchInput";
 import { SlMenu } from "react-icons/sl";
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { IndividualLogo } from "../../logo/Logo";
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();
 
@@ -23,7 +22,9 @@ export default function DesktopNavbar() {
         >
           <MobileNavbar />
           <div className="w-full flex justify-between items-center">
-            <div className="w-auto shrink-0">{/* <IndividualLogo /> */}</div>
+            <div className="w-auto shrink-0">
+              <IndividualLogo />
+            </div>
 
             <nav className="px-4 relative hidden sm:flex gap-x-2 w-full">
               <SearchInput />

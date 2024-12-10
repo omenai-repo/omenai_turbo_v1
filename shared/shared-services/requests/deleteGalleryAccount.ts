@@ -1,3 +1,5 @@
+"use server";
+import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 

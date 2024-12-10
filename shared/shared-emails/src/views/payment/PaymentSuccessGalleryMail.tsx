@@ -81,10 +81,7 @@ const PaymentSuccessfulGalleryMail = (
             <Text className="text-black text-[14px] leading-[24px]">
               You can view the details of this payment and manage your funds
               through your{" "}
-              <Link href={`${url}/dashboard/gallery/payouts`}>
-                Stripe dashboard
-              </Link>
-              .
+              <Link href={`${url}/gallery/payouts`}>Stripe dashboard</Link>.
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
               Please ensure the artwork is prepared for delivery based on the

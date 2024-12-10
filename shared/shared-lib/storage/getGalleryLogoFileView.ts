@@ -7,8 +7,7 @@ import {
 export const getGalleryLogoFileView = (
   fileId: string,
   width: number,
-  height?: number,
-  format?: string
+  height?: number
 ) => {
   const fileData = gallery_logo_storage.getFilePreview(
     process.env.NEXT_PUBLIC_APPWRITE_GALLERY_LOGO_BUCKET_ID!,

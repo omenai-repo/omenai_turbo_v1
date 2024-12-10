@@ -1,7 +1,11 @@
 "use client";
 import { blockGallery } from "@omenai/shared-services/admin/block_gallery";
 import { adminModals } from "@omenai/shared-state-store/src/admin/AdminModalsStore";
+import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { toast } from "sonner";
@@ -9,10 +13,31 @@ import { toast } from "sonner";
 export default function BlockGalleryConfirmationPopupModal() {
   const { blockGalleryConfirmationPopup, setBlockGalleryConfirmationPopup } =
     adminModals();
+  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const blockGalleryVerificationMutation = async () => {
+    setLoading(true);
+    const session = await checkSession();
 
-  const acceptGalleryVerificationMutation = useMutation({
-    mutationFn: async () => {
+    if (!session) {
+      toast.error("Error notification", {
+        description: "Admin session expired. Please login again",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      setBlockGalleryConfirmationPopup({
+        show: false,
+        gallery_id: "",
+        status: "",
+      });
+      router.replace("/auth/login/secure/admin");
+      return;
+    }
+    try {
       const block_gallery = await blockGallery(
         blockGalleryConfirmationPopup.gallery_id,
         blockGalleryConfirmationPopup.status
@@ -25,6 +50,9 @@ export default function BlockGalleryConfirmationPopupModal() {
             color: "white",
           },
           className: "class",
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["fetch_verified_galleries"],
         });
       } else {
         toast.error("Error notification", {
@@ -41,14 +69,18 @@ export default function BlockGalleryConfirmationPopupModal() {
         gallery_id: "",
         status: "",
       });
-      return block_gallery?.isOk;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["fetch_verified_galleries"],
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error notification", {
+        description: "Something went wrong, try again or contact support",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
       });
-    },
-  });
+    }
+  };
 
   return (
     <div
@@ -64,11 +96,13 @@ export default function BlockGalleryConfirmationPopupModal() {
 
         <div className="flex gap-x-4 items-center justify-center my-5">
           <button
-            onClick={() => acceptGalleryVerificationMutation.mutate()}
-            disabled={acceptGalleryVerificationMutation.isPending}
+            onClick={blockGalleryVerificationMutation}
+            disabled={loading}
             className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center px-4 py-2.5 bg-green-600 text-white"
           >
-            <span className="text-xs ">Confirm</span>
+            <span className="text-xs ">
+              {loading ? <LoadSmall /> : "Confirm"}
+            </span>
             <IoCheckmarkOutline />
           </button>
 

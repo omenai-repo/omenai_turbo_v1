@@ -10,3 +10,8 @@ export const session_auth_url = (): string => {
     return ".omenai.app";
   }
 };
+export const login_url = (): string => {
+  return process.env.NODE_ENV === "production"
+    ? "https://auth.omenai.app/login"
+    : "http://localhost:4000/login";
+};

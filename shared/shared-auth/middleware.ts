@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, refreshSession } from "./lib/auth/session";
+import { login_url } from "@omenai/url-config/src/config";
 
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
-const loginRoute_prod = "https://auth.omenai.app/login";
-const localhost_login_route = "http://localhost:4000/login";
+const url = login_url();
 function redirect(url: string) {
   return NextResponse.redirect(new URL(url));
 }
@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
   const session = await getSession();
 
   if (!session) {
-    return redirect(localhost_login_route);
+    return redirect(url);
   }
 
   const isUserDashboard = userDashboardRegex.test(request.url);
@@ -33,12 +33,12 @@ export async function middleware(request: NextRequest) {
     switch (session.role) {
       case "user":
         if (isGalleryDashboard) {
-          return redirect(`${localhost_login_route}/gallery`);
+          return redirect(`${url}`);
         }
         break;
       case "gallery":
         if (isUserDashboard || isPurchasePage || isPaymentPage) {
-          return redirect(`${localhost_login_route}/user`);
+          return redirect(`${url}`);
         }
         break;
       case "admin":
@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
           isPurchasePage ||
           isPaymentPage
         ) {
-          return redirect(localhost_login_route);
+          return redirect(url);
         }
         break;
     }

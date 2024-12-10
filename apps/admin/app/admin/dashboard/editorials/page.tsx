@@ -44,7 +44,7 @@ export default function Editorial_Page() {
                   link={editorial.link}
                   minutes={editorial.minutes}
                   date={editorial.date}
-                  key={index}
+                  key={editorial.title}
                   documentId={editorial.$id}
                 />
               ))}

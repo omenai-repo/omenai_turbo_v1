@@ -89,9 +89,9 @@ export default function ArtworkCanvas({
       <div className="flex flex-col w-full h-full justify-end">
         <div
           className="relative w-full artContainer"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          ref={containerRef}
+          // onMouseMove={handleMouseMove}
+          // onMouseLeave={handleMouseLeave}
+          // ref={containerRef}
           // onTouchMove={handleTouchMove}
           // onTouchStart={() => setZoomScale(2)} // Start zoom on touch
           // onTouchEnd={handleTouchEnd}
@@ -135,7 +135,7 @@ export default function ArtworkCanvas({
               </p>
               {/* <HiPencil /> */}
               {isDashboard && (
-                <Link href={`/dashboard/gallery/artworks/edit?id=${name}`}>
+                <Link href={`/gallery/artworks/edit?id=${name}`}>
                   <button
                     className={`disabled:cursor-not-allowed disabled:text-dark/20 text-xs font-normal underline cursor-pointer`}
                   >

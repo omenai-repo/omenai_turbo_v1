@@ -120,7 +120,7 @@ const Option = ({
           </motion.li>
         </>
       ) : (
-        <Link href={`/dashboard/user/${text.toLowerCase()}`}>
+        <Link href={`/user/${text.toLowerCase()}`}>
           <motion.li
             variants={itemVariants}
             onClick={() => {

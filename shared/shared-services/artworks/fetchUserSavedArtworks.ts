@@ -1,11 +1,14 @@
+"use server";
+import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function fetchUserSaveArtworks(session_id: string) {
+export async function fetchUserSaveArtworks() {
+  const session = await getSession();
   try {
     const url = getApiUrl();
     const response = await fetch(`${url}/api/artworks/getUserSavedArtworks`, {
       method: "POST",
-      body: JSON.stringify({ id: session_id }),
+      body: JSON.stringify({ id: session?.user_id as string }),
     }).then(async (res) => {
       if (!res.ok) return undefined;
       const result = await res.json();

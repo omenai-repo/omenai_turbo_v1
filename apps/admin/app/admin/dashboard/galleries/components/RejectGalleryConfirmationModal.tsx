@@ -1,7 +1,11 @@
 "use client";
 import { rejectGalleryVerification } from "@omenai/shared-services/admin/reject_gallery_verification";
 import { adminModals } from "@omenai/shared-state-store/src/admin/AdminModalsStore";
+import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
 import { toast } from "sonner";
@@ -9,15 +13,43 @@ import { toast } from "sonner";
 export default function RejectConfirmationPopupModal() {
   const { rejectConfirmationPopup, setRejectConfirmationPopup } = adminModals();
   const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const rejectGalleryVerificationMutation = useMutation({
-    mutationFn: async () => {
+  const rejectGalleryVerificationMutation = async () => {
+    setLoading(true);
+    const session = await checkSession();
+
+    if (!session) {
+      toast.error("Error notification", {
+        description: "Admin session expired. Please login again",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      setRejectConfirmationPopup({
+        show: false,
+        email: "",
+        name: "",
+        gallery_id: "",
+      });
+      setLoading(false);
+      router.replace("/auth/login/secure/admin");
+      return;
+    }
+
+    try {
       const reject_gallery = await rejectGalleryVerification(
         rejectConfirmationPopup.gallery_id,
         rejectConfirmationPopup.name,
         rejectConfirmationPopup.email
       );
       if (reject_gallery?.isOk) {
+        queryClient.invalidateQueries({
+          queryKey: ["fetch_non_verified_galleries"],
+        });
         toast.success("Operation successful", {
           description: reject_gallery.message,
           style: {
@@ -36,21 +68,20 @@ export default function RejectConfirmationPopupModal() {
           className: "class",
         });
       }
-
-      setRejectConfirmationPopup({
-        show: false,
-        email: "",
-        name: "",
-        gallery_id: "",
+    } catch (error) {
+      toast.error("Error notification", {
+        description:
+          "Something went wrong, please try again or contact support",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
       });
-      return reject_gallery?.isOk;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["fetch_non_verified_galleries"],
-      });
-    },
-  });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -66,11 +97,13 @@ export default function RejectConfirmationPopupModal() {
 
         <div className="flex gap-x-4 items-center justify-center my-5">
           <button
-            onClick={() => rejectGalleryVerificationMutation.mutate()}
-            disabled={rejectGalleryVerificationMutation.isPending}
+            onClick={() => rejectGalleryVerificationMutation}
+            disabled={loading}
             className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
           >
-            <span className="text-xs ">Confirm</span>
+            <span className="text-xs ">
+              {loading ? <LoadSmall /> : "Confirm"}
+            </span>
             <IoCheckmarkOutline />
           </button>
 

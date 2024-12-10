@@ -49,7 +49,7 @@ const OrderRequestReminder = (name: string) => {
             <div className="w-full grid place-items-center text-center">
               <Link
                 className="w-fit bg-black text-white text-center px-5 cursor-pointer py-3"
-                href={`${url}/dashboard/gallery/orders`}
+                href={`${url}/gallery/orders`}
               >
                 View orders on your dashboard
               </Link>

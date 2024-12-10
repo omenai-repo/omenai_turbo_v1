@@ -37,16 +37,16 @@ export default function SearchInput() {
     <div className="relative flex w-full justify-between gap-x-5 items-center rounded-sm border bg-transparent border-dark/30">
       <input
         type="text"
-        className="w-full h-[40px] bg-transparent px-3 border-none rounded-sm placeholder:text-xs placeholder:font-normal focus:border-none focus:ring-0 focus:border-0"
+        className="w-full h-[40px] bg-transparent px-3 border-none rounded-sm placeholder:text-xs placeholder:font-normal placeholder:text-dark focus:border-none focus:ring-0 focus:border-0"
         placeholder="Search for anything"
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={handleEnterKeyPress}
       />
       <div
-        className=" text-xs flex items-center gap-x-2 bg-transparent rounded-sm text-white w-fit h-full py-2 px-3 cursor-pointer"
+        className=" text-xs flex items-center gap-x-2 bg-dark rounded-sm text-white w-fit h-full py-2 px-3 cursor-pointer"
         onClick={handleIconTrigger}
       >
-        <CiSearch className="text-dark" />
+        <CiSearch className="text-white" />
       </div>
     </div>
   );
