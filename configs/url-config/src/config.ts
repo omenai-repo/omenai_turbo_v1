@@ -15,3 +15,9 @@ export const login_url = (): string => {
     ? "https://auth.omenai.app/login"
     : "http://localhost:4000/login";
 };
+
+export const dashboard_url = (): string => {
+  return process.env.NODE_ENV === "production"
+    ? "https://dashboard.omenai.app"
+    : "http://localhost:5000/";
+};

@@ -11,13 +11,14 @@ import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { login_url } from "@omenai/url-config/src/config";
+import { login_url, dashboard_url } from "@omenai/url-config/src/config";
 
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const auth_url = login_url();
 
+  const dashboard_base_url = dashboard_url();
   //simple state to show password visibility
   // const [hidePassword, setHidePassword] = useState(true);
 
@@ -81,7 +82,7 @@ export default function FormInput() {
           if (session.verified) {
             if (url === "" || url === null) {
               set_redirect_uri("");
-              router.replace("http://localhost:5000");
+              router.replace(`${dashboard_base_url}/user/saves`);
               router.refresh();
             } else {
               router.replace(url);

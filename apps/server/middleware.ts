@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const origin = request.headers.get("origin") ?? "";
   const allowedOrigin =
-    process.env.NODE_ENV === "production" ? "https://admin.omenai.app" : origin;
+    process.env.NODE_ENV === "production" ? "https://*.omenai.app" : origin;
 
   // Handle preflight (OPTIONS) requests
   if (request.method === "OPTIONS") {

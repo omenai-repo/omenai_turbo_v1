@@ -13,11 +13,13 @@ import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/Gal
 import { Form } from "@omenai/shared-types";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { login_url } from "@omenai/url-config/src/config";
+import { login_url, dashboard_url } from "@omenai/url-config/src/config";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const auth_url = login_url();
+  const dashboard_base_url = dashboard_url();
+
   //simple state to show password visibility
 
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
@@ -68,7 +70,6 @@ export default function FormInput() {
         });
       } else {
         const session = await getServerSession();
-        console.log(session);
 
         if (session && session.role === "gallery") {
           toast.success("Operation successful", {
@@ -83,7 +84,7 @@ export default function FormInput() {
           if (session.verified) {
             if (url === "" || url === null) {
               set_redirect_uri("");
-              router.replace("http://localhost:5000/gallery/overview");
+              router.replace(`${dashboard_base_url}/gallery/overview`);
               router.refresh();
             } else {
               router.replace(url);
