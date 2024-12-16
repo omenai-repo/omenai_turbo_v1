@@ -1,11 +1,5 @@
 {
   "name": "@omenai/tailwind-config",
   "version": "1.0.0",
-  "private": true,
-  "devDependencies": {
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "@omenai/typescript-config": "*"
-  }
+  "private": true
 }

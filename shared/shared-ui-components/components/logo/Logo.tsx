@@ -1,15 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
+import { base_url } from "@omenai/url-config/src/config";
 
 type LogoProps = {
   className?: string;
   theme?: "light" | "dark";
 };
 export const GalleryLogo = ({ className, theme = "dark" }: LogoProps) => {
+  const base_uri = base_url();
   return (
     <>
       <Link
-        href={"/"}
+        href={base_uri}
         className="flex flex-col xxs:flex-row xxs:gap-1 items-end relative"
       >
         <Image
@@ -33,10 +35,12 @@ export const GalleryLogo = ({ className, theme = "dark" }: LogoProps) => {
   );
 };
 export const AdminLogo = ({ className, theme = "dark" }: LogoProps) => {
+  const base_uri = base_url();
+
   return (
     <>
       <Link
-        href={"/"}
+        href={base_uri}
         className="flex flex-col xxs:flex-row xxs:gap-1 items-end relative"
       >
         <Image
@@ -61,9 +65,11 @@ export const AdminLogo = ({ className, theme = "dark" }: LogoProps) => {
 };
 
 export const IndividualLogo = ({ className }: LogoProps) => {
+  const base_uri = base_url();
+
   return (
     <>
-      <Link href={"/"} className={`flex gap-1 items-end ${className}`}>
+      <Link href={base_uri} className={`flex gap-1 items-end ${className}`}>
         <Image
           src={
             "https://cloud.appwrite.io/v1/storage/buckets/66e1aa4f000b16df96a2/files/67489398000b8e614835/view?project=655231c3469bf1ef8d8f&project=655231c3469bf1ef8d8f"

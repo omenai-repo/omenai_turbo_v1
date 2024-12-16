@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, refreshSession } from "./lib/auth/session";
-import { login_url } from "@omenai/url-config/src/config";
+import { base_url, login_url } from "@omenai/url-config/src/config";
 
 const allowed_origins = [
   "https://auth.omenai.app",
@@ -27,8 +27,9 @@ export async function middleware(request: NextRequest) {
   //   }
   const session = await getSession();
   const url = login_url();
+  const base_path_url = base_url();
 
-  if (!session) {
+  if (!session && !request.url.startsWith(base_path_url)) {
     return redirect(url);
   }
 

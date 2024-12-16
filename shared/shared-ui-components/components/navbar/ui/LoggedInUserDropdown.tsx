@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { BiUser } from "react-icons/bi";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { useRouter } from "next/navigation";
-import { login_url } from "@omenai/url-config/src/config";
+import { dashboard_url, login_url } from "@omenai/url-config/src/config";
 
 const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
   const [open, setOpen] = useState(false);
@@ -90,6 +90,7 @@ const Option = ({
 }) => {
   const router = useRouter();
   const auth_url = login_url();
+  const base_dashboard_url = dashboard_url();
 
   async function handleSignout() {
     toast.info("Signing you out...");
@@ -123,7 +124,7 @@ const Option = ({
           </motion.li>
         </>
       ) : (
-        <Link href={`/user/${text.toLowerCase()}`}>
+        <Link href={`${base_dashboard_url}user/${text.toLowerCase()}`}>
           <motion.li
             variants={itemVariants}
             onClick={() => {

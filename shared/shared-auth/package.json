@@ -2,9 +2,6 @@
   "name": "@omenai/shared-auth",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev -p 8080"
-  },
   "devDependencies": {
     "@omenai/typescript-config": "*",
     "@omenai/shared-types": "*",

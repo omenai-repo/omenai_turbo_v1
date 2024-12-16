@@ -1,5 +1,10 @@
 import React from "react";
+import DesktopNavbar from "../components/navbar/desktop/DesktopNavbar";
 
 export default function page() {
-  return <div>page</div>;
+  return (
+    <div>
+      <DesktopNavbar />
+    </div>
+  );
 }

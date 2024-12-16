@@ -25,12 +25,9 @@
     "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
-    "autoprefixer": "^10.4.20",
     "@omenai/url-config": "*",
     "eslint": "^9",
-    "eslint-config-next": "15.0.4",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15"
+    "eslint-config-next": "15.0.4"
   },
   "dependencies": {
     "flowbite-react": "^0.10.2",

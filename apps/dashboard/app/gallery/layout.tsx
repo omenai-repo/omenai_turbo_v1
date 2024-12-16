@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { GallerySchemaTypes } from "@omenai/shared-types";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -26,7 +27,9 @@ export default function GalleryDashboardLayout({
   const { data: account, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
-      const acc = await getAccountId(session?.email as string);
+      const acc = await getAccountId(
+        (session as GallerySchemaTypes)?.email as string
+      );
       if (!acc?.isOk) {
         toast.error("Error notification", {
           description: "Something went wrong, Please refresh the page",

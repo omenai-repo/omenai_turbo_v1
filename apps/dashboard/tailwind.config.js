@@ -1,5 +1,14 @@
 /** @type {import('tailwindcss').Config} */
-const config = require("@omenai/tailwind-config/tailwind.config.ts");
+const config = require("@omenai/tailwind-config/tailwind.config.js");
 module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../shared/shared-ui-components/components/**/*.{js,ts,jsx,tsx,mdx}",
+
+    // Or if using `src` directory:
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   ...config,
 };

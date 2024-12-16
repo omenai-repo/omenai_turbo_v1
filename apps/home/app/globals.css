@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* box-sizing: border-box; */
+  scroll-behavior: smooth;
+}
+
+/* .custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #ff0101 #f0f0f0;
+} */
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #15171e;
+  /* border-radius: 50%; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #15171e;
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.artContainer {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  cursor: zoom-in;
+}
+
+.artImage {
+  will-change: transform;
+  transition:
+    transform 0.1s ease,
+    transform-origin 0.1s ease; /* Smooth transition and origin */
+}
+
+.artContainer:hover .artImage {
+  transform: scale(2); /* Adjust zoom level here */
+}

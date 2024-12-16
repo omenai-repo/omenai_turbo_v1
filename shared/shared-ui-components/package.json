@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@omenai/package-provider": "*",
     "@omenai/shared-hooks": "*",
     "@omenai/shared-json": "*",
     "@omenai/shared-lib": "*",
@@ -13,11 +14,7 @@
     "@omenai/shared-types": "*",
     "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
-    "@omenai/typescript-config": "*",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.15",
-    "@omenai/package-provider": "*"
+    "@omenai/typescript-config": "*"
   },
   "dependencies": {}
 }
