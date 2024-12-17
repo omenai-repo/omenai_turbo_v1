@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { GoIssueClosed } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdInfo, MdOutlineCallToAction } from "react-icons/md";
-import { login_url } from "@omenai/url-config/src/config";
+import { base_url, login_url } from "@omenai/url-config/src/config";
 
 type OverviewOrdersCardProps = {
   title: string;
@@ -54,6 +54,7 @@ export default function OrdersCard({
   const currency = getCurrencySymbol("USD");
   const session = useSession();
   const router = useRouter();
+  const base_uri = base_url();
 
   if (session === null || session === undefined) router.replace(auth_url);
 
@@ -203,7 +204,7 @@ export default function OrdersCard({
               status !== "completed" &&
               order_accepted.status === "accepted" && (
                 <Link
-                  href={`/payment/${order_id}?id_key=${session?.gallery_id}`}
+                  href={`${base_uri}/payment/${order_id}?id_key=${session?.user_id}`}
                 >
                   <button className="whitespace-nowrap bg-dark rounded-sm text-white disabled:bg-[#E0E0E0] disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                     <span>Pay for this artwork</span>

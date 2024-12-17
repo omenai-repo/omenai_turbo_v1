@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { createCheckoutSession } from "@omenai/shared-services/stripe/createCheckoutSession";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
 
 export default function PayNowButton({
@@ -33,7 +33,7 @@ export default function PayNowButton({
   const router = useRouter();
   const { session } = useContext(SessionContext);
   const [loading, setLoading] = useState(false);
-  const url = getApiUrl();
+  const url = base_url();
 
   async function handleClickPayNow() {
     setLoading(true);

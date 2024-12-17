@@ -19,9 +19,8 @@ export default function CompletedOrders({ orders }: { orders: any }) {
           <div className="flex flex-col gap-3 w-full">
             {orders.map((order: any) => {
               return (
-                <>
+                <div key={order.order_id}>
                   <OrdersCard
-                    key={order.order_id}
                     url={order.artwork_data.url}
                     title={order.artwork_data.title}
                     artist={order.artwork_data.artist}
@@ -38,7 +37,7 @@ export default function CompletedOrders({ orders }: { orders: any }) {
                     availability={order.availability}
                   />
                   <hr className="h-px my-2 bg-dark/10 border-0 dark:bg-gray-700" />
-                </>
+                </div>
               );
             })}
           </div>

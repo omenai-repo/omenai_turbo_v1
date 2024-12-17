@@ -1,8 +1,10 @@
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
+import { dashboard_url } from "@omenai/url-config/src/config";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function OrderCompletedPage() {
+  const dashboard_uri = dashboard_url();
   return (
     <>
       <DesktopNavbar />
@@ -40,7 +42,7 @@ export default function OrderCompletedPage() {
               <span className="text-[14px]">Return Home</span>
             </Link>
             <Link
-              href="/dashboard/user/orders"
+              href={`${dashboard_uri}/user/orders`}
               className="flex items-center whitespace-nowrap justify-center space-x-2 h-[40px] px-4 w-full bg-black text-white cursor-pointer mt-[50px] transition duration-150"
               title="Return Home"
             >
