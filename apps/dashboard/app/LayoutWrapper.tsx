@@ -2,7 +2,6 @@
 import NextTopLoader from "nextjs-toploader";
 import { useWindowSize } from "usehooks-ts";
 
-import { adminNavigationActions } from "@omenai/shared-state-store/src/admin/AdminNavigationStore";
 import { QueryProvider, SessionProvider } from "@omenai/package-provider";
 
 import { Toaster } from "sonner";

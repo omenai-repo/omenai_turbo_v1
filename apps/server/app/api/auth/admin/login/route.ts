@@ -47,12 +47,12 @@ export async function POST(request: Request) {
     return res.json(
       {
         message: "Login successful",
+        data: session_payload,
       },
       { status: 200 }
     );
   } catch (error: any) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
 
     return NextResponse.json(
       { message: error_response?.message },

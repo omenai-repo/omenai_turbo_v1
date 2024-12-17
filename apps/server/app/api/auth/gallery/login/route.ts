@@ -72,6 +72,7 @@ export async function POST(request: Request) {
     return res.json(
       {
         message: "Login successful",
+        data: session_payload,
       },
       { status: 200 }
     );
