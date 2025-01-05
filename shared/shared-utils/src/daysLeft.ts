@@ -4,7 +4,7 @@ export function daysLeft(futureDateStr: Date): number {
 
   // Ensure the future date is actually in the future
   if (futureDate <= new Date()) {
-    throw new Error("Future date must be after the current date");
+    return 0;
   }
 
   // Calculate the difference in milliseconds between the two dates

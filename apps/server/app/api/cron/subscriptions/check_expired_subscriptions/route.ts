@@ -38,7 +38,7 @@ export async function GET() {
     if (expired_user_emails.length === 0) {
       await session.abortTransaction();
       return NextResponse.json(
-        { message: "No exxpired subscriptions" },
+        { message: "No expired subscriptions" },
         { status: 200 }
       );
     }

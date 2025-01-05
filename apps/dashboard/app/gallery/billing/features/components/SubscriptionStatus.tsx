@@ -72,7 +72,7 @@ export default function SubDetail({
         </div>
       </div>
       <div className=" mt-4">
-        {sub_data.status === "canceled" ? (
+        {sub_data.status === "canceled" || sub_data.status === "expired" ? (
           <Link href={`/gallery/billing/plans?plan_action=reactivation`}>
             <button className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-xs bg-dark text-white hover:bg-dark/70 flex gap-2 items-center">
               Reactivate Subscription

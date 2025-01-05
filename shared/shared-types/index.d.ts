@@ -15,7 +15,29 @@ export type UserType = JWTPayload &
     | Omit<GallerySchemaTypes, "password">
     | Omit<IndividualSchemaTypes, "password">
     | Omit<AccountAdminSchemaTypes, "password">
+    | Omit<ArtistSchemaTypes, "password">
   );
+
+type DataRoleTypes = "artist" | "gallery" | "user" | "admin";
+
+export type ArtistSchemaTypes = {
+  name: string;
+  email: string;
+  password: string;
+  artist_id: string;
+  verified: boolean;
+  artist_verified?: boolean;
+  logo?: string | null;
+  bio?: string;
+  address?: IndividualAddressTypes;
+  bio_video_link?: string | null;
+  algo_data_id?: string | null;
+  role: DataRoleTypes;
+  wallet_id?: string | null;
+  categorization?: ArtistCategorization;
+};
+
+export type ArtistAlgorithmDataSchemaTypes = {};
 
 export type GallerySchemaTypes = {
   name: string;
@@ -27,7 +49,7 @@ export type GallerySchemaTypes = {
   description: string;
   gallery_verified: boolean;
   verified: boolean;
-  role: string;
+  role: DataRoleTypes;
   logo?: string;
   subscription_active: boolean;
   status: "active" | "blocked";
@@ -41,7 +63,7 @@ export type IndividualSchemaTypes = {
   user_id: string;
   preferences: string[];
   verified: boolean;
-  role: string;
+  role: DataRoleTypes;
   address?: IndividualAddressTypes;
 };
 
@@ -57,6 +79,14 @@ export type InputProps = {
   onClick?: () => void;
   id?: number;
   onClickPrev?: () => void;
+};
+
+export type ArtistSignupData = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  bio: string;
 };
 
 export type IndividualSignupData = {
@@ -436,8 +466,7 @@ export type AccountAdminSchemaTypes = {
   email: string;
   password: string;
   admin_id: string;
-  // verified: boolean;
-  role: string;
+  role: DataRoleTypes;
 };
 
 export type FLWDirectChargeDataTypes = CardInputTypes & {
@@ -501,3 +530,24 @@ export type ProrationSchemaTypes = {
 };
 
 export type artworkCollectionTypes = "trending" | "curated" | "recent";
+
+export type ArtistAlgorithmSchemaTypes = {
+  graduate: boolean;
+  mfa: boolean;
+  exhibitions: {
+    solo: number;
+    group: number;
+    museum: boolean;
+  };
+  bienalle: "venice" | "other";
+  fairs_feature: boolean;
+  musesum_collection_feature: boolean;
+};
+
+export type ArtistCategorization =
+  | "emerging"
+  | "early-mid"
+  | "mid"
+  | "late-mid"
+  | "established"
+  | "elite";

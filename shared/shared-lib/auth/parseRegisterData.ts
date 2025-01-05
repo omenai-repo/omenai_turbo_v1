@@ -2,12 +2,16 @@ import {
   IndividualRegisterData,
   GallerySignupData,
   AdminSignupData,
+  ArtistSignupData,
 } from "@omenai/shared-types";
+
 import { hashPassword } from "../hash/hashPassword";
+
 type data =
   | Omit<IndividualRegisterData, "confirmPassword">
   | Omit<GallerySignupData, "confirmPassword">
-  | Omit<AdminSignupData, "confirmPassword">;
+  | Omit<AdminSignupData, "confirmPassword">
+  | Omit<ArtistSignupData, "confirmPassword>">;
 
 export async function parseRegisterData(data: data) {
   // Validate data before extracting password

@@ -43,7 +43,7 @@ export default function MigrationUpgradeCheckoutItem({
 
   const daysInMonth = getDaysInMonth(startDate);
 
-  const days_left = getDaysLeft(startDate, sub_data.plan_details.interval);
+  // const days_left = getDaysLeft(startDate, sub_data.plan_details.interval);
 
   const dailyRate =
     (sub_data.plan_details.interval === "yearly"
@@ -81,7 +81,8 @@ export default function MigrationUpgradeCheckoutItem({
       interval === "yearly"
         ? +plan.pricing.annual_price
         : +plan.pricing.monthly_price,
-      interval
+      interval,
+      sub_data.status
     );
     plan_change_params = { action, shouldCharge };
   }

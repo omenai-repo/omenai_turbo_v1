@@ -49,13 +49,15 @@ export default function Plan({
 
   if (sub_data !== null) {
     buttonText =
-      plan_action === "reactivation"
-        ? "Activate plan"
-        : sub_data.plan_details.type !== name ||
-            (sub_data.plan_details.type === name &&
-              sub_data.plan_details.interval !== tab)
-          ? "Migrate"
-          : "Subscribed";
+      sub_data.status === "expired"
+        ? "Get started today"
+        : plan_action === "reactivation"
+          ? "Activate plan"
+          : sub_data.plan_details.type !== name ||
+              (sub_data.plan_details.type === name &&
+                sub_data.plan_details.interval !== tab)
+            ? "Migrate"
+            : "Subscribed";
   }
 
   return (
@@ -125,6 +127,7 @@ export default function Plan({
                     <button
                       disabled={
                         sub_data !== null &&
+                        sub_data.status === "active" &&
                         sub_data.plan_details.type === name &&
                         sub_data.plan_details.interval === tab &&
                         plan_action === null

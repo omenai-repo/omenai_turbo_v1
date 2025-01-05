@@ -13,7 +13,8 @@ export function determinePlanChange(
   currentPlan: string,
   currentInterval: "monthly" | "yearly",
   newPrice: number,
-  newInterval: "monthly" | "yearly"
+  newInterval: "monthly" | "yearly",
+  status: "active" | "canceled" | "expired"
 ): PlanChangeResult {
   const currentPlanData = planTiers[currentPlan as keyof typeof planTiers];
   const currentPrice = currentPlanData[`${currentInterval}Price`];
@@ -27,7 +28,7 @@ export function determinePlanChange(
   );
 
   const isUpgrade = newPlanIndex >= currentPlanIndex;
-  const shouldCharge = newPrice > currentPrice;
+  const shouldCharge = status === "expired" || newPrice > currentPrice;
 
   return {
     action: isUpgrade ? "upgrade" : "downgrade",

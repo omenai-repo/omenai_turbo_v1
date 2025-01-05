@@ -46,7 +46,8 @@ export default function Subscription() {
           id: acc.data.connected_account_id,
           isSubActive:
             sub_check?.data?.status === "active" ||
-            sub_check?.data?.status === "canceled",
+            sub_check?.data?.status === "canceled" ||
+            sub_check?.data?.status === "expired",
           subscription_data: sub_check.data,
         };
       } catch (error) {
