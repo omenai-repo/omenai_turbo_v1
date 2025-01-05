@@ -40,7 +40,8 @@ export default function Plan({
       sub_data.plan_details.type.toLowerCase(),
       sub_data.plan_details.interval.toLowerCase() as "yearly" | "monthly",
       tab === "yearly" ? +pricing.annual_price : +pricing.monthly_price,
-      tab
+      tab,
+      sub_data.status
     );
     plan_change_params = { action, shouldCharge };
   }
