@@ -39,26 +39,71 @@ export default function ArtworkCard({
 }) {
   const image_href = getImageFileView(image, 250);
   return (
-    <div className="m-2 w-fit p-4 xxm:p-0 max-h-[500px]">
-      <div className="flex flex-col min-w-[180px] w-[180px] xxl:w-[200px] md:min-w-[250px] h-full md:w-[250px] justify-end">
-        <div className="relative w-full">
+    <div className="my-2 max-w-full p-0 max-h-full rounded-[20px]">
+      <div className="flex flex-col w-full h-full justify-end">
+        <div className="relative w-full artContainer">
           <Link href={`/artwork/${name}`} className="relative">
             <Image
               src={image_href}
               alt={name + " image"}
               loading="lazy"
-              height={200}
-              width={250}
-              className="min-w-[180px] w-[180px] xxl:w-[200px] md:min-w-[250px] max-h-[400px] md:w-[250px] h-auto aspect-auto object-contain object-center cursor-pointer"
+              height={500}
+              width={500}
+              className="w-full rounded-[20px] h-full aspect-auto object-cover object-center cursor-pointer artImage"
             />
           </Link>
+          <div className="bg-[#FFFFFF] py-[5px] rounded-[28px] text-[9px] absolute px-[13px] top-[25px] left-[12px]">
+            Mixed Media
+          </div>
+
+          <div className="absolute top-[20px] right-[12px]">
+            {isDashboard ? null : (
+              <LikeComponent
+                impressions={impressions}
+                likeIds={likeIds}
+                sessionId={sessionId}
+                art_id={art_id}
+              />
+            )}
+          </div>
+
+          <div className="flex items-center justify-center absolute bottom-[20px] left-[20px] right-[20px]">
+            {/* Glass Card */}
+            <div className="p-3 rounded-2xl bg-white/30 backdrop-blur-sm shadow-lg">
+              {/* Title */}
+              <div className="text-gray-400 text-[14px]">
+                {name} – {artist.substring(0, 20)}
+                {artist.length > 20 && "..."}
+              </div>
+
+              <div className="flex justify-between mt-[15px]">
+                {/* Price */}
+                <div className="text-white text-[16px] font-bold">
+                  {pricing?.price && pricing.shouldShowPrice === "Yes"
+                    ? !availability
+                      ? "Sold"
+                      : `${formatPrice(pricing.usd_price)}`
+                    : !availability
+                      ? "Sold"
+                      : "Price on request"}
+                </div>
+
+                {/* Purchase Button */}
+                {!availability ? null : (
+                  <button className="px-4 py-[5px] rounded-full bg-white text-black text-xxxs font-medium shadow">
+                    Purchase
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className=" bg-[#FAFAFA] border border-[#E0E0E0] px-3 y-2 w-full">
+        {/* <div className=" bg-[#FAFAFA] border border-[#E0E0E0] px-3 y-2 w-full">
           <div className="flex flex-col space-y-1 my-2">
             <p className="font-normal text-xs text-dark ">
               {name}
-              {/* {name.length > 20 && "..."} */}
+              {/* {name.length > 20 && "..."}
             </p>
 
             <div className="flex justify-between items-center">
@@ -66,7 +111,7 @@ export default function ArtworkCard({
                 {artist.substring(0, 20)}
                 {artist.length > 20 && "..."}
               </p>
-              {/* <HiPencil /> */}
+              {/* <HiPencil /> 
               {isDashboard && (
                 <Link href={`/gallery/artworks/edit?id=${name}`}>
                   <button
@@ -77,64 +122,8 @@ export default function ArtworkCard({
                 </Link>
               )}
             </div>
-
-            {pricing?.price && pricing.shouldShowPrice === "Yes" ? (
-              !availability ? (
-                <div className="flex justify-between items-center">
-                  <p className="font-medium text-xs text-dark">Sold</p>
-                  {isDashboard ? null : (
-                    <LikeComponent
-                      impressions={impressions}
-                      likeIds={likeIds}
-                      sessionId={sessionId}
-                      art_id={art_id}
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="flex justify-between items-center">
-                  <p className="font-medium text-xs text-dark">
-                    USD {formatPrice(pricing.usd_price)}
-                  </p>
-                  {isDashboard ? null : (
-                    <LikeComponent
-                      impressions={impressions}
-                      likeIds={likeIds}
-                      sessionId={sessionId}
-                      art_id={art_id}
-                    />
-                  )}
-                </div>
-              )
-            ) : !availability ? (
-              <div className="flex justify-between items-center">
-                <p className="font-medium text-xs text-dark">Sold</p>
-                {isDashboard ? null : (
-                  <LikeComponent
-                    impressions={impressions}
-                    likeIds={likeIds}
-                    sessionId={sessionId}
-                    art_id={art_id}
-                  />
-                )}
-              </div>
-            ) : (
-              <div className="flex justify-between items-center">
-                <p className="font-medium text-xs text-dark">
-                  Price on request
-                </p>
-                {isDashboard ? null : (
-                  <LikeComponent
-                    impressions={impressions}
-                    likeIds={likeIds}
-                    sessionId={sessionId}
-                    art_id={art_id}
-                  />
-                )}
-              </div>
-            )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
