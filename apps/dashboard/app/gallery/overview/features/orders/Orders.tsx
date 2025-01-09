@@ -9,10 +9,10 @@ import { useQuery } from "@tanstack/react-query";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { useContext } from "react";
+import { CreateOrderModelTypes } from "@omenai/shared-types";
+
+
 export default function Orders() {
-  const { session } = useContext(SessionContext);
   const { data: orders, isLoading } = useQuery({
     queryKey: ["get_overview_order"],
     queryFn: async () => {
@@ -48,15 +48,13 @@ export default function Orders() {
       ) : (
         <>
           <div className="flex flex-col gap-3 w-full">
-            {limitedOrders.slice(0, 2).map((order: any, index: number) => {
+            {limitedOrders.slice(0, 2).map((order: CreateOrderModelTypes, index: number) => {
               return (
                 <OverviewOrdersCard
                   key={order.order_id}
                   url={order.artwork_data.url}
                   title={order.artwork_data.title}
                   artist={order.artwork_data.artist}
-                  buyer={order.buyer.name}
-                  price={order.artwork_data.pricing.usd_price}
                   order_date={formatIntlDateTime(order.createdAt)}
                   status={order.status}
                 />

@@ -6,7 +6,7 @@ type EmailData = {
   email: string;
   token: string;
   gallery_name?: string;
-  route: "individual" | "gallery";
+  route: "individual" | "gallery" | "artist";
 };
 export const sendPasswordRecoveryMail = async ({
   name,
@@ -21,6 +21,6 @@ export const sendPasswordRecoveryMail = async ({
     from: "transactions",
     to: email,
     subject: "Reset your password",
-    react: PasswordRecoveryEmail(name, token, route, gallery_name),
+    react: PasswordRecoveryEmail(name, token, route),
   });
 };

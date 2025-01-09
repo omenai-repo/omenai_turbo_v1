@@ -23,7 +23,7 @@ export default function QuoteForm() {
 
   const [quoteData, setQuoteData] = useState<ShippingQuoteTypes>({
     package_carrier: "",
-    shipping_fees: "",
+    fees: "",
     taxes: "",
     additional_information: "",
   });
@@ -116,7 +116,7 @@ export default function QuoteForm() {
                 </label>
                 <input
                   onChange={handleInputChange}
-                  name="shipping_fees"
+                  name="fees"
                   type="text"
                   required
                   className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"

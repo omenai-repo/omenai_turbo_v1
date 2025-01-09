@@ -6,7 +6,7 @@ export const confirmOrderDelivery = async (
 ) => {
   const url = getApiUrl();
   try {
-    const res = await fetch(`${url}/api/orders/confirmOrderDelivery`, {
+    const res = await fetch(`${url}/api/orders/gallery/confirmOrderDelivery`, {
       method: "POST",
       body: JSON.stringify({
         confirm_delivery,

@@ -20,7 +20,7 @@ export default function OrdersGroup({
 
   const pending_orders = orders.filter(
     (order: CreateOrderModelTypes) =>
-      !order.delivery_confirmed && order.availability
+      !order.shipping_details.delivery_confirmed && order.availability
   ) as CreateOrderModelTypes[] & {
     createdAt: string;
     updatedAt: string;
@@ -29,7 +29,7 @@ export default function OrdersGroup({
 
   const completed_orders = orders.filter(
     (order: CreateOrderModelTypes) =>
-      order.delivery_confirmed || !order.availability
+      order.shipping_details.delivery_confirmed || !order.availability
   );
 
   return (

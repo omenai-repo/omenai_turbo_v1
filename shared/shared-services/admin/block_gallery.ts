@@ -15,3 +15,4 @@ export async function blockGallery(gallery_id: string, status: string) {
     console.log(error);
   }
 }
+

@@ -31,7 +31,7 @@ export default function ProvideOrderRejectionModalForm() {
 
   const router = useRouter();
 
-  const handleSubmitTrackingInfo = async (e: FormEvent<HTMLFormElement>) => {
+  const handleOrderRejection = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const response = await declineOrderRequest(
@@ -69,7 +69,7 @@ export default function ProvideOrderRejectionModalForm() {
   return (
     <div>
       <h1 className="text-base font-normal mb-4 text-dark">Sure to decline?</h1>
-      <form className="w-full" onSubmit={handleSubmitTrackingInfo}>
+      <form className="w-full" onSubmit={handleOrderRejection}>
         <div className="space-y-2 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto my-2">
             <label htmlFor="shipping" className="text-xs text-[#858585] mb-2">

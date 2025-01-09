@@ -4,20 +4,24 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export const createShippingOrder = async (
   buyer_id: string,
   art_id: string,
-  gallery_id: string,
+  seller_id: string,
   save_shipping_address: boolean,
-  shipping_address: IndividualAddressTypes
+  shipping_address: IndividualAddressTypes,
+  origin_address: IndividualAddressTypes | null,
+  designation: "gallery" | "artist"
 ) => {
   const url = getApiUrl();
   try {
-    const res = await fetch(`${url}/api/orders/createOrder`, {
+    const res = await fetch(`${url}/api/orders/gallery/createOrder`, {
       method: "POST",
       body: JSON.stringify({
         buyer_id,
         art_id,
-        gallery_id,
+        seller_id,
         save_shipping_address,
         shipping_address,
+        origin_address,
+        designation
       }),
     });
     const result = await res.json();

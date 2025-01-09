@@ -64,7 +64,7 @@ const OrderRequestToGalleryMail = (
             <Text className="text-black text-[14px] leading-[24px]">
               As a valued member of our platform, we want to ensure that you are
               promptly informed of any potential sales opportunities. Therefore,
-              we kindly request that you log in to your gallery dashboard to
+              we kindly request that you log in to your dashboard to
               review and take necessary actions on this order request.
             </Text>
             <div className="w-full grid place-items-center text-center">

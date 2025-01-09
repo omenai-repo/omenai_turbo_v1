@@ -7,7 +7,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
-import { PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
+import { PaymentStatusTypes, PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       //   Update Order Payment Information
 
       // Create the update info
-      const payment_information = {
+      const payment_information: PaymentStatusTypes = {
         status: "completed",
         transaction_value: formatPrice(
           paymentIntent.amount_total / 100,
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
       // Apply update to CreateOrder collection
       await CreateOrder.updateOne(
         {
-          "buyer.email": meta.user_email,
+          "buyer_details.email": meta.user_email,
           "artwork_data.art_id": meta.art_id,
         },
         {
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
         month,
         year,
         value: paymentIntent.amount_total / 100,
-        gallery_id: meta.gallery_id,
+        id: meta.gallery_id,
       };
 
       await SalesActivity.create({ ...activity });
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
       await CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
-          "buyer.user_id": { $ne: meta.user_id },
+          "buyer_details.id": { $ne: meta.user_id },
         },
         { $set: { availability: false } }
       );
@@ -158,17 +158,17 @@ export async function POST(request: Request) {
 
     const email_order_info = await CreateOrder.findOne(
       {
-        "buyer.email": meta.user_email,
+        "buyer_details.email": meta.user_email,
         "artwork_data.art_id": meta.art_id,
       },
-      "artwork_data order_id createdAt buyer"
+      "artwork_data order_id createdAt buyer_details"
     );
 
     const price = formatPrice(paymentIntent.amount_total / 100, currency);
 
     await sendPaymentSuccessMail({
       email: meta.user_email,
-      name: email_order_info.buyer.name,
+      name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
       order_id: email_order_info.order_id,
       order_date: formatIntlDateTime(email_order_info.createdAt),

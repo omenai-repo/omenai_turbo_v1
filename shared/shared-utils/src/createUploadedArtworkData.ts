@@ -1,12 +1,14 @@
 import {
   ArtworkUploadStateTypes,
   ArtworkSchemaTypes,
+  RoleAccess,
 } from "@omenai/shared-types";
 
 export function createUploadedArtworkData(
   data: ArtworkUploadStateTypes,
   url: string,
-  id: string
+  id: string,
+  role_access: RoleAccess
 ): Omit<
   ArtworkSchemaTypes,
   "art_id" | "should_show_on_sub_active" | "availability"
@@ -39,6 +41,7 @@ export function createUploadedArtworkData(
       artwork_description: data.artwork_description,
       framing: data.framing,
       signature: data.signature,
+      role_access
     };
 
   return updatedArwordData;

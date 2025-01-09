@@ -4,7 +4,7 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
-import { PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
+import { PaymentStatusTypes, PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
@@ -46,10 +46,10 @@ export async function POST(request: Request) {
 
   const email_order_info = await CreateOrder.findOne(
     {
-      "buyer.email": meta.user_email,
+      "buyer_details.email": meta.user_email,
       "artwork_data.art_id": meta.art_id,
     },
-    "artwork_data order_id createdAt buyer"
+    "artwork_data order_id createdAt buyer_details"
   );
 
   if (event.type === "payment_intent.succeeded") {
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       //   Update Order Payment Information
 
       // Create the update info
-      const payment_information = {
+      const payment_information: PaymentStatusTypes = {
         status: "completed",
         transaction_value: formatPrice(
           paymentIntent.amount_received / 100,
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       // Apply update to CreateOrder collection
       await CreateOrder.updateOne(
         {
-          "buyer.email": meta.user_email,
+          "buyer_details.email": meta.user_email,
           "artwork_data.art_id": meta.art_id,
         },
         {
@@ -170,7 +170,7 @@ export async function POST(request: Request) {
 
     await sendPaymentSuccessMail({
       email: meta.user_email,
-      name: email_order_info.buyer.name,
+      name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
       order_id: email_order_info.order_id,
       order_date: formatIntlDateTime(email_order_info.createdAt),
@@ -193,7 +193,7 @@ export async function POST(request: Request) {
   if (event.type === "payment_intent.processing") {
     await sendPaymentPendingMail({
       email: meta.user_email,
-      name: email_order_info.buyer.name,
+      name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
     });
   }

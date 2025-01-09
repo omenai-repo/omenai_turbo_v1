@@ -85,7 +85,7 @@ export default function OrderActionModalForm() {
           )}
         </div>
       </div>
-      {galleryOrderActionModalData.status === "pending" && (
+      {galleryOrderActionModalData.status === "processing" && (
         <div className="my-4 flex items-center justify-center gap-x-2 w-full text-[13px]">
           <button
             onClick={handleDeclineOrderRequest}

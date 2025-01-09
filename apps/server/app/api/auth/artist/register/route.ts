@@ -10,6 +10,7 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+
 export async function POST(request: Request) {
   try {
     await connectMongoDB();

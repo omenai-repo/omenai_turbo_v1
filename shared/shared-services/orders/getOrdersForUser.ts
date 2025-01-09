@@ -6,7 +6,7 @@ export async function getOrdersForUser() {
   const session = await getServerSession();
   try {
     const url = getApiUrl();
-    const res = await fetch(`${url}/api/orders/getOrdersByUserId`, {
+    const res = await fetch(`${url}/api/orders/gallery/getOrdersByUserId`, {
       method: "POST",
       body: JSON.stringify({ id: session?.user_id }),
     });

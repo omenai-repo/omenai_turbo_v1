@@ -5,8 +5,6 @@ import Image from "next/image";
 type OverviewOrdersCardProps = {
   title: string;
   artist: string;
-  price: number;
-  buyer: string;
   order_date: string;
   url: string;
   status: string;
@@ -14,8 +12,6 @@ type OverviewOrdersCardProps = {
 export default function OverviewOrdersCard({
   title,
   artist,
-  price,
-  buyer,
   order_date,
   url,
   status,

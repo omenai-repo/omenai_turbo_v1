@@ -1,0 +1,6 @@
+{
+  "name": "@omenai/firebase-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./firebase.ts"
+}

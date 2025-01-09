@@ -27,3 +27,4 @@ export const base_url = (): string => {
     ? "https://omenai.app"
     : "http://localhost:3000";
 };
+

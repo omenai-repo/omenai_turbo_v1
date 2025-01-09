@@ -28,7 +28,7 @@ const ArtistVerificationEmail = (username: string, token: string) => {
               className="mx-auto my-10"
             />
             <Heading className="text-black text-[24px] font-normal text-center p-0 mb-[20px] mx-0">
-              Welcome on board to <strong>Omenai</strong>
+              Welcome on board to <strong>Omenai for Artists</strong>
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">
               Hello {username},

@@ -41,7 +41,6 @@ export async function POST(request: Request) {
       username: account.admin,
       token: token,
       email: account.email,
-      gallery_name: account.name,
     });
 
     return NextResponse.json(

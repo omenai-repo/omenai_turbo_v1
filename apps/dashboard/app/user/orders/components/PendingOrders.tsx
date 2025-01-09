@@ -27,7 +27,7 @@ export default function PendingOrders({
           <NotFoundData />
         ) : (
           <div className="flex flex-col gap-3 w-full">
-            {orders.map((order: any) => {
+            {orders.map((order: CreateOrderModelTypes) => {
               return (
                 <div key={order.order_id}>
                   <OrdersCard
@@ -40,9 +40,9 @@ export default function PendingOrders({
                     order_id={order.order_id}
                     state="pending"
                     payment_information={order.payment_information}
-                    tracking_information={order.tracking_information}
-                    shipping_quote={order.shipping_quote}
-                    delivery_confirmed={order.delivery_confirmed}
+                    tracking_information={order.shipping_details.tracking}
+                    shipping_quote={order.shipping_details.quote}
+                    delivery_confirmed={order.shipping_details.delivery_confirmed}
                     order_accepted={order.order_accepted}
                     availability={order.availability}
                   />

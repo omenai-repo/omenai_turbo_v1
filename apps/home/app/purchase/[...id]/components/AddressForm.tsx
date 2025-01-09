@@ -59,7 +59,9 @@ export default function AddressForm({
         art_id,
         gallery_id,
         save_shipping_address,
-        shipping_address
+        shipping_address,
+        null,
+        "gallery"
       );
 
       if (!createdShippingOrder!.isOk) {

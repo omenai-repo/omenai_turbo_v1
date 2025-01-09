@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const { id, year } = await request.json();
 
     const activities = await SalesActivity.find({
-      gallery_id: id,
+      id,
       year,
     });
 

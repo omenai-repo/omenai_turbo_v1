@@ -45,7 +45,7 @@ type ActionStoreTypes = {
     buyer: string,
     shipping_address: IndividualAddressTypes,
     order_id: string,
-    status: "completed" | "pending",
+    status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
   ) => void;
   clearGalleryOrderActionModalData: () => void;
@@ -153,7 +153,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
     buyer: string,
     shipping_address: IndividualAddressTypes,
     order_id: string,
-    status: "completed" | "pending",
+    status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
   ) => {
     set({

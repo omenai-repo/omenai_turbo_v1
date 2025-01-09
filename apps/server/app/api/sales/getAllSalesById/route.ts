@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     await connectMongoDB();
 
     const { id } = await request.json();
-    const allSales = await SalesActivity.find({ gallery_id: id }, "_id").exec();
+    const allSales = await SalesActivity.find({ id }, "_id").exec();
 
     return NextResponse.json(
       {

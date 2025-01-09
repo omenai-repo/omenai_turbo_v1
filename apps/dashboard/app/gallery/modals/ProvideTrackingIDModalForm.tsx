@@ -12,8 +12,8 @@ import { toast } from "sonner";
 export default function UploadTrackingInformationModalForm() {
   const { toggleUploadTrackingInfoModal, current_order_id } = actionStore();
   const [tracking_info, setTrackingInfo] = useState<TrackingInformationTypes>({
-    tracking_link: "",
-    tracking_id: "",
+    link: "",
+    id: "",
   });
 
   const queryClient = useQueryClient();
@@ -80,7 +80,7 @@ export default function UploadTrackingInformationModalForm() {
             </label>
             <input
               onChange={handleInputChange}
-              name="tracking_link"
+              name="link"
               type="text"
               required
               placeholder="Please provide a link to track this order"
@@ -95,7 +95,7 @@ export default function UploadTrackingInformationModalForm() {
             </label>
             <input
               onChange={handleInputChange}
-              name="tracking_id"
+              name="id"
               type="text"
               placeholder="Please provide a tracking ID for this package"
               required

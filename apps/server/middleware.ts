@@ -9,9 +9,9 @@ const allowed_origins = [
 export async function middleware(request: NextRequest) {
   // Handle other requests
   const response = NextResponse.next();
-  const origin = request.headers.get("origin") ?? "";
-  const userAgent = request.headers.get("User-Agent") ?? "";
-  const authorization = request.headers.get("Authorization") ?? "";
+  const origin: string = request.headers.get("origin") ?? "";
+  const userAgent: string = request.headers.get("User-Agent") ?? "";
+  const authorization: string = request.headers.get("Authorization") ?? "";
 
   if (request.nextUrl.pathname.startsWith("/api/webhook")) return response;
 

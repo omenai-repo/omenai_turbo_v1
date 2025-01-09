@@ -7,7 +7,7 @@ export const updateShippingQuote = async (
 ) => {
   const url = getApiUrl();
   try {
-    const res = await fetch(`${url}/api/orders/updateOrderShippingQuote`, {
+    const res = await fetch(`${url}/api/orders/gallery/updateOrderShippingQuote`, {
       method: "POST",
       body: JSON.stringify({
         data,

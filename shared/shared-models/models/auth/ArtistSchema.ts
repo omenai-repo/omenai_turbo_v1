@@ -50,7 +50,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
     },
     bio: {
       type: String,
-      required: true,
+      default: () => ""
     },
 
     algo_data_id: {
@@ -75,11 +75,20 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
         state: "",
         zip: "",
       },
+      required: true
     },
     categorization: {
       type: String,
       default: () => "",
     },
+    art_type: {
+      type: Schema.Types.Mixed,
+      required: true
+    },
+    documentation: {
+      type: Schema.Types.Mixed,
+      required: true
+    }
   },
   { timestamps: true }
 );

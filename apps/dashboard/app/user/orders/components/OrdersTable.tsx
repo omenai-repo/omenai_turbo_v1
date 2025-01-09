@@ -22,8 +22,6 @@ type OrdersTableProps = {
 export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
   const [orders, setOrders] = useState<
     | (CreateOrderModelTypes[] & {
-        createdAt: string;
-        updatedAt: string;
         _id: ObjectId;
       })
     | []
@@ -41,7 +39,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
         (order) =>
           order.order_id.toLowerCase().startsWith(searchValue) ||
           order.artwork_data.title.toLowerCase().startsWith(searchValue) ||
-          order.buyer.name.toLowerCase().startsWith(searchValue)
+          order.buyer_details.name.toLowerCase().startsWith(searchValue)
       );
 
       return [...searchFilter] as CreateOrderModelTypes[] & {
@@ -179,68 +177,68 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
           </tr>
         </thead>
         <tbody>
-          {orders.map((artwork: any, index: number) => {
+          {orders.map((order: CreateOrderModelTypes) => {
             return (
               <tr
-                key={artwork.order_id}
+                key={order.order_id}
                 className="cursor-pointer bg-white ring-1 ring-[#EFEFEF] duration-200 my-2"
               >
                 <td className=" py-4 pl-3 text-xs font-normal text-dark">
-                  {artwork.order_id}
+                  {order.order_id}
                 </td>
                 <td className="px-1 py-4 text-xs font-normal text-dark">
-                  {artwork.artwork_data.title}
+                  {order.artwork_data.title}
                 </td>
                 <td className="px-1 py-4 text-xs font-normal text-dark">
-                  {formatIntlDateTime(artwork.createdAt)}
+                  {formatIntlDateTime(order.createdAt)}
                 </td>
                 {/* <td className="px-1 py-4 text-xs font-normal text-dark">
-                  {formatPrice(artwork.artwork_data.pricing.usd_price)}
+                  {formatPrice(order.artwork_data.pricing.usd_price)}
                 </td> */}
                 <td className="px-2.5 py-4 text-xs font-normal text-dark">
                   {construct_status(
-                    artwork.status,
-                    artwork.payment_information.status,
-                    artwork.tracking_information.tracking_link,
-                    artwork.order_accepted.status,
-                    artwork.delivery_confirmed
+                    order.status,
+                    order.payment_information.status,
+                    order.shipping_details.tracking.link,
+                    order.order_accepted.status,
+                    order.shipping_details.delivery_confirmed
                   )}
                 </td>
-                {artwork.status === "completed" && (
+                {order.status === "completed" && (
                   <td className="px-1 py-4 text-xs font-normal text-dark">
-                    {formatIntlDateTime(artwork.updatedAt)}
+                    {formatIntlDateTime(order.updatedAt)}
                   </td>
                 )}
                 <td className="rounded-r-[8px] px-1 py-4 text-xs font-normal text-dark">
-                  {artwork.payment_information.status === "pending" &&
-                    artwork.status !== "completed" &&
-                    artwork.order_accepted.status === "accepted" && (
+                  {order.payment_information.status === "pending" &&
+                    order.status !== "completed" &&
+                    order.order_accepted.status === "accepted" && (
                       <button className=" bg-dark rounded-sm text-white disabled:bg-[#E0E0E0] w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                         <span>Pay for this artwork</span>
                       </button>
                     )}
                   <div className="w-full flex items-center space-x-2">
-                    {artwork.payment_information.status === "completed" &&
-                      artwork.status !== "completed" &&
-                      !artwork.delivery_confirmed &&
-                      artwork.tracking_information.tracking_link !== "" && (
+                    {order.payment_information.status === "completed" &&
+                      order.status !== "completed" &&
+                      !order.shipping_details.delivery_confirmed &&
+                      order.shipping_details.tracking.link !== "" && (
                         <button className=" bg-dark disabled:bg-[#E0E0E0] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                           <span>View tracking information</span>
                         </button>
                       )}
-                    {artwork.payment_information.status === "completed" &&
-                      !artwork.delivery_confirmed &&
-                      artwork.tracking_information.tracking_link !== "" && (
+                    {order.payment_information.status === "completed" &&
+                      !order.shipping_details.delivery_confirmed &&
+                      order.shipping_details.tracking.link !== "" && (
                         <button className=" bg-green-600 disabled:bg-[#E0E0E0] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                           <span>Confirm order delivery</span>
                         </button>
                       )}
                   </div>
 
-                  {artwork.payment_information.status === "completed" &&
-                    artwork.order_accepted.status === "accepted" &&
-                    artwork.status !== "completed" &&
-                    artwork.tracking_information.tracking_link === "" && (
+                  {order.payment_information.status === "completed" &&
+                    order.order_accepted.status === "accepted" &&
+                    order.status !== "completed" &&
+                    order.shipping_details.tracking.link === "" && (
                       <button
                         disabled
                         className=" bg-dark disabled:bg-[#E0E0E0] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
@@ -249,7 +247,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                       </button>
                     )}
 
-                  {artwork.order_accepted.status === "" && (
+                  {order.order_accepted.status === "" && (
                     <div className="relative flex items-center gap-x-1">
                       <button
                         disabled
@@ -260,7 +258,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                       </button>
                     </div>
                   )}
-                  {artwork.delivery_confirmed && (
+                  {order.shipping_details.delivery_confirmed && (
                     <div className="relative flex items-center gap-x-1">
                       <button
                         disabled

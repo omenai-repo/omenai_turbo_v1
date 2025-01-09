@@ -46,7 +46,7 @@ export default function ComponentWrapper({
       </div>
     );
   }
-  if (data!.order.buyer.user_id !== user_id_key) notFound();
+  if (data!.order.buyer_details.id !== user_id_key) notFound();
 
   if (data!.order === null) throw new Error("Something went wrong");
   if (

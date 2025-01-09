@@ -11,15 +11,15 @@ export default function OrderDetails({
   order,
   lock_status,
 }: {
-  order: CreateOrderModelTypes & { createdAt: string; updatedAt: string };
+  order: CreateOrderModelTypes 
   lock_status: boolean;
 }) {
   const image_href = getImageFileView(order.artwork_data.url, 200);
 
   const total_price_number = calculatePurchaseGrandTotalNumber(
     order.artwork_data.pricing.usd_price,
-    order.shipping_quote.shipping_fees,
-    order.shipping_quote.taxes
+    order.shipping_details.quote.fees,
+    order.shipping_details.quote.taxes
   );
   return (
     <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 my-[3rem] p-5 gap-4">
@@ -28,10 +28,10 @@ export default function OrderDetails({
           art_id={order.artwork_data.art_id}
           artwork={order.artwork_data.title}
           amount={total_price_number}
-          gallery_id={order.gallery_id}
+          gallery_id={order.seller_details.id}
           lock_status={lock_status}
-          gallery_email={order.gallery_details.email}
-          gallery_name={order.gallery_details.name}
+          gallery_email={order.seller_details.email}
+          gallery_name={order.seller_details.name}
         />
       </div>
 
@@ -63,15 +63,15 @@ export default function OrderDetails({
               <div className="flex justify-between items-center text-[#858585] my-3">
                 <p>Delivery address</p>
                 <p className="font-bold">
-                  {order.shipping_address.address_line},{" "}
-                  {order.shipping_address.city}, {order.shipping_address.state},{" "}
-                  {order.shipping_address.country}
+                  {order.shipping_details.addresses.destination.address_line},{" "}
+                  {order.shipping_details.addresses.destination.city}, {order.shipping_details.addresses.destination.state},{" "}
+                  {order.shipping_details.addresses.destination.country}
                 </p>
               </div>
               <div className="flex justify-between items-center text-[#858585] my-3">
                 <p>Shipping carrier</p>
                 <p className="font-bold">
-                  {order.shipping_quote.package_carrier}
+                  {order.shipping_details.quote.package_carrier}
                 </p>
               </div>
               <div className="flex justify-between items-center  my-3 text-[#858585]">
@@ -83,12 +83,12 @@ export default function OrderDetails({
               <div className="flex justify-between items-center text-[#858585] my-3">
                 <p>Shipping</p>
                 <p className="font-bold">
-                  ${order.shipping_quote.shipping_fees}
+                  ${order.shipping_details.quote.fees}
                 </p>
               </div>
               <div className="flex justify-between items-center text-[#858585] my-3">
                 <p>Taxes</p>
-                <p className="font-bold">${order.shipping_quote.taxes}</p>
+                <p className="font-bold">${order.shipping_details.quote.taxes}</p>
               </div>
 
               <div className="flex justify-between items-center font-normal text-base mt-10">

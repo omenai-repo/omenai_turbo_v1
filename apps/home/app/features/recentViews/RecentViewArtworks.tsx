@@ -67,7 +67,7 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
                 return (
                   <RecentViewedCard
                     image={artwork.url}
-                    key={artwork.art_id}
+                    key={index + artwork.art_id}
                     artist={artwork.artist}
                     name={artwork.artwork}
                   />

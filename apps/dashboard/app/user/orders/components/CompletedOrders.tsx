@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import OrdersCard from "./OrdersCard";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
+import { CreateOrderModelTypes } from "@omenai/shared-types";
 
 export default function CompletedOrders({ orders }: { orders: any }) {
   return (
@@ -17,7 +18,7 @@ export default function CompletedOrders({ orders }: { orders: any }) {
           <NotFoundData />
         ) : (
           <div className="flex flex-col gap-3 w-full">
-            {orders.map((order: any) => {
+            {orders.map((order: CreateOrderModelTypes) => {
               return (
                 <div key={order.order_id}>
                   <OrdersCard
@@ -30,9 +31,9 @@ export default function CompletedOrders({ orders }: { orders: any }) {
                     order_id={order.order_id}
                     state="history"
                     payment_information={order.payment_information}
-                    tracking_information={order.tracking_information}
-                    shipping_quote={order.shipping_quote}
-                    delivery_confirmed={order.delivery_confirmed}
+                    tracking_information={order.shipping_details.tracking}
+                    shipping_quote={order.shipping_details.quote}
+                    delivery_confirmed={order.shipping_details.delivery_confirmed}
                     order_accepted={order.order_accepted}
                     availability={order.availability}
                   />

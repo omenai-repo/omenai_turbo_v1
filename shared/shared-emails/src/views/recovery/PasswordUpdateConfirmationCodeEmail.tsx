@@ -17,7 +17,6 @@ import {
 const PasswordUpdateConfirmationCodeEmail = (
   username: string,
   token: string,
-  gallery_name?: string
 ) => {
   return (
     <Html>
@@ -41,13 +40,7 @@ const PasswordUpdateConfirmationCodeEmail = (
               Dear {username},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              We have received a request to update your{" "}
-              {gallery_name && `admin `}
-              password
-              {gallery_name &&
-                ` for your gallery account (${gallery_name} gallery)`}
-              . Below, you will find your Confirmation code. Please note that
-              the validity of this code will expire in{" "}
+              We have received a request to update your password for your Omenai account. Below, you will find your Confirmation code. Please note that the validity of this code will expire in{" "}
               <strong>10 minutes.</strong>
             </Text>
 

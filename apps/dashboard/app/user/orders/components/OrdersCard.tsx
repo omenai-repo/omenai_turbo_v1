@@ -178,7 +178,7 @@ export default function OrdersCard({
             {construct_status(
               status,
               payment_information.status,
-              tracking_information.tracking_link,
+              tracking_information.link,
               order_accepted.status,
               delivery_confirmed,
               availability
@@ -215,9 +215,9 @@ export default function OrdersCard({
               {payment_information.status === "completed" &&
                 status !== "completed" &&
                 !delivery_confirmed &&
-                tracking_information.tracking_link !== "" && (
+                tracking_information.link !== "" && (
                   <Link
-                    href={tracking_information.tracking_link}
+                    href={tracking_information.link}
                     target="_blank"
                   >
                     <button className="whitespace-nowrap bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
@@ -227,7 +227,7 @@ export default function OrdersCard({
                 )}
               {payment_information.status === "completed" &&
                 !delivery_confirmed &&
-                tracking_information.tracking_link !== "" && (
+                tracking_information.link !== "" && (
                   <button
                     onClick={() =>
                       updateConfirmOrderDeliveryPopup(true, order_id)
@@ -242,7 +242,7 @@ export default function OrdersCard({
             {payment_information.status === "completed" &&
               order_accepted.status === "accepted" &&
               status !== "completed" &&
-              tracking_information.tracking_link === "" && (
+              tracking_information.link === "" && (
                 <button
                   disabled
                   className="whitespace-nowrap bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
