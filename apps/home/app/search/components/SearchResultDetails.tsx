@@ -1,7 +1,7 @@
 "use client";
 
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
@@ -67,7 +67,7 @@ export default function SearchResultDetails({
                   <div className="flex-1 gap-4 space-y-12" key={index}>
                     {artworks.map((art: any) => {
                       return (
-                        <ArtworkCanvas
+                        <ArtworkCard
                           key={art.art_id}
                           image={art.url}
                           name={art.title}

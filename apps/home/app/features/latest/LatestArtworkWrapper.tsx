@@ -29,20 +29,28 @@ export default function LatestArtworkWrapper({
   return (
     <>
       <div className="flex md:flex-row flex-col gap-4 my-5">
-        <div className="space-y-1 flex-1">
-          <h1 className="text-sm md:text-md font-normal">Latest artworks</h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
-            Fresh Off the Easel: Explore the Newest Masterpieces, Just for You
-          </p>
+        <div className="flex justify-between items-start w-full mb-[50px]">
+          <div>
+            <div className="border-[1.5px] border-[#000000] rounded-[62px] py-[8px] px-[15px] font-medium">
+              Latest Artworks
+            </div>
+            <p className="text-[30px] font-bold text-[#000000] mt-[20px]">
+              Latest Artworks.
+            </p>
+          </div>
+
+          <div className="">
+            <div className="flex text-[24px] font-bold">
+              Fresh Off the Easel: <div className="font-medium">Explore</div>
+            </div>
+            <div className="text-right text-[24px] font-medium">the Newest</div>
+            <div className="text-right text-[24px] font-medium">
+              Masterpieces, Just for You
+            </div>
+          </div>
         </div>
-        <Link
-          href={"/categories/recent-artworks"}
-          className="text-dark flex items-center gap-x-2 font-normal text-[14px] break-words"
-        >
-          View all
-          <MdArrowRightAlt />
-        </Link>
       </div>
+
       {artworks.length === 0 && (
         <div className="h-[500px] w-full place-items-center grid">
           <NotFoundData />

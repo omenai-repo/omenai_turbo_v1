@@ -8,8 +8,8 @@ import { useWindowSize } from "usehooks-ts";
 import { fetchUserSaveArtworks } from "@omenai/shared-services/artworks/fetchUserSavedArtworks";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
 import { login_url } from "@omenai/url-config/src/config";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export default function Saves() {
   const { session } = useContext(SessionContext);
@@ -54,7 +54,7 @@ export default function Saves() {
               <div className="flex-1 gap-2 space-y-6" key={index}>
                 {artworks.map((art: any) => {
                   return (
-                    <ArtworkCanvas
+                    <ArtworkCard
                       key={art.art_id}
                       image={art.url}
                       name={art.title}
