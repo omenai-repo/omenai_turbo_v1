@@ -67,9 +67,9 @@ export default function ArtworkCard({
             )}
           </div>
 
-          <div className="flex items-center justify-center absolute bottom-[20px] left-[20px] right-[20px]">
+          <div className="flex items-center justify-center">
             {/* Glass Card */}
-            <div className="p-3 rounded-2xl bg-white/30 backdrop-blur-sm shadow-lg">
+            <div className="p-3 rounded-2xl bg-white/30 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
               {/* Title */}
               <div className="text-gray-400 text-[14px]">
                 {name} – {artist.substring(0, 20)}
@@ -78,7 +78,7 @@ export default function ArtworkCard({
 
               <div className="flex justify-between mt-[15px]">
                 {/* Price */}
-                <div className="text-white text-[16px] font-bold">
+                <div className="text-white text-[14px] font-bold">
                   {pricing?.price && pricing.shouldShowPrice === "Yes"
                     ? !availability
                       ? "Sold"
@@ -91,7 +91,9 @@ export default function ArtworkCard({
                 {/* Purchase Button */}
                 {!availability ? null : (
                   <button className="px-4 py-[5px] rounded-full bg-white text-black text-xxxs font-medium shadow">
-                    Purchase
+                    {pricing?.price && pricing.shouldShowPrice === "Yes"
+                      ? "Purchase"
+                      : "Request"}
                   </button>
                 )}
               </div>
