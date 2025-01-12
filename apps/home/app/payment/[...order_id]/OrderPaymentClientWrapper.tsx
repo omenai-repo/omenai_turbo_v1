@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
 import { useContext, useEffect, useState } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { getApiUrl, login_url } from "@omenai/url-config/src/config";
 
 export default function OrderPaymentClientWrapper({
   order_id,
@@ -30,6 +30,7 @@ export default function OrderPaymentClientWrapper({
   const searchParams = useSearchParams();
   const user_id_key = searchParams.get("id_key");
 
+  const auth_url = login_url();
   const { session } = useContext(SessionContext);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function OrderPaymentClientWrapper({
         className: "class",
       });
       set_redirect_uri(`${url}${route}?id_key=${user_id_key}`);
-      router.replace("/auth/login/");
+      router.replace(auth_url);
     } else {
       setIsLoggedIn(true);
     }

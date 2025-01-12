@@ -1,8 +1,8 @@
 export const URLS = {
-  galleryLogin: "/auth/login/",
-  galleryRegister: "/auth/register/gallery",
-  userLogin: "/auth/login/",
-  userRegister: "/auth/register/individual",
+  galleryLogin: "/login/",
+  galleryRegister: "/register/gallery",
+  userLogin: "/login/",
+  userRegister: "/register/individual",
   galleryDashboard: "/gallery/overview",
   userDashboard: "/dashboard/user",
   root: "/",
