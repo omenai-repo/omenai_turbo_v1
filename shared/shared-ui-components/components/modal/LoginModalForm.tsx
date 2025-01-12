@@ -83,15 +83,13 @@ export default function LoginModalForm() {
         }
       } else {
         toast.error("Error notification", {
-          description: "Something went wrong. Please contact support",
+          description: data.message,
           style: {
             background: "red",
             color: "white",
           },
           className: "class",
         });
-        await handleSignout();
-        router.replace(`${auth_url}/login`);
       }
     },
   });
