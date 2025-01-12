@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
     const { id } = await request.json();
     const allImpressions = await Artworkuploads.find(
-      { gallery_id: id },
+      { author_id: id },
       "impressions"
     ).exec();
 

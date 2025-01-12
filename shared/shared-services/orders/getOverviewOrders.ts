@@ -6,7 +6,7 @@ export async function getOverviewOrders() {
   const session = await getServerSession();
   try {
     const url = getApiUrl();
-    const res = await fetch(`${url}/api/orders/gallery/getOrdersBySellerId`, {
+    const res = await fetch(`${url}/api/orders/getOrdersBySellerId`, {
       method: "POST",
       body: JSON.stringify({
         id: (session as GallerySchemaTypes).gallery_id,

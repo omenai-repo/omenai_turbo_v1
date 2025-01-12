@@ -71,7 +71,7 @@ export default function UploadArtworkImage() {
         (session?.gallery_id as string) ?? "",
         {
           role: "gallery",
-          designation: null
+          designation: null,
         }
       );
 

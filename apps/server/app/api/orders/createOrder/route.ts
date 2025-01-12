@@ -9,8 +9,8 @@ import { NextResponse } from "next/server";
 import {
   ServerError,
   ForbiddenError,
-} from "../../../../../custom/errors/dictionary/errorDictionary";
-import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+} from "../../../../custom/errors/dictionary/errorDictionary";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { getCurrentDate } from "@omenai/shared-utils/src/getCurrentDate";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
@@ -38,12 +38,9 @@ export async function POST(request: Request) {
     let seller_data;
 
     if (designation === "gallery") {
-      const gallery_data = await AccountGallery.findOne(
-      { gallery_id: seller_id },
-      "name email"
-    ).exec();
-
-    seller_data = gallery_data
+      const gallery_data = await AccountGallery.findOne({ gallery_id: seller_id },"name email").exec();
+      seller_data = gallery_data
+      
     } else {
       const artist_data = await AccountArtist.findOne({artist_id: seller_id}, 'name, email').exec()
       seller_data = artist_data

@@ -3,13 +3,13 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function createCheckoutSession(
   item: string,
   amount: number,
-  gallery_id: string,
+  seller_id: string,
   meta: {
     trans_type: string;
     user_id: string;
     user_email: string;
-    gallery_email: string;
-    gallery_name: string;
+    seller_email: string;
+    seller_name: string;
     artwork_name: string;
     art_id: string;
   },
@@ -23,7 +23,7 @@ export async function createCheckoutSession(
       body: JSON.stringify({
         item,
         amount,
-        gallery_id,
+        seller_id,
         meta,
         cancel_url,
         success_url,

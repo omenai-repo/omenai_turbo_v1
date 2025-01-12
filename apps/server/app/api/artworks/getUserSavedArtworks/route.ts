@@ -45,7 +45,16 @@ export async function POST(request: Request) {
     const allArtworks = await Artworkuploads.aggregate([
       {
         $match: {
-          gallery_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+          $or: [
+            // Condition for artworks by artists
+            { "role_access.role": "artist" },
+
+            // Condition for artworks by galleries meeting the specified criteria
+            {
+              "role_access.role": "gallery",
+              author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            },
+          ],
           like_IDs: { $in: [id] },
         },
       },
@@ -62,28 +71,36 @@ export async function POST(request: Request) {
     // Separate artworks into basic and pro/premium
     let selectedBasicArtworks = [];
     let selectedProPremiumArtworks = [];
+    let artworksByArtist = [];
+
     let skippedBasicArtworks = 0;
 
     for (let artwork of allArtworks) {
-      if (basicGalleryIds.includes(artwork.gallery_id)) {
-        if (skippedBasicArtworks < skip) {
-          skippedBasicArtworks++;
-          continue;
-        }
-        if (selectedBasicArtworks.length < remainingBasicLimit) {
-          selectedBasicArtworks.push(artwork);
-        }
+      if (artwork.role_access.role === "artist") {
+        artworksByArtist.push(artwork);
       } else {
-        if (skippedBasicArtworks + selectedProPremiumArtworks.length < skip) {
-          skippedBasicArtworks++;
-          continue;
+        if (basicGalleryIds.includes(artwork.author_id)) {
+          if (skippedBasicArtworks < skip) {
+            skippedBasicArtworks++;
+            continue;
+          }
+          if (selectedBasicArtworks.length < remainingBasicLimit) {
+            selectedBasicArtworks.push(artwork);
+          }
+        } else {
+          if (skippedBasicArtworks + selectedProPremiumArtworks.length < skip) {
+            skippedBasicArtworks++;
+            continue;
+          }
+          selectedProPremiumArtworks.push(artwork);
         }
-        selectedProPremiumArtworks.push(artwork);
       }
 
       // Stop if we have filled the page
       if (
-        selectedBasicArtworks.length + selectedProPremiumArtworks.length >=
+        selectedBasicArtworks.length +
+          selectedProPremiumArtworks.length +
+          artworksByArtist.length >=
         PAGE_SIZE
       )
         break;
@@ -93,6 +110,7 @@ export async function POST(request: Request) {
     const allUserSavedArtworks = [
       ...selectedBasicArtworks,
       ...selectedProPremiumArtworks,
+      ...artworksByArtist,
     ].slice(0, PAGE_SIZE);
 
     return NextResponse.json(
@@ -105,7 +123,6 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
 
     return NextResponse.json(
       { message: error_response?.message },

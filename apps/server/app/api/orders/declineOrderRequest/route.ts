@@ -1,8 +1,8 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
-import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendOrderDeclinedMail } from "@omenai/shared-emails/src/models/orders/orderDeclinedMail";
 export async function POST(request: Request) {
   try {

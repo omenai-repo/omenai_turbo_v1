@@ -1,22 +1,25 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { NextResponse } from "next/server";
-import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
 
-    const { order_id } = await request.json();
+    const { art_id, lock_status } = await request.json();
 
-    const order = await CreateOrder.findOne({ order_id });
+    const locked = await CreateOrder.updateMany(
+      { "artwork_data.art_id": art_id },
+      { $set: { lock_purchase: lock_status } }
+    );
 
-    // if (!order) throw new ServerError("No order matching this id found");
+    if (!locked) throw new ServerError("An error occured");
 
     return NextResponse.json(
       {
         message: "Successful",
-        data: order,
       },
       { status: 200 }
     );

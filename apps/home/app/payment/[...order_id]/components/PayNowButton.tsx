@@ -17,18 +17,18 @@ export default function PayNowButton({
   art_id,
   artwork,
   amount,
-  gallery_id,
+  seller_id,
   lock_status,
-  gallery_email,
-  gallery_name,
+  seller_email,
+  seller_name,
 }: {
   art_id: string;
   artwork: string;
   amount: number;
-  gallery_id: string;
+  seller_id: string;
   lock_status: boolean;
-  gallery_email: string;
-  gallery_name: string;
+  seller_email: string;
+  seller_name: string;
 }) {
   const router = useRouter();
   const { session } = useContext(SessionContext);
@@ -50,14 +50,14 @@ export default function PayNowButton({
         const checkout_session = await createCheckoutSession(
           artwork,
           amount,
-          gallery_id,
+          seller_id,
           {
             trans_type: "purchase_payout",
             user_id: (session as IndividualSchemaTypes)?.user_id,
             user_email: (session as IndividualSchemaTypes)?.email,
             art_id,
-            gallery_email,
-            gallery_name,
+            seller_email,
+            seller_name,
             artwork_name: artwork,
           },
           `${url}/payment/success`,

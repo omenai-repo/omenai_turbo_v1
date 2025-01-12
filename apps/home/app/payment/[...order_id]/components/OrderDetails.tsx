@@ -11,7 +11,7 @@ export default function OrderDetails({
   order,
   lock_status,
 }: {
-  order: CreateOrderModelTypes 
+  order: CreateOrderModelTypes;
   lock_status: boolean;
 }) {
   const image_href = getImageFileView(order.artwork_data.url, 200);
@@ -28,10 +28,10 @@ export default function OrderDetails({
           art_id={order.artwork_data.art_id}
           artwork={order.artwork_data.title}
           amount={total_price_number}
-          gallery_id={order.seller_details.id}
+          seller_id={order.seller_details.id}
           lock_status={lock_status}
-          gallery_email={order.seller_details.email}
-          gallery_name={order.seller_details.name}
+          seller_email={order.seller_details.email}
+          seller_name={order.seller_details.name}
         />
       </div>
 
@@ -64,7 +64,8 @@ export default function OrderDetails({
                 <p>Delivery address</p>
                 <p className="font-bold">
                   {order.shipping_details.addresses.destination.address_line},{" "}
-                  {order.shipping_details.addresses.destination.city}, {order.shipping_details.addresses.destination.state},{" "}
+                  {order.shipping_details.addresses.destination.city},{" "}
+                  {order.shipping_details.addresses.destination.state},{" "}
                   {order.shipping_details.addresses.destination.country}
                 </p>
               </div>
@@ -88,7 +89,9 @@ export default function OrderDetails({
               </div>
               <div className="flex justify-between items-center text-[#858585] my-3">
                 <p>Taxes</p>
-                <p className="font-bold">${order.shipping_details.quote.taxes}</p>
+                <p className="font-bold">
+                  ${order.shipping_details.quote.taxes}
+                </p>
               </div>
 
               <div className="flex justify-between items-center font-normal text-base mt-10">

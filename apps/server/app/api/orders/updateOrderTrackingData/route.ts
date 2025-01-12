@@ -1,32 +1,30 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
-import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
 
-    const { id } = await request.json();
+    const { data, order_id } = await request.json();
 
-    const orders = await CreateOrder.find({ "seller_details.id": id })
-      .sort({ updatedAt: -1 })
-      .exec();
+    const updateOrders = await CreateOrder.findOneAndUpdate(
+      { order_id },
+      { $set: { "shipping_details.tracking": data } }
+    );
 
-    console.log(orders);
-
-    if (!orders) throw new ServerError("No orders were found");
+    if (!updateOrders)
+      throw new ServerError("Tracking data could not be updated");
 
     return NextResponse.json(
       {
-        message: "Successful",
-        data: orders,
+        message: "Successfully updated tracking information",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
 
     return NextResponse.json(
