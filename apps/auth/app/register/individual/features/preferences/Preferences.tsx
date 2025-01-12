@@ -56,11 +56,10 @@ function Preferences() {
               Back
             </button>
             <button
+              className="h-[40px] px-4 mt-[1rem] text-xs font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/30 transition-all ease-linear duration-200"
               disabled={isLoading || preferences.length < 5}
               onClick={incrementCurrentSignupFormIndex}
             >
-              <span>Next</span>
-              <MdOutlineArrowForward />
               <span>Next</span>
               <MdOutlineArrowForward />
             </button>

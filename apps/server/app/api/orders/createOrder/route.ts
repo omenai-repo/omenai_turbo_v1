@@ -26,8 +26,17 @@ export async function POST(request: Request) {
       save_shipping_address,
       shipping_address,
       origin_address,
-      designation
+      designation,
     } = await request.json();
+    console.log(
+      buyer_id,
+      art_id,
+      seller_id,
+      save_shipping_address,
+      shipping_address,
+      origin_address,
+      designation
+    );
 
     const buyerData = await AccountIndividual.findOne(
       { user_id: buyer_id },
@@ -38,14 +47,18 @@ export async function POST(request: Request) {
     let seller_data;
 
     if (designation === "gallery") {
-      const gallery_data = await AccountGallery.findOne({ gallery_id: seller_id },"name email").exec();
-      seller_data = gallery_data
-      
+      const gallery_data = await AccountGallery.findOne(
+        { gallery_id: seller_id },
+        "name email"
+      ).exec();
+      seller_data = gallery_data;
     } else {
-      const artist_data = await AccountArtist.findOne({artist_id: seller_id}, 'name, email').exec()
-      seller_data = artist_data
+      const artist_data = await AccountArtist.findOne(
+        { artist_id: seller_id },
+        "name, email"
+      ).exec();
+      seller_data = artist_data;
     }
-
 
     const artwork = await Artworkuploads.findOne(
       { art_id },
@@ -67,23 +80,27 @@ export async function POST(request: Request) {
     else {
       const createOrder: CreateOrderModelTypes = await CreateOrder.create({
         artwork_data: artwork,
-        buyer_details: {name: buyerData.name, email: buyerData.email, id: buyerData.user_id},
+        buyer_details: {
+          name: buyerData.name,
+          email: buyerData.email,
+          id: buyerData.user_id,
+        },
         shipping_details: {
-            addresses: {
-              origin: origin_address,
-              destination: shipping_address
-            },
-            tracking: {
-              id: "",
-              link: ""
-            },
-            quote: {
-              package_carrier: "",
-              fees: "",
-              taxes: "",
-              additional_information: ""
-            },
-            delivery_confirmed: false
+          addresses: {
+            origin: origin_address,
+            destination: shipping_address,
+          },
+          tracking: {
+            id: "",
+            link: "",
+          },
+          quote: {
+            package_carrier: "",
+            fees: "",
+            taxes: "",
+            additional_information: "",
+          },
+          delivery_confirmed: false,
         },
         seller_details: {
           id: seller_id,
@@ -139,6 +156,7 @@ export async function POST(request: Request) {
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 
+    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }
