@@ -11,7 +11,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 export default function Banner() {
   const { session } = useContext(SessionContext);
   const router = useRouter();
-  const url = auth_uri();
+  const auth_url = auth_uri();
   async function handleSignout() {
     toast.info("Signing you out...");
     const res = await signOut();
@@ -20,7 +20,7 @@ export default function Banner() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace(url);
+      router.replace(`${auth_url}/login`);
     } else {
       toast.error("Operation successful", {
         description:

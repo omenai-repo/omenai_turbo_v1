@@ -9,7 +9,7 @@ export default function NavbarActionButtons() {
   const login_base_url = auth_uri();
   return (
     <div>
-      <Link href={login_base_url} className="w-fit lg:hidden block">
+      <Link href={`${login_base_url}/login`} className="w-fit lg:hidden block">
         <BiUser className="text-sm" />
       </Link>
       <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-xs sm:text-[14px] ml-2">

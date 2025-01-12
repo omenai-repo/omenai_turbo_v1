@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       throw new ServerError("An error was encountered. Please try again");
 
     const isOrderPresent = await CreateOrder.findOne({
-      "buyer.email": buyerData.email,
+      "buyer_details.email": buyerData.email,
       "artwork_data.art_id": artwork.art_id,
     });
 

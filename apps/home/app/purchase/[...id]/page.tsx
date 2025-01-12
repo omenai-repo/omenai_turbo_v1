@@ -13,7 +13,7 @@ export default async function PurhasePage({
   const slug = decodeURIComponent((await params).id);
 
   if (session === undefined) {
-    redirect(login_base_url);
+    redirect(`${login_base_url}/login`);
   }
 
   return <PurchaseComponentWrapper slug={slug} />;
