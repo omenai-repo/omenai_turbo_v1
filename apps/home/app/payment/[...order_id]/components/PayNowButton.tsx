@@ -80,8 +80,7 @@ export default function PayNowButton({
         }
       } else {
         toast.error("Error notification", {
-          description:
-            "A user is currently processing a purchase transaction on this artwork.",
+          description: get_purchase_lock.message,
           style: {
             background: "red",
             color: "white",
