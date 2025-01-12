@@ -21,7 +21,7 @@ const LockSchema = new Schema<LockModelTypes>(
   { timestamps: true }
 );
 
-// LockSchema.index({ createdAt: 1 }, { expireAfterSeconds: 600 });
+LockSchema.index({ createdAt: 1 }, { expireAfterSeconds: 600 });
 
 export const LockMechanism =
   models.LockMechanism || model("LockMechanism", LockSchema);

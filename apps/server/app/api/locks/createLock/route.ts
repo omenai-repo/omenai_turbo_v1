@@ -1,21 +1,33 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ForbiddenError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
 
     const { user_id, art_id } = await request.json();
+    // Check the availability of the piece
+    const is_piece_still_available = await Artworkuploads.findOne(
+      { art_id },
+      "availability"
+    );
+
+    if (!is_piece_still_available.availability)
+      throw new ForbiddenError("Piece has been purchased by another collector");
     const checkIfLockActive = await LockMechanism.findOne({ art_id });
 
     if (checkIfLockActive) {
       return NextResponse.json(
         {
           message:
-            "A user is currently processing a transaction on this artwork. Please refersh your page after a few a while to check on the availability of the artwork",
+            "A user is currently processing a transaction on this piece. Please refersh your page in 10 minutes to check availability of the artwork",
           data: { lock_data: checkIfLockActive },
         },
         { status: 200 }
