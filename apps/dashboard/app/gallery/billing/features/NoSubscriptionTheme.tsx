@@ -7,12 +7,12 @@ import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function NoSubscriptionTheme() {
   const { session } = useContext(SessionContext);
   const router = useRouter();
-  const url = login_url();
+  const url = auth_uri();
   const { data, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {

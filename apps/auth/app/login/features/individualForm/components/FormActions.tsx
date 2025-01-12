@@ -6,7 +6,7 @@ import Link from "next/link";
 import { GoArrowRight } from "react-icons/go";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 export default function FormActions() {
   const { updateRecoveryModal } = actionStore();
 
@@ -14,7 +14,7 @@ export default function FormActions() {
 
   const { isLoading } = individualLoginStore();
 
-  const auth_url = login_url();
+  const auth_url = auth_uri();
 
   return (
     <div className="flex flex-col mt-[1rem] gap-4 w-full">

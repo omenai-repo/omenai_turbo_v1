@@ -12,7 +12,7 @@ import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function SubscriptionCheckout() {
   const searchParams = useSearchParams();
@@ -23,7 +23,7 @@ export default function SubscriptionCheckout() {
   const charge_type = searchParams.get("charge_type");
   const router = useRouter();
   const { session } = useContext(SessionContext);
-  const url = login_url();
+  const url = auth_uri();
   if (session === undefined || session === null) router.replace(url);
 
   if (

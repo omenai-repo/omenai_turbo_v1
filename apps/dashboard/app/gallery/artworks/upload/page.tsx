@@ -14,11 +14,11 @@ import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function UploadArtwork() {
   const { session } = useContext(SessionContext);
-  const url = login_url();
+  const url = auth_uri();
   const router = useRouter();
   if (session === undefined) router.replace(url);
 

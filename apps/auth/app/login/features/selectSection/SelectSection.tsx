@@ -3,11 +3,11 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useLoginStore } from "@omenai/shared-state-store/src/auth/login/LoginStore";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 function SelectSection() {
   const { updateCurrent } = useLoginStore();
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   return (
     <AnimatePresence key={5}>
       <motion.div

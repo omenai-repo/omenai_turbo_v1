@@ -8,11 +8,11 @@ import CardChangeCheckoutItem from "../plans/checkout/components/CardChangeCheck
 import { CheckoutStepper } from "../plans/checkout/components/CheckoutStepper";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function SubscriptionCheckout() {
   const searchParams = useSearchParams();
-  const url = login_url();
+  const url = auth_uri();
 
   const charge_type = searchParams.get("charge_type");
   const router = useRouter();

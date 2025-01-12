@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import PasswordBlock from "./components/PasswordBlock";
 import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default async function ResetPassword({
   params,
@@ -10,7 +10,7 @@ export default async function ResetPassword({
   params: Promise<{ id: string }>;
 }) {
   const slug = (await params).id;
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   // Check if user is verified and then redirect
   return (
     <div className="w-full h-full font-dark p-5">

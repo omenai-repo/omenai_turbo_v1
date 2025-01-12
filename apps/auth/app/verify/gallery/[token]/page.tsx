@@ -1,7 +1,7 @@
 import Link from "next/link";
 import TokenBlock from "./components/TokenBlock";
 import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export const dynamicParams = false;
 export default async function VerifyEmail({
@@ -10,7 +10,7 @@ export default async function VerifyEmail({
   params: Promise<{ token: string }>;
 }) {
   const slug = (await params).token;
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   // Check if gallery is verified and then redirect
   return (
     <div className="w-full h-full font-dark p-5">

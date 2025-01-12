@@ -4,7 +4,7 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/GalleryLoginStore";
 import { useLoginStore } from "@omenai/shared-state-store/src/auth/login/LoginStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 import Link from "next/link";
 import { GoArrowRight } from "react-icons/go";
 
@@ -14,7 +14,7 @@ export default function FormActions() {
   const { updateCurrent } = useLoginStore();
 
   const { isLoading } = galleryLoginStore();
-  const auth_url = login_url();
+  const auth_url = auth_uri();
 
   return (
     <div className="flex flex-col mt-[1rem] gap-4 w-full">

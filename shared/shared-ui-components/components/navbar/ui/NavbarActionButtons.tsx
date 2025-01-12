@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { GoHome } from "react-icons/go";
 import { BiUser } from "react-icons/bi";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function NavbarActionButtons() {
-  const login_base_url = login_url();
+  const login_base_url = auth_uri();
   return (
     <div>
       <Link href={login_base_url} className="w-fit lg:hidden block">

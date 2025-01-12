@@ -8,14 +8,15 @@ import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { useContext } from "react";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function Plans() {
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   const { session } = useContext(SessionContext);
   const router = useRouter();
   const url = getApiUrl();
-  if (session === null || session === undefined) router.replace(auth_url);
+  if (session === null || session === undefined)
+    router.replace(`${auth_url}/login`);
   const { data, isLoading } = useQuery({
     queryKey: ["get_all_plan_details"],
     queryFn: async () => {

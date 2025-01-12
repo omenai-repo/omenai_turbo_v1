@@ -9,15 +9,16 @@ import { fetchUserSaveArtworks } from "@omenai/shared-services/artworks/fetchUse
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function Saves() {
   const { session } = useContext(SessionContext);
   const router = useRouter();
   const { width } = useWindowSize();
-  const auth_url = login_url();
+  const auth_url = auth_uri();
 
-  if (session === null || session === undefined) router.replace(auth_url);
+  if (session === null || session === undefined)
+    router.replace(`${auth_url}/login`);
 
   const { data: artworks, isLoading } = useQuery({
     queryKey: ["fetch_saved_artworks"],

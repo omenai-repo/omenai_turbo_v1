@@ -2,7 +2,7 @@
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import Link from "next/link";
 import { LoadSmall } from "../loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function LoginModalFormActions({
   loading,
@@ -10,7 +10,7 @@ export default function LoginModalFormActions({
   loading: boolean;
 }) {
   const { toggleLoginModal, toggleLoginModalRecoveryForm } = actionStore();
-  const auth_url = login_url();
+  const auth_url = auth_uri();
 
   return (
     <>

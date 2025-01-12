@@ -11,7 +11,7 @@ import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
-import { login_url, base_url } from "@omenai/url-config/src/config";
+import { auth_uri, base_url } from "@omenai/url-config/src/config";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 
 export default function LoginModalForm() {
@@ -24,7 +24,7 @@ export default function LoginModalForm() {
   const [form, setForm] = useState<Form>({ email: "", password: "" });
   const router = useRouter();
 
-  const auth_url = login_url();
+  const auth_url = auth_uri();
 
   async function handleSignout() {
     toast.info("Signing you out...");
@@ -34,7 +34,7 @@ export default function LoginModalForm() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      //   router.replace(auth_url);
+      //   router.replace(`${auth_url}/login`);
     } else {
       toast.error("Operation successful", {
         description:

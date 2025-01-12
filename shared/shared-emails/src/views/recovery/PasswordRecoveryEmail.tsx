@@ -1,4 +1,4 @@
-import { getApiUrl, login_url } from "@omenai/url-config/src/config";
+import { getApiUrl, auth_uri } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
@@ -17,9 +17,9 @@ import {
 const PasswordRecoveryEmail = (
   username: string,
   token: string,
-  route: string,
+  route: string
 ) => {
-  const url = login_url();
+  const url = auth_uri();
   return (
     <Html>
       <Head />
@@ -42,8 +42,9 @@ const PasswordRecoveryEmail = (
               Dear {username},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              We have received a request to reset your password. Below, you will find your verification link. Please note that the validity of this link will expire in{" "}
-              <strong>10 minutes.</strong>
+              We have received a request to reset your password. Below, you will
+              find your verification link. Please note that the validity of this
+              link will expire in <strong>10 minutes.</strong>
             </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
