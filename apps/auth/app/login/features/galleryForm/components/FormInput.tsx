@@ -93,8 +93,10 @@ export default function FormInput() {
               set_redirect_uri("");
             }
           } else {
-            await handleSignout();
+            router.replace(`${auth_url}/verify/gallery/${session.gallery_id}`);
           }
+        } else {
+          await handleSignout();
         }
       }
     } catch (error) {

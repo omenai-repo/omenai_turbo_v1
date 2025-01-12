@@ -26,7 +26,7 @@ import {
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { hasEmptyString } from "@omenai/shared-utils/src/hasEmptyString";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 
 export default function CardInput({
   updateAuthorization,
@@ -49,6 +49,7 @@ export default function CardInput({
   const plan_object_id = searchParams.get("id");
   const charge_type = searchParams.get("charge_type");
   const redirect = searchParams.get("redirect");
+  const dashboard_uri = dashboard_url();
   const [transaction_id, set_transaction_id] = useLocalStorage(
     "flw_trans_id",
     ""
@@ -106,8 +107,8 @@ export default function CardInput({
         },
         redirect:
           redirect !== null
-            ? `${url}${redirect}`
-            : `${url}/gallery/billing/plans/checkout/verification`,
+            ? `${dashboard_uri}${redirect}`
+            : `${dashboard_uri}/gallery/billing/plans/checkout/verification`,
         charge_type,
       };
 

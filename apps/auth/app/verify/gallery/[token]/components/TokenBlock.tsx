@@ -57,7 +57,7 @@ export default function TokenBlock({ token }: TokenProps) {
           },
           className: "class",
         });
-        router.push("/auth/login/");
+        router.push("/login/");
       }
       setIsLoading();
     }

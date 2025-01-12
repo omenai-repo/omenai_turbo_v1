@@ -40,6 +40,7 @@ export default function VerifyTransaction({
         </div>
       ) : (
         <div className=" mt-6 w-full flex flex-col gap-y-4">
+          {/* todo: Fix verification icon */}
           <div className="space-y-3 grid place-items-center">
             <Image
               src={"/images/verified.png"}

@@ -8,6 +8,7 @@ import LikeComponent from "../likes/LikeComponent";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { base_url } from "@omenai/url-config/src/config";
 
 export default function ArtworkCanvas({
   image,
@@ -40,6 +41,7 @@ export default function ArtworkCanvas({
   const [zoomScale, setZoomScale] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const [imageSrc, setImageSrc] = useState(getImageFileView(image, 500)); // Default to low-res
+  const url = base_url();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setZoomScale(2.2);
@@ -96,7 +98,7 @@ export default function ArtworkCanvas({
           // onTouchStart={() => setZoomScale(2)} // Start zoom on touch
           // onTouchEnd={handleTouchEnd}
         >
-          <Link href={`/artwork/${name}`} className="relative">
+          <Link href={`${url}/artwork/${name}`} className="relative">
             <Image
               src={imageSrc}
               alt={name + " image"}

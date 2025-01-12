@@ -60,7 +60,7 @@ export default function FormInput() {
       const response = await loginUser({ ...form });
 
       if (!response.isOk) {
-        toast.error("Error notification", {
+        toast.error("Error notification ", {
           description: response.message,
           style: {
             background: "red",
@@ -90,8 +90,12 @@ export default function FormInput() {
             }
           } else {
             // todo: Redirect to verification page
-            await handleSignout();
+            router.replace(
+              `${auth_url}/verify/individual/${session.gallery_id}`
+            );
           }
+        } else {
+          await handleSignout();
         }
       }
     } catch (error) {
