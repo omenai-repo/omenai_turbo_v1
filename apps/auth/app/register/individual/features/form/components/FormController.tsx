@@ -5,7 +5,7 @@ import Preferences from "../../preferences/Preferences";
 import { ChangeEvent } from "react";
 import TC from "../../TC/TC";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
-import { inputProperties } from "../../../../../mocks/input/gallery/inputMock";
+import { inputProperties } from "../../../../../mocks/input/individual/InputMock";
 
 export default function FormController() {
   const { currentSignupFormIndex, updateSignUpData } = useIndividualAuthStore();
