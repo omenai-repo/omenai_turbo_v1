@@ -8,6 +8,8 @@ const allowed_origins = [
   "https://admin.omenai.app",
   "https://omenai.app",
   "http://localhost",
+  "https://prodtest.omenai.app",
+  "https://v1.omenai.app
 ];
 
 const userDashboardRegex = /\/user\/.*/;
