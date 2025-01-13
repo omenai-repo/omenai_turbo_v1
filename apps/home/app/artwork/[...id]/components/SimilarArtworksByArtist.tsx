@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchSimilarArtworksByArtist } from "@omenai/shared-services/artworks/fetchSimilarArtworksByArtist";
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
@@ -73,7 +73,7 @@ export default function SimilarArtworksByArtist({
                     availability: boolean;
                   }) => {
                     return (
-                      <ArtworkCanvas
+                      <ArtworkCard
                         key={art.art_id}
                         image={art.url}
                         name={art.title}

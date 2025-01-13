@@ -8,10 +8,10 @@ import Pagination from "./Pagination";
 import { fetchArtworksByCriteria } from "@omenai/shared-services/artworks/fetchArtworksByCriteria";
 import { collectionsFilterStore } from "@omenai/shared-state-store/src/collections/collectionsFilterStore";
 import { collectionsStore } from "@omenai/shared-state-store/src/collections/collectionsStore";
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export function ArtworksListing({
   medium,
@@ -70,7 +70,7 @@ export function ArtworksListing({
             <div className="flex-1 gap-2 space-y-6" key={index}>
               {artworks.map((art: any) => {
                 return (
-                  <ArtworkCanvas
+                  <ArtworkCard
                     key={art.art_id}
                     image={art.url}
                     name={art.title}

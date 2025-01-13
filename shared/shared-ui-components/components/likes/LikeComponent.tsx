@@ -21,18 +21,20 @@ export default function LikeComponent({
     art_id
   );
   return (
-    <span className="flex space-x-1 items-center">
+    <span className="flex space-x-1 flex items-center justify-center bg-[#fff] h-[30px] w-[30px] rounded-full">
       {/* <span className="text-xs text-dark">{likedState.count}</span> */}
       {(sessionId === undefined ||
         (sessionId && !likedState.ids.includes(sessionId))) && (
         <IoHeartOutline
           className={`text-[18px]  cursor-pointer `}
+          size={22}
           onClick={() => handleLike(true)}
         />
       )}
       {sessionId !== undefined && likedState.ids.includes(sessionId) && (
         <IoIosHeart
           className={`text-[18px] text-red-600 cursor-pointer `}
+          size={22}
           onClick={() => handleLike(false)}
         />
       )}

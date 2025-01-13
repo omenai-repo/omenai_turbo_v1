@@ -12,6 +12,7 @@ import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/Artw
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export default function AllArtworks({
   sessionId,
@@ -68,7 +69,7 @@ export default function AllArtworks({
             <div className="flex-1 gap-2 space-y-6" key={index}>
               {artworks.map((art: any) => {
                 return (
-                  <ArtworkCanvas
+                  <ArtworkCard
                     key={art.art_id}
                     image={art.url}
                     name={art.title}

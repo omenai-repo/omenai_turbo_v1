@@ -1,6 +1,5 @@
 "use client";
 
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import { getAllArtworksById } from "@omenai/shared-services/artworks/fetchAllArtworksById";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
@@ -9,6 +8,7 @@ import { useWindowSize } from "usehooks-ts";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export default function ArtCatalog() {
   const { session } = useContext(SessionContext);
@@ -53,7 +53,7 @@ export default function ArtCatalog() {
                 <div className="flex-1 gap-2 space-y-6" key={index}>
                   {artworks.map((art: any) => {
                     return (
-                      <ArtworkCanvas
+                      <ArtworkCard
                         key={art.art_id}
                         image={art.url}
                         name={art.title}

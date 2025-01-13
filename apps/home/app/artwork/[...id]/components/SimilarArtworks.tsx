@@ -1,5 +1,4 @@
 "use client";
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { fetchArtworksByCriteria } from "@omenai/shared-services/artworks/fetchArtworksByCriteria";
@@ -8,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { useWindowSize } from "usehooks-ts";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export default function SimilarArtworks({
   title,
@@ -78,7 +78,7 @@ export default function SimilarArtworks({
                     availability: boolean;
                   }) => {
                     return (
-                      <ArtworkCanvas
+                      <ArtworkCard
                         key={art.art_id}
                         image={art.url}
                         name={art.title}

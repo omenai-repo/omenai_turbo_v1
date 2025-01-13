@@ -8,6 +8,8 @@ module.exports = {
       center: true,
     },
     fontSize: {
+      xxxs: "0.56rem",
+      xxs: "0.625rem",
       xs: "0.8125rem",
       base: "1rem",
       sm: "1.2rem",
