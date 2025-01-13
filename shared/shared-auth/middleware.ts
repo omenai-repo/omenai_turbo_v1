@@ -9,6 +9,7 @@ const allowed_origins = [
   "https://omenai.app",
   "http://localhost",
   "https://prodtest.omenai.app",
+  "https://v1.omenai.app",
 ];
 
 const userDashboardRegex = /\/user\/.*/;
