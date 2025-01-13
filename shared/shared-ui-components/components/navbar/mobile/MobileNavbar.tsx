@@ -15,7 +15,7 @@ export default function MobileNavbar() {
     >
       <div className="flex justify-between items-center py-6 px-4">
         <div onClick={() => updateOpenSideNav(false)}>
-          {/* <IndividualLogo /> */}
+          <IndividualLogo />
         </div>
 
         <div className="lg:hidden block">

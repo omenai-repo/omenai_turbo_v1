@@ -11,13 +11,13 @@ const Footer = () => {
         <div className="w-full">
           <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-0 lg:grid-cols-5 lg:gap-y-16">
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs font-medium text-dark">Services</p>
+              <p className="text-base font-medium text-dark">Services</p>
 
               <ul className="mt-6 space-y-4 ">
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Omenai for Galleries
                   </a>
@@ -26,7 +26,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Auctions
                   </a>
@@ -35,7 +35,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Fairs and shows
                   </a>
@@ -44,7 +44,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Buy
                   </a>
@@ -53,7 +53,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Sell
                   </a>
@@ -62,46 +62,13 @@ const Footer = () => {
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs font-medium text-dark">Company</p>
+              <p className="text-base font-medium text-dark">Helpful Links</p>
 
               <ul className="mt-6 space-y-4 ">
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
-                  >
-                    About
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
-                  >
-                    Meet the Team
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
-                  >
-                    Contact us
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs font-medium text-dark">Helpful Links</p>
-
-              <ul className="mt-6 space-y-4 ">
-                <li>
-                  <a
-                    href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Editorials
                   </a>
@@ -110,7 +77,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     FAQs
                   </a>
@@ -119,22 +86,30 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Pricing
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-[#858585] text-base transition hover:opacity-75"
+                  >
+                    Contact us
                   </a>
                 </li>
               </ul>
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs font-medium text-dark">Legal</p>
+              <p className="text-base font-medium text-dark">Legal</p>
 
               <ul className="mt-6 space-y-4 ">
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Terms & conditions
                   </a>
@@ -143,7 +118,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Returns Policy
                   </a>
@@ -152,7 +127,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Refund Policy
                   </a>
@@ -161,7 +136,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
                     Privacy policy
                   </a>
@@ -170,24 +145,24 @@ const Footer = () => {
             </div>
 
             <div className="col-span-2 sm:col-span-1">
-              <p className="text-xs font-medium text-dark">Downloads</p>
+              <p className="text-base font-medium text-dark">Downloads</p>
 
               <ul className="mt-6 space-y-4 ">
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
-                    Marketing Calendar
+                    Google App Store
                   </a>
                 </li>
 
                 <li>
                   <a
                     href="#"
-                    className="text-[#858585] text-xs transition hover:opacity-75"
+                    className="text-[#858585] text-base transition hover:opacity-75"
                   >
-                    SEO Infographics
+                    IOS App Store
                   </a>
                 </li>
               </ul>
@@ -199,7 +174,7 @@ const Footer = () => {
                   href="/"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-[#858585] text-xs transition hover:opacity-75"
+                  className="text-[#858585] text-base transition hover:opacity-75"
                 >
                   <span className="sr-only">Facebook</span>
 
@@ -223,7 +198,7 @@ const Footer = () => {
                   href="/"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-[#858585] text-xs transition hover:opacity-75"
+                  className="text-[#858585] text-base transition hover:opacity-75"
                 >
                   <span className="sr-only">Instagram</span>
 
@@ -247,7 +222,7 @@ const Footer = () => {
                   href="/"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-[#858585] text-xs transition hover:opacity-75"
+                  className="text-[#858585] text-base transition hover:opacity-75"
                 >
                   <span className="sr-only">Twitter</span>
 
@@ -267,7 +242,7 @@ const Footer = () => {
                   href="/"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-[#858585] text-xs transition hover:opacity-75"
+                  className="text-[#858585] text-base transition hover:opacity-75"
                 >
                   <span className="sr-only">GitHub</span>
 
@@ -291,7 +266,7 @@ const Footer = () => {
                   href="/"
                   rel="noreferrer"
                   target="_blank"
-                  className="text-[#858585] text-xs transition hover:opacity-75"
+                  className="text-[#858585] text-base transition hover:opacity-75"
                 >
                   <span className="sr-only">Dribbble</span>
 
@@ -315,11 +290,12 @@ const Footer = () => {
 
         <div className="mt-8 border-t border-gray-100 pt-8">
           <div className="sm:flex sm:justify-between">
-            <p className="text-xs text-gray-500">
-              &copy; 2024. Omenai Inc. All rights reserved.
+            <p className="text-base text-gray-500">
+              &copy; {new Date().getFullYear()}. Omenai Inc. All rights
+              reserved.
             </p>
 
-            <ul className="mt-8 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
+            <ul className="mt-8 flex flex-wrap justify-start gap-4 text-base sm:mt-0 lg:justify-end">
               <li>
                 <a
                   href="#"

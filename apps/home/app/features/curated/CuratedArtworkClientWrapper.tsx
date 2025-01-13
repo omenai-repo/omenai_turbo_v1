@@ -9,6 +9,7 @@ import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { fetchCuratedArtworks } from "@omenai/shared-services/artworks/fetchedCuratedArtworks";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import PreferencePicker from "./components/PreferencePicker";
 
 export default function CuratedArtworkClientWrapper({
   sessionId,
@@ -33,29 +34,36 @@ export default function CuratedArtworkClientWrapper({
     return <SectionLoaderContainers title="Based on your preferences" />;
   return (
     <>
-      <div className="flex md:flex-row flex-col gap-4 my-5">
-        <div className="space-y-1 flex-1">
-          <h1 className="text-sm md:text-md font-normal">
-            Based on your preferences
-          </h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
-            Your Art, Your Way: Explore Pieces That Resonate with You
-          </p>
+      {/*  */}
+      <div className="flex md:flex-row flex-col gap-4 mt-16">
+        <div className="flex justify-between items-center w-full my-5">
+          <div>
+            <p className="text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+              Just for you
+            </p>
+            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+              Art based off <br /> your preferences.
+            </p>
+          </div>
+
+          <div className="hidden sm:flex flex-col items-end">
+            <p className="text-sm font-[900]">Your Art, Your Way:</p>
+            <p className="justify-self-end font-medium">
+              Discover Captivating Pieces{" "}
+            </p>
+            <p className="justify-self-end font-medium">
+              that truly resonates with You
+            </p>
+          </div>
         </div>
-        <Link
-          href={"/categories/curated-artworks"}
-          className="text-dark flex items-center gap-x-2 font-normal text-[14px] break-words"
-        >
-          View all
-          <MdArrowRightAlt />
-        </Link>
       </div>
+      {/*  */}
       {userCuratedArtworks!.length === 0 && (
         <div className="h-[500px] w-full place-items-center grid">
           <NotFoundData />
         </div>
       )}
-      <div className="bg-[#fafafa] relative">
+      <div className="relative">
         <div className="relative z-20 py-8">
           <CuratedArtworksLayout
             sessionId={sessionId}

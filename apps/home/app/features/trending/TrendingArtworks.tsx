@@ -8,6 +8,10 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
+import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
+import { useWindowSize } from "usehooks-ts";
+import { IoIosArrowRoundForward } from "react-icons/io";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export default function TrendingArtworks({
   sessionId,
@@ -16,106 +20,52 @@ export default function TrendingArtworks({
   artworks: any;
   sessionId: string | undefined;
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    watchDrag: true,
-  });
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const { width } = useWindowSize();
 
-  const updateScrollProgress = () => {
-    if (!emblaApi) return;
-    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-    setScrollProgress(progress);
-  };
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    const handleScroll = () => {
-      requestAnimationFrame(updateScrollProgress);
-    };
-
-    emblaApi.on("scroll", handleScroll);
-    emblaApi.on("resize", updateScrollProgress);
-    updateScrollProgress(); // Initial progress update
-
-    return () => {
-      emblaApi.off("scroll", handleScroll);
-      emblaApi.off("resize", updateScrollProgress);
-    };
-  }, [emblaApi]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-    }
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-    }
-  }, [emblaApi]);
+  const arts = catalogChunk(
+    artworks,
+    width < 640 ? 1 : width < 990 ? 2 : width < 1280 ? 3 : 4
+  );
   return (
-    <>
+    <div className="h-[120vh] overflow-hidden relative">
       {artworks.length > 0 && (
-        <div className="p-4 relative">
-          <div className="embla" ref={emblaRef}>
-            <div className="embla__container">
-              {artworks.map((artwork: any, index: number) => {
-                if (artwork.impressions === 0) return null;
-                return (
-                  <TrendingArtworkCard
-                    key={artwork.art_id}
-                    name={artwork.title}
-                    image={artwork.url}
-                    artist={artwork.artist}
-                    impressions={artwork.impressions}
-                    medium={artwork.medium}
-                    rarity={artwork.rarity}
-                    likeIds={artwork.like_IDs}
-                    sessionId={sessionId}
-                    art_id={artwork.art_id}
-                    availability={artwork.availability}
-                  />
-                );
-              })}
-              {artworks.length >= 25 && (
-                <div className="h-[400px] w-[250px] grid place-items-center mx-10">
-                  <Link href={""}>
-                    <button className="whitespace-nowrap border border-dark rounded-full bg-transparent text-xs disabled:bg-[#E0E0E0] disabled:text-[#858585]  w-full text-dark disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark hover:text-white duration-300">
-                      View all trending artworks
-                    </button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
+        <div className="flex flex-wrap gap-x-4 justify-center">
+          {arts.map((artworks: any[], index) => {
+            return (
+              <div className="flex-1 gap-2 space-y-6" key={index}>
+                {artworks.map((art: any) => {
+                  return (
+                    <ArtworkCard
+                      key={art.art_id}
+                      image={art.url}
+                      name={art.title}
+                      artist={art.artist}
+                      art_id={art.art_id}
+                      pricing={art.pricing}
+                      impressions={art.impressions as number}
+                      likeIds={art.like_IDs as string[]}
+                      sessionId={sessionId}
+                      availability={art.availability}
+                      medium={art.medium}
+                      trending={true}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
+          {/* first */}
         </div>
       )}
-      <div className="w-full flex gap-x-4 items-center mb-5 px-6">
-        <div className=" w-full h-[0.5px] bg-[#fafafa]">
-          <div
-            className="h-full bg-dark "
-            style={{ width: `${scrollProgress * 100}%` }}
-          ></div>
-        </div>
-
-        <div className="flex items-center justify-center w-fit space-x-2">
-          <button
-            onClick={scrollPrev}
-            className="h-[40px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowLeft />
+      <div className="h-[35vh] w-full absolute z-10 bottom-0 flex items-center justify-center">
+        <div className="absolute w-full h-full bg-gradient-to-t from-white from-10% via-white/70 via-60% to-transparent" />
+        <Link href={"/catalog"} className="group absolute bottom-16">
+          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded-full h-[40px]">
+            See more
+            <IoIosArrowRoundForward />
           </button>
-          <button
-            onClick={scrollNext}
-            className="h-[40px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowRight />
-          </button>
-        </div>
+        </Link>
       </div>
-    </>
+    </div>
   );
 }

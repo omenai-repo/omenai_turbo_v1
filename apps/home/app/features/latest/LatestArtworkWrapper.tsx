@@ -5,8 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import LatestArtworks from "./LatestArtworks";
 import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
-import Link from "next/link";
-import { MdArrowRightAlt } from "react-icons/md";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 export default function LatestArtworkWrapper({
@@ -27,26 +25,24 @@ export default function LatestArtworkWrapper({
   if (isLoading) return <SectionLoaderContainers title="Latest artworks" />;
 
   return (
-    <>
+    <div className="">
       <div className="flex md:flex-row flex-col gap-4 my-5">
-        <div className="flex justify-between items-start w-full mb-[50px]">
+        <div className="flex justify-between items-center w-full my-5">
           <div>
-            <div className="border-[1.5px] border-[#000000] rounded-[62px] py-[8px] px-[15px] font-medium">
+            <p className="text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
               Latest Artworks
-            </div>
-            <p className="text-[30px] font-bold text-[#000000] mt-[20px]">
+            </p>
+            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
               Latest Artworks.
             </p>
           </div>
 
-          <div className="">
-            <div className="flex text-[24px] font-bold">
-              Fresh Off the Easel: <div className="font-medium">Explore</div>
-            </div>
-            <div className="text-right text-[24px] font-medium">the Newest</div>
-            <div className="text-right text-[24px] font-medium">
-              Masterpieces, Just for You
-            </div>
+          <div className="hidden sm:flex flex-col items-end">
+            <p className="text-sm font-[900]">Fresh Off the Easel:</p>
+            <p className="justify-self-end font-medium">Explore the newest</p>
+            <p className="justify-self-end font-medium">
+              masterpieces, just for you
+            </p>
           </div>
         </div>
       </div>
@@ -58,6 +54,6 @@ export default function LatestArtworkWrapper({
       )}
 
       <LatestArtworks artworks={artworks} sessionId={sessionId} />
-    </>
+    </div>
   );
 }

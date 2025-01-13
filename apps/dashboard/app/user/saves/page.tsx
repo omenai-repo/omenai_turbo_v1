@@ -8,7 +8,7 @@ import { useWindowSize } from "usehooks-ts";
 import { fetchUserSaveArtworks } from "@omenai/shared-services/artworks/fetchUserSavedArtworks";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 
 export default function Saves() {
@@ -66,6 +66,7 @@ export default function Saves() {
                       likeIds={art.like_IDs as string[]}
                       sessionId={session?.user_id as string | undefined}
                       availability={art.availability}
+                      medium={art.medium}
                     />
                   );
                 })}

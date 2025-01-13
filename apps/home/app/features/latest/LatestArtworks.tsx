@@ -2,16 +2,10 @@
 
 import Link from "next/link";
 
-import {
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
-
-import { useCallback, useEffect, useState } from "react";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-import useEmblaCarousel from "embla-carousel-react";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useWindowSize } from "usehooks-ts";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 export default function LatestArtworks({
   artworks,
@@ -20,55 +14,15 @@ export default function LatestArtworks({
   artworks: any;
   sessionId: string | undefined;
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    watchDrag: true,
-  });
-  const [scrollProgress, setScrollProgress] = useState(0);
   const { width } = useWindowSize();
-
-  const updateScrollProgress = () => {
-    if (!emblaApi) return;
-    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-    setScrollProgress(progress);
-  };
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    const handleScroll = () => {
-      requestAnimationFrame(updateScrollProgress);
-    };
-
-    emblaApi.on("scroll", handleScroll);
-    emblaApi.on("resize", updateScrollProgress);
-    updateScrollProgress(); // Initial progress update
-
-    return () => {
-      emblaApi.off("scroll", handleScroll);
-      emblaApi.off("resize", updateScrollProgress);
-    };
-  }, [emblaApi]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-    }
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-    }
-  }, [emblaApi]);
 
   const arts = catalogChunk(
     artworks,
-    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : width < 1440 ? 4 : 5
+    width < 640 ? 1 : width < 990 ? 2 : width < 1280 ? 3 : 4
   );
 
   return (
-    <>
+    <div className="h-[130vh] overflow-hidden relative">
       {artworks.length > 0 && (
         <div className="flex flex-wrap gap-x-4 justify-center">
           {arts.map((artworks: any[], index) => {
@@ -87,6 +41,8 @@ export default function LatestArtworks({
                       likeIds={art.like_IDs as string[]}
                       sessionId={sessionId}
                       availability={art.availability}
+                      medium={art.medium}
+                      trending={false}
                     />
                   );
                 })}
@@ -96,29 +52,15 @@ export default function LatestArtworks({
           {/* first */}
         </div>
       )}
-      <div className="w-full flex gap-x-4 items-center my-3 mt-8 px-6">
-        <div className=" w-full h-[1px] bg-[#fafafa]">
-          <div
-            className="h-full bg-dark "
-            style={{ width: `${scrollProgress * 100}%` }}
-          ></div>
-        </div>
-
-        <div className="flex items-center justify-center w-fit space-x-2">
-          <button
-            onClick={scrollPrev}
-            className="h-[40px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowLeft />
+      <div className="h-[35vh] w-full absolute z-10 bottom-0 flex items-center justify-center">
+        <div className="absolute w-full h-full bg-gradient-to-t from-white from-10% via-white/70 via-60% to-transparent" />
+        <Link href={"/catalog"} className="group absolute bottom-16">
+          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded-full h-[40px]">
+            See more
+            <IoIosArrowRoundForward />
           </button>
-          <button
-            onClick={scrollNext}
-            className="h-[40px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowRight />
-          </button>
-        </div>
+        </Link>
       </div>
-    </>
+    </div>
   );
 }

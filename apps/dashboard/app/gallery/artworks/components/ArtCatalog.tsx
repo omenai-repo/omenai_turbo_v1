@@ -65,6 +65,7 @@ export default function ArtCatalog() {
                         sessionId={sessionId}
                         availability={art.availability}
                         isDashboard
+                        medium={art.medium}
                       />
                     );
                   })}

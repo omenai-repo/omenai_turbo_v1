@@ -50,11 +50,11 @@ module.exports = {
         "3xl": "1560px",
       },
       fontFamily: {
-        sans: ["var(--font-nunito_sans)"],
+        sans: ["var(--font-dm_sans)"],
       },
 
       backgroundImage: {
-        "hero-image": "url('/images/e96e5841821e79f985088d21e301bed7.jpeg')",
+        "hero-image": "url('/images/home_bg.png')",
         "billing-card": "url('/images/curve.jpg')",
         "curated-bg": "url('/images/gloss_black.jpg')",
       },

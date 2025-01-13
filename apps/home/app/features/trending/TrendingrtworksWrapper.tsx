@@ -28,20 +28,29 @@ export default function TrendingArtworkWrapper({
   if (isLoading) return <SectionLoaderContainers title="Trending artworks" />;
   return (
     <>
-      <div className="flex gap-4 my-5 flex-col md:flex-row">
-        <div className="space-y-1 flex-1">
-          <h1 className="text-sm md:text-md font-normal">Trending artworks</h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
-            On the Rise: Discover the Art Everyone&apos;s Talking About
-          </p>
+      <div className="flex md:flex-row flex-col gap-4">
+        <div className="flex justify-between items-center w-full my-5">
+          <div>
+            <p className="text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+              Trending artworks
+            </p>
+            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+              Trending artworks.
+            </p>
+          </div>
+
+          <div className="hidden sm:flex flex-col items-end">
+            <p className="text-sm font-[900]">
+              Spotlight on Today&apos;s Must-Have Pieces:
+            </p>
+            <p className="justify-self-end font-medium">
+              On the Rise: Discover the Art
+            </p>
+            <p className="justify-self-end font-medium">
+              Everyone&apos;s Talking About
+            </p>
+          </div>
         </div>
-        <Link
-          href={"/categories/trending-artworks"}
-          className="text-dark flex items-center gap-x-2 font-normal text-[14px] break-words"
-        >
-          View all
-          <MdArrowRightAlt />
-        </Link>
       </div>
       {artworks?.length === 0 && (
         <div className="h-[500px] w-full place-items-center grid">

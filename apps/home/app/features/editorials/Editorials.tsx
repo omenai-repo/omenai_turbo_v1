@@ -31,26 +31,33 @@ export default function Editorials() {
   return (
     <>
       {editorials && editorials?.length === 0 ? null : (
-        <div className="p-5 sm:px-4 relative bg-[#FAFAFA]">
-          <div className="flex flex-col md:flex-row lg:justify-between lg:items-center p-2">
-            <div className="space-y-1 my-10">
-              <h1 className="text-sm md:text-md font-normal">
-                Editorial articles
-              </h1>
-              <p className="text-base md:text-sm text-[#858585] font-light italic">
-                Behind the Canvas: Stories and Perspectives from the Art World
-              </p>
+        <>
+          <div className="flex md:flex-row flex-col gap-4 mt-16 mb-4">
+            <div className="flex justify-between items-center w-full my-5">
+              <div>
+                <p className="text-xs xs:text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+                  Editorials
+                </p>
+                <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+                  Editorial articles
+                </p>
+              </div>
+
+              <div className="hidden sm:flex flex-col items-end">
+                <p className="text-sm font-[900]">
+                  Unveiling the Stories Behind the Canvas:
+                </p>
+                <p className="justify-self-end font-medium">
+                  Stories and Perspectives
+                </p>
+                <p className="justify-self-end font-medium">
+                  from the Art World
+                </p>
+              </div>
             </div>
-            <Link
-              href={"https://omenai.net"}
-              className="text-dark flex items-center gap-x-2 font-normal text-[14px] break-words"
-            >
-              View all editorials
-              <MdArrowRightAlt />
-            </Link>
           </div>
           <EditorialsGrid editorials={editorials} />
-        </div>
+        </>
       )}
     </>
   );

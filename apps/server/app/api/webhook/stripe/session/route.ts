@@ -23,10 +23,7 @@ export async function POST(request: Request) {
   const rawBody = await request.text();
 
   let event;
-  // Only verify the event if you have an endpoint secret defined.
-  // Otherwise use the basic event deserialized with JSON.parse
   if (secretHash) {
-    // Get the signature sent by Stripe
     const signature = request.headers.get("stripe-signature");
     try {
       event = await stripe.webhooks.constructEvent(
@@ -35,14 +32,13 @@ export async function POST(request: Request) {
         secretHash
       );
     } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed.`, err);
+      console.error(`⚠️  Webhook signature verification failed.`, err);
       return NextResponse.json({ status: 400 });
     }
   }
 
   if (event.type === "checkout.session.completed") {
     const paymentIntent = event.data.object;
-    // Then define and call a method to handle the successful payment intent.
     if (
       paymentIntent.status !== "complete" ||
       paymentIntent.payment_status !== "paid"
@@ -51,29 +47,27 @@ export async function POST(request: Request) {
     }
 
     let transaction_id;
-
-    // Retrieve the MongoDB Client
     const client = await connectMongoDB();
-
-    // Create a session with the initialized MongoClient
     const session = await client.startSession();
-
     const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
     const formatted_date = getFormattedDateTime();
     const date = new Date();
-
     const meta = paymentIntent.metadata;
 
     try {
-      // Create a session transaction to group multiple database operations
-      // A session transaction ensures that all operations are successful before it it being commited to the DB, if a single error occurs in any operation,
-      // the updates are rolled back and the entire process is aborted.
-
       session.startTransaction();
 
-      //   Update Order Payment Information
+      // Check if the transaction already exists
+      const existingTransaction = await PurchaseTransactions.findOne({
+        trans_reference: paymentIntent.id,
+      }).session(session);
 
-      // Create the update info
+      if (existingTransaction) {
+        console.log("Transaction already processed.");
+        await session.abortTransaction();
+        return NextResponse.json({ status: 200 });
+      }
+
       const payment_information: PaymentStatusTypes = {
         status: "completed",
         transaction_value: formatPrice(
@@ -84,8 +78,7 @@ export async function POST(request: Request) {
         transaction_reference: paymentIntent.id,
       };
 
-      // Apply update to CreateOrder collection
-      await CreateOrder.updateOne(
+      const updateOrderPromise = CreateOrder.updateOne(
         {
           "buyer_details.email": meta.user_email,
           "artwork_data.art_id": meta.art_id,
@@ -96,9 +89,8 @@ export async function POST(request: Request) {
             payment_date: new Date().toISOString(),
           },
         }
-      );
+      ).session(session);
 
-      // Update transaction collection
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
         trans_amount: formatPrice(paymentIntent.amount_total / 100, currency),
         trans_date: date,
@@ -109,15 +101,15 @@ export async function POST(request: Request) {
         trans_type: "purchase_payout",
       };
 
-      const create_transaction = await PurchaseTransactions.create(data);
+      const createTransactionPromise = PurchaseTransactions.create([data], {
+        session,
+      });
 
-      // Update Artwork Availability to false
-      await Artworkuploads.updateOne(
+      const updateArtworkPromise = Artworkuploads.updateOne(
         { art_id: meta.art_id },
         { $set: { availability: false } }
-      );
+      ).session(session);
 
-      // Add this transaction to sales activity for revenue representation
       const { month, year } = getCurrentMonthAndYear();
       const activity = {
         month,
@@ -126,38 +118,43 @@ export async function POST(request: Request) {
         id: meta.seller_id,
       };
 
-      await SalesActivity.create({ ...activity });
+      const createSalesActivityPromise = SalesActivity.create([activity], {
+        session,
+      });
 
-      // Clear the order lock on the artwork
-      await releaseOrderLock(meta.art_id, meta.user_id);
+      const releaseOrderLockPromise = releaseOrderLock(
+        meta.art_id,
+        meta.user_id
+      );
 
-      await CreateOrder.updateMany(
+      const updateManyOrdersPromise = CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
           "buyer_details.id": { $ne: meta.user_id },
         },
         { $set: { availability: false } }
-      );
+      ).session(session);
 
-      transaction_id = create_transaction.trans_id;
+      const [createTransactionResult] = await Promise.all([
+        createTransactionPromise,
+        updateOrderPromise,
+        updateArtworkPromise,
+        createSalesActivityPromise,
+        releaseOrderLockPromise,
+        updateManyOrdersPromise,
+      ]);
 
-      // Once all operations are run with no errors, commit the transaction
+      transaction_id = createTransactionResult[0].trans_id;
+
       await session.commitTransaction();
-
       console.log("Transaction committed.");
     } catch (error) {
-      console.log("An error occurred during the transaction:" + error);
-
-      // If any errors are encountered, abort the transaction process, this rolls back all updates and ensures that the DB isn't written to.
+      console.error("An error occurred during the transaction:", error);
       await session.abortTransaction();
-      // Exit the webhook
       return NextResponse.json({ status: 400 });
     } finally {
-      // End the session to avoid reusing the same Mongoclient for different transactions
       await session.endSession();
     }
-
-    // Catch error above
 
     const email_order_info = await CreateOrder.findOne(
       {
@@ -169,7 +166,8 @@ export async function POST(request: Request) {
 
     const price = formatPrice(paymentIntent.amount_total / 100, currency);
 
-    await sendPaymentSuccessMail({
+    // Send emails asynchronously
+    sendPaymentSuccessMail({
       email: meta.user_email,
       name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
@@ -177,10 +175,11 @@ export async function POST(request: Request) {
       order_date: formatIntlDateTime(email_order_info.createdAt),
       transaction_Id: transaction_id,
       price,
-    });
+    }).catch((err) =>
+      console.error("Failed to send payment success email:", err)
+    );
 
-    // Send mail to gallery
-    await sendPaymentSuccessGalleryMail({
+    sendPaymentSuccessGalleryMail({
       email: meta.seller_email,
       name: meta.seller_name,
       artwork: meta.artwork_name,
@@ -188,7 +187,9 @@ export async function POST(request: Request) {
       order_date: formatIntlDateTime(email_order_info.createdAt),
       transaction_Id: transaction_id,
       price,
-    });
+    }).catch((err) =>
+      console.error("Failed to send payment success gallery email:", err)
+    );
   }
 
   if (event.type === "checkout.session.expired") {
@@ -203,6 +204,5 @@ export async function POST(request: Request) {
     if (!release_lock_status?.isOk) return NextResponse.json({ status: 400 });
   }
 
-  // Return a 200 response to acknowledge receipt of the event
   return NextResponse.json({ status: 200 });
 }

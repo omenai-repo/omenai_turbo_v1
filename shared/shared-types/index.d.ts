@@ -15,7 +15,15 @@ export type UserType = JWTPayload &
     | Omit<GallerySchemaTypes, "password">
     | Omit<IndividualSchemaTypes, "password">
     | Omit<AccountAdminSchemaTypes, "password">
-    | Omit<ArtistSchemaTypes, "password" | "artist_verified" | "logo" | "address" | "art_type" | "documentation">
+    | Omit<
+        ArtistSchemaTypes,
+        | "password"
+        | "artist_verified"
+        | "logo"
+        | "address"
+        | "art_type"
+        | "documentation"
+      >
   );
 
 type AccessRoleTypes = "artist" | "gallery" | "user" | "admin";
@@ -35,15 +43,15 @@ export type ArtistSchemaTypes = {
   role: AccessRoleTypes;
   wallet_id?: string | null;
   categorization?: ArtistCategorization;
-  art_type: string | string[],
-  documentation: ArtistDocumentationTypes
+  art_type: string | string[];
+  documentation: ArtistDocumentationTypes;
 };
 
 export type ArtistDocumentationTypes = {
-    id: string,
-    cv: string,
-    socials: string | string[]
-  }
+  id: string;
+  cv: string;
+  socials: string | string[];
+};
 
 export type ArtistAlgorithmDataSchemaTypes = {};
 
@@ -94,9 +102,9 @@ export type ArtistSignupData = {
   email: string;
   password: string;
   confirmPassword: string;
-  art_type: string | string[],
-  documentation: ArtistDocumentationTypes,
-  address: IndividualAddressTypes
+  art_type: string | string[];
+  documentation: ArtistDocumentationTypes;
+  address: IndividualAddressTypes;
 };
 
 export type IndividualSignupData = {
@@ -151,15 +159,6 @@ export type Form = {
   password: string;
 };
 
-export type IndividualAddressTypes = {
-  address_line: string;
-  city: string;
-  country: string;
-  state: string;
-  zip: string;
-  [key: string]: string;
-};
-
 export type ArtworkSchemaTypes = {
   artist: string;
   year: number;
@@ -182,12 +181,12 @@ export type ArtworkSchemaTypes = {
   signature: string;
   should_show_on_sub_active?: boolean;
   availability: boolean;
-  role_access: RoleAccess
+  role_access: RoleAccess;
 };
 export type RoleAccess = {
-    role: "artist" | "gallery",
-    designation: ArtistCategorization | null
-  }
+  role: "artist" | "gallery";
+  designation: ArtistCategorization | null;
+};
 
 export type ArtworkDimensions = {
   width: string;
@@ -239,39 +238,38 @@ export type ArtworkUploadStateTypes = {
   currency: string;
 };
 
-
 export type CreateOrderModelTypes = {
   artwork_data: Pick<
     ArtworkSchemaTypes,
     "artist" | "pricing" | "title" | "url" | "art_id"
   > & { _id: ObjectId };
-  buyer_details: OrderBuyerAndSellerDetails
-  seller_details: OrderBuyerAndSellerDetails
+  buyer_details: OrderBuyerAndSellerDetails;
+  seller_details: OrderBuyerAndSellerDetails;
   order_id: string;
-  status: "processing" | "completed" ;
+  status: "processing" | "completed";
   shipping_details: OrderShippingDetailsTypes;
   payment_information: PaymentStatusTypes;
   order_accepted: OrderAcceptedStatusTypes;
-  createdAt: string,
-  updatedAt: string,
-  availability: boolean
-}
+  createdAt: string;
+  updatedAt: string;
+  availability: boolean;
+};
 
 export type OrderShippingDetailsTypes = {
   addresses: {
-    origin?: IndividualAddressTypes,
-    destination: IndividualAddressTypes
-  },
-  tracking: TrackingInformationTypes,
-  quote: ShippingQuoteTypes,
-  delivery_confirmed: boolean
-}
+    origin?: IndividualAddressTypes;
+    destination: IndividualAddressTypes;
+  };
+  tracking: TrackingInformationTypes;
+  quote: ShippingQuoteTypes;
+  delivery_confirmed: boolean;
+};
 
 type OrderBuyerAndSellerDetails = {
-  id: string,
-  name: string,
-  email: string
-}
+  id: string;
+  name: string;
+  email: string;
+};
 export type OrderAcceptedStatusTypes = {
   status: "accepted" | "declined" | "";
   reason?: string;
@@ -280,18 +278,25 @@ export type TrackingInformationTypes = {
   id: string;
   link: string;
 };
-export type PaymentStatusTypes = {
-  status: "pending" | "completed";
-  transaction_value: string;
-  transaction_date: string;
-  transaction_reference: string;
-};
-
 export type ShippingQuoteTypes = {
   package_carrier: string;
   fees: string;
   taxes: string;
   additional_information?: string;
+};
+export type IndividualAddressTypes = {
+  address_line: string;
+  city: string;
+  country: string;
+  state: string;
+  zip: string;
+  [key: string]: string;
+};
+export type PaymentStatusTypes = {
+  status: "pending" | "completed";
+  transaction_value: string;
+  transaction_date: string;
+  transaction_reference: string;
 };
 
 export type LockModelTypes = {
@@ -358,14 +363,14 @@ export type WalletModelSchemaTypes = {
   wallet_id: string;
   available_balance: number;
   withdrawable_balance: number;
-  withdrawal_account?: WithdrawalAccount
+  withdrawal_account?: WithdrawalAccount;
 };
 export type WithdrawalAccount = {
-  account_number: number,
-  account_name: string,
-  bank_name: string,
-  bank_code: string
-}
+  account_number: number;
+  account_name: string;
+  bank_name: string;
+  bank_code: string;
+};
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;
@@ -558,20 +563,20 @@ export type ProrationSchemaTypes = {
 export type artworkCollectionTypes = "trending" | "curated" | "recent";
 
 export type ArtistAlgorithmSchemaTypes = {
-  params: ArtistAlgorithmSchemaQuestionTypes,
-  pricing: ArtistPricingSchemaTypes,
-  categorization: ArtistCategorization,
+  params: ArtistAlgorithmSchemaQuestionTypes;
+  pricing: ArtistPricingSchemaTypes;
+  categorization: ArtistCategorization;
   artist_id: string;
-  id: string
-}
+  id: string;
+};
 
 export type ArtistPricingSchemaTypes = {
-  categorization: string,
+  categorization: string;
   value_range: {
-    min: number,
-    max: number
-  },
-}
+    min: number;
+    max: number;
+  };
+};
 
 export type ArtistAlgorithmSchemaQuestionTypes = {
   graduate: boolean;

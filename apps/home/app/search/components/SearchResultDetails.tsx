@@ -79,6 +79,7 @@ export default function SearchResultDetails({
                           sessionId={sessionId}
                           availability={art.availability}
                           isDashboard={false}
+                          medium={art.medium}
                         />
                       );
                     })}

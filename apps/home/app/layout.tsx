@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { Inter } from "next/font/google";
+import { Inter, DM_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { SessionProvider } from "@omenai/package-provider/SessionProvider";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
@@ -10,16 +10,17 @@ import { OrderReceivedModal } from "@omenai/shared-ui-components/components/moda
 import { Toaster } from "sonner";
 import type { Viewport } from "next";
 import "./globals.css";
+import Footer from "@omenai/shared-ui-components/components/footer/Footer";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
 };
-const nunito_sans = Inter({
+const dm_sans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-nunito_sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-dm_sans",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default async function RootLayout({
   const session = await getServerSession();
   return (
     <html lang="en">
-      <body className={`${nunito_sans.className} flex flex-col justify-center`}>
+      <body className={`${dm_sans.className} flex flex-col justify-center`}>
         <NextTopLoader color="#1A1A1A" height={6} />
         <Toaster
           position="top-right"
@@ -50,6 +51,7 @@ export default async function RootLayout({
             <RecoveryModal />
             <OrderReceivedModal />
             {children}
+            <Footer />
           </QueryProvider>
         </SessionProvider>
       </body>

@@ -22,11 +22,11 @@ export default function DesktopNavbar() {
   const { session } = useContext(SessionContext);
   return (
     <>
-      <div className="flex justify-between p-5">
+      <div className="flex justify-between my-8">
         <div>
           <IndividualLogo />
         </div>
-        <ul className="flex gap-x-6 ">
+        <ul className="hidden md:flex gap-x-6">
           {navbarlinks.map((item) => {
             return (
               <NavbarLink
@@ -38,6 +38,7 @@ export default function DesktopNavbar() {
             );
           })}
         </ul>
+        <MobileNavbar />
         <div className="flex items-center space-x-4">
           {session && session.role === "user" && (
             <LoggedInUser user={session.name} />
@@ -47,7 +48,7 @@ export default function DesktopNavbar() {
             (session.role === "gallery" || session.role === "admin") && (
               <NavbarActionButtons />
             )}
-          <div className="lg:hidden block">
+          <div className="md:hidden block">
             <SlMenu
               className="text-sm"
               onClick={() => updateOpenSideNav(true)}

@@ -80,6 +80,7 @@ export default function AllArtworks({
                     likeIds={art.like_IDs as string[]}
                     sessionId={sessionId}
                     availability={art.availability}
+                    medium={art.medium}
                   />
                 );
               })}

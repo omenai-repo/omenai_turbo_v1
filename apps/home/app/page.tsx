@@ -16,6 +16,7 @@ import RecentViewWrapper from "./features/recentViews/RecentViewWrapper";
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
+import AppStoreAd from "./features/appStoreAd/AppStoreAd";
 export default function Home() {
   const { session } = useContext(SessionContext);
   const { data: promotionals, isLoading } = useQuery({
@@ -41,27 +42,46 @@ export default function Home() {
 
   return (
     <main>
-      <DesktopNavbar />
-      {promotionals && <Hero promotionals={promotionals.slice(0, 2)} />}
-      <div className="px-4 lg:px-8">
+      <div className="2xl:px-20 xl:px-16 lg:px-8 px-4">
+        <DesktopNavbar />
+
+        {promotionals && <Hero promotionals={promotionals} />}
+
         <LatestArtworkWrapper
-          sessionId={(session as IndividualSchemaTypes)?.role === "user" ? (session as IndividualSchemaTypes)?.user_id : undefined}
+          sessionId={
+            (session as IndividualSchemaTypes)?.role === "user"
+              ? (session as IndividualSchemaTypes)?.user_id
+              : undefined
+          }
         />
         <Collections />
         <TrendingArtworkWrapper
-          sessionId={(session as IndividualSchemaTypes)?.role === "user" ? (session as IndividualSchemaTypes)?.user_id : undefined}
+          sessionId={
+            (session as IndividualSchemaTypes)?.role === "user"
+              ? (session as IndividualSchemaTypes)?.user_id
+              : undefined
+          }
         />
         <Editorials />
         {session !== undefined && session.role === "user" && (
           <CuratedArtworkClientWrapper
-            sessionId={session.role === "user" ? (session as IndividualSchemaTypes)?.user_id : undefined}
+            sessionId={
+              session.role === "user"
+                ? (session as IndividualSchemaTypes)?.user_id
+                : undefined
+            }
           />
         )}
         <RecentViewWrapper
-          sessionId={(session as IndividualSchemaTypes)?.role === "user" ? (session as IndividualSchemaTypes)?.user_id : undefined}
+          sessionId={
+            (session as IndividualSchemaTypes)?.role === "user"
+              ? (session as IndividualSchemaTypes)?.user_id
+              : undefined
+          }
         />
         {/* <Footer /> */}
       </div>
+      <AppStoreAd />
     </main>
   );
 }

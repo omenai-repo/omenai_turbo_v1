@@ -61,6 +61,8 @@ type ActionStoreTypes = {
   userUpdatePasswordModalPopup: (value: boolean) => void;
   confirmOrderDeliveryPopup: { open: boolean; order_id: string };
   updateConfirmOrderDeliveryPopup: (value: boolean, order_id: string) => void;
+  curated_preference: string;
+  set_curated_preference: (text: string) => void;
 };
 
 export const actionStore = create<ActionStoreTypes>((set, get) => ({
@@ -220,5 +222,9 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
   confirmOrderDeliveryPopup: { open: false, order_id: "" },
   updateConfirmOrderDeliveryPopup: (value: boolean, order_id: string) => {
     set({ confirmOrderDeliveryPopup: { open: value, order_id } });
+  },
+  curated_preference: "All",
+  set_curated_preference: (text: string) => {
+    set({ curated_preference: text });
   },
 }));

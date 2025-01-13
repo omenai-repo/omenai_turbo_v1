@@ -53,30 +53,43 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
 
   return (
     <>
-      {artworks?.length > 0 && (
-        <div className="p-4 relative">
-          <div className="space-y-1 my-5">
-            <h1 className="text-sm md:text-md font-normal">Recently viewed</h1>
-            <p className="text-base md:text-sm text-[#858585] font-light italic">
-              Back for a Second Look: Your Recently Viewed Pieces
+      <div className="flex md:flex-row flex-col gap-4 mt-16">
+        <div className="flex justify-between items-center w-full my-5">
+          <div>
+            <p className="text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+              View history
+            </p>
+            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+              Recently viewed by you.
             </p>
           </div>
-          <div className="embla" ref={emblaRef}>
-            <div className="embla__container">
-              {artworks.map((artwork: any, index: number) => {
-                return (
-                  <RecentViewedCard
-                    image={artwork.url}
-                    key={index + artwork.art_id}
-                    artist={artwork.artist}
-                    name={artwork.artwork}
-                  />
-                );
-              })}
-            </div>
+
+          <div className="hidden sm:flex flex-col items-end">
+            <p className="text-sm font-[900]">Back for a Second Look:</p>
+            <p className="justify-self-end font-medium">Rediscover the Art</p>
+            <p className="justify-self-end font-medium">
+              That Captured Your Attention
+            </p>
+          </div>
+        </div>
+      </div>
+      {artworks?.length > 0 && (
+        <div className="embla" ref={emblaRef}>
+          <div className="embla__container flex gap-4">
+            {artworks.map((artwork: any, index: number) => {
+              return (
+                <RecentViewedCard
+                  image={artwork.url}
+                  key={index + artwork.art_id}
+                  artist={artwork.artist}
+                  name={artwork.artwork}
+                />
+              );
+            })}
           </div>
         </div>
       )}
+
       <div className="w-full flex gap-x-4 items-center my-3 mt-8 px-6">
         <div className=" w-full h-[1px] bg-[#fafafa]">
           <div

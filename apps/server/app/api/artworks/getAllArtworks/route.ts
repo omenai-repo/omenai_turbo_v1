@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
     const skip = (page - 1) * 10;
 
-    const allArtworks = await Artworkuploads.find().skip(skip).limit(30).sort({
+    const allArtworks = await Artworkuploads.find().skip(skip).limit(16).sort({
       createdAt: -1,
     });
 

@@ -1,68 +1,86 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import useEmblaCarousel from "embla-carousel-react";
 import SingleSlide from "./components/SingleSlide";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import HomeBG from "./HomeBG";
 
 export default function Hero({ promotionals }: any) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    watchDrag: false,
+    loop: false,
+    watchDrag: true,
+    align: "start",
   });
-  const [scroll, setScroll] = useState<number>(1);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const updateScrollProgress = () => {
+    if (!emblaApi) return;
+    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
+    setScrollProgress(progress);
+  };
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const handleScroll = () => {
+      requestAnimationFrame(updateScrollProgress);
+    };
+
+    emblaApi.on("scroll", handleScroll);
+    emblaApi.on("resize", updateScrollProgress);
+    updateScrollProgress(); // Initial progress update
+
+    return () => {
+      emblaApi.off("scroll", handleScroll);
+      emblaApi.off("resize", updateScrollProgress);
+    };
+  }, [emblaApi]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev();
-      setScroll((prev) => (prev === 2 ? 1 : 2));
     }
   }, [emblaApi]);
 
   const scrollNext = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollNext();
-      setScroll((prev) => (prev === 2 ? 1 : 2));
     }
   }, [emblaApi]);
 
   return (
-    <div className="embla" ref={emblaRef}>
-      <div className="embla__container">
-        {promotionals.map((promotional: any, index: number) => {
-          return (
-            <div
-              className="embla__slide"
-              key={promotional.id || promotional.heading || index}
-            >
-              <SingleSlide
-                headline={promotional.headline}
-                subheadline={promotional.subheadline}
-                cta={promotional.cta}
-                image={promotional.image}
-              />
-            </div>
-          );
-        })}
-      </div>
+    <>
+      {/* <HomeBG /> */}
+      <div className="embla my-5" ref={emblaRef}>
+        <div className="embla__container">
+          {promotionals.map((promotional: any, index: number) => {
+            return (
+              <div
+                className="embla__slide"
+                key={promotional.id || promotional.heading || index}
+              >
+                <SingleSlide
+                  headline={promotional.headline}
+                  subheadline={promotional.subheadline}
+                  cta={promotional.cta}
+                  image={promotional.image}
+                />
+              </div>
+            );
+          })}
+        </div>
 
-      <div className="w-full flex gap-x-4 items-center my-3 px-6">
-        <div className="w-full h-[2px] bg-[#fafafa] flex justify-center space-x-2 items-center">
-          {/* User */}
+        {/* <p>{scroll}</p> */}
+      </div>
+      <div className="w-full flex gap-x-4 items-center px-6">
+        <div className=" w-full h-[0.5px] bg-[#fafafa]">
           <div
-            onClick={scrollPrev}
-            className={`h-[1px] w-full rounded-full duration-500 cursor-pointer ${
-              scroll === 1 ? "bg-dark" : "bg-transparent text-dark"
-            } `}
-          />
-          <div
-            onClick={scrollNext}
-            className={`h-[1px] w-full rounded-full duration-500 cursor-pointer ${
-              scroll === 2 ? "bg-dark" : "bg-transparent text-dark"
-            } `}
-          />
+            className="h-full bg-dark "
+            style={{ width: `${scrollProgress * 100}%` }}
+          ></div>
         </div>
 
         <div className="flex items-center justify-center w-fit space-x-2">
@@ -80,7 +98,6 @@ export default function Hero({ promotionals }: any) {
           </button>
         </div>
       </div>
-      {/* <p>{scroll}</p> */}
-    </div>
+    </>
   );
 }

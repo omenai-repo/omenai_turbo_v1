@@ -53,24 +53,31 @@ export default function Collections() {
     }
   }, [emblaApi]);
   return (
-    <div className="p-4">
-      <div className="flex gap-4 my-5 flex-col md:flex-row">
-        <div className="space-y-1 flex-1">
-          <h1 className="text-sm md:text-md font-normal">Art Collections</h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
-            Dive Into Diverse Art Collections, Thoughtfully Curated for Your
-            Exploration
-          </p>
-        </div>
-        <Link
-          href={"/collections"}
-          className="text-dark flex items-center gap-x-2 font-normal text-[14px] break-words"
-        >
-          View all
-          <MdArrowRightAlt />
-        </Link>
-      </div>
+    <div className="p-2">
+      <div className="flex md:flex-row flex-col gap-4 my-5">
+        <div className="flex justify-between items-center w-full my-5">
+          <div>
+            <p className="text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+              Art collections
+            </p>
+            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+              Art collections.
+            </p>
+          </div>
 
+          <div className="hidden sm:flex flex-col items-end">
+            <p className="text-sm font-[900]">
+              Curated Creativity, All in One Place:
+            </p>
+            <p className="justify-self-end font-medium">
+              Dive Into Diverse Art Collections,
+            </p>
+            <p className="justify-self-end font-medium">
+              Thoughtfully Curated for Your Exploration
+            </p>
+          </div>
+        </div>
+      </div>
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           {/* <div className="embla__slide">
@@ -88,7 +95,7 @@ export default function Collections() {
           })}
         </div>
 
-        <div className="w-full flex gap-x-4 items-center my-3 mt-8">
+        <div className="w-full flex gap-x-4 items-center my-3">
           <div className=" w-full h-[1px] bg-[#fafafa]">
             <div
               className="h-full bg-dark "
