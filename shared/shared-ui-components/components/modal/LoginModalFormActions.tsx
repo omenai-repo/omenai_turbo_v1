@@ -2,6 +2,7 @@
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import Link from "next/link";
 import { LoadSmall } from "../loader/Load";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function LoginModalFormActions({
   loading,
@@ -9,6 +10,7 @@ export default function LoginModalFormActions({
   loading: boolean;
 }) {
   const { toggleLoginModal, toggleLoginModalRecoveryForm } = actionStore();
+  const auth_url = auth_uri();
 
   return (
     <>
@@ -38,7 +40,7 @@ export default function LoginModalFormActions({
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>
             <Link
-              href="/auth/register/individual"
+              href={`${auth_url}/register/individual`}
               className="text-dark underline font-normal"
             >
               Create one

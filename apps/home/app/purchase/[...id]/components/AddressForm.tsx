@@ -17,13 +17,13 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 
 type AddressFormTypes = {
   userAddress: IndividualAddressTypes;
-  gallery_id: string;
+  author_id: string;
   art_id: string;
   availability: boolean;
 };
 export default function AddressForm({
   userAddress,
-  gallery_id,
+  author_id,
   art_id,
   availability,
 }: AddressFormTypes) {
@@ -57,7 +57,7 @@ export default function AddressForm({
       const createdShippingOrder = await createShippingOrder(
         (session as IndividualSchemaTypes)?.user_id,
         art_id,
-        gallery_id,
+        author_id,
         save_shipping_address,
         shipping_address,
         null,

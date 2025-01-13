@@ -10,7 +10,7 @@ import UpcomingSub from "./components/UpcomingSub";
 import { useLocalStorage } from "usehooks-ts";
 import { useContext, useEffect } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function SubscriptionActiveTheme({
   subscription_data,
@@ -19,7 +19,7 @@ export default function SubscriptionActiveTheme({
 }) {
   const { session } = useContext(SessionContext);
   const router = useRouter();
-  const url = login_url();
+  const url = auth_uri();
   if (session === null || session === undefined) router.replace(url);
 
   const [trans_id, set_trans_id] = useLocalStorage("flw_trans_id", "");

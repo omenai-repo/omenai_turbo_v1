@@ -15,7 +15,7 @@ import { galleryLogoUpdate } from "@omenai/shared-state-store/src/gallery/galler
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function LogoPickerModal() {
   const { modal, updateModal } = galleryLogoUpdate();
@@ -29,7 +29,7 @@ export default function LogoPickerModal() {
 
   const [logo, setLogo] = useState<File | null>(null);
 
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   async function handleSignout() {
     toast.info("Signing you out...");
     const res = await signOut();
@@ -38,7 +38,7 @@ export default function LogoPickerModal() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace(auth_url);
+      router.replace(`${auth_url}/login`);
     } else {
       toast.error("Operation successful", {
         description:

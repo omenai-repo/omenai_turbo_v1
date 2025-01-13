@@ -6,6 +6,7 @@ import Link from "next/link";
 import { GoArrowRight } from "react-icons/go";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { auth_uri } from "@omenai/url-config/src/config";
 export default function FormActions() {
   const { updateRecoveryModal } = actionStore();
 
@@ -13,13 +14,15 @@ export default function FormActions() {
 
   const { isLoading } = individualLoginStore();
 
+  const auth_url = auth_uri();
+
   return (
     <div className="flex flex-col mt-[1rem] gap-4 w-full">
       <div className="flex flex-col gap-y-2 justify-between items-center">
         <p className="font-normal text-xs text-dark/70 text-right">
           Need an account?{" "}
           <Link
-            href={"/auth/register/individual"}
+            href={`${auth_url}/register/individual`}
             className="text-dark underline"
           >
             Create one

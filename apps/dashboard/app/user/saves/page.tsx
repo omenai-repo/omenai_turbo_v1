@@ -15,9 +15,10 @@ export default function Saves() {
   const { session } = useContext(SessionContext);
   const router = useRouter();
   const { width } = useWindowSize();
-  const auth_url = login_url();
+  const auth_url = auth_uri();
 
-  if (session === null || session === undefined) router.replace(auth_url);
+  if (session === null || session === undefined)
+    router.replace(`${auth_url}/login`);
 
   const { data: artworks, isLoading } = useQuery({
     queryKey: ["fetch_saved_artworks"],

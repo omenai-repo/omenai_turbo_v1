@@ -15,15 +15,15 @@ export async function POST(request: Request) {
     // Create Checkout Sessions from body params.
     const url = getApiUrl();
     await connectMongoDB();
-    const { item, amount, gallery_id, meta, success_url, cancel_url } =
+    const { item, amount, seller_id, meta, success_url, cancel_url } =
       await request.json();
 
     const gallery = await AccountGallery.findOne(
-      { gallery_id },
+      { gallery_id: seller_id },
       "connected_account_id"
     );
     const active_subscription = await Subscriptions.findOne(
-      { "customer.gallery_id": gallery_id },
+      { "customer.gallery_id": seller_id },
       "plan_details status"
     );
 
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      metadata: { ...meta, gallery_id },
+      metadata: { ...meta, seller_id },
       payment_intent_data: {
         application_fee_amount: commission,
         transfer_data: {

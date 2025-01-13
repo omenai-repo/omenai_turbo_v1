@@ -3,10 +3,11 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useLoginStore } from "@omenai/shared-state-store/src/auth/login/LoginStore";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 function SelectSection() {
   const { updateCurrent } = useLoginStore();
-
+  const auth_url = auth_uri();
   return (
     <AnimatePresence key={5}>
       <motion.div
@@ -40,7 +41,7 @@ function SelectSection() {
         </div>
         <p className="text-right text-[#161616] mt-10">
           Don’t have an account?{" "}
-          <Link href={"/auth/register/gallery"}>
+          <Link href={`${auth_url}/register/gallery`}>
             {" "}
             <span className="underline text-black font-normal">
               Create one

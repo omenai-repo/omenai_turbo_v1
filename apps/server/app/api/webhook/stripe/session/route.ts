@@ -7,7 +7,10 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
-import { PaymentStatusTypes, PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
+import {
+  PaymentStatusTypes,
+  PurchaseTransactionModelSchemaTypes,
+} from "@omenai/shared-types";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
@@ -99,7 +102,7 @@ export async function POST(request: Request) {
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
         trans_amount: formatPrice(paymentIntent.amount_total / 100, currency),
         trans_date: date,
-        trans_gallery_id: meta.gallery_id,
+        trans_gallery_id: meta.seller_id,
         trans_owner_id: meta.user_id,
         trans_owner_role: "user",
         trans_reference: paymentIntent.id,
@@ -120,7 +123,7 @@ export async function POST(request: Request) {
         month,
         year,
         value: paymentIntent.amount_total / 100,
-        id: meta.gallery_id,
+        id: meta.seller_id,
       };
 
       await SalesActivity.create({ ...activity });
@@ -178,8 +181,8 @@ export async function POST(request: Request) {
 
     // Send mail to gallery
     await sendPaymentSuccessGalleryMail({
-      email: meta.gallery_email,
-      name: meta.gallery_name,
+      email: meta.seller_email,
+      name: meta.seller_name,
       artwork: meta.artwork_name,
       order_id: email_order_info.order_id,
       order_date: formatIntlDateTime(email_order_info.createdAt),

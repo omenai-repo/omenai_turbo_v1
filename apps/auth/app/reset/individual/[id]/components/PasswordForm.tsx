@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { resetPassword } from "@omenai/shared-services/password/resetPassword";
+import { auth_uri } from "@omenai/url-config/src/config";
 type IdProps = {
   id: string;
 };
@@ -17,6 +18,8 @@ export default function PasswordForm({ id }: IdProps) {
   const [errorList, setErrorList] = useState<string[]>([]);
 
   const router = useRouter();
+
+  const auth_url = auth_uri();
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const label = e.target.name;
@@ -71,7 +74,7 @@ export default function PasswordForm({ id }: IdProps) {
             },
             className: "class",
           });
-          router.replace("/auth/login/");
+          router.replace(`${auth_url}/login`);
         }
         setIsLoading();
       }

@@ -6,7 +6,7 @@ import { useContext, useState } from "react";
 import { toast } from "sonner";
 
 import { useLocalStorage } from "usehooks-ts";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { getApiUrl, auth_uri } from "@omenai/url-config/src/config";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
@@ -33,6 +33,7 @@ export default function PricingCardItem({
   const url = getApiUrl();
   const router = useRouter();
   const { session } = useContext(SessionContext);
+  const auth_url = auth_uri();
   async function handleSubscribe() {
     if (
       session === undefined ||
@@ -47,7 +48,7 @@ export default function PricingCardItem({
         },
         className: "class",
       });
-      router.push("/auth/login/");
+      router.push(`${auth_url}/login`);
     } else {
       setLoading(true);
       const response = await fetch("/api/subscriptions/subscribeUser", {

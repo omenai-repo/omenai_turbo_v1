@@ -7,7 +7,7 @@ export const declineOrderRequest = async (
 ) => {
   const url = getApiUrl();
   try {
-    const res = await fetch(`${url}/api/orders/gallery/declineOrderRequest`, {
+    const res = await fetch(`${url}/api/orders/declineOrderRequest`, {
       method: "POST",
       body: JSON.stringify({
         data,

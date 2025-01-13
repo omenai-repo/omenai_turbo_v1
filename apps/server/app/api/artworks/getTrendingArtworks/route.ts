@@ -51,7 +51,16 @@ export async function POST(request: Request) {
     // Fetch all filtered artworks, sorted by creation date
     const allArtworks = await Artworkuploads.find({
       ...filterCriteria,
-      gallery_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+      $or: [
+        // Condition for artworks by artists
+        { "role_access.role": "artist" },
+
+        // Condition for artworks by galleries meeting the specified criteria
+        {
+          "role_access.role": "gallery",
+          author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+        },
+      ],
       impressions: { $gt: 0 },
     })
       .sort({ impressions: -1 })
@@ -69,28 +78,36 @@ export async function POST(request: Request) {
     // Separate artworks into basic and pro/premium
     let selectedBasicArtworks = [];
     let selectedProPremiumArtworks = [];
+    let artworksByArtist = [];
+
     let skippedBasicArtworks = 0;
 
     for (let artwork of allArtworks) {
-      if (basicGalleryIds.includes(artwork.gallery_id)) {
-        if (skippedBasicArtworks < skip) {
-          skippedBasicArtworks++;
-          continue;
-        }
-        if (selectedBasicArtworks.length < remainingBasicLimit) {
-          selectedBasicArtworks.push(artwork);
-        }
+      if (artwork.role_access.role === "artist") {
+        artworksByArtist.push(artwork);
       } else {
-        if (skippedBasicArtworks + selectedProPremiumArtworks.length < skip) {
-          skippedBasicArtworks++;
-          continue;
+        if (basicGalleryIds.includes(artwork.author_id)) {
+          if (skippedBasicArtworks < skip) {
+            skippedBasicArtworks++;
+            continue;
+          }
+          if (selectedBasicArtworks.length < remainingBasicLimit) {
+            selectedBasicArtworks.push(artwork);
+          }
+        } else {
+          if (skippedBasicArtworks + selectedProPremiumArtworks.length < skip) {
+            skippedBasicArtworks++;
+            continue;
+          }
+          selectedProPremiumArtworks.push(artwork);
         }
-        selectedProPremiumArtworks.push(artwork);
       }
 
       // Stop if we have filled the page
       if (
-        selectedBasicArtworks.length + selectedProPremiumArtworks.length >=
+        selectedBasicArtworks.length +
+          selectedProPremiumArtworks.length +
+          artworksByArtist.length >=
         PAGE_SIZE
       )
         break;
@@ -100,11 +117,21 @@ export async function POST(request: Request) {
     const allTrendingPaginatedArtworks = [
       ...selectedBasicArtworks,
       ...selectedProPremiumArtworks,
+      ...artworksByArtist,
     ].slice(0, PAGE_SIZE);
 
     const total = await Artworkuploads.countDocuments({
       ...builtFilters,
-      gallery_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+      $or: [
+        // Condition for artworks by artists
+        { "role_access.role": "artist" },
+
+        // Condition for artworks by galleries meeting the specified criteria
+        {
+          "role_access.role": "gallery",
+          author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+        },
+      ],
       impressions: { $gt: 0 },
     });
 

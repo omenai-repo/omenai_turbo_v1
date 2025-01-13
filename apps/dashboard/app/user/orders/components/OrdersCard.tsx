@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { GoIssueClosed } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdInfo, MdOutlineCallToAction } from "react-icons/md";
-import { base_url, login_url } from "@omenai/url-config/src/config";
+import { base_url, auth_uri } from "@omenai/url-config/src/config";
 
 type OverviewOrdersCardProps = {
   title: string;
@@ -50,13 +50,14 @@ export default function OrdersCard({
   availability,
 }: OverviewOrdersCardProps) {
   const image_url = getImageFileView(url, 200);
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   const currency = getCurrencySymbol("USD");
   const session = useSession();
   const router = useRouter();
   const base_uri = base_url();
 
-  if (session === null || session === undefined) router.replace(auth_url);
+  if (session === null || session === undefined)
+    router.replace(`${auth_url}/login`);
 
   const { updateConfirmOrderDeliveryPopup } = actionStore();
 
@@ -216,10 +217,7 @@ export default function OrdersCard({
                 status !== "completed" &&
                 !delivery_confirmed &&
                 tracking_information.link !== "" && (
-                  <Link
-                    href={tracking_information.link}
-                    target="_blank"
-                  >
+                  <Link href={tracking_information.link} target="_blank">
                     <button className="whitespace-nowrap bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                       <span>Track this order</span>
                     </button>

@@ -12,7 +12,7 @@ export const createShippingOrder = async (
 ) => {
   const url = getApiUrl();
   try {
-    const res = await fetch(`${url}/api/orders/gallery/createOrder`, {
+    const res = await fetch(`${url}/api/orders/createOrder`, {
       method: "POST",
       body: JSON.stringify({
         buyer_id,

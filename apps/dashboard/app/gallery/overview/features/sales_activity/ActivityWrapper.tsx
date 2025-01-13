@@ -9,12 +9,12 @@ import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import { login_url } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function ActivityWrapper() {
   const { session } = useContext(SessionContext);
   const router = useRouter();
-  const url = login_url();
+  const url = auth_uri();
   if (session === undefined) router.replace(url);
   const { data: sales, isLoading } = useQuery({
     queryKey: ["get_overview_sales_activity"],

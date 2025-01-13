@@ -34,7 +34,7 @@ export function createUploadedArtworkData(
       title: data.title,
       rarity: data.rarity,
       url,
-      gallery_id: id,
+      author_id: id,
       artist_birthyear: data.artist_birthyear,
       artist_country_origin: data.artist_country_origin,
       certificate_of_authenticity: data.certificate_of_authenticity,

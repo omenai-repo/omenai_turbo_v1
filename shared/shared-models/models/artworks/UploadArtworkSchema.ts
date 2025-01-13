@@ -28,7 +28,7 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
       unique: true,
       index: true,
     },
-    gallery_id: { type: String, required: true, index: true },
+    author_id: { type: String, required: true, index: true },
     url: { type: String, required: true, unique: true },
     impressions: { type: Number, default: 0 },
     like_IDs: { type: Schema.Types.Mixed, default: [] },
@@ -42,6 +42,7 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
       type: Boolean,
       default: () => true,
     },
+    role_access: {type: Schema.Types.Mixed, required: true}
   },
   { timestamps: true }
 );

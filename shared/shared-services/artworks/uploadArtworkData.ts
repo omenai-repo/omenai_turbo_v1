@@ -6,22 +6,18 @@ export async function uploadArtworkData(
 ) {
   try {
     const url = getApiUrl();
+
     const response = await fetch(`${url}/api/artworks/upload`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-type": "application/json",
       },
-    }).then(async (res) => {
-      const response = {
-        isOk: res.ok,
-        body: await res.json(),
-      };
-
-      return response;
     });
 
-    return response;
+    const result = await response.json();
+
+    return { body: result, isOk: response.ok };
   } catch (error: any) {
     console.log(error);
   }

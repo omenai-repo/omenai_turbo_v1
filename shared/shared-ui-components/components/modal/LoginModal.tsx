@@ -1,7 +1,7 @@
 "use client";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { AnimatePresence, motion } from "framer-motion";
-// import LoginModalForm from "./LoginModalForm";
+import LoginModalForm from "./LoginModalForm";
 
 const LoginModal = () => {
   const { openLoginModal, toggleLoginModal } = actionStore();
@@ -24,7 +24,7 @@ const LoginModal = () => {
             className="bg-white text-dark p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
-            {/* <LoginModalForm /> */}
+            <LoginModalForm />
           </motion.div>
         </motion.div>
       )}

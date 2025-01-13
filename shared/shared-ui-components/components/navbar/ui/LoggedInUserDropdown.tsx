@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { BiUser } from "react-icons/bi";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { useRouter } from "next/navigation";
-import { dashboard_url, login_url } from "@omenai/url-config/src/config";
+import { dashboard_url, auth_uri } from "@omenai/url-config/src/config";
 
 const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
   const [open, setOpen] = useState(false);
@@ -89,7 +89,7 @@ const Option = ({
   setSelectedTab: (label: string) => void;
 }) => {
   const router = useRouter();
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   const base_dashboard_url = dashboard_url();
 
   async function handleSignout() {
@@ -100,7 +100,7 @@ const Option = ({
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace(auth_url);
+      router.replace(`${auth_url}/login`);
     } else {
       toast.error("Operation successful", {
         description:

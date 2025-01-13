@@ -171,7 +171,7 @@ export type ArtworkSchemaTypes = {
   url: string;
   pricing: ArtworkPricing;
   art_id: string;
-  gallery_id: string;
+  author_id: string;
   impressions?: number;
   like_IDs?: string[];
   artist_birthyear: string;
@@ -358,7 +358,14 @@ export type WalletModelSchemaTypes = {
   wallet_id: string;
   available_balance: number;
   withdrawable_balance: number;
+  withdrawal_account?: WithdrawalAccount
 };
+export type WithdrawalAccount = {
+  account_number: number,
+  account_name: string,
+  bank_name: string,
+  bank_code: string
+}
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;

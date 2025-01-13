@@ -4,6 +4,7 @@ import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { resetPassword } from "@omenai/shared-services/password/resetPassword";
 import { resetStore } from "@omenai/shared-state-store/src/auth/reset/resetStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { auth_uri } from "@omenai/url-config/src/config";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, Key, useState } from "react";
 import { toast } from "sonner";
@@ -18,6 +19,8 @@ export default function PasswordForm({ id }: IdProps) {
   const [errorList, setErrorList] = useState<string[]>([]);
 
   const router = useRouter();
+
+  const auth_url = auth_uri();
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const label = e.target.name;
@@ -72,7 +75,7 @@ export default function PasswordForm({ id }: IdProps) {
             },
             className: "class",
           });
-          router.replace("/auth/login/");
+          router.replace(`${auth_url}/login`);
         }
         setIsLoading();
       }

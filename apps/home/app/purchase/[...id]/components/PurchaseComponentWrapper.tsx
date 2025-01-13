@@ -71,7 +71,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
           <AddressForm
             availability={(artwork as ArtworkResultTypes).availability}
             userAddress={address}
-            gallery_id={(artwork as ArtworkResultTypes).gallery_id}
+            author_id={(artwork as ArtworkResultTypes).author_id}
             art_id={(artwork as ArtworkResultTypes).art_id}
           />
         </div>

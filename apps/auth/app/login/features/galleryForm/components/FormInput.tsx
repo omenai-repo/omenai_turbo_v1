@@ -13,11 +13,11 @@ import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/Gal
 import { Form } from "@omenai/shared-types";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { login_url, dashboard_url } from "@omenai/url-config/src/config";
+import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
-  const auth_url = login_url();
+  const auth_url = auth_uri();
   const dashboard_base_url = dashboard_url();
 
   //simple state to show password visibility
@@ -44,7 +44,7 @@ export default function FormInput() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace(auth_url);
+      router.replace(`${auth_url}/login`);
     } else {
       toast.error("Operation successful", {
         description:
@@ -93,8 +93,10 @@ export default function FormInput() {
               set_redirect_uri("");
             }
           } else {
-            await handleSignout();
+            router.replace(`${auth_url}/verify/gallery/${session.gallery_id}`);
           }
+        } else {
+          await handleSignout();
         }
       }
     } catch (error) {
