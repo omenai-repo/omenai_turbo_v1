@@ -42,7 +42,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="2xl:px-16 xl:px-8 px-4">
+      <div>
         <DesktopNavbar />
 
         {promotionals && <Hero promotionals={promotionals} />}
@@ -82,6 +82,7 @@ export default function Home() {
         {/* <Footer /> */}
       </div>
       <AppStoreAd />
+      <Footer />
     </main>
   );
 }

@@ -52,7 +52,7 @@ export default function ArtworkCard({
               loading="lazy"
               height={500}
               width={500}
-              className="w-full rounded-[10px] h-full aspect-auto object-cover object-center cursor-pointer artImage"
+              className="w-full rounded-[20px] h-full aspect-auto object-cover object-center cursor-pointer artImage"
             />
           </Link>
           <div className="bg-[#FFFFFF] py-[5px] rounded-[24px] text-xs absolute px-[14px] top-[1.5rem] left-[1rem]">

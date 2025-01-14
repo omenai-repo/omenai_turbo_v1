@@ -6,7 +6,7 @@ type DimensionsProps = {
 export default function Dimensions({ dimensions }: DimensionsProps) {
   return (
     <div className="">
-      <h6 className="text-dark/80 font-normal text-[14px]">Dimensions:</h6>
+      <h6 className="text-dark/80 font-medium text-[14px]">Dimensions:</h6>
 
       <div className="w-full grid grid-cols-12 gap-x-2">
         <div className="col-span-6 md:col-span-4 text-xs">

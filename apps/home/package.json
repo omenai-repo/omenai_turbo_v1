@@ -24,9 +24,11 @@
     "@omenai/shared-ui-components": "*",
     "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
+    "@omenai/test-config": "*",
     "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
-    "@omenai/test-config": "*",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.throttle": "^4.1.9",
     "eslint": "^9",
     "eslint-config-next": "15.0.4"
   },
@@ -34,6 +36,8 @@
     "@tinymce/tinymce-react": "^5.1.1",
     "dompurify": "^3.2.3",
     "flowbite-react": "^0.10.2",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "lottie-react": "^2.4.0",
     "nextjs-toploader": "^3.7.15"
   }

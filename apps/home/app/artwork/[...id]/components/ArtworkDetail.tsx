@@ -20,6 +20,7 @@ import {
   IndividualSchemaTypes,
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import FullArtworkDetails from "./FullArtworkDetails";
 
 type ArtworkDetailTypes = {
   data: ArtworkResultTypes;
@@ -57,8 +58,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         };
         const res = await requestPrice(
           artwork_data,
-          (session as IndividualSchemaTypes)?.email,
-          (session as IndividualSchemaTypes)?.name
+          (session as IndividualSchemaTypes).email,
+          (session as IndividualSchemaTypes).name
         );
 
         if (res?.isOk) {
@@ -89,7 +90,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   return (
     <div className="flex flex-col gap-y-4">
       <div className="">
-        <h1 className="text-md font-normal">{data.title}</h1>
+        <h1 className="text-md font-[900]">{data.title}</h1>
         <h3 className="text-base font-normal text-dark/70">{data.artist}</h3>
       </div>
       <p className="text-xs font-normal text-dark/80 gap-x-4 flex items-center">
@@ -97,6 +98,17 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         <span>|</span>
         <span>{data.rarity}</span>
       </p>
+
+      <div className="flex flex-col gap-y-2">
+        <span className="text-[14px] font-medium">Price</span>
+        <h1 className=" text-sm font-[900]">
+          {!data.availability
+            ? "Sold"
+            : data.pricing.shouldShowPrice === "Yes"
+              ? formatPrice(data.pricing.usd_price)
+              : "Price on request"}
+        </h1>
+      </div>
       <Dimensions dimensions={data.dimensions} />
       <div className="flex items-center flex-wrap gap-4">
         {data.certificate_of_authenticity === "Yes" && (
@@ -117,24 +129,15 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         </div>
       </div>
 
-      <hr className="border-dark/10" />
-      <div className="flex flex-col gap-y-2">
-        <span className="text-[14px] font-light">Price</span>
-        <h1 className=" text-sm font-bold">
-          {!data.availability
-            ? "Sold"
-            : data.pricing.shouldShowPrice === "Yes"
-              ? formatPrice(data.pricing.usd_price)
-              : "Price on request"}
-        </h1>
-      </div>
-      <hr className="border-dark/10" />
+      {/* <hr className="ring-dark/10" />
 
-      <div className="flex flex-col gap-2 font-normal w-full text-[14px]">
+      <hr className="ring-dark/10" /> */}
+
+      <div className="flex flex-col gap-y-5 font-normal w-full text-[14px]">
         <button
           disabled={loading || !data.availability}
           onClick={handleBuyButtonClick}
-          className="w-full bg-dark h-[40px] px-4  text-white hover:bg-dark/80 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
+          className="w-full bg-dark h-[50px] px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
         >
           {loading ? (
             <LoadSmall />
@@ -155,7 +158,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           (sessionId && !likedState.ids.includes(sessionId))) && (
           <button
             onClick={() => handleLike(true)}
-            className="w-full h-[40px] px-4 justify-center flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark border border-dark/10 duration-300 group"
+            className="w-full h-[50px] px-4 justify-center rounded-full flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark ring-1 ring-dark/50 duration-300 group"
           >
             <span>Save artwork</span>
             <IoHeartOutline />
@@ -164,7 +167,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {sessionId !== undefined && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
-            className="w-full h-[40px] px-4 rounded-md border flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 border-dark/10 text-dark text-base group"
+            className="w-full h-[50px] px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-base group"
           >
             <span>Remove from saved</span>
             <GiCheckMark />

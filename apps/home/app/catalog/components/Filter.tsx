@@ -71,18 +71,18 @@ export default function Filter() {
   };
 
   return (
-    <div className="sticky top-[38px] sm:top-[50px] lg:top-[73px] z-20 py-3 bg-white">
+    <div className="sticky top-[60px] z-20 py-3 bg-white">
       <div
         className={`w-full ${
           width > 960 ? "hidden" : "flex"
-        } justify-between items-center my-5`}
+        } justify-between items-center`}
       >
         <button
           className={`${
             showFilterBlock
               ? "bg-dark text-white"
               : "border-dark/10 border bg-white text-dark"
-          } duration-200 border px-3 py-1 border-dark/10 rounded-full h-[35px] flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
+          } duration-200 border px-3 py-1 border-dark/10 rounded-full relative z-20 h-[35px] flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
           onClick={() => setShowFilterBlock(!showFilterBlock)}
         >
           <span className="text-[13px] font-normal">Filters</span>
@@ -96,7 +96,7 @@ export default function Filter() {
       </div>
       {selectedFilters.length > 0 && (
         <>
-          <div className="flex flex-wrap gap-4 items-center py-4 px-2 cursor-pointer">
+          <div className="flex flex-wrap gap-x-4 items-center py-4 px-2 cursor-pointer">
             {selectedFilters.map((filter) => {
               return <FilterPill key={filter.name} filter={filter.name} />;
             })}
@@ -122,7 +122,7 @@ export default function Filter() {
       <div
         className={`${
           width >= 960 || showFilterBlock ? "flex" : "hidden"
-        } grid grid-cols-2 md:flex md:flex-wrap relative`}
+        } grid grid-cols-2 mt-2 md:flex md:flex-wrap relative`}
       >
         <PriceFilter />
         <YearFilter />

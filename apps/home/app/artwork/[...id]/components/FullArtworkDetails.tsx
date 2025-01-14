@@ -5,14 +5,14 @@ type FullArtworkDetailsType = {
 };
 export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
   return (
-    <div className=" m-5 lg:w-[1000px] border border-dark/10">
-      <div className="p-4 bg-[#FAFAFA] border-dark/10 w-full">
-        <h3 className="text-dark/80 font-semibold text-[14px]">
+    <div className=" my-5 w-full">
+      <div className="p-4 bg-dark w-full  rounded-tl-[20px] rounded-tr-[20px]">
+        <h3 className="text-white font-semibold text-[14px]">
           Additional details about this artwork
         </h3>
       </div>
 
-      <div className="w-full text-dark/80 justify-center gap-y-3 py-4 font-normal text-xs">
+      <div className="w-full text-dark/80 border border-dark/10 justify-center gap-y-3 py-4 font-normal text-xs">
         <div className="grid grid-cols-12 p-4">
           <p className="font-medium col-span-6">Materials:</p>
           <p className="col-span-6">{data.materials}</p>

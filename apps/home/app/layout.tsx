@@ -50,8 +50,7 @@ export default async function RootLayout({
             <LoginModal />
             <RecoveryModal />
             <OrderReceivedModal />
-            {children}
-            <Footer />
+            <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
           </QueryProvider>
         </SessionProvider>
       </body>

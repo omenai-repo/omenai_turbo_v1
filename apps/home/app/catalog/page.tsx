@@ -4,6 +4,8 @@ import Collections from "../features/collections/Collections";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
+import Footer from "@omenai/shared-ui-components/components/footer/Footer";
+import AppStoreAd from "../features/appStoreAd/AppStoreAd";
 
 export default async function page() {
   const session = await getServerSession();
@@ -11,12 +13,12 @@ export default async function page() {
   return (
     <main className="relative">
       <DesktopNavbar />
-      <div className="px-0 md:px-4">
-        <Collections />
+      <div className="">
+        <Collections isCatalog={true} />
       </div>
 
       {/* <Hero /> */}
-      <div className="px-4 md:px-8">
+      <div className="">
         <Filter />
         <AllArtworks
           sessionId={
@@ -25,6 +27,8 @@ export default async function page() {
               : undefined
           }
         />
+        <AppStoreAd />
+        <Footer />
       </div>
     </main>
   );

@@ -4,13 +4,13 @@ import { fetchSingleArtwork } from "@omenai/shared-services/artworks/fetchSingle
 import { IndividualSchemaTypes, UserType } from "@omenai/shared-types";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { useQuery } from "@tanstack/react-query";
-import { Footer } from "flowbite-react";
 import ArtistInformation from "./components/ArtistInformation";
 import FullArtworkDetails from "./components/FullArtworkDetails";
 import ProductBox from "./components/ProductBox";
 import SimilarArtworks from "./components/SimilarArtworks";
 import SimilarArtworksByArtist from "./components/SimilarArtworksByArtist";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import Footer from "@omenai/shared-ui-components/components/footer/Footer";
 
 export default function ArtworkPageWrapper({
   param,
@@ -49,7 +49,6 @@ export default function ArtworkPageWrapper({
             }
           />
           <hr className="border-dark/10" />
-          <FullArtworkDetails data={artworkDetails} />
           <ArtistInformation
             name={artworkDetails.artist}
             year={artworkDetails.artist_birthyear}

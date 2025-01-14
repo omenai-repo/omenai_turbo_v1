@@ -43,7 +43,7 @@ export default function SimilarArtworksByArtist({
 
   const arts = catalogChunk(
     artworksArray,
-    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : width < 1440 ? 4 : 5
+    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : 4
   );
   return (
     <div className="w-full h-full p-5">

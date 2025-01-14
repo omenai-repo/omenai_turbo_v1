@@ -11,7 +11,11 @@ import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import { collections } from "../../collectionConstants";
 
-export default function Collections() {
+export default function Collections({
+  isCatalog = false,
+}: {
+  isCatalog?: boolean;
+}) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     watchDrag: true,
@@ -53,31 +57,40 @@ export default function Collections() {
     }
   }, [emblaApi]);
   return (
-    <div className="p-2">
-      <div className="flex md:flex-row flex-col gap-4 mb-5">
-        <div className="flex justify-between items-center w-full my-5">
-          <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
-              Art collections
-            </p>
-            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
-              Art collections.
-            </p>
-          </div>
+    <div className="">
+      {isCatalog ? (
+        <>
+          <h1 className="text-sm sm:text-lg md:text-xl font-normal mt-5 text-[#000000]">
+            Curate creativity and design in the digital realm.
+          </h1>
+          <hr className="w-full border border-dark/10 my-2" />
+        </>
+      ) : (
+        <div className="flex md:flex-row flex-col gap-4 mb-5">
+          <div className="flex justify-between items-center w-full my-5">
+            <div>
+              <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+                Art collections
+              </p>
+              <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+                Art collections.
+              </p>
+            </div>
 
-          <div className="hidden sm:flex flex-col items-end">
-            <p className="text-sm font-[900]">
-              Curated Creativity, All in One Place:
-            </p>
-            <p className="justify-self-end font-medium">
-              Dive Into Diverse Art Collections,
-            </p>
-            <p className="justify-self-end font-medium">
-              Thoughtfully Curated for Your Exploration
-            </p>
+            <div className="hidden sm:flex flex-col items-end">
+              <p className="text-sm font-[900]">
+                Curated Creativity, All in One Place:
+              </p>
+              <p className="justify-self-end font-medium">
+                Dive Into Diverse Art Collections,
+              </p>
+              <p className="justify-self-end font-medium">
+                Thoughtfully Curated for Your Exploration
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           {/* <div className="embla__slide">
@@ -87,6 +100,7 @@ export default function Collections() {
             return (
               <div key={collection.title} className="mx-2">
                 <ArtCollectionCard
+                  isCatalog={isCatalog}
                   title={collection.title}
                   url={collection.url}
                 />
