@@ -10,7 +10,7 @@ export default function EditorialsGrid({ editorials }: { editorials: any }) {
 
   return (
     <>
-      <EditorialGridItemsList editorials={editorials} />
+      <EditorialGridItemsList editorials={editorials.slice().reverse()} />
     </>
   );
 }

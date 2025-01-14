@@ -42,7 +42,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="2xl:px-20 xl:px-16 lg:px-8 px-4">
+      <div className="2xl:px-16 xl:px-8 px-4">
         <DesktopNavbar />
 
         {promotionals && <Hero promotionals={promotionals} />}

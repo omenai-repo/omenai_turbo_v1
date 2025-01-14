@@ -14,8 +14,8 @@ export default function SingleSlide({
   const image_url = getPromotionalFileView(image, 250, 200, "webp");
 
   return (
-    <section className="min-w-[200px] w-[330px] sm:w-[500px] sm:max-w-[500px] bg-dark flex h-[200px] items-center p-2 xs:p-4 rounded-lg">
-      <div className="text-white p-2 xs:p-4 flex col-span-1 w-full flex-col gap-y-3">
+    <section className="min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] bg-dark flex h-[200px] items-center p-2 xs:p-4 rounded-lg">
+      <div className="text-white p-2 flex col-span-1 w-full flex-col gap-y-3">
         <p className="text-xs xs:text-base font-bold">{headline}</p>
         <p className="text-xs font-normal">{subheadline}</p>
         <Link href={cta} className="group">

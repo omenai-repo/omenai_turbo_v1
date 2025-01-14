@@ -45,7 +45,7 @@ export default function CuratedArtworksLayout({
         preferences={(session as IndividualSchemaTypes).preferences}
       />
       <div
-        className={`h-[130vh] overflow-hidden relative transition-opacity duration-300 ${
+        className={`h-[180vh] sm:h-[130vh] overflow-hidden relative transition-opacity duration-300 ${
           isFading ? "opacity-10" : "opacity-100"
         }`}
       >

@@ -32,10 +32,10 @@ export default function Editorials() {
     <>
       {editorials && editorials?.length === 0 ? null : (
         <>
-          <div className="flex md:flex-row flex-col gap-4 mt-16 mb-4">
+          <div className="flex md:flex-row flex-col gap-4 mt-16 mb-5">
             <div className="flex justify-between items-center w-full my-5">
               <div>
-                <p className="text-xs xs:text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+                <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
                   Editorials
                 </p>
                 <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">

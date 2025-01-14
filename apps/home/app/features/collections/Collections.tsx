@@ -54,10 +54,10 @@ export default function Collections() {
   }, [emblaApi]);
   return (
     <div className="p-2">
-      <div className="flex md:flex-row flex-col gap-4 my-5">
+      <div className="flex md:flex-row flex-col gap-4 mb-5">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-base ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
               Art collections
             </p>
             <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">

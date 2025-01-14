@@ -71,22 +71,22 @@ export default function ArtworkCard({
             )}
           </div>
 
-          <div className="flex items-center justify-center">
+          <div className="flex items-centerjustify-center">
             {/* Glass Card */}
-            <div className="p-3 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
+            <div className="p-3 flex flex-col gap-y-1 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
               {/* Title */}
               <div className="text-gray-400 text-xs xs:text-base font-light">
                 {name}
               </div>
-              <div className="text-gray-400 text-xs font-light italic">
+              <div className="text-gray-400 text-xs font-light">
                 {artist.substring(0, 20)}
                 {artist.length > 20 && "..."}
               </div>
 
               {!trending && (
-                <div className="flex justify-between mt-3">
+                <div className="flex justify-between mt-1.5">
                   {/* Price */}
-                  <div className="text-white text-xs xs:text-base font-bold">
+                  <div className="text-white text-xs xs:text-[14px] font-bold">
                     {pricing?.price && pricing.shouldShowPrice === "Yes"
                       ? !availability
                         ? "Sold"
@@ -98,11 +98,14 @@ export default function ArtworkCard({
 
                   {/* Purchase Button */}
                   {!availability ? null : (
-                    <button className="px-4 py-[5px] rounded-full bg-white text-black text-xs font-medium shadow">
+                    <Link
+                      href={`/artwork/${name}`}
+                      className="px-4 py-[5px] duration-300 hover:bg-dark hover:text-white rounded-full bg-white text-black text-xs font-medium shadow"
+                    >
                       {pricing?.price && pricing.shouldShowPrice === "Yes"
                         ? "Purchase"
                         : "Request"}
-                    </button>
+                    </Link>
                   )}
                 </div>
               )}
