@@ -57,12 +57,12 @@ export function ArtworksListing({
 
   const arts = catalogChunk(
     artworks,
-    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : width < 1440 ? 4 : 5
+    width < 640 ? 1 : width < 990 ? 2 : width < 1440 ? 3 : 4
   );
 
   return (
-    <div className="w-full mb-5 px-5 mt-3">
-      {/* <p className="text-xs font-normal mb-4">{artwork_total} artworks:</p> */}
+    <div className="w-full mb-5 mt-3">
+      {/* <p className="text-[14px] font-normal mb-4">{artwork_total} artworks:</p> */}
 
       <div className="flex flex-wrap gap-x-4 justify-center">
         {arts.map((artworks: any[], index) => {

@@ -18,7 +18,7 @@ export default function GalleryDetailPopupModal() {
     >
       <div className="bg-white p-5 rounded-md w-[500px]">
         <h1 className="text-base font-normal mb-4">Gallery Information</h1>
-        <div className="flex flex-col gap-y-2 text-xs">
+        <div className="flex flex-col gap-y-2 text-[14px]">
           <p>Name: {singleGalleryListItemData.name}</p>
           <p>Email: {singleGalleryListItemData.email}</p>
           <p>Location: {singleGalleryListItemData.location.address}</p>

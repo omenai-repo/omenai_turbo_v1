@@ -17,7 +17,7 @@ export const UserBanner = () => {
 
           <div className="">
             <p className="text-dark font-normal text-[15px]">{session?.name}</p>
-            <p className="text-[#858585] text-xs font-light">
+            <p className="text-[#858585] text-[14px] font-light">
               {session?.email}
             </p>
           </div>
@@ -32,7 +32,7 @@ export const UserBanner = () => {
             className=""
           />
 
-          <p className="text-xs">
+          <p className="text-[14px]">
             Status:{" "}
             <span
               className={`${

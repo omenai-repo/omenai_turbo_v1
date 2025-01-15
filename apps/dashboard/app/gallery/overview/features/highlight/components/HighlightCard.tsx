@@ -26,5 +26,5 @@ export default function HighlightCard({ tag }: HightlightCardProps) {
 
   if (isLoading) return <LoadSmall />;
 
-  return <h4 className="font-normal text-xs text-dark">{data}</h4>;
+  return <h4 className="font-normal text-[14px] text-dark">{data}</h4>;
 }

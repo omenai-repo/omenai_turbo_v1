@@ -50,12 +50,12 @@ export default function GalleryListItem({
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-y-2">
           <h1 className="text-[14px] font-normal">{name}</h1>
-          <p className="text-xs font-normal">{location.address}</p>
+          <p className="text-[14px] font-normal">{location.address}</p>
           <button
             onClick={updateGalleryPopupData}
             className="flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-dark text-white"
           >
-            <span className="text-xs ">View</span>
+            <span className="text-[14px] ">View</span>
 
             <GoEye />
           </button>
@@ -73,7 +73,7 @@ export default function GalleryListItem({
                 }
                 className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
               >
-                <span className="text-xs ">Block Gallery</span>
+                <span className="text-[14px] ">Block Gallery</span>
               </button>
             </div>
           ) : (
@@ -88,7 +88,7 @@ export default function GalleryListItem({
                 }
                 className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center  h-[40px] px-4 bg-dark text-white"
               >
-                <span className="text-xs ">Unblock Gallery</span>
+                <span className="text-[14px] ">Unblock Gallery</span>
               </button>
             </div>
           )
@@ -105,7 +105,7 @@ export default function GalleryListItem({
               }
               className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
             >
-              <span className="text-xs ">Reject Gallery</span>
+              <span className="text-[14px] ">Reject Gallery</span>
 
               <MdClose />
             </button>
@@ -121,7 +121,7 @@ export default function GalleryListItem({
               }
               className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center  h-[40px] px-4 bg-green-600 text-white"
             >
-              <span className="text-xs ">Accept Gallery</span>
+              <span className="text-[14px] ">Accept Gallery</span>
 
               <IoCheckmarkOutline />
             </button>

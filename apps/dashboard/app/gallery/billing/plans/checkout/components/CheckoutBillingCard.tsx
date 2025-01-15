@@ -136,7 +136,7 @@ export default function CheckoutBillingCard({
   return (
     <>
       <div className="flex justify-between items-center my-5">
-        <h1 className="text-xs font-normal">Payment Method</h1>
+        <h1 className="text-[14px] font-normal">Payment Method</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -144,7 +144,7 @@ export default function CheckoutBillingCard({
       </div>
       <div className="rounded-sm ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
         <div className="w-full flex justify-start relative z-10 my-2">
-          <p className="text-dark text-xs font-semibold">
+          <p className="text-dark text-[14px] font-semibold">
             Billing card details
           </p>
         </div>
@@ -152,12 +152,12 @@ export default function CheckoutBillingCard({
         <div className="flex justify-between items-center relative z-10">
           <div>
             <div className="flex space-x-3 items-center">
-              <p className="text-xs text-dark font-bold dark whitespace-nowrap tracking-widest">
+              <p className="text-[14px] text-dark font-bold dark whitespace-nowrap tracking-widest">
                 {sub_data.card.first_6digits} ** ****{" "}
                 {sub_data.card.last_4digits}
               </p>
             </div>
-            <p className="text-normal text-xs font-normal text-dark ">
+            <p className="text-normal text-[14px] font-normal text-dark ">
               {sub_data.card.expiry}
             </p>
           </div>

@@ -126,7 +126,7 @@ export default function AuthPinInput({
       onSubmit={handleSubmit}
     >
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-xs font-normal">Pin Verification</h1>
+        <h1 className="text-[14px] font-normal">Pin Verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -134,7 +134,7 @@ export default function AuthPinInput({
       </div>
       <div className="relative w-full">
         <label
-          className="text-[#858585] font-normal text-xs mb-4"
+          className="text-[#858585] font-normal text-[14px] mb-4"
           htmlFor="otp"
         >
           Enter your 4-digit pin
@@ -148,7 +148,7 @@ export default function AuthPinInput({
           maxLength={4}
           minLength={4}
           value={auth_data.pin}
-          className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+          className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
         />
       </div>
 
@@ -156,7 +156,7 @@ export default function AuthPinInput({
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+          className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

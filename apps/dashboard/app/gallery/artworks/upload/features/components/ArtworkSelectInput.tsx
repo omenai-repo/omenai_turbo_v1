@@ -31,13 +31,13 @@ export default function ArtworkSelectInput({
   };
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-dark/80 font-normal text-xs">
+      <label htmlFor={name} className="text-dark/80 font-normal text-[14px]">
         {label}
       </label>
       <select
         onChange={handleChange}
         required={required}
-        className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+        className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
       >
         <option value="">Select</option>
         {name === "currency" ? (

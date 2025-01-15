@@ -155,7 +155,7 @@ export default function CardInput({
   return (
     <form className="space-y-4" onSubmit={handleCardInputSubmit}>
       <div className="flex justify-between items-center">
-        <h1 className="text-xs font-normal">Payment Method</h1>
+        <h1 className="text-[14px] font-normal">Payment Method</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>

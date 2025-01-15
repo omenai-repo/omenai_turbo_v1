@@ -14,15 +14,15 @@ export default function CheckoutItem({
         <h1 className="text-base font-normal ">
           Omenai {plan.name} subscription
         </h1>
-        <p className="mt-1 flex items-baseline text-xs font-bold tracking-tight">
+        <p className="mt-1 flex items-baseline text-[14px] font-bold tracking-tight">
           Billed {interval}
         </p>
       </div>
 
       <div className="p-5">
         <div className="flex justify-between items-center">
-          <p className="text-xs font-bold">Due today</p>
-          <p className="text-xs font-bold">
+          <p className="text-[14px] font-bold">Due today</p>
+          <p className="text-[14px] font-bold">
             {interval === "monthly"
               ? `$${plan.pricing.monthly_price}`
               : `$${plan.pricing.annual_price}`}{" "}

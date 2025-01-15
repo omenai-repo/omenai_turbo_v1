@@ -78,7 +78,7 @@ export default function Oput({
       onSubmit={handleSubmit}
     >
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-xs font-normal">OTP verification</h1>
+        <h1 className="text-[14px] font-normal">OTP verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>

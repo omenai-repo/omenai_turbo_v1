@@ -7,7 +7,7 @@ export default function DashboardIndicator() {
   const lastPath = pathname.at(-1);
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-xs flex-1">
+      <div className="text-[14px] flex-1">
         <p className="font-normal text-dark">Welcome, Admin</p>
         <p className="text-dark">
           <span className="font-light">Admin</span> /{" "}
@@ -18,10 +18,12 @@ export default function DashboardIndicator() {
       </div>
       <div>
         {lastPath === "editorials" && (
-          <Link href={'/admin/dashboard/editorials/upload-editorial'}>
-            <button className="h-[45px] px-[20px] bg-[#1a1a1a] text-white text-[12px] rounded-md font-medium">Upload editorial</button>
+          <Link href={"/admin/dashboard/editorials/upload-editorial"}>
+            <button className="h-[45px] px-[20px] bg-[#1a1a1a] text-white text-[12px] rounded-md font-medium">
+              Upload editorial
+            </button>
           </Link>
-      )}
+        )}
       </div>
     </div>
   );

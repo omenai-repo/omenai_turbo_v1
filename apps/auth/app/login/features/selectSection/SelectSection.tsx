@@ -25,7 +25,7 @@ function SelectSection() {
             onClick={() => updateCurrent(1)}
           >
             <p className="text-base">As an individual</p>
-            <p className="text-xs text-[#161616]">
+            <p className="text-[14px] text-[#161616]">
               Purchase artworks and access your licenses and orders
             </p>
           </div>
@@ -34,7 +34,7 @@ function SelectSection() {
             onClick={() => updateCurrent(2)}
           >
             <p className="text-base">As a gallery</p>
-            <p className="text-xs text-[#161616]">
+            <p className="text-[14px] text-[#161616]">
               Purchase artworks and access your licenses and orders
             </p>
           </div>

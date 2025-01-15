@@ -155,21 +155,24 @@ export default function AvsNoauthInput({
       onSubmit={submitAddressInfo}
     >
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-xs font-normal">Address verification</h1>
+        <h1 className="text-[14px] font-normal">Address verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
         </p>
       </div>
       <div className="w-full">
-        <label htmlFor={"country"} className="text-dark/80 font-normal text-xs">
+        <label
+          htmlFor={"country"}
+          className="text-dark/80 font-normal text-[14px]"
+        >
           Country
         </label>
         <select
           onChange={handleInputChange}
           required={true}
           name="country"
-          className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+          className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
         >
           <option value="">Select Country</option>
           <>
@@ -188,7 +191,7 @@ export default function AvsNoauthInput({
         </select>
       </div>
       <div className="w-full">
-        <label htmlFor={""} className="text-dark/80 font-normal text-xs">
+        <label htmlFor={""} className="text-dark/80 font-normal text-[14px]">
           State
         </label>
         <select
@@ -196,7 +199,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === ""}
           required={true}
           name="state"
-          className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] disabled:cursor-not-allowed disabled:bg-[#fafafa] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+          className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] disabled:cursor-not-allowed disabled:bg-[#fafafa] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
         >
           <option value="">Select State</option>
           <>
@@ -216,7 +219,7 @@ export default function AvsNoauthInput({
       </div>
       <div className="relative w-full">
         <label
-          className="text-[#858585] font-normal text-xs mb-2"
+          className="text-[#858585] font-normal text-[14px] mb-2"
           htmlFor="city"
         >
           City
@@ -227,12 +230,12 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="e.g Lisbon"
-          className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+          className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
         />
       </div>
       <div className="relative w-full">
         <label
-          className="text-[#858585] font-normal text-xs mb-2"
+          className="text-[#858585] font-normal text-[14px] mb-2"
           htmlFor="otp"
         >
           Address
@@ -243,12 +246,12 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="e.g 7, example street"
-          className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+          className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
         />
       </div>
       <div className="relative w-full">
         <label
-          className="text-[#858585] font-normal text-xs mb-2"
+          className="text-[#858585] font-normal text-[14px] mb-2"
           htmlFor="zipcode"
         >
           Zipcode
@@ -259,7 +262,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="ZIP"
-          className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+          className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
         />
       </div>
 
@@ -267,7 +270,7 @@ export default function AvsNoauthInput({
         <button
           type="submit"
           disabled={isLoading || hasEmptyString(address_info)}
-          className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+          className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

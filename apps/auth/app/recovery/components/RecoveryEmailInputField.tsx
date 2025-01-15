@@ -93,7 +93,7 @@ export default function RecoveryEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+        className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
         placeholder="Email address"
         onChange={(e) => setEmail(e.target.value)}
         required
@@ -101,7 +101,7 @@ export default function RecoveryEmailInputField() {
       <button
         disabled={isLoading}
         type="submit"
-        className=" disabled:cursor-not-allowed grid disabled:bg-white disabled:border disabled:border-dark place-items-center w-full h-[40px]  bg-dark hover:bg-dark/80 hover:text-white rounded-sm text-white text-xs "
+        className=" disabled:cursor-not-allowed grid disabled:bg-white disabled:border disabled:border-dark place-items-center w-full h-[40px]  bg-dark hover:bg-dark/80 hover:text-white rounded-sm text-white text-[14px] "
       >
         {isLoading ? <LoadSmall /> : "Send reset link"}
       </button>

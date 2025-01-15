@@ -89,37 +89,29 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   }
   return (
     <div className="flex flex-col gap-y-4">
-      <div className="">
-        <h1 className="text-md font-[900]">{data.title}</h1>
-        <h3 className="text-base font-normal text-dark/70">{data.artist}</h3>
+      <div className="text-dark/80">
+        <h1 className="text-sm sm:text-md font-[900]">{data.title}</h1>
+        <h3 className="text-base font-normal italic text-dark/70">
+          {data.artist}
+        </h3>
       </div>
-      <p className="text-xs font-normal text-dark/80 gap-x-4 flex items-center">
+      <p className="text-[14px] font-medium text-dark/80 gap-x-4 flex items-center">
         <span>{data.medium}</span>
         <span>|</span>
         <span>{data.rarity}</span>
       </p>
 
-      <div className="flex flex-col gap-y-2">
-        <span className="text-[14px] font-medium">Price</span>
-        <h1 className=" text-sm font-[900]">
-          {!data.availability
-            ? "Sold"
-            : data.pricing.shouldShowPrice === "Yes"
-              ? formatPrice(data.pricing.usd_price)
-              : "Price on request"}
-        </h1>
-      </div>
       <Dimensions dimensions={data.dimensions} />
       <div className="flex items-center flex-wrap gap-4">
         {data.certificate_of_authenticity === "Yes" && (
-          <div className="flex gap-x-2 text-xs items-center px-4 py-1 bg-[#E7F6EC] text-[#004617] w-fit rounded-full">
+          <div className="flex gap-x-2 text-[14px] items-center px-4 py-1 bg-[#E7F6EC] text-[#004617] w-fit rounded-full">
             <GrCertificate />
             <p className="whitespace-nowrap">
               Certificate of authenticity available
             </p>
           </div>
         )}
-        <div className="flex gap-x-2 text-xs items-center px-4 py-1 bg-[#e5f4ff] text-[#30589f] w-fit rounded-full">
+        <div className="flex gap-x-2 text-[14px] items-center px-4 py-1 bg-[#e5f4ff] text-[#30589f] w-fit rounded-full">
           <PiFrameCornersThin />
           <p className="whitespace-nowrap">
             {data.framing === "Framed"
@@ -129,11 +121,18 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         </div>
       </div>
 
-      {/* <hr className="ring-dark/10" />
+      <div className="flex flex-col gap-y-2 my-4">
+        {/* <span className="text-[14px] font-medium">Price</span> */}
+        <h1 className=" text-sm font-[900]">
+          {!data.availability
+            ? "Sold"
+            : data.pricing.shouldShowPrice === "Yes"
+              ? formatPrice(data.pricing.usd_price)
+              : "Price on request"}
+        </h1>
+      </div>
 
-      <hr className="ring-dark/10" /> */}
-
-      <div className="flex flex-col gap-y-5 font-normal w-full text-[14px]">
+      <div className="flex flex-col gap-y-3 font-normal w-full text-[14px]">
         <button
           disabled={loading || !data.availability}
           onClick={handleBuyButtonClick}
@@ -167,7 +166,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {sessionId !== undefined && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
-            className="w-full h-[50px] px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-base group"
+            className="w-full h-[50px] px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-[14px] group"
           >
             <span>Remove from saved</span>
             <GiCheckMark />

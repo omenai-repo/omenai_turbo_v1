@@ -100,7 +100,7 @@ export default function BlockGalleryConfirmationPopupModal() {
             disabled={loading}
             className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center px-4 py-2.5 bg-green-600 text-white"
           >
-            <span className="text-xs ">
+            <span className="text-[14px] ">
               {loading ? <LoadSmall /> : "Confirm"}
             </span>
             <IoCheckmarkOutline />
@@ -116,7 +116,7 @@ export default function BlockGalleryConfirmationPopupModal() {
             }
             className=" flex gap-x-2 w-fit rounded-md items-center px-4 py-2.5 bg-red-600 text-white"
           >
-            <span className="text-xs ">Cancel</span>
+            <span className="text-[14px] ">Cancel</span>
             <MdClose />
           </button>
         </div>

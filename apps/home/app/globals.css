@@ -45,9 +45,3 @@ body {
   min-width: 0;
   margin-right: 10px;
 }
-
-.artContainer {
-  overflow: hidden;
-  position: relative;
-  display: inline-block;
-}

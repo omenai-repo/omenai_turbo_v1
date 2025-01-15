@@ -56,7 +56,7 @@ export default function CardNumber({ onChange }: CardNumberProps) {
             value={formattedCardNumber}
             maxLength={24} // Limit input length to 19 characters
             placeholder="1234 1234 1234 1234"
-            className="h-[40px] border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+            className="h-[40px] border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
           />
 
           {cardType !== null && (

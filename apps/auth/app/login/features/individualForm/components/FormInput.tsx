@@ -119,7 +119,7 @@ export default function FormInput() {
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col">
-        <label htmlFor={"email"} className="text-xs text-[#858585]">
+        <label htmlFor={"email"} className="text-[14px] text-[#858585]">
           Email address
         </label>
         <input
@@ -132,7 +132,7 @@ export default function FormInput() {
         />
       </div>
       <div className="flex flex-col">
-        <label htmlFor={"password"} className="text-xs text-[#858585]">
+        <label htmlFor={"password"} className="text-[14px] text-[#858585]">
           Password
         </label>
         <div className="w-full relative">

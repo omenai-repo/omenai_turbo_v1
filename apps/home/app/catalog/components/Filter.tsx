@@ -1,14 +1,11 @@
 "use client";
 import { GiSettingsKnobs } from "react-icons/gi";
 import PriceFilter from "./PriceFilter";
-import YearFilter from "./YearFilter";
 import MediumFilter from "./MediumFilter";
-import RarityFilter from "./RarityFilter";
 import { useState } from "react";
 import { isEmptyFilter } from "@omenai/shared-utils/src/isFilterEmpty";
 
 import { toast } from "sonner";
-import FilterPill from "./FilterPill";
 import { ImBin2 } from "react-icons/im";
 import { FaCheckCircle } from "react-icons/fa";
 import { useWindowSize } from "usehooks-ts";
@@ -18,8 +15,11 @@ import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPa
 import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
 import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
+import FilterPill from "./FilterPill";
+import YearFilter from "./YearFilter";
+import RarityFilter from "./RarityFilter";
 
-export default function Filter() {
+export default function Filter({ isMedium = false }: { isMedium?: boolean }) {
   const [showFilterBlock, setShowFilterBlock] = useState(false);
   const { width } = useWindowSize();
 
@@ -96,7 +96,7 @@ export default function Filter() {
       </div>
       {selectedFilters.length > 0 && (
         <>
-          <div className="flex flex-wrap gap-x-4 items-center py-4 px-2 cursor-pointer">
+          <div className="flex flex-wrap gap-4 items-center py-4 px-2 cursor-pointer">
             {selectedFilters.map((filter) => {
               return <FilterPill key={filter.name} filter={filter.name} />;
             })}

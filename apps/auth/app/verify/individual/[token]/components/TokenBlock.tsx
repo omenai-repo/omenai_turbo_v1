@@ -90,13 +90,13 @@ export default function TokenBlock({ token }: TokenProps) {
           Verify your email to kickstart your journey.
         </h1>
         <div className="flex flex-col gap-4 my-[2rem]">
-          <p className="leading-32 text-xs">
+          <p className="leading-32 text-[14px]">
             Thank you for choosing to join{" "}
             <span className="text-dark font-normal">Omenai inc.</span> We extend
             our warmest welcome and look forward to providing you with an
             enjoyable journey with us
           </p>
-          <p className="leading-32 text-xs">
+          <p className="leading-32 text-[14px]">
             A token has been sent to the email address you provided to us,
             Kindly utilize this token to authenticate your account and access
             our services.
@@ -126,7 +126,7 @@ export default function TokenBlock({ token }: TokenProps) {
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>
       </form>
-      <p className="text-xs">
+      <p className="text-[14px]">
         Did not recieve a code?{" "}
         <button
           disabled={resendTokenLoading}
@@ -138,7 +138,7 @@ export default function TokenBlock({ token }: TokenProps) {
       </p>
 
       <div className="contact my-[3rem] md:w-[50%] mx-auto leading-32">
-        <p className="text-center text-xs">
+        <p className="text-center text-[14px]">
           Feel free to contact us should you have any issues on{" "}
           <Link
             href={"mailto:contact@omenai.net"}

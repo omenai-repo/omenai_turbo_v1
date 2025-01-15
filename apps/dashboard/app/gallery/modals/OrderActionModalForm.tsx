@@ -33,7 +33,7 @@ export default function OrderActionModalForm() {
   return (
     <>
       <div className="p-3 border border-[#E0E0E0] rounded-lg">
-        <div className="flex flex-col gap-y-4 text-xs">
+        <div className="flex flex-col gap-y-4 text-[14px]">
           <div className="flex flex-col">
             <Image
               src={image_url}

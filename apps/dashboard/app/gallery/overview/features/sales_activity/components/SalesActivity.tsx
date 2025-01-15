@@ -45,7 +45,7 @@ export function SalesActivity({ activityData }: any) {
       }}
     >
       <div
-        className="text-xs text-dark"
+        className="text-[14px] text-dark"
         style={{
           position: "absolute",
           top: 20,
@@ -60,11 +60,11 @@ export function SalesActivity({ activityData }: any) {
 
             <XAxis
               dataKey="name"
-              className="text-xs"
+              className="text-[14px]"
               padding={{ left: 50, right: 10 }}
               scale="point"
             />
-            <YAxis className="text-xs " />
+            <YAxis className="text-[14px] " />
             <Tooltip
               content={
                 <CustomTooltip

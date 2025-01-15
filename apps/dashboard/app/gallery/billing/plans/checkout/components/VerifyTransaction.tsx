@@ -27,7 +27,7 @@ export default function VerifyTransaction({
   return (
     <div className="grid place-items-center">
       <div className="flex justify-between items-center mb-2 w-full">
-        <h1 className="text-xs font-normal">Transaction verification</h1>
+        <h1 className="text-[14px] font-normal">Transaction verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -36,7 +36,7 @@ export default function VerifyTransaction({
       {isLoading ? (
         <div className="w-full flex flex-col justify-center items-center gap-y-4">
           <Load />
-          <p className="text-xs">Verification in progress...please wait</p>
+          <p className="text-[14px]">Verification in progress...please wait</p>
         </div>
       ) : (
         <div className=" mt-6 w-full flex flex-col gap-y-4">
@@ -49,14 +49,14 @@ export default function VerifyTransaction({
               alt="verification icon"
               className="text-center"
             />
-            <p className="text-xs font-bold">{verified?.message}</p>
+            <p className="text-[14px] font-bold">{verified?.message}</p>
           </div>
 
           <div className="w-full mt-5">
             <Link
               href={"/gallery/billing"}
               type="button"
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
             >
               Go home
             </Link>

@@ -11,7 +11,6 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 
-
 export default function Orders() {
   const { data: orders, isLoading } = useQuery({
     queryKey: ["get_overview_order"],
@@ -48,23 +47,25 @@ export default function Orders() {
       ) : (
         <>
           <div className="flex flex-col gap-3 w-full">
-            {limitedOrders.slice(0, 2).map((order: CreateOrderModelTypes, index: number) => {
-              return (
-                <OverviewOrdersCard
-                  key={order.order_id}
-                  url={order.artwork_data.url}
-                  title={order.artwork_data.title}
-                  artist={order.artwork_data.artist}
-                  order_date={formatIntlDateTime(order.createdAt)}
-                  status={order.status}
-                />
-              );
-            })}
+            {limitedOrders
+              .slice(0, 2)
+              .map((order: CreateOrderModelTypes, index: number) => {
+                return (
+                  <OverviewOrdersCard
+                    key={order.order_id}
+                    url={order.artwork_data.url}
+                    title={order.artwork_data.title}
+                    artist={order.artwork_data.artist}
+                    order_date={formatIntlDateTime(order.createdAt)}
+                    status={order.status}
+                  />
+                );
+              })}
           </div>
           <div className="w-full flex justify-center my-4">
             <Link
               href="/gallery/orders"
-              className="text-dark/80 flex gap-x-1 text-xs items-center mt-4 cursor-pointer"
+              className="text-dark/80 flex gap-x-1 text-[14px] items-center mt-4 cursor-pointer"
             >
               View {limitedOrders.length} pending orders
               <IoIosArrowRoundForward />

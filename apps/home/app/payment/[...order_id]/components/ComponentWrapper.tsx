@@ -58,7 +58,7 @@ export default function ComponentWrapper({
   if (!data!.order.availability) {
     return (
       <div className="w-[95vh] h-full grid place-items-center">
-        <p className="text-xs font-semibold">
+        <p className="text-[14px] font-semibold">
           Unfortunately, this artwork has been purchased by another customer
         </p>
       </div>

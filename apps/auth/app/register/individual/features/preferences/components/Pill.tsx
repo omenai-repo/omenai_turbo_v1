@@ -11,7 +11,7 @@ export default function Pill({ text }: PillProps) {
     <button
       onClick={() => updatePreference(text)}
       type="button"
-      className={`rounded-full w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-xs transition-all ease-linear duration-100 px-3 py-1 ${
+      className={`rounded-full w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-[14px] transition-all ease-linear duration-100 px-3 py-1 ${
         preferences.includes(text)
           ? "bg-dark text-white"
           : "bg-transparent text-dark"

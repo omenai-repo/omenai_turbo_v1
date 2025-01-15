@@ -3,7 +3,17 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../apps/home/app/catalog/components/CancelFilter.tsx",
+    "../../apps/home/app/catalog/components/Filter.tsx",
+    "../../apps/home/app/catalog/components/FilterActions.tsx",
+    "../../apps/home/app/catalog/components/FilterOptionBox.tsx",
+    "../../apps/home/app/catalog/components/FilterPill.tsx",
+    "../../apps/home/app/catalog/components/MediumFilter.tsx",
+    "../../apps/home/app/catalog/components/Pagination.tsx",
+    "../../apps/home/app/catalog/components/PriceFilter.tsx",
+    "../../apps/home/app/catalog/components/RarityFilter.tsx",
+    "../../apps/home/app/catalog/components/YearFilter.tsx"
   ],
   "compilerOptions": {
     "plugins": [
@@ -12,7 +22,5 @@
       }
     ]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

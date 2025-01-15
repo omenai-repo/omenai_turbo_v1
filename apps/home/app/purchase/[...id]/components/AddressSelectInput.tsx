@@ -33,7 +33,7 @@ export default function AddressSelectInput({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-dark/80 font-normal text-xs">
+      <label htmlFor={name} className="text-dark/80 font-medium text-[14px]">
         {label}
       </label>
       {name !== "state" ? (
@@ -41,7 +41,7 @@ export default function AddressSelectInput({
           onChange={handleCountrySelectChange}
           required={required}
           defaultValue={defaultValue !== undefined ? defaultValue : ""}
-          className="border-0 border-b bg-transparent text-xs ring-0 disabled:cursor-not-allowed border-b-dark/20 w-full p-2 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-dark text-dark"
+          className="border-0 border-b bg-transparent text-[14px] ring-0 disabled:cursor-not-allowed border-b-dark/20 w-full p-2 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-dark text-dark"
         >
           <option value="">Select</option>
           {items &&
@@ -50,7 +50,7 @@ export default function AddressSelectInput({
                 <option
                   key={item}
                   value={item}
-                  className="p-3 font-light text-dark text-xs"
+                  className="p-3 font-light text-dark text-[14px]"
                 >
                   {item}
                 </option>
@@ -65,7 +65,7 @@ export default function AddressSelectInput({
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             setAddress(name, e.target.value)
           }
-          className="border-0 border-b bg-transparent text-xs ring-0 disabled:cursor-not-allowed border-b-dark/20 w-full p-2 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-dark text-dark"
+          className="border-0 border-b bg-transparent text-[14px] ring-0 disabled:cursor-not-allowed border-b-dark/20 w-full p-2 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-dark text-dark"
         >
           <option value="">Select</option>
           {countryStates.length > 0 &&
@@ -74,7 +74,7 @@ export default function AddressSelectInput({
                 <option
                   key={state}
                   value={state}
-                  className="p-3 font-light text-dark text-xs"
+                  className="p-3 font-light text-dark text-[14px]"
                 >
                   {state}
                 </option>

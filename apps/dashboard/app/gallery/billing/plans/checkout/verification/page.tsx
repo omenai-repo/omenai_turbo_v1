@@ -37,7 +37,7 @@ export default function TransactionVerification() {
         {isLoading ? (
           <div className=" w-[20vw] flex flex-col items-center justify-center space-y-6">
             <Load />
-            <p className="text-xs font-normal">
+            <p className="text-[14px] font-normal">
               Verification in progress...please wait
             </p>
           </div>
@@ -51,14 +51,14 @@ export default function TransactionVerification() {
                 alt="verification icon"
                 className="text-center"
               />
-              <p className="text-xs font-bold">{verified?.message}</p>
+              <p className="text-[14px] font-bold">{verified?.message}</p>
             </div>
 
             <div className=" mt-5">
               <Link
                 href={"/gallery/billing"}
                 type="button"
-                className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+                className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
               >
                 View subscription info
               </Link>

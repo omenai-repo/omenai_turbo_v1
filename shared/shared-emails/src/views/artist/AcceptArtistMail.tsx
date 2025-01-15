@@ -50,23 +50,23 @@ const AcceptArtistMail = (artist_name?: string) => {
 
             <ul>
               <li>
-                <Text className="m-0 text-xs leading-[28px] text-gray-900">
+                <Text className="m-0 text-[14px] leading-[28px] text-gray-900">
                   <Link href={`${url}/auth/login`}>Login</Link> to your artist
                   account.
                 </Text>
               </li>
               <li>
-                <Text className="m-0 text-xs leading-[28px] text-gray-900">
+                <Text className="m-0 text-[14px] leading-[28px] text-gray-900">
                   Complete your onboarding process via your dashboard
                 </Text>
               </li>
               <li>
-                <Text className="m-0 text-xs leading-[28px] text-gray-900">
+                <Text className="m-0 text-[14px] leading-[28px] text-gray-900">
                   Upload your latest artworks and manage your gallery.
                 </Text>
               </li>
               <li>
-                <Text className="m-0 text-xs leading-[28px] text-gray-900">
+                <Text className="m-0 text-[14px] leading-[28px] text-gray-900">
                   Connect with potential buyers and art lovers.
                 </Text>
               </li>

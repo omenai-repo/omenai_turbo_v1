@@ -4,8 +4,8 @@ type UploadInputTypes = {
   label: string;
   name: string;
   value: string;
-  inputType?: string,
-  placeholder?: string
+  inputType?: string;
+  placeholder?: string;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 export function AdminUploadInput({
@@ -14,12 +14,12 @@ export function AdminUploadInput({
   value,
   handleChange,
   inputType,
-  placeholder
+  placeholder,
 }: UploadInputTypes) {
   return (
     <div>
       <div className="flex flex-col">
-        <label htmlFor={label} className="text-xs text-[#858585]">
+        <label htmlFor={label} className="text-[14px] text-[#858585]">
           {label}
         </label>
         <input
@@ -27,7 +27,7 @@ export function AdminUploadInput({
           value={value}
           onChange={handleChange}
           name={name}
-          placeholder={placeholder ? placeholder : ''}
+          placeholder={placeholder ? placeholder : ""}
           className="focus:ring-0 border px-4 border-dark/20 outline-none focus:outline-none h-[50px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-1"
           required
         />

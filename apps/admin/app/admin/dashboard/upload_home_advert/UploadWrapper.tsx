@@ -176,12 +176,12 @@ export default function Upload() {
         />
 
         <div className="flex flex-col gap-3">
-          <label htmlFor="Cover" className="text-xs">
+          <label htmlFor="Cover" className="text-[14px]">
             Cover image
           </label>
           <label
             htmlFor="label_description"
-            className="text-xs text-red-600 font-semibold"
+            className="text-[14px] text-red-600 font-semibold"
           >
             Note: Uploading a landscaped or square-shaped image would be most
             ideal for display
@@ -193,7 +193,7 @@ export default function Upload() {
           <button
             disabled={loading}
             type="submit"
-            className={`whitespace-nowrap bg-dark text-xs disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 `}
+            className={`whitespace-nowrap bg-dark text-[14px] disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 `}
           >
             {loading ? <LoadSmall /> : "Upload promotional content"}
           </button>

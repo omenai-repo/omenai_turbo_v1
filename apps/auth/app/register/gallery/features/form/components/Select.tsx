@@ -59,14 +59,17 @@ export default function SelectInput({
         className="flex flex-col gap-2 container"
       >
         <div className="flex flex-col gap-1">
-          <label htmlFor={name} className="text-dark/80 font-normal text-xs">
+          <label
+            htmlFor={name}
+            className="text-dark/80 font-normal text-[14px]"
+          >
             {label}
           </label>
           <select
             value={(gallerySignupData as Record<string, any>)[labelText]}
             onChange={handleChange}
             required={required}
-            className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+            className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
           >
             <option value="">Select {labelText}</option>
             <>
@@ -92,7 +95,7 @@ export default function SelectInput({
                   className="flex items-center gap-x-2"
                 >
                   <MdError className="text-red-600" />
-                  <p className="text-red-600 text-xs">{error}</p>
+                  <p className="text-red-600 text-[14px]">{error}</p>
                 </div>
               );
             })}
@@ -101,14 +104,14 @@ export default function SelectInput({
             <button
               className={`${
                 currentGallerySignupFormIndex > 0 ? "block" : "hidden"
-              }   h-[40px] px-4 mt-[1rem] bg-dark text-white text-xs font-normal hover:bg-dark/80 transition-all ease-linear duration-200`}
+              }   h-[40px] px-4 mt-[1rem] bg-dark text-white text-[14px] font-normal hover:bg-dark/80 transition-all ease-linear duration-200`}
               type={"button"}
               onClick={handleClickPrev}
             >
               Back
             </button>
             <button
-              className=" h-[40px] px-4 mt-[1rem] text-xs font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/80 transition-all ease-linear duration-200"
+              className=" h-[40px] px-4 mt-[1rem] text-[14px] font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/80 transition-all ease-linear duration-200"
               type={"button"}
               onClick={handleClick}
             >

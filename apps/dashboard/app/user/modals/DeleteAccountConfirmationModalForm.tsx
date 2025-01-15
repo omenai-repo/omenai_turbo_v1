@@ -79,7 +79,7 @@ export default function DeleteAccountConfirmationModalForm() {
             <span className="text-[#FFA500] text-[14px]">Warning</span>
           </p>
 
-          <p className="text-xs">
+          <p className="text-[14px]">
             Deleting your account will permanently erase all your data on the
             platform and prevent you from using any of the platform&apos;s
             features. <br />
@@ -98,7 +98,7 @@ export default function DeleteAccountConfirmationModalForm() {
           disabled={loading}
           type="button"
           onClick={handleDeleteGalleryAccount}
-          className="h-[40px] px-4 w-full text-xs text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-red-500 bg-red-600 duration-300 grid place-items-center"
+          className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-red-500 bg-red-600 duration-300 grid place-items-center"
         >
           {loading ? <LoadSmall /> : "I understand, delete this account"}
         </button>

@@ -23,7 +23,7 @@ export default function SubDetail({
   return (
     <div className="ring-1 ring-[#e0e0e0] rounded-md p-4 h-[250px] relative">
       <div className="w-full flex justify-start relative z-10 my-2">
-        <p className="text-dark text-xs font-semibold">Subscription Info</p>
+        <p className="text-dark text-[14px] font-semibold">Subscription Info</p>
       </div>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-x-3">
@@ -35,7 +35,7 @@ export default function SubDetail({
             className="w-fit h-fit"
           />
           <div>
-            <h1 className="font-bold text-xs">
+            <h1 className="font-bold text-[14px]">
               Omenai {sub_data.plan_details.type}
             </h1>
             <p className="font-semibold text-[12px]">
@@ -74,14 +74,14 @@ export default function SubDetail({
       <div className=" mt-4">
         {sub_data.status === "canceled" || sub_data.status === "expired" ? (
           <Link href={`/gallery/billing/plans?plan_action=reactivation`}>
-            <button className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-xs bg-dark text-white hover:bg-dark/70 flex gap-2 items-center">
+            <button className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-[14px] bg-dark text-white hover:bg-dark/70 flex gap-2 items-center">
               Reactivate Subscription
             </button>
           </Link>
         ) : (
           <div className="flex gap-x-2 items-center">
             <button
-              className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-xs bg-red-600 flex gap-2 items-center"
+              className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-[14px] bg-red-600 flex gap-2 items-center"
               onClick={() => updateOpenModal()}
             >
               {/* <RxCross1 className="text-base text-white" /> */}
@@ -90,7 +90,7 @@ export default function SubDetail({
               </span>
             </button>
             <Link href="/gallery/billing/plans">
-              <button className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-xs bg-dark flex gap-2 items-center">
+              <button className=" h-[40px] px-4 rounded-sm w-fit text-[12px] 2xl:text-[14px] bg-dark flex gap-2 items-center">
                 <span className="text-white">Upgrade/Downgrade plan</span>
               </button>
             </Link>

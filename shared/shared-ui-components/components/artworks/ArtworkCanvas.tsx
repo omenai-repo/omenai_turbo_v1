@@ -127,19 +127,19 @@ export default function ArtworkCanvas({
 
         <div className=" bg-transparent pr-3 py-1 w-full">
           <div className="flex flex-col my-2">
-            <p className="font-normal text-xs text-dark text-ellipsis overflow-hidden whitespace-nowrap">
+            <p className="font-normal text-[14px] text-dark text-ellipsis overflow-hidden whitespace-nowrap">
               {name}
             </p>
 
             <div className="flex justify-between items-center">
-              <p className="font-normal text-[#707070] italic text-xs text-ellipsis overflow-hidden whitespace-nowrap">
+              <p className="font-normal text-[#707070] italic text-[14px] text-ellipsis overflow-hidden whitespace-nowrap">
                 {artist}
               </p>
               {/* <HiPencil /> */}
               {isDashboard && (
                 <Link href={`/gallery/artworks/edit?id=${name}`}>
                   <button
-                    className={`disabled:cursor-not-allowed disabled:text-dark/20 text-xs font-normal underline cursor-pointer`}
+                    className={`disabled:cursor-not-allowed disabled:text-dark/20 text-[14px] font-normal underline cursor-pointer`}
                   >
                     Edit artwork
                   </button>
@@ -149,16 +149,16 @@ export default function ArtworkCanvas({
 
             {pricing?.price && pricing.shouldShowPrice === "Yes" ? (
               !availability ? (
-                <p className="font-medium text-xs text-dark">Sold</p>
+                <p className="font-medium text-[14px] text-dark">Sold</p>
               ) : (
-                <p className="font-medium text-xs text-dark">
+                <p className="font-medium text-[14px] text-dark">
                   USD {formatPrice(pricing.usd_price)}
                 </p>
               )
             ) : !availability ? (
-              <p className="font-medium text-xs text-dark">Sold</p>
+              <p className="font-medium text-[14px] text-dark">Sold</p>
             ) : (
-              <p className="font-medium text-xs">Price on request</p>
+              <p className="font-medium text-[14px]">Price on request</p>
             )}
           </div>
         </div>

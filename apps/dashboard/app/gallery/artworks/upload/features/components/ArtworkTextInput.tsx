@@ -72,7 +72,7 @@ export default function ArtworkTextInput({
         type === "textarea" && "lg:last:col-span-4 md:last:col-span-2"
       } `}
     >
-      <label htmlFor={name} className="text-[#858585] font-normal text-xs">
+      <label htmlFor={name} className="text-[#858585] font-normal text-[14px]">
         {label}
       </label>
       {type === "text" && (
@@ -84,7 +84,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           defaultValue={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 text-xs text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+          className="border px-2 ring-0 text-[14px] text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
         />
       )}
       {type === "textarea" && (
@@ -94,13 +94,13 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={2}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 text-xs text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+          className="border px-2 ring-0 text-[14px] text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
         />
       )}
       {errorList.length > 0 &&
         errorList.map((error, index) => {
           return (
-            <p key={`${error}-error_list`} className="text-red-600 text-xs">
+            <p key={`${error}-error_list`} className="text-red-600 text-[14px]">
               {error}
             </p>
           );

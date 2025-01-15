@@ -23,7 +23,10 @@ export default function Tabs({ catalogue = false }: TabsTypes) {
         )}
       </div>
       <div className={`${catalogue ? "hidden" : "block"}`}>
-        <Link href={"/catalog"} className="flex items-center gap-x-2 text-xs">
+        <Link
+          href={"/catalog"}
+          className="flex items-center gap-x-2 text-[14px]"
+        >
           <span>See more</span>
           <MdArrowRightAlt />
         </Link>

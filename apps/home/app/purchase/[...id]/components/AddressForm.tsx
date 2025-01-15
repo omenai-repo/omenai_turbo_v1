@@ -9,6 +9,7 @@ import { createShippingOrder } from "@omenai/shared-services/orders/createShippi
 import { toast } from "sonner";
 import { useSession } from "@omenai/package-provider/SessionProvider";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import {
   IndividualAddressTypes,
   IndividualSchemaTypes,
@@ -39,6 +40,19 @@ export default function AddressForm({
   async function handleOrderSubmission(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
+    if (allKeysEmpty(address)) {
+      toast.error("Error notification", {
+        description: "Please fill out the form completely",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      setLoading(false);
+      return;
+    }
+
     if (!availability) {
       toast.error("Error notification", {
         description: "This artwork is not available for purchase",
@@ -84,9 +98,7 @@ export default function AddressForm({
   return (
     <>
       <div className="w-full my-[1rem]">
-        <h1 className="mb-[1rem] text-[14px] font-normal">
-          Shipping Information
-        </h1>
+        <h1 className="my-6 text-[14px] font-medium">Address Information</h1>
         <form onSubmit={handleOrderSubmission}>
           <div className="">
             {userDetails.map((detail, index) => {
@@ -145,7 +157,7 @@ export default function AddressForm({
                   id="save_address"
                   onChange={(e) => setSaveShippingAddress(e.target.checked)}
                 />
-                <label htmlFor="age" className="text-xs">
+                <label htmlFor="age" className="text-[14px]">
                   Save my address
                 </label>
               </div>
@@ -154,7 +166,7 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full h-[40px] px-4 text-xs disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white hover:bg-white hover:text-dark hover:border hover:border-dark hover:underline duration-300 grid place-items-center group"
+                className="w-full rounded-full h-[40px] px-4 text-[14px] disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline duration-300 grid place-items-center group"
               >
                 {!loading ? "Request price quote" : <LoadSmall />}
               </button>

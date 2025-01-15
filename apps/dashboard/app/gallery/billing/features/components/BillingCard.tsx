@@ -19,7 +19,9 @@ export default function BillingCard({
     >
       <div className="absolute inset-0 bg-dark/50 rounded-2xl" />
       <div className="w-full flex justify-start relative z-10 my-2">
-        <p className="text-white text-xs font-semibold">Billing card details</p>
+        <p className="text-white text-[14px] font-semibold">
+          Billing card details
+        </p>
       </div>
       {/* Icon */}
       <div className="flex flex-col 2xl:flex-row justify-between 2xl:items-center relative z-10">

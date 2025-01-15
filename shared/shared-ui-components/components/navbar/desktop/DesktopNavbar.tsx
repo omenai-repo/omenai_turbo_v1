@@ -22,7 +22,7 @@ export default function DesktopNavbar() {
   const { session } = useContext(SessionContext);
   return (
     <>
-      <div className="flex justify-between sticky top-0 z-30 bg-white py-5">
+      <div className="flex justify-between sticky top-0 z-30 bg-white pb-5 pt-8">
         <div>
           <IndividualLogo />
         </div>

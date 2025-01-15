@@ -100,7 +100,7 @@ export default function OrderDetails({
                   {formatPrice(total_price_number)}
                 </p>
               </div>
-              <p className="my-3 text-[#858585] italic text-xs">
+              <p className="my-3 text-[#858585] italic text-[14px]">
                 *Additional duties and taxes may apply at import
               </p>
             </div>

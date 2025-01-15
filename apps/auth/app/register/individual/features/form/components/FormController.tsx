@@ -19,7 +19,7 @@ export default function FormController() {
 
   return (
     <>
-      <p className="text-xs text-[#858585] px-4">
+      <p className="text-[14px] text-[#858585] px-4">
         Step {currentSignupFormIndex + 1} of {inputProperties.length + 2}
       </p>
       {currentSignupFormIndex < inputProperties.length && (

@@ -70,7 +70,7 @@ export default function ImageUpload() {
           ) : (
             <button
               type="button"
-              className="w-full h-full border text-xs duration-300 border-dark/10 rounded-md outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+              className="w-full h-full border text-[14px] duration-300 border-dark/10 rounded-md outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
               onClick={() => {
                 imagePickerRef.current?.click();
               }}
@@ -115,7 +115,7 @@ export default function ImageUpload() {
                 className="flex items-center gap-x-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-xs">{error}</p>
+                <p className="text-red-600 text-[14px]">{error}</p>
               </div>
             );
           })}
@@ -123,14 +123,14 @@ export default function ImageUpload() {
           <button
             className={`${
               currentGallerySignupFormIndex > 0 ? "block" : "hidden"
-            }   h-[40px] px-4 mt-[1rem] bg-dark text-white text-xs font-normal hover:bg-dark/80 transition-all ease-linear duration-200`}
+            }   h-[40px] px-4 mt-[1rem] bg-dark text-white text-[14px] font-normal hover:bg-dark/80 transition-all ease-linear duration-200`}
             type={"button"}
             onClick={handleClickPrev}
           >
             Back
           </button>
           <button
-            className=" h-[40px] px-4 mt-[1rem] text-xs font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/80 transition-all ease-linear duration-200"
+            className=" h-[40px] px-4 mt-[1rem] text-[14px] font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/80 transition-all ease-linear duration-200"
             type={"button"}
             onClick={handleClick}
           >

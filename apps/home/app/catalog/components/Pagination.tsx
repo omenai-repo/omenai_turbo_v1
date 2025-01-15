@@ -69,14 +69,14 @@ export default function Pagination() {
         <button
           disabled={paginationCount === 1}
           onClick={() => handlePaginationArtworkFetch("dec")}
-          className="bg-dark text-xs rounded-sm w-full text-white h-[50px] px-4 disabled:bg-dark/30 disabled:cursor-not-allowed"
+          className="bg-dark text-[14px] rounded-sm w-full text-white h-[50px] px-4 disabled:bg-dark/30 disabled:cursor-not-allowed"
         >
           Previous page
         </button>
         <button
           disabled={paginationCount === pageCount}
           onClick={() => handlePaginationArtworkFetch("inc")}
-          className="bg-dark text-xs rounded-sm w-full text-white h-[50px] px-4 disabled:bg-dark/30 disabled:cursor-not-allowed"
+          className="bg-dark text-[14px] rounded-sm w-full text-white h-[50px] px-4 disabled:bg-dark/30 disabled:cursor-not-allowed"
         >
           Next page
         </button>

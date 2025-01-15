@@ -52,7 +52,7 @@ export default function PageLayout() {
         <div className="flex flex-col gap-y-8 mt-12" id="navigation-items">
           {/* General navigation */}
           <div>
-            <h4 className={`text-white font-normal text-xs`}>General</h4>
+            <h4 className={`text-white font-normal text-[14px]`}>General</h4>
             <ul className="flex flex-col gap-y-1">
               {navMockData.general.map((item, index) => {
                 return (
@@ -69,7 +69,7 @@ export default function PageLayout() {
           </div>
           {/* Account pages */}
           <div>
-            <h4 className={`text-white font-normal text-xs`}>Account</h4>
+            <h4 className={`text-white font-normal text-[14px]`}>Account</h4>
             <ul className="flex flex-col gap-y-1">
               {navMockData.account.map((item, index) => {
                 return (

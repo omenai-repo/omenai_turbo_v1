@@ -71,7 +71,7 @@ export default function ConfirmOrderDeliveryForm() {
             <IoWarning className="text-md text-[#FFA500]" />
           </p>
 
-          <p className="text-xs">
+          <p className="text-[14px]">
             By confirming you are acknowledging that the artwork has been
             delivered to you in good condition. If you mistakenly confirm or
             encounter any issues with your order, please contact customer
@@ -85,7 +85,7 @@ export default function ConfirmOrderDeliveryForm() {
           disabled={loading}
           type="button"
           onClick={confirmDelivery}
-          className="h-[40px] px-4 w-full text-xs text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-green-500 bg-green-600 duration-300 grid place-items-center"
+          className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-green-500 bg-green-600 duration-300 grid place-items-center"
         >
           {loading ? <LoadSmall /> : "I understand, confirm delivery"}
         </button>

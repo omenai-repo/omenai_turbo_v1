@@ -56,7 +56,7 @@ export function ArtworkListing({
 
   return (
     <div className="w-full mb-5 px-5 mt-3">
-      {/* <p className="text-xs font-normal mb-4">{artwork_total} artworks:</p> */}
+      {/* <p className="text-[14px] font-normal mb-4">{artwork_total} artworks:</p> */}
 
       <div className="flex flex-wrap gap-x-4 justify-center">
         {arts.map((artworks: any[], index) => {

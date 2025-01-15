@@ -19,7 +19,7 @@ export default function FormActions() {
   return (
     <div className="flex flex-col mt-[1rem] gap-4 w-full">
       <div className="flex flex-col gap-y-2 justify-between items-center">
-        <p className="font-normal text-xs text-dark/70 text-right">
+        <p className="font-normal text-[14px] text-dark/70 text-right">
           Need an account?{" "}
           <Link
             href={`${auth_url}/register/individual`}
@@ -29,7 +29,7 @@ export default function FormActions() {
           </Link>
         </p>
 
-        <p className="font-normal text-xs text-dark/70 text-right">
+        <p className="font-normal text-[14px] text-dark/70 text-right">
           Forgot password?{" "}
           <span
             className="text-black cursor-pointer underline font-normal"
@@ -44,14 +44,14 @@ export default function FormActions() {
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[40px] px-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-black text-white text-xs font-normal"
+          className="h-[40px] px-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-black text-white text-[14px] font-normal"
         >
           {isLoading ? <LoadSmall /> : "Login"}{" "}
           {!isLoading && <GoArrowRight className="text-md opacity-70" />}
         </button>
         <button
           onClick={() => updateCurrent(1)}
-          className="h-[40px] px-4 w-full text-center text-xs flex items-center justify-center bg-white cursor-pointer"
+          className="h-[40px] px-4 w-full text-center text-[14px] flex items-center justify-center bg-white cursor-pointer"
         >
           Sign in to Gallery account
         </button>

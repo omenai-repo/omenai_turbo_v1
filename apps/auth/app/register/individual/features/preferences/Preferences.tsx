@@ -27,11 +27,11 @@ function Preferences() {
   return (
     <AnimatePresence key={7}>
       <div className="container">
-        <p className="text-xs font-normal text-center">
+        <p className="text-[14px] font-normal text-center">
           We would like understand your art interests, please select up to 5
           artwork mediums that resonates with you most
         </p>
-        <p className="text-center text-xs font-semibold my-[1.5rem]">
+        <p className="text-center text-[14px] font-semibold my-[1.5rem]">
           Selected: {preferences.length}/5
         </p>
 
@@ -49,14 +49,14 @@ function Preferences() {
           {/* Submit */}
           <div className="flex gap-4 justify-end my-5">
             <button
-              className={` h-[40px] px-4 mt-[1rem] text-xs font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/30 transition-all ease-linear duration-200`}
+              className={` h-[40px] px-4 mt-[1rem] text-[14px] font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/30 transition-all ease-linear duration-200`}
               type={"button"}
               onClick={decrementCurrentSignupFormIndex}
             >
               Back
             </button>
             <button
-              className="h-[40px] px-4 mt-[1rem] text-xs font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/30 transition-all ease-linear duration-200"
+              className="h-[40px] px-4 mt-[1rem] text-[14px] font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/30 transition-all ease-linear duration-200"
               disabled={isLoading || preferences.length < 5}
               onClick={incrementCurrentSignupFormIndex}
             >

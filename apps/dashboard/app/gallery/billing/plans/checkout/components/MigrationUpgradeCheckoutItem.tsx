@@ -97,35 +97,35 @@ export default function MigrationUpgradeCheckoutItem({
           <h1 className="text-base font-normal ">
             Omenai {plan.name} subscription
           </h1>
-          <p className="mt-1 flex items-baseline text-xs font-bold tracking-tight">
+          <p className="mt-1 flex items-baseline text-[14px] font-bold tracking-tight">
             Billed {interval}
           </p>
         </div>
 
         <div className="p-5 flex-flex-col space-y-3">
           <div className="flex justify-between items-center">
-            <p className="text-xs font-bold">Current plan duration</p>
-            <p className="text-xs font-bold">{days_used} days elapsed</p>
+            <p className="text-[14px] font-bold">Current plan duration</p>
+            <p className="text-[14px] font-bold">{days_used} days elapsed</p>
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-xs font-bold">Plan cost</p>
-            <p className="text-xs font-bold">
+            <p className="text-[14px] font-bold">Plan cost</p>
+            <p className="text-[14px] font-bold">
               {formatPrice(upgrade_cost, currency)}
             </p>
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-xs font-bold">Prorated cost</p>
+            <p className="text-[14px] font-bold">Prorated cost</p>
 
-            <p className="text-xs font-bold">
+            <p className="text-[14px] font-bold">
               {!plan_change_params.shouldCharge
                 ? formatPrice(0, currency)
                 : `-${formatPrice(proratedPrice, currency)}`}
             </p>
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-xs font-bold">Due today</p>
+            <p className="text-[14px] font-bold">Due today</p>
 
-            <p className="text-xs font-bold">
+            <p className="text-[14px] font-bold">
               {!plan_change_params.shouldCharge
                 ? formatPrice(0, currency)
                 : `${formatPrice(grand_total, currency)}`}

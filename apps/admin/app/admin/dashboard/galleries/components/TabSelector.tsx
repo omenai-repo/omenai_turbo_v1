@@ -11,7 +11,7 @@ export default function TabSelector({
     <div className="p-2 rounded-sm flex gap-2 bg-white ring-1 ring-dark/20 w-fit max-w-full">
       {/* User */}
       <div
-        className={`h-[40px] px-4 rounded-sm cursor-pointer w-fit grid place-items-center text-xs ${
+        className={`h-[40px] px-4 rounded-sm cursor-pointer w-fit grid place-items-center text-[14px] ${
           tab === "pending" ? "bg-dark  text-white" : "bg-transparent text-dark"
         }  cursor-pointer rounded-sm `}
         onClick={() => setTab("pending")}
@@ -20,7 +20,7 @@ export default function TabSelector({
       </div>
       {/* Gallery */}
       <div
-        className={`h-[40px] px-4 rounded-sm cursor-pointer w-fit grid text-xs place-items-center ${
+        className={`h-[40px] px-4 rounded-sm cursor-pointer w-fit grid text-[14px] place-items-center ${
           tab === "verified"
             ? "bg-dark  text-white"
             : "bg-transparent text-dark"

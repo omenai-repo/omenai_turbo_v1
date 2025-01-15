@@ -25,7 +25,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
     <div className="flex justify-between items-center md:hidden w-full relative">
       <div
         onClick={() => setDropDown(!dropdown)}
-        className="py-3 px-4 flex items-center gap-x-4 border-dark/30 border rounded-full text-xs bg-dark text-white"
+        className="py-3 px-4 flex items-center gap-x-4 border-dark/30 border rounded-full text-[14px] bg-dark text-white"
       >
         <span>{selectedTab.title}</span>
         <MdOutlineKeyboardArrowDown />
@@ -33,7 +33,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
       <div
         className={`w-[150px] ${
           dropdown ? "flex" : "hidden"
-        } border border-dark/10 duration-200 z-20 items-center bg-white text-xs flex-col absolute top-[3.5rem] left-0`}
+        } border border-dark/10 duration-200 z-20 items-center bg-white text-[14px] flex-col absolute top-[3.5rem] left-0`}
       >
         <p
           onClick={() => updatetabState("Recently uploaded", "recent")}
@@ -65,7 +65,10 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
         </div>
       </div>
       <div className={`${catalogue ? "hidden" : "block"}`}>
-        <Link href={"/catalog"} className="flex items-center gap-x-2 text-xs">
+        <Link
+          href={"/catalog"}
+          className="flex items-center gap-x-2 text-[14px]"
+        >
           <span>See more</span>
           <MdArrowRightAlt />
         </Link>

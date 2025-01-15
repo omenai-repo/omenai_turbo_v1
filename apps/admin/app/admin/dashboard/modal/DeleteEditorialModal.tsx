@@ -86,7 +86,7 @@ export const DeleteEditorialModal = () => {
                 <button
                   disabled={loading}
                   onClick={handleEditorialDelete}
-                  className="h-[40px] px-4 w-full text-xs text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+                  className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
                 >
                   {loading ? <LoadSmall /> : "Delete editorial"}
                 </button>

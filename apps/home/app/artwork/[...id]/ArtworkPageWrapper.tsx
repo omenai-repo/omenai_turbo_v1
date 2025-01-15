@@ -29,6 +29,7 @@ export default function ArtworkPageWrapper({
         return artworkDetails.data;
       }
     },
+    gcTime: 0,
   });
 
   if (isLoading) {
@@ -39,7 +40,7 @@ export default function ArtworkPageWrapper({
       <div className="">
         <DesktopNavbar />
 
-        <div className="p-2 md:p-8">
+        <div className="my-5">
           <ProductBox
             data={artworkDetails}
             sessionId={
@@ -48,30 +49,34 @@ export default function ArtworkPageWrapper({
                 : undefined
             }
           />
-          <hr className="border-dark/10" />
-          <ArtistInformation
-            name={artworkDetails.artist}
-            year={artworkDetails.artist_birthyear}
-            location={artworkDetails.artist_country_origin}
-          />
-          <SimilarArtworks
-            title={artworkDetails.title}
-            sessionId={
-              (session as IndividualSchemaTypes)?.role === "user"
-                ? (session as IndividualSchemaTypes)?.user_id
-                : undefined
-            }
-            medium={artworkDetails.medium}
-          />
-          <SimilarArtworksByArtist
-            sessionId={
-              (session as IndividualSchemaTypes)?.role === "user"
-                ? (session as IndividualSchemaTypes)?.user_id
-                : undefined
-            }
-            artist={artworkDetails.artist}
-          />
+          <hr className="border-dark/10 my-5" />
+          <div className="grid sm:grid-cols-2 gap-6">
+            <FullArtworkDetails data={artworkDetails} />
+
+            <ArtistInformation
+              name={artworkDetails.artist}
+              year={artworkDetails.artist_birthyear}
+              location={artworkDetails.artist_country_origin}
+            />
+          </div>
         </div>
+        <SimilarArtworks
+          title={artworkDetails.title}
+          sessionId={
+            (session as IndividualSchemaTypes)?.role === "user"
+              ? (session as IndividualSchemaTypes)?.user_id
+              : undefined
+          }
+          medium={artworkDetails.medium}
+        />
+        <SimilarArtworksByArtist
+          sessionId={
+            (session as IndividualSchemaTypes)?.role === "user"
+              ? (session as IndividualSchemaTypes)?.user_id
+              : undefined
+          }
+          artist={artworkDetails.artist}
+        />
 
         <Footer />
       </div>

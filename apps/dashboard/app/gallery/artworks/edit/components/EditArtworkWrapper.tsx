@@ -171,7 +171,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor={"currency"}
-                className="text-dark/80 font-normal text-xs"
+                className="text-dark/80 font-normal text-[14px]"
               >
                 Currency
               </label>
@@ -179,7 +179,7 @@ export default function EditArtworkWrapper({
                 onChange={handleChange}
                 name="currency"
                 required={true}
-                className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+                className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
               >
                 <option value="">Select</option>
                 <>
@@ -202,7 +202,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col w-full">
               <label
                 htmlFor={"price"}
-                className="text-[#858585] font-normal text-xs"
+                className="text-[#858585] font-normal text-[14px]"
               >
                 Price (Enter price in your preferred currency)
               </label>
@@ -214,7 +214,7 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="border px-2 ring-0 text-xs text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+                className="border px-2 ring-0 text-[14px] text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
               />
             </div>
 
@@ -241,7 +241,7 @@ export default function EditArtworkWrapper({
           <div className="flex flex-col gap-1">
             <label
               htmlFor={"shouldShowPrice"}
-              className="text-dark/80 font-normal text-xs"
+              className="text-dark/80 font-normal text-[14px]"
             >
               Display price value
             </label>
@@ -249,7 +249,7 @@ export default function EditArtworkWrapper({
               onChange={handleChange}
               name="shouldShowPrice"
               required={true}
-              className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-[#858585] "
+              className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
             >
               <option value="">Select</option>
               <option
@@ -271,7 +271,7 @@ export default function EditArtworkWrapper({
             <button
               disabled={loading}
               type="submit"
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
             >
               {loading ? <LoadSmall /> : " Update pricing details"}
             </button>
@@ -282,7 +282,7 @@ export default function EditArtworkWrapper({
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-red-600/80 text-xs bg-red-600 duration-200 grid place-items-center"
+              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-red-600/80 text-[14px] bg-red-600 duration-200 grid place-items-center"
             >
               {deleteLoading ? <LoadSmall /> : " Delete ths artwork"}
             </button>

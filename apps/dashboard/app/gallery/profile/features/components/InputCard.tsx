@@ -28,7 +28,7 @@ export const InputCard = (props: Props) => {
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={id} className="text-xs text-dark">
+      <label htmlFor={id} className="text-[14px] text-dark">
         {label}
       </label>
       <div className={clsx("flex items-center justify-between py-1 px-1")}>
@@ -44,7 +44,7 @@ export const InputCard = (props: Props) => {
           }
           className={`w-full ${labelText === "email" && "text-dark/40"} ${
             labelText === "gallery" && "text-dark/40"
-          } disabled:cursor-not-allowed border px-2 ring-0 text-xs text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-xs placeholder:text-dark `}
+          } disabled:cursor-not-allowed border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-dark `}
           {...rest}
         />
       </div>

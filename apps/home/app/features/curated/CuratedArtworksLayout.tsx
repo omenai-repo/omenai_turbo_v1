@@ -36,7 +36,7 @@ export default function CuratedArtworksLayout({
 
   const arts = catalogChunk(
     curated_artworks,
-    width < 640 ? 1 : width < 990 ? 2 : width < 1280 ? 3 : 4
+    width < 640 ? 1 : width < 990 ? 2 : width < 1440 ? 3 : 4
   );
   return (
     <>

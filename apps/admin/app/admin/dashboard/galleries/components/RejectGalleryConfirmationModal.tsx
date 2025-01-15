@@ -101,7 +101,7 @@ export default function RejectConfirmationPopupModal() {
             disabled={loading}
             className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
           >
-            <span className="text-xs ">
+            <span className="text-[14px] ">
               {loading ? <LoadSmall /> : "Confirm"}
             </span>
             <IoCheckmarkOutline />
@@ -118,7 +118,7 @@ export default function RejectConfirmationPopupModal() {
             }
             className=" flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-green-600 text-white"
           >
-            <span className="text-xs ">Cancel</span>
+            <span className="text-[14px] ">Cancel</span>
 
             <MdClose />
           </button>

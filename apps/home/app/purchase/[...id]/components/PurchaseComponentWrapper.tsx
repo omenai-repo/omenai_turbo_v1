@@ -63,22 +63,28 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="relative h-full">
+    <>
       <DesktopNavbar />
-      <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 p-5 md:gap-x-8 lg:gap-x-16 gap-y-8">
-        <div className="col-span-1 xl:col-span-2 border border-dark/10 px-5 pt-12">
-          <DeliveryMethod />
-          <AddressForm
-            availability={(artwork as ArtworkResultTypes).availability}
-            userAddress={address}
-            author_id={(artwork as ArtworkResultTypes).author_id}
-            art_id={(artwork as ArtworkResultTypes).art_id}
-          />
-        </div>
-        <div className="cols-span-1">
-          <ProductItem artwork={artwork as ArtworkResultTypes} />
+
+      <div className="grid place-items-center h-screen w-full">
+        <div className="relative h-full container">
+          <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 md:gap-x-8 lg:gap-x-16 gap-y-8">
+            <div className="col-span-1 xl:col-span-2 border-1 border-dark/10 pt-6">
+              <DeliveryMethod />
+              <hr className="border-1 border-dark/10 my-12" />
+              <AddressForm
+                availability={(artwork as ArtworkResultTypes).availability}
+                userAddress={address}
+                author_id={(artwork as ArtworkResultTypes).author_id}
+                art_id={(artwork as ArtworkResultTypes).art_id}
+              />
+            </div>
+            <div className="cols-span-1">
+              <ProductItem artwork={artwork as ArtworkResultTypes} />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

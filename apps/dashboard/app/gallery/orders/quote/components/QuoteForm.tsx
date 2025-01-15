@@ -95,7 +95,7 @@ export default function QuoteForm() {
         >
           <div className=" flex flex-col w-full">
             <div className="relative w-full ">
-              <label className="text-[#858585] text-xs" htmlFor="shipping">
+              <label className="text-[#858585] text-[14px]" htmlFor="shipping">
                 Package carrier
               </label>
               <input
@@ -104,14 +104,17 @@ export default function QuoteForm() {
                 type="text"
                 required
                 placeholder="e.g DHL, USPS, UPS, etc..."
-                className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
               />
             </div>
           </div>
           <div className="flex gap-x-2 items-center">
             <div className="flex flex-col w-full">
               <div className="relative w-full ">
-                <label className="text-[#858585] text-xs" htmlFor="shipping">
+                <label
+                  className="text-[#858585] text-[14px]"
+                  htmlFor="shipping"
+                >
                   Shipping fees ($)
                 </label>
                 <input
@@ -119,13 +122,13 @@ export default function QuoteForm() {
                   name="fees"
                   type="text"
                   required
-                  className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 />
                 <BsCurrencyDollar className="absolute right-3 top-9 text-[#858585]" />
               </div>
             </div>
             <div className="flex flex-col w-full">
-              <label className="text-[#858585] text-xs" htmlFor="shipping">
+              <label className="text-[#858585] text-[14px]" htmlFor="shipping">
                 Taxes and other fees ($)
               </label>
               <div className="relative w-full ">
@@ -134,7 +137,7 @@ export default function QuoteForm() {
                   name="taxes"
                   type="text"
                   required
-                  className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 />
                 <BsCurrencyDollar className="absolute right-3 top-3 text-[#858585]" />
               </div>
@@ -142,7 +145,7 @@ export default function QuoteForm() {
           </div>
 
           <div className=" flex flex-col w-full">
-            <label className="text-[#858585] text-xs" htmlFor="shipping">
+            <label className="text-[#858585] text-[14px]" htmlFor="shipping">
               Additional information (optional)
             </label>
             <div className="relative w-full ">
@@ -150,7 +153,7 @@ export default function QuoteForm() {
                 onChange={handleInputChange}
                 name="additional_information"
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-xs placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
               />
             </div>
           </div>
@@ -158,15 +161,15 @@ export default function QuoteForm() {
             <button
               disabled={loading}
               type="submit"
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
             >
               {loading ? <LoadSmall /> : " Accept order request"}
             </button>
           </div>
         </form>
         {/* Details */}
-        <div className="p-3 border border-[#E0E0E0] text-xs rounded-lg">
-          <div className="flex flex-col gap-y-4 text-xs">
+        <div className="p-3 border border-[#E0E0E0] text-[14px] rounded-lg">
+          <div className="flex flex-col gap-y-4 text-[14px]">
             <div className="flex flex-col">
               <Image
                 src={image_url}

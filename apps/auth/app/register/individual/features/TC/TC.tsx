@@ -18,7 +18,7 @@ export default function TC() {
       transition={{ duration: 0.33 }}
     >
       <h1 className="text-md font-normal mb-4">Confirm account creation</h1>
-      <p className="text-xs my-4 font-normal">
+      <p className="text-[14px] my-4 font-normal">
         Please read through and confirm that you understand and accept all the
         terms stated
       </p>
@@ -33,7 +33,7 @@ export default function TC() {
             required
             className="border-dark"
           />
-          <Label htmlFor="terms of use" className="text-dark text-xs">
+          <Label htmlFor="terms of use" className="text-dark text-[14px]">
             By ticking this box, I accept the{" "}
             <Link href={"/"} className="underline font-normal">
               Terms of use
@@ -47,7 +47,7 @@ export default function TC() {
         </div>
         <div className="flex items-center gap-2">
           <Checkbox id="promotional emails" className="border-dark" />
-          <Label htmlFor="promotional emails" className="text-dark text-xs">
+          <Label htmlFor="promotional emails" className="text-dark text-[14px]">
             By ticking this box, I agree to subscribing to Omenai Inc&apos;s
             mailing list and receiving promotional emails.(optional)
           </Label>
@@ -58,7 +58,7 @@ export default function TC() {
         <button
           type="submit"
           disabled={isLoading || !isChecked}
-          className=" h-[40px] px-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+          className=" h-[40px] px-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {isLoading ? <LoadSmall /> : "Create account"}
         </button>

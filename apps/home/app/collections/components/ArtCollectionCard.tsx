@@ -21,7 +21,7 @@ export default function ArtCollectionCard({
           />
           <div className="bg-[#FAFAFA] flex flex-col p-4">
             <p className="text-[14px] font-light">{title}</p>
-            {/* <span className="w-fit text-xs font-light text-[#858585] border-none">
+            {/* <span className="w-fit text-[14px] font-light text-[#858585] border-none">
                     Omenai&apos;s best picks
                     </span> */}
           </div>

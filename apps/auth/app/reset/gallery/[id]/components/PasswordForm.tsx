@@ -94,7 +94,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Enter a new password"
             onChange={handleInputChange}
             required
-            className="ring-1 ring-black focus:ring-primary ease-linear duration-150 transition-all px-3 py-2 rounded-sm text-xs italic placeholder:text-gray-400"
+            className="ring-1 ring-black focus:ring-primary ease-linear duration-150 transition-all px-3 py-2 rounded-sm text-[14px] italic placeholder:text-gray-400"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -107,13 +107,16 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Confirm new password"
             required
             onChange={handleInputChange}
-            className="ring-1 ring-black focus:ring-primary ease-linear duration-150 transition-all px-3 py-2 rounded-sm text-xs italic placeholder:text-gray-400"
+            className="ring-1 ring-black focus:ring-primary ease-linear duration-150 transition-all px-3 py-2 rounded-sm text-[14px] italic placeholder:text-gray-400"
           />
 
           {errorList.length > 0 &&
             errorList.map((error: string, index: Key) => {
               return (
-                <p key={`${error}-error_list`} className="text-red-600 text-xs">
+                <p
+                  key={`${error}-error_list`}
+                  className="text-red-600 text-[14px]"
+                >
                   {error}
                 </p>
               );

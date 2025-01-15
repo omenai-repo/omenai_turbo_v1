@@ -13,7 +13,7 @@ export const InputCard = ({ label, labelText, value }: Props) => {
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={labelText} className="text-xs font-normal text-dark">
+      <label htmlFor={labelText} className="text-[14px] font-normal text-dark">
         {label}
       </label>
       <div className={clsx("flex items-center justify-between py-1 px-1")}>
@@ -24,7 +24,7 @@ export const InputCard = ({ label, labelText, value }: Props) => {
             setProfileUpdateData(labelText, e.target.value)
           }
           disabled={labelText === "email"}
-          className="focus:ring-0 border disabled:cursor-not-allowed disabled:bg-[#fafafa] w-full disabled:text-[#e0e0e0] h-[40px] px-4 border-dark/20  text-xs focus:border-dark focus:ring-dark focus:outline-none placeholder:text-xs"
+          className="focus:ring-0 border disabled:cursor-not-allowed disabled:bg-[#fafafa] w-full disabled:text-[#e0e0e0] h-[40px] px-4 border-dark/20  text-[14px] focus:border-dark focus:ring-dark focus:outline-none placeholder:text-[14px]"
         />
       </div>
     </div>

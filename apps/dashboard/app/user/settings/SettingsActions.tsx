@@ -10,14 +10,14 @@ export default function SettingsAction() {
       <button
         type="button"
         onClick={() => userUpdatePasswordModalPopup(true)}
-        className="w-full text-xs disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+        className="w-full text-[14px] disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
       >
         Change password
       </button>
       <button
         type="button"
         onClick={() => updateDeleteUserAccountModalPopup(true)}
-        className="w-full text-xs disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-red-600 rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-red-600/80"
+        className="w-full text-[14px] disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-red-600 rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-red-600/80"
       >
         Delete my account
       </button>

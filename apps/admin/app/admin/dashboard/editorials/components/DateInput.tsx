@@ -14,7 +14,7 @@ export default function DateInput({ label, value, setDate }: DateInputProps) {
   return (
     <div className="w-full flex-1">
       <div className="flex flex-col">
-        <label htmlFor={label} className="text-xs text-[#858585]">
+        <label htmlFor={label} className="text-[14px] text-[#858585]">
           {label}
         </label>
         <DatePicker

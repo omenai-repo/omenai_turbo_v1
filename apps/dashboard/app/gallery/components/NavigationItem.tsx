@@ -26,7 +26,7 @@ export default function NavigationItem({
           className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded-sm`}
         >
           <IconWrapper>{icon}</IconWrapper>
-          <p className={`text-xs p-2 font-normal`}>{title}</p>
+          <p className={`text-[14px] p-2 font-normal`}>{title}</p>
         </li>
       ) : (
         <Link
@@ -43,7 +43,7 @@ export default function NavigationItem({
           >
             {icon}
           </IconWrapper>
-          <p className={`text-xs p-2 font-normal group-hover:text-white`}>
+          <p className={`text-[14px] p-2 font-normal group-hover:text-white`}>
             {title}
           </p>
         </Link>

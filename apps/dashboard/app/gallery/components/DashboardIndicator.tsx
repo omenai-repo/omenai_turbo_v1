@@ -54,7 +54,7 @@ export default function DashboardIndicator({
   }
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-xs">
+      <div className="text-[14px]">
         <p className="font-normal text-dark">
           Welcome back, <strong>{gallery_name}</strong>
         </p>
@@ -71,11 +71,11 @@ export default function DashboardIndicator({
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" w-full text-xs disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+            className=" w-full text-[14px] disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>
-          <p className="text-xs text-[#858585]">
+          <p className="text-[14px] text-[#858585]">
             Account currently under review
           </p>
         </div>
@@ -83,8 +83,8 @@ export default function DashboardIndicator({
         <div className="flex gap-2 items-center">
           <RiAdminLine className="text-sm font-light text-dark" />
           <div>
-            <p className="text-dark text-xs font-bold">{admin_name}</p>
-            {/* <p className="text-dark text-xs">{gallery_name}</p> */}
+            <p className="text-dark text-[14px] font-bold">{admin_name}</p>
+            {/* <p className="text-dark text-[14px]">{gallery_name}</p> */}
           </div>
         </div>
       )}

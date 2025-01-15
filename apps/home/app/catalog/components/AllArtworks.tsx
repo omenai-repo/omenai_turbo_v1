@@ -4,7 +4,6 @@ import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPa
 import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
 import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
 import { useQuery } from "@tanstack/react-query";
-import Pagination from "./Pagination";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useWindowSize } from "usehooks-ts";
 import { useState } from "react";
@@ -13,6 +12,7 @@ import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/comp
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
+import Pagination from "./Pagination";
 
 export default function AllArtworks({
   sessionId,
@@ -56,12 +56,12 @@ export default function AllArtworks({
 
   const arts = catalogChunk(
     artworks,
-    width < 640 ? 1 : width < 990 ? 2 : width < 1280 ? 3 : 4
+    width < 640 ? 1 : width < 990 ? 2 : width < 1440 ? 3 : 4
   );
 
   return (
     <div className="w-full my-3">
-      <p className="text-xs font-bold mb-4">{artwork_total} artworks:</p>
+      <p className="text-[14px] font-bold mb-4">{artwork_total} artworks:</p>
 
       <div className="flex flex-wrap gap-x-4 justify-center">
         {arts.map((artworks: any[], index) => {

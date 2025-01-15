@@ -50,7 +50,7 @@ export default function NoSubscriptionTheme() {
         <div className="flex justify-center items-center flex-col gap-3">
           <h5>No subscriptions plans are active</h5>
           <Link href={"/gallery/billing/plans"} className="">
-            <button className=" h-[40px] px-4 rounded-sm w-fit text-xs bg-dark flex gap-2 items-center">
+            <button className=" h-[40px] px-4 rounded-sm w-fit text-[14px] bg-dark flex gap-2 items-center">
               <span className="text-white">Create a subscription</span>
             </button>
           </Link>

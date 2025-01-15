@@ -39,7 +39,7 @@ export default function UploadArtworkDetails() {
         <ArtistInfoInputGroup />
         <ArtworkDimensionsInputGroup />
         <ArtworkPriceInputGroup />
-        <div className="w-full flex my-4 text-xs">
+        <div className="w-full flex my-4 text-[14px]">
           <button
             type="submit"
             className="w-full bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"

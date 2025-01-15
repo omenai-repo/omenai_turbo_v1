@@ -8,7 +8,7 @@ export default function FormBlock() {
         <div className="flex flex-col gap-4 text-center items-center">
           <GalleryLogo />
 
-          <p className="text-xs">Kindly provide the following details</p>
+          <p className="text-[14px]">Kindly provide the following details</p>
         </div>
 
         <FormInput />

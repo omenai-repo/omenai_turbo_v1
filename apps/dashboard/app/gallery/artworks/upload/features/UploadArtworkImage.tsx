@@ -135,7 +135,7 @@ export default function UploadArtworkImage() {
         ) : (
           <button
             type="button"
-            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded-sm text-xs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded-sm text-[14px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
             onClick={() => {
               imagePickerRef.current?.click();
             }}
@@ -169,7 +169,7 @@ export default function UploadArtworkImage() {
           }}
         />
       </div>
-      <div className="mt-4 flex w-full text-xs">
+      <div className="mt-4 flex w-full text-[14px]">
         <button
           disabled={loading || !image}
           className={`bg-dark rounded-sm disabled:cursor-not-allowed disabled:bg-[#E0E0E0] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 w-full`}

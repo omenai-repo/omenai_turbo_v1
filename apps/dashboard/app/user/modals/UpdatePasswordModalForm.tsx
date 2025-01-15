@@ -128,7 +128,10 @@ export default function UpdatePasswordModalForm() {
       <form onSubmit={handlePasswordUpdate}>
         <div className="space-y-2 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto">
-            <label htmlFor="shipping" className="text-xs text-[#858585] mb-2">
+            <label
+              htmlFor="shipping"
+              className="text-[14px] text-[#858585] mb-2"
+            >
               Password
             </label>
             <input
@@ -137,13 +140,16 @@ export default function UpdatePasswordModalForm() {
               type="password"
               required
               placeholder="Enter a new password"
-              className="h-[40px] px-4 border border-dark/20 w-full text-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-xs placeholder:text-dark/40"
+              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px] placeholder:text-dark/40"
             />
           </div>
         </div>
         <div className="space-y-2 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto">
-            <label htmlFor="shipping" className="text-xs text-[#858585] mb-2">
+            <label
+              htmlFor="shipping"
+              className="text-[14px] text-[#858585] mb-2"
+            >
               Confirm password
             </label>
             <input
@@ -152,14 +158,17 @@ export default function UpdatePasswordModalForm() {
               type="password"
               placeholder="Confirm your password"
               required
-              className="h-[40px] px-4 border border-dark/20 w-full text-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-xs placeholder:text-dark/40"
+              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px] placeholder:text-dark/40"
             />
           </div>
         </div>
 
         <div className="space-y-2 mb-2 flex flex-col w-full relative">
           <div className="relative w-full h-auto">
-            <label htmlFor="shipping" className="text-xs text-[#858585] mb-2">
+            <label
+              htmlFor="shipping"
+              className="text-[14px] text-[#858585] mb-2"
+            >
               Confirmation code
             </label>
             <input
@@ -168,7 +177,7 @@ export default function UpdatePasswordModalForm() {
               type="text"
               placeholder="Enter confirmation code"
               required
-              className="h-[40px] px-4 border border-dark/20 w-full text-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-xs placeholder:text-dark/40"
+              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px] placeholder:text-dark/40"
             />
           </div>
 
@@ -183,7 +192,7 @@ export default function UpdatePasswordModalForm() {
                 info.password === "" ||
                 codeLoading
               }
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-xs bg-dark duration-200 grid place-items-center"
+              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
             >
               {codeLoading ? <LoadSmall /> : "Get code"}
             </button>
@@ -197,7 +206,7 @@ export default function UpdatePasswordModalForm() {
                 className="flex items-center gap-x-2 my-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-xs">{error}</p>
+                <p className="text-red-600 text-[14px]">{error}</p>
               </div>
             );
           })}
@@ -211,7 +220,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="h-[40px] px-4 w-full text-xs text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+            className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
           >
             {loading ? <LoadSmall /> : "Update Password"}
           </button>

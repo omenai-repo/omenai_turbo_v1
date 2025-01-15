@@ -23,7 +23,7 @@ export default function TransactionTable() {
     refetchOnWindowFocus: false,
   });
   return (
-    <div className="flex flex-col gap-y-4 w-full rounded-md overflow-y-scroll overflow-x-hidden text-xs p-4 ring-1 ring-[#e0e0e0]">
+    <div className="flex flex-col gap-y-4 w-full rounded-md overflow-y-scroll overflow-x-hidden text-[14px] p-4 ring-1 ring-[#e0e0e0]">
       <div className="flex justify-center">
         <h2 className="text-base font-bold">Transaction History</h2>
       </div>
@@ -49,7 +49,7 @@ export default function TransactionTable() {
                   />
 
                   <div>
-                    <h2 className="font-bold text-xs">
+                    <h2 className="font-bold text-[14px]">
                       {transaction.trans_id}
                     </h2>
                     <p className="text-[13px]">
@@ -71,7 +71,7 @@ export default function TransactionTable() {
         >
           <div>
             <NotFoundData />
-            <p className="text-xs font-semibold">No transactions found</p>
+            <p className="text-[14px] font-semibold">No transactions found</p>
           </div>
         </div>
       )}

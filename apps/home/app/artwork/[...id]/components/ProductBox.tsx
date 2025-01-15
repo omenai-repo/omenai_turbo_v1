@@ -7,6 +7,7 @@ import { createViewHistory } from "@omenai/shared-services/viewHistory/createVie
 import { ArtworkResultTypes } from "@omenai/shared-types";
 import ArtistInformation from "./ArtistInformation";
 import FullArtworkDetails from "./FullArtworkDetails";
+import LegalComponents from "./LegalComponents";
 
 type ProductBoxTypes = {
   data: ArtworkResultTypes;
@@ -34,16 +35,14 @@ export default function ProductBox({ data, sessionId }: ProductBoxTypes) {
   }, []);
   return (
     <div className="">
-      <div className="grid lg:grid-cols-2 gap-4 items-center">
+      <div className="grid lg:grid-cols-12 gap-6 justify-center items-start">
         {/* Image */}
-        <div className="h-full flex flex-col">
-          <ImageBox url={data.url} title={data.title} />
-        </div>
+        <ImageBox url={data.url} title={data.title} />
 
         {/* Data */}
-        <div className="w-full lg:w-2/3 h-full">
+        <div className="w-full col-span-12 lg:col-span-4 h-full">
           <ArtworkDetail data={data} sessionId={sessionId} />
-          <FullArtworkDetails data={data} />
+          <LegalComponents />
         </div>
       </div>
     </div>

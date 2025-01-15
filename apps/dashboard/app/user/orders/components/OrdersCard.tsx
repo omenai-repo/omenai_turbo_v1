@@ -169,10 +169,10 @@ export default function OrdersCard({
           width={100}
           className="object-top object-contain"
         />
-        <div className="flex flex-col sapce-y-1 text-xs">
+        <div className="flex flex-col sapce-y-1 text-[14px]">
           <p className="text-dark font-normal text-[15px]">{title}</p>
-          <span className="text-dark text-xs">{artist}</span>
-          <span className="text-dark text-xs font-bold">
+          <span className="text-dark text-[14px]">{artist}</span>
+          <span className="text-dark text-[14px] font-bold">
             {formatPrice(price, currency)}
           </span>
           <div className="mt-3">
@@ -187,11 +187,11 @@ export default function OrdersCard({
           </div>
         </div>
       </div>
-      <div className="flex flex-col md:mt-0 mt-5 text-xs md:items-end items-start gap-y-1">
-        <span className="text-dark text-xs font-normal">
+      <div className="flex flex-col md:mt-0 mt-5 text-[14px] md:items-end items-start gap-y-1">
+        <span className="text-dark text-[14px] font-normal">
           Order ID: <span className="font-normal">{order_id}</span>
         </span>
-        <span className="text-dark text-xs">{order_date}</span>
+        <span className="text-dark text-[14px]">{order_date}</span>
         {!availability ? (
           <button
             disabled

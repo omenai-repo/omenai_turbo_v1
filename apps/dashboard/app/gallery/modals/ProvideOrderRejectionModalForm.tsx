@@ -72,7 +72,10 @@ export default function ProvideOrderRejectionModalForm() {
       <form className="w-full" onSubmit={handleOrderRejection}>
         <div className="space-y-2 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto my-2">
-            <label htmlFor="shipping" className="text-xs text-[#858585] mb-2">
+            <label
+              htmlFor="shipping"
+              className="text-[14px] text-[#858585] mb-2"
+            >
               Reason for declining request
             </label>
             <input
@@ -81,7 +84,7 @@ export default function ProvideOrderRejectionModalForm() {
               type="text"
               required
               placeholder="e.g Artwork no longer available"
-              className="h-[40px] px-4 border border-dark/20 w-full text-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-xs"
+              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]"
             />
           </div>
         </div>
@@ -90,7 +93,7 @@ export default function ProvideOrderRejectionModalForm() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[40px] px-4 w-full text-xs text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-200 grid place-items-center"
+            className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-200 grid place-items-center"
           >
             {loading ? <LoadSmall /> : " Decline order"}
           </button>

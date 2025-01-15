@@ -13,7 +13,7 @@ export const OrderReceivedModal = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={() => toggleOrderReceivedModal(false)}
+          // onClick={() => toggleOrderReceivedModal(false)}
           className="bg-slate-900/20 backdrop-blur py-8 px-2 fixed inset-0 z-50 grid place-items-center cursor-pointer"
         >
           <motion.div

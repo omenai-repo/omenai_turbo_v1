@@ -43,7 +43,7 @@ export default function EditorialItem({
           <p>No cover</p>
         )}
         <div className="flex flex-col gap-[1rem] py-2 mx-0">
-          <h1 className="text-xs xs:text-base text-white leading-tight font-normal ">
+          <h1 className="text-[14px] xs:text-base text-white leading-tight font-normal ">
             {title}
           </h1>
           <div className="absolute bottom-5 left-0 px-4 flex w-full justify-between items-center gap-4">
@@ -52,7 +52,7 @@ export default function EditorialItem({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <button className="flex bg-white text-dark px-4 py-2 items-center gap-x-2 rounded-full text-xs whitespace-nowrap">
+              <button className="flex bg-white text-dark px-4 py-2 items-center gap-x-2 rounded-full text-[14px] whitespace-nowrap">
                 Read full article
               </button>
             </Link>

@@ -1,11 +1,11 @@
 import AllArtworks from "./components/AllArtworks";
-import Filter from "./components/Filter";
 import Collections from "../features/collections/Collections";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
 import Footer from "@omenai/shared-ui-components/components/footer/Footer";
 import AppStoreAd from "../features/appStoreAd/AppStoreAd";
+import Filter from "./components/Filter";
 
 export default async function page() {
   const session = await getServerSession();

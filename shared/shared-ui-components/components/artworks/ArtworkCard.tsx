@@ -49,18 +49,22 @@ export default function ArtworkCard({
             <Image
               src={image_href}
               alt={name + " image"}
-              loading="lazy"
               height={500}
               width={500}
+              priority
               className="w-full rounded-[20px] h-full aspect-auto object-cover object-center cursor-pointer artImage"
             />
           </Link>
-          <div className="bg-[#FFFFFF] py-[5px] rounded-[24px] text-xs absolute px-[14px] top-[1.5rem] left-[1rem]">
+          <div className="bg-[#FFFFFF] py-[5px] rounded-[24px] text-[14px] absolute px-[14px] top-[1.5rem] left-[1rem]">
             {medium}
           </div>
 
           <div className="absolute top-[20px] right-[12px] flex items-center gap-1">
-            {trending && <p className="text-white">Liked by 2k+ people</p>}
+            {trending && (
+              <p className="text-white text-[14px]">
+                Liked by {impressions} {impressions > 1 ? "people" : "person"}
+              </p>
+            )}
             {isDashboard ? null : (
               <LikeComponent
                 impressions={impressions}
@@ -71,14 +75,14 @@ export default function ArtworkCard({
             )}
           </div>
 
-          <div className="flex items-centerjustify-center">
+          <div className="flex items-center justify-center">
             {/* Glass Card */}
             <div className="p-3 flex flex-col gap-y-1 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
               {/* Title */}
-              <div className="text-gray-400 text-xs xs:text-base font-light">
+              <div className="text-gray-400 text-[14px] xs:text-base font-light">
                 {name}
               </div>
-              <div className="text-gray-400 text-xs font-light">
+              <div className="text-gray-400 text-[14px] font-light">
                 {artist.substring(0, 20)}
                 {artist.length > 20 && "..."}
               </div>
@@ -86,7 +90,7 @@ export default function ArtworkCard({
               {!trending && (
                 <div className="flex justify-between mt-1.5">
                   {/* Price */}
-                  <div className="text-white text-xs xs:text-[14px] font-bold">
+                  <div className="text-white text-[14px] xs:text-[14px] font-bold">
                     {pricing?.price && pricing.shouldShowPrice === "Yes"
                       ? !availability
                         ? "Sold"
@@ -100,7 +104,7 @@ export default function ArtworkCard({
                   {!availability ? null : (
                     <Link
                       href={`/artwork/${name}`}
-                      className="px-4 py-[5px] duration-300 hover:bg-dark hover:text-white rounded-full bg-white text-black text-xs font-medium shadow"
+                      className="px-4 py-[5px] duration-300 hover:bg-dark hover:text-white rounded-full bg-white text-black text-[14px] font-medium shadow"
                     >
                       {pricing?.price && pricing.shouldShowPrice === "Yes"
                         ? "Purchase"

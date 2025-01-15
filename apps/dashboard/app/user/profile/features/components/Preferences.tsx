@@ -21,7 +21,7 @@ export default function Preferences() {
     <AnimatePresence>
       <label
         htmlFor="artType-preferences"
-        className="text-xs font-normal text-dark"
+        className="text-[14px] font-normal text-dark"
       >
         Preferences
       </label>
@@ -32,7 +32,7 @@ export default function Preferences() {
           exit={{ y: -100 }}
           transition={{ duration: 0.33 }}
         >
-          <div className="flex flex-wrap  gap-y-[1rem] gap-x-[0.5rem] text-xs">
+          <div className="flex flex-wrap  gap-y-[1rem] gap-x-[0.5rem] text-[14px]">
             {artTypes.map((art, index) => {
               return (
                 <div key={art + index}>

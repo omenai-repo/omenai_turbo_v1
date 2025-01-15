@@ -68,13 +68,13 @@ export default function CancelSubscriptionModal({
             >
               {/* Add modal form here */}
               <div className="h-auto w-full">
-                <div className="flex flex-col gap-4 font-normal text-xs">
+                <div className="flex flex-col gap-4 font-normal text-[14px]">
                   <h2 className="text-red-600 text-sm font-normal">
                     You are about to cancel your subscription.
                   </h2>
                   <p>
                     Your current subscription will remain active till{" "}
-                    <span className="font-bold text-xs">
+                    <span className="font-bold text-[14px]">
                       {formatIntlDateTime(sub_end)}.
                     </span>{" "}
                     If you would like to proceed with canceling your
@@ -82,7 +82,7 @@ export default function CancelSubscriptionModal({
                   </p>
 
                   {/* Warning block */}
-                  <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3 text-xs">
+                  <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3 text-[14px]">
                     <IoWarning className="text-md text-[#ff3434]" />
                     <p>
                       Are you sure? After{" "}

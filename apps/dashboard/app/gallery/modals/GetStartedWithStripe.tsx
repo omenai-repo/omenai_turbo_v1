@@ -115,7 +115,7 @@ export default function GetStartedWithStripe() {
             >
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-xs mb-2"
+                  className="text-[#858585] font-normal text-[14px] mb-2"
                   htmlFor="name"
                 >
                   Name
@@ -124,12 +124,12 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.name}
-                  className="p-3 border border-[#E0E0E0] text-xs disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 />
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-xs mb-2"
+                  className="text-[#858585] font-normal text-[14px] mb-2"
                   htmlFor="email"
                 >
                   Email
@@ -138,12 +138,12 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.email}
-                  className="p-3 border border-[#E0E0E0] text-xs disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 />
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-xs mb-2"
+                  className="text-[#858585] font-normal text-[14px] mb-2"
                   htmlFor="email"
                 >
                   Business Location
@@ -153,7 +153,7 @@ export default function GetStartedWithStripe() {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setCountrySelect(e.target.value)
                   }
-                  className="p-3 mb-4 border border-[#E0E0E0] text-xs disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 mb-4 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 >
                   <option value="">Select</option>
                   {country_codes.map((country, index) => {
@@ -179,7 +179,7 @@ export default function GetStartedWithStripe() {
                         Your connected account ID is:{" "}
                         <code className="font-bold">{connectedAccountId}</code>{" "}
                       </p>
-                      <span className="text-xs mt-1 font-light">
+                      <span className="text-[14px] mt-1 font-light">
                         Hey, don&apos;t worry, we&apos;ll remember it for you!
                       </span>
                     </>

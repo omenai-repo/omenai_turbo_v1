@@ -104,7 +104,7 @@ export default function PayNowButton({
             style="dark"
             animation="duration-500"
             trigger="hover"
-            className={`w-[400px] bg-dark text-xs text-white p-2 relative ${
+            className={`w-[400px] bg-dark text-[14px] text-white p-2 relative ${
               !lock_status && "hidden"
             }`}
           >

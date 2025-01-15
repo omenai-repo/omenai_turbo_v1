@@ -99,7 +99,7 @@ export default function RefreshStripe() {
             <div className="flex flex-col space-y-2 mt-5">
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-xs mb-2"
+                  className="text-[#858585] font-normal text-[14px] mb-2"
                   htmlFor="name"
                 >
                   Name
@@ -108,12 +108,12 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={session?.name}
-                  className="p-3 border border-[#E0E0E0] text-xs disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 />
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-xs mb-2"
+                  className="text-[#858585] font-normal text-[14px] mb-2"
                   htmlFor="email"
                 >
                   Email
@@ -122,7 +122,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={session?.email}
-                  className="p-3 border border-[#E0E0E0] text-xs disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="p-3 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
                 />
               </div>
             </div>
