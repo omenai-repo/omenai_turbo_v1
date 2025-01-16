@@ -1,16 +1,20 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { filterOptionsType } from "@omenai/shared-types/index";
+import {
+  filterOptionsType,
+  IndividualSchemaTypes,
+} from "@omenai/shared-types/index";
+import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 export const fetchCuratedArtworks = async (
   page: number,
-  preferences: string[],
   filters?: filterOptionsType
 ) => {
+  const session = await getServerSession();
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/artworks/getUserCuratedArtworks`, {
       method: "POST",
       body: JSON.stringify({
-        preferences,
+        preferences: (session as IndividualSchemaTypes).preferences,
         page,
         filters,
       }),

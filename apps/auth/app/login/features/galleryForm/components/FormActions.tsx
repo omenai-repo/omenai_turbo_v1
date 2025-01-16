@@ -18,43 +18,41 @@ export default function FormActions() {
 
   return (
     <div className="flex flex-col mt-[1rem] gap-4 w-full">
-      <div className="flex flex-col gap-y-2 justify-between items-center">
-        <p className="font-normal text-[14px] text-dark/70 text-right">
-          Need a gallery account?{" "}
-          <Link
-            href={`${auth_url}/register/gallery`}
-            className="text-dark underline"
-          >
-            Create one
-          </Link>
-        </p>
-
-        <p className="font-normal text-[14px] text-dark/70 text-right">
-          Forgot password?{" "}
-          <span
-            className="text-black cursor-pointer underline font-normal"
-            onClick={() => updateRecoveryModal("gallery")}
-          >
-            Reset it
-          </span>
-        </p>
-      </div>
-
-      <div className="flex flex-col w-full gap-2 mt-[30px]">
+      <div className="flex flex-col w-full gap-y-4">
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[40px] px-4 w-full font-normal flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-black text-white text-[14px]"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-black text-white text-[14px] font-normal"
         >
-          {isLoading ? <LoadSmall /> : "Login"}{" "}
-          {!isLoading && <GoArrowRight className="text-md opacity-70" />}
+          {isLoading ? <LoadSmall /> : "Login to your account"}{" "}
         </button>
-        <button
-          onClick={() => updateCurrent(0)}
-          className="h-[40px] px-4 w-full text-center underline flex text-[14px] items-center justify-center bg-white cursor-pointer"
+        <Link href={"/register"}>
+          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center bg-white cursor-pointer">
+            Create an account
+          </button>
+        </Link>
+      </div>
+
+      <div className="flex flex-col gap-y-2 my-6 justify-between items-center">
+        <div className="flex gap-x-6">
+          <p className="font-medium text-[14px] text-dark/70 ">
+            <Link href={`/login/artist`} className="text-dark underline">
+              Sign in as Artist{" "}
+            </Link>
+          </p>
+          <p className="font-medium text-[14px] text-dark/70">
+            <Link href={`/login/user`} className="text-dark underline">
+              Sign in a User{" "}
+            </Link>
+          </p>
+        </div>
+
+        <p
+          className="text-[14px] text-dark/70 text-red-600 cursor-pointer underline font-medium"
+          onClick={() => updateRecoveryModal("gallery")}
         >
-          Sign in to Individual account
-        </button>
+          Forgot password?
+        </p>
       </div>
     </div>
   );

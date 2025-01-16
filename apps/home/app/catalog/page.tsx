@@ -11,7 +11,7 @@ export default async function page() {
   const session = await getServerSession();
 
   return (
-    <main className="relative">
+    <main className="relative" suppressHydrationWarning>
       <DesktopNavbar />
       <div className="">
         <Collections isCatalog={true} />

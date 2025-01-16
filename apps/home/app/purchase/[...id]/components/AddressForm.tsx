@@ -166,7 +166,7 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-full h-[40px] px-4 text-[14px] disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline duration-300 grid place-items-center group"
+                className="w-full rounded-full h-[40px] px-4 text-[14px] disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline grid place-items-center group"
               >
                 {!loading ? "Request price quote" : <LoadSmall />}
               </button>

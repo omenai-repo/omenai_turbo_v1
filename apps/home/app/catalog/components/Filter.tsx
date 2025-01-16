@@ -2,7 +2,7 @@
 import { GiSettingsKnobs } from "react-icons/gi";
 import PriceFilter from "./PriceFilter";
 import MediumFilter from "./MediumFilter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isEmptyFilter } from "@omenai/shared-utils/src/isFilterEmpty";
 
 import { toast } from "sonner";
@@ -19,21 +19,20 @@ import FilterPill from "./FilterPill";
 import YearFilter from "./YearFilter";
 import RarityFilter from "./RarityFilter";
 
-export default function Filter({ isMedium = false }: { isMedium?: boolean }) {
+export default function Filter() {
   const [showFilterBlock, setShowFilterBlock] = useState(false);
-  const { width } = useWindowSize();
+  const [width, setWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
 
   const { filterOptions, selectedFilters, clearAllFilters } = filterStore();
-  const { paginationCount, updatePaginationCount } = artworkActionStore();
+  const { currentPage, setCurrentPage } = artworkActionStore();
   const { setArtworks, setIsLoading, setPageCount } = artworkStore();
   const router = useRouter();
   async function handleSubmitFilter() {
-    updatePaginationCount("reset");
+    setCurrentPage(1);
     setIsLoading(true);
-    const response = await fetchPaginatedArtworks(
-      paginationCount,
-      filterOptions
-    );
+    const response = await fetchPaginatedArtworks(currentPage, filterOptions);
     if (response?.isOk) {
       setPageCount(response.count);
       setArtworks(response.data);
@@ -54,10 +53,16 @@ export default function Filter({ isMedium = false }: { isMedium?: boolean }) {
     });
   }
 
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleClearAll = async () => {
     clearAllFilters();
     setIsLoading(true);
-    const response = await fetchPaginatedArtworks(paginationCount, {
+    const response = await fetchPaginatedArtworks(currentPage, {
       price: [],
       year: [],
       medium: [],
@@ -72,18 +77,16 @@ export default function Filter({ isMedium = false }: { isMedium?: boolean }) {
 
   return (
     <div className="sticky top-[60px] z-20 py-3 bg-white">
-      <div
-        className={`w-full ${
-          width > 960 ? "hidden" : "flex"
-        } justify-between items-center`}
-      >
+      <div className={`w-full`}>
         <button
-          className={`${
+          className={`${window.innerWidth > 960 ? "hidden" : "flex"} ${
             showFilterBlock
               ? "bg-dark text-white"
               : "border-dark/10 border bg-white text-dark"
-          } duration-200 border px-3 py-1 border-dark/10 rounded-full relative z-20 h-[35px] flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
+          } duration-200 border px-3 py-1 rounded-full relative z-20 h-[35px] flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
           onClick={() => setShowFilterBlock(!showFilterBlock)}
+          aria-expanded={showFilterBlock}
+          aria-label="Toggle filter block"
         >
           <span className="text-[13px] font-normal">Filters</span>
           {showFilterBlock ? (
@@ -92,8 +95,8 @@ export default function Filter({ isMedium = false }: { isMedium?: boolean }) {
             <GiSettingsKnobs className="rotate-90" />
           )}
         </button>
-        <div />
       </div>
+
       {selectedFilters.length > 0 && (
         <>
           <div className="flex flex-wrap gap-4 items-center py-4 px-2 cursor-pointer">

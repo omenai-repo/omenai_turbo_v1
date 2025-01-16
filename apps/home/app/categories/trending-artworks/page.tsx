@@ -11,12 +11,13 @@ export default async function TrendingArtworks() {
   return (
     <main className="relative">
       <DesktopNavbar />
-      <div className="p-4">
-        <div className="space-y-1 px-4 my-5">
-          <h1 className="text-sm md:text-md font-normal">Trending artworks</h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
-            On the Rise: Discover the Art Everyone&apos;s Talking About
+      <div className="py-4">
+        <div className="space-y-1 my-5">
+          <p className="text-lg lg:text-xl font-semibold">On the rise</p>
+          <p className=" font-medium">
+            Discover the Art Everyone&apos;s Talking About
           </p>
+          {/* <p className=" font-medium"></p> */}
         </div>
         <Filter page_type="trending" />
 

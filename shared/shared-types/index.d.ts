@@ -209,6 +209,19 @@ export type ArtworkPriceFilterData = {
   "pricing.currency": string;
 };
 
+export type FilterOptions = {
+  price: {
+    min: number;
+    max: number;
+  }[];
+  year: {
+    min: number;
+    max: number;
+  }[];
+  medium: string[];
+  rarity: string[];
+};
+
 export type ArtworkResultTypes = ArtworkSchemaTypes & {
   _id: string;
   updatedAt: string;

@@ -115,37 +115,30 @@ export default function FormInput() {
   };
 
   return (
-    <form
-      className="container flex flex-col gap-[1rem]"
-      onSubmit={handleSubmit}
-    >
+    <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
       <div className="flex flex-col">
-        <label htmlFor={"email"} className="text-[14px] text-[#858585]">
-          Email address
-        </label>
         <input
           type="Gallery email address"
           value={form.email}
           name="email"
-          className="focus:ring-0 border-0 px-0 border-b-[1px] border-b-dark/20 outline-none focus:outline-none focus:border-b-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-1"
+          placeholder="Enter your Email Address"
+          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
           onChange={handleChange}
           required
         />
       </div>
       <div className="flex flex-col">
-        <label htmlFor={"password"} className="text-[14px] text-[#858585]">
-          Password
-        </label>
         <div className="w-full relative">
           <input
             value={form.password}
             type={show ? "text" : "password"}
             name="password"
-            className="focus:ring-0 border-0 w-full px-0 border-b-[1px] border-b-dark/20 outline-none focus:outline-none focus:border-b-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-1"
+            placeholder="Enter your Password"
+            className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
             onChange={handleChange}
             required
           />
-          <div className="absolute top-0 right-2 w-fit cursor-pointer">
+          <div className="absolute top-4 right-2 w-fit cursor-pointer">
             {show ? (
               <PiEyeSlashThin
                 className="text-md"

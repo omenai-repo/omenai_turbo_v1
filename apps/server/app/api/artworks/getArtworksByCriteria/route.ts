@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const BASIC_LIMIT = 25;
   try {
     await connectMongoDB();
-    const { page = 1, medium, filters } = await request.json();
+    const { page, medium, filters } = await request.json();
     const skip = (page - 1) * PAGE_SIZE;
 
     // Helper function to fetch gallery IDs based on subscription plan
@@ -64,53 +64,25 @@ export async function POST(request: Request) {
       medium,
     })
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(PAGE_SIZE)
       .exec();
 
-    // Fetch all artworks, no initial limit applied
-
-    // Calculate how many basic artworks have already been returned in previous pages
-    const basicArtworksAlreadyReturned = (page - 1) * PAGE_SIZE - skip;
-    const remainingBasicLimit = Math.max(
-      BASIC_LIMIT - basicArtworksAlreadyReturned,
-      0
-    );
-
-    // Separate artworks into basic and pro/premium
+    // Separate artworks into basic and pro/premium based on gallery_id
     let selectedBasicArtworks = [];
     let selectedProPremiumArtworks = [];
     let artworksByArtist = [];
 
-    let skippedBasicArtworks = 0;
-
     for (let artwork of allArtworks) {
       if (artwork.role_access.role === "artist") {
         artworksByArtist.push(artwork);
-      } else {
-        if (basicGalleryIds.includes(artwork.author_id)) {
-          if (skippedBasicArtworks < skip) {
-            skippedBasicArtworks++;
-            continue;
-          }
-          if (selectedBasicArtworks.length < remainingBasicLimit) {
-            selectedBasicArtworks.push(artwork);
-          }
-        } else {
-          if (skippedBasicArtworks + selectedProPremiumArtworks.length < skip) {
-            skippedBasicArtworks++;
-            continue;
-          }
-          selectedProPremiumArtworks.push(artwork);
+      } else if (basicGalleryIds.includes(artwork.author_id)) {
+        if (selectedBasicArtworks.length < BASIC_LIMIT) {
+          selectedBasicArtworks.push(artwork);
         }
+      } else {
+        selectedProPremiumArtworks.push(artwork);
       }
-
-      // Stop if we have filled the page
-      if (
-        selectedBasicArtworks.length +
-          selectedProPremiumArtworks.length +
-          artworksByArtist.length >=
-        PAGE_SIZE
-      )
-        break;
     }
 
     // Combine and slice the artworks for pagination
@@ -141,7 +113,7 @@ export async function POST(request: Request) {
         message: "Successful",
         data: allArtworksByCriteria,
         page,
-        pageCount: Math.ceil(total / 30),
+        pageCount: Math.ceil(total / PAGE_SIZE),
       },
       { status: 200 }
     );

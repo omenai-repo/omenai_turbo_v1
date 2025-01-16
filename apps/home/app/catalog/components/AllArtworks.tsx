@@ -12,41 +12,42 @@ import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/comp
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-import Pagination from "./Pagination";
-
+import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 export default function AllArtworks({
   sessionId,
 }: {
   sessionId: string | undefined;
 }) {
-  const { paginationCount } = artworkActionStore();
-  const { isLoading, setPageCount, setArtworks, artworks } = artworkStore();
+  const { currentPage, setCurrentPage } = artworkActionStore();
+  const { isLoading, setArtworks, setIsLoading, artworks } = artworkStore();
   const { filterOptions } = filterStore();
+
   const { width } = useWindowSize();
   const [artwork_total, set_artwork_total] = useState(0);
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_paginated_artworks"],
     queryFn: async () => {
-      const response = await fetchPaginatedArtworks(
-        paginationCount,
-        filterOptions
-      );
+      const response = await fetchPaginatedArtworks(currentPage, filterOptions);
       if (response?.isOk) {
-        setPageCount(response.count);
         setArtworks(response.data);
         set_artwork_total(response.total);
-        return response.data;
+        return { data: response.data, pages: response.count };
       } else throw new Error("Failed to fetch artworks");
     },
     refetchOnWindowFocus: false,
+    gcTime: 0,
   });
 
   if (loading || isLoading) {
     return <ArtworksListingSkeletonLoader />;
   }
 
-  if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
+  if (
+    !artworksArray ||
+    artworksArray.data.length === 0 ||
+    artworks.length === 0
+  ) {
     return (
       <div className="w-full h-full grid place-items-center my-12">
         <NotFoundData />
@@ -90,7 +91,15 @@ export default function AllArtworks({
         {/* first */}
       </div>
 
-      <Pagination />
+      <Pagination
+        total={artworksArray.pages}
+        filterOptions={filterOptions}
+        fn={fetchPaginatedArtworks}
+        setArtworks={setArtworks}
+        setCurrentPage={setCurrentPage}
+        setIsLoading={setIsLoading}
+        currentPage={currentPage}
+      />
     </div>
   );
 }

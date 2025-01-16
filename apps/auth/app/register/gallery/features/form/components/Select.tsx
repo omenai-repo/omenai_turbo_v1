@@ -7,7 +7,7 @@ import { MdError, MdOutlineArrowForward } from "react-icons/md";
 type SelectInputProps = {
   label: string;
   labelText: string;
-  items: string[];
+  items: { code: string; name: string }[];
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   name: string;
   required: boolean;
@@ -56,7 +56,7 @@ export default function SelectInput({
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col gap-2 container"
+        className="flex flex-col gap-2 xl:container"
       >
         <div className="flex flex-col gap-1">
           <label
@@ -69,9 +69,11 @@ export default function SelectInput({
             value={(gallerySignupData as Record<string, any>)[labelText]}
             onChange={handleChange}
             required={required}
-            className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 text-dark "
           >
-            <option value="">Select {labelText}</option>
+            <option value="" className="text-dark">
+              Select {labelText}
+            </option>
             <>
               {items.map((item: any) => {
                 return (
@@ -99,26 +101,6 @@ export default function SelectInput({
                 </div>
               );
             })}
-
-          <div className="self-end flex gap-4">
-            <button
-              className={`${
-                currentGallerySignupFormIndex > 0 ? "block" : "hidden"
-              }   h-[40px] px-4 mt-[1rem] bg-dark text-white text-[14px] font-normal hover:bg-dark/80 transition-all ease-linear duration-200`}
-              type={"button"}
-              onClick={handleClickPrev}
-            >
-              Back
-            </button>
-            <button
-              className=" h-[40px] px-4 mt-[1rem] text-[14px] font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/80 transition-all ease-linear duration-200"
-              type={"button"}
-              onClick={handleClick}
-            >
-              <span>Next</span>
-              <MdOutlineArrowForward />
-            </button>
-          </div>
         </div>
       </motion.div>
     </AnimatePresence>

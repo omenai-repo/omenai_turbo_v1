@@ -24,20 +24,20 @@ export default function Filter({ medium }: { medium: string }) {
   const {
     setArtworks,
     setIsLoading,
-    paginationCount,
-    setPaginationCount,
+    currentPage,
+    setCurrentPage,
     pageCount,
     setPageCount,
   } = collectionsStore();
 
   async function handleSubmitFilter() {
-    setPaginationCount(1);
+    setCurrentPage(1);
     setIsLoading(true);
 
     const response = await fetchArtworksByCriteria(
-      medium,
-      paginationCount,
-      filterOptions
+      currentPage,
+      filterOptions,
+      medium
     );
 
     if (response?.isOk) {
@@ -71,13 +71,13 @@ export default function Filter({ medium }: { medium: string }) {
     };
 
     const response = await fetchArtworksByCriteria(
-      medium,
-      paginationCount,
-      emptyFilters
+      currentPage,
+      emptyFilters,
+      medium
     );
 
     if (response?.isOk) {
-      setPaginationCount(1);
+      setCurrentPage(1);
       setArtworks(response.data);
     }
     setIsLoading(false);

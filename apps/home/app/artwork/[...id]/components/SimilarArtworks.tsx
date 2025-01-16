@@ -8,6 +8,7 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { useWindowSize } from "usehooks-ts";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
+import { FilterOptions } from "@omenai/shared-types";
 
 export default function SimilarArtworks({
   title,
@@ -19,11 +20,17 @@ export default function SimilarArtworks({
   medium: string;
 }) {
   const { width } = useWindowSize();
+  const filter: FilterOptions = {
+    price: [],
+    year: [],
+    rarity: [],
+    medium: [],
+  };
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_similar_artworks_by_criteria"],
     queryFn: async () => {
-      const response = await fetchArtworksByCriteria(medium);
+      const response = await fetchArtworksByCriteria(1, filter, medium);
       if (response?.isOk) {
         return response.data;
       } else throw new Error("Failed to fetch artworks");

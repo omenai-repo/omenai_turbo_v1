@@ -10,6 +10,8 @@ type GalleryAuthStoreTypes = {
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
+  isFieldDirty: boolean;
+  setIsFieldDirty: (value: boolean) => void;
 };
 export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
   (set, get) => ({
@@ -80,6 +82,11 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
         },
         currentGallerySignupFormIndex: 0,
       });
+    },
+
+    isFieldDirty: true,
+    setIsFieldDirty: (value: boolean) => {
+      set({ isFieldDirty: value });
     },
   })
 );

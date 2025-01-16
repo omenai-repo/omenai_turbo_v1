@@ -3,24 +3,27 @@ import { AnimatePresence, motion } from "framer-motion";
 import FormInput from "./components/FormInput";
 import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 
-export default function Form() {
+export default function GalleryLoginForm() {
   return (
     <AnimatePresence key={3}>
       <motion.div
-        initial={{ x: 100, opacity: 0 }}
+        initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        exit={{ y: -100 }}
+        exit={{ y: 100 }}
         transition={{ duration: 0.33 }}
-        className="w-full py-[20px] md:py-[30px] lg:px-[2rem] xl:px-[4rem] 2xl:px-[7rem]"
+        className="w-full h-full flex items-center gap-x-8"
       >
-        <div className="text-center text-[14px] flex items-center flex-col mt-10">
-          <GalleryLogo />
-          <p className="text-[#616161] mt-5">
-            Welcome back. kindly login to your gallery account
-          </p>
-        </div>
-        <div className="mt-[40px]">
-          <FormInput />
+        <div className="flex flex-col space-y-8 w-full ">
+          <div className="text-[14px] ">
+            <GalleryLogo />
+          </div>
+          <div className="flex flex-col space-y-10 w-full">
+            <h1 className="text-sm sm:text-lg font-[900]">
+              Login to your account.
+            </h1>
+
+            <FormInput />
+          </div>
         </div>
       </motion.div>
     </AnimatePresence>

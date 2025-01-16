@@ -1,7 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
-import Pagination from "./Pagination";
 import { fetchTrendingArtworks } from "@omenai/shared-services/artworks/fetchTrendingArtworks";
 import { categoriesFilterStore } from "@omenai/shared-state-store/src/categories/categoriesFilterStore";
 import { categoriesStore } from "@omenai/shared-state-store/src/categories/categoriesStore";
@@ -9,29 +8,31 @@ import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/comp
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
+import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 
 export function ArtworkListing({
   sessionId,
 }: {
   sessionId: string | undefined;
 }) {
-  const { isLoading, setArtworks, artworks, paginationCount, setPageCount } =
-    categoriesStore();
+  const {
+    isLoading,
+    setArtworks,
+    artworks,
+    currentPage,
+    setCurrentPage,
+    setIsLoading,
+  } = categoriesStore();
   const { filterOptions } = categoriesFilterStore();
   const { width } = useWindowSize();
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_paginated_artworks"],
     queryFn: async () => {
-      const response = await fetchTrendingArtworks(
-        paginationCount,
-        filterOptions
-      );
+      const response = await fetchTrendingArtworks(currentPage, filterOptions);
       if (response?.isOk) {
-        setPageCount(response.count);
         setArtworks(response.data);
-        // set_artwork_total(response.total);
-        return response.data;
+        return { data: response.data, pages: response.count };
       } else throw new Error("Failed to fetch artworks");
     },
     refetchOnWindowFocus: false,
@@ -41,7 +42,7 @@ export function ArtworkListing({
     return <ArtworksListingSkeletonLoader />;
   }
 
-  if (!artworksArray || artworksArray.length === 0) {
+  if (!artworksArray || artworksArray.data.length === 0) {
     return (
       <div className="w-full h-full grid place-items-center">
         <NotFoundData />
@@ -51,11 +52,11 @@ export function ArtworkListing({
 
   const arts = catalogChunk(
     artworks,
-    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : width < 1440 ? 4 : 5
+    width < 640 ? 1 : width < 990 ? 2 : width < 1440 ? 3 : 4
   );
 
   return (
-    <div className="w-full mb-5 px-5 mt-3">
+    <div className="w-full mb-5 mt-3">
       {/* <p className="text-[14px] font-normal mb-4">{artwork_total} artworks:</p> */}
 
       <div className="flex flex-wrap gap-x-4 justify-center">
@@ -85,7 +86,15 @@ export function ArtworkListing({
         {/* first */}
       </div>
 
-      <Pagination />
+      <Pagination
+        total={artworksArray.pages}
+        filterOptions={filterOptions}
+        fn={fetchTrendingArtworks}
+        setArtworks={setArtworks}
+        setCurrentPage={setCurrentPage}
+        setIsLoading={setIsLoading}
+        currentPage={currentPage}
+      />
     </div>
   );
 }

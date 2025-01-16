@@ -23,13 +23,6 @@ export const GalleryLogo = ({ className, theme = "dark" }: LogoProps) => {
           height={50}
           priority={true}
         />
-        <span
-          className={`font-normal text-[14px] relative xxs:top-1 ${
-            theme === "light" ? "text-white" : "text-black"
-          } ${className}`}
-        >
-          For Galleries
-        </span>
       </Link>
     </>
   );

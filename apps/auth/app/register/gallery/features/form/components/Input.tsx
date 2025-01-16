@@ -11,9 +11,9 @@ export type InputProps = {
   type: HTMLInputTypeAttribute;
   placeholder: string;
   disabled?: boolean;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   buttonType: "button" | "submit" | undefined;
-  buttonText: "Next" | "Submit" | undefined;
+  buttonText: "Continue" | "Submit" | undefined;
   onClick?: () => void;
 };
 
@@ -27,32 +27,32 @@ export default function Input({
 }: InputProps) {
   const {
     gallerySignupData,
+    updateGallerySignupData,
     currentGallerySignupFormIndex,
-    incrementCurrentGallerySignupFormIndex,
-    decrementCurrentGallerySignupFormIndex,
+    setIsFieldDirty,
   } = useGalleryAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
 
-  const handleClickPrev = () => {
-    setErrorList([]);
-    decrementCurrentGallerySignupFormIndex();
-  };
   const [show, setShow] = useState(false);
 
-  const handleClick = (value: string, label: string) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    updateGallerySignupData(e.target.name, e.target.value);
     setErrorList([]);
     const { success, errors }: { success: boolean; errors: string[] | [] } =
       validate(
-        value,
-        label,
-        labelText === "confirmPassword" &&
-          (gallerySignupData as Record<string, any>)["password"]
+        e.target.value,
+        e.target.name,
+        e.target.name === "confirmPassword"
+          ? gallerySignupData.password
+          : undefined
       );
-    if (!success) setErrorList(errors);
-    else {
+    if (!success) {
+      setIsFieldDirty(true);
+      setErrorList(errors);
+    } else {
       setErrorList([]);
-      incrementCurrentGallerySignupFormIndex();
+      setIsFieldDirty(false);
     }
   };
 
@@ -63,7 +63,7 @@ export default function Input({
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col gap-2 container"
+        className="flex flex-col gap-2 w-full xl:container"
       >
         <label htmlFor={labelText} className="text-[#858585] text-[14px]">
           {label}
@@ -71,16 +71,16 @@ export default function Input({
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className=" focus:ring-1 focus:border-0 border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 "
             placeholder={`e.g ${placeholder}`}
             disabled={disabled}
-            onChange={onChange}
+            onChange={handleChange}
             onKeyDown={handleKeyPress}
             name={labelText}
             value={(gallerySignupData as Record<string, any>)[labelText]}
           />
           {type === "password" && (
-            <div className="absolute top-2.5 right-2 w-fit cursor-pointer">
+            <div className="absolute top-4 right-4 w-fit cursor-pointer">
               {show ? (
                 <PiEyeSlashThin
                   className="text-md"
@@ -92,7 +92,6 @@ export default function Input({
             </div>
           )}
         </div>
-
         {errorList.length > 0 &&
           errorList.map((error, index) => {
             return (
@@ -105,30 +104,6 @@ export default function Input({
               </div>
             );
           })}
-        <div className="self-end flex gap-4">
-          <button
-            className={`${
-              currentGallerySignupFormIndex > 0 ? "block" : "hidden"
-            }   h-[40px] px-4 mt-[1rem] bg-dark text-white text-[14px] font-normal hover:bg-dark/80 transition-all ease-linear duration-200`}
-            type={"button"}
-            onClick={handleClickPrev}
-          >
-            Back
-          </button>
-          <button
-            className=" h-[40px] px-4 mt-[1rem] text-[14px] font-normal bg-dark text-white flex justify-center items-center gap-x-2 hover:bg-dark/80 transition-all ease-linear duration-200"
-            type={"button"}
-            onClick={() =>
-              handleClick(
-                (gallerySignupData as Record<string, any>)[labelText],
-                labelText
-              )
-            }
-          >
-            <span>Next</span>
-            <MdOutlineArrowForward />
-          </button>
-        </div>
       </motion.div>
     </AnimatePresence>
   );

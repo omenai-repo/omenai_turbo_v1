@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   try {
     await connectMongoDB();
 
-    const { page = 1, id } = await request.json();
+    const { page, id } = await request.json();
     const skip = (page - 1) * PAGE_SIZE;
 
     // Helper function to fetch gallery IDs based on subscription plan

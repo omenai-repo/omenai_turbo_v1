@@ -1,19 +1,37 @@
+"use client";
 import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import Action from "../actions/Action";
 import FormInput from "./components/FormInput";
+import { AnimatePresence, motion } from "framer-motion";
 export default function FormBlock() {
   return (
-    <div className="flex-1 grid place-items-center h-full font-normal p-5 relative">
-      <div className="flex flex-col gap-[2rem] text-dark w-full">
-        <div className="flex flex-col gap-4 text-center items-center">
-          <GalleryLogo />
+    <AnimatePresence key={74}>
+      <motion.div
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ y: 100 }}
+        transition={{ duration: 0.33 }}
+        className="w-full h-full flex items-center gap-x-8"
+      >
+        <div className="flex flex-col space-y-8 w-full ">
+          <div className="text-[14px] ">
+            <GalleryLogo />
+          </div>
+          <div className="flex flex-col space-y-10 w-full">
+            <div>
+              <h1 className="text-sm sm:text-lg font-[900]">
+                Create a gallery Account
+              </h1>
+              <p className="text-[14px]">Please fill your information below</p>
+            </div>
 
-          <p className="text-[14px]">Kindly provide the following details</p>
+            <FormInput />
+          </div>
+          <div className="w-full flex justify-end">
+            <Action />
+          </div>
         </div>
-
-        <FormInput />
-      </div>
-      <Action />
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

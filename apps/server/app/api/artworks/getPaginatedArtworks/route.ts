@@ -13,6 +13,7 @@ export async function POST(request: Request) {
     await connectMongoDB();
     const { page, filters } = await request.json();
     const skip = (page - 1) * PAGE_SIZE;
+    console.log(page);
 
     // Helper function to fetch gallery IDs based on subscription plan
     const getGalleryIdsByPlan = async (plan: string | string[]) => {

@@ -1,18 +1,8 @@
+import { FilterOptions } from "@omenai/shared-types";
 import { create } from "zustand";
 
 export type FilterStoreTypes = {
-  filterOptions: {
-    price: {
-      min: number;
-      max: number;
-    }[];
-    year: {
-      min: number;
-      max: number;
-    }[];
-    medium: string[];
-    rarity: string[];
-  };
+  filterOptions: FilterOptions;
 
   updateFilter: (label: string, value: string) => void;
   removeFilter: (label: string, value: any) => void;

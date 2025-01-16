@@ -8,13 +8,13 @@ import { MdClear } from "react-icons/md";
 export default function FilterPill({ filter }: { filter: string }) {
   const { removeSingleFilterSelection, selectedFilters } =
     categoriesFilterStore();
-  const { setArtworks, setIsLoading, setPageCount, paginationCount } =
+  const { setArtworks, setIsLoading, setPageCount, currentPage } =
     categoriesStore();
 
   async function handleRemoveSingleFilter() {
     if (selectedFilters.length === 1) {
       removeSingleFilterSelection(filter);
-      const response = await fetchTrendingArtworks(paginationCount, {
+      const response = await fetchTrendingArtworks(currentPage, {
         price: [],
         year: [],
         medium: [],

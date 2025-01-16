@@ -1,12 +1,15 @@
 "use client";
 
-import Input from "./Input";
 import { ChangeEvent } from "react";
 import FormConfirm from "../../formConfirm/FormConfirm";
-import SelectInput from "./Select";
-import ImageUpload from "./ImageUpload";
+
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { inputProperties } from "../../../../../mocks/input/gallery/inputMock";
+import GallerySignUpStepOne from "../../steps/GallerySignUpStepOne";
+import GallerySignupStepTwo from "../../steps/GallerySignupStepTwo";
+import GallerySignUpStepThree from "../../steps/GallerySignupStepThree";
+import GallerySignupStepfour from "../../steps/GallerySignupStepfour";
+import StepCount from "../../steps/StepCount";
 
 export default function FormController() {
   const { currentGallerySignupFormIndex, updateGallerySignupData } =
@@ -21,35 +24,17 @@ export default function FormController() {
 
   return (
     <>
-      <p className="text-[14px] text-[#858585] px-4">
-        Step {currentGallerySignupFormIndex + 1} of {inputProperties.length + 1}
-      </p>
-      {currentGallerySignupFormIndex < inputProperties.length &&
-        (form.type === "select" ? (
-          <SelectInput
-            label={form.label}
-            items={form.items}
-            name={form.label}
-            required={false}
-            labelText={form.labelText}
-          />
-        ) : form.type === "logo" ? (
-          <ImageUpload />
-        ) : (
-          <Input
-            label={form.label}
-            type={form.type}
-            placeholder={form.placeholder}
-            buttonType={form.buttonType}
-            buttonText={form.buttonText}
-            labelText={form.labelText}
-            onChange={handleChange}
-          />
-        ))}
+      {currentGallerySignupFormIndex === 0 && <GallerySignUpStepOne />}
+      {currentGallerySignupFormIndex === 1 && <GallerySignupStepTwo />}
+      {currentGallerySignupFormIndex === 2 && <GallerySignUpStepThree />}
+      {currentGallerySignupFormIndex === 3 && <GallerySignupStepfour />}
+      {currentGallerySignupFormIndex === 4 && <FormConfirm />}
 
-      {currentGallerySignupFormIndex === inputProperties.length && (
-        <FormConfirm />
-      )}
+      <div className="flex justify-center w-full">
+        <div className="mt-12 max-w-[300px] w-full">
+          <StepCount />
+        </div>
+      </div>
     </>
   );
 }

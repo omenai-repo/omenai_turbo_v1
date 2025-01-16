@@ -1,9 +1,10 @@
+import { FilterOptions } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchArtworksByCriteria(
-  medium: string,
-  page?: number,
-  filters?: any
+  page: number,
+  filters: FilterOptions,
+  medium?: string
 ) {
   try {
     const url = getApiUrl();

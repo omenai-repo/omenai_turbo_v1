@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
 // import Pagination from "./Pagination";
 
-import Pagination from "./Pagination";
+import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { fetchArtworksByCriteria } from "@omenai/shared-services/artworks/fetchArtworksByCriteria";
 import { collectionsFilterStore } from "@omenai/shared-state-store/src/collections/collectionsFilterStore";
 import { collectionsStore } from "@omenai/shared-state-store/src/collections/collectionsStore";
@@ -20,8 +20,14 @@ export function ArtworksListing({
   medium: string;
   sessionId: string | undefined;
 }) {
-  const { isLoading, setArtworks, artworks, paginationCount, setPageCount } =
-    collectionsStore();
+  const {
+    isLoading,
+    setArtworks,
+    artworks,
+    currentPage,
+    setCurrentPage,
+    setIsLoading,
+  } = collectionsStore();
   const { filterOptions } = collectionsFilterStore();
   const { width } = useWindowSize();
 
@@ -29,15 +35,14 @@ export function ArtworksListing({
     queryKey: ["get_artworks_by_collection"],
     queryFn: async () => {
       const response = await fetchArtworksByCriteria(
-        medium,
-        paginationCount,
-        filterOptions
+        currentPage,
+        filterOptions,
+        medium
       );
 
       if (response?.data) {
-        setPageCount(response.pageCount);
         setArtworks(response.data);
-        return response.data;
+        return { data: response.data, pages: response.pageCount };
       } else throw new Error("Failed to fetch artworks");
     },
     refetchOnWindowFocus: false,
@@ -47,7 +52,11 @@ export function ArtworksListing({
     return <ArtworksListingSkeletonLoader />;
   }
 
-  if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
+  if (
+    !artworksArray ||
+    artworksArray.data.length === 0 ||
+    artworks.length === 0
+  ) {
     return (
       <div className="w-full h-full grid place-items-center">
         <NotFoundData />
@@ -91,7 +100,16 @@ export function ArtworksListing({
         {/* first */}
       </div>
 
-      <Pagination medium={medium} />
+      <Pagination
+        total={artworksArray.pages}
+        filterOptions={filterOptions}
+        fn={fetchArtworksByCriteria}
+        setArtworks={setArtworks}
+        setCurrentPage={setCurrentPage}
+        setIsLoading={setIsLoading}
+        currentPage={currentPage}
+        medium={medium}
+      />
     </div>
   );
 }

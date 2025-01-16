@@ -30,7 +30,7 @@ export default async function page({
       <div className=" items-start justify-start w-full">
         {/* banner */}
         <div className="h-full text-black pt-10 pb-5">
-          <h1 className="text-lg lg:text-xl font-normal">
+          <h1 className="text-lg lg:text-xl font-semibold">
             {pageTitleParser()}
           </h1>
           <div className="flex items-center gap-2">

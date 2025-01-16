@@ -1,12 +1,13 @@
+import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { create } from "zustand";
 
 type collectionsStoreTypes = {
-  artworks: any[];
-  setArtworks: (art_data: any[]) => void;
+  artworks: ArtworkSchemaTypes[];
+  setArtworks: (art_data: ArtworkSchemaTypes[]) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  paginationCount: number;
-  setPaginationCount: (count: number) => void;
+  currentPage: number;
+  setCurrentPage: (count: number) => void;
   paginationLoading: boolean;
   setPaginationLoading: (paginationLoading: boolean) => void;
   pageCount: number;
@@ -14,16 +15,16 @@ type collectionsStoreTypes = {
 };
 export const collectionsStore = create<collectionsStoreTypes>((set, get) => ({
   artworks: [],
-  setArtworks: (art_data: any[]) => {
+  setArtworks: (art_data: ArtworkSchemaTypes[]) => {
     set({ artworks: art_data });
   },
   isLoading: false,
   setIsLoading: (loading: boolean) => {
     set({ isLoading: loading });
   },
-  paginationCount: 1,
-  setPaginationCount: (count: number) => {
-    set({ paginationCount: count });
+  currentPage: 1,
+  setCurrentPage: (count: number) => {
+    set({ currentPage: count });
   },
   paginationLoading: false,
   setPaginationLoading: (paginationLoading: boolean) => {

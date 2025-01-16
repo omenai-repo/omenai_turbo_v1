@@ -37,29 +37,25 @@ export default function Filter({
   const {
     setArtworks,
     setIsLoading,
-    paginationCount,
-    setPaginationCount,
+    currentPage,
+    setCurrentPage,
     pageCount,
     setPageCount,
   } = categoriesStore();
 
   async function handleSubmitFilter() {
-    setPaginationCount(1);
+    setCurrentPage(1);
     setIsLoading(true);
     let response;
 
     if (page_type === "trending") {
-      response = await fetchTrendingArtworks(paginationCount, filterOptions);
+      response = await fetchTrendingArtworks(currentPage, filterOptions);
     } else if (page_type === "curated") {
       //update to curated
-      response = await fetchCuratedArtworks(
-        paginationCount,
-        (session as IndividualSchemaTypes)?.preferences,
-        filterOptions
-      );
+      response = await fetchCuratedArtworks(currentPage, filterOptions);
     } else if (page_type === "recent") {
       //update to recent
-      response = await fetchPaginatedArtworks(paginationCount, filterOptions);
+      response = await fetchPaginatedArtworks(currentPage, filterOptions);
     }
 
     if (response?.isOk) {
@@ -95,31 +91,27 @@ export default function Filter({
     };
 
     if (page_type === "trending") {
-      response = await fetchTrendingArtworks(paginationCount, emptyFilters);
+      response = await fetchTrendingArtworks(currentPage, emptyFilters);
     } else if (page_type === "curated") {
       //update to curated
-      response = await fetchCuratedArtworks(
-        paginationCount,
-        (session as IndividualSchemaTypes)?.preferences,
-        emptyFilters
-      );
+      response = await fetchCuratedArtworks(currentPage, emptyFilters);
     } else if (page_type === "recent") {
       //update to recent
-      response = await fetchPaginatedArtworks(paginationCount, emptyFilters);
+      response = await fetchPaginatedArtworks(currentPage, emptyFilters);
     }
 
     if (response?.isOk) {
       setArtworks(response?.data);
-      setPaginationCount(1);
+      setCurrentPage(1);
     }
   };
 
   return (
-    <div className="sticky top-[38px] sm:top-[50px] lg:top-[73px] px-0 lg:px-4 z-20 py-3 bg-white">
+    <div className="sticky top-[60px] z-20 pb-4 pt-8 bg-white">
       <div
         className={`w-full ${
           width > 960 ? "hidden" : "flex"
-        } justify-between items-center py-4 px-4`}
+        } justify-between items-center py-4`}
       >
         <button
           className={`${
@@ -140,7 +132,7 @@ export default function Filter({
       </div>
       {selectedFilters.length > 0 && (
         <>
-          <div className="flex flex-wrap gap-2 items-center py-4 px-2 cursor-pointer">
+          <div className="flex flex-wrap gap-2 items-center py-4 cursor-pointer">
             {selectedFilters.map((filter) => {
               return <FilterPill key={filter.name} filter={filter.name} />;
             })}

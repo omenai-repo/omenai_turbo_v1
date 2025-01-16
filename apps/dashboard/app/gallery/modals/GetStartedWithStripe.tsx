@@ -160,8 +160,8 @@ export default function GetStartedWithStripe() {
                     return (
                       <option
                         className="p-3 font-light text-dark"
-                        value={country.key}
-                        key={country.key}
+                        value={country.code}
+                        key={country.code}
                       >
                         {country.name}
                       </option>

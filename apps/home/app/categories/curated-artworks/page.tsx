@@ -10,14 +10,13 @@ export default async function CuratedArtworks() {
   return (
     <main className="relative">
       <DesktopNavbar />
-      <div className="p-4">
-        <div className="space-y-1 px-4 my-5">
-          <h1 className="text-sm md:text-md font-normal">
-            Artworks based on your preference
-          </h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
-            Your Art, Your Way: Explore Pieces That Resonate with You
+      <div>
+        <div className="space-y-1 my-5">
+          <p className="text-lg lg:text-xl font-semibold">
+            Your Art, Your Way:
           </p>
+          <p className=" font-medium">Discover Captivating Pieces </p>
+          <p className=" font-medium">that truly resonates with You</p>
         </div>
         <Filter page_type="curated" />
         <ArtworkListing

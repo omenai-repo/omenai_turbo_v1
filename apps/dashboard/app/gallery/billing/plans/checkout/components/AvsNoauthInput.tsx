@@ -74,7 +74,10 @@ export default function AvsNoauthInput({
     const countryCode = country_codes.find(
       (country) => country.name === address_info.country
     );
-    const updated_address_info = { ...address_info, country: countryCode?.key };
+    const updated_address_info = {
+      ...address_info,
+      country: countryCode?.code,
+    };
     if (hasEmptyString(updated_address_info)) {
       toast.error("Error notification", {
         description: "Invalid input parameters",
@@ -176,10 +179,10 @@ export default function AvsNoauthInput({
         >
           <option value="">Select Country</option>
           <>
-            {country_codes.map((country: { key: string; name: string }) => {
+            {country_codes.map((country: { code: string; name: string }) => {
               return (
                 <option
-                  key={country.key}
+                  key={country.code}
                   value={country.name}
                   className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
                 >

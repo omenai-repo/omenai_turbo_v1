@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import uploadGalleryLogoContent from "../../uploadGalleryLogo";
 import { gallery_logo_storage } from "@omenai/appwrite-config/appwrite";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
-
+import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 export default function FormInput() {
   const { gallerySignupData, setIsLoading, clearData } = useGalleryAuthStore();
 
@@ -15,6 +15,18 @@ export default function FormInput() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(gallerySignupData);
+    if (allKeysEmpty(gallerySignupData) || gallerySignupData.logo === null) {
+      toast.error("Error notification", {
+        description: "All form fields must be filled out before submission.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
 
     setIsLoading();
 
@@ -80,9 +92,9 @@ export default function FormInput() {
     }
   };
   return (
-    <div className="container">
+    <div className="">
       <form
-        className="flex flex-col justify-end gap-4 w-full container lg:px-[2rem] xl:px-[4rem] 2xl:px-[7rem]"
+        className="flex flex-col justify-end gap-4 w-full"
         onSubmit={handleSubmit}
       >
         <FormController />

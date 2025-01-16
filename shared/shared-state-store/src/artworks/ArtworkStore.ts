@@ -1,8 +1,9 @@
+import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { create } from "zustand";
 
 type ArtworkStoreTypes = {
-  artworks: any[];
-  setArtworks: (art_data: any[]) => void;
+  artworks: ArtworkSchemaTypes[];
+  setArtworks: (art_data: ArtworkSchemaTypes[]) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   pageCount: number;

@@ -141,7 +141,7 @@ export async function POST(request: Request) {
         message: "Successful",
         data: allCuratedPaginatedArtworks,
         page,
-        pageCount: Math.ceil(total / 30),
+        pageCount: Math.ceil(total / PAGE_SIZE),
       },
       { status: 200 }
     );

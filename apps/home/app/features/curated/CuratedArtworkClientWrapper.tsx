@@ -20,10 +20,7 @@ export default function CuratedArtworkClientWrapper({
   const { data: userCuratedArtworks, isLoading } = useQuery({
     queryKey: ["curated"],
     queryFn: async () => {
-      const data = await fetchCuratedArtworks(
-        1,
-        (session as IndividualSchemaTypes)?.preferences
-      );
+      const data = await fetchCuratedArtworks(1);
       if (data?.isOk) return data.data;
       else throw new Error("Something went wrong");
     },
