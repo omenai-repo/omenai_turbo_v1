@@ -4,15 +4,14 @@ import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPa
 import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
 import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
 import { useQuery } from "@tanstack/react-query";
-import { Store } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useWindowSize } from "usehooks-ts";
 import { useState } from "react";
-import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
+import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 export default function AllArtworks({
   sessionId,
 }: {
