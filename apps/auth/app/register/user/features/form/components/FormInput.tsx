@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import FormController from "./FormController";
 import { registerAccount } from "@omenai/shared-services/register/registerAccount";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
+import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 
 export default function FormInput() {
   const { individualSignupData, preferences, setIsLoading, clearData } =
@@ -15,6 +16,18 @@ export default function FormInput() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (allKeysEmpty(individualSignupData)) {
+      toast.error("Error notification", {
+        description: "All form fields must be filled out before submission.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
     setIsLoading();
     const { name, email, password } = individualSignupData;
     const data = {
@@ -52,7 +65,7 @@ export default function FormInput() {
   return (
     <div className="">
       <form
-        className="flex flex-col justify-end gap-4 w-full container lg:px-[2rem] xl:px-[4rem] 2xl:px-[7rem]"
+        className="flex flex-col justify-end gap-4 w-full"
         onSubmit={handleSubmit}
       >
         <FormController />

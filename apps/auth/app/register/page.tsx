@@ -7,7 +7,7 @@ import RegisterOptions from "./components/RegisterOptions";
 
 function Page() {
   return (
-    <section className="h-[100vh] w-full xl:container py-12 grid place-items-center overflow-x-hidden">
+    <section className="h-[100vh] w-full xl:container py-12  overflow-x-hidden">
       <div className="w-full h-full md:grid grid-cols-2">
         {/* Side section */}
         <div className="h-full w-full relative flex-1 hidden md:block">
@@ -34,7 +34,7 @@ function Page() {
               <div className="w-full h-full flex flex-col gap-y-8 p-5 md:px-[50px] overflow-x-hidden">
                 <div className="flex flex-col space-y-6">
                   <IndividualLogo />
-                  <h1 className="text-sm sm:text-lg font-[900]">
+                  <h1 className="text-sm sm:text-lg font-bold">
                     Create an account today.
                   </h1>
                 </div>

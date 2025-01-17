@@ -4,20 +4,20 @@ export const inputProperties: any = [];
 
 export const gallery_signup_step_one = [
   {
-    label: "What's the gallery name?",
+    label: "Gallery name?",
     type: "text",
     placeholder: "Louvre museum",
     labelText: "name",
   },
   {
-    label: "What email can we reach you on?",
+    label: "Email address",
     type: "email",
     placeholder: "Louvre museum",
     labelText: "email",
   },
 
   {
-    label: "What's the admin name? (Account controller)",
+    label: "Admin name",
     type: "text",
     placeholder: "Jack bauer",
     labelText: "admin",
@@ -34,14 +34,14 @@ export const gallery_signup_step_two = [
   },
 
   {
-    label: "Business address",
+    label: "Gallery address",
     type: "text",
     placeholder: "e.g 79, example street, London, England",
     labelText: "address",
     items: [],
   },
   {
-    label: "Can you give a description of the gallery?",
+    label: "Gallery description",
     type: "text",
     placeholder: "Tell us a bit more about your gallery",
     labelText: "description",

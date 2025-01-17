@@ -1,10 +1,11 @@
 export const allKeysEmpty = (obj: Record<string, any>): boolean => {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      if (obj[key].trim() !== "") {
-        return false; // Found a key with a non-empty string value
+      const value = obj[key];
+      if (value === "" || value === null || value === undefined) {
+        return true; // Found a key with an empty string, null, or undefined value
       }
     }
   }
-  return true; // All keys have empty string values
+  return false; // All keys have valid values
 };

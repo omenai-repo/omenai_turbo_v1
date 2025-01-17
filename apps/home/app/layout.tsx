@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { Inter, DM_Sans } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { SessionProvider } from "@omenai/package-provider/SessionProvider";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
@@ -17,7 +17,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
 };
-const dm_sans = DM_Sans({
+const dm_sans = Poppins({
   subsets: ["latin"],
   variable: "--font-dm_sans",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],

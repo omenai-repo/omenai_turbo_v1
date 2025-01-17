@@ -1,5 +1,8 @@
 "use client";
-import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
+import {
+  GalleryLogo,
+  IndividualLogo,
+} from "@omenai/shared-ui-components/components/logo/Logo";
 import Action from "../actions/Action";
 import FormInput from "./components/FormInput";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,12 +18,12 @@ export default function FormBlock() {
       >
         <div className="flex flex-col space-y-4 w-full ">
           <div className="text-[14px] ">
-            <GalleryLogo />
+            <IndividualLogo />
           </div>
           <div className="flex flex-col space-y-6 w-full">
             <div>
               <h1 className="text-base sm:text-lg font-bold">
-                Create a gallery Account
+                Create a user Account
               </h1>
               <p className="text-xs sm:text-[14px]">
                 Please fill your information below

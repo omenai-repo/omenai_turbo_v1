@@ -32,13 +32,13 @@ export default function LatestArtworkWrapper({
             <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
               Latest Artworks
             </p>
-            <p className="text-sm sm:text-lg font-[900] text-[#000000] mt-[20px]">
+            <p className="text-sm sm:text-lg font-bold text-[#000000] mt-[20px]">
               Latest Artworks.
             </p>
           </div>
 
           <div className="hidden sm:flex flex-col items-end">
-            <p className="text-sm font-[900]">Fresh Off the Easel:</p>
+            <p className="text-sm font-bold">Fresh Off the Easel:</p>
             <p className="justify-self-end font-medium">Explore the newest</p>
             <p className="justify-self-end font-medium">
               masterpieces, just for you

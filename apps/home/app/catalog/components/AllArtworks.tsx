@@ -4,7 +4,7 @@ import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPa
 import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
 import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
 import { useQuery } from "@tanstack/react-query";
-import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
+import { Store } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useWindowSize } from "usehooks-ts";
 import { useState } from "react";
 import ArtworkCanvas from "@omenai/shared-ui-components/components/artworks/ArtworkCanvas";

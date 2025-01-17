@@ -69,9 +69,13 @@ export default function SelectInput({
             value={(gallerySignupData as Record<string, any>)[labelText]}
             onChange={handleChange}
             required={required}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 text-dark "
+            className="border-0 ring-1 ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
           >
-            <option value="" className="text-dark">
+            {/* focus:ring ring-1 border-0 ring-dark/20 outline-none
+            focus:outline-none focus:ring-dark transition-all duration-200
+            ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full
+            placeholder:text-dark/40 text-dark */}
+            <option value="" className="text-dark/40">
               Select {labelText}
             </option>
             <>
@@ -80,7 +84,7 @@ export default function SelectInput({
                   <option
                     key={item.code}
                     value={item.name}
-                    className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                    className="px-3 py-5 my-5 font-normal text-xs sm:text-[14px] text-dark/40"
                   >
                     {item.name}
                   </option>

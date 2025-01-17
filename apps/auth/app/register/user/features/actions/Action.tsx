@@ -1,4 +1,3 @@
-import { auth_uri } from "@omenai/url-config/src/config";
 import Link from "next/link";
 
 export default function Action() {

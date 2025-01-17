@@ -1,20 +1,22 @@
 import { InputProps } from "@omenai/shared-types";
 
-export const inputProperties: Omit<InputProps, "prev" | "onClickPrev">[] = [
+export const user_signup_step_one = [
   {
-    label: "What's your full name please?",
+    label: "Full name",
     type: "text",
     placeholder: "Jack Bauear",
     labelText: "name",
     id: 0,
   },
   {
-    label: "What email can we reach you on?",
+    label: "Email address",
     type: "email",
-    placeholder: "Louvre museum",
+    placeholder: "johndoe@example.com",
     labelText: "email",
     id: 1,
   },
+];
+export const user_signup_step_two = [
   {
     label: "Setup a password to secure your account",
     type: "password",

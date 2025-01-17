@@ -15,8 +15,7 @@ export default function FormInput() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(gallerySignupData);
-    if (allKeysEmpty(gallerySignupData) || gallerySignupData.logo === null) {
+    if (allKeysEmpty(gallerySignupData)) {
       toast.error("Error notification", {
         description: "All form fields must be filled out before submission.",
         style: {

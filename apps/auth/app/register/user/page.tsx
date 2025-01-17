@@ -1,4 +1,4 @@
-import FormBlock from "./features/form/FormBlock";
+import Form from "./features/form/Form";
 import ImageBlock from "./features/image/Image";
 
 export default function GallerySignup() {
@@ -12,7 +12,7 @@ export default function GallerySignup() {
 
         {/* Form section */}
         <div className="w-full h-full p-2 lg:px-[50px] overflow-x-hidden">
-          <FormBlock />
+          <Form />
         </div>
       </div>
     </section>

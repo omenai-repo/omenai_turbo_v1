@@ -55,14 +55,20 @@ export default function ImageUpload() {
         transition={{ duration: 0.33 }}
         className="flex flex-col space-y-6 container w-full items-center"
       >
-        <div className="w-[300px] h-[300px]">
+        <label
+          htmlFor="logo"
+          className="text-[#858585] text-xs font-light sm:text-[14px]"
+        >
+          Upload a logo of your gallery
+        </label>
+        <div className="w-[250px] h-[250px]">
           {cover ? (
             <Image
               src={URL.createObjectURL(cover as File)}
               alt="uploaded image"
               width={200}
               height={200}
-              className="w-[300px] h-[300px] object-cover object-top mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
+              className="w-[250px] h-[250px] object-cover object-top mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
               onClick={() => {
                 setCover(null);
                 updateGallerySignupData("logo", null);

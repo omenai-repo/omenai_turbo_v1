@@ -40,7 +40,7 @@ function Page() {
               <div className="w-full h-full flex flex-col gap-y-8 p-5 md:px-[50px] overflow-x-hidden">
                 <div className="flex flex-col space-y-6">
                   <IndividualLogo />
-                  <h1 className="text-sm sm:text-lg font-[900]">
+                  <h1 className="text-sm sm:text-lg font-bold">
                     Login & experience art.
                   </h1>
                 </div>

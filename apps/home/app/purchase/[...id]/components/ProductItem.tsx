@@ -23,7 +23,7 @@ export default function ProductItem({
           />
           <div className="">
             <div className="flex flex-col gap-y1">
-              <h1 className="font-[900] text-dark/80 text-base">
+              <h1 className="font-bold text-dark/80 text-base">
                 {artwork.title}
               </h1>
               <p className="font-medium italic text-base text-dark/80">

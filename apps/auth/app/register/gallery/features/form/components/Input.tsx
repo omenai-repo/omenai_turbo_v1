@@ -63,15 +63,18 @@ export default function Input({
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col gap-2 w-full xl:container"
+        className="flex flex-col gap-y-2 w-full xl:container"
       >
-        <label htmlFor={labelText} className="text-[#858585] text-[14px]">
+        <label
+          htmlFor={labelText}
+          className="text-[#858585] text-xs font-normal sm:text-[14px]"
+        >
           {label}
         </label>
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 "
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
             placeholder={`e.g ${placeholder}`}
             disabled={disabled}
             onChange={handleChange}
@@ -80,7 +83,7 @@ export default function Input({
             value={(gallerySignupData as Record<string, any>)[labelText]}
           />
           {type === "password" && (
-            <div className="absolute top-4 right-4 w-fit cursor-pointer">
+            <div className="absolute top-2 sm:top-4 right-4 w-fit cursor-pointer">
               {show ? (
                 <PiEyeSlashThin
                   className="text-md"
@@ -100,7 +103,7 @@ export default function Input({
                 className="flex items-center gap-x-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-[14px]">{error}</p>
+                <p className="text-red-600 text-xs sm:text-[14px]">{error}</p>
               </div>
             );
           })}

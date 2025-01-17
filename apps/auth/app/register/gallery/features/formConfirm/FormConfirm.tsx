@@ -17,13 +17,15 @@ export default function FormConfirm() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      <h1 className="text-sm font-normal mb-4">Confirm account creation</h1>
-      <p className="text-[14px] my-4 font-normal">
+      {/* <h1 className="text-xs sm:text-base font-semibold mb-4">
+        Confirm account creation
+      </h1> */}
+      <p className="text-xs my-4 font-normal">
         Please read through and confirm that you understand and accept all the
         terms stated
       </p>
 
-      <div className="bg-[#FAFAFA] p-5 my-5 flex flex-col gap-y-5">
+      <div className="bg-[#FAFAFA] p-2 my-5 flex flex-col gap-y-5">
         <div className="flex items-center gap-2">
           <Checkbox
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -33,23 +35,19 @@ export default function FormConfirm() {
             required
             className="border-dark"
           />
-          <Label htmlFor="terms of use" className="text-dark text-[14px]">
+          <Label
+            htmlFor="terms of use"
+            className="text-dark text-xs sm:text-[14px]"
+          >
             By ticking this box, I accept the{" "}
-            <Link href={"/"} className="underline font-normal">
+            <Link href={"/"} className="underline font-bold">
               Terms of use
             </Link>{" "}
             and{" "}
-            <Link href={"/"} className="underline font-normal">
+            <Link href={"/"} className="underline font-bold">
               Privacy Policy
             </Link>{" "}
             of creating an account with Omenai Inc.
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <Checkbox id="promotional emails" className="border-dark" />
-          <Label htmlFor="promotional emails" className="text-dark text-[14px]">
-            By ticking this box, I agree to subscribing to Omenai Inc&apos;s
-            mailing list and receiving promotional emails.(optional)
           </Label>
         </div>
       </div>

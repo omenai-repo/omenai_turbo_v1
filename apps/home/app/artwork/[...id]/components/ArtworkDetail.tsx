@@ -90,7 +90,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   return (
     <div className="flex flex-col gap-y-4">
       <div className="text-dark/80">
-        <h1 className="text-sm sm:text-md font-[900]">{data.title}</h1>
+        <h1 className="text-sm sm:text-md font-bold">{data.title}</h1>
         <h3 className="text-base font-normal italic text-dark/70">
           {data.artist}
         </h3>
@@ -123,7 +123,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
 
       <div className="flex flex-col gap-y-2 my-4">
         {/* <span className="text-[14px] font-medium">Price</span> */}
-        <h1 className=" text-sm font-[900]">
+        <h1 className=" text-sm font-bold">
           {!data.availability
             ? "Sold"
             : data.pricing.shouldShowPrice === "Yes"
