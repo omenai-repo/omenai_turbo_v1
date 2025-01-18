@@ -40,7 +40,7 @@ export default function LoginModalFormActions({
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>
             <Link
-              href={`${auth_url}/register/individual`}
+              href={`${auth_url}/register/user`}
               className="text-dark underline font-normal"
             >
               Create one
