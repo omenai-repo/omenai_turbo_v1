@@ -15,6 +15,7 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import { ShippingQuoteTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 
 export default function QuoteForm() {
   const { galleryOrderActionModalData, clearGalleryOrderActionModalData } =
@@ -36,11 +37,29 @@ export default function QuoteForm() {
     const { name, value } = e.target;
     setQuoteData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: JSON.stringify(value),
     }));
   }
   const handleSubmitQuoteFees = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (
+      allKeysEmpty({
+        package_carrier: quoteData.package_carrier,
+        fees: quoteData.fees,
+        taxes: quoteData.taxes,
+      })
+    ) {
+      toast.error("Error notification", {
+        description:
+          "All mandatory form fields must be filled out before submission.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
     setLoading(true);
     const response = await updateShippingQuote(
       quoteData,
@@ -93,26 +112,28 @@ export default function QuoteForm() {
           className="w-full flex flex-col gap-y-4"
           onSubmit={handleSubmitQuoteFees}
         >
-          <div className=" flex flex-col w-full">
-            <div className="relative w-full ">
-              <label className="text-[#858585] text-[14px]" htmlFor="shipping">
+          <div className=" flex flex-col space-y-2 w-full">
+            <div className="relative w-full flex flex-col space-y-2">
+              <label
+                className="text-dark font-light text-[14px]"
+                htmlFor="shipping"
+              >
                 Package carrier
               </label>
               <input
                 onChange={handleInputChange}
                 name="package_carrier"
                 type="text"
-                required
                 placeholder="e.g DHL, USPS, UPS, etc..."
-                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
               />
             </div>
           </div>
           <div className="flex gap-x-2 items-center">
-            <div className="flex flex-col w-full">
-              <div className="relative w-full ">
+            <div className="flex flex-col space-y-2 w-full">
+              <div className="relative w-full flex flex-col space-y-2">
                 <label
-                  className="text-[#858585] text-[14px]"
+                  className="text-dark font-light text-[14px]"
                   htmlFor="shipping"
                 >
                   Shipping fees ($)
@@ -120,40 +141,48 @@ export default function QuoteForm() {
                 <input
                   onChange={handleInputChange}
                   name="fees"
-                  type="text"
-                  required
-                  className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  type="number"
+                  step="any"
+                  placeholder="e.g 150.00"
+                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
                 />
-                <BsCurrencyDollar className="absolute right-3 top-9 text-[#858585]" />
+                <BsCurrencyDollar className="absolute right-3 top-9 text-dark font-light" />
               </div>
             </div>
-            <div className="flex flex-col w-full">
-              <label className="text-[#858585] text-[14px]" htmlFor="shipping">
+            <div className="flex flex-col space-y-2 w-full">
+              <label
+                className="text-dark font-light text-[14px]"
+                htmlFor="shipping"
+              >
                 Taxes and other fees ($)
               </label>
-              <div className="relative w-full ">
+              <div className="relative w-full flex flex-col space-y-2">
                 <input
                   onChange={handleInputChange}
                   name="taxes"
-                  type="text"
-                  required
-                  className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  placeholder="e.g 150.00"
+                  type="number"
+                  step="any"
+                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
                 />
-                <BsCurrencyDollar className="absolute right-3 top-3 text-[#858585]" />
+                <BsCurrencyDollar className="absolute right-3 top-3 text-dark font-light" />
               </div>
             </div>
           </div>
 
-          <div className=" flex flex-col w-full">
-            <label className="text-[#858585] text-[14px]" htmlFor="shipping">
+          <div className=" flex flex-col space-y-2 w-full">
+            <label
+              className="text-dark font-light text-[14px]"
+              htmlFor="shipping"
+            >
               Additional information (optional)
             </label>
-            <div className="relative w-full ">
+            <div className="relative w-full flex flex-col space-y-2">
               <textarea
                 onChange={handleInputChange}
                 name="additional_information"
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-dark font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
               />
             </div>
           </div>
@@ -161,7 +190,7 @@ export default function QuoteForm() {
             <button
               disabled={loading}
               type="submit"
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normalr"
             >
               {loading ? <LoadSmall /> : " Accept order request"}
             </button>
@@ -175,33 +204,39 @@ export default function QuoteForm() {
                 src={image_url}
                 alt={galleryOrderActionModalData.artwork.title}
                 height={100}
-                width={80}
-                className="object-top object-contain"
+                width={100}
+                className="object-top h-[100px] w-[100px] rounded-[10px]"
               />
             </div>
             <div className="flex flex-col">
-              <p className="text-[#858585]">Artwork name</p>
-              <p>{galleryOrderActionModalData.artwork.title}</p>
+              <p className="text-dark font-light">Artwork name</p>
+              <p className="font-semibold">
+                {galleryOrderActionModalData.artwork.title}
+              </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-[#858585]">Artist name</p>
-              <p>{galleryOrderActionModalData.artwork.artist}</p>
+              <p className="text-dark font-light">Artist name</p>
+              <p className="font-semibold">
+                {galleryOrderActionModalData.artwork.artist}
+              </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-[#858585]">Price</p>
-              <p>
+              <p className="text-dark font-light">Price</p>
+              <p className="font-semibold">
                 {formatPrice(
                   galleryOrderActionModalData.artwork.pricing.usd_price
                 )}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-[#858585]">Buyer name</p>
-              <p>{galleryOrderActionModalData.buyer}</p>
+              <p className="text-dark font-light">Buyer name</p>
+              <p className="font-semibold">
+                {galleryOrderActionModalData.buyer}
+              </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-[#858585]">Buyer address</p>
-              <p>
+              <p className="text-dark font-light">Buyer address</p>
+              <p className="font-semibold">
                 {galleryOrderActionModalData.shipping_address.address_line},
                 {galleryOrderActionModalData.shipping_address.city},
                 {galleryOrderActionModalData.shipping_address.state},

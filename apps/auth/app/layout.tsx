@@ -2,9 +2,9 @@ import "./globals.css";
 import { DM_Sans, Poppins } from "next/font/google";
 import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import LayoutWrapper from "./LayoutWrapper";
-const dm_sans = Poppins({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-dm_sans",
+  variable: "--font-sans_serif",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 export default async function AuthDashboardRootLayout({
@@ -15,7 +15,7 @@ export default async function AuthDashboardRootLayout({
   const session = await getSession();
   return (
     <html lang="en">
-      <body className={`${dm_sans.className} flex flex-col justify-center`}>
+      <body className={`${poppins.className} flex flex-col justify-center`}>
         <LayoutWrapper session={session} children={children} />
       </body>
     </html>

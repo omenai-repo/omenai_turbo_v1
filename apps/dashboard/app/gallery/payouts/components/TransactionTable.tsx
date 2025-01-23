@@ -38,14 +38,14 @@ export function TransactionTable({
     return table;
   });
   return (
-    <div className="max-h-[500px] h-full w-full overflow-scroll">
-      <table className="w-full min-w-max table-auto text-left">
-        <thead>
-          <tr>
+    <div className="h-full w-full overflow-scroll">
+      <table className=" w-full table-auto border-separate border-spacing-y-2 overflow-scroll text-left md:overflow-auto">
+        <thead className="w-full rounded-full h-[40px] bg-[#EFEFEF] text-base font-semibold text-white">
+          <tr className="px-1 rounded-full">
             {TABLE_HEAD.map((head) => (
               <th
                 key={head}
-                className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                className="whitespace-nowrap  py-3 pl-3 text-[14px] font-medium text-dark"
               >
                 <p className="font-bold text-[14px]">{head}</p>
               </th>
@@ -59,25 +59,30 @@ export function TransactionTable({
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
             return (
-              <tr key={data.id}>
-                <td className={`${classes}`}>
-                  <p className="font-normal text-[14px]">{data.id}</p>
+              <tr
+                key={data.id}
+                className="cursor-pointer bg-white ring-1 ring-[#EFEFEF] duration-200 my-2"
+              >
+                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                  <p className="font-medium text-[14px]">{data.id}</p>
                 </td>
-                <td className={`${classes}`}>
-                  <p className="font-normal text-[14px]">{data.date}</p>
+                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                  <p className="font-medium text-[14px]">{data.date}</p>
                 </td>
-                <td className={`${classes}`}>
-                  <p className="font-normal text-[14px]">{data.gross}</p>
+                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                  <p className="font-medium text-[14px]">{data.gross}</p>
                 </td>
-                <td className={`${classes}`}>
-                  <p className="font-normal text-[14px]">{data.net}</p>
+                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                  <p className="font-medium text-[14px]">{data.net}</p>
                 </td>
-                <td className={`${classes} flex items-center space-x-2`}>
-                  <p className="font-normal text-[14px]">{data.type}</p>
+                <td
+                  className={`py-4 pl-3 text-[14px] font-medium text-dark flex items-center space-x-2`}
+                >
+                  <p className="font-medium text-[14px]">{data.type}</p>
                   <FiArrowDownLeft className="text-green-600" />
                 </td>
-                <td className={`${classes}`}>
-                  <p className="font-normal text-[14px] px-4 py-1 rounded-full text-white bg-green-600 w-fit">
+                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                  <p className="font-medium text-[12px] px-4 py-1 rounded-full text-white bg-green-600 w-fit">
                     {data.status}
                   </p>
                 </td>

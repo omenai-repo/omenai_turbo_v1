@@ -10,6 +10,8 @@ import {
   CiGrid41,
   CiExport,
 } from "react-icons/ci";
+import { FaStripeS } from "react-icons/fa";
+import { FaStripe } from "react-icons/fa6";
 
 const overview = <CiGrid41 className="text-dark group-hover:text-white" />;
 const order = <TfiPackage className="text-dark group-hover:text-white" />;
@@ -21,9 +23,9 @@ const upload = <CiExport className="text-dark group-hover:text-white" />;
 const profile = <CiUser className="text-dark group-hover:text-white" />;
 const settings = <CiSettings className="text-dark group-hover:text-white" />;
 const logout = <CiLogout className="text-dark group-hover:text-white" />;
-const album = <IoAlbumsOutline />;
+const album = <IoAlbumsOutline className="text-dark group-hover:text-white" />;
 const wallet = <IoWalletOutline className="text-dark group-hover:text-white" />;
-
+const stripe = <FaStripe className="text-dark group-hover:text-white" />;
 export const navMockData: NavMockData = {
   general: [
     { title: "Overview", icon: overview, url: "/gallery/overview" },
@@ -42,7 +44,7 @@ export const navMockData: NavMockData = {
   account: [
     {
       title: "Payout with Stripe",
-      icon: settings,
+      icon: stripe,
       url: "/gallery/payouts",
     },
     {

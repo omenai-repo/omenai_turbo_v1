@@ -10,8 +10,24 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { auth_uri } from "@omenai/url-config/src/config";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
+import { userDashboardActionStore } from "@omenai/shared-state-store/src/dashboard/individual/userDashboardActionState";
+import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
+import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 export default function Saves() {
+  const {
+    artworks,
+    setArtworks,
+    isLoading,
+    setIsLoading,
+    artwork_total,
+    set_artwork_total,
+    setPageCount,
+    pageCount,
+    current_page,
+    set_current_page,
+  } = userDashboardActionStore();
   const { session } = useContext(SessionContext);
   const router = useRouter();
   const { width } = useWindowSize();
@@ -20,35 +36,43 @@ export default function Saves() {
   if (session === null || session === undefined)
     router.replace(`${auth_url}/login`);
 
-  const { data: artworks, isLoading } = useQuery({
+  const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["fetch_saved_artworks"],
     queryFn: async () => {
-      const artworks = await fetchUserSaveArtworks();
-      if (!artworks) throw new Error("Something went wrong");
-      else return artworks.data;
+      const response = await fetchUserSaveArtworks(1);
+      if (!response?.isOk) throw new Error("Something went wrong");
+      else {
+        setArtworks(response?.data);
+        set_artwork_total(response?.total);
+        setPageCount(response?.count);
+      }
+      return response.data;
     },
     refetchOnWindowFocus: false,
+    gcTime: 0,
   });
 
-  if (isLoading) {
+  if (loading || isLoading) {
+    return <ArtworksListingSkeletonLoader />;
+  }
+
+  if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
     return (
-      <div className="h-[50vh] w-full grid place-items-center">
-        <Load />
+      <div className="w-full h-full grid place-items-center my-12">
+        <NotFoundData />
       </div>
     );
   }
   const arts = catalogChunk(
     artworks,
-    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : width < 1440 ? 4 : 5
+    width < 640 ? 1 : width < 990 ? 2 : width < 1440 ? 3 : 4
   );
 
   return (
     <div className="p-2">
-      {artworks.length === 0 ? (
-        <div className="w-full h-[50vh] grid place-items-center">
-          <p>Like an artwork to add it here.</p>
-        </div>
-      ) : (
+      <>
+        <p className="text-[14px] font-bold my-4">{artwork_total} artworks:</p>
+
         <div className="flex flex-wrap gap-x-4 justify-center">
           {arts.map((artworks: any[], index) => {
             return (
@@ -75,7 +99,17 @@ export default function Saves() {
           })}
           {/* first */}
         </div>
-      )}
+      </>
+
+      <Pagination
+        total={pageCount}
+        filterOptions={{ price: [], year: [], medium: [], rarity: [] }}
+        fn={fetchUserSaveArtworks}
+        setArtworks={setArtworks}
+        setCurrentPage={set_current_page}
+        setIsLoading={setIsLoading}
+        currentPage={current_page}
+      />
     </div>
   );
 }

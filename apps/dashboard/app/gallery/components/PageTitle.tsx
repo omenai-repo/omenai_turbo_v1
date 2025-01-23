@@ -43,12 +43,12 @@ export default function PageTitle({ title }: { title: string }) {
   return (
     <div className="flex justify-between items-center w-full">
       <div className="w-full flex flex-col gap-y-1">
-        <h1 className="font-normal text-md text-dark">{title}</h1>
+        <h1 className="font-bold text-md text-dark">{title}</h1>
         <p className="text-base flex">{breadcrumbs}</p>
       </div>
       {title === "My Artworks" && (
         <Link href={"/gallery/artworks/upload"} className="w-fit">
-          <button className="bg-dark rounded-sm w-fit whitespace-nowrap text-white text-[14px] h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+          <button className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal whitespace-nowrap">
             <span>Upload Artwork</span>
             <IoAdd className="text-sm" />
           </button>

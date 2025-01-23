@@ -1,6 +1,6 @@
 "use client";
 import { GiSettingsKnobs } from "react-icons/gi";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import FilterPill from "./FilterPill";
 import { ImBin2 } from "react-icons/im";
@@ -28,9 +28,7 @@ export default function Filter({
 }: {
   page_type: artworkCollectionTypes;
 }) {
-  const { session } = useContext(SessionContext);
   const [showFilterBlock, setShowFilterBlock] = useState(false);
-  const { width } = useWindowSize();
 
   const { filterOptions, selectedFilters, clearAllFilters } =
     categoriesFilterStore();
@@ -42,6 +40,16 @@ export default function Filter({
     pageCount,
     setPageCount,
   } = categoriesStore();
+
+  const [width, setWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   async function handleSubmitFilter() {
     setCurrentPage(1);
@@ -103,6 +111,7 @@ export default function Filter({
     if (response?.isOk) {
       setArtworks(response?.data);
       setCurrentPage(1);
+      setPageCount(response.count);
     }
   };
 

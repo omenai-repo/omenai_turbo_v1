@@ -90,7 +90,7 @@ export default function MigrationUpgradeCheckoutItem({
   return (
     <>
       <div className="bg-white shadow-md rounded-sm">
-        <div className="w-full p-5 bg-dark text-white">
+        <div className="w-full p-5 bg-dark text-white rounded-[20px]">
           <p className="text-[13px] font-normal">
             Subscription {plan_change_params.action}
           </p>
@@ -102,7 +102,7 @@ export default function MigrationUpgradeCheckoutItem({
           </p>
         </div>
 
-        <div className="p-5 flex-flex-col space-y-3">
+        <div className="p-5 flex-flex-col space-y-3 my-4 rounded-[20px]">
           <div className="flex justify-between items-center">
             <p className="text-[14px] font-bold">Current plan duration</p>
             <p className="text-[14px] font-bold">{days_used} days elapsed</p>

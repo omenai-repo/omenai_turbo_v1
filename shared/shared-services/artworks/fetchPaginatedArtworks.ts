@@ -1,6 +1,10 @@
+import { FilterOptions } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function fetchPaginatedArtworks(page: number, filters?: any) {
+export async function fetchPaginatedArtworks(
+  page: number,
+  filters?: FilterOptions
+) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/artworks/getPaginatedArtworks`, {

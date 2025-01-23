@@ -26,7 +26,7 @@ const ExpiryMonth: React.FC<MonthProps> = ({ onChange }) => {
         maxLength={2}
         minLength={2}
         onChange={handleInputChange}
-        className="h-[40px] border border-[#E0E0E0] text-[13px] placeholder:text-[#858585] placeholder:text-[13px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+        className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
       />
     </div>
   );

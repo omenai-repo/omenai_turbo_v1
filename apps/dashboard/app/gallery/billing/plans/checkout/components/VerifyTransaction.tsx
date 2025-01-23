@@ -18,7 +18,6 @@ export default function VerifyTransaction({
       const response = await verifyFlwTransaction(transaction_id);
       if (!response?.isOk) return null;
       else {
-        console.log(response.data);
         return { message: response.message, data: response.data };
       }
     },
@@ -56,7 +55,7 @@ export default function VerifyTransaction({
             <Link
               href={"/gallery/billing"}
               type="button"
-              className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
             >
               Go home
             </Link>

@@ -60,10 +60,15 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       type: String,
       required: true,
     },
-    subscription_active: {
-      type: Boolean,
+    subscription_status: {
+      type: Schema.Types.Mixed,
       required: true,
-      default: () => false,
+      default: () => {
+        return {
+          type: null,
+          active: false,
+        };
+      },
     },
     status: {
       type: String,

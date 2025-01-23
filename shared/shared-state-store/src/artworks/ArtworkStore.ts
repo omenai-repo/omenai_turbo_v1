@@ -8,6 +8,8 @@ type ArtworkStoreTypes = {
   setIsLoading: (loading: boolean) => void;
   pageCount: number;
   setPageCount: (count: number) => void;
+  artwork_total: number;
+  set_artwork_total: (value: number) => void;
 };
 export const artworkStore = create<ArtworkStoreTypes>((set, get) => ({
   artworks: [],
@@ -21,5 +23,9 @@ export const artworkStore = create<ArtworkStoreTypes>((set, get) => ({
   pageCount: 1,
   setPageCount: (count: number) => {
     set({ pageCount: count });
+  },
+  artwork_total: 0,
+  set_artwork_total: (value: number) => {
+    set({ artwork_total: value });
   },
 }));

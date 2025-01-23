@@ -57,13 +57,13 @@ export const FormCard = () => {
     <form onSubmit={handleSubmit} className="p-5 space-y-8 lg:px-2">
       <div className="grid grid-cols-2 items-center">
         <InputCard
-          label="Gallery name"
+          label="Name"
           value={user?.name}
           onChange={() => {}}
           labelText="gallery"
         />
         <InputCard
-          label="Gallery Email address"
+          label="Email address"
           value={user?.email}
           labelText="email"
           rightComponent={
@@ -80,7 +80,7 @@ export const FormCard = () => {
 
       <div className="grid grid-cols-2 items-center">
         <InputCard
-          label="location"
+          label="Address"
           defaultValue={(user as GallerySchemaTypes).location.address}
           labelText="location"
         />
@@ -107,7 +107,7 @@ export const FormCard = () => {
             !updateData.description) ||
           isLoading
         }
-        className="w-full disabled:cursor-not-allowed disabled:bg-[#E0E0E0] bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+        className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
       >
         {isLoading ? <LoadSmall /> : "Save edit data"}
       </button>

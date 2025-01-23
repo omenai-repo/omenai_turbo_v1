@@ -8,9 +8,7 @@ import { isEmptyFilter } from "@omenai/shared-utils/src/isFilterEmpty";
 import { toast } from "sonner";
 import { ImBin2 } from "react-icons/im";
 import { FaCheckCircle } from "react-icons/fa";
-import { useWindowSize } from "usehooks-ts";
 import { MdClear } from "react-icons/md";
-import { useRouter } from "next/navigation";
 import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPaginatedArtworks";
 import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
 import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
@@ -21,20 +19,28 @@ import RarityFilter from "./RarityFilter";
 
 export default function Filter() {
   const [showFilterBlock, setShowFilterBlock] = useState(false);
+
   const [width, setWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 0
   );
 
   const { filterOptions, selectedFilters, clearAllFilters } = filterStore();
   const { currentPage, setCurrentPage } = artworkActionStore();
-  const { setArtworks, setIsLoading, setPageCount } = artworkStore();
-  const router = useRouter();
+  const {
+    setArtworks,
+    setIsLoading,
+    setPageCount,
+    set_artwork_total,
+    artwork_total,
+  } = artworkStore();
+
   async function handleSubmitFilter() {
     setCurrentPage(1);
     setIsLoading(true);
     const response = await fetchPaginatedArtworks(currentPage, filterOptions);
     if (response?.isOk) {
       setPageCount(response.count);
+      set_artwork_total(response.total);
       setArtworks(response.data);
     } else {
       toast.error("Error notification", {

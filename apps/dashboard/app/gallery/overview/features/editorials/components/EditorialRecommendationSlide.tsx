@@ -23,7 +23,7 @@ export default function EditorialRecommendationSlide({
         height={400}
         className="absolute w-full h-full object-cover inset-0 object-top rounded-xl"
       />
-      <div className="bg-black/30 absolute inset-0 z-10 rounded-xl" />
+      <div className="bg-dark/30 absolute inset-0 z-10 rounded-xl" />
       <div className="self-end text-white flex flex-col gap-y-1 relative z-20">
         <span className="text-base  font-light">{category}</span>
         <h4 className="text-base md:text-sm xl:text-md font-normal">{title}</h4>

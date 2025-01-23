@@ -113,8 +113,8 @@ export default function AddressForm({
                   disabled={true}
                   defaultValue={
                     detail.name === "name"
-                      ? (session as IndividualSchemaTypes)?.name || ""
-                      : (session as IndividualSchemaTypes)?.email || ""
+                      ? (session as IndividualSchemaTypes).name || ""
+                      : (session as IndividualSchemaTypes).email || ""
                   }
                 />
               );

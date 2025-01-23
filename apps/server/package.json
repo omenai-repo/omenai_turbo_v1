@@ -20,6 +20,7 @@
     "@omenai/typescript-config": "*"
   },
   "dependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "lru-cache": "^11.0.2"
   }
 }

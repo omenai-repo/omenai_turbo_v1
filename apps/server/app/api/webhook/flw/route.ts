@@ -198,7 +198,7 @@ export async function POST(request: Request) {
 
           await AccountGallery.updateOne(
             { gallery_id },
-            { $set: { subscription_active: true } }
+            { $set: { subscription_status: { type: plan.name, active: true } } }
           ).session(session);
 
           await session.commitTransaction();

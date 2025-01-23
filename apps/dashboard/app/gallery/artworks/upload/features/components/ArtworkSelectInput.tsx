@@ -9,6 +9,7 @@ type ArtworkSelectInputProps = {
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   name: string;
   required: boolean;
+  disabled?: boolean;
 };
 
 type CurrencyItems = { name: string; code: string };
@@ -18,15 +19,11 @@ export default function ArtworkSelectInput({
   name,
   required,
   currency_items,
+  disabled = false,
 }: ArtworkSelectInputProps) {
   const { updateArtworkUploadData } = galleryArtworkUploadStore();
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    // if (name === "currency") {
-    //   updateArtworkUploadData("price", "0");
-    //   updateArtworkUploadData("usd_price", "0");
-    // }
-
     updateArtworkUploadData(name, e.target.value);
   };
   return (
@@ -37,9 +34,12 @@ export default function ArtworkSelectInput({
       <select
         onChange={handleChange}
         required={required}
-        className="border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
+        disabled={disabled}
+        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
       >
-        <option value="">Select</option>
+        <option value={disabled ? "Yes" : ""}>
+          {disabled ? "Yes" : "Select"}
+        </option>
         {name === "currency" ? (
           <>
             {currency_items!.map((item: CurrencyItems, index) => {

@@ -23,14 +23,13 @@ export const TextareaCard = (props: Props) => {
       </label>
       <div className={clsx("flex items-center justify-between py-1")}>
         <textarea
-          rows={8}
+          rows={5}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
             handleChange(name, e.target.value)
           }
-          className={clsx(
-            "disabled:cursor-not-allowed border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-dark ",
-            className
-          )}
+          className={
+            "p-3 border border-[#E0E0E0] text-[14px] placeholder:text-dark font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+          }
           {...rest}
         />
       </div>

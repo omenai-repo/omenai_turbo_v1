@@ -36,7 +36,7 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="bg-[#FAFAFA] border border-[#E0E0E0] p-6 w-[500px] rounded-lg">
+    <div className="bg-[#FAFAFA] border border-[#E0E0E0] p-6 w-[500px] rounded-[20px]">
       <div className="flex flex-col items-center my-4 space-y-4 text-dark">
         <p className="text-[14px]">Stripe Available Balance</p>
 
@@ -54,14 +54,14 @@ export default function BalanceBox({
         <div className="mt-16 w-full flex space-x-2">
           <button
             disabled={balance.available[0].amount / 100 === 0}
-            className="h-[40px] text-[14px] font-normal disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] px-4 w-full bg-dark text-white cursor-pointer grid place-items-center"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             Payout Balance
           </button>
           <button
             onClick={generateLoginLink}
             disabled={generatingLoginLink}
-            className="h-[40px] text-[14px] font-normal disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] px-4 w-full bg-dark text-white cursor-pointer grid place-items-center"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
           </button>

@@ -18,6 +18,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function UploadArtwork() {
   const { session } = useContext(SessionContext);
+
   const url = auth_uri();
   const router = useRouter();
   if (session === undefined) router.replace(url);

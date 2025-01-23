@@ -40,8 +40,6 @@ export default function Orders() {
       id="tour-footer"
       data-tg-tour="Welcome to the tour"
     >
-      {isLoading && <div>!</div>}
-
       {orders!.length === 0 ? (
         <NotFoundData />
       ) : (
@@ -65,9 +63,9 @@ export default function Orders() {
           <div className="w-full flex justify-center my-4">
             <Link
               href="/gallery/orders"
-              className="text-dark/80 flex gap-x-1 text-[14px] items-center mt-4 cursor-pointer"
+              className="text-dark/80 flex gap-x-1 text-[14px] items-center font-medium underline mt-4 cursor-pointer"
             >
-              View {limitedOrders.length} pending orders
+              View {limitedOrders.length} pending order(s)
               <IoIosArrowRoundForward />
             </Link>
           </div>

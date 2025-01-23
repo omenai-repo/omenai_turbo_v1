@@ -37,7 +37,7 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       weight: "",
       price: 0,
       usd_price: 0,
-      shouldShowPrice: "",
+      shouldShowPrice: "Yes",
       depth: "",
       artist_birthyear: "",
       artist_country_origin: "",

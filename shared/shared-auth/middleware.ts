@@ -28,11 +28,11 @@ export async function middleware(request: NextRequest) {
   //     return NextResponse.next(); // Skip middleware for auth.omenai.app
   //   }
   const session = await getSession();
-  const url = auth_uri();
+  const auth_url = auth_uri();
   const base_path_url = base_url();
 
   if (!session && !request.url.startsWith(base_path_url)) {
-    return redirect(url);
+    return redirect(`${auth_url}/login`);
   }
 
   const isUserDashboard = userDashboardRegex.test(request.url);
@@ -44,12 +44,12 @@ export async function middleware(request: NextRequest) {
     switch (session.role) {
       case "user":
         if (isGalleryDashboard) {
-          return redirect(`${url}`);
+          return redirect(`${auth_url}/login`);
         }
         break;
       case "gallery":
         if (isUserDashboard || isPurchasePage || isPaymentPage) {
-          return redirect(`${url}`);
+          return redirect(`${auth_url}/login`);
         }
         break;
       case "admin":
@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
           isPurchasePage ||
           isPaymentPage
         ) {
-          return redirect(url);
+          return redirect(`${auth_url}/login`);
         }
         break;
     }

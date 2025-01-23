@@ -36,10 +36,10 @@ export default function NavigationItem({
             pathname.startsWith(url)
               ? "bg-dark text-white"
               : "bg-white text-dark"
-          } group flex items-center w-full hover:bg-dark rounded-sm`}
+          } group flex items-center w-full hover:bg-dark rounded-full`}
         >
           <IconWrapper
-            className={` ${pathname.startsWith(url) && "bg-white text-white"}`}
+            className={` ${pathname.startsWith(url) ? "bg-white text-white" : "group"}`}
           >
             {icon}
           </IconWrapper>

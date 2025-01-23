@@ -47,12 +47,12 @@ export default function NoVerificationBlock({
   }
   return (
     <div
-      className={`w-full h-[78vh] grid place-items-center bg-dark mt-10 rounded-lg`}
+      className={`w-full h-[78vh] grid place-items-center bg-dark mt-10 rounded-[20px]`}
     >
       <div className="flex flex-col gap-4 items-center text-[14px]">
         <BsShieldLock className="text-2xl text-white" />
         <div className="text-center">
-          <p className=" text-white">
+          <p className=" text-white text-[14px]">
             Your account is being verified, an agent will reach out to you
             within 24 hours.
           </p>
@@ -65,7 +65,7 @@ export default function NoVerificationBlock({
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" w-full text-[14px] disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-white rounded-sm text-dark h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-[#e0e0e0]"
+            className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-white text-dark hover:bg-[#e0e0e0] duration-300 text-[14px] font-normal"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>

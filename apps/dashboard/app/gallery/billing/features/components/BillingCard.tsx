@@ -15,7 +15,7 @@ export default function BillingCard({
   return (
     <div
       className="rounded-2xl ring-1 bg-billing-card ring-[#e0e0e0] bg-no-repeat text-white bg-blend-overlay p-4 relative w-full h-[250px]"
-      style={{ backgroundImage: "url('/images/curve.jpg')" }}
+      style={{ backgroundImage: "url('/curve.png')" }}
     >
       <div className="absolute inset-0 bg-dark/50 rounded-2xl" />
       <div className="w-full flex justify-start relative z-10 my-2">

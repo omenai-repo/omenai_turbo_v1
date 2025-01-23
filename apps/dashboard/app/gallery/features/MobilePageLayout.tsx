@@ -9,7 +9,7 @@ export default function MobilePageLayout() {
   const { openMobileNav, setOpenMobileNav } = galleryNavigationActions();
   return (
     <div
-      className={`gap-4 w-full bg-black/20 fixed z-30 h-full ${
+      className={`gap-4 w-full bg-dark/20 fixed z-30 h-full ${
         openMobileNav ? "left-0" : "left-[-100%]"
       } left-0 duration-200 md:hidden flex justify-between`}
     >

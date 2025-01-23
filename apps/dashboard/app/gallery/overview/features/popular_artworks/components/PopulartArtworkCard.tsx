@@ -23,7 +23,7 @@ export default function PopulartArtworkCard({
           alt={title}
           height={100}
           width={100}
-          className="object-top object-contain rounded-lg"
+          className="object-top h-[100px] w-[100px] rounded-lg"
         />
         <div className="flex flex-col gap-y-1">
           <p className="text-dark font-normal text-[14px] sm:text-base">

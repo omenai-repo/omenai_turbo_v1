@@ -5,7 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import { verifyFlwTransaction } from "@omenai/shared-services/subscriptions/verifyFlwTransaction";
 import Link from "next/link";
 import { useReadLocalStorage } from "usehooks-ts";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  LoadIcon,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import PageTitle from "../../../../components/PageTitle";
 export default function TransactionVerification() {
   const transaction_id = useReadLocalStorage("flw_trans_id") as string;
@@ -28,16 +30,14 @@ export default function TransactionVerification() {
     refetchOnWindowFocus: false,
   });
 
-  console.log(verified?.data);
-
   return (
     <>
       <PageTitle title="Verifying your transaction" />
       <div className="grid place-items-center w-full h-[65vh]">
         {isLoading ? (
           <div className=" w-[20vw] flex flex-col items-center justify-center space-y-6">
-            <Load />
-            <p className="text-[14px] font-normal">
+            <LoadIcon />
+            <p className="text-[14px] font-medium">
               Verification in progress...please wait
             </p>
           </div>
@@ -45,7 +45,7 @@ export default function TransactionVerification() {
           <div className=" w-[20vw] flex-flex-col space-y-6">
             <div className="space-y-2 grid place-items-center">
               <Image
-                src={"/images/verified.png"}
+                src={"/icons/verified.png"}
                 height={100}
                 width={100}
                 alt="verification icon"
@@ -58,7 +58,7 @@ export default function TransactionVerification() {
               <Link
                 href={"/gallery/billing"}
                 type="button"
-                className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[14px] bg-dark duration-200 grid place-items-center"
+                className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               >
                 View subscription info
               </Link>

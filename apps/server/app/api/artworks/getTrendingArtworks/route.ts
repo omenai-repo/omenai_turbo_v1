@@ -141,6 +141,7 @@ export async function POST(request: Request) {
         data: allTrendingPaginatedArtworks,
         page,
         pageCount: Math.ceil(total / 30),
+        total,
       },
       { status: 200 }
     );

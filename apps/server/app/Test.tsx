@@ -10,7 +10,6 @@ export default function Test() {
       credentials: "include",
     });
     const response = await res.json();
-    console.log(response);
   };
 
   return (

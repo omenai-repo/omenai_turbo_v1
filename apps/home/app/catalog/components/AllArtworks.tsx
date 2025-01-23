@@ -5,7 +5,6 @@ import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/Artw
 import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
 import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
-import { useState } from "react";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
@@ -18,11 +17,19 @@ export default function AllArtworks({
   sessionId: string | undefined;
 }) {
   const { currentPage, setCurrentPage } = artworkActionStore();
-  const { isLoading, setArtworks, setIsLoading, artworks } = artworkStore();
+  const {
+    isLoading,
+    setArtworks,
+    setIsLoading,
+    artworks,
+    artwork_total,
+    set_artwork_total,
+    setPageCount,
+    pageCount,
+  } = artworkStore();
   const { filterOptions } = filterStore();
 
   const { width } = useWindowSize();
-  const [artwork_total, set_artwork_total] = useState(0);
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_paginated_artworks"],
@@ -31,6 +38,7 @@ export default function AllArtworks({
       if (response?.isOk) {
         setArtworks(response.data);
         set_artwork_total(response.total);
+        setPageCount(response.count);
         return { data: response.data, pages: response.count };
       } else throw new Error("Failed to fetch artworks");
     },
@@ -91,7 +99,7 @@ export default function AllArtworks({
       </div>
 
       <Pagination
-        total={artworksArray.pages}
+        total={pageCount}
         filterOptions={filterOptions}
         fn={fetchPaginatedArtworks}
         setArtworks={setArtworks}

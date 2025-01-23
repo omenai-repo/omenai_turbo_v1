@@ -10,16 +10,16 @@ export default function CheckoutItem({
 }) {
   return (
     <div className="bg-white shadow-lg">
-      <div className="w-full p-8 bg-dark text-white">
-        <h1 className="text-base font-normal ">
+      <div className="w-full p-8 bg-dark rounded-[20px] text-white">
+        <h1 className="text-base font-bold ">
           Omenai {plan.name} subscription
         </h1>
-        <p className="mt-1 flex items-baseline text-[14px] font-bold tracking-tight">
+        <p className="mt-1 flex items-baseline text-[14px] font-medium tracking-tight">
           Billed {interval}
         </p>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 my-4 rounded-[20px]">
         <div className="flex justify-between items-center">
           <p className="text-[14px] font-bold">Due today</p>
           <p className="text-[14px] font-bold">

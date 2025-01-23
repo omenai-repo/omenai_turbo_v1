@@ -12,6 +12,8 @@ type collectionsStoreTypes = {
   setPaginationLoading: (paginationLoading: boolean) => void;
   pageCount: number;
   setPageCount: (count: number) => void;
+  artwork_total: number;
+  set_artwork_total: (value: number) => void;
 };
 export const collectionsStore = create<collectionsStoreTypes>((set, get) => ({
   artworks: [],
@@ -33,5 +35,9 @@ export const collectionsStore = create<collectionsStoreTypes>((set, get) => ({
   pageCount: 1,
   setPageCount: (count: number) => {
     set({ pageCount: count });
+  },
+  artwork_total: 0,
+  set_artwork_total: (value: number) => {
+    set({ artwork_total: value });
   },
 }));

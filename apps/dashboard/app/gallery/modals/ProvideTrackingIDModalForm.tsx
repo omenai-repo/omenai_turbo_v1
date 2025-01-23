@@ -69,12 +69,12 @@ export default function UploadTrackingInformationModalForm() {
 
   return (
     <div>
-      <h1 className="text-base font-normal mb-4 text-dark">
+      <h1 className="text-base font-bold mb-4 text-dark">
         Tracking information
       </h1>
       <form className="w-full" onSubmit={handleSubmitTrackingInfo}>
         <div className="space-y-2 mb-2 flex flex-col w-full">
-          <div className="relative w-full h-auto">
+          <div className="relative w-full h-auto flex flex-col space-y-1">
             <label
               htmlFor="shipping"
               className="text-[14px] text-[#858585] mb-2"
@@ -87,12 +87,12 @@ export default function UploadTrackingInformationModalForm() {
               type="text"
               required
               placeholder="Please provide a link to track this order"
-              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
             />
           </div>
         </div>
         <div className="space-y-2 mb-2 flex flex-col w-full">
-          <div className="relative w-full h-auto">
+          <div className="relative w-full h-auto flex flex-col space-y-1">
             <label
               htmlFor="shipping"
               className="text-[14px] text-[#858585] mb-2"
@@ -105,7 +105,7 @@ export default function UploadTrackingInformationModalForm() {
               type="text"
               placeholder="Please provide a tracking ID for this package"
               required
-              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
             />
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function UploadTrackingInformationModalForm() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             {loading ? <LoadSmall /> : " Submit tracking information"}
           </button>

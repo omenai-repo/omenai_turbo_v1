@@ -24,7 +24,6 @@ export default function Home() {
     queryFn: async () => {
       const promotionals = await getPromotionalData();
       if (!promotionals?.isOk) throw new Error("Something went wrong");
-      // console.log(promotionals)
       return promotionals.data;
     },
   });

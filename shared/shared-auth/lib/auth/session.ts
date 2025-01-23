@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { UserType } from "@omenai/shared-types/index";
-const secret_key = "secret";
+const secret_key = "process.env.JWT_SECRET;";
 const key = new TextEncoder().encode(secret_key);
 
 const cookie = {

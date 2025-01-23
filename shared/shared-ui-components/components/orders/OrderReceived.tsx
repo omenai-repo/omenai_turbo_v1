@@ -18,7 +18,7 @@ export default function OrderReceived() {
         <Link
           onClick={() => toggleOrderReceivedModal(false)}
           href={"/catalog"}
-          className="h-[40px] rounded-full text-[14px] px-4 w-full bg-black grid place-items-center text-white cursor-pointer mt-[50px]"
+          className="h-[40px] rounded-full text-[14px] px-4 w-full bg-dark grid place-items-center text-white cursor-pointer mt-[50px]"
         >
           Continue shopping
         </Link>

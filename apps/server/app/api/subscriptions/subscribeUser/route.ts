@@ -46,7 +46,6 @@ export async function POST(request: Request) {
           );
 
           const response = await get_subscription_payment_link.json();
-          console.log(data_filter);
 
           if (response) {
             return NextResponse.json(

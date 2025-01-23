@@ -17,7 +17,6 @@ export default function WYSIWIG_Editor() {
     setIsLoading(true);
     if (editorRef.current) {
       const editorContent = editorRef.current.getContent();
-      // console.log(editorContent);
       setRenderedHTML(editorContent);
     } else {
       toast.error("Something went wrong while rendering form contents");
@@ -100,7 +99,7 @@ export default function WYSIWIG_Editor() {
           <button
             onClick={log}
             disabled={isLoading}
-            className="w-full h-[50px] flex items-center justify-center bg-black text-white cursor-pointer flex-1 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1]"
+            className="w-full h-[50px] flex items-center justify-center bg-dark text-white cursor-pointer flex-1 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1]"
           >
             {isLoading ? <LoadSmall /> : "Print form"}
           </button>

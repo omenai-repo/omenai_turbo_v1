@@ -15,20 +15,22 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { fetchSingleArtworkOnPurchase } from "@omenai/shared-services/artworks/fetchSingleArtworkOnPurchase";
 import { useQuery } from "@tanstack/react-query";
+import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 
 export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   const { session } = useContext(SessionContext);
+  const { set_address_on_order, address } = orderStore();
   // const [redirect_uri, set_redirect_uri] = useLocalStorage(
   //   "redirect_uri_on_login",
   //   ""
   // );
-  const [address, setAddress] = useState<IndividualAddressTypes>({
-    address_line: "",
-    city: "",
-    country: "",
-    state: "",
-    zip: "",
-  });
+  // const [address, setAddress] = useState<IndividualAddressTypes>({
+  //   address_line: "",
+  //   city: "",
+  //   country: "",
+  //   state: "",
+  //   zip: "",
+  // });
 
   const { data: artwork, isLoading: loading } = useQuery({
     queryKey: ["fetch_artwork_on purchase"],
@@ -48,7 +50,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
         });
         throw new Error("Something went wrong");
       } else {
-        setAddress(user.data.address);
+        set_address_on_order(user.data.address);
         return artwork.data;
       }
     },

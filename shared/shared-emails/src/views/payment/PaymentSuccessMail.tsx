@@ -29,7 +29,7 @@ const PaymentSuccessfulMail = (
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
               src={
-                "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/66d988de000cf7f960c3/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
+                "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/679292dc001c0e14f322/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
               }
               width="100"
               height="20"
@@ -47,7 +47,7 @@ const PaymentSuccessfulMail = (
               We're thrilled to inform you that we have received your payment
               for <strong>(Order ID #{order_id})</strong>
             </Text>
-            <div className="w-fit p-5 bg-black text-white border border-t-8 border-t-white flex">
+            <div className="w-fit p-5 bg-dark text-white border border-t-8 border-t-white flex">
               <div className="">
                 <Text className="font-bold">Receipt from Omenai Inc.</Text>
                 <Text>

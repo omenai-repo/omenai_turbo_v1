@@ -124,7 +124,6 @@ export default function CardInput({
             className: "class",
           });
         } else {
-          console.log(response.data);
           if (response.data.meta.authorization.mode === "redirect") {
             toast.info("Redirecting to authentication portal, Please wait");
             set_transaction_id(response.data.data.id);
@@ -155,7 +154,7 @@ export default function CardInput({
   return (
     <form className="space-y-4" onSubmit={handleCardInputSubmit}>
       <div className="flex justify-between items-center">
-        <h1 className="text-[14px] font-normal">Payment Method</h1>
+        <h1 className="text-[14px] font-bold">Payment Method</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -174,7 +173,7 @@ export default function CardInput({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleCardDetailInputChange(e.target.name, e.target.value)
           }
-          className="h-[40px] border border-[#E0E0E0] text-[13px] placeholder:text-[#858585] placeholder:text-[13px] bg-white w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
         />
       </div>
       <CardNumber onChange={handleCardDetailInputChange} />
@@ -188,7 +187,7 @@ export default function CardInput({
         <button
           type="submit"
           disabled={cardInputLoading}
-          className="h-[40px] px-4 w-full text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 text-[13px] bg-dark duration-200 grid place-items-center"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {cardInputLoading ? <LoadSmall /> : "Submit"}
         </button>

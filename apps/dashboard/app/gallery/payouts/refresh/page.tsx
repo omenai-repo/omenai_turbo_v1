@@ -89,17 +89,17 @@ export default function RefreshStripe() {
       ) : (
         <div className="grid place-items-center h-[78vh]">
           <div className="bg-white border border-[#E0E0E0] text-dark p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative">
-            <h1 className="text-[14px] font-normal text-[#858585] mb-1">
+            <h1 className="text-[14px] font-normal text-dark mb-1">
               Looks like you didn&apos;t complete your Stripe Onboarding.
             </h1>
             <p className="font-bold text-sm">
               Create a connected account on{" "}
               <span className="text-[#5247ee]">Stripe</span>
             </p>
-            <div className="flex flex-col space-y-2 mt-5">
+            <div className="flex flex-col mt-3">
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-[14px] mb-2"
+                  className="text-dark font-normal text-[14px]"
                   htmlFor="name"
                 >
                   Name
@@ -108,12 +108,12 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={session?.name}
-                  className="p-3 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="h-[40px] p-6 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                 />
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-[14px] mb-2"
+                  className="text-dark font-normal text-[14px]"
                   htmlFor="email"
                 >
                   Email
@@ -122,19 +122,19 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={session?.email}
-                  className="p-3 border border-[#E0E0E0] text-[14px] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] placeholder:text-[#858585] placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+                  className="h-[40px] p-6 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                 />
               </div>
             </div>
             <>
-              <p className="text-[14px] font-normal mt-4">
+              <p className="text-[14px] font-medium my-4">
                 Your connected account ID is:{" "}
                 <code className="font-bold">{account_Id}</code>{" "}
               </p>
             </>
             <button
               disabled={accountLinkCreatePending}
-              className="h-[40px] text-[14px] font-normal disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] px-4 w-full bg-black text-white cursor-pointer mt-5 grid place-items-center"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               onClick={handleAccountLink}
             >
               {accountLinkCreatePending ? (

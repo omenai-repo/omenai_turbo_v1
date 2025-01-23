@@ -4,6 +4,7 @@
   "description": "Shared UI components",
   "private": true,
   "type": "module",
+  "main": "index",
   "devDependencies": {
     "@omenai/package-provider": "*",
     "@omenai/shared-hooks": "*",

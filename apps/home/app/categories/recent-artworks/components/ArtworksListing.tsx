@@ -22,6 +22,10 @@ export function ArtworkListing({
     currentPage,
     setCurrentPage,
     setIsLoading,
+    artwork_total,
+    set_artwork_total,
+    pageCount,
+    setPageCount,
   } = categoriesStore();
   const { filterOptions } = categoriesFilterStore();
   const { width } = useWindowSize();
@@ -31,8 +35,9 @@ export function ArtworkListing({
     queryFn: async () => {
       const response = await fetchPaginatedArtworks(currentPage, filterOptions);
       if (response?.isOk) {
+        set_artwork_total(response.total);
         setArtworks(response.data);
-        // set_artwork_total(response.total);
+        setPageCount(response.count);
         return { data: response.data, pages: response.count };
       } else throw new Error("Failed to fetch artworks");
     },
@@ -58,7 +63,7 @@ export function ArtworkListing({
 
   return (
     <div className="w-full mb-5 px-5 mt-3">
-      {/* <p className="text-[14px] font-normal mb-4">{artwork_total} artworks:</p> */}
+      <p className="text-[14px] font-bold mb-4">{artwork_total} artworks:</p>
 
       <div className="flex flex-wrap gap-x-4 justify-center">
         {arts.map((artworks: any[], index) => {
@@ -88,7 +93,7 @@ export function ArtworkListing({
       </div>
 
       <Pagination
-        total={artworksArray.pages}
+        total={pageCount}
         filterOptions={filterOptions}
         fn={fetchPaginatedArtworks}
         setArtworks={setArtworks}

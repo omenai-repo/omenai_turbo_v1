@@ -4,6 +4,7 @@ import { create } from "zustand";
 type OrderStoreTypes = {
   address: IndividualAddressTypes;
   setAddress: (label: string, value: string) => void;
+  set_address_on_order: (address: IndividualAddressTypes) => void;
 };
 export const orderStore = create<OrderStoreTypes>((set, get) => ({
   address: {
@@ -23,5 +24,8 @@ export const orderStore = create<OrderStoreTypes>((set, get) => ({
         address: updatedData as IndividualAddressTypes,
       });
     }
+  },
+  set_address_on_order: (address: IndividualAddressTypes) => {
+    set({ address });
   },
 }));

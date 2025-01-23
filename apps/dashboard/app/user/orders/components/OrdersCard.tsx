@@ -77,7 +77,7 @@ export default function OrdersCard({
       );
     } else {
       if (
-        status === "pending" &&
+        status === "processing" &&
         order_accepted === "accepted" &&
         payment_status === "pending" &&
         tracking_status === "" &&
@@ -91,7 +91,7 @@ export default function OrdersCard({
         );
       }
       if (
-        status === "pending" &&
+        status === "processing" &&
         order_accepted === "accepted" &&
         payment_status === "completed" &&
         tracking_status === "" &&
@@ -105,28 +105,28 @@ export default function OrdersCard({
         );
       }
       if (
-        status === "pending" &&
+        status === "processing" &&
         order_accepted === "accepted" &&
         payment_status === "completed" &&
         tracking_status !== "" &&
         !delivery_confirmed
       ) {
         return (
-          <span className="px-3 py-1 rounded-full bg-green-100 flex gap-x-1 items-center w-fit">
+          <span className="px-3 py-1 rounded-full bg-green-200 flex gap-x-1 items-center w-fit">
             <GoIssueClosed />
             Delivery in progress
           </span>
         );
       }
       if (
-        status === "pending" &&
+        status === "processing" &&
         order_accepted === "" &&
         payment_status === "pending" &&
         tracking_status === "" &&
         !delivery_confirmed
       ) {
         return (
-          <span className="px-3 py-1 rounded-full bg-amber-100 flex gap-x-1 items-center w-fit">
+          <span className="px-3 py-1 rounded-full bg-amber-200 flex gap-x-1 items-center w-fit">
             <MdInfo />
             Order in review
           </span>
@@ -165,14 +165,14 @@ export default function OrdersCard({
         <Image
           src={image_url}
           alt={title}
-          height={120}
+          height={100}
           width={100}
-          className="object-top object-contain"
+          className="object-fill object-center rounded-[20px] h-[100px] w-[100px]"
         />
         <div className="flex flex-col sapce-y-1 text-[14px]">
-          <p className="text-dark font-normal text-[15px]">{title}</p>
-          <span className="text-dark text-[14px]">{artist}</span>
-          <span className="text-dark text-[14px] font-bold">
+          <p className="text-dark font-medium text-base">{title}</p>
+          {/* <span className="text-dark text-[14px]">{artist}</span> */}
+          <span className="text-dark text-base font-bold">
             {formatPrice(price, currency)}
           </span>
           <div className="mt-3">
@@ -188,14 +188,15 @@ export default function OrdersCard({
         </div>
       </div>
       <div className="flex flex-col md:mt-0 mt-5 text-[14px] md:items-end items-start gap-y-1">
-        <span className="text-dark text-[14px] font-normal">
-          Order ID: <span className="font-normal">{order_id}</span>
+        <span className="text-dark font-medium text-[14px]">{order_date}</span>
+        <span className="text-dark text-[14px] font-medium">
+          Order ID: <span className="font-medium">#{order_id}</span>
         </span>
-        <span className="text-dark text-[14px]">{order_date}</span>
+
         {!availability ? (
           <button
             disabled
-            className="whitespace-nowrap bg-dark rounded-sm text-white disabled:bg-[#E0E0E0] disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+            className="whitespace-nowrap rounded-full bg-dark text-xs text-white disabled:bg-[#E0E0E0] disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
           >
             <span>No action required</span>
           </button>
@@ -207,7 +208,7 @@ export default function OrdersCard({
                 <Link
                   href={`${base_uri}/payment/${order_id}?id_key=${session?.user_id}`}
                 >
-                  <button className="whitespace-nowrap bg-dark rounded-sm text-white disabled:bg-[#E0E0E0] disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                  <button className="whitespace-nowrap rounded-full bg-dark text-xs text-white disabled:bg-[#E0E0E0] disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                     <span>Pay for this artwork</span>
                   </button>
                 </Link>
@@ -218,7 +219,7 @@ export default function OrdersCard({
                 !delivery_confirmed &&
                 tracking_information.link !== "" && (
                   <Link href={tracking_information.link} target="_blank">
-                    <button className="whitespace-nowrap bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                    <button className="whitespace-nowrap rounded-full bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] text-xs w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                       <span>Track this order</span>
                     </button>
                   </Link>
@@ -230,7 +231,7 @@ export default function OrdersCard({
                     onClick={() =>
                       updateConfirmOrderDeliveryPopup(true, order_id)
                     }
-                    className="whitespace-nowrap bg-green-600 disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                    className="whitespace-nowrap rounded-full bg-green-600 disabled:bg-[#E0E0E0] disabled:text-[#858585] text-xs w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                   >
                     <span>Confirm order delivery</span>
                   </button>
@@ -243,7 +244,7 @@ export default function OrdersCard({
               tracking_information.link === "" && (
                 <button
                   disabled
-                  className="whitespace-nowrap bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                  className="whitespace-nowrap rounded-full bg-dark disabled:bg-[#E0E0E0] disabled:text-[#858585] text-xs w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                 >
                   <span>Awaiting tracking information</span>
                 </button>
@@ -253,7 +254,7 @@ export default function OrdersCard({
               <div className="relative flex items-center gap-x-1">
                 <button
                   disabled
-                  className="whitespace-nowrap bg-dark rounded-sm disabled:cursor-not-allowed w-full disabled:bg-gray-400 disabled:text-[#A1A1A1] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                  className="whitespace-nowrap rounded-full bg-dark text-xs disabled:cursor-not-allowed w-full disabled:bg-[#e0e0e0] disabled:text-[#A1A1A1] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                 >
                   <MdOutlineCallToAction />
                   <span>Order in review</span>
@@ -264,7 +265,7 @@ export default function OrdersCard({
               <div className="relative flex items-center gap-x-1">
                 <button
                   disabled
-                  className="whitespace-nowrap bg-dark rounded-sm disabled:cursor-not-allowed w-full disabled:bg-gray-400 disabled:text-[#A1A1A1] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                  className="whitespace-nowrap rounded-full bg-dark text-xs disabled:cursor-not-allowed w-full disabled:bg-[#e0e0e0] disabled:text-[#A1A1A1] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                 >
                   <GoIssueClosed />
                   <span>This order has been fulfilled</span>

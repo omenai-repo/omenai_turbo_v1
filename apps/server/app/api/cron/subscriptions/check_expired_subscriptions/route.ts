@@ -51,7 +51,7 @@ export async function GET() {
 
     await AccountGallery.updateMany(
       { email: { $in: emailsToUpdate } },
-      { $set: { subscription_active: false } }
+      { $set: { subscription_status: { type: null, active: false } } }
     );
 
     const user_token_data = expired_user_emails.map((doc) => {

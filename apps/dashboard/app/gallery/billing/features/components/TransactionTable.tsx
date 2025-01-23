@@ -2,7 +2,9 @@
 
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { fetchSubscriptionTransactions } from "@omenai/shared-services/transactions/fetchSubscriptionTransactions";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  LoadIcon,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { useQuery } from "@tanstack/react-query";
@@ -23,13 +25,13 @@ export default function TransactionTable() {
     refetchOnWindowFocus: false,
   });
   return (
-    <div className="flex flex-col gap-y-4 w-full rounded-md overflow-y-scroll overflow-x-hidden text-[14px] p-4 ring-1 ring-[#e0e0e0]">
+    <div className="flex flex-col gap-y-4 w-full rounded-[20px] overflow-y-scroll overflow-x-hidden text-[14px] p-4 ring-1 ring-[#e0e0e0]">
       <div className="flex justify-center">
         <h2 className="text-base font-bold">Transaction History</h2>
       </div>
       {isLoading ? (
         <div className="w-full h-full grid place-items-center">
-          <Load />
+          <LoadIcon />
         </div>
       ) : transactions.length > 0 ? (
         <div className="flex flex-col gap-y-5 mt-5">

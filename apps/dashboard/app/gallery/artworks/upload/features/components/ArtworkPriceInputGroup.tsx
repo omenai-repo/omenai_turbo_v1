@@ -5,9 +5,13 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { uploadArtworkPriceInputMocks } from "../mocks";
 import ArtworkSelectInput from "./ArtworkSelectInput";
 import ArtworkTextInput from "./ArtworkTextInput";
+import { useContext } from "react";
+import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { GallerySchemaTypes } from "@omenai/shared-types";
 
 export default function ArtworkPriceInputGroup() {
   const { artworkUploadData } = galleryArtworkUploadStore();
+  const { session } = useContext(SessionContext);
 
   const currency_symbol = getCurrencySymbol(artworkUploadData.currency);
   const usd_symbol = getCurrencySymbol("USD");
@@ -49,6 +53,13 @@ export default function ArtworkPriceInputGroup() {
             name={uploadArtworkPriceInputMocks[2].name}
             required={uploadArtworkPriceInputMocks[2].required}
             items={uploadArtworkPriceInputMocks[2].options}
+            disabled={
+              (session as GallerySchemaTypes).subscription_status.type ===
+                null ||
+              (
+                session as GallerySchemaTypes
+              ).subscription_status.type?.toLowerCase() === "basic"
+            }
           />
         </div>
       </div>

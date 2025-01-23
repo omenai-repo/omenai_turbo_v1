@@ -76,7 +76,7 @@ export const uploadArtworkDetailInputMocks = [
     type: "textarea",
     label: "Artwork description (optional)",
     required: false,
-    placeholder: "Describe the artwork",
+    placeholder: "Describe this art piece",
   },
 ];
 
@@ -143,7 +143,6 @@ export const uploadArtworkPriceInputMocks = [
       { name: "Polish Złoty (zł)", code: "PLN" },
       { name: "Qatari Riyal (﷼)", code: "QAR" },
       { name: "Rwandan Franc (Fr)", code: "RWF" },
-      { name: "West African CFA franc (CFA)", code: "XOF" }, // Removed duplicate entries, pre-filled code
       { name: "Singapore Dollar ($)", code: "SGD" }, // Caution: same symbol as USD
       { name: "South African Rand (R)", code: "ZAR" },
       { name: "South Korean Won (₩)", code: "KRW" },

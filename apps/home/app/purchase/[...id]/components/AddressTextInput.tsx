@@ -33,6 +33,7 @@ export default function AddressTextInput({
         placeholder={placeholder}
         required={required}
         onChange={handleInputChange}
+        name={name}
         defaultValue={defaultValue !== undefined ? defaultValue : ""}
         className="border-0 text-[14px] border-b ring-0 disabled:cursor-not-allowed disabled:text-dark/50 border-b-dark/20 w-full py-2 px-0 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-gray-200 "
       />

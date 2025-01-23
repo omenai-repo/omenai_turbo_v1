@@ -133,7 +133,7 @@ export default function Plan({
                         sub_data.plan_details.interval === tab &&
                         plan_action === null
                       }
-                      className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+                      className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                     >
                       {buttonText}
                     </button>

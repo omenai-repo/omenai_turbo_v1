@@ -13,7 +13,6 @@ export async function POST(request: Request) {
     await connectMongoDB();
     const { page, filters } = await request.json();
     const skip = (page - 1) * PAGE_SIZE;
-    console.log(page);
 
     // Helper function to fetch gallery IDs based on subscription plan
     const getGalleryIdsByPlan = async (plan: string | string[]) => {
@@ -93,7 +92,6 @@ export async function POST(request: Request) {
 
     // Calculate total adhering to restrictions
     const total = await Artworkuploads.countDocuments({
-      ...builtFilters,
       $or: [
         // Condition for artworks by artists
         { "role_access.role": "artist" },
@@ -104,6 +102,7 @@ export async function POST(request: Request) {
           author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
         },
       ],
+      ...builtFilters,
     });
 
     return NextResponse.json(

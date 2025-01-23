@@ -38,8 +38,6 @@ export default function PayoutDashboard() {
           checkIsStripeOnboarded(connectedAccountId),
         ]);
 
-        console.log(balance, table, response);
-
         // Check if all results are okay
         if (!balance?.isOk || !table?.isOk || !response?.isOk) {
           throw new Error("Something went wrong, Please refresh the page");

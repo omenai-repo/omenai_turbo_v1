@@ -9,6 +9,8 @@ import { VscEye } from "react-icons/vsc";
 import { ChangeEvent, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { CgTrack } from "react-icons/cg";
+import { RiProgress2Line } from "react-icons/ri";
 
 import {
   CreateOrderModelTypes,
@@ -94,54 +96,52 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
     order_accepted: string
   ) {
     if (
-      status === "pending" &&
-      status === "pending" &&
+      status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "pending" &&
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-full bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
           <MdInfo />
           Awaiting payment
         </span>
       );
     }
     if (
-      status === "pending" &&
-      status === "pending" &&
+      status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "completed" &&
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-full bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
           <GoIssueClosed />
           Payment completed
         </span>
       );
     }
     if (
-      status === "pending" &&
+      status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "completed" &&
       tracking_status !== ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-full bg-green-100 flex gap-x-1 items-center w-fit">
-          <GoIssueClosed />
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
+          <RiProgress2Line />
           Delivery in progress
         </span>
       );
     }
     if (
-      status === "pending" &&
+      status === "processing" &&
       order_accepted === "" &&
       payment_status === "pending" &&
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-full bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
           <MdInfo />
           Action required
         </span>
@@ -149,7 +149,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
     }
     if (status === "completed" && order_accepted === "declined") {
       return (
-        <span className="px-3 py-1 rounded-full bg-red-200 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-200 flex gap-x-1 items-center w-fit">
           <IoClose />
           Order declined by Gallery
         </span>
@@ -157,7 +157,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
     }
     if (status === "completed" && order_accepted === "accepted") {
       return (
-        <span className="px-3 py-1 rounded-full bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
           <GoIssueClosed />
           Order has been completed
         </span>
@@ -170,33 +170,33 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
       <div className="mt-1 mb-8 w-fit h-fit relative pl-1">
         <input
           type="text"
-          className="h-[40px] px-4 pl-10 w-[500px] border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-transparent focus:border-none focus:ring-1 focus:ring-dark/80 duration-300 focus:outline-none"
+          className="w-[500px] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
           placeholder="Search by order ID, artwork name or buyer name"
           onChange={handleSearchChange}
         />
-        <RiSearch2Line className="absolute left-5 top-4 text-[#858585]" />
+        <RiSearch2Line className="absolute right-5 top-4 text-[#858585]" />
       </div>
       <table className=" w-full table-auto border-separate border-spacing-y-2 overflow-scroll text-left md:overflow-auto">
-        <thead className="w-full rounded-lg bg-[#EFEFEF] text-base font-semibold text-white">
-          <tr className="px-1">
-            <th className="whitespace-nowrap  py-3 pl-3 text-[14px] font-normal text-dark">
+        <thead className="w-full rounded-full h-[40px] bg-[#EFEFEF] text-base font-semibold text-white">
+          <tr className="px-1 rounded-full">
+            <th className="whitespace-nowrap  py-3 pl-3 text-[14px] font-medium text-dark">
               Order ID
             </th>
-            <th className="whitespace-nowrap py-3 pl-1 text-[14px] font-normal text-dark">
+            <th className="whitespace-nowrap py-3 pl-1 text-[14px] font-medium text-dark">
               Artwork name
             </th>
-            <th className="whitespace-nowrap py-3 text-[14px] font-normal text-dark">
+            <th className="whitespace-nowrap py-3 text-[14px] font-medium text-dark">
               Order Date
             </th>
-            <th className="whitespace-nowrap px-2.5 py-3 text-[14px] font-normal text-dark">
+            <th className="whitespace-nowrap px-2.5 py-3 text-[14px] font-medium text-dark">
               Status
             </th>
             {tab === "completed" && (
-              <th className="whitespace-nowrap rounded-r-lg py-3 pl-1 text-[14px] font-normal text-dark">
+              <th className="whitespace-nowrap rounded-r-lg py-3 pl-1 text-[14px] font-medium text-dark">
                 Order completion date
               </th>
             )}
-            <th className="whitespace-nowrap rounded-r-lg py-3 pl-1 text-[14px] font-normal text-dark">
+            <th className="whitespace-nowrap rounded-r-lg py-3 pl-1 text-[14px] font-medium text-dark">
               Action
             </th>
           </tr>
@@ -217,7 +217,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                 <td className="px-1 py-4 text-[14px] font-normal text-dark">
                   {formatIntlDateTime(order.createdAt)}
                 </td>
-                {/* <td className="px-1 py-4 text-[14px] font-normal text-dark">
+                {/* <td className="px-1 py-4 text-[14px] font-medium text-dark">
                   {formatPrice(order.artwork_data.pricing.usd_price)}
                 </td> */}
                 <td className="px-2.5 py-4 text-[14px] font-normal text-dark">
@@ -229,17 +229,17 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                   )}
                 </td>
                 {order.status === "completed" && (
-                  <td className="px-1 py-4 text-[14px] font-normal text-dark">
+                  <td className="px-1 py-4 text-[14px] font-medium text-dark">
                     {formatIntlDateTime(order.updatedAt)}
                   </td>
                 )}
-                <td className="rounded-r-[8px] px-1 py-4 text-[14px] font-normal text-dark">
+                <td className="rounded-r-[8px] px-1 py-4 text-[14px] font-medium text-dark">
                   {order.payment_information.status === "pending" &&
                     order.status !== "completed" &&
                     order.order_accepted.status === "accepted" && (
                       <button
                         disabled
-                        className=" bg-dark rounded-sm disabled:bg-[#E0E0E0] text-[#858585] disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <span>No action required</span>
                       </button>
@@ -250,7 +250,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                     order.shipping_details.tracking.link !== "" && (
                       <button
                         disabled
-                        className=" bg-dark disabled:bg-[#E0E0E0] rounded-sm text-[#858585] disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <span>No action required</span>
                       </button>
@@ -265,9 +265,9 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                               order.order_id
                             )
                           }
-                          className=" bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                          className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                         >
-                          <MdOutlineCallToAction />
+                          <CgTrack />
                           <span>Upload tracking information</span>
                         </button>
                       </div>
@@ -285,7 +285,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                             order.artwork_data
                           )
                         }
-                        className=" bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <MdOutlineCallToAction />
                         <span>Take action</span>
@@ -304,7 +304,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                             order.artwork_data
                           )
                         }
-                        className=" bg-dark rounded-sm text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <VscEye />
                         <span>View</span>

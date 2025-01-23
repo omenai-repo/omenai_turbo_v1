@@ -44,7 +44,7 @@ export const InputCard = (props: Props) => {
           }
           className={`w-full ${labelText === "email" && "text-dark/40"} ${
             labelText === "gallery" && "text-dark/40"
-          } disabled:cursor-not-allowed border px-2 ring-0 text-[14px] text-dark border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-dark `}
+          } focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 `}
           {...rest}
         />
       </div>

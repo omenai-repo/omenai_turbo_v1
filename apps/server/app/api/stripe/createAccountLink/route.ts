@@ -1,11 +1,11 @@
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export async function POST(request: Request) {
   try {
-    const url = getApiUrl();
+    const url = dashboard_url();
     const { account } = await request.json();
 
     const accountLink = await stripe.accountLinks.create({

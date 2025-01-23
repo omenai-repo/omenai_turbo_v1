@@ -10,31 +10,10 @@ type ImageBoxProps = {
 };
 
 export default function ImageBox({ url, title }: ImageBoxProps) {
-  const [position, setPosition] = useState({ x: 50, y: 50 });
-  const [zoomScale, setZoomScale] = useState(1);
   const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const initialImageRender = getImageFileView(url, 1000);
-  const highResImageRender = getImageFileView(url, 1500);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!containerRef.current) return;
-    setZoomScale(2);
-
-    requestAnimationFrame(() => {
-      const rect = containerRef.current!.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      setPosition({ x, y });
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setPosition({ x: 50, y: 50 });
-    setZoomScale(1);
-  };
 
   return (
     <div
@@ -58,16 +37,7 @@ export default function ImageBox({ url, title }: ImageBoxProps) {
                 className={`h-auto w-full max-h-[800px] object-contain cursor-zoom-in transition-opacity duration-500 ${
                   loading ? "opacity-0" : "opacity-100"
                 }`}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
                 onLoad={() => setLoading(false)}
-                style={{
-                  transform: `scale(${zoomScale})`,
-                  transformOrigin: `${position.x}% ${position.y}%`,
-                  transition: "transform 0.4s ease, transform-origin 0.2s ease",
-                  overflow: "hidden",
-                  touchAction: "none",
-                }}
               />
             </div>
           </div>

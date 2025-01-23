@@ -57,7 +57,7 @@ export default function TokenBlock({ token }: TokenProps) {
           },
           className: "class",
         });
-        router.push("/login/");
+        router.push("/login/user");
       }
       setIsLoading();
     }
@@ -86,13 +86,13 @@ export default function TokenBlock({ token }: TokenProps) {
   return (
     <div className="text-center flex flex-col items-center">
       <div className="info_text my-[1rem]">
-        <h1 className="lg:text-xl md:text-lg text-sm">
+        <h1 className="lg:text-xl md:text-lg text-sm font-bold">
           Verify your email to kickstart your journey.
         </h1>
         <div className="flex flex-col gap-4 my-[2rem]">
-          <p className="leading-32 text-[14px]">
+          <p className="leading-32 font-medium text-[14px]">
             Thank you for choosing to join{" "}
-            <span className="text-dark font-normal">Omenai inc.</span> We extend
+            <span className="text-dark font-[900]">Omenai Inc.</span> We extend
             our warmest welcome and look forward to providing you with an
             enjoyable journey with us
           </p>
@@ -111,7 +111,7 @@ export default function TokenBlock({ token }: TokenProps) {
       >
         <input
           type="text"
-          className=" h-[40px] px-4 ring-1 ring-dark w-full md:w-1/3"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
           placeholder="Verification token"
           required
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -120,7 +120,7 @@ export default function TokenBlock({ token }: TokenProps) {
         />
         <button
           disabled={isLoading}
-          className=" disabled:bg-gray-400 grid place-items-center disabled:cursor-not-allowed h-[40px] px-4 bg-black text-white transition-all ease-linear duration-200"
+          className=" disabled:bg-gray-400 h-[40px] p-6 rounded-full w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal duration-200"
           type={"submit"}
         >
           {isLoading ? <LoadSmall /> : "Submit"}
@@ -137,7 +137,7 @@ export default function TokenBlock({ token }: TokenProps) {
         </button>
       </p>
 
-      <div className="contact my-[3rem] md:w-[50%] mx-auto leading-32">
+      <div className="contact font-medium my-[3rem] md:w-[50%] mx-auto leading-32">
         <p className="text-center text-[14px]">
           Feel free to contact us should you have any issues on{" "}
           <Link

@@ -90,9 +90,7 @@ export default function FormInput() {
             }
           } else {
             // todo: Redirect to verification page
-            router.replace(
-              `${auth_url}/verify/individual/${session.gallery_id}`
-            );
+            router.replace(`${auth_url}/verify/individual/${session.user_id}`);
           }
         } else {
           await handleSignout();

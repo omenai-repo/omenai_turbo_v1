@@ -65,7 +65,7 @@ export default function DeleteAccountConfirmationModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-normal mb-4 text-dark">
+      <h1 className="text-sm font-bold mb-4 text-dark">
         Confirm Account Deletion
       </h1>
       <div className="flex flex-col gap-4 font-normal text-base">
@@ -75,21 +75,21 @@ export default function DeleteAccountConfirmationModalForm() {
 
         <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3">
           <p className="font-bold flex items-center gap-x-2">
-            <IoWarning className="text-md text-[#FFA500]" />
-            <span className="text-[#FFA500] text-[14px]">Warning</span>
+            <IoWarning className="text-md text-red-600" />
+            <span className="text-red-600 text-[14px]">Warning</span>
           </p>
 
-          <p className="text-[14px]">
+          <p className="text-[14px] font-medium">
             Deleting your account will permanently erase all your data on the
             platform and prevent you from using any of the platform&apos;s
             features. <br />
             Please be advised that all artworks you have ordered and paid for
             prior to confirming this action will still be delivered to your
-            address. <br />
-            <strong className="text-red-600">
-              This action is not reversible!
-            </strong>
+            address and no refunds will be issued for outstanding orders.
           </p>
+          <strong className="text-red-600">
+            This action is not reversible!
+          </strong>
         </div>
       </div>
 
@@ -98,7 +98,7 @@ export default function DeleteAccountConfirmationModalForm() {
           disabled={loading}
           type="button"
           onClick={handleDeleteGalleryAccount}
-          className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-red-500 bg-red-600 duration-300 grid place-items-center"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, delete this account"}
         </button>

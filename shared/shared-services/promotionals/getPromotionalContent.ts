@@ -5,6 +5,7 @@ export async function getPromotionalData() {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/promotionals/getPromotionalData`, {
       method: "GET",
+      credentials: "include",
     });
 
     const result = await res.json();

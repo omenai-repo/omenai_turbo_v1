@@ -26,7 +26,8 @@ export const fetchCuratedArtworks = async (
       isOk: res.ok,
       message: result.message,
       data: result.data,
-      pageCount: result.pageCount,
+      count: result.pageCount,
+      total: result.total,
     };
   } catch (error: any) {
     console.log(error);

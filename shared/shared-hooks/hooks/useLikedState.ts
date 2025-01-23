@@ -35,6 +35,8 @@ function useLikedState(
         queryClient.invalidateQueries({ queryKey: ["latest"] });
         queryClient.invalidateQueries({ queryKey: ["trending"] });
         queryClient.invalidateQueries({ queryKey: ["curated"] });
+        queryClient.invalidateQueries({ queryKey: ["fetch_saved_artworks"] });
+        queryClient.invalidateQueries({ queryKey: ["get_paginated_artworks"] });
       } else {
         setLikedState({ count: initialImpressions, ids: initialLikeIds });
       }
@@ -42,7 +44,7 @@ function useLikedState(
   });
 
   // handle onClick like button
-  const handleLike = async (state: any) => {
+  const handleLike = async (state: boolean) => {
     // Pop up login modal
     // TODO: Create login modal
 

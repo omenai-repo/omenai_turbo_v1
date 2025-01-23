@@ -39,33 +39,37 @@ export default function OrderActionModalForm() {
               src={image_url}
               alt={galleryOrderActionModalData.artwork.title}
               height={100}
-              width={80}
-              className="object-top object-contain"
+              width={100}
+              className="object-top object-contain w-[100px] h-[100px] rounded-[10px]"
             />
           </div>
           <div className="flex flex-col">
-            <p className="text-[#858585]">Artwork name</p>
-            <p>{galleryOrderActionModalData.artwork.title}</p>
+            <p className="text-dark font-light">Artwork name</p>
+            <p className="font-semibold">
+              {galleryOrderActionModalData.artwork.title}
+            </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-[#858585]">Artist name</p>
-            <p>{galleryOrderActionModalData.artwork.artist}</p>
+            <p className="text-dark font-light">Artist name</p>
+            <p className="font-semibold">
+              {galleryOrderActionModalData.artwork.artist}
+            </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-[#858585]">Price</p>
-            <p>
+            <p className="text-dark font-light">Price</p>
+            <p className="font-semibold">
               {formatPrice(
                 galleryOrderActionModalData.artwork.pricing.usd_price
               )}
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-[#858585]">Buyer name</p>
-            <p>{galleryOrderActionModalData.buyer}</p>
+            <p className="text-dark font-light">Buyer name</p>
+            <p className="font-semibold">{galleryOrderActionModalData.buyer}</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-[#858585]">Buyer address</p>
-            <p>
+            <p className="text-dark font-light">Buyer address</p>
+            <p className="font-semibold">
               {galleryOrderActionModalData.shipping_address.address_line},{" "}
               {galleryOrderActionModalData.shipping_address.city},{" "}
               {galleryOrderActionModalData.shipping_address.state},{" "}
@@ -89,7 +93,7 @@ export default function OrderActionModalForm() {
         <div className="my-4 flex items-center justify-center gap-x-2 w-full text-[13px]">
           <button
             onClick={handleDeclineOrderRequest}
-            className="border border-[#E0E0E0] h-[40px] px-4 w-full"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-white ring-1 ring-[#e0e0e0] text-dark text-[14px] font-normal"
           >
             Decline Order
           </button>
@@ -99,7 +103,7 @@ export default function OrderActionModalForm() {
           >
             <button
               onClick={routeToQuote}
-              className="bg-dark h-[40px] px-4 w-full text-white"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal whitespace-nowrap"
             >
               Provide shipping quote
             </button>

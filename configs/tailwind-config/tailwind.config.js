@@ -50,7 +50,7 @@ module.exports = {
         "3xl": "1560px",
       },
       fontFamily: {
-        sans: ["var(--font-dm_sans)"],
+        sans: ["var(--font-sans-serif)"],
       },
 
       backgroundImage: {

@@ -21,6 +21,7 @@ export async function fetchArtworksByCriteria(
       data: result.data,
       page: result.page,
       pageCount: result.pageCount,
+      total: result.total,
     };
   } catch (error: any) {
     console.log(error);

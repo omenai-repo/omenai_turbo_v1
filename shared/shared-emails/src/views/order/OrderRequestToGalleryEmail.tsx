@@ -34,7 +34,7 @@ const OrderRequestToGalleryMail = (
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
               src={
-                "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/66d988de000cf7f960c3/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
+                "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/679292dc001c0e14f322/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
               }
               width="120"
               height="20"
@@ -64,12 +64,12 @@ const OrderRequestToGalleryMail = (
             <Text className="text-black text-[14px] leading-[24px]">
               As a valued member of our platform, we want to ensure that you are
               promptly informed of any potential sales opportunities. Therefore,
-              we kindly request that you log in to your dashboard to
-              review and take necessary actions on this order request.
+              we kindly request that you log in to your dashboard to review and
+              take necessary actions on this order request.
             </Text>
             <div className="w-full grid place-items-center text-center">
               <Link
-                className="w-fit bg-black text-white text-center px-5 cursor-pointer py-3"
+                className="w-fit bg-dark text-white text-center px-5 cursor-pointer py-3"
                 href={`${url}/gallery/orders`}
               >
                 View order on your dashboard

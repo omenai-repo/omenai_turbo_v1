@@ -4,16 +4,18 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@omenai/typescript-config": "*",
-    "@omenai/url-config": "*",
-    "@omenai/shared-types": "*",
-    "@omenai/shared-lib": "*",
-    "@omenai/shared-utils": "*",
     "@omenai/appwrite-config": "*",
+    "@omenai/shared-lib": "*",
+    "@omenai/shared-types": "*",
+    "@omenai/shared-utils": "*",
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-ui-components": "*",
+    "@omenai/url-config": "*",
     "react-email": "3.0.2"
   },
   "dependencies": {
     "@react-email/components": "0.0.28",
+    "dotenv": "^16.4.7",
     "resend": "^4.0.1"
   }
 }

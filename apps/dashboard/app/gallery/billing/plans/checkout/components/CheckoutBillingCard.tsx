@@ -82,7 +82,6 @@ export default function CheckoutBillingCard({
       const { data } = tokenize_card;
       if (data.status === "error") setError(data.message);
       else {
-        console.log(data);
         set_transaction_id(data.data.id);
         router.replace(`${url}/gallery/billing/plans/checkout/verification`);
       }
@@ -136,13 +135,13 @@ export default function CheckoutBillingCard({
   return (
     <>
       <div className="flex justify-between items-center my-5">
-        <h1 className="text-[14px] font-normal">Payment Method</h1>
+        <h1 className="text-[14px] font-bold">Payment Method</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
         </p>
       </div>
-      <div className="rounded-sm ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
+      <div className="rounded-[20px] ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
         <div className="w-full flex justify-start relative z-10 my-2">
           <p className="text-dark text-[14px] font-semibold">
             Billing card details
@@ -177,7 +176,7 @@ export default function CheckoutBillingCard({
             }
             className="w-full flex justify-start mt-5 mb-2"
           >
-            <button className="flex gap-2 items-center disabled:cursor-not-allowed disabled:bg-dark/20 place-items-center rounded-sm text-[13px] bg-dark h-[40px] px-4 text-white  hover:bg-dark/80 duration-300">
+            <button className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal">
               <span>Change card</span>
             </button>
           </Link>
@@ -190,7 +189,7 @@ export default function CheckoutBillingCard({
         <button
           disabled={migrationLoading}
           onClick={handleMigrateToPlan}
-          className="flex gap-2 items-center w-full my-5 justify-center disabled:cursor-not-allowed disabled:bg-dark/20 place-items-center rounded-sm text-[13px] bg-dark h-[40px] px-4 text-white hover:bg-dark/90"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal my-5"
         >
           {migrationLoading ? (
             <LoadSmall />
@@ -204,7 +203,7 @@ export default function CheckoutBillingCard({
         <button
           onClick={handlePayNow}
           disabled={loading}
-          className="flex gap-2 items-center w-full my-5 justify-center disabled:cursor-not-allowed disabled:bg-dark/20 place-items-center rounded-sm text-[13px] bg-dark h-[40px] px-4 text-white hover:bg-dark/90"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {loading ? (
             <LoadSmall />

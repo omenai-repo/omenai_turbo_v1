@@ -1,6 +1,14 @@
-export default function HighlightCardIcon({ icon }: { icon: React.ReactNode }) {
+export default function HighlightCardIcon({
+  icon,
+  color,
+}: {
+  icon: React.ReactNode;
+  color: string;
+}) {
   return (
-    <div className="p-2 rounded-md bg-dark text-white grid place-items-center">
+    <div
+      className={`p-4 rounded-[40%] ${color} text-white grid place-items-center`}
+    >
       {icon}
     </div>
   );

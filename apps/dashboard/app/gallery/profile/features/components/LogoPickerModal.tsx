@@ -167,7 +167,6 @@ export default function LogoPickerModal() {
                           d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                         />
                       </svg>
-                      Upload logo
                     </button>
                   )}
 
@@ -186,7 +185,7 @@ export default function LogoPickerModal() {
               <div className=" w-full px-5 py-8 text-[14px]">
                 <div className="w-full items-center gap-x-2 flex">
                   <button
-                    className="w-full disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-dark rounded-sm text-[14px] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                    className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                     onClick={() => updateModal(false)}
                   >
                     Cancel
@@ -194,7 +193,7 @@ export default function LogoPickerModal() {
                   <button
                     onClick={handleLogoUpdate}
                     disabled={loading || !logo}
-                    className="w-full disabled:cursor-not-allowed whitespace-nowrap disabled:bg-[#E0E0E0] bg-dark rounded-sm text-[14px] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                    className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                   >
                     {loading ? <LoadSmall /> : "Upload logo"}
                   </button>

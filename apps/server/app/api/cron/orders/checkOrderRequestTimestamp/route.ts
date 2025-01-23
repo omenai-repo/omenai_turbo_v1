@@ -76,7 +76,6 @@ export async function GET() {
       }, // Ensure not overlapping with 96-hour orders
       "order_accepted.status": "", // Ensure status is empty
     });
-    console.log(orders72);
     if (orders72.length > 0) {
       // Send warning emails to galleries
       const email_payload = orders72.map((order) => {

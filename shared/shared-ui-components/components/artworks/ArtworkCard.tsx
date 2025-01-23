@@ -8,6 +8,7 @@ import LikeComponent from "../likes/LikeComponent";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 import Image from "next/image";
+import { base_url } from "@omenai/url-config/src/config";
 
 export default function ArtworkCard({
   image,
@@ -41,11 +42,12 @@ export default function ArtworkCard({
   trending?: boolean;
 }) {
   const image_href = getImageFileView(image, 500);
+  const base_uri = base_url();
   return (
     <div className="my-2 max-w-full p-0 max-h-full rounded-[20px]">
       <div className="flex flex-col w-full h-full justify-end">
         <div className="relative w-full artContainer">
-          <Link href={`/artwork/${name}`} className="relative">
+          <Link href={`${base_uri}/artwork/${name}`} className="relative">
             <Image
               src={image_href}
               alt={name + " image"}
@@ -55,8 +57,20 @@ export default function ArtworkCard({
               className="w-full rounded-[20px] h-full aspect-auto object-cover object-center cursor-pointer artImage"
             />
           </Link>
-          <div className="bg-[#FFFFFF] py-[5px] rounded-[24px] text-[14px] absolute px-[14px] top-[1.5rem] left-[1rem]">
-            {medium}
+          <div className=" absolute px-[14px] top-[1.5rem] left-[1rem]">
+            {isDashboard ? (
+              <Link href={`/gallery/artworks/edit?id=${name}`}>
+                <button
+                  className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-[14px] font-normal cursor-pointer`}
+                >
+                  Edit artwork
+                </button>
+              </Link>
+            ) : (
+              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] text-[14px]">
+                {medium}
+              </div>
+            )}
           </div>
 
           <div className="absolute top-[20px] right-[12px] flex items-center gap-1">
@@ -103,7 +117,7 @@ export default function ArtworkCard({
                   {/* Purchase Button */}
                   {!availability ? null : (
                     <Link
-                      href={`/artwork/${name}`}
+                      href={`${base_uri}/artwork/${name}`}
                       className="px-4 py-[5px] duration-300 hover:bg-dark hover:text-white rounded-full bg-white text-black text-[14px] font-medium shadow"
                     >
                       {pricing?.price && pricing.shouldShowPrice === "Yes"

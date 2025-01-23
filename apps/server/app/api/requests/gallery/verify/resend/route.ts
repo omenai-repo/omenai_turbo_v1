@@ -26,15 +26,14 @@ export async function POST(request: Request) {
 
     const { author } = await request.json();
 
-    const { admin, email, verified } = await AccountGallery.findOne(
+    const gallery = await AccountGallery.findOne(
       { gallery_id: author },
       "admin email verified"
     ).exec();
 
-    if (!admin || !email)
-      throw new NotFoundError("Unable to authenticate account");
+    if (!gallery) throw new NotFoundError("Unable to authenticate account");
 
-    if (verified)
+    if (gallery.verified)
       throw new ForbiddenError(
         "This action is not permitted. Account already verified"
       );
@@ -60,8 +59,8 @@ export async function POST(request: Request) {
       throw new ServerError("A server error has occured, please try again");
 
     await sendGalleryMail({
-      name: admin,
-      email,
+      name: gallery.admin,
+      email: gallery.email,
       token: email_token,
     });
 
@@ -73,6 +72,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.log(error);
 
     return NextResponse.json(
       { message: error_response?.message },

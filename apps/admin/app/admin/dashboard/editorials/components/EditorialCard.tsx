@@ -19,7 +19,6 @@ export default function EditorialCard({
   date: Date | null;
   documentId: string;
 }) {
-  console.log(cover);
   const url = getEditorialCoverFileView(cover);
 
   const { setShowDeleteEditorialModal } = adminModals();
@@ -32,7 +31,7 @@ export default function EditorialCard({
           alt={title}
           className="w-full object-cover aspect-square object-top"
         />
-        <div className="h-full w-full absolute top-0 left-0 hover:bg-black/30 ease-in duration-300 flex justify-end p-[20px] group/overlay overflow-hidden">
+        <div className="h-full w-full absolute top-0 left-0 hover:bg-dark/30 ease-in duration-300 flex justify-end p-[20px] group/overlay overflow-hidden">
           <div
             onClick={() => setShowDeleteEditorialModal(true, documentId)}
             className="opacity-0 group-hover/overlay:opacity-100 group-hover/overlay:translate-x-0 flex ease-in duration-300 translate-x-10  items-center text-[14px] text-red-600 gap-2 px-3 py-2 rounded-full bg-gray-100 h-fit cursor-pointer"

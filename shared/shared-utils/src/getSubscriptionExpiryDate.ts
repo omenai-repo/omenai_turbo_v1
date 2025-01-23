@@ -16,6 +16,3 @@ export function getSubscriptionExpiryDate(
 const currentDate = new Date();
 const monthlyExpiry = getSubscriptionExpiryDate("monthly");
 const yearlyExpiry = getSubscriptionExpiryDate("yearly");
-
-console.log(monthlyExpiry); // Output: e.g., 2024-09-14T12:20:17.000+01:00
-console.log(yearlyExpiry); // Output: e.g., 2025-08-14T12:20:17.000+01:00

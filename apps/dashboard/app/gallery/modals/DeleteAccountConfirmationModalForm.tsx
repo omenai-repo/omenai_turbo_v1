@@ -5,7 +5,7 @@ import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { deleteAccount } from "@omenai/shared-services/requests/deleteGalleryAccount";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { IoWarning } from "react-icons/io5";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 export default function DeleteAccountConfirmationModalForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const { session } = useContext(SessionContext);
-
+  const router = useRouter();
   const auth_url = auth_uri();
   async function handleSignout() {
     toast.info("Signing you out...");
@@ -77,7 +77,7 @@ export default function DeleteAccountConfirmationModalForm() {
             <span className="text-[#FFA500] text-[14px]">Warning</span>
           </p>
 
-          <p>
+          <p className="text-[14px] text-dark">
             Deleting your account will permanently erase all your uploaded
             artwork and prevent you from using any of the platform&apos;s
             features.{" "}
@@ -93,7 +93,7 @@ export default function DeleteAccountConfirmationModalForm() {
           disabled={loading}
           type="button"
           onClick={handleDeleteGalleryAccount}
-          className="h-[40px] px-4 w-full text-base text-white disabled:cursor-not-allowed disabled:bg-[#E0E0E0] hover:bg-red-500 bg-red-600 duration-300 grid place-items-center"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, delete this account"}
         </button>

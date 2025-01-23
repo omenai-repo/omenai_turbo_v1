@@ -10,10 +10,8 @@ const NavigationChipTabs = () => {
   //   const [selected, setSelected] = useState(tabs[0]);
   const { selected, setSelected } = UserDashboardNavigationStore();
 
-  const pathname = usePathname().split("/");
-
   return (
-    <div className=" pb-[0.90rem] pt-6 grid grid-cols-4 items-center w-full border-b border-b-dark/10">
+    <div className=" pb-[0.90rem] pt-6 grid grid-cols-4 items-center w-full border-b  border-b-dark/10">
       {tabs.map((tab, index) => (
         <Chip
           text={tab}
@@ -41,7 +39,7 @@ const Chip = ({
       onClick={() => setSelectedTab(text.toLowerCase())}
       className={`hover:text-dark hover:underline text-[14px] font-normal transition-colors py-0.5 relative text-center`}
     >
-      <span className="relative z-10">{text}</span>
+      <span className="relative z-10 font-medium">{text}</span>
       {selectedTab && (
         <motion.span
           layoutId="pill-tab"

@@ -67,7 +67,10 @@ export type GallerySchemaTypes = {
   verified: boolean;
   role: AccessRoleTypes;
   logo?: string;
-  subscription_active: boolean;
+  subscription_status: {
+    type: "basic" | "premium" | "pro" | null;
+    active: boolean;
+  };
   status: "active" | "blocked";
   connected_account_id: string | null;
 };

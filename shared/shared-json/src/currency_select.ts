@@ -1,7 +1,6 @@
 export const currencies = [
   { name: "Australian Dollar (A$)", code: "AUD" },
   { name: "Euro (€)", code: "EUR" }, // Removed duplicate entries, pre-filled code
-  { name: "West African CFA franc (CFA)", code: "XOF" }, // Removed duplicate entries, pre-filled code
   { name: "Botswana Pula (P)", code: "BWP" },
   { name: "Canadian Dollar (CA$)", code: "CAD" },
   { name: "Croatian Kuna (kn)", code: "HRK" },

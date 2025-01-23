@@ -72,7 +72,10 @@ export default function ArtworkTextInput({
         type === "textarea" && "lg:last:col-span-4 md:last:col-span-2"
       } `}
     >
-      <label htmlFor={name} className="text-[#858585] font-normal text-[14px]">
+      <label
+        htmlFor={name}
+        className="text-dark whitespace-nowrap font-normal text-[14px]"
+      >
         {label}
       </label>
       {type === "text" && (
@@ -84,7 +87,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           defaultValue={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 text-[14px] text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
+          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
         />
       )}
       {type === "textarea" && (
@@ -92,9 +95,9 @@ export default function ArtworkTextInput({
           name={name}
           required={required}
           placeholder={placeholder}
-          rows={2}
+          rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 text-[14px] text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[14px] placeholder:text-[#858585] "
+          className="border px-2 ring-0 text-[14px] rounded-[10px] text-[#858585] disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[#858585] placeholder:text-xs"
         />
       )}
       {errorList.length > 0 &&

@@ -1,6 +1,6 @@
 "use client";
 
-import { DotLoader, PulseLoader } from "react-spinners";
+import { ClipLoader, DotLoader, PulseLoader } from "react-spinners";
 
 export default function Load() {
   return (
@@ -14,6 +14,14 @@ export const LoadSmall = () => {
   return (
     <div className="w-fit">
       <PulseLoader size={5} />
+    </div>
+  );
+};
+
+export const LoadIcon = () => {
+  return (
+    <div className="w-fit">
+      <ClipLoader size={30} />
     </div>
   );
 };

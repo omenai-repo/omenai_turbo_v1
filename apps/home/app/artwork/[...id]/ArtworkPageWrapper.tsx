@@ -24,7 +24,6 @@ export default function ArtworkPageWrapper({
     queryFn: async () => {
       const artworkDetails = await fetchSingleArtwork(param);
       if (!artworkDetails?.isOk) {
-        console.log(artworkDetails);
       } else {
         return artworkDetails.data;
       }

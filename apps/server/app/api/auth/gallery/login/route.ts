@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       name,
       role,
       logo,
-      subscription_active,
+      subscription_status,
       connected_account_id,
       status,
     } = user;
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       name,
       role,
       logo,
-      subscription_active,
+      subscription_status,
       connected_account_id,
       email: user.email,
       status,

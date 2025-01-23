@@ -10,14 +10,16 @@ export default function OverviewComponentCard({
   id?: string;
 }) {
   return (
-    <div
-      id={id}
-      className={` ${
-        fullWidth ? "px-1 py-2" : "p-6"
-      } w-full min-h-[400px] rounded-lg ring-1 ring-[#eeeeee] mt-5 relative bg-white`}
-    >
-      <h4 className="text-dark text-base font-normal mb-5">{title}</h4>
-      {children}
+    <div className="pt-5 pb-2 mb-8">
+      <h4 className="text-dark text-base font-semibold mb-5">{title}</h4>
+      <div
+        id={id}
+        className={` ${
+          fullWidth ? "px-1 py-2" : "px-5 py-8"
+        } w-full min-h-[300px] grid place-items-center rounded-lg ring-1 ring-[#eeeeee] mt-5 relative bg-white`}
+      >
+        {children}
+      </div>
     </div>
   );
 }
