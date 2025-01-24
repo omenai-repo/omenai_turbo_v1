@@ -8,23 +8,24 @@ export default function OrderCompletedPage() {
   return (
     <>
       <DesktopNavbar />
-      <div className="w-full h-[95vh] grid place-items-center">
-        <div className="p-6 grid text-center place-items-center space-y-4">
-          <p className="text-base">
+      <div className="w-full h-[80vh] grid place-items-center">
+        <div className="p-6 grid text-center place-items-center space-y-6">
+          <Image
+              height={100}
+              width={100}
+              src={"/images/done.png"}
+              alt="success-icon"
+          />
+          <p className="text-[14px] font-medium my-4">
             Your payment has been completed successfuly. Your order will be on
             it&apos;s way to you shortly
           </p>
-          <Image
-            height={100}
-            width={100}
-            src={"/images/done.png"}
-            alt="success-icon"
-          />
 
-          <div className="flex space-x-2 items-center">
+
+          <div className="flex sm:flex-row flex-col gap-2 justify-center items-center">
             <Link
               href="/"
-              className="flex items-center whitespace-nowrap justify-center space-x-2 h-[40px] px-4 w-full bg-dark text-white cursor-pointer mt-[50px] transition duration-150"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               title="Return Home"
             >
               <svg
@@ -39,11 +40,11 @@ export default function OrderCompletedPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px]">Return Home</span>
+              <span className="text-[14px] whitespace-nowrap">Return Home</span>
             </Link>
             <Link
               href={`${dashboard_uri}/user/orders`}
-              className="flex items-center whitespace-nowrap justify-center space-x-2 h-[40px] px-4 w-full bg-dark text-white cursor-pointer mt-[50px] transition duration-150"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               title="Return Home"
             >
               <svg
@@ -58,7 +59,8 @@ export default function OrderCompletedPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px]">Return to dashboard</span>
+              <span className="text-[14px] whitespace-nowrap
+              ">Return to dashboard</span>
             </Link>
           </div>
         </div>

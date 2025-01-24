@@ -70,7 +70,7 @@ export default function ComponentWrapper({
       {isLoggedIn ? (
         <>
           <DesktopNavbar />
-          <div className="">
+          <div className="w-full h-[80vh] grid place-items-center ">
             <OrderDetails order={data!.order} lock_status={data!.locked} />
           </div>
         </>

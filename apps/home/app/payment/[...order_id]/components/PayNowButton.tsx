@@ -111,7 +111,7 @@ export default function PayNowButton({
             <button
               onClick={handleClickPayNow}
               disabled={lock_status || loading}
-              className="w-fit h-[40px] px-4 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-dark disabled:border-dark bg-dark text-white text-[14px] hover:bg-white hover:text-dark disabled:hover:border-none hover:border-dark hover:border duration-150 grid place-items-center group"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
             >
               {loading ? <LoadSmall /> : "Proceed to payment"}
             </button>
@@ -121,18 +121,11 @@ export default function PayNowButton({
           )}
         </div>
 
-        <p className="font-normal text-red-600 lg:w-1/2 mt-6 leading-6">
+        <p className="font-normal text-red-600 w-full mt-6 leading-6">
           <span className="text-base font-bold uppercase underline">
             Please note:
           </span>
-          <br /> To safeguard your purchase and prevent accidental duplicate
-          transactions for this artwork, we utilize a secure queuing system.
-          This system allows only one buyer to finalize payment at a time.
-          <br />
-          In the rare instance you encounter an issue accessing the payment
-          portal, you can refresh your page shortly. We&apos;ll inform you of
-          the artwork&apos;s availability if the purchase process hasn&apos;t
-          been completed by another buyer.
+          <br /> To protect your purchase and prevent duplicate transactions, we use a secure queuing system, allowing one buyer to complete payment at a time. If you experience issues accessing the payment portal, refresh the page. We&apos;ll notify you if the artwork is still available.
         </p>
       </div>
     </div>

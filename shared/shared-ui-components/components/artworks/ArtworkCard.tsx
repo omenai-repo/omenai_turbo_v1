@@ -61,13 +61,13 @@ export default function ArtworkCard({
             {isDashboard ? (
               <Link href={`/gallery/artworks/edit?id=${name}`}>
                 <button
-                  className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-[14px] font-normal cursor-pointer`}
+                  className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-[14px] font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
                 >
                   Edit artwork
                 </button>
               </Link>
             ) : (
-              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] text-[14px]">
+              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] text-[14px] ring ring-[#e0e0e0]/50">
                 {medium}
               </div>
             )}
@@ -118,7 +118,7 @@ export default function ArtworkCard({
                   {!availability ? null : (
                     <Link
                       href={`${base_uri}/artwork/${name}`}
-                      className="px-4 py-[5px] duration-300 hover:bg-dark hover:text-white rounded-full bg-white text-black text-[14px] font-medium shadow"
+                      className="px-4 py-[5px] duration-300 ring ring-[#e0e0e0]/50 hover:bg-dark hover:text-white rounded-full bg-white text-black text-[14px] font-medium shadow"
                     >
                       {pricing?.price && pricing.shouldShowPrice === "Yes"
                         ? "Purchase"

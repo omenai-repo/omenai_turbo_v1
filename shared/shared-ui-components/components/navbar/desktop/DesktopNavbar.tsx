@@ -12,9 +12,8 @@ import { IndividualLogo } from "../../logo/Logo";
 
 const navbarlinks = [
   { text: "Buy artworks", link: "/catalog" },
-  { text: "Omenai shop", link: "https://omenai.shop" },
+  { text: "Shop", link: "https://omenai.shop" },
   { text: "Editorials", link: "/" },
-  { text: "Pricing", link: "/gallery/pricing" },
 ];
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();
@@ -22,7 +21,8 @@ export default function DesktopNavbar() {
   const { session } = useContext(SessionContext);
   return (
     <>
-      <div className="flex justify-between sticky top-0 z-30 bg-white pb-5 pt-8">
+      <MobileNavbar />
+      <div className="flex justify-between items-center sticky top-0 z-30 bg-white pb-5 pt-8">
         <div>
           <IndividualLogo />
         </div>
@@ -38,7 +38,7 @@ export default function DesktopNavbar() {
             );
           })}
         </ul>
-        <MobileNavbar />
+
         <div className="flex items-center space-x-4">
           {session && session.role === "user" && (
             <LoggedInUser user={session.name} />

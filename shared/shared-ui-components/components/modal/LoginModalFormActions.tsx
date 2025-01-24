@@ -20,7 +20,7 @@ export default function LoginModalFormActions({
             Forgot password?{" "}
             <span
               onClick={() => toggleLoginModalRecoveryForm(true)}
-              className="text-primary cursor-pointer font-normal underline"
+              className="text-dark cursor-pointer font-bold underline"
             >
               Let us help
             </span>
@@ -30,18 +30,18 @@ export default function LoginModalFormActions({
         <button
           type="submit"
           disabled={loading}
-          className=" disabled:cursor-not-allowed grid disabled:bg-white disabled:border disabled:border-dark place-items-center w-full h-[40px] px-4 bg-dark hover:bg-dark/70 rounded-sm text-white text-[14px] "
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {!loading ? "Login to your account" : <LoadSmall />}
         </button>
       </div>
       <div className="w-full flex justify-center my-2">
-        <p className="text-[14px] text-dark/80 font-normal">
+        <p className="text-[14px] text-dark/80 font-medium">
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>
             <Link
               href={`${auth_url}/register/user`}
-              className="text-dark underline font-normal"
+              className="text-dark underline font-bold"
             >
               Create one
             </Link>

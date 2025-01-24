@@ -109,8 +109,8 @@ export default function LoginModalForm() {
     <>
       <div className="flex flex-col items-center justify-center gap-2 my-4">
         <IndividualLogo />
-        <h1 className="text-[14px] text-dark font-normal mt-3 mb-5">
-          Login to your individual account
+        <h1 className="text-[14px] text-dark font-bold mt-3 mb-5">
+          Login to your user account
         </h1>
       </div>
 
@@ -118,7 +118,7 @@ export default function LoginModalForm() {
         className="container flex flex-col gap-[1rem] my-4"
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-2">
           <label htmlFor={"email"} className="text-[14px]">
             Email address
           </label>
@@ -126,12 +126,13 @@ export default function LoginModalForm() {
             type="email"
             name="email"
             value={form.email}
-            className="focus:ring-0 border-0 px-0 text-[14px] border-b-[1px] border-b-dark/30 outline-none focus:outline-none focus:border-b-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-1"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
             required
+            placeholder="e.g john@doe.examplemail.com"
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-2">
           <label htmlFor={"email"} className="text-[14px]">
             Password
           </label>
@@ -139,7 +140,8 @@ export default function LoginModalForm() {
             type="password"
             name="password"
             value={form.password}
-            className="focus:ring-0 border-0 px-0 border-b-[1px] text-[14px] border-b-dark/30 outline-none focus:outline-none focus:border-b-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-1"
+            placeholder="********"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-sx"
             required
             onChange={handleChange}
           />
