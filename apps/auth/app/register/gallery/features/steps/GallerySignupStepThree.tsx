@@ -2,12 +2,15 @@ import React, { ChangeEvent } from "react";
 import Input from "../form/components/Input";
 import { gallery_signup_step_three } from "../../../../mocks/input/gallery/inputMock";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
-import Action from "../actions/Action";
 import ActionButtons from "../actions/ActionButtons";
 
 export default function GallerySignUpStepThree() {
-  const { currentGallerySignupFormIndex, updateGallerySignupData } =
-    useGalleryAuthStore();
+  const {
+    currentGallerySignupFormIndex,
+    updateGallerySignupData,
+    gallerySignupData,
+    isFieldDirty,
+  } = useGalleryAuthStore();
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     let fieldName = e.target.name;
     updateGallerySignupData(fieldName, e.target.value);
@@ -25,6 +28,10 @@ export default function GallerySignUpStepThree() {
               buttonText="Continue"
               labelText={form_step.labelText}
               onChange={handleChange}
+              disabled={
+                form_step.labelText === "confirmPassword" &&
+                isFieldDirty.password
+              }
             />
           </div>
         );

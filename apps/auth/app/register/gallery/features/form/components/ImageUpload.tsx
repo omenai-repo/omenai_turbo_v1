@@ -6,14 +6,14 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { MdError, MdOutlineArrowForward } from "react-icons/md";
 import { BsImage } from "react-icons/bs";
+import { toast } from "sonner";
 
 export default function ImageUpload() {
   const {
     gallerySignupData,
     currentGallerySignupFormIndex,
-    incrementCurrentGallerySignupFormIndex,
-    decrementCurrentGallerySignupFormIndex,
     updateGallerySignupData,
+    setIsFieldDirty,
   } = useGalleryAuthStore();
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const [errorList, setErrorList] = useState<string[]>([]);
@@ -21,30 +21,6 @@ export default function ImageUpload() {
     (gallerySignupData as Record<string, any>)["logo"]
   );
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
-
-  const handleClickPrev = () => {
-    decrementCurrentGallerySignupFormIndex();
-  };
-
-  const handleClick = () => {
-    if ((gallerySignupData as Record<string, any>)["logo"] === null) {
-      setErrorList(["Please upload your Gallery logo"]);
-      return;
-    }
-
-    const type = (gallerySignupData as Record<string, any>)["logo"].type.split(
-      "/"
-    );
-
-    if (!acceptedFileTypes.includes(type[1])) {
-      setErrorList([
-        "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
-      ]);
-    } else {
-      setErrorList([]);
-      incrementCurrentGallerySignupFormIndex();
-    }
-  };
 
   return (
     <AnimatePresence key={`${currentGallerySignupFormIndex}-gallery`}>
@@ -93,9 +69,25 @@ export default function ImageUpload() {
             onChange={(e) => {
               // Check if input is actaully an image
               if (!e.target.files![0].type.startsWith("image/")) return;
-              setCover(e.target.files![0]);
-              updateGallerySignupData("logo", e.target.files![0]);
-              setErrorList([]);
+              const type = e.target.files![0].type.split("/");
+
+              if (!acceptedFileTypes.includes(type[1])) {
+                toast.error("Error notification", {
+                  description:
+                    "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
+                  style: {
+                    background: "red",
+                    color: "white",
+                  },
+                  className: "class",
+                });
+                return;
+              } else {
+                setCover(e.target.files![0]);
+                updateGallerySignupData("logo", e.target.files![0]);
+                setIsFieldDirty("logo", false);
+                setErrorList([]);
+              }
             }}
           />
         </div>

@@ -23,9 +23,8 @@ export default function SelectInput({
   const {
     gallerySignupData,
     currentGallerySignupFormIndex,
-    incrementCurrentGallerySignupFormIndex,
-    decrementCurrentGallerySignupFormIndex,
     updateGallerySignupData,
+    setIsFieldDirty,
   } = useGalleryAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
@@ -33,20 +32,7 @@ export default function SelectInput({
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     updateGallerySignupData(labelText, value);
-  };
-
-  const handleClickPrev = () => {
-    setErrorList([]);
-    decrementCurrentGallerySignupFormIndex();
-  };
-
-  const handleClick = () => {
-    if ((gallerySignupData as Record<string, any>)[labelText] === "")
-      setErrorList(["Please select an option from the dropdown"]);
-    else {
-      setErrorList([]);
-      incrementCurrentGallerySignupFormIndex();
-    }
+    setIsFieldDirty(labelText as keyof typeof gallerySignupData, false);
   };
 
   return (

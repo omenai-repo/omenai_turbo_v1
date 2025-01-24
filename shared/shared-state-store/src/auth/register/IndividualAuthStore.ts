@@ -12,8 +12,8 @@ type IndividualAuthStoreTypes = {
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
-  isFieldDirty: boolean;
-  setIsFieldDirty: (value: boolean) => void;
+  isFieldDirty: Record<keyof IndividualSignupData, boolean>;
+  setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => void;
 };
 
 export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
@@ -96,9 +96,19 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
         currentSignupFormIndex: 0,
       });
     },
-    isFieldDirty: true,
-    setIsFieldDirty: (value: boolean) => {
-      set({ isFieldDirty: value });
+    isFieldDirty: {
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+    },
+    setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => {
+      set((state: any) => ({
+        isFieldDirty: {
+          ...state.isFieldDirty,
+          [key]: value,
+        },
+      }));
     },
   })
 );

@@ -4,7 +4,7 @@ import ActionButton from "../features/actions/ActionButton";
 import Input from "../features/form/components/Input";
 
 export default function UserSignupStepTwo() {
-  const { currentSignupFormIndex, updateSignUpData } = useIndividualAuthStore();
+  const { isFieldDirty } = useIndividualAuthStore();
 
   return (
     <div className="flex flex-col space-y-6">
@@ -18,6 +18,10 @@ export default function UserSignupStepTwo() {
               labelText={form_input.labelText}
               id={form_input.id}
               key={form_input.id}
+              disabled={
+                form_input.labelText === "confirmPassword" &&
+                isFieldDirty.password
+              }
             />
           );
         })}

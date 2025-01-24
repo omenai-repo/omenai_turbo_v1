@@ -1,5 +1,6 @@
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
+import { GallerySignupData } from "@omenai/shared-types";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, HTMLInputTypeAttribute, useState } from "react";
@@ -30,6 +31,7 @@ export default function Input({
     updateGallerySignupData,
     currentGallerySignupFormIndex,
     setIsFieldDirty,
+    isFieldDirty,
   } = useGalleryAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
@@ -39,6 +41,7 @@ export default function Input({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     updateGallerySignupData(e.target.name, e.target.value);
     setErrorList([]);
+
     const { success, errors }: { success: boolean; errors: string[] | [] } =
       validate(
         e.target.value,
@@ -48,11 +51,11 @@ export default function Input({
           : undefined
       );
     if (!success) {
-      setIsFieldDirty(true);
+      setIsFieldDirty(e.target.name as keyof GallerySignupData, true);
       setErrorList(errors);
     } else {
       setErrorList([]);
-      setIsFieldDirty(false);
+      setIsFieldDirty(e.target.name as keyof GallerySignupData, false);
     }
   };
 
@@ -74,7 +77,7 @@ export default function Input({
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
+            className="disabled:cursor-not-allowed disabled:bg-gray-400 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
             placeholder={`e.g ${placeholder}`}
             disabled={disabled}
             onChange={handleChange}

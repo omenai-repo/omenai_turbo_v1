@@ -1,3 +1,4 @@
+import { add } from "date-fns";
 import { GallerySignupData } from "@omenai/shared-types";
 import { create } from "zustand";
 
@@ -10,8 +11,8 @@ type GalleryAuthStoreTypes = {
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
-  isFieldDirty: boolean;
-  setIsFieldDirty: (value: boolean) => void;
+  isFieldDirty: Record<keyof GallerySignupData, boolean>;
+  setIsFieldDirty: (key: keyof GallerySignupData, value: boolean) => void;
 };
 export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
   (set, get) => ({
@@ -84,9 +85,24 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       });
     },
 
-    isFieldDirty: true,
-    setIsFieldDirty: (value: boolean) => {
-      set({ isFieldDirty: value });
+    isFieldDirty: {
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+      address: true,
+      admin: true,
+      description: true,
+      country: true,
+      logo: true,
+    },
+    setIsFieldDirty: (key: keyof GallerySignupData, value: boolean) => {
+      set((state: any) => ({
+        isFieldDirty: {
+          ...state.isFieldDirty,
+          [key]: value,
+        },
+      }));
     },
   })
 );
