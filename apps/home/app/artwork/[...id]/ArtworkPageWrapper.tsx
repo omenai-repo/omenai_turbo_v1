@@ -11,6 +11,9 @@ import SimilarArtworks from "./components/SimilarArtworks";
 import SimilarArtworksByArtist from "./components/SimilarArtworksByArtist";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import Footer from "@omenai/shared-ui-components/components/footer/Footer";
+import ZoomableViewerModal from "./modals/ZoomableViewerModal";
+import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import dynamic from "next/dynamic";
 
 export default function ArtworkPageWrapper({
   param,
@@ -19,6 +22,7 @@ export default function ArtworkPageWrapper({
   param: string;
   session: UserType | undefined;
 }) {
+  const { seaDragonZoomableImageViewerUrl } = actionStore();
   const { data: artworkDetails, isLoading } = useQuery({
     queryKey: ["fetch_single_artwork_data"],
     queryFn: async () => {
@@ -35,8 +39,8 @@ export default function ArtworkPageWrapper({
     return <Load />;
   }
   return (
-    <div>
-      <div className="">
+    <div className="relative">
+      <div>
         <DesktopNavbar />
 
         <div className="my-5">

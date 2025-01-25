@@ -30,6 +30,9 @@ module.exports = {
           800: "#FCFCFC",
           light: "#818181",
         },
+        sliderTrack: "#e0e0e0",
+        sliderThumb: "#ff5722",
+        sliderThumbHover: "#e64a19",
 
         line: "#DEDEDE",
         authSideDark: "#1A1A1A",

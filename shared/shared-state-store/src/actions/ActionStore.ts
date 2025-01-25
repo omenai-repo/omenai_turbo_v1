@@ -63,6 +63,10 @@ type ActionStoreTypes = {
   updateConfirmOrderDeliveryPopup: (value: boolean, order_id: string) => void;
   curated_preference: string;
   set_curated_preference: (text: string) => void;
+  seaDragonZoomableImageViewerUrl: string;
+  setSeaDragonZoomableImageViewerUrl: (url: string) => void;
+  openSeadragonImageViewer: boolean;
+  setOpenSeaDragonImageViewer: (value: boolean) => void;
 };
 
 export const actionStore = create<ActionStoreTypes>((set, get) => ({
@@ -226,5 +230,13 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
   curated_preference: "All",
   set_curated_preference: (text: string) => {
     set({ curated_preference: text });
+  },
+  seaDragonZoomableImageViewerUrl: "",
+  setSeaDragonZoomableImageViewerUrl: (url: string) => {
+    set({ seaDragonZoomableImageViewerUrl: url });
+  },
+  openSeadragonImageViewer: false,
+  setOpenSeaDragonImageViewer: (value: boolean) => {
+    set({ openSeadragonImageViewer: value });
   },
 }));

@@ -21,7 +21,7 @@ export const LoadSmall = () => {
 export const LoadIcon = () => {
   return (
     <div className="w-fit">
-      <ClipLoader size={30} />
+      <DotLoader size={30} />
     </div>
   );
 };

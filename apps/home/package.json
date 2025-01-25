@@ -34,11 +34,13 @@
   },
   "dependencies": {
     "@tinymce/tinymce-react": "^5.1.1",
+    "@types/openseadragon": "^3.0.10",
     "dompurify": "^3.2.3",
     "flowbite-react": "^0.10.2",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "lottie-react": "^2.4.0",
-    "nextjs-toploader": "^3.7.15"
+    "nextjs-toploader": "^3.7.15",
+    "openseadragon": "^5.0.1"
   }
 }
