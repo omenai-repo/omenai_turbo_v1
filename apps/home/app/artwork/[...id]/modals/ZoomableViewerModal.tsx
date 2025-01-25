@@ -22,7 +22,7 @@ const ZoomableViewerModal = ({ fileUrl }: { fileUrl: string }) => {
   if (!openSeadragonImageViewer) return null;
 
   return (
-    <div className="w-[100vw] h-[100vh] fixed inset-0 z-50 flex items-center justify-center bg-dark">
+    <div className="w-[100vw] h-[100svh] fixed inset-0 z-50 flex items-center justify-center bg-dark">
       <div className="rounded-lg shadow-lg p-4 max-w-full w-full h-full">
         <button
           onClick={() => setOpenSeaDragonImageViewer(false)}

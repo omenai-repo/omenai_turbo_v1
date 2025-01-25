@@ -54,7 +54,7 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
         immediateRender: true, // Render the image immediately
         showZoomControl: true, // Remove zoom controls
         minZoomLevel: 0.5,
-        maxZoomLevel: 2.5, // Allow up to 5x zoom
+        maxZoomLevel: 4, // Allow up to 5x zoom
         visibilityRatio: 1, // Ensure the image fits perfectly within the viewport
         constrainDuringPan: true, // Prevent panning out of bounds
         blendTime: 0, // Disable fade-in animation
@@ -127,7 +127,7 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
             <input
               type="range"
               min="0.5" // Matches minZoomLevel
-              max="2.5" // Matches maxZoomLevel
+              max="4" // Matches maxZoomLevel
               step="0.1"
               value={zoomLevel} // Controlled input
               className="slider"
