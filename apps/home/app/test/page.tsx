@@ -1,3 +1,9 @@
+import React from "react";
+
+export default function page() {
+  return <div>page</div>;
+}
+
 // "use client";
 
 // import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
