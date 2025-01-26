@@ -2,6 +2,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import LayoutWrapper from "./LayoutWrapper";
+import { Analytics } from "@vercel/analytics/react"
 const dm_sans = Poppins({
   subsets: ["latin"],
   variable: "--font-sans_serif",
@@ -19,6 +20,7 @@ export default async function DashboardRootLayout({
         className={`${dm_sans.className} flex flex-col px-4 justify-center`}
       >
         <LayoutWrapper session={session} children={children} />
+        <Analytics />
       </body>
     </html>
   );

@@ -2,6 +2,8 @@ import "./globals.css";
 import { DM_Sans, Poppins } from "next/font/google";
 import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import LayoutWrapper from "./LayoutWrapper";
+import { Analytics } from "@vercel/analytics/react"
+
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-sans_serif",
@@ -17,6 +19,7 @@ export default async function AuthDashboardRootLayout({
     <html lang="en">
       <body className={`${poppins.className} flex flex-col justify-center`}>
         <LayoutWrapper session={session} children={children} />
+        <Analytics />
       </body>
     </html>
   );

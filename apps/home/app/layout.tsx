@@ -10,7 +10,7 @@ import { OrderReceivedModal } from "@omenai/shared-ui-components/components/moda
 import { Toaster } from "sonner";
 import type { Viewport } from "next";
 import "./globals.css";
-import Footer from "@omenai/shared-ui-components/components/footer/Footer";
+import { Analytics } from "@vercel/analytics/react"
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -51,6 +51,7 @@ export default async function RootLayout({
             <RecoveryModal />
             <OrderReceivedModal />
             <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
+            <Analytics />
           </QueryProvider>
         </SessionProvider>
       </body>

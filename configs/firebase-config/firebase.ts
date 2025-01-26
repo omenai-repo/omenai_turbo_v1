@@ -6,15 +6,7 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const omenaiFirebaseConfig = {
-  apiKey: "AIzaSyCQj_JmjFwz0OBSsTWPN9kPykfMACKcluY",
-  authDomain: "omenai-storage-test.firebaseapp.com",
-  projectId: "omenai-storage-test",
-  storageBucket: "omenai-storage-test.firebasestorage.app",
-  messagingSenderId: "988036158337",
-  appId: "1:988036158337:web:1cf92ca84409fc79aa4e80",
-  measurementId: "G-HT0LXKEXYQ",
-};
+const omenaiFirebaseConfig = {};
 
 // Initialize Firebase
 const app = initializeApp(omenaiFirebaseConfig);
