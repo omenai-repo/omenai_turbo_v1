@@ -24,8 +24,8 @@ export async function POST(request: Request) {
     if (!declineOrder) throw new ServerError("An error occured");
 
     await sendOrderDeclinedMail({
-      name: declineOrder.buyer.name,
-      email: declineOrder.buyer.email,
+      name: declineOrder.buyer_details.name,
+      email: declineOrder.buyer_details.email,
       reason: declineOrder.order_accepted.reason,
       artwork_data: declineOrder.artwork_data,
     });

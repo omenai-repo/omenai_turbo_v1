@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { auth_uri, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
@@ -17,7 +17,7 @@ import {
 } from "@react-email/components";
 
 const AcceptGalleryMail = (gallery_name?: string) => {
-  const url = getApiUrl();
+  const url = auth_uri();
   return (
     <Html>
       <Head />
@@ -51,7 +51,7 @@ const AcceptGalleryMail = (gallery_name?: string) => {
             <ul>
               <li>
                 <Text className="m-0 text-[14px] leading-[28px] text-gray-900">
-                  <Link href={`${url}/auth/login`}>Login</Link> to your gallery
+                  <Link href={`${url}/login`}>Login</Link> to your gallery
                   account.
                 </Text>
               </li>

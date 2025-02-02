@@ -1,5 +1,9 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import {
+  base_url,
+  dashboard_url,
+  getApiUrl,
+} from "@omenai/url-config/src/config";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import {
   Body,
@@ -24,7 +28,8 @@ const OrderRequestToGalleryMail = (
     "title" | "artist" | "art_id" | "pricing" | "url"
   >
 ) => {
-  const url = getApiUrl();
+  const url = base_url();
+  const dashboard_uri = dashboard_url();
   const image = getImageFileView(artwork_data.url, 200);
   return (
     <Html>
@@ -70,7 +75,7 @@ const OrderRequestToGalleryMail = (
             <div className="w-full grid place-items-center text-center">
               <Link
                 className="w-fit bg-dark text-white text-center px-5 cursor-pointer py-3"
-                href={`${url}/gallery/orders`}
+                href={`${dashboard_uri}/gallery/orders`}
               >
                 View order on your dashboard
               </Link>

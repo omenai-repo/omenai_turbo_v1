@@ -126,7 +126,7 @@ export default function LoginModalForm() {
             type="email"
             name="email"
             value={form.email}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 placeholder:text-xs"
             required
             placeholder="e.g john@doe.examplemail.com"
             onChange={handleChange}
@@ -141,7 +141,7 @@ export default function LoginModalForm() {
             name="password"
             value={form.password}
             placeholder="********"
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-sx"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 placeholder:text-sx"
             required
             onChange={handleChange}
           />

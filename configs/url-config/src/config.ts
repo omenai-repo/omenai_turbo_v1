@@ -12,7 +12,7 @@ export const session_auth_url = (): string => {
 };
 export const auth_uri = (): string => {
   return process.env.NODE_ENV === "production"
-    ? "https://auth.omenai.app/"
+    ? "https://auth.omenai.app"
     : "http://localhost:4000/";
 };
 

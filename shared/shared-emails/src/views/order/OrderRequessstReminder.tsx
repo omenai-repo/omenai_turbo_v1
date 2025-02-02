@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
@@ -14,7 +14,7 @@ import {
 } from "@react-email/components";
 
 const OrderRequestReminder = (name: string) => {
-  const url = getApiUrl();
+  const url = dashboard_url();
 
   return (
     <Html>

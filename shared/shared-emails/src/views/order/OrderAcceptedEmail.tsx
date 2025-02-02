@@ -1,5 +1,5 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
@@ -23,7 +23,7 @@ const OrderAcceptedEmail = (
     "title" | "artist" | "art_id" | "pricing" | "url"
   >
 ) => {
-  const url = getApiUrl();
+  const url = base_url();
   return (
     <Html>
       <Head />

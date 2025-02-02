@@ -1,5 +1,5 @@
 import { storage } from "@omenai/appwrite-config";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Body,
@@ -21,7 +21,7 @@ const RequestPriceEmail = (
     "title" | "artist" | "art_id" | "pricing" | "url" | "medium"
   >
 ) => {
-  const url = getApiUrl();
+  const url = base_url();
   const image = storage.getFileView(
     process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
     artwork_data.url

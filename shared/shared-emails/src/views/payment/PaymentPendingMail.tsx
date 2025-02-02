@@ -13,7 +13,6 @@ import {
 } from "@react-email/components";
 
 const PaymentPendingMail = (name: string, artwork: string) => {
-  const url = getApiUrl();
   return (
     <Html>
       <Head />

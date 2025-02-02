@@ -14,7 +14,6 @@ import {
 } from "@react-email/components";
 
 const CronTest = () => {
-  const url = getApiUrl();
   return (
     <Html>
       <Head />

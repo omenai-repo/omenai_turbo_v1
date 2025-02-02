@@ -54,7 +54,7 @@ export default function RecoveryModalEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full w-full placeholder:text-dark/40 placeholder:text-xs"
         placeholder="Email address"
         required
         onChange={(e) => setEmail(e.target.value)}
@@ -62,7 +62,7 @@ export default function RecoveryModalEmailInputField() {
       <button
         type="submit"
         disabled={loading}
-        className=" disabled:cursor-not-allowed grid disabled:bg-white disabled:border disabled:border-dark place-items-center w-full h-[40px]  bg-dark hover:bg-dark/80 hover:text-white rounded-sm text-white text-[14px] "
+        className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
       >
         {!loading ? "Send reset link" : <LoadSmall />}
       </button>

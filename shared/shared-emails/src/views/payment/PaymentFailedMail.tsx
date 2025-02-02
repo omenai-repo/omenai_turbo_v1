@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
   Container,
@@ -13,7 +13,7 @@ import {
 } from "@react-email/components";
 
 const PaymentFailedMail = (name: string, artwork: string, order_id: string) => {
-  const url = getApiUrl();
+  const url = base_url();
   return (
     <Html>
       <Head />

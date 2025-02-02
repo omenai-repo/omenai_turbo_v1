@@ -1,4 +1,4 @@
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
   Container,
@@ -20,7 +20,7 @@ const PaymentSuccessfulMail = (
   order_date: string,
   transaction_Id: string
 ) => {
-  const url = getApiUrl();
+  const url = dashboard_url();
   return (
     <Html>
       <Head />
