@@ -35,12 +35,14 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       type: Boolean,
       required: true,
       default: () => false,
+      index: true,
     },
 
     artist_verified: {
       type: Boolean,
       default: () => false,
       required: true,
+      index: true,
     },
     logo: {
       type: String,
@@ -94,6 +96,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
     isOnboardingCompleted: {
       type: Boolean,
       default: () => false,
+      index: true,
     },
   },
   { timestamps: true }

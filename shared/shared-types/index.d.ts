@@ -17,12 +17,7 @@ export type UserType = JWTPayload &
     | Omit<AccountAdminSchemaTypes, "password">
     | Omit<
         ArtistSchemaTypes,
-        | "password"
-        | "artist_verified"
-        | "logo"
-        | "address"
-        | "art_style"
-        | "documentation"
+        "password" | "logo" | "address" | "art_style" | "documentation"
       >
   );
 
@@ -304,6 +299,7 @@ export type IndividualAddressTypes = {
   address_line: string;
   city: string;
   country: string;
+  countryCode?: string;
   state: string;
   zip: string;
   [key: string]: string;
