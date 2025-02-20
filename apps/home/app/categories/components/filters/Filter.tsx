@@ -18,7 +18,7 @@ import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPa
 import { categoriesFilterStore } from "@omenai/shared-state-store/src/categories/categoriesFilterStore";
 import { categoriesStore } from "@omenai/shared-state-store/src/categories/categoriesStore";
 import {
-  artworkCollectionTypes,
+  ArtworkCollectionTypes,
   IndividualSchemaTypes,
 } from "@omenai/shared-types";
 import { isEmptyFilter } from "@omenai/shared-utils/src/isFilterEmpty";
@@ -26,7 +26,7 @@ import { isEmptyFilter } from "@omenai/shared-utils/src/isFilterEmpty";
 export default function Filter({
   page_type,
 }: {
-  page_type: artworkCollectionTypes;
+  page_type: ArtworkCollectionTypes;
 }) {
   const [showFilterBlock, setShowFilterBlock] = useState(false);
 

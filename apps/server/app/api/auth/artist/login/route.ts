@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const isPasswordMatch = bcrypt.compareSync(password, artist.password);
 
     if (!isPasswordMatch) throw new ConflictError("Invalid credentials");
-    const { artist_id, verified, name, role } = artist;
+    const { artist_id, verified, name, role, isOnboardingCompleted } = artist;
 
     const session_payload = {
       artist_id,
@@ -46,6 +46,7 @@ export async function POST(request: Request) {
       name,
       role,
       email: artist.email,
+      isOnboardingCompleted,
     };
 
     await createSession(session_payload);

@@ -1,4 +1,7 @@
-import { ArtistSchemaTypes } from "@omenai/shared-types";
+import {
+  ArtistDocumentationTypes,
+  ArtistSchemaTypes,
+} from "@omenai/shared-types";
 import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -41,7 +44,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
     },
     logo: {
       type: String,
-      default: () => "",
+      required: true,
     },
 
     bio_video_link: {
@@ -50,7 +53,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
     },
     bio: {
       type: String,
-      default: () => ""
+      default: () => "",
     },
 
     algo_data_id: {
@@ -68,27 +71,30 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
     },
     address: {
       type: Schema.Types.Mixed,
-      default: {
-        address_line: "",
-        city: "",
-        country: "",
-        state: "",
-        zip: "",
-      },
-      required: true
+      required: true,
     },
     categorization: {
       type: String,
       default: () => "",
     },
-    art_type: {
+    art_style: {
       type: Schema.Types.Mixed,
-      required: true
+      required: true,
     },
     documentation: {
       type: Schema.Types.Mixed,
-      required: true
-    }
+      default: (): ArtistDocumentationTypes => {
+        return {
+          cv: "",
+          socials: { instagram: "", twitter: "", facebook: "", linkedin: "" },
+        };
+      },
+      required: true,
+    },
+    isOnboardingCompleted: {
+      type: Boolean,
+      default: () => false,
+    },
   },
   { timestamps: true }
 );

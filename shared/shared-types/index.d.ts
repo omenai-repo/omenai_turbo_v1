@@ -21,7 +21,7 @@ export type UserType = JWTPayload &
         | "artist_verified"
         | "logo"
         | "address"
-        | "art_type"
+        | "art_style"
         | "documentation"
       >
   );
@@ -35,7 +35,7 @@ export type ArtistSchemaTypes = {
   artist_id: string;
   verified: boolean;
   artist_verified: boolean;
-  logo: string | null;
+  logo: string;
   bio?: string;
   address: IndividualAddressTypes;
   bio_video_link?: string | null;
@@ -43,17 +43,27 @@ export type ArtistSchemaTypes = {
   role: AccessRoleTypes;
   wallet_id?: string | null;
   categorization?: ArtistCategorization;
-  art_type: string | string[];
-  documentation: ArtistDocumentationTypes;
+  art_style: string | string[];
+  documentation?: ArtistDocumentationTypes;
+  isOnboardingCompleted: boolean;
+};
+
+export type ArtistSignupData = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  logo: string;
+  art_style: string | string[];
+  address: IndividualAddressTypes;
 };
 
 export type ArtistDocumentationTypes = {
-  id: string;
-  cv: string;
-  socials: string | string[];
+  cv?: string;
+  socials?: { [key?: Socials]: string } | { [key?: Socials]: string }[];
 };
 
-export type ArtistAlgorithmDataSchemaTypes = {};
+type Socials = "instagram" | "twitter" | "facebook" | "linkedin";
 
 export type GallerySchemaTypes = {
   name: string;
@@ -98,16 +108,6 @@ export type InputProps = {
   onClick?: () => void;
   id?: number;
   onClickPrev?: () => void;
-};
-
-export type ArtistSignupData = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  art_type: string | string[];
-  documentation: ArtistDocumentationTypes;
-  address: IndividualAddressTypes;
 };
 
 export type IndividualSignupData = {
@@ -576,7 +576,7 @@ export type ProrationSchemaTypes = {
   value: number;
 };
 
-export type artworkCollectionTypes = "trending" | "curated" | "recent";
+export type ArtworkCollectionTypes = "trending" | "curated" | "recent";
 
 export type ArtistAlgorithmSchemaTypes = {
   params: ArtistAlgorithmSchemaQuestionTypes;
@@ -594,23 +594,30 @@ export type ArtistPricingSchemaTypes = {
   };
 };
 
-export type ArtistAlgorithmSchemaQuestionTypes = {
-  graduate: boolean;
-  mfa: boolean;
-  exhibitions: {
-    solo: number;
-    group: number;
-    museum: boolean;
-  };
-  bienalle: "venice" | "other";
-  fairs_feature: boolean;
-  musesum_collection_feature: boolean;
+export type ArtistCategorization =
+  | "Emerging"
+  | "Early Mid-career"
+  | "Mid-career"
+  | "Late Mid-career"
+  | "Established"
+  | "Elite";
+
+export type ArtistCategorizationAnswerTypes = {
+  graduate: "yes" | "no";
+  mfa: "yes" | "no";
+  solo: number;
+  group: number;
+  museum_collection: "yes" | "no";
+  biennale: "venice" | "other" | "none";
+  museum_exhibition: "yes" | "no";
+  art_fair: "yes" | "no";
 };
 
-export type ArtistCategorization =
-  | "emerging"
-  | "early-mid"
-  | "mid"
-  | "late-mid"
-  | "established"
-  | "elite";
+export type ArtistAlgorithmDataSchemaTypes = {
+  artist_id: string;
+  categoriztion: {
+    artist_categorization: ArtistCategorization;
+    answers: ArtistCategorizationAnswerTypes;
+    price_range: { min: number; max: number };
+  };
+};

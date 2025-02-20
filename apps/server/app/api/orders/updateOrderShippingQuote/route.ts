@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
+import { ShippingQuoteTypes } from "@omenai/shared-types";
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
