@@ -1,14 +1,8 @@
 import {
   ArtistCategorization,
+  ArtistCategorizationAlgorithmResult,
   ArtistCategorizationAnswerTypes,
 } from "@omenai/shared-types";
-
-type Result = {
-  status: "success" | "error";
-  totalPoints: number;
-  rating: string;
-  error?: string;
-};
 
 const pointsStructure: {
   [key: string]: { [key: string]: number } | ((val: number) => number);
@@ -73,7 +67,7 @@ function isAnswers(
 
 export function calculateArtistRating(
   answers: ArtistCategorizationAnswerTypes
-): Result {
+): ArtistCategorizationAlgorithmResult {
   if (!isAnswers(answers)) {
     return {
       status: "error",

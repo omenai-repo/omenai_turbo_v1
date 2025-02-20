@@ -613,6 +613,13 @@ export type ArtistCategorizationAnswerTypes = {
   art_fair: "yes" | "no";
 };
 
+type ArtistCategorizationAlgorithmResult = {
+  status: "success" | "error";
+  totalPoints: number;
+  rating: string;
+  error?: string;
+};
+
 export type ArtistAlgorithmDataSchemaTypes = {
   artist_id: string;
   categoriztion: {
