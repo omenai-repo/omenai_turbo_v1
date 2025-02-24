@@ -7,6 +7,7 @@ const allowed_origins = [
   "https://omenai.app",
   "http://localhost",
   "https://v1.omenai.app",
+  "https://api.omenai.app/",
 ];
 
 export async function middleware(request: NextRequest) {

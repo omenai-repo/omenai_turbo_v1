@@ -1,0 +1,125 @@
+import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
+import { dhlErrorMap } from "../../../custom/errors/shipment/dhlErrorMap";
+
+// DHL API keys
+const API_KEY = (process.env.DHL_API_KEY || "").trim();
+const API_SECRET = (process.env.DHL_API_SECRET || "").trim();
+
+// DHL API version
+export const DHL_API_VERSION = "2.12.0";
+
+// DHL API credentials encryption
+export const credentials = Buffer.from(`${API_KEY}:${API_SECRET}`).toString(
+  "base64"
+);
+
+// DHL API headers
+export const HEADERS = new Headers({
+  "Content-Type": "application/json",
+  Authorization: `Basic ${credentials}`,
+  "x-version": DHL_API_VERSION,
+});
+
+// DHL API URL
+export const DHL_API_URL = "https://api-eu.dhl.com/shipment/v1";
+
+// DHL API express account number
+export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT = "942718371";
+
+// async function to select the most appropriate DHL product for a particular shipment based on price and product relevance to shipment
+export async function selectAppropriateDHLProduct(
+  products: any[]
+): Promise<any> {
+  if (products === undefined || products.length === 0) {
+    return null;
+  }
+  const acceptableProductCodes = ["P", "U", "D", "N", "H", "W", "Y"];
+
+  // Filter for preferred products if available, otherwise consider all
+  let validProducts = products.filter((product: any) =>
+    acceptableProductCodes.includes(product.productCode)
+  );
+
+  if (validProducts.length === 0) {
+    validProducts = products;
+  }
+
+  // Define the currency types in order of preference
+  const priceTypesPriority = ["BILLC", "BASEC", "PULCL"];
+
+  // Process each product to extract and possibly convert its price
+  const processedProducts = await Promise.all(
+    validProducts.map(async (product: any) => {
+      let selectedPriceObj: any = null;
+
+      // Loop through the priority list until we find a matching price object
+      for (const type of priceTypesPriority) {
+        selectedPriceObj = product.totalPrice.find(
+          (priceObj: any) => priceObj.currencyType === type
+        );
+        if (selectedPriceObj) break;
+      }
+
+      // If no matching price object is found, default to 0
+      if (!selectedPriceObj) {
+        selectedPriceObj = product.totalPrice[0];
+      }
+
+      let chargeable_price_in_usd: number;
+      // If the price's currency is not USD, convert it
+      if (selectedPriceObj.priceCurrency !== "USD") {
+        chargeable_price_in_usd = await convertToUSD(
+          selectedPriceObj.price,
+          selectedPriceObj.priceCurrency
+        );
+      } else {
+        chargeable_price_in_usd = selectedPriceObj.price;
+      }
+
+      return {
+        productCode: product.productCode,
+        productName: product.productName,
+        pickupCapabilities: product.pickupCapabilities,
+        deliveryCapabilities: product.deliveryCapabilities,
+        pricingDate: product.pricingDate,
+        totalPrice: product.totalPrice,
+        chargeable_price_in_usd,
+      };
+    })
+  );
+
+  // Sort the products by their USD-converted price (ascending)
+  processedProducts.sort(
+    (a: any, b: any) => a.chargeable_price_in_usd - b.chargeable_price_in_usd
+  );
+
+  // Return the cheapest product
+  return processedProducts.length > 0 ? processedProducts[0] : null;
+}
+
+// API call to get the currency conversion rate
+async function convertToUSD(
+  amount: number,
+  fromCurrency: string
+): Promise<number> {
+  const conversion = await getCurrencyConversion(fromCurrency, amount);
+  if (!conversion?.isOk) {
+    throw new Error("Failed to convert currency");
+  }
+  return conversion.data;
+}
+
+// Function to convert DHL errors into user friendly error messages
+export function getUserFriendlyError(dhlErrorMessage: string): string {
+  // Attempt to extract the error code using a regex pattern
+  const codeMatch = dhlErrorMessage.match(/^(\d+):/);
+  if (codeMatch) {
+    const errorCode = codeMatch[1];
+    if (dhlErrorMap[errorCode]) {
+      return dhlErrorMap[errorCode];
+    } else {
+    }
+  }
+  // Return a generic friendly message if the error code is unknown or extraction fails
+  return "An unexpected error occurred. Please try again later or contact support.";
+}

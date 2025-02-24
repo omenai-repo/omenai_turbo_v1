@@ -4,12 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "country-timezone": "^1.0.8",
     "crypto-random-string": "^5.0.0",
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
+    "@omenai/shared-auth": "*",
     "@omenai/shared-json": "*",
-    "crypto-random-string": "^5.0.0",
-    "@omenai/shared-auth": "*"
+    "crypto-random-string": "^5.0.0"
   }
 }

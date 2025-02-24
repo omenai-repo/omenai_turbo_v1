@@ -274,6 +274,21 @@ export type OrderShippingDetailsTypes = {
   tracking: TrackingInformationTypes;
   quote: ShippingQuoteTypes;
   delivery_confirmed: boolean;
+  shipment_information: {
+    carrier: string;
+    shipment_product_code: string;
+    dimensions: {
+      length: number;
+      weight: number;
+      width: number;
+      height: number;
+    };
+    pickup: {
+      additional_information?: string;
+      pickup_max_time: string;
+      pickup_min_time: string;
+    };
+  };
 };
 
 type OrderBuyerAndSellerDetails = {
@@ -623,4 +638,45 @@ export type ArtistAlgorithmDataSchemaTypes = {
     answers: ArtistCategorizationAnswerTypes;
     price_range: { min: number; max: number };
   };
+};
+
+// Shipment Types
+export type ShipmentDimensions = {
+  length: number;
+  width: number;
+  height: number;
+  weight: number;
+};
+export type ShipmentAddressValidationType = {
+  type: "pickup" | "delivery";
+  countryCode: string;
+  postalCode: string;
+  cityName: string;
+  countyName: string;
+};
+
+export type ShipmentPickupRequestDataTypes = {
+  originCountryCode: string;
+  specialInstructions?: string;
+  artistDetails: {
+    address: IndividualAddressTypes;
+    email: string;
+    phone: string;
+    fullname: string;
+  };
+  shipment_product_code: string;
+  dimensions: ShipmentDimensions;
+};
+
+export type ShipmentRateRequestTypes = {
+  originCountryCode: string;
+  originCityName: string;
+  originPostalCode: string;
+  destinationCountryCode: string;
+  destinationCityName: string;
+  destinationPostalCode: string;
+  weight: number;
+  length: number;
+  width: number;
+  height: number;
 };

@@ -2573,6 +2573,11 @@ cors@^2.8.5, cors@~2.8.5:
     object-assign "^4"
     vary "^1"
 
+country-timezone@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/country-timezone/-/country-timezone-1.0.8.tgz#5082c5905cd2493382c82362ac871691d75be32d"
+  integrity sha512-TkCxa4rMXYZA+BNMW5Nl7jUNLppdqvhKi1FJsvrC6jcRakdrspoyjqyWt4X+udgyCaEvaJq+0ChyFdeEsJL0KQ==
+
 cross-spawn@^7.0.0, cross-spawn@^7.0.5, cross-spawn@^7.0.6:
   version "7.0.6"
   resolved "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.6.tgz"

@@ -1,44 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import { getUserFriendlyError, HEADERS } from "../resources";
+import { ShipmentAddressValidationType } from "@omenai/shared-types";
+import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { validateAddressVerificationRequestData } from "@omenai/shared-lib/validations/api/shipment/validateAddressVerificationRequestData";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 export async function POST(request: NextRequest) {
-  const API_KEY = (process.env.DHL_API_KEY || "").trim();
-  const API_SECRET = (process.env.DHL_API_SECRET || "").trim();
+  const {
+    type,
+    countryCode,
+    postalCode,
+    cityName,
+    countyName,
+  }: ShipmentAddressValidationType = await request.json();
 
-  const credentials = Buffer.from(`${API_KEY}:${API_SECRET}`).toString(
-    "base64"
-  );
-  const { type, countryCode, postalCode, cityName, countyName } =
-    await request.json();
+  try {
+    // Validate and sanitize input
+    const requestValidation = validateAddressVerificationRequestData({
+      type,
+      countryCode,
+      postalCode,
+      cityName,
+      countyName,
+    });
 
-  if (!type || !countryCode || !postalCode || !cityName || !countyName) {
+    if (requestValidation) throw new BadRequestError(requestValidation);
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
     return NextResponse.json(
-      {
-        status: "error",
-        message:
-          "Missing one or more required fields: [type, countryCode, postalCode, cityName, countyName]",
-      },
-      { status: 400 }
+      { message: error_response?.message },
+      { status: error_response?.status }
     );
   }
-  try {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("x-version", "2.12.0");
-    myHeaders.append("Authorization", `Basic ${credentials}`);
 
+  try {
     const requestOptions = {
       method: "GET",
-      headers: myHeaders,
+      headers: HEADERS,
     };
 
     const response = await fetch(
-      `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName}&postalCode=${postalCode}&countyName=${countyName}&strictValidation=true`,
+      `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName}&postalCode=${postalCode}&countyName=${countyName}&strictValidation=${true}`,
       requestOptions
     );
     const data = await response.json();
+    // TODO: Fix for multiple DHL error responses
+    if (!response.ok) {
+      const error_message = getUserFriendlyError(data.detail);
+      return NextResponse.json(
+        { message: error_message, data },
+        { status: data.status }
+      );
+    }
     return NextResponse.json({ message: "Success", data }, { status: 200 });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
 }
