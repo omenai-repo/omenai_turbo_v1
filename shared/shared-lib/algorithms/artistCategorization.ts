@@ -1,5 +1,5 @@
 import {
-  ArtistCategorization,
+  ArtistCategory,
   ArtistCategorizationAlgorithmResult,
   ArtistCategorizationAnswerTypes,
 } from "@omenai/shared-types";
@@ -9,8 +9,8 @@ const pointsStructure: {
 } = {
   graduate: { yes: 10, no: 0 },
   mfa: { yes: 15, no: 0 },
-  solo: (val: number) => (val >= 15 ? 30 : val),
-  group: (val: number) => (val >= 15 ? 20 : val),
+  solo: (val: number) => (val >= 15 ? 30 : val >= 6 ? 20 : val >= 1 ? 10 : 0),
+  group: (val: number) => (val >= 15 ? 20 : val >= 6 ? 15 : val >= 1 ? 5 : 0),
   museum_collection: { yes: 25, no: 0 },
   biennale: {
     venice: 40,
@@ -24,14 +24,45 @@ const pointsStructure: {
 const ratingCategories: {
   min: number;
   max: number;
-  rating: ArtistCategorization;
+  rating: ArtistCategory;
+  price_range: { min: number; max: number };
 }[] = [
-  { min: 0, max: 29, rating: "Emerging" },
-  { min: 30, max: 49, rating: "Early Mid-career" },
-  { min: 50, max: 69, rating: "Mid-career" },
-  { min: 70, max: 89, rating: "Late Mid-career" },
-  { min: 90, max: 150, rating: "Established" },
-  { min: 150, max: 200, rating: "Elite" },
+  {
+    min: 0,
+    max: 29,
+    rating: "Emerging",
+    price_range: { min: 1000, max: 2750 },
+  },
+  {
+    min: 30,
+    max: 49,
+    rating: "Early Mid-career",
+    price_range: { min: 4000, max: 5750 },
+  },
+  {
+    min: 50,
+    max: 69,
+    rating: "Mid-career",
+    price_range: { min: 5000, max: 9000 },
+  },
+  {
+    min: 70,
+    max: 89,
+    rating: "Late Mid-career",
+    price_range: { min: 6500, max: 10000 },
+  },
+  {
+    min: 90,
+    max: 150,
+    rating: "Established",
+    price_range: { min: 10000, max: 30000 },
+  },
+  {
+    min: 150,
+    max: 200,
+    rating: "Elite",
+    price_range: { min: 20000, max: 100000 },
+  },
 ];
 
 function isAnswers(
@@ -74,6 +105,7 @@ export function calculateArtistRating(
       totalPoints: 0,
       rating: "Unknown",
       error: "Invalid answers data provided.",
+      price_range: { min: 0, max: 0 },
     };
   }
 
@@ -99,6 +131,7 @@ export function calculateArtistRating(
           totalPoints: 0,
           rating: "Unknown",
           error: `Invalid answer provided for question: ${question}`,
+          price_range: { min: 0, max: 0 },
         };
       }
     }
@@ -108,15 +141,18 @@ export function calculateArtistRating(
       totalPoints: 0,
       rating: "Unknown",
       error: "An unexpected error occurred.",
+      price_range: { min: 0, max: 0 },
     };
   }
 
-  const rating =
-    ratingCategories.find(
-      (category) => totalPoints >= category.min && totalPoints <= category.max
-    )?.rating || "Unknown";
+  const category = ratingCategories.find(
+    (category) => totalPoints >= category.min && totalPoints <= category.max
+  ) || { rating: "Unknown", price_range: { min: 0, max: 0 } };
 
-  return { status: "success", totalPoints, rating };
+  return {
+    status: "success",
+    totalPoints,
+    rating: category.rating,
+    price_range: category.price_range,
+  };
 }
-//solo  >= 6 ? 20 : val >= 1 ? 10 : 0
-//group  >= 6 ? 15 : val >= 1 ? 5 : 0

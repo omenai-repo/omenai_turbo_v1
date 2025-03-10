@@ -183,7 +183,7 @@ export type ArtworkSchemaTypes = {
 };
 export type RoleAccess = {
   role: "artist" | "gallery";
-  designation: ArtistCategorization | null;
+  designation: ArtistCategory | null;
 };
 
 export type ArtworkDimensions = {
@@ -589,14 +589,6 @@ export type ProrationSchemaTypes = {
 
 export type ArtworkCollectionTypes = "trending" | "curated" | "recent";
 
-export type ArtistAlgorithmSchemaTypes = {
-  params: ArtistAlgorithmSchemaQuestionTypes;
-  pricing: ArtistPricingSchemaTypes;
-  categorization: ArtistCategorization;
-  artist_id: string;
-  id: string;
-};
-
 export type ArtistPricingSchemaTypes = {
   categorization: string;
   value_range: {
@@ -605,7 +597,7 @@ export type ArtistPricingSchemaTypes = {
   };
 };
 
-export type ArtistCategorization =
+export type ArtistCategory =
   | "Emerging"
   | "Early Mid-career"
   | "Mid-career"
@@ -629,15 +621,40 @@ type ArtistCategorizationAlgorithmResult = {
   totalPoints: number;
   rating: string;
   error?: string;
+  price_range: { min: number; max: number };
 };
 
-export type ArtistAlgorithmDataSchemaTypes = {
+export type ArtistAlgorithmSchemaTypes = {
   artist_id: string;
-  categoriztion: {
-    artist_categorization: ArtistCategorization;
+  history: ArtistAlgorithmData[] | [];
+  current: ArtistAlgorithmData | null;
+  request: ArtistAlgorithmData | null;
+  id?: string;
+};
+
+export type ArtistAlgorithmData = {
+  date: Date;
+  categorization: {
+    artist_categorization: ArtistCategory | "Unknown";
     answers: ArtistCategorizationAnswerTypes;
     price_range: { min: number; max: number };
   };
+};
+
+export type ArtistCategorizationUpdateDataTypes = {
+  answers: ArtistCategorizationAnswerTypes;
+  bio: string;
+  artist_id: string;
+};
+export type ArtistCategorizationAnswerTypes = {
+  graduate: "yes" | "no";
+  mfa: "yes" | "no";
+  solo: number;
+  group: number;
+  museum_collection: "yes" | "no";
+  biennale: "venice" | "other" | "none";
+  museum_exhibition: "yes" | "no";
+  art_fair: "yes" | "no";
 };
 
 // Shipment Types
@@ -679,4 +696,19 @@ export type ShipmentRateRequestTypes = {
   length: number;
   width: number;
   height: number;
+};
+
+export type ShipmentRequestDataTypes = {
+  originCountryCode;
+  specialInstructions;
+  artistDetails;
+  shipment_product_code;
+  dimensions: ShipmentDimensions;
+  receiver_address: IndividualAddressTypes;
+  receiver_data: {
+    email: string;
+    phone: string;
+    fullname: string;
+  };
+  invoice_number: string;
 };

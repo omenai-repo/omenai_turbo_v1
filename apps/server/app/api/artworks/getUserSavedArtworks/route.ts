@@ -49,7 +49,7 @@ export async function POST(request: Request) {
             // Condition for artworks by artists
             { "role_access.role": "artist" },
 
-            // Condition for artworks by galleries meeting the specified criteria
+            // Condition for artworks by galleries meeting the specified criteria.
             {
               "role_access.role": "gallery",
               author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },

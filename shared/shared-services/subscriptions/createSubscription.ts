@@ -1,8 +1,8 @@
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 
 export const createSubscription = async (email: string, name: string) => {
-  const url = getApiUrl();
+  const url = dashboard_url();
   const get_subscription_payment_link = await fetch(
     "https://api.flutterwave.com/v3/payments",
     {

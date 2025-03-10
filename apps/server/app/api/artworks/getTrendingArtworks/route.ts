@@ -113,7 +113,6 @@ export async function POST(request: Request) {
       ],
       impressions: { $gt: 0 },
     });
-    console.log(allTrendingPaginatedArtworks);
 
     return NextResponse.json(
       {
