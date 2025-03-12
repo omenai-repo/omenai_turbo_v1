@@ -55,7 +55,7 @@ export type ArtistSignupData = {
 
 export type ArtistDocumentationTypes = {
   cv?: string;
-  socials?: { [key?: Socials]: string } | { [key?: Socials]: string }[];
+  socials?: { [key?: Socials]: string };
 };
 
 type Socials = "instagram" | "twitter" | "facebook" | "linkedin";
@@ -644,6 +644,7 @@ export type ArtistAlgorithmData = {
 export type ArtistCategorizationUpdateDataTypes = {
   answers: ArtistCategorizationAnswerTypes;
   bio: string;
+  documentation: ArtistDocumentationTypes;
   artist_id: string;
 };
 export type ArtistCategorizationAnswerTypes = {

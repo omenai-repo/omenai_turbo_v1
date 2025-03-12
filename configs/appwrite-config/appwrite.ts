@@ -43,8 +43,16 @@ editorial_client
   .setEndpoint(endpoint)
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_PROJECT_ID!);
 
+// Artist docs
+const documentation_client = new Client();
+
+documentation_client
+  .setEndpoint(endpoint)
+  .setProject(process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_CLIENT_ID!);
+
 export const editorial_database = new Databases(editorial_client);
 export const editorial_storage = new Storage(editorial_client);
+export const documentation_storage = new Storage(documentation_client);
 export const appwrite_image_format = ImageFormat;
 export const appwrite_image_gravity = ImageGravity;
 export const identifier = ID;

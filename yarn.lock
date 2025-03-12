@@ -2479,6 +2479,11 @@ cliui@^8.0.1:
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
 
+cloc@^2.4.0-cloc:
+  version "2.4.0-cloc"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.4.0-cloc.tgz#d73e598c87c8cca57c391c79ec9e5268b7d9c225"
+  integrity sha512-7SH5scbWgvVkg0LLUsGpCBnUnB9hCvryGFq9uZsMsuOm/JcxDs+6XB/EBuu446MzfCV0K7ydfTxB0bkEEbHHvw==
+
 clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.npmjs.org/clone/-/clone-1.0.4.tgz"
@@ -6225,7 +6230,7 @@ turbo-windows-arm64@2.4.4:
   resolved "https://registry.yarnpkg.com/turbo-windows-arm64/-/turbo-windows-arm64-2.4.4.tgz#e00c26e3d7fd9a82af90018ad3137f14e5221630"
   integrity sha512-403sqp9t5sx6YGEC32IfZTVWkRAixOQomGYB8kEc6ZD+//LirSxzeCHCnM8EmSXw7l57U1G+Fb0kxgTcKPU/Lg==
 
-turbo@^2.4.4:
+turbo@^2.3.3:
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/turbo/-/turbo-2.4.4.tgz#cec5dbac5850adebdba71fbdf90e6e9a7723c3d6"
   integrity sha512-N9FDOVaY3yz0YCOhYIgOGYad7+m2ptvinXygw27WPLQvcZDl3+0Sa77KGVlLSiuPDChOUEnTKE9VJwLSi9BPGQ==

@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     const data: ArtistCategorizationUpdateDataTypes = await request.json();
 
-    if (!data.answers || !data.artist_id || !data.bio)
+    if (!data.answers || !data.artist_id || !data.bio || !data.documentation)
       throw new BadRequestError("Invalid data parameters");
 
     const artist = await AccountArtist.findOne({ artist_id: data.artist_id });
@@ -73,6 +73,11 @@ export async function POST(request: NextRequest) {
     await ArtistCategorization.create([categorizationSchemaData], {
       session,
     });
+
+    await AccountArtist.updateOne(
+      { artist_id: data.artist_id },
+      { $set: { documentation: data.documentation, bio: data.bio } }
+    ).session(session);
 
     await session.commitTransaction();
 
