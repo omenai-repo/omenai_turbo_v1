@@ -57,6 +57,7 @@ export default function ({
           },
           className: "class",
         });
+      handleClickNext();
     } catch (error) {
       toast.error("Error notification", {
         description:
@@ -69,7 +70,6 @@ export default function ({
       });
     } finally {
       setLoading(false);
-      handleClickNext();
     }
   };
 
