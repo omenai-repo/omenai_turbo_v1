@@ -47,10 +47,7 @@ export async function POST(request: NextRequest) {
     // TODO: Fix for multiple DHL error responses
     if (!response.ok) {
       const error_message = getUserFriendlyError(data.detail);
-      return NextResponse.json(
-        { message: error_message, data },
-        { status: data.status }
-      );
+      throw new BadRequestError(error_message);
     }
     return NextResponse.json({ message: "Success", data }, { status: 200 });
   } catch (error) {
