@@ -17,12 +17,11 @@ export default function OrderDetails({
 
   const total_price_number = calculatePurchaseGrandTotalNumber(
     order.artwork_data.pricing.usd_price,
-    order.shipping_details.quote.fees,
-    order.shipping_details.quote.taxes
+    order.shipping_details.shipment_information.quote.fees,
+    order.shipping_details.shipment_information.quote.taxes
   );
   return (
     <div className="p-4 max-w-[600px]">
-
       <div className="w-fit h-full">
         <div className="w-full">
           <div className="shadow-lg px-5 py-6 rounded-[20px]">
@@ -60,7 +59,9 @@ export default function OrderDetails({
               <div className="flex flex-col text-dark my-3">
                 <p>Shipping carrier</p>
                 <p className="font-semibold">
-                  {JSON.parse(order.shipping_details.quote.package_carrier)}
+                  {JSON.parse(
+                    order.shipping_details.shipment_information.carrier
+                  )}
                 </p>
               </div>
               <div className="flex flex-col  my-3 text-dark">
@@ -72,13 +73,21 @@ export default function OrderDetails({
               <div className="flex flex-col text-dark my-3">
                 <p>Shipping</p>
                 <p className="font-semibold">
-                  {formatPrice(+JSON.parse(order.shipping_details.quote.fees))}
+                  {formatPrice(
+                    +JSON.parse(
+                      order.shipping_details.shipment_information.quote.fees
+                    )
+                  )}
                 </p>
               </div>
               <div className="flex flex-col text-dark my-3">
                 <p>Taxes</p>
                 <p className="font-semibold">
-                  {formatPrice(+JSON.parse(order.shipping_details.quote.taxes))}
+                  {formatPrice(
+                    +JSON.parse(
+                      order.shipping_details.shipment_information.quote.taxes
+                    )
+                  )}
                 </p>
               </div>
 
@@ -94,13 +103,13 @@ export default function OrderDetails({
 
               <div>
                 <PayNowButton
-                    art_id={order.artwork_data.art_id}
-                    artwork={order.artwork_data.title}
-                    amount={total_price_number}
-                    seller_id={order.seller_details.id}
-                    lock_status={lock_status}
-                    seller_email={order.seller_details.email}
-                    seller_name={order.seller_details.name}
+                  art_id={order.artwork_data.art_id}
+                  artwork={order.artwork_data.title}
+                  amount={total_price_number}
+                  seller_id={order.seller_details.id}
+                  lock_status={lock_status}
+                  seller_email={order.seller_details.email}
+                  seller_name={order.seller_details.name}
                 />
               </div>
             </div>

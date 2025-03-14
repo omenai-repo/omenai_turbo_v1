@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(url.toString(), requestOptions);
 
     const data = await response.json();
+    console.log(data);
 
     // TODO: Fix for multiple DHL error responses
     if (!response.ok) {
@@ -106,6 +107,8 @@ export async function POST(request: NextRequest) {
       data.products
     );
 
+    console.log(appropriateDHLProduct);
+
     if (appropriateDHLProduct === null)
       throw new NotFoundError(
         "No DHL product found for this shipment. Please contact support"
@@ -113,7 +116,10 @@ export async function POST(request: NextRequest) {
 
     //TODO: Save relevant data to database before returning response
 
-    return NextResponse.json({ message: "Success", data }, { status: 200 });
+    return NextResponse.json(
+      { message: "Success", appropriateDHLProduct },
+      { status: 200 }
+    );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 

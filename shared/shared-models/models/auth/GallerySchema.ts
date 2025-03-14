@@ -11,7 +11,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       unique: true,
     },
 
-    location: {
+    address: {
       type: Schema.Types.Mixed,
       required: true,
     },

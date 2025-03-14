@@ -11,22 +11,25 @@ import { useSession } from "@omenai/package-provider/SessionProvider";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import {
-  IndividualAddressTypes,
+  AddressTypes,
   IndividualSchemaTypes,
+  RoleAccess,
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 
 type AddressFormTypes = {
-  userAddress: IndividualAddressTypes;
+  userAddress: AddressTypes;
   author_id: string;
   art_id: string;
   availability: boolean;
+  role_access: RoleAccess;
 };
 export default function AddressForm({
   userAddress,
   author_id,
   art_id,
   availability,
+  role_access,
 }: AddressFormTypes) {
   const { address } = orderStore();
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,7 +78,7 @@ export default function AddressForm({
         save_shipping_address,
         shipping_address,
         null,
-        "gallery"
+        role_access.role
       );
 
       if (!createdShippingOrder!.isOk) {

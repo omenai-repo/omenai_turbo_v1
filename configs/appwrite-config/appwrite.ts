@@ -43,7 +43,7 @@ editorial_client
   .setEndpoint(endpoint)
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_PROJECT_ID!);
 
-// Artist docs
+// Omenai artist documenation
 const documentation_client = new Client();
 
 documentation_client

@@ -5,12 +5,7 @@ import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/registe
 import ActionButtons from "../actions/ActionButtons";
 
 export default function GallerySignUpStepThree() {
-  const {
-    currentGallerySignupFormIndex,
-    updateGallerySignupData,
-    gallerySignupData,
-    isFieldDirty,
-  } = useGalleryAuthStore();
+  const { updateGallerySignupData, isFieldDirty } = useGalleryAuthStore();
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     let fieldName = e.target.name;
     updateGallerySignupData(fieldName, e.target.value);

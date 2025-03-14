@@ -25,18 +25,8 @@ export async function POST(request: Request) {
       seller_id,
       save_shipping_address,
       shipping_address,
-      origin_address,
       designation,
     } = await request.json();
-    console.log(
-      buyer_id,
-      art_id,
-      seller_id,
-      save_shipping_address,
-      shipping_address,
-      origin_address,
-      designation
-    );
 
     const buyerData = await AccountIndividual.findOne(
       { user_id: buyer_id },
@@ -49,7 +39,7 @@ export async function POST(request: Request) {
     if (designation === "gallery") {
       const gallery_data = await AccountGallery.findOne(
         { gallery_id: seller_id },
-        "name email"
+        "name email address"
       ).exec();
       seller_data = gallery_data;
     } else {
@@ -87,26 +77,45 @@ export async function POST(request: Request) {
         },
         shipping_details: {
           addresses: {
-            origin: origin_address,
+            origin: seller_data.address,
             destination: shipping_address,
           },
-          tracking: {
-            id: "",
-            link: "",
-          },
-          quote: {
-            package_carrier: "",
-            fees: "",
-            taxes: "",
-            additional_information: "",
-          },
           delivery_confirmed: false,
+          additional_information: "",
+          shipment_information: {
+            carrier: "",
+            shipment_product_code: "",
+
+            dimensions: {
+              length: 0,
+              weight: 0,
+              width: 0,
+              height: 0,
+            },
+            pickup: {
+              additional_information: "",
+              pickup_max_time: "",
+              pickup_min_time: "",
+            },
+            tracking: {
+              id: "",
+              link: "",
+            },
+            quote: {
+              package_carrier: "",
+              fees: "",
+              taxes: "",
+            },
+          },
         },
+        hold_status: null,
+        exhibition_status: null,
         seller_details: {
           id: seller_id,
           name: seller_data.name,
           email: seller_data.email,
         },
+        seller_designation: designation,
         payment_information: {
           status: "pending",
           transaction_value: "",

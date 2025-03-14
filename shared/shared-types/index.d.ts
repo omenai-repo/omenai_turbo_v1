@@ -32,7 +32,7 @@ export type ArtistSchemaTypes = {
   artist_verified: boolean;
   logo: string;
   bio?: string;
-  address: IndividualAddressTypes;
+  address: AddressTypes;
   bio_video_link?: string | null;
   algo_data_id?: string | null;
   role: AccessRoleTypes;
@@ -50,7 +50,7 @@ export type ArtistSignupData = {
   confirmPassword: string;
   logo: string;
   art_style: string | string[];
-  address: IndividualAddressTypes;
+  address: AddressTypes;
 };
 
 export type ArtistDocumentationTypes = {
@@ -66,7 +66,7 @@ export type GallerySchemaTypes = {
   password: string;
   gallery_id: string;
   admin: string;
-  location: GalleryLocation;
+  address: AddressTypes;
   description: string;
   gallery_verified: boolean;
   verified: boolean;
@@ -88,7 +88,7 @@ export type IndividualSchemaTypes = {
   preferences: string[];
   verified: boolean;
   role: AccessRoleTypes;
-  address?: IndividualAddressTypes;
+  address?: AddressTypes;
 };
 
 export type InputProps = {
@@ -99,7 +99,7 @@ export type InputProps = {
   disabled?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   buttonType?: "button" | "submit";
-  buttonText?: "Next" | "Submit";
+  buttonText?: "Continue" | "Submit";
   onClick?: () => void;
   id?: number;
   onClickPrev?: () => void;
@@ -110,6 +110,7 @@ export type IndividualSignupData = {
   email: string;
   password: string;
   confirmPassword: string;
+  address: AddressTypes;
 };
 export type AdminSignupData = {
   name: string;
@@ -123,8 +124,7 @@ export type GallerySignupData = {
   email: string;
   password: string;
   confirmPassword: string;
-  address: string;
-  country: string;
+  address: AddressTypes;
   admin: string;
   description: string;
   logo: File | null;
@@ -140,13 +140,14 @@ export type IndividualRegisterData = Omit<
   "confirmPassword"
 > & {
   preferences: string[];
+  address: AddressTypes;
 };
 
 export type GalleryRegisterData = Pick<
   GallerySignupData,
   "name" | "admin" | "email" | "password" | "description"
 > & {
-  location: GalleryLocation;
+  address: AddressTypes;
   logo: string;
 };
 
@@ -261,19 +262,31 @@ export type CreateOrderModelTypes = {
   shipping_details: OrderShippingDetailsTypes;
   payment_information: PaymentStatusTypes;
   order_accepted: OrderAcceptedStatusTypes;
+  seller_designation: "artist" | "gallery";
+  exhibition_status: OrderArtworkExhibitionStatus | null;
+  hold_status: HoldStatus;
   createdAt: string;
   updatedAt: string;
   availability: boolean;
 };
 
+type OrderArtworkExhibitionStatus = {
+  is_on_exhibition: boolean;
+  exhibition_end_date: Date;
+};
+
+type HoldStatus = {
+  is_hold: boolean;
+  hold_end_date: Date;
+};
+
 export type OrderShippingDetailsTypes = {
   addresses: {
-    origin?: IndividualAddressTypes;
-    destination: IndividualAddressTypes;
+    origin: AddressTypes;
+    destination: AddressTypes;
   };
-  tracking: TrackingInformationTypes;
-  quote: ShippingQuoteTypes;
   delivery_confirmed: boolean;
+  additional_information?: string;
   shipment_information: {
     carrier: string;
     shipment_product_code: string;
@@ -288,6 +301,8 @@ export type OrderShippingDetailsTypes = {
       pickup_max_time: string;
       pickup_min_time: string;
     };
+    tracking: TrackingInformationTypes;
+    quote: ShippingQuoteTypes;
   };
 };
 
@@ -295,6 +310,7 @@ type OrderBuyerAndSellerDetails = {
   id: string;
   name: string;
   email: string;
+  address: AddressTypes;
 };
 export type OrderAcceptedStatusTypes = {
   status: "accepted" | "declined" | "";
@@ -305,19 +321,16 @@ export type TrackingInformationTypes = {
   link: string;
 };
 export type ShippingQuoteTypes = {
-  package_carrier: string;
   fees: string;
   taxes: string;
-  additional_information?: string;
 };
-export type IndividualAddressTypes = {
+export type AddressTypes = {
   address_line: string;
   city: string;
   country: string;
-  countryCode?: string;
+  countryCode: string;
   state: string;
   zip: string;
-  [key: string]: string;
 };
 export type PaymentStatusTypes = {
   status: "pending" | "completed";
@@ -488,7 +501,7 @@ export type CardInputTypes = {
 
 export type AdminGalleryListItemTypes = {
   name: string;
-  location: GalleryLocation;
+  address: AddressTypes;
   description: string;
   _id: string;
   email: string;
@@ -677,7 +690,7 @@ export type ShipmentPickupRequestDataTypes = {
   originCountryCode: string;
   specialInstructions?: string;
   artistDetails: {
-    address: IndividualAddressTypes;
+    address: AddressTypes;
     email: string;
     phone: string;
     fullname: string;
@@ -705,7 +718,7 @@ export type ShipmentRequestDataTypes = {
   artistDetails;
   shipment_product_code;
   dimensions: ShipmentDimensions;
-  receiver_address: IndividualAddressTypes;
+  receiver_address: AddressTypes;
   receiver_data: {
     email: string;
     phone: string;

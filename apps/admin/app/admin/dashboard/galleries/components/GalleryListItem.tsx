@@ -9,7 +9,7 @@ import { AdminGalleryListItemTypes } from "@omenai/shared-types";
 
 export default function GalleryListItem({
   name,
-  location,
+  address,
   description,
   _id,
   email,
@@ -32,7 +32,7 @@ export default function GalleryListItem({
   function updateGalleryPopupData() {
     setSingleGalleryListItemData({
       name,
-      location,
+      address,
       description,
       _id,
       email,
@@ -50,7 +50,10 @@ export default function GalleryListItem({
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-y-2">
           <h1 className="text-[14px] font-normal">{name}</h1>
-          <p className="text-[14px] font-normal">{location.address}</p>
+          <p className="text-[14px] font-normal">
+            {address.address_line}, {address.city}, {address.state},{" "}
+            {address.country}
+          </p>
           <button
             onClick={updateGalleryPopupData}
             className="flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-dark text-white"

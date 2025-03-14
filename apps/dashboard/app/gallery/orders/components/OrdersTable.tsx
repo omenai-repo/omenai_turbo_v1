@@ -14,7 +14,7 @@ import { RiProgress2Line } from "react-icons/ri";
 
 import {
   CreateOrderModelTypes,
-  IndividualAddressTypes,
+  AddressTypes,
   ArtworkSchemaTypes,
 } from "@omenai/shared-types";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
@@ -69,7 +69,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
 
   function handleViewOrder(
     buyer: string,
-    shipping_address: IndividualAddressTypes,
+    shipping_address: AddressTypes,
     order_id: string,
     status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
@@ -224,7 +224,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                   {construct_status(
                     order.status,
                     order.payment_information.status,
-                    order.shipping_details.tracking.link,
+                    order.shipping_details.shipment_information.tracking.link,
                     order.order_accepted.status
                   )}
                 </td>
@@ -247,7 +247,8 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                   {order.payment_information.status === "completed" &&
                     order.order_accepted.status === "accepted" &&
                     order.status !== "completed" &&
-                    order.shipping_details.tracking.link !== "" && (
+                    order.shipping_details.shipment_information.tracking
+                      .link !== "" && (
                       <button
                         disabled
                         className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
@@ -257,7 +258,8 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                     )}
                   {order.payment_information.status === "completed" &&
                     order.order_accepted.status === "accepted" &&
-                    order.shipping_details.tracking.link === "" && (
+                    order.shipping_details.shipment_information.tracking
+                      .link === "" && (
                       <div className="relative flex items-center gap-x-1">
                         <button
                           onClick={() =>

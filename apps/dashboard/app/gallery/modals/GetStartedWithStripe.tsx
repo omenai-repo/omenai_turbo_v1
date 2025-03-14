@@ -174,15 +174,15 @@ export default function GetStartedWithStripe() {
                 accountLinkCreatePending) && (
                 <div className="dev-callout">
                   {connectedAccountId && (
-                    <>
-                      <p className="text-[14px] font-normal mt-6">
+                    <div className="my-5">
+                      <p className="text-[14px] font-normal">
                         Your connected account ID is:{" "}
                         <code className="font-bold">{connectedAccountId}</code>{" "}
                       </p>
-                      <span className="text-[14px] my-3 font-light">
+                      <span className="text-[14px] my-3 font-medium">
                         Hey, don&apos;t worry, we&apos;ll remember it for you!
                       </span>
-                    </>
+                    </div>
                   )}
                   {accountCreatePending && (
                     <p className="text-[14px] font-bold mt-6">

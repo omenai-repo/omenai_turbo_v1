@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     const { status } = await request.json();
     const galleries = await AccountGallery.find(
       { gallery_verified: status, verified: true },
-      "name location admin logo description email gallery_verified gallery_id status"
+      "name address admin logo description email gallery_verified gallery_id status"
     );
 
     if (!galleries)

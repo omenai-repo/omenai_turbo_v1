@@ -34,11 +34,17 @@ export default function FormInput() {
       email,
       password,
       admin,
-      address,
       description,
       country,
       logo,
+      address_line,
+      countryCode,
+      state,
+      city,
+      zip,
     } = gallerySignupData;
+
+    console.log(gallerySignupData);
 
     if (logo === null) return;
 
@@ -54,7 +60,7 @@ export default function FormInput() {
         email,
         password,
         admin,
-        location: { address, country },
+        address: { address_line, country, countryCode, state, city, zip },
         description,
         logo: file.fileId,
       };

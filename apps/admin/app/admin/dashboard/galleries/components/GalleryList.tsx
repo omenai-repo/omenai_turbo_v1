@@ -51,7 +51,7 @@ export default function GalleryList() {
                 <GalleryListItem
                   key={gallery._id}
                   name={gallery.name}
-                  location={gallery.location}
+                  address={gallery.address}
                   description={gallery.description}
                   _id={gallery._id}
                   email={gallery.email}

@@ -1,10 +1,10 @@
-import { IndividualAddressTypes } from "@omenai/shared-types";
+import { AddressTypes } from "@omenai/shared-types";
 import { create } from "zustand";
 
 type OrderStoreTypes = {
-  address: IndividualAddressTypes;
+  address: AddressTypes;
   setAddress: (label: string, value: string) => void;
-  set_address_on_order: (address: IndividualAddressTypes) => void;
+  set_address_on_order: (address: AddressTypes) => void;
 };
 export const orderStore = create<OrderStoreTypes>((set, get) => ({
   address: {
@@ -13,6 +13,7 @@ export const orderStore = create<OrderStoreTypes>((set, get) => ({
     country: "",
     state: "",
     zip: "",
+    countryCode: "",
   },
   setAddress: (label: string, value: string) => {
     const data: Record<string, any> = get().address;
@@ -21,11 +22,11 @@ export const orderStore = create<OrderStoreTypes>((set, get) => ({
       const updatedData = { ...data, [label]: value };
 
       set({
-        address: updatedData as IndividualAddressTypes,
+        address: updatedData as AddressTypes,
       });
     }
   },
-  set_address_on_order: (address: IndividualAddressTypes) => {
+  set_address_on_order: (address: AddressTypes) => {
     set({ address });
   },
 }));

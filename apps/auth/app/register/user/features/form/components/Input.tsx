@@ -15,15 +15,10 @@ export default function Input({
   type,
   placeholder,
   disabled = false,
-  onChange,
   id,
 }: InputProps) {
-  const {
-    individualSignupData,
-    decrementCurrentSignupFormIndex,
-    updateSignUpData,
-    setIsFieldDirty,
-  } = useIndividualAuthStore();
+  const { individualSignupData, updateSignUpData, setIsFieldDirty } =
+    useIndividualAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
   const [show, setShow] = useState(false);

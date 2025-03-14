@@ -23,10 +23,8 @@ export default function QuoteForm() {
   const queryClient = useQueryClient();
 
   const [quoteData, setQuoteData] = useState<ShippingQuoteTypes>({
-    package_carrier: "",
     fees: "",
     taxes: "",
-    additional_information: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +42,6 @@ export default function QuoteForm() {
     e.preventDefault();
     if (
       allKeysEmpty({
-        package_carrier: quoteData.package_carrier,
         fees: quoteData.fees,
         taxes: quoteData.taxes,
       })

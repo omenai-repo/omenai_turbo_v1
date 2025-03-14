@@ -81,7 +81,7 @@ export const FormCard = () => {
       <div className="grid grid-cols-2 items-center">
         <InputCard
           label="Address"
-          defaultValue={(user as GallerySchemaTypes).location.address}
+          defaultValue={(user as GallerySchemaTypes).address.address_line}
           labelText="location"
         />
         <InputCard

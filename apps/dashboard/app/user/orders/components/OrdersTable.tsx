@@ -199,7 +199,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                   {construct_status(
                     order.status,
                     order.payment_information.status,
-                    order.shipping_details.tracking.link,
+                    order.shipping_details.shipment_information.tracking.link,
                     order.order_accepted.status,
                     order.shipping_details.delivery_confirmed
                   )}
@@ -221,14 +221,16 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                     {order.payment_information.status === "completed" &&
                       order.status !== "completed" &&
                       !order.shipping_details.delivery_confirmed &&
-                      order.shipping_details.tracking.link !== "" && (
+                      order.shipping_details.shipment_information.tracking
+                        .link !== "" && (
                         <button className=" bg-dark disabled:bg-[#E0E0E0] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                           <span>View tracking information</span>
                         </button>
                       )}
                     {order.payment_information.status === "completed" &&
                       !order.shipping_details.delivery_confirmed &&
-                      order.shipping_details.tracking.link !== "" && (
+                      order.shipping_details.shipment_information.tracking
+                        .link !== "" && (
                         <button className=" bg-green-600 disabled:bg-[#E0E0E0] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                           <span>Confirm order delivery</span>
                         </button>
@@ -238,7 +240,8 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                   {order.payment_information.status === "completed" &&
                     order.order_accepted.status === "accepted" &&
                     order.status !== "completed" &&
-                    order.shipping_details.tracking.link === "" && (
+                    order.shipping_details.shipment_information.tracking
+                      .link === "" && (
                       <button
                         disabled
                         className=" bg-dark disabled:bg-[#E0E0E0] rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"

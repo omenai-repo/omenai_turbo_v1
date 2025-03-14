@@ -6,8 +6,7 @@ import SelectInput from "../form/components/Select";
 import ActionButtons from "../actions/ActionButtons";
 
 export default function GallerySignupStepTwo() {
-  const { currentGallerySignupFormIndex, updateGallerySignupData } =
-    useGalleryAuthStore();
+  const { updateGallerySignupData } = useGalleryAuthStore();
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     let fieldName = e.target.name;
     updateGallerySignupData(fieldName, e.target.value);

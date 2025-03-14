@@ -40,9 +40,15 @@ export default function PendingOrders({
                     order_id={order.order_id}
                     state="pending"
                     payment_information={order.payment_information}
-                    tracking_information={order.shipping_details.tracking}
-                    shipping_quote={order.shipping_details.quote}
-                    delivery_confirmed={order.shipping_details.delivery_confirmed}
+                    tracking_information={
+                      order.shipping_details.shipment_information.tracking
+                    }
+                    shipping_quote={
+                      order.shipping_details.shipment_information.quote
+                    }
+                    delivery_confirmed={
+                      order.shipping_details.delivery_confirmed
+                    }
                     order_accepted={order.order_accepted}
                     availability={order.availability}
                   />

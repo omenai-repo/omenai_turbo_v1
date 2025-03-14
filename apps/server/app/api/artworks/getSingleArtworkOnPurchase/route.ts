@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     const artwork = await Artworkuploads.findOne(
       { title: new_title },
-      "art_id author_id title artist pricing url availability "
+      "art_id author_id title artist pricing url availability role_access"
     ).exec();
     if (!artwork) throw new NotFoundError("Artwork not found");
 

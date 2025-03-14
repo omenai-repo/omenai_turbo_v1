@@ -1,12 +1,14 @@
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
-import React from "react";
+import React, { useState } from "react";
 import { MdOutlineArrowForward } from "react-icons/md";
 import { shouldDisableNext } from "@omenai/shared-utils/src/should_disable_next_button";
+import { validateAddress } from "@omenai/shared-services/address_validation/validateAddress";
 import { toast } from "sonner";
+import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 const steps = {
   0: ["name", "email", "admin"],
-  1: ["country", "address", "description"],
-  2: ["password", "confirmPassword"],
+  1: ["country", "address_line", "state", "city", "zip"],
+  2: ["password", "confirmPassword", "description"],
   3: ["logo"],
 };
 
@@ -19,6 +21,55 @@ export default function () {
     gallerySignupData,
   } = useGalleryAuthStore();
 
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const validateAddressCapability = async () => {
+    const payload = {
+      type: "pickup" as "delivery" | "pickup",
+      countryCode: gallerySignupData.countryCode,
+      postalCode: gallerySignupData.zip,
+      cityName: gallerySignupData.state,
+      countyName: gallerySignupData.city,
+    };
+
+    setLoading(true);
+    try {
+      const response = await validateAddress(payload);
+
+      if (!response.isOk)
+        toast.error("Error notification", {
+          description: response.message,
+          style: {
+            background: "red",
+            color: "white",
+          },
+          className: "class",
+        });
+      else
+        toast.success("Verification successful", {
+          description:
+            "Address verification for pickup capability was successful",
+          style: {
+            background: "green",
+            color: "white",
+          },
+          className: "class",
+        });
+    } catch (error) {
+      toast.error("Error notification", {
+        description:
+          "Something went wrong. Could be us, please contact support",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+    } finally {
+      setLoading(false);
+      handleClickNext();
+    }
+  };
   const handleClickPrev = () => {
     decrementCurrentGallerySignupFormIndex();
   };
@@ -62,12 +113,25 @@ export default function () {
         Back
       </button>
       <button
-        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/50 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
+        className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/50 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
         type={"button"}
-        onClick={handleClickNext}
+        disabled={currentGallerySignupFormIndex === 1 && loading}
+        onClick={
+          currentGallerySignupFormIndex === 1
+            ? validateAddressCapability
+            : handleClickNext
+        }
       >
-        <span>Continue</span>
-        <MdOutlineArrowForward />
+        <span>
+          {loading ? (
+            <LoadSmall />
+          ) : currentGallerySignupFormIndex === 1 ? (
+            "Verify Address"
+          ) : (
+            "Continue"
+          )}
+        </span>
+        {currentGallerySignupFormIndex !== 1 && <MdOutlineArrowForward />}
       </button>
     </div>
   );

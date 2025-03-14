@@ -1,6 +1,6 @@
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
-import { GallerySignupData } from "@omenai/shared-types";
+import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, HTMLInputTypeAttribute, useState } from "react";
@@ -51,11 +51,17 @@ export default function Input({
           : undefined
       );
     if (!success) {
-      setIsFieldDirty(e.target.name as keyof GallerySignupData, true);
+      setIsFieldDirty(
+        e.target.name as keyof GallerySignupData & AddressTypes,
+        true
+      );
       setErrorList(errors);
     } else {
       setErrorList([]);
-      setIsFieldDirty(e.target.name as keyof GallerySignupData, false);
+      setIsFieldDirty(
+        e.target.name as keyof GallerySignupData & AddressTypes,
+        false
+      );
     }
   };
 
@@ -66,18 +72,18 @@ export default function Input({
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col gap-y-2 w-full xl:container"
+        className="flex flex-col gap-y-1 w-full xl:container"
       >
         <label
           htmlFor={labelText}
-          className="text-[#858585] text-xs font-normal sm:text-[14px]"
+          className="text-[#858585] text-xs font-normal"
         >
           {label}
         </label>
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className="disabled:cursor-not-allowed disabled:bg-gray-400 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
+            className="disabled:cursor-not-allowed disabled:bg-gray-400 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
             placeholder={`e.g ${placeholder}`}
             disabled={disabled}
             onChange={handleChange}

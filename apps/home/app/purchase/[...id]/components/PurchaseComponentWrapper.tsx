@@ -8,7 +8,7 @@ import { fetchUserData } from "@omenai/shared-services/requests/fetchUserData";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import {
   ArtworkResultTypes,
-  IndividualAddressTypes,
+  AddressTypes,
   IndividualSchemaTypes,
 } from "@omenai/shared-types";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
@@ -20,17 +20,6 @@ import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   const { session } = useContext(SessionContext);
   const { set_address_on_order, address } = orderStore();
-  // const [redirect_uri, set_redirect_uri] = useLocalStorage(
-  //   "redirect_uri_on_login",
-  //   ""
-  // );
-  // const [address, setAddress] = useState<IndividualAddressTypes>({
-  //   address_line: "",
-  //   city: "",
-  //   country: "",
-  //   state: "",
-  //   zip: "",
-  // });
 
   const { data: artwork, isLoading: loading } = useQuery({
     queryKey: ["fetch_artwork_on purchase"],
@@ -79,6 +68,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
                 userAddress={address}
                 author_id={(artwork as ArtworkResultTypes).author_id}
                 art_id={(artwork as ArtworkResultTypes).art_id}
+                role_access={(artwork as ArtworkResultTypes).role_access}
               />
             </div>
             <div className="cols-span-1">

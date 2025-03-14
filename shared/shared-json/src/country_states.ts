@@ -1210,7 +1210,7 @@ export const country_and_states = [
     ],
   },
   {
-    country: "Czeck Republic",
+    country: "Czech Republic",
     states: [
       "Brnensky",
       "Budejovicky",

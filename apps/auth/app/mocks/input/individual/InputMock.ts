@@ -1,3 +1,4 @@
+import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { InputProps } from "@omenai/shared-types";
 
 export const user_signup_step_one = [
@@ -17,6 +18,42 @@ export const user_signup_step_one = [
   },
 ];
 export const user_signup_step_two = [
+  {
+    label: "Gallery country of operation",
+    type: "select",
+    placeholder: "Select option",
+    labelText: "country",
+    items: country_codes,
+  },
+
+  {
+    label: "Address line",
+    type: "text",
+    placeholder: "e.g 79, example street",
+    labelText: "address_line",
+    items: [],
+  },
+  {
+    label: "City",
+    type: "text",
+    placeholder: "Prague",
+    labelText: "city",
+  },
+  {
+    label: "State",
+    type: "select",
+    labelText: "state",
+    placeholder: "Select option",
+    items: [],
+  },
+  {
+    label: "Postal code",
+    type: "text",
+    placeholder: "Your region's postal code",
+    labelText: "zip",
+  },
+];
+export const user_signup_step_three = [
   {
     label: "Setup a password to secure your account",
     type: "password",

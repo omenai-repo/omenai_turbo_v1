@@ -1,4 +1,4 @@
-import { IndividualSignupData } from "@omenai/shared-types";
+import { AddressTypes, IndividualSignupData } from "@omenai/shared-types";
 import { create } from "zustand";
 
 type IndividualAuthStoreTypes = {
@@ -7,12 +7,16 @@ type IndividualAuthStoreTypes = {
   decrementCurrentSignupFormIndex: () => void;
   preferences: string[];
   updatePreference: (value: string) => void;
-  individualSignupData: IndividualSignupData;
+  individualSignupData: Omit<IndividualSignupData, "address"> & AddressTypes;
   updateSignUpData: (label: string, value: string) => void;
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
-  isFieldDirty: Record<keyof IndividualSignupData, boolean>;
+  isFieldDirty: Record<
+    | keyof Omit<IndividualSignupData, "address">
+    | keyof Omit<AddressTypes, "countryCode">,
+    boolean
+  >;
   setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => void;
 };
 
@@ -62,6 +66,12 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       email: "",
       password: "",
       confirmPassword: "",
+      address_line: "",
+      city: "",
+      country: "",
+      zip: "",
+      countryCode: "",
+      state: "",
     },
 
     // UPDATE SIGNUP FORM DATA ON INPUT CHANGE
@@ -74,7 +84,13 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       if (label in data) {
         const updatedData = { ...data, [label]: value };
 
-        set({ individualSignupData: updatedData as IndividualSignupData });
+        set({
+          individualSignupData: updatedData as Omit<
+            IndividualSignupData,
+            "address"
+          > &
+            AddressTypes,
+        });
       }
     },
     isLoading: false,
@@ -91,6 +107,12 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
           email: "",
           password: "",
           confirmPassword: "",
+          address_line: "",
+          city: "",
+          country: "",
+          zip: "",
+          countryCode: "",
+          state: "",
         },
         preferences: [],
         currentSignupFormIndex: 0,
@@ -101,6 +123,11 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       email: true,
       password: true,
       confirmPassword: true,
+      address_line: true,
+      city: true,
+      country: true,
+      zip: true,
+      state: true,
     },
     setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => {
       set((state: any) => ({

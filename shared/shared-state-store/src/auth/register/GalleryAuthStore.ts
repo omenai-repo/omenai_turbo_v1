@@ -1,17 +1,20 @@
-import { add } from "date-fns";
-import { GallerySignupData } from "@omenai/shared-types";
+import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
 import { create } from "zustand";
 
 type GalleryAuthStoreTypes = {
   currentGallerySignupFormIndex: number;
   incrementCurrentGallerySignupFormIndex: () => void;
   decrementCurrentGallerySignupFormIndex: () => void;
-  gallerySignupData: GallerySignupData;
+  gallerySignupData: Omit<GallerySignupData, "address"> & AddressTypes;
   updateGallerySignupData: (label: string, value: string | File | null) => void;
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
-  isFieldDirty: Record<keyof GallerySignupData, boolean>;
+  isFieldDirty: Record<
+    | keyof Omit<GallerySignupData, "address">
+    | keyof Omit<AddressTypes, "countryCode">,
+    boolean
+  >;
   setIsFieldDirty: (key: keyof GallerySignupData, value: boolean) => void;
 };
 export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
@@ -43,10 +46,14 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       email: "",
       password: "",
       confirmPassword: "",
-      address: "",
+      address_line: "",
+      city: "",
+      country: "",
+      countryCode: "",
+      state: "",
+      zip: "",
       admin: "",
       description: "",
-      country: "",
       logo: null,
     },
 
@@ -59,7 +66,10 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       if (label in data) {
         const updatedData = { ...data, [label]: value };
 
-        set({ gallerySignupData: updatedData as GallerySignupData });
+        set({
+          gallerySignupData: updatedData as Omit<GallerySignupData, "address"> &
+            AddressTypes,
+        });
       }
     },
     isLoading: false,
@@ -75,10 +85,14 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
           email: "",
           password: "",
           confirmPassword: "",
-          address: "",
+          address_line: "",
+          city: "",
+          country: "",
+          state: "",
+          zip: "",
+          countryCode: "",
           admin: "",
           description: "",
-          country: "",
           logo: null,
         },
         currentGallerySignupFormIndex: 0,
@@ -90,10 +104,13 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       email: true,
       password: true,
       confirmPassword: true,
-      address: true,
+      address_line: true,
+      city: true,
+      country: true,
+      state: true,
+      zip: true,
       admin: true,
       description: true,
-      country: true,
       logo: true,
     },
     setIsFieldDirty: (key: keyof GallerySignupData, value: boolean) => {

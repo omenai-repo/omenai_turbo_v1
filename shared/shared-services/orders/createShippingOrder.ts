@@ -1,4 +1,4 @@
-import { IndividualAddressTypes } from "@omenai/shared-types";
+import { AddressTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const createShippingOrder = async (
@@ -6,8 +6,8 @@ export const createShippingOrder = async (
   art_id: string,
   seller_id: string,
   save_shipping_address: boolean,
-  shipping_address: IndividualAddressTypes,
-  origin_address: IndividualAddressTypes | null,
+  shipping_address: AddressTypes,
+  origin_address: AddressTypes | null,
   designation: "gallery" | "artist"
 ) => {
   const url = getApiUrl();
@@ -21,7 +21,7 @@ export const createShippingOrder = async (
         save_shipping_address,
         shipping_address,
         origin_address,
-        designation
+        designation,
       }),
     });
     const result = await res.json();

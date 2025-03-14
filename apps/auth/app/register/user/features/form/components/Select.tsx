@@ -1,7 +1,12 @@
 "use client";
 import { country_and_states } from "@omenai/shared-json/src/countryAndStateList";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
-import { GallerySignupData, AddressTypes } from "@omenai/shared-types";
+import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
+import {
+  GallerySignupData,
+  AddressTypes,
+  IndividualSignupData,
+} from "@omenai/shared-types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
 import { MdError, MdOutlineArrowForward } from "react-icons/md";
@@ -23,19 +28,19 @@ export default function SelectInput({
   required,
 }: SelectInputProps) {
   const {
-    gallerySignupData,
-    currentGallerySignupFormIndex,
-    updateGallerySignupData,
+    individualSignupData,
+    currentSignupFormIndex,
+    updateSignUpData,
     setIsFieldDirty,
     isFieldDirty,
-  } = useGalleryAuthStore();
+  } = useIndividualAuthStore();
 
   const option_items =
     labelText === "country"
       ? items
       : labelText === "state"
         ? country_and_states.find(
-            (country) => country.country === gallerySignupData.country
+            (country) => country.country === individualSignupData.country
           )?.states || []
         : [];
   const [errorList, setErrorList] = useState<string[]>([]);
@@ -45,14 +50,17 @@ export default function SelectInput({
     const selectedCode =
       e.target.options[e.target.selectedIndex].getAttribute("data-code");
 
-    updateGallerySignupData(labelText, value);
+    updateSignUpData(labelText, value);
     labelText === "country" &&
-      updateGallerySignupData("countryCode", selectedCode);
-    setIsFieldDirty(labelText as keyof GallerySignupData & AddressTypes, false);
+      updateSignUpData("countryCode", selectedCode as string);
+    setIsFieldDirty(
+      labelText as keyof IndividualSignupData & AddressTypes,
+      false
+    );
   };
 
   return (
-    <AnimatePresence key={`${currentGallerySignupFormIndex}-gallery`}>
+    <AnimatePresence key={`${currentSignupFormIndex}-gallery`}>
       <motion.div
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
@@ -65,10 +73,12 @@ export default function SelectInput({
             {label}
           </label>
           <select
-            value={(gallerySignupData as Record<string, any>)[labelText]}
+            value={(individualSignupData as Record<string, any>)[labelText]}
             onChange={handleChange}
             required={required}
-            disabled={labelText === "state" && gallerySignupData.country === ""}
+            disabled={
+              labelText === "state" && individualSignupData.country === ""
+            }
             className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-gray-400 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
           >
             <option value="" className="text-dark/40">

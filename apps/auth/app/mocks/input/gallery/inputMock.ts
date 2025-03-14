@@ -26,7 +26,7 @@ export const gallery_signup_step_one = [
 
 export const gallery_signup_step_two = [
   {
-    label: "Country of operation",
+    label: "Gallery country of operation",
     type: "select",
     placeholder: "Select option",
     labelText: "country",
@@ -34,18 +34,30 @@ export const gallery_signup_step_two = [
   },
 
   {
-    label: "Gallery address",
+    label: "Address line",
     type: "text",
-    placeholder: "e.g 79, example street, London, England",
-    labelText: "address",
+    placeholder: "e.g 79, example street",
+    labelText: "address_line",
     items: [],
   },
   {
-    label: "Gallery description",
+    label: "City",
     type: "text",
-    placeholder: "Tell us a bit more about your gallery",
-    labelText: "description",
+    placeholder: "Prague",
+    labelText: "city",
+  },
+  {
+    label: "State",
+    type: "select",
+    labelText: "state",
+    placeholder: "Select option",
     items: [],
+  },
+  {
+    label: "Postal code",
+    type: "text",
+    placeholder: "Your region's postal code",
+    labelText: "zip",
   },
 ];
 
@@ -61,6 +73,12 @@ export const gallery_signup_step_three = [
     type: "password",
     placeholder: "********",
     labelText: "confirmPassword",
+  },
+  {
+    label: "Gallery Description",
+    type: "text",
+    placeholder: "Tell us a bit more about your gallery",
+    labelText: "description",
   },
 ];
 

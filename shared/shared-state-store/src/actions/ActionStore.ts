@@ -2,7 +2,7 @@ import { country_and_states } from "@omenai/shared-json/src/countryAndStateList"
 import { create } from "zustand";
 import {
   ArtworkSchemaTypes,
-  IndividualAddressTypes,
+  AddressTypes,
   RouteIdentifier,
 } from "@omenai/shared-types";
 
@@ -36,14 +36,14 @@ type ActionStoreTypes = {
   setCountryStates: () => void;
   galleryOrderActionModalData: {
     buyer: string;
-    shipping_address: IndividualAddressTypes;
+    shipping_address: AddressTypes;
     order_id: string;
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">;
     status: string;
   };
   updateGalleryOrderActionModalData: (
     buyer: string,
-    shipping_address: IndividualAddressTypes,
+    shipping_address: AddressTypes,
     order_id: string,
     status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
@@ -145,6 +145,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
       country: "",
       state: "",
       zip: "",
+      countryCode: "",
     },
     order_id: "",
     artwork: {
@@ -157,7 +158,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
   },
   updateGalleryOrderActionModalData: (
     buyer: string,
-    shipping_address: IndividualAddressTypes,
+    shipping_address: AddressTypes,
     order_id: string,
     status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
@@ -183,6 +184,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
           country: "",
           state: "",
           zip: "",
+          countryCode: "",
         },
         order_id: "",
         artwork: {
