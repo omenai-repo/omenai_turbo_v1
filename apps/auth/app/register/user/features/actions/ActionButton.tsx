@@ -47,7 +47,7 @@ export default function ({
           },
           className: "class",
         });
-      else
+      else {
         toast.success("Verification successful", {
           description:
             "Address verification for pickup capability was successful",
@@ -57,7 +57,8 @@ export default function ({
           },
           className: "class",
         });
-      handleClickNext();
+        handleClickNext();
+      }
     } catch (error) {
       toast.error("Error notification", {
         description:
