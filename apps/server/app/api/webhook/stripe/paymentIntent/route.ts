@@ -3,8 +3,11 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
-import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
-import { PaymentStatusTypes, PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
+import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
+import {
+  PaymentStatusTypes,
+  PurchaseTransactionModelSchemaTypes,
+} from "@omenai/shared-types";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
@@ -46,7 +49,7 @@ export async function POST(request: Request) {
 
   const email_order_info = await CreateOrder.findOne(
     {
-      "buyer_details.email": meta.user_email,
+      "buyer_details.email": meta.buyer_email,
       "artwork_data.art_id": meta.art_id,
     },
     "artwork_data order_id createdAt buyer_details"
@@ -92,7 +95,7 @@ export async function POST(request: Request) {
       // Apply update to CreateOrder collection
       await CreateOrder.updateOne(
         {
-          "buyer_details.email": meta.user_email,
+          "buyer_details.email": meta.buyer_email,
           "artwork_data.art_id": meta.art_id,
         },
         {
@@ -109,11 +112,10 @@ export async function POST(request: Request) {
           currency
         ),
         trans_date: date,
-        trans_gallery_id: meta.gallery_id,
-        trans_owner_id: meta.user_id,
-        trans_owner_role: "user",
+        trans_recipient_id: meta.seller_id,
+        trans_initiator_id: meta.buyer_id,
+        trans_recipient_role: "gallery",
         trans_reference: paymentIntent.id,
-        trans_type: "purchase_payout",
       };
 
       const create_transaction = await PurchaseTransactions.create(data);
@@ -130,18 +132,18 @@ export async function POST(request: Request) {
         month,
         year,
         value: paymentIntent.amount_received / 100,
-        gallery_id: meta.gallery_id,
+        id: meta.seller_id,
       };
 
       await SalesActivity.create({ ...activity });
 
       // Clear the order lock on the artwork
-      await releaseOrderLock(meta.art_id, meta.user_id);
+      await releaseOrderLock(meta.art_id, meta.buyer_id);
 
       await CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
-          "buyer.user_id": { $ne: meta.user_id },
+          "buyer_details.id": { $ne: meta.buyer_id },
         },
         { $set: { availability: false } }
       );
@@ -169,7 +171,7 @@ export async function POST(request: Request) {
     const price = formatPrice(paymentIntent.amount_received / 100, currency);
 
     await sendPaymentSuccessMail({
-      email: meta.user_email,
+      email: meta.buyer_email,
       name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
       order_id: email_order_info.order_id,
@@ -192,7 +194,7 @@ export async function POST(request: Request) {
 
   if (event.type === "payment_intent.processing") {
     await sendPaymentPendingMail({
-      email: meta.user_email,
+      email: meta.buyer_email,
       name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
     });
@@ -200,14 +202,17 @@ export async function POST(request: Request) {
 
   if (event.type === "payment_intent.payment_failed") {
     await sendPaymentFailedMail({
-      email: meta.user_email,
+      email: meta.buyer_email,
       name: email_order_info.buyer.name,
       artwork: email_order_info.artwork_data.title,
       order_id: email_order_info.order_id,
     });
   }
 
-  const release_lock_status = await releaseOrderLock(meta.art_id, meta.user_id);
+  const release_lock_status = await releaseOrderLock(
+    meta.art_id,
+    meta.buyer_id
+  );
 
   if (!release_lock_status?.isOk) return NextResponse.json({ status: 400 });
   // Return a 200 response to acknowledge receipt of the event

@@ -5,11 +5,11 @@ export async function createCheckoutSession(
   amount: number,
   seller_id: string,
   meta: {
-    trans_type: string;
-    user_id: string;
-    user_email: string;
+    buyer_id: string;
+    buyer_email: string;
     seller_email: string;
     seller_name: string;
+    seller_id: string;
     artwork_name: string;
     art_id: string;
   },

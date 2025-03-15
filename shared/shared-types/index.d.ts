@@ -253,7 +253,7 @@ export type ArtworkUploadStateTypes = {
 export type CreateOrderModelTypes = {
   artwork_data: Pick<
     ArtworkSchemaTypes,
-    "artist" | "pricing" | "title" | "url" | "art_id"
+    "artist" | "pricing" | "title" | "url" | "art_id" | "role_access"
   > & { _id: ObjectId };
   buyer_details: OrderBuyerAndSellerDetails;
   seller_details: OrderBuyerAndSellerDetails;
@@ -402,25 +402,24 @@ export type WalletModelSchemaTypes = {
   owner_id: string;
   wallet_id: string;
   available_balance: number;
-  withdrawable_balance: number;
-  withdrawal_account?: WithdrawalAccount;
+  pending_balance: number;
+  primary_withdrawal_account?: WithdrawalAccount | null;
 };
 export type WithdrawalAccount = {
   account_number: number;
+  account_bank: string;
   account_name: string;
-  bank_name: string;
-  bank_code: string;
+  account_bank_id: string;
 };
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;
   trans_reference: string;
   trans_amount: string;
-  trans_owner_id: string;
-  trans_owner_role: "user" | "gallery";
-  trans_gallery_id: string;
-  trans_type: "purchase_payout" | "subscription";
+  trans_initiator_id: string;
+  trans_recipient_id: string;
   trans_date: Date;
+  trans_recipient_role: "gallery" | "artist";
 };
 
 export type SubscriptionTransactionModelSchemaTypes = {
@@ -428,7 +427,6 @@ export type SubscriptionTransactionModelSchemaTypes = {
   reference: string;
   amount: string;
   gallery_id: string;
-  type: "purchase_payout" | "subscription";
   date: Date;
 };
 

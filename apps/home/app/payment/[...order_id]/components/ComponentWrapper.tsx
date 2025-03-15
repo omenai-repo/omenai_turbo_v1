@@ -71,7 +71,7 @@ export default function ComponentWrapper({
         <>
           <DesktopNavbar />
           <div className="w-full h-[80vh] grid place-items-center ">
-            <OrderDetails order={data!.order} lock_status={data!.locked} />
+            <OrderDetails order={data?.order} lock_status={data?.locked} />
           </div>
         </>
       ) : (

@@ -1,7 +1,10 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  NotFoundError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export async function POST(request: Request) {
@@ -9,16 +12,27 @@ export async function POST(request: Request) {
     await connectMongoDB();
     const data = await request.json();
 
-    const createWallet = await Wallet.create({ owner_id: data.owner_id });
+    // Check if wallet exists
+    const wallet_exists = await Wallet.findOne({ owner_id: data.owner_id });
 
-    if (!createWallet)
+    if (!wallet_exists)
+      throw new NotFoundError(
+        "Wallet doesn't exists for this user, please escalate to IT support"
+      );
+
+    const fund_wallet = await Wallet.updateOne(
+      { owner_id: data.owner_id },
+      { $inc: { pending_balance: data.amount } }
+    );
+
+    if (!fund_wallet)
       throw new ServerError(
         "An error was encountered. Please try again or contact IT support"
       );
 
     return NextResponse.json(
       {
-        message: "Wallet created",
+        message: "Wallet funded",
       },
       { status: 200 }
     );

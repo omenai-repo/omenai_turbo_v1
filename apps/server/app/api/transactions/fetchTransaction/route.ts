@@ -1,5 +1,5 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
+import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -10,8 +10,7 @@ export async function POST(request: Request) {
     const { gallery_id } = await request.json();
 
     const fetchTransactions = await PurchaseTransactions.find({
-      trans_gallery_id: gallery_id,
-      trans_type: "purchase_payout",
+      trans_recipient_id: gallery_id,
     });
 
     if (!fetchTransactions)

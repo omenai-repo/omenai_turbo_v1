@@ -50,7 +50,7 @@ export default function ({
       else {
         toast.success("Verification successful", {
           description:
-            "Address verification for pickup capability was successful",
+            "Address verification for delivery capability was successful",
           style: {
             background: "green",
             color: "white",

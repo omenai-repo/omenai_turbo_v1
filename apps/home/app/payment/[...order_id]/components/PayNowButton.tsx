@@ -11,7 +11,7 @@ import { createCheckoutSession } from "@omenai/shared-services/stripe/createChec
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
+import { IndividualSchemaTypes, RoleAccess } from "@omenai/shared-types";
 
 export default function PayNowButton({
   art_id,
@@ -21,6 +21,7 @@ export default function PayNowButton({
   lock_status,
   seller_email,
   seller_name,
+  role_access,
 }: {
   art_id: string;
   artwork: string;
@@ -29,6 +30,7 @@ export default function PayNowButton({
   lock_status: boolean;
   seller_email: string;
   seller_name: string;
+  role_access: RoleAccess;
 }) {
   const router = useRouter();
   const { session } = useContext(SessionContext);
@@ -52,12 +54,12 @@ export default function PayNowButton({
           amount,
           seller_id,
           {
-            trans_type: "purchase_payout",
-            user_id: (session as IndividualSchemaTypes)?.user_id,
-            user_email: (session as IndividualSchemaTypes)?.email,
+            buyer_id: (session as IndividualSchemaTypes)?.user_id,
+            buyer_email: (session as IndividualSchemaTypes)?.email,
             art_id,
             seller_email,
             seller_name,
+            seller_id,
             artwork_name: artwork,
           },
           `${url}/payment/success`,
@@ -125,7 +127,10 @@ export default function PayNowButton({
           <span className="text-base font-bold uppercase underline">
             Please note:
           </span>
-          <br /> To protect your purchase and prevent duplicate transactions, we use a secure queuing system, allowing one buyer to complete payment at a time. If you experience issues accessing the payment portal, refresh the page. We&apos;ll notify you if the artwork is still available.
+          <br /> To protect your purchase and prevent duplicate transactions, we
+          use a secure queuing system, allowing one buyer to complete payment at
+          a time. If you experience issues accessing the payment portal, refresh
+          the page. We&apos;ll notify you if the artwork is still available.
         </p>
       </div>
     </div>

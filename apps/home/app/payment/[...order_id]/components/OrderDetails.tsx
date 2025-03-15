@@ -110,6 +110,7 @@ export default function OrderDetails({
                   lock_status={lock_status}
                   seller_email={order.seller_details.email}
                   seller_name={order.seller_details.name}
+                  role_access={order.artwork_data.role_access}
                 />
               </div>
             </div>

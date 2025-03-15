@@ -5,7 +5,7 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
-import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
+import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
 import {
   PaymentStatusTypes,
@@ -80,13 +80,12 @@ export async function POST(request: Request) {
 
       const updateOrderPromise = CreateOrder.updateOne(
         {
-          "buyer_details.email": meta.user_email,
+          "buyer_details.email": meta.buyer_email,
           "artwork_data.art_id": meta.art_id,
         },
         {
           $set: {
             payment_information,
-            payment_date: new Date().toISOString(),
           },
         }
       ).session(session);
@@ -94,11 +93,10 @@ export async function POST(request: Request) {
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
         trans_amount: formatPrice(paymentIntent.amount_total / 100, currency),
         trans_date: date,
-        trans_gallery_id: meta.seller_id,
-        trans_owner_id: meta.user_id,
-        trans_owner_role: "user",
+        trans_recipient_id: meta.seller_id,
+        trans_initiator_id: meta.buyer_id,
+        trans_recipient_role: "gallery",
         trans_reference: paymentIntent.id,
-        trans_type: "purchase_payout",
       };
 
       const createTransactionPromise = PurchaseTransactions.create([data], {
@@ -124,13 +122,13 @@ export async function POST(request: Request) {
 
       const releaseOrderLockPromise = releaseOrderLock(
         meta.art_id,
-        meta.user_id
+        meta.buyer_id
       );
 
       const updateManyOrdersPromise = CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
-          "buyer_details.id": { $ne: meta.user_id },
+          "buyer_details.id": { $ne: meta.buyer_id },
         },
         { $set: { availability: false } }
       ).session(session);
@@ -158,7 +156,7 @@ export async function POST(request: Request) {
 
     const email_order_info = await CreateOrder.findOne(
       {
-        "buyer_details.email": meta.user_email,
+        "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
       },
       "artwork_data order_id createdAt buyer_details"
@@ -168,7 +166,7 @@ export async function POST(request: Request) {
 
     // Send emails asynchronously
     sendPaymentSuccessMail({
-      email: meta.user_email,
+      email: meta.buyer_email,
       name: email_order_info.buyer_details.name,
       artwork: email_order_info.artwork_data.title,
       order_id: email_order_info.order_id,
@@ -198,7 +196,7 @@ export async function POST(request: Request) {
 
     const release_lock_status = await releaseOrderLock(
       meta.art_id,
-      meta.user_id
+      meta.buyer_id
     );
 
     if (!release_lock_status?.isOk) return NextResponse.json({ status: 400 });

@@ -3,7 +3,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
-import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
+import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 export async function POST(request: Request) {

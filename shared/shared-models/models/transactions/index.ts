@@ -1,4 +1,4 @@
 import { SubscriptionTransactions } from "./SubscriptionTransactionSchema";
-import { PurchaseTransactions } from "./TransactionSchema";
+import { PurchaseTransactions } from "./PurchaseTransactionSchema";
 
 export { SubscriptionTransactions, PurchaseTransactions };

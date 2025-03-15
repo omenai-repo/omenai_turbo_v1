@@ -1,5 +1,5 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/TransactionSchema";
+import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";

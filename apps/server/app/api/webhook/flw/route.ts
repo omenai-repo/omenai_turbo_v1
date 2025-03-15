@@ -136,7 +136,6 @@ export async function POST(request: Request) {
             date,
             gallery_id,
             reference: convert_verify_transaction_json_response.data.id,
-            type: "subscription",
           };
 
           const create_transaction = await SubscriptionTransactions.create(

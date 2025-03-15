@@ -8,10 +8,8 @@ const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
     trans_reference: { type: String, required: true },
     trans_amount: { type: String, required: true },
     trans_date: { type: Date, required: true },
-    trans_owner_id: { type: String, required: true },
-    trans_owner_role: { type: String, required: true },
-    trans_gallery_id: { type: String, required: true },
-    trans_type: { type: String, required: true },
+    trans_initiator_id: { type: String, required: true },
+    trans_recipient_id: { type: String, required: true },
   },
   { timestamps: true }
 );

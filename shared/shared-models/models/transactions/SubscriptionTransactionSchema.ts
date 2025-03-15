@@ -10,7 +10,6 @@ const subscription_transaction =
       amount: { type: String, required: true },
       date: { type: Date, required: true },
       gallery_id: { type: String, required: true },
-      type: { type: String, required: true },
     },
     { timestamps: true }
   );
