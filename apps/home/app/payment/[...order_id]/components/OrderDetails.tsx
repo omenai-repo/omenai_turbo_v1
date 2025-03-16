@@ -111,7 +111,9 @@ export default function OrderDetails({
                   seller_name={order.seller_details.name}
                   role_access={order.artwork_data.role_access}
                   shipping_cost={
-                    +order.shipping_details.shipment_information.quote.fees
+                    +JSON.parse(
+                      order.shipping_details.shipment_information.quote.fees
+                    )
                   }
                   unit_price={order.artwork_data.pricing.usd_price}
                 />
