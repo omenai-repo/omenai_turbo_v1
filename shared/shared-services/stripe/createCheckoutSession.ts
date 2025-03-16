@@ -12,6 +12,8 @@ export async function createCheckoutSession(
     seller_id: string;
     artwork_name: string;
     art_id: string;
+    shipping_cost: number;
+    unit_price: number;
   },
   success_url: string,
   cancel_url: string

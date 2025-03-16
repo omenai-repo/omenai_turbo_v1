@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
     const updateOrders = await CreateOrder.findOneAndUpdate(
       { order_id },
-      { $set: { "shipping_details.tracking": data } }
+      { $set: { "shipping_details.shipment_information.tracking": data } }
     );
 
     if (!updateOrders)

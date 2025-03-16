@@ -6,10 +6,11 @@ const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
   {
     trans_id: { type: String, default: () => `PAY_OM_${generateDigit(7)}` },
     trans_reference: { type: String, required: true },
-    trans_amount: { type: String, required: true },
+    trans_pricing: { type: Schema.Types.Mixed, required: true },
     trans_date: { type: Date, required: true },
     trans_initiator_id: { type: String, required: true },
     trans_recipient_id: { type: String, required: true },
+    trans_recipient_role: { type: String, required: true },
   },
   { timestamps: true }
 );

@@ -7,6 +7,7 @@ import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/
 import {
   PaymentStatusTypes,
   PurchaseTransactionModelSchemaTypes,
+  PurchaseTransactionPricing,
 } from "@omenai/shared-types";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
@@ -106,11 +107,15 @@ export async function POST(request: Request) {
       );
 
       // Update transaction collection
+      const transaction_pricing: PurchaseTransactionPricing = {
+        amount_total: paymentIntent.amount_received / 100,
+        unit_price: meta.unit_price,
+        shipping_cost: meta.shipping_cost,
+        commission: meta.commission,
+      };
+
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
-        trans_amount: formatPrice(
-          paymentIntent.amount_received / 100,
-          currency
-        ),
+        trans_pricing: transaction_pricing,
         trans_date: date,
         trans_recipient_id: meta.seller_id,
         trans_initiator_id: meta.buyer_id,

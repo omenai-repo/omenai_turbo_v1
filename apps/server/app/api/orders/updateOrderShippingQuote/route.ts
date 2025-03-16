@@ -9,13 +9,13 @@ export async function POST(request: Request) {
   try {
     await connectMongoDB();
 
-    const { data, order_id } = await request.json();
+    const { quote_data, order_id } = await request.json();
 
     const updateOrders = await CreateOrder.findOneAndUpdate(
       { order_id },
       {
         $set: {
-          "shipping_details.quote": data,
+          "shipping_details.shipment_information.quote": quote_data,
           order_accepted: { status: "accepted", reason: "" },
         },
       },

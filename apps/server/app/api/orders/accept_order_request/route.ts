@@ -114,6 +114,7 @@ export async function POST(request: NextRequest) {
           exhibition_status: data.exhibition_status,
           hold_status: data.hold_status,
           "shipping_details.shipment_information": shipment_information,
+          "order_accepted.status": "accepted",
         },
       },
       { session }

@@ -10,6 +10,7 @@ import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLoc
 import {
   PaymentStatusTypes,
   PurchaseTransactionModelSchemaTypes,
+  PurchaseTransactionPricing,
 } from "@omenai/shared-types";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
@@ -90,8 +91,15 @@ export async function POST(request: Request) {
         }
       ).session(session);
 
+      const transaction_pricing: PurchaseTransactionPricing = {
+        amount_total: paymentIntent.amount_total / 100,
+        unit_price: meta.unit_price,
+        shipping_cost: meta.shipping_cost,
+        commission: meta.commission,
+      };
+
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
-        trans_amount: formatPrice(paymentIntent.amount_total / 100, currency),
+        trans_pricing: transaction_pricing,
         trans_date: date,
         trans_recipient_id: meta.seller_id,
         trans_initiator_id: meta.buyer_id,

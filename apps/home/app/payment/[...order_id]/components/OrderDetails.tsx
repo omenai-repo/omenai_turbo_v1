@@ -56,14 +56,13 @@ export default function OrderDetails({
                   {order.shipping_details.addresses.destination.country}
                 </p>
               </div>
-              <div className="flex flex-col text-dark my-3">
+              {/* Uncomment when the new endpoint has been connected */}
+              {/* <div className="flex flex-col text-dark my-3">
                 <p>Shipping carrier</p>
                 <p className="font-semibold">
-                  {JSON.parse(
-                    order.shipping_details.shipment_information.carrier
-                  )}
+                  {order.shipping_details.shipment_information.carrier}
                 </p>
-              </div>
+              </div> */}
               <div className="flex flex-col  my-3 text-dark">
                 <p>Price</p>
                 <p className="font-semibold">
@@ -111,6 +110,10 @@ export default function OrderDetails({
                   seller_email={order.seller_details.email}
                   seller_name={order.seller_details.name}
                   role_access={order.artwork_data.role_access}
+                  shipping_cost={
+                    +order.shipping_details.shipment_information.quote.fees
+                  }
+                  unit_price={order.artwork_data.pricing.usd_price}
                 />
               </div>
             </div>

@@ -415,11 +415,18 @@ export type WithdrawalAccount = {
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;
   trans_reference: string;
-  trans_amount: string;
   trans_initiator_id: string;
   trans_recipient_id: string;
+  trans_pricing: PurchaseTransactionPricing;
   trans_date: Date;
   trans_recipient_role: "gallery" | "artist";
+};
+
+export type PurchaseTransactionPricing = {
+  unit_price: number;
+  commission: number;
+  shipping_cost: number;
+  amount_total: number;
 };
 
 export type SubscriptionTransactionModelSchemaTypes = {

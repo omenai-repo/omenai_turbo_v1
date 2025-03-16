@@ -83,7 +83,7 @@ export async function POST(request: Request) {
           delivery_confirmed: false,
           additional_information: "",
           shipment_information: {
-            carrier: "",
+            carrier: "DHL",
             shipment_product_code: "",
 
             dimensions: {
@@ -102,7 +102,6 @@ export async function POST(request: Request) {
               link: "",
             },
             quote: {
-              package_carrier: "",
               fees: "",
               taxes: "",
             },

@@ -9,34 +9,45 @@ import { FiArrowDownLeft } from "react-icons/fi";
 import { FiArrowUpRight } from "react-icons/fi";
 
 const TABLE_HEAD = [
-  "Transaction ID",
+  "Trans ID",
   "Date",
-  "Gross amount",
-  "Net amount",
-  "Transaction type",
+  "Gross",
+  "Net earned",
+  "Commission",
   "Status",
 ];
 
 export function TransactionTable({
   table,
 }: {
-  table: PurchaseTransactionModelSchemaTypes &
-    { createdAt: any; updatedAt: any }[];
+  table: (PurchaseTransactionModelSchemaTypes & {
+    createdAt: string;
+    updatedAt: string;
+  })[];
 }) {
-  const transaction_table_data = table.map((transaction: any) => {
-    const priceNumber =
-      convertPriceStringToNumber(transaction.trans_amount) * 0.7;
-    const table = {
-      id: transaction.trans_id,
-      date: formatIntlDateTime(transaction.trans_date),
-      gross: transaction.trans_amount,
-      net: formatPrice(priceNumber),
-      type: "Incoming",
-      status: "Completed",
-    };
+  const transaction_table_data = table.map(
+    (
+      transaction: PurchaseTransactionModelSchemaTypes & {
+        createdAt: string;
+        updatedAt: string;
+      }
+    ) => {
+      const table = {
+        id: transaction.trans_id,
+        date: formatIntlDateTime(transaction.trans_date),
+        gross: transaction.trans_pricing.unit_price,
+        net: formatPrice(
+          transaction.trans_pricing.unit_price -
+            transaction.trans_pricing.commission,
+          "USD"
+        ),
+        commission: transaction.trans_pricing.commission,
+        status: "Completed",
+      };
 
-    return table;
-  });
+      return table;
+    }
+  );
   return (
     <div className="h-full w-full overflow-scroll">
       <table className=" w-full table-auto border-separate border-spacing-y-2 overflow-scroll text-left md:overflow-auto">
@@ -78,7 +89,7 @@ export function TransactionTable({
                 <td
                   className={`py-4 pl-3 text-[14px] font-medium text-dark flex items-center space-x-2`}
                 >
-                  <p className="font-medium text-[14px]">{data.type}</p>
+                  <p className="font-medium text-[14px]">{data.commission}</p>
                   <FiArrowDownLeft className="text-green-600" />
                 </td>
                 <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>

@@ -2,7 +2,7 @@ import { ShippingQuoteTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const updateShippingQuote = async (
-  data: ShippingQuoteTypes,
+  quote_data: ShippingQuoteTypes,
   order_id: string
 ) => {
   const url = getApiUrl();
@@ -10,7 +10,7 @@ export const updateShippingQuote = async (
     const res = await fetch(`${url}/api/orders/updateOrderShippingQuote`, {
       method: "POST",
       body: JSON.stringify({
-        data,
+        quote_data,
         order_id,
       }),
     });

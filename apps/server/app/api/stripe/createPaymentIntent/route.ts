@@ -12,9 +12,9 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
-    const { amount, gallery_id, meta } = await request.json();
+    const { amount, seller_id, meta } = await request.json();
     const gallery = await AccountGallery.findOne(
-      { gallery_id },
+      { gallery_id: seller_id },
       "connected_account_id"
     );
     if (!gallery)
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Get current plam details to ascertain plan package
 
     const active_subscription = await Subscriptions.findOne(
-      { "customer.gallery_id": gallery_id },
+      { "customer.gallery_id": seller_id },
       "plan_details status"
     );
 
@@ -38,13 +38,17 @@ export async function POST(request: Request) {
         : active_subscription.plan_details.type.toLowerCase() === "pro"
           ? 0.2
           : 0.25;
-
-    const commission = Math.round(amount * commision_rate * 100);
+    const commission =
+      Math.round(meta.unit_price * commision_rate * 100) + meta.shipping_cost;
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
       currency: "usd",
-      metadata: { ...meta, gallery_id },
+      metadata: {
+        ...meta,
+        seller_id,
+        commission: Math.round(meta.unit_price * commision_rate * 100),
+      },
       // In the latest version of the API, specifying the `automatic_payment_methods` parameter
       // is optional because Stripe enables its functionality by default.
       automatic_payment_methods: {
