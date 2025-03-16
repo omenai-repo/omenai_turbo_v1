@@ -136,7 +136,7 @@ export async function POST(request: Request) {
       const activity = {
         month,
         year,
-        value: paymentIntent.amount_received / 100,
+        value: meta.unit_price,
         id: meta.seller_id,
       };
 
