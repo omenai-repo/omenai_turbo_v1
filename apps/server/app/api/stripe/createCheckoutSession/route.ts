@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       metadata: {
         ...meta,
         seller_id,
-        commission: Math.round(meta.unit_price * commision_rate * 100),
+        commission: Math.round(meta.unit_price * commision_rate),
       },
       payment_intent_data: {
         application_fee_amount: commission,

@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       metadata: {
         ...meta,
         seller_id,
-        commission: Math.round(meta.unit_price * commision_rate * 100),
+        commission: Math.round(meta.unit_price * commision_rate),
       },
       // In the latest version of the API, specifying the `automatic_payment_methods` parameter
       // is optional because Stripe enables its functionality by default.

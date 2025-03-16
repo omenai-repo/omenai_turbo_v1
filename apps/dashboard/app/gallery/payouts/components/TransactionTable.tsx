@@ -38,8 +38,7 @@ export function TransactionTable({
         gross: transaction.trans_pricing.unit_price,
         net: formatPrice(
           transaction.trans_pricing.unit_price -
-            transaction.trans_pricing.commission,
-          "USD"
+            transaction.trans_pricing.commission
         ),
         commission: transaction.trans_pricing.commission,
         status: "Completed",
