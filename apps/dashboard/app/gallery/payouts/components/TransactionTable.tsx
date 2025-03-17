@@ -11,9 +11,9 @@ import { FiArrowUpRight } from "react-icons/fi";
 const TABLE_HEAD = [
   "Trans ID",
   "Date",
-  "Gross",
-  "Net earned",
-  "Commission",
+  "Gross earning",
+  "Net earning",
+  "Platform Commission",
   "Status",
 ];
 
@@ -35,12 +35,12 @@ export function TransactionTable({
       const table = {
         id: transaction.trans_id,
         date: formatIntlDateTime(transaction.trans_date),
-        gross: transaction.trans_pricing.unit_price,
+        gross: formatPrice(transaction.trans_pricing.unit_price),
         net: formatPrice(
           transaction.trans_pricing.unit_price -
             transaction.trans_pricing.commission
         ),
-        commission: transaction.trans_pricing.commission,
+        commission: formatPrice(transaction.trans_pricing.commission),
         status: "Completed",
       };
 
@@ -89,7 +89,6 @@ export function TransactionTable({
                   className={`py-4 pl-3 text-[14px] font-medium text-dark flex items-center space-x-2`}
                 >
                   <p className="font-medium text-[14px]">{data.commission}</p>
-                  <FiArrowDownLeft className="text-green-600" />
                 </td>
                 <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
                   <p className="font-medium text-[12px] px-4 py-1 rounded-full text-white bg-green-600 w-fit">

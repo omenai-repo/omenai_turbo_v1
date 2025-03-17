@@ -61,7 +61,12 @@ export default function ArtworkTextInput({
           className: "class",
         });
       else {
-        updateArtworkUploadData("usd_price", conversion_value.data);
+        const rounded_conversion_value =
+          Math.round(+conversion_value.data * 10) / 10;
+        updateArtworkUploadData(
+          "usd_price",
+          rounded_conversion_value.toString()
+        );
       }
     }
   };

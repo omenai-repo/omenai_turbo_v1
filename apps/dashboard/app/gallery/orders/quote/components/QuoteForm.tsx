@@ -35,7 +35,7 @@ export default function QuoteForm() {
     const { name, value } = e.target;
     setQuoteData((prev) => ({
       ...prev,
-      [name]: JSON.stringify(value),
+      [name]: value,
     }));
   }
   const handleSubmitQuoteFees = async (e: FormEvent<HTMLFormElement>) => {

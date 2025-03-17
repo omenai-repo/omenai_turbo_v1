@@ -427,6 +427,7 @@ export type PurchaseTransactionPricing = {
   commission: number;
   shipping_cost: number;
   amount_total: number;
+  tax_fees: number;
 };
 
 export type SubscriptionTransactionModelSchemaTypes = {

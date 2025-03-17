@@ -24,6 +24,7 @@ export default function PayNowButton({
   role_access,
   shipping_cost,
   unit_price,
+  tax_fees,
 }: {
   art_id: string;
   artwork: string;
@@ -35,6 +36,7 @@ export default function PayNowButton({
   role_access: RoleAccess;
   shipping_cost: number;
   unit_price: number;
+  tax_fees: number;
 }) {
   const router = useRouter();
   const { session } = useContext(SessionContext);
@@ -67,6 +69,7 @@ export default function PayNowButton({
             artwork_name: artwork,
             shipping_cost,
             unit_price,
+            tax_fees,
           },
           `${url}/payment/success`,
           `${url}/payment/cancel?a_id=${art_id}&u_id=${(session as IndividualSchemaTypes)?.user_id}`

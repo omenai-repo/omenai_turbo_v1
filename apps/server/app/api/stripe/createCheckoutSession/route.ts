@@ -36,8 +36,13 @@ export async function POST(request: Request) {
         : active_subscription.plan_details.type.toLowerCase() === "pro"
           ? 0.2
           : 0.25;
-    const commission =
-      Math.round(meta.unit_price * commision_rate * 100) + meta.shipping_cost;
+
+    const commission = Math.round(
+      meta.unit_price * commision_rate * 100 +
+        meta.shipping_cost * 100 +
+        meta.tax_fees * 100
+    );
+
     const currentTimestampSeconds = Math.floor(Date.now() / 1000);
     const thirtyMinutesOffset = 30 * 60;
     const futureTimestamp = currentTimestampSeconds + thirtyMinutesOffset;
@@ -55,22 +60,24 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      metadata: {
-        ...meta,
-        seller_id,
-        commission: Math.round(meta.unit_price * commision_rate),
-      },
+
       payment_intent_data: {
         application_fee_amount: commission,
         transfer_data: {
           destination: gallery.connected_account_id,
         },
       },
+      metadata: {
+        ...meta,
+        seller_id,
+        commission: Math.round(meta.unit_price * commision_rate),
+      },
       expires_at: futureTimestamp,
       mode: "payment",
       success_url,
       cancel_url,
     });
+
     if (!session) throw new ServerError("Something went wrong, try again");
     return NextResponse.json({
       message: "Checkout Session created... Redirecting",

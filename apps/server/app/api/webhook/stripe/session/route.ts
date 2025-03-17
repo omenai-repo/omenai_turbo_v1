@@ -92,10 +92,11 @@ export async function POST(request: Request) {
       ).session(session);
 
       const transaction_pricing: PurchaseTransactionPricing = {
-        amount_total: paymentIntent.amount_total / 100,
-        unit_price: meta.unit_price,
-        shipping_cost: meta.shipping_cost,
-        commission: meta.commission,
+        amount_total: Math.round(paymentIntent.amount_total / 100),
+        unit_price: Math.round(+meta.unit_price),
+        shipping_cost: Math.round(+meta.shipping_cost),
+        commission: Math.round(+meta.commission),
+        tax_fees: Math.round(+meta.tax_fees),
       };
 
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
@@ -122,6 +123,7 @@ export async function POST(request: Request) {
         year,
         value: meta.unit_price,
         id: meta.seller_id,
+        trans_ref: data.trans_reference,
       };
 
       const createSalesActivityPromise = SalesActivity.create([activity], {

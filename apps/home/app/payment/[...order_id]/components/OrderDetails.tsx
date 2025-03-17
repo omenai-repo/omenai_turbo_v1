@@ -17,8 +17,8 @@ export default function OrderDetails({
 
   const total_price_number = calculatePurchaseGrandTotalNumber(
     order.artwork_data.pricing.usd_price,
-    order.shipping_details.shipment_information.quote.fees,
-    order.shipping_details.shipment_information.quote.taxes
+    +order.shipping_details.shipment_information.quote.fees,
+    +order.shipping_details.shipment_information.quote.taxes
   );
   return (
     <div className="p-4 max-w-[600px]">
@@ -111,9 +111,10 @@ export default function OrderDetails({
                   seller_name={order.seller_details.name}
                   role_access={order.artwork_data.role_access}
                   shipping_cost={
-                    +JSON.parse(
-                      order.shipping_details.shipment_information.quote.fees
-                    )
+                    +order.shipping_details.shipment_information.quote.fees
+                  }
+                  tax_fees={
+                    +order.shipping_details.shipment_information.quote.taxes
                   }
                   unit_price={order.artwork_data.pricing.usd_price}
                 />
