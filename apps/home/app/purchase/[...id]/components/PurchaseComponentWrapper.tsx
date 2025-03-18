@@ -58,7 +58,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
       <DesktopNavbar />
 
       <div className="grid place-items-center h-screen w-full">
-        <div className="relative h-full container">
+        <div className="relative h-full p-5 xl:container">
           <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 md:gap-x-8 lg:gap-x-16 gap-y-8">
             <div className="col-span-1 xl:col-span-2 border-1 border-dark/10 pt-6">
               <DeliveryMethod />

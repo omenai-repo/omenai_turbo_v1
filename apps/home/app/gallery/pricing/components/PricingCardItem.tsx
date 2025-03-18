@@ -122,7 +122,7 @@ export default function PricingCardItem({
         <div className="flex flex-col gap-4 w-full">
           <button
             onClick={handleSubscribe}
-            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-gray-400 disabled:text-dark disabled:cursor-pointer text-white`}
+            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-dark disabled:cursor-pointer text-white`}
           >
             {loading ? <LoadSmall /> : "Subscribe"}
           </button>

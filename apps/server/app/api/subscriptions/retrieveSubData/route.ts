@@ -2,6 +2,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions";
 
 export async function POST(request: Request) {
   try {
@@ -18,10 +19,15 @@ export async function POST(request: Request) {
         { status: 200 }
       );
 
+    const plan = await SubscriptionPlan.findOne({
+      name: subscription_data.plan_details.type,
+    });
+
     return NextResponse.json(
       {
         message: "Successfully retrieved subscription data",
         data: subscription_data,
+        plan,
       },
       { status: 200 }
     );

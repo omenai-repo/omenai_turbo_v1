@@ -84,9 +84,9 @@ export default function Oput({
           <span className="text-[13px]">Secure form</span>
         </p>
       </div>
-      <div className="relative w-full">
+      <div className="relative w-full flex flex-col">
         <label
-          className="text-[#858585] font-normal text-[13px] mb-4"
+          className="text-[#858585] font-bold text-[13px] mb-4"
           htmlFor="otp"
         >
           Enter OTP sent to your number or email
@@ -98,7 +98,7 @@ export default function Oput({
           onChange={handleOtpChange}
           minLength={4}
           placeholder="Enter OTP"
-          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
         />
       </div>
 
@@ -106,7 +106,7 @@ export default function Oput({
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

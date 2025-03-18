@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
     postalCode,
     cityName,
     countyName,
+    country,
   }: ShipmentAddressValidationType = await request.json();
 
   try {
@@ -19,8 +20,6 @@ export async function POST(request: NextRequest) {
       type,
       countryCode,
       postalCode,
-      cityName,
-      countyName,
     });
 
     if (requestValidation) throw new BadRequestError(requestValidation);
@@ -40,7 +39,7 @@ export async function POST(request: NextRequest) {
     };
 
     const response = await fetch(
-      `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName.toLowerCase()}&postalCode=${postalCode}&countyName=${countyName.toLowerCase()}&strictValidation=${false}`,
+      `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country || ""}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || country || ""}&strictValidation=${false}`,
       requestOptions
     );
     const data = await response.json();

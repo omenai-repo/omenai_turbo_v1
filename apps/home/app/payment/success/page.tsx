@@ -11,21 +11,20 @@ export default function OrderCompletedPage() {
       <div className="w-full h-[80vh] grid place-items-center">
         <div className="p-6 grid text-center place-items-center space-y-6">
           <Image
-              height={100}
-              width={100}
-              src={"/images/done.png"}
-              alt="success-icon"
+            height={100}
+            width={100}
+            src={"/images/done.png"}
+            alt="success-icon"
           />
           <p className="text-[14px] font-medium my-4">
             Your payment has been completed successfuly. Your order will be on
             it&apos;s way to you shortly
           </p>
 
-
           <div className="flex sm:flex-row flex-col gap-2 justify-center items-center">
             <Link
               href="/"
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               title="Return Home"
             >
               <svg
@@ -44,7 +43,7 @@ export default function OrderCompletedPage() {
             </Link>
             <Link
               href={`${dashboard_uri}/user/orders`}
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               title="Return Home"
             >
               <svg
@@ -59,8 +58,12 @@ export default function OrderCompletedPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px] whitespace-nowrap
-              ">Return to dashboard</span>
+              <span
+                className="text-[14px] whitespace-nowrap
+              "
+              >
+                Return to dashboard
+              </span>
             </Link>
           </div>
         </div>

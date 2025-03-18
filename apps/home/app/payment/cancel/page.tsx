@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import {dashboard_url} from "@omenai/url-config/src/config";
+import { dashboard_url } from "@omenai/url-config/src/config";
 
 export default function OrderCanceledPage() {
   const searchParams = useSearchParams();
@@ -38,21 +38,27 @@ export default function OrderCanceledPage() {
       </div>
     );
   }
-  const dashboard_uri: string = dashboard_url()
+  const dashboard_uri: string = dashboard_url();
 
   return (
     <>
       <DesktopNavbar />
       <div className="w-full h-[85vh] grid place-items-center">
         <div className="p-6 grid place-items-center text-center space-y-4">
-          <Image src={"/images/cancel.png"} alt={"cancel icon"} height={100} width={100} />
-          <p className="text-base font-medium">Your transaction has been canceled</p>
-
+          <Image
+            src={"/images/cancel.png"}
+            alt={"cancel icon"}
+            height={100}
+            width={100}
+          />
+          <p className="text-base font-medium">
+            Your transaction has been canceled
+          </p>
 
           <div className="flex flex-col space-y-2 items-center">
             <Link
               href="/"
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               title="Return Home"
             >
               <svg
@@ -71,7 +77,7 @@ export default function OrderCanceledPage() {
             </Link>
             <Link
               href={`${dashboard_uri}/user/orders`}
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
               title="Return Home"
             >
               <svg
@@ -86,7 +92,9 @@ export default function OrderCanceledPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px] whitespace-nowrap">Return to dashboard</span>
+              <span className="text-[14px] whitespace-nowrap">
+                Return to dashboard
+              </span>
             </Link>
           </div>
         </div>

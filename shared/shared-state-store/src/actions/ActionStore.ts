@@ -1,10 +1,10 @@
-import { country_and_states } from "@omenai/shared-json/src/countryAndStateList";
 import { create } from "zustand";
 import {
   ArtworkSchemaTypes,
   AddressTypes,
   RouteIdentifier,
 } from "@omenai/shared-types";
+import { ICity, IState } from "country-state-city";
 
 type ActionStoreTypes = {
   recoveryModal: {
@@ -30,10 +30,13 @@ type ActionStoreTypes = {
   toggleDeclineOrderModal: (value: boolean) => void;
   openLoginModalRecoveryForm: boolean;
   toggleLoginModalRecoveryForm: (value: boolean) => void;
-  selectedCountry: string;
-  countryStates: string[];
-  setSelectedCountry: (country: string) => void;
-  setCountryStates: () => void;
+  selectedCountry: { country: string; code: string };
+  setSelectedCountry: (country: string, code: string) => void;
+  selectedCityList: ICity[];
+  setSelectedCityList: (value: ICity[]) => void;
+  selectedStateList: IState[];
+  setSelectedStateList: (value: IState[]) => void;
+
   galleryOrderActionModalData: {
     buyer: string;
     shipping_address: AddressTypes;
@@ -123,18 +126,18 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
     set({ openLoginModalRecoveryForm: value });
   },
 
-  selectedCountry: "",
-  setSelectedCountry: (country: string) => {
-    set({ selectedCountry: country });
+  selectedCountry: { country: "", code: "" },
+  setSelectedCountry: (country: string, code: string) => {
+    set({ selectedCountry: { country, code } });
   },
 
-  countryStates: [],
-  setCountryStates: () => {
-    const selectedCountry = get().selectedCountry;
-    const country_states = country_and_states.find((countries) => {
-      return countries.country === selectedCountry;
-    });
-    set({ countryStates: country_states?.states });
+  selectedCityList: [],
+  setSelectedCityList: (value: ICity[]) => {
+    set({ selectedCityList: value });
+  },
+  selectedStateList: [],
+  setSelectedStateList: (value: IState[]) => {
+    set({ selectedStateList: value });
   },
 
   galleryOrderActionModalData: {

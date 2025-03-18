@@ -1,6 +1,6 @@
 import { AddressTypes, IndividualSignupData } from "@omenai/shared-types";
 import { create } from "zustand";
-
+import { ICity } from "country-state-city";
 type IndividualAuthStoreTypes = {
   currentSignupFormIndex: number;
   incrementCurrentSignupFormIndex: () => void;
@@ -9,9 +9,12 @@ type IndividualAuthStoreTypes = {
   updatePreference: (value: string) => void;
   individualSignupData: Omit<IndividualSignupData, "address"> & AddressTypes;
   updateSignUpData: (label: string, value: string) => void;
+  selectedCityList: ICity[];
+  setSelectedCityList: (value: ICity[]) => void;
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
+
   isFieldDirty: Record<
     | keyof Omit<IndividualSignupData, "address">
     | keyof Omit<AddressTypes, "countryCode">,
@@ -92,6 +95,10 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
             AddressTypes,
         });
       }
+    },
+    selectedCityList: [],
+    setSelectedCityList: (value: ICity[]) => {
+      set({ selectedCityList: value });
     },
     isLoading: false,
     setIsLoading: () => {

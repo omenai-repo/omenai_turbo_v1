@@ -1,7 +1,7 @@
 "use client";
-import { country_and_states } from "@omenai/shared-json/src/countryAndStateList";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { GallerySignupData, AddressTypes } from "@omenai/shared-types";
+import { City, ICity, IState, State } from "country-state-city";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
 import { MdError, MdOutlineArrowForward } from "react-icons/md";
@@ -28,16 +28,12 @@ export default function SelectInput({
     updateGallerySignupData,
     setIsFieldDirty,
     isFieldDirty,
+    selectedCityList,
+    selectedStateList,
+    setSelectedCityList,
+    setSelectedStateList,
   } = useGalleryAuthStore();
 
-  const option_items =
-    labelText === "country"
-      ? items
-      : labelText === "state"
-        ? country_and_states.find(
-            (country) => country.country === gallerySignupData.country
-          )?.states || []
-        : [];
   const [errorList, setErrorList] = useState<string[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -46,8 +42,23 @@ export default function SelectInput({
       e.target.options[e.target.selectedIndex].getAttribute("data-code");
 
     updateGallerySignupData(labelText, value);
-    labelText === "country" &&
-      updateGallerySignupData("countryCode", selectedCode);
+    if (labelText === "country") {
+      updateGallerySignupData("state", "");
+      updateGallerySignupData("city", "");
+      setSelectedCityList([]);
+      updateGallerySignupData("countryCode", selectedCode as string);
+      const stateList = State.getStatesOfCountry(selectedCode as string);
+      setSelectedStateList(stateList);
+    }
+    if (labelText === "state") {
+      updateGallerySignupData("city", "");
+      const cities = City.getCitiesOfState(
+        gallerySignupData.countryCode,
+        selectedCode as string
+      );
+      setSelectedCityList(cities);
+    }
+
     setIsFieldDirty(labelText as keyof GallerySignupData & AddressTypes, false);
   };
 
@@ -67,16 +78,21 @@ export default function SelectInput({
           <select
             value={(gallerySignupData as Record<string, any>)[labelText]}
             onChange={handleChange}
-            required={required}
-            disabled={labelText === "state" && gallerySignupData.country === ""}
-            className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-gray-400 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
+            required={true}
+            disabled={
+              (labelText === "state" && gallerySignupData.country === "") ||
+              (labelText === "city" &&
+                gallerySignupData.state === "" &&
+                gallerySignupData.country === "")
+            }
+            className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
           >
             <option value="" className="text-dark/40">
               Select {labelText}
             </option>
             <>
               {labelText === "country" &&
-                option_items.map((item: any) => {
+                items.map((item: { code: string; name: string }) => {
                   return (
                     <option
                       key={item.code}
@@ -89,14 +105,29 @@ export default function SelectInput({
                   );
                 })}
               {labelText === "state" &&
-                option_items.map((item: any) => {
+                selectedStateList.map((state: IState) => {
                   return (
                     <option
-                      key={item}
-                      value={item}
+                      key={state.isoCode}
+                      value={state.name}
+                      data-code={state.isoCode}
                       className="px-3 py-5 my-5 text-xs font-medium text-dark/40"
                     >
-                      {item}
+                      {state.name}
+                    </option>
+                  );
+                })}
+
+              {labelText === "city" &&
+                selectedCityList.map((city: ICity) => {
+                  return (
+                    <option
+                      key={city.name}
+                      value={city.name}
+                      data-code={city.name}
+                      className="px-3 py-5 my-5 text-xs font-medium text-dark/40"
+                    >
+                      {city.name}
                     </option>
                   );
                 })}

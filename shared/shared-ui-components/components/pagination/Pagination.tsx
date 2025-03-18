@@ -95,7 +95,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Previous Button */}
         <li>
           <button
-            className={`${width > 380 && "px-3 py-2 disabled:bg-gray-400 disabled:text-dark/50 rounded text-xs text-white bg-dark"} ${
+            className={`${width > 380 && "px-3 py-2 disabled:bg-dark/10 disabled:text-dark/50 rounded text-xs text-white bg-dark"} ${
               currentPage === 1
                 ? "text-dark/80 cursor-not-allowed"
                 : "text-dark"
@@ -112,7 +112,7 @@ const Pagination: React.FC<PaginationProps> = ({
           typeof page === "number" ? (
             <li key={index}>
               <button
-                className={`px-3 py-1 rounded disabled:bg-gray-400 disabled:text-dark/50 disabled:cursor-not-allowed ${
+                className={`px-3 py-1 rounded disabled:bg-dark/10 disabled:text-dark/50 disabled:cursor-not-allowed ${
                   page === currentPage
                     ? "bg-dark text-white"
                     : "text-dark hover:bg-dark/50"
@@ -132,7 +132,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Next Button */}
         <li>
           <button
-            className={`${width > 380 && " disabled:bg-gray-400 disabled:text-dark/50 px-3 py-2 rounded text-white text-xs bg-dark"}  ${
+            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-2 rounded text-white text-xs bg-dark"}  ${
               currentPage === total
                 ? "text-dark/80 cursor-not-allowed"
                 : "text-dark"

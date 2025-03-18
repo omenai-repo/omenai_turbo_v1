@@ -102,7 +102,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 rounded-[10px]  disabled:cursor-not-allowed disabled:bg-[#E0E0E0] border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[#858585] placeholder:text-xs"
+          className="border px-2 ring-0 rounded-[10px]  disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[#858585] placeholder:text-xs"
         />
       )}
       {errorList.length > 0 &&

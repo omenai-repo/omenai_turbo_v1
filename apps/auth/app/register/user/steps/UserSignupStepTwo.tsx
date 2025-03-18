@@ -3,6 +3,7 @@ import { user_signup_step_two } from "../../../mocks/input/individual/InputMock"
 import ActionButton from "../features/actions/ActionButton";
 import Input from "../features/form/components/Input";
 import SelectInput from "../features/form/components/Select";
+import { ICountry, IState, ICity } from "country-state-city";
 
 export default function UserSignupStepTwo() {
   return (
@@ -14,7 +15,7 @@ export default function UserSignupStepTwo() {
               {form_step.type === "select" ? (
                 <SelectInput
                   label={form_step.label}
-                  items={form_step.items as { code: string; name: string }[]}
+                  items={form_step.items as ICountry[] | IState[] | ICity[]}
                   name={form_step.label}
                   required={false}
                   labelText={form_step.labelText}

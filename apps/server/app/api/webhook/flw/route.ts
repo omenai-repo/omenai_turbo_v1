@@ -121,6 +121,7 @@ export async function POST(request: Request) {
             { $inc: { value: 1 } },
             { upsert: true, new: true, setDefaultsOnInsert: true }
           ).session(session);
+          //TODO: Send a mail after card change
 
           await session.commitTransaction();
           return NextResponse.json({ status: 200 });

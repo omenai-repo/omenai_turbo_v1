@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       throw new ServerError("Something went wrong. Please try again");
     // Use an existing Customer ID if this is a returning customer.
 
-    // Get current plam details to ascertain plan package
+    // Get current plan details to ascertain plan package
 
     const active_subscription = await Subscriptions.findOne(
       { "customer.gallery_id": seller_id },

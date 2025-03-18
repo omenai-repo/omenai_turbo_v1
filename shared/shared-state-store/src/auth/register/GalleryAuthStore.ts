@@ -1,4 +1,5 @@
 import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
+import { ICity, IState } from "country-state-city";
 import { create } from "zustand";
 
 type GalleryAuthStoreTypes = {
@@ -7,6 +8,10 @@ type GalleryAuthStoreTypes = {
   decrementCurrentGallerySignupFormIndex: () => void;
   gallerySignupData: Omit<GallerySignupData, "address"> & AddressTypes;
   updateGallerySignupData: (label: string, value: string | File | null) => void;
+  selectedCityList: ICity[];
+  setSelectedCityList: (value: ICity[]) => void;
+  selectedStateList: IState[];
+  setSelectedStateList: (value: IState[]) => void;
   isLoading: boolean;
   setIsLoading: () => void;
   clearData: () => void;
@@ -71,6 +76,14 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
             AddressTypes,
         });
       }
+    },
+    selectedCityList: [],
+    setSelectedCityList: (value: ICity[]) => {
+      set({ selectedCityList: value });
+    },
+    selectedStateList: [],
+    setSelectedStateList: (value: IState[]) => {
+      set({ selectedStateList: value });
     },
     isLoading: false,
     setIsLoading: () => {

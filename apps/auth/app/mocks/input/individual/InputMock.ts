@@ -1,6 +1,6 @@
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { InputProps } from "@omenai/shared-types";
-
+import { Country, ICountry } from "country-state-city";
 export const user_signup_step_one = [
   {
     label: "Full name",
@@ -19,26 +19,13 @@ export const user_signup_step_one = [
 ];
 export const user_signup_step_two = [
   {
-    label: "Gallery country of operation",
+    label: "Country of residence",
     type: "select",
     placeholder: "Select option",
     labelText: "country",
-    items: country_codes,
+    items: Country.getAllCountries() as ICountry[],
   },
 
-  {
-    label: "Address line",
-    type: "text",
-    placeholder: "e.g 79, example street",
-    labelText: "address_line",
-    items: [],
-  },
-  {
-    label: "City",
-    type: "text",
-    placeholder: "Prague",
-    labelText: "city",
-  },
   {
     label: "State",
     type: "select",
@@ -46,6 +33,21 @@ export const user_signup_step_two = [
     placeholder: "Select option",
     items: [],
   },
+  {
+    label: "City",
+    type: "select",
+    placeholder: "Select option",
+    labelText: "city",
+    items: [],
+  },
+  {
+    label: "Address line 1",
+    type: "text",
+    placeholder: "e.g 79, example street",
+    labelText: "address_line",
+    items: [],
+  },
+
   {
     label: "Postal code",
     type: "text",

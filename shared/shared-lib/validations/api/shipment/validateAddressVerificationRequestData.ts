@@ -5,7 +5,7 @@ export function validateAddressVerificationRequestData(
 ): string | null {
   const { type, countryCode, postalCode, cityName, countyName } = data;
 
-  if (!type || !countryCode || !postalCode || !cityName || !countyName) {
+  if (!type || !countryCode || !postalCode) {
     return "Missing one or more required fields";
   }
 
@@ -19,13 +19,6 @@ export function validateAddressVerificationRequestData(
 
   if (typeof postalCode !== "string") {
     return "Invalid postal code";
-  }
-
-  if (typeof cityName !== "string") {
-    return "Invalid city name";
-  }
-  if (typeof countyName !== "string") {
-    return "Invalid city name";
   }
 
   // Add more validation rules as needed

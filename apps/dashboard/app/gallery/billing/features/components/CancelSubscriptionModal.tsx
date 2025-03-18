@@ -16,7 +16,7 @@ export default function CancelSubscriptionModal({
   sub_end,
   id,
 }: {
-  sub_end: string;
+  sub_end: Date;
   id: string;
 }) {
   const router = useRouter();
@@ -57,19 +57,19 @@ export default function CancelSubscriptionModal({
             onClick={() => {
               updateOpenModal();
             }}
-            className="bg-slate-900/20 backdrop-blur py-8 px-2 fixed inset-0 z-50 grid place-items-center cursor-pointer"
+            className="bg-slate-900/20 backdrop-blur-2xl py-8 px-2 fixed inset-0 z-50 grid place-items-center cursor-pointer"
           >
             <motion.div
               initial={{ scale: 0, rotate: "12.5deg" }}
               animate={{ scale: 1, rotate: "0deg" }}
               exit={{ scale: 0, rotate: "0deg" }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white text-dark p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
+              className="bg-white text-dark p-6 rounded-3xl w-full max-w-lg shadow-xl cursor-default relative h-auto"
             >
               {/* Add modal form here */}
               <div className="h-auto w-full">
                 <div className="flex flex-col gap-4 font-normal text-[14px]">
-                  <h2 className="text-red-600 text-sm font-normal">
+                  <h2 className="text-red-600 text-base font-bold">
                     You are about to cancel your subscription.
                   </h2>
                   <p>
@@ -78,13 +78,15 @@ export default function CancelSubscriptionModal({
                       {formatIntlDateTime(sub_end)}.
                     </span>{" "}
                     If you would like to proceed with canceling your
-                    subscription, please select “Cancel subscription” below.
+                    subscription, please select{" "}
+                    <strong>&apos;Cancel subscription&apos;</strong>
+                    below.
                   </p>
 
                   {/* Warning block */}
                   <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3 text-[14px]">
                     <IoWarning className="text-md text-[#ff3434]" />
-                    <p>
+                    <p className="font-medium">
                       Are you sure? After{" "}
                       <span className="font-bold">
                         {formatIntlDateTime(sub_end)}
@@ -102,14 +104,14 @@ export default function CancelSubscriptionModal({
                   <div className="flex gap-3 text-[15px]">
                     <button
                       disabled={loading}
-                      className=" h-[40px] px-4 text-white disabled:cursor-not-allowed text-[13px] bg-dark hover:bg-dark/60 duration-200"
+                      className=" h-[40px] px-4 rounded-full text-white disabled:cursor-not-allowed text-[13px] bg-dark hover:bg-dark/90 duration-200"
                       onClick={() => updateOpenModal()}
                     >
                       Close
                     </button>
                     <button
                       disabled={loading}
-                      className=" h-[40px] px-4 text-white disabled:cursor-not-allowed text-[13px] bg-red-600 hover:bg-red-600/60 duration-200"
+                      className=" h-[40px] px-4 text-white rounded-full disabled:cursor-not-allowed text-[13px] bg-red-600 hover:bg-red-600/90 duration-200"
                       color="gray"
                       onClick={cancel_subscription}
                     >

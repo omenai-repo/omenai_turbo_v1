@@ -92,14 +92,14 @@ export default function WYSIWIG_Editor() {
               setRenderedHTML(null);
             }}
             disabled={!renderedHTML}
-            className="w-full h-[50px] flex items-center justify-center bg-white border border-black text-red-700 cursor-pointer flex-1 disabled:border-none disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1]"
+            className="w-full h-[50px] flex items-center justify-center bg-white border border-black text-red-700 cursor-pointer flex-1 disabled:border-none disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1]"
           >
             Remove
           </button>
           <button
             onClick={log}
             disabled={isLoading}
-            className="w-full h-[50px] flex items-center justify-center bg-dark text-white cursor-pointer flex-1 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1]"
+            className="w-full h-[50px] flex items-center justify-center bg-dark text-white cursor-pointer flex-1 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1]"
           >
             {isLoading ? <LoadSmall /> : "Print form"}
           </button>

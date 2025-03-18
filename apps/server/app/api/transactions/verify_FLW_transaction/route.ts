@@ -22,6 +22,8 @@ export async function POST(request: Request) {
     const convert_verify_transaction_json_response =
       await verify_transaction.json();
 
+    console.log(convert_verify_transaction_json_response);
+
     if (convert_verify_transaction_json_response.status !== "success") {
       return NextResponse.json(
         {
@@ -44,8 +46,9 @@ export async function POST(request: Request) {
     } else {
       // If subscription verification, save token to database
       if (
+        convert_verify_transaction_json_response.data.meta !== null &&
         convert_verify_transaction_json_response.data.meta.type ===
-        "subscription"
+          "subscription"
       ) {
         if (
           convert_verify_transaction_json_response.data.status ===

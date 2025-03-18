@@ -120,7 +120,7 @@ export default function TokenBlock({ token }: TokenProps) {
         />
         <button
           disabled={isLoading}
-          className=" disabled:bg-gray-400 h-[40px] p-6 rounded-full w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal duration-200"
+          className=" disabled:bg-dark/10 h-[40px] p-6 rounded-full w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal duration-200"
           type={"submit"}
         >
           {isLoading ? <LoadSmall /> : "Submit"}

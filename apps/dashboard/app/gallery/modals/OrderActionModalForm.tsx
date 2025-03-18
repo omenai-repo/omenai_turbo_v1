@@ -93,7 +93,7 @@ export default function OrderActionModalForm() {
         <div className="my-4 flex items-center justify-center gap-x-2 w-full text-[13px]">
           <button
             onClick={handleDeclineOrderRequest}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-white ring-1 ring-[#e0e0e0] text-dark text-[14px] font-normal"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white ring-1 ring-[#e0e0e0] text-dark text-[14px] font-normal"
           >
             Decline Order
           </button>
@@ -103,7 +103,7 @@ export default function OrderActionModalForm() {
           >
             <button
               onClick={routeToQuote}
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal whitespace-nowrap"
+              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal whitespace-nowrap"
             >
               Provide shipping quote
             </button>

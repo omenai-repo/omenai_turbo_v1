@@ -136,7 +136,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         <button
           disabled={loading || !data.availability}
           onClick={handleBuyButtonClick}
-          className="w-full bg-dark h-[50px] px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
+          className="w-full bg-dark h-[50px] px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
         >
           {loading ? (
             <LoadSmall />

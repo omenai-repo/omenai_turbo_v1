@@ -239,7 +239,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                     order.order_accepted.status === "accepted" && (
                       <button
                         disabled
-                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <span>No action required</span>
                       </button>
@@ -251,7 +251,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                       .link !== "" && (
                       <button
                         disabled
-                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <span>No action required</span>
                       </button>
@@ -267,7 +267,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                               order.order_id
                             )
                           }
-                          className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                          className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                         >
                           <CgTrack />
                           <span>Upload tracking information</span>
@@ -287,7 +287,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                             order.artwork_data
                           )
                         }
-                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <MdOutlineCallToAction />
                         <span>Take action</span>
@@ -306,7 +306,7 @@ export default function OrdersTable({ data, tab }: OrdersTableProps) {
                             order.artwork_data
                           )
                         }
-                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                        className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                       >
                         <VscEye />
                         <span>View</span>

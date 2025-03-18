@@ -3,7 +3,7 @@ import AddressTextInput from "./AddressTextInput";
 import { userDetails, userLocation } from "../AddressInputFieldMocks";
 import AddressSelectInput from "./AddressSelectInput";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { indexAddress } from "../indexAddressOptions";
 import { createShippingOrder } from "@omenai/shared-services/orders/createShippingOrder";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import {
   RoleAccess,
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { City, IState, State } from "country-state-city";
 
 type AddressFormTypes = {
   userAddress: AddressTypes;
@@ -31,7 +32,15 @@ export default function AddressForm({
   availability,
   role_access,
 }: AddressFormTypes) {
-  const { address } = orderStore();
+  const { address, set_address_on_order } = orderStore();
+  const {
+    selectedCityList,
+    setSelectedStateList,
+    selectedStateList,
+    setSelectedCityList,
+    setSelectedCountry,
+    selectedCountry,
+  } = actionStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [save_shipping_address, setSaveShippingAddress] =
     useState<boolean>(false);
@@ -39,6 +48,31 @@ export default function AddressForm({
   const { toggleOrderReceivedModal } = actionStore();
 
   const session = useSession();
+
+  useEffect(() => {
+    const address = (session as IndividualSchemaTypes).address;
+    setSelectedCountry(
+      (address as AddressTypes).country,
+      (address as AddressTypes).countryCode
+    );
+    const stateList = State.getStatesOfCountry(
+      (address as AddressTypes).countryCode
+    );
+
+    const selectedState = stateList.find(
+      (state: IState) =>
+        state.name.toLowerCase() ===
+        (address as AddressTypes).state.toLowerCase()
+    );
+
+    const cityList = City.getCitiesOfState(
+      (address as AddressTypes).countryCode,
+      selectedState?.isoCode as string
+    );
+
+    setSelectedStateList(stateList);
+    setSelectedCityList(cityList);
+  }, []);
 
   async function handleOrderSubmission(e: FormEvent) {
     e.preventDefault();
@@ -123,35 +157,41 @@ export default function AddressForm({
               );
             })}
           </div>
-          <div className="grid md:grid-cols-2">
+          <div className="grid xl:grid-cols-2 gap-y-2 gap-x-4">
             {userLocation.map((location: any, index: number) => {
-              if (location.type === "select" && !location.placeholder) {
-                return (
-                  <AddressSelectInput
-                    key={location.name}
-                    label={location.label}
-                    name={location.name}
-                    required={location.required}
-                    items={location.items}
-                  />
-                );
-              } else if (location.placeholder) {
-                return (
-                  <AddressTextInput
-                    key={location.name}
-                    placeholder={location.placeholder}
-                    label={location.label}
-                    name={location.name}
-                    type={location.type}
-                    required={location.required}
-                    defaultValue={indexAddress(location.name, userAddress)}
-                  />
-                );
-              }
+              return location.type === "select" ? (
+                <AddressSelectInput
+                  key={index}
+                  label={location.label}
+                  name={location.name}
+                  items={location.items}
+                  labelText={location.labelText}
+                  defaultValue={
+                    (session as IndividualSchemaTypes).address?.[
+                      location.labelText as keyof AddressTypes
+                    ] ?? ""
+                  }
+                />
+              ) : (
+                <AddressTextInput
+                  key={location.labelText}
+                  placeholder={location.placeholder}
+                  label={location.label}
+                  name={location.labelText}
+                  type={location.type}
+                  required={true}
+                  disabled={false}
+                  defaultValue={
+                    (session as IndividualSchemaTypes)?.address?.[
+                      location.labelText as keyof AddressTypes
+                    ] || ""
+                  }
+                />
+              );
             })}
           </div>
 
-          <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center mt-2">
+          <div className="flex lg:flex-row flex-col sm:justify-between sm:items-center mt-2">
             <div className="my-5">
               <div className="flex items-center gap-2">
                 <input

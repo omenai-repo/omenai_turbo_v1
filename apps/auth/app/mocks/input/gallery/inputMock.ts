@@ -32,25 +32,24 @@ export const gallery_signup_step_two = [
     labelText: "country",
     items: country_codes,
   },
-
-  {
-    label: "Address line",
-    type: "text",
-    placeholder: "e.g 79, example street",
-    labelText: "address_line",
-    items: [],
-  },
-  {
-    label: "City",
-    type: "text",
-    placeholder: "Prague",
-    labelText: "city",
-  },
   {
     label: "State",
     type: "select",
     labelText: "state",
     placeholder: "Select option",
+    items: [],
+  },
+  {
+    label: "City",
+    type: "select",
+    placeholder: "Select option",
+    labelText: "city",
+  },
+  {
+    label: "Address line",
+    type: "text",
+    placeholder: "e.g 79, example street",
+    labelText: "address_line",
     items: [],
   },
   {

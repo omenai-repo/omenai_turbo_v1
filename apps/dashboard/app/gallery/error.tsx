@@ -336,7 +336,7 @@ export default function Error({
             to customer support.
           </p>
           <button
-            className="h-[40px] text-[14px] font-normal w-fit disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] px-4 bg-dark text-white cursor-pointer mt-5 grid place-items-center"
+            className="h-[40px] text-[14px] font-normal w-fit disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] px-4 bg-dark text-white cursor-pointer mt-5 grid place-items-center"
             onClick={
               // Attempt to recover by trying to re-render the segment
               () => reset()

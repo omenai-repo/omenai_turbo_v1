@@ -34,6 +34,7 @@
     "@tanstack/react-query": "^5.61.0",
     "@vercel/analytics": "^1.4.1",
     "cloc": "^2.4.0-cloc",
+    "country-state-city": "^3.2.1",
     "dotenv": "^16.4.5",
     "embla-carousel-react": "^8.5.1",
     "firebase": "^11.1.0",

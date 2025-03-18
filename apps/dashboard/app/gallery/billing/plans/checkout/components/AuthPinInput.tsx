@@ -126,15 +126,15 @@ export default function AuthPinInput({
       onSubmit={handleSubmit}
     >
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-[14px] font-normal">Pin Verification</h1>
+        <h1 className="text-base font-bold">Pin Verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
         </p>
       </div>
-      <div className="relative w-full">
+      <div className="relative w-full flex flex-col">
         <label
-          className="text-[#858585] font-normal text-[14px] mb-4"
+          className="text-[#858585] font-bold text-[14px] mb-4"
           htmlFor="otp"
         >
           Enter your 4-digit pin
@@ -156,7 +156,7 @@ export default function AuthPinInput({
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

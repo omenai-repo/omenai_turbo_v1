@@ -10,7 +10,12 @@ export async function retrieveSubscriptionData(gallery_id: string) {
     });
     const result = await res.json();
 
-    return { isOk: res.ok, message: result.message, data: result.data };
+    return {
+      isOk: res.ok,
+      message: result.message,
+      data: result.data,
+      plan: result.plan,
+    };
   } catch (error) {
     console.log(error);
   }

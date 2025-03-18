@@ -407,9 +407,12 @@ export type WalletModelSchemaTypes = {
 };
 export type WithdrawalAccount = {
   account_number: number;
-  account_bank: string;
+  bank_name: string;
   account_name: string;
-  account_bank_id: string;
+  bank_id: string;
+  bank_code: string;
+  bank_branch?: string;
+  bank_country: string;
 };
 
 export type PurchaseTransactionModelSchemaTypes = {
@@ -688,8 +691,9 @@ export type ShipmentAddressValidationType = {
   type: "pickup" | "delivery";
   countryCode: string;
   postalCode: string;
-  cityName: string;
-  countyName: string;
+  cityName?: string;
+  countyName?: string;
+  country?: string;
 };
 
 export type ShipmentPickupRequestDataTypes = {

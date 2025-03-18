@@ -1,14 +1,16 @@
 "use client";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
+import { IState, ICity, ICountry, State, City } from "country-state-city";
 import { ChangeEvent } from "react";
+import { MdError } from "react-icons/md";
 
 type AddressSelectInputProps = {
   label: string;
-  items?: string[];
+  labelText: string;
+  items: ICountry[];
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   name: string;
-  required: boolean;
   defaultValue?: string | undefined;
 };
 export default function AddressSelectInput({
@@ -16,72 +18,109 @@ export default function AddressSelectInput({
   items,
   onChange,
   name,
-  required,
   defaultValue,
+  labelText,
 }: AddressSelectInputProps) {
-  const { setSelectedCountry, countryStates, setCountryStates } = actionStore();
+  const {
+    selectedCityList,
+    setSelectedStateList,
+    selectedStateList,
+    setSelectedCityList,
+    setSelectedCountry,
+    selectedCountry,
+  } = actionStore();
 
   const { setAddress } = orderStore();
 
-  function handleCountrySelectChange(e: ChangeEvent<HTMLSelectElement>) {
-    if (e.target.value !== "") {
-      setSelectedCountry(e.target.value);
-      setCountryStates();
-      setAddress(name, e.target.value);
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    const selectedCode =
+      e.target.options[e.target.selectedIndex].getAttribute("data-code");
+
+    if (labelText === "country") {
+      setSelectedCityList([]);
+      setSelectedCountry(value, selectedCode as string);
+      const stateList = State.getStatesOfCountry(selectedCode as string);
+      setSelectedStateList(stateList);
     }
-  }
+    if (labelText === "state") {
+      const cities = City.getCitiesOfState(
+        selectedCountry.code,
+        selectedCode as string
+      );
+      setSelectedCityList(cities);
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-dark/80 font-medium text-[14px]">
+    <div className="flex flex-col gap-4 w-full">
+      <label htmlFor={name} className="text-dark/80 font-normal text-xs">
         {label}
       </label>
-      {name !== "state" ? (
-        <select
-          onChange={handleCountrySelectChange}
-          required={required}
-          defaultValue={defaultValue !== undefined ? defaultValue : ""}
-          className="border-0 border-b bg-transparent text-[14px] ring-0 disabled:cursor-not-allowed border-b-dark/20 w-full p-2 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-dark text-dark"
+      <select
+        required={true}
+        onChange={handleChange}
+        className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
+      >
+        <option
+          value=""
+          selected={defaultValue === ""}
+          className="text-dark/40"
         >
-          <option value="">Select</option>
-          {items &&
-            items.map((item, index) => {
+          Select {labelText}
+        </option>
+        <>
+          {labelText === "country" &&
+            items.map((item: ICountry) => {
               return (
                 <option
-                  key={item}
-                  value={item}
-                  className="p-3 font-light text-dark text-[14px]"
+                  key={item.isoCode}
+                  value={item.name}
+                  data-code={item.isoCode}
+                  selected={
+                    defaultValue?.toLowerCase() === item.name.toLowerCase()
+                  }
+                  className="px-3 py-5 my-5 text-xs font-medium text-dark/40"
                 >
-                  {item}
+                  {item.name}
                 </option>
               );
             })}
-        </select>
-      ) : (
-        <select
-          disabled={countryStates.length === 0}
-          required={required}
-          defaultValue={defaultValue !== undefined ? defaultValue : ""}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            setAddress(name, e.target.value)
-          }
-          className="border-0 border-b bg-transparent text-[14px] ring-0 disabled:cursor-not-allowed border-b-dark/20 w-full p-2 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-dark text-dark"
-        >
-          <option value="">Select</option>
-          {countryStates.length > 0 &&
-            countryStates.map((state, index) => {
+          {labelText === "state" &&
+            selectedStateList.map((state: IState) => {
               return (
                 <option
-                  key={state}
-                  value={state}
-                  className="p-3 font-light text-dark text-[14px]"
+                  key={state.isoCode}
+                  value={state.name}
+                  data-code={state.isoCode}
+                  selected={
+                    defaultValue?.toLowerCase() === state.name.toLowerCase()
+                  }
+                  className="px-3 py-5 my-5 text-xs font-medium text-dark/40"
                 >
-                  {state}
+                  {state.name}
                 </option>
               );
             })}
-        </select>
-      )}
+
+          {labelText === "city" &&
+            selectedCityList.map((city: ICity) => {
+              return (
+                <option
+                  key={city.name}
+                  value={city.name}
+                  data-code={city.name}
+                  selected={
+                    defaultValue?.toLowerCase() === city.name.toLowerCase()
+                  }
+                  className="px-3 py-5 my-5 text-xs font-medium text-dark/40"
+                >
+                  {city.name}
+                </option>
+              );
+            })}
+        </>
+      </select>
     </div>
   );
 }

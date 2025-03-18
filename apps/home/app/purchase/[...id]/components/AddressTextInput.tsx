@@ -23,7 +23,7 @@ export default function AddressTextInput({
     setAddress(name, e.target.value);
   };
   return (
-    <div className="flex flex-col gap-1 my-4 px-2">
+    <div className="flex flex-col gap-1 my-4 px-2 w-full">
       <label htmlFor={name} className="text-dark font-normal text-[14px]">
         {label}
       </label>
@@ -35,7 +35,7 @@ export default function AddressTextInput({
         onChange={handleInputChange}
         name={name}
         defaultValue={defaultValue !== undefined ? defaultValue : ""}
-        className="border-0 text-[14px] border-b ring-0 disabled:cursor-not-allowed disabled:text-dark/50 border-b-dark/20 w-full py-2 px-0 focus:border-b-dark focus:ring-0 placeholder:font-light placeholder:text-gray-200 "
+        className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
       />
     </div>
   );

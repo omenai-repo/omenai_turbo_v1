@@ -9,7 +9,7 @@ export default function UpcomingSub({
   sub_data,
 }: {
   sub_data: SubscriptionModelSchemaTypes & {
-    created: string;
+    createdAt: string;
     updatedAt: string;
   };
 }) {

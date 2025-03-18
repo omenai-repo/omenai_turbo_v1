@@ -45,8 +45,8 @@ export default function CardInput({
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const interval = searchParams.get("interval");
-  const plan_object_id = searchParams.get("id");
+  const interval = searchParams.get("plan_interval");
+  const plan_object_id = searchParams.get("plan_id");
   const charge_type = searchParams.get("charge_type");
   const redirect = searchParams.get("redirect");
   const dashboard_uri = dashboard_url();
@@ -124,6 +124,12 @@ export default function CardInput({
             className: "class",
           });
         } else {
+          console.log(response);
+          if (response.data.data.status === "successful") {
+            set_transaction_id(response.data.data.id);
+            router.replace("/gallery/billing/plans/checkout/verification");
+            return;
+          }
           if (response.data.meta.authorization.mode === "redirect") {
             toast.info("Redirecting to authentication portal, Please wait");
             set_transaction_id(response.data.data.id);
@@ -173,7 +179,7 @@ export default function CardInput({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleCardDetailInputChange(e.target.name, e.target.value)
           }
-          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
         />
       </div>
       <CardNumber onChange={handleCardDetailInputChange} />

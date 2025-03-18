@@ -13,7 +13,12 @@ export async function initiateDirectCharge(data: FLWDirectChargeDataTypes) {
     );
 
     const result = await res.json();
-    return { isOk: res.ok, message: result.message, data: result.data };
+    return {
+      isOk: res.ok,
+      message: result.message,
+      data: result.data,
+      status: result.status,
+    };
   } catch (error: any) {
     console.log(error);
   }

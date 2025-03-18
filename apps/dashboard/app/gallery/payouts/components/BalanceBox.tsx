@@ -54,14 +54,14 @@ export default function BalanceBox({
         <div className="mt-16 w-full flex space-x-2">
           <button
             disabled={balance.available[0].amount / 100 === 0}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             Payout Balance
           </button>
           <button
             onClick={generateLoginLink}
             disabled={generatingLoginLink}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
           </button>

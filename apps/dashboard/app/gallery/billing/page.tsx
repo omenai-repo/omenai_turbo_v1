@@ -49,13 +49,14 @@ export default function Subscription() {
             sub_check?.data?.status === "canceled" ||
             sub_check?.data?.status === "expired",
           subscription_data: sub_check.data,
+          subscription_plan: sub_check.plan,
         };
       } catch (error) {
         console.error(error);
         handleError();
       }
     },
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   if (isLoading) {
@@ -72,6 +73,7 @@ export default function Subscription() {
 
       {isConfirmed?.isSubActive ? (
         <SubscriptionActiveTheme
+          subscription_plan={isConfirmed.subscription_plan}
           subscription_data={isConfirmed.subscription_data}
         />
       ) : (

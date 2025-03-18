@@ -11,11 +11,23 @@ import { useLocalStorage } from "usehooks-ts";
 import { useContext, useEffect } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { auth_uri } from "@omenai/url-config/src/config";
+import {
+  SubscriptionModelSchemaTypes,
+  SubscriptionPlanDataTypes,
+} from "@omenai/shared-types";
 
 export default function SubscriptionActiveTheme({
   subscription_data,
+  subscription_plan,
 }: {
-  subscription_data: any;
+  subscription_data: SubscriptionModelSchemaTypes & {
+    createdAt: string;
+    updatedAt: string;
+  };
+  subscription_plan: SubscriptionPlanDataTypes & {
+    createdAt: string;
+    updatedAt: string;
+  };
 }) {
   const { session } = useContext(SessionContext);
   const router = useRouter();
@@ -39,6 +51,8 @@ export default function SubscriptionActiveTheme({
               first_6digits={subscription_data.card.first_6digits}
               last_4digits={subscription_data.card.last_4digits}
               type={subscription_data.card.type}
+              plan_id={subscription_plan.plan_id}
+              plan_interval={subscription_data.plan_details.interval}
             />
           </div>
 
