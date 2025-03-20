@@ -17,12 +17,18 @@ export default function VerifyTransaction({
     queryKey: ["verify_subscription_payment"],
     queryFn: async () => {
       const response = await verifyFlwTransaction(transaction_id);
-      if (!response?.isOk) return null;
-      else {
-        queryClient.invalidateQueries({
-          queryKey: ["subscription_precheck"],
-        });
-        return { message: response.message, data: response.data };
+      if (!response?.isOk) {
+        return {
+          message: `${response?.message}. Please contact support`,
+          isOk: response?.isOk,
+        };
+        throw new Error("Something went wrong");
+      } else {
+        return {
+          message: response.message,
+          data: response.data,
+          isOk: response.isOk,
+        };
       }
     },
     refetchOnWindowFocus: false,
@@ -37,32 +43,35 @@ export default function VerifyTransaction({
         </p>
       </div>
       {isLoading ? (
-        <div className="w-full flex flex-col justify-center items-center gap-y-4">
+        <div className="w-full h-full flex flex-col justify-center items-center gap-y-4">
           <Load />
           <p className="text-[14px]">Verification in progress...please wait</p>
         </div>
       ) : (
-        <div className=" mt-6 w-full flex flex-col gap-y-4">
-          {/* todo: Fix verification icon */}
-          <div className="space-y-3 grid place-items-center">
-            <Image
-              src={"/icons/verified.png"}
-              height={100}
-              width={100}
-              alt="verification icon"
-              className="text-center"
-            />
-            <p className="text-[14px] font-bold">{verified?.message}</p>
-          </div>
+        <div className=" w-[20vw] flex-flex-col space-y-6 h-[30vh] grid place-items-center">
+          <div>
+            <div className="space-y-5 grid place-items-center">
+              <Image
+                src={`/icons/${verified?.isOk ? "verified.png" : "cancel_icon.png"}`}
+                height={50}
+                width={50}
+                alt="verification icon"
+                className="text-center"
+              />
+              <p className="text-[14px] font-bold whitespace-nowrap">
+                {verified?.message}
+              </p>
+            </div>
 
-          <div className="w-full mt-5">
-            <Link
-              href={"/gallery/billing"}
-              type="button"
-              className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
-            >
-              Go home
-            </Link>
+            <div className=" mt-5">
+              <Link
+                href={"/gallery/billing"}
+                type="button"
+                className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+              >
+                {verified?.isOk ? "View subscription info" : "Go back"}
+              </Link>
+            </div>
           </div>
         </div>
       )}

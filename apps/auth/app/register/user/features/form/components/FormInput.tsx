@@ -7,6 +7,7 @@ import FormController from "./FormController";
 import { registerAccount } from "@omenai/shared-services/register/registerAccount";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
+import { IndividualRegisterData } from "@omenai/shared-types";
 
 export default function FormInput() {
   const {
@@ -21,7 +22,6 @@ export default function FormInput() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(isFieldDirty);
 
     if (allKeysEmpty(individualSignupData)) {
       toast.error("Error notification", {
@@ -46,15 +46,15 @@ export default function FormInput() {
       zip,
       address_line,
     } = individualSignupData;
-    const data = {
+    const data: Omit<IndividualRegisterData, "confirmPassword"> & {
+      preferences: string[];
+    } = {
       name,
       email,
       password,
       preferences,
       address: { country, countryCode, city, state, zip, address_line },
     };
-
-    console.log(data);
 
     const response = await registerAccount(data, "individual");
 

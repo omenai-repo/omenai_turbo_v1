@@ -8,7 +8,9 @@ import {
 import { hashPassword } from "../hash/hashPassword";
 
 type data =
-  | Omit<IndividualRegisterData, "confirmPassword">
+  | (Omit<IndividualRegisterData, "confirmPassword"> & {
+      preferences: string[];
+    })
   | Omit<GallerySignupData, "confirmPassword">
   | Omit<AdminSignupData, "confirmPassword">
   | Omit<ArtistSignupData, "confirmPassword>">;

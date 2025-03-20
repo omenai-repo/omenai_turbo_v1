@@ -86,7 +86,7 @@ export default function Oput({
       </div>
       <div className="relative w-full flex flex-col">
         <label
-          className="text-[#858585] font-bold text-[13px] mb-4"
+          className="text-[#858585] font-medium text-xs mb-4"
           htmlFor="otp"
         >
           Enter OTP sent to your number or email

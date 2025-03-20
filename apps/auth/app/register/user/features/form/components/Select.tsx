@@ -57,6 +57,7 @@ export default function SelectInput({
       e.target.options[e.target.selectedIndex].getAttribute("data-code");
 
     updateSignUpData(labelText, value);
+
     if (labelText === "country") {
       updateSignUpData("state", "");
       updateSignUpData("city", "");
@@ -96,9 +97,8 @@ export default function SelectInput({
             required={required}
             disabled={
               (labelText === "state" && individualSignupData.country === "") ||
-              (labelText === "city" &&
-                individualSignupData.state === "" &&
-                individualSignupData.country === "")
+              (labelText === "city" && individualSignupData.state === "") ||
+              individualSignupData.country === ""
             }
             className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
           >

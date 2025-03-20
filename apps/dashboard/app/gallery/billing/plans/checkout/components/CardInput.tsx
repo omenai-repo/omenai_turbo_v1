@@ -113,7 +113,8 @@ export default function CardInput({
       };
 
       const response = await initiateDirectCharge(data);
-      if (response?.isOk) {
+      console.log(response);
+      if (response?.data) {
         if (response.data.status === "error") {
           toast.error("Error notification", {
             description: response.data.message,
@@ -124,8 +125,7 @@ export default function CardInput({
             className: "class",
           });
         } else {
-          console.log(response);
-          if (response.data.data.status === "successful") {
+          if (response.data.status === "successful") {
             set_transaction_id(response.data.data.id);
             router.replace("/gallery/billing/plans/checkout/verification");
             return;

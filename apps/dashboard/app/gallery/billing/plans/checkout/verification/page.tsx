@@ -23,7 +23,6 @@ export default function TransactionVerification() {
     queryKey: ["verify_subscription_payment_on_redirect"],
     queryFn: async () => {
       const response = await verifyFlwTransaction(transaction_id);
-      console.log(response);
       if (!response?.isOk) {
         return {
           message: `${response?.message}. Please contact support`,

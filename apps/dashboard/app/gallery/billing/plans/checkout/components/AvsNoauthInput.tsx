@@ -1,6 +1,5 @@
 "use client";
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
-import { country_and_states } from "@omenai/shared-json/src/countryAndStateList";
 import { validateChargeAuthorization } from "@omenai/shared-services/subscriptions/subscribeUser/validateChargeAuthorization";
 import { stepperStore } from "@omenai/shared-state-store/src/stepper/stepperStore";
 import {

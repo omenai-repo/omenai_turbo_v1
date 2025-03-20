@@ -31,11 +31,11 @@ export default function BillingCard({
       <div className="flex flex-col 2xl:flex-row justify-between 2xl:items-center relative z-10">
         <div>
           <div className="flex space-x-3 items-center">
-            <p className="text-sm  text-white font-bold whitespace-nowrap tracking-[0.15rem]">
+            <p className="text-sm  text-white font-semibold whitespace-nowrap tracking-[0.15rem]">
               {first_6digits} ** **** {last_4digits}
             </p>
           </div>
-          <p className="text-normal text-base font-bold text-white ">
+          <p className="text-normal text-base font-semibold text-white ">
             {expiry}
           </p>
         </div>
@@ -43,8 +43,8 @@ export default function BillingCard({
         <Image
           src={`/icons/${type.toLowerCase()}.png`}
           alt={`${type.toLowerCase()} logo`}
-          height={20}
-          width={40}
+          height={60}
+          width={80}
           className="w-fit h-fit mt-5 2xl:mt-0"
         />
       </div>

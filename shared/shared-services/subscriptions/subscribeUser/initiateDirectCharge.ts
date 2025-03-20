@@ -17,7 +17,6 @@ export async function initiateDirectCharge(data: FLWDirectChargeDataTypes) {
       isOk: res.ok,
       message: result.message,
       data: result.data,
-      status: result.status,
     };
   } catch (error: any) {
     console.log(error);

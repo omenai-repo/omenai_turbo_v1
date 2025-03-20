@@ -134,7 +134,7 @@ export default function AuthPinInput({
       </div>
       <div className="relative w-full flex flex-col">
         <label
-          className="text-[#858585] font-bold text-[14px] mb-4"
+          className="text-[#858585] font-medium text-xs mb-4"
           htmlFor="otp"
         >
           Enter your 4-digit pin
