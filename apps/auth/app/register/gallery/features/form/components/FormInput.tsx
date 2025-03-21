@@ -42,6 +42,7 @@ export default function FormInput() {
       state,
       city,
       zip,
+      stateCode,
     } = gallerySignupData;
 
     console.log(gallerySignupData);
@@ -60,7 +61,15 @@ export default function FormInput() {
         email,
         password,
         admin,
-        address: { address_line, country, countryCode, state, city, zip },
+        address: {
+          address_line,
+          country,
+          countryCode,
+          state,
+          city,
+          zip,
+          stateCode,
+        },
         description,
         logo: file.fileId,
       };

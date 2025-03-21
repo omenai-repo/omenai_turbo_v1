@@ -17,7 +17,7 @@ type IndividualAuthStoreTypes = {
 
   isFieldDirty: Record<
     | keyof Omit<IndividualSignupData, "address">
-    | keyof Omit<AddressTypes, "countryCode">,
+    | keyof Omit<AddressTypes, "countryCode" | "stateCode">,
     boolean
   >;
   setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => void;
@@ -75,6 +75,7 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       zip: "",
       countryCode: "",
       state: "",
+      stateCode: "",
     },
 
     // UPDATE SIGNUP FORM DATA ON INPUT CHANGE
@@ -120,6 +121,7 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
           zip: "",
           countryCode: "",
           state: "",
+          stateCode: "",
         },
         preferences: [],
         currentSignupFormIndex: 0,

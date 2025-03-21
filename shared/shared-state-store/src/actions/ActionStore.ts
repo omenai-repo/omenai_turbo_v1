@@ -149,6 +149,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
       state: "",
       zip: "",
       countryCode: "",
+      stateCode: "",
     },
     order_id: "",
     artwork: {
@@ -188,6 +189,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
           state: "",
           zip: "",
           countryCode: "",
+          stateCode: "",
         },
         order_id: "",
         artwork: {

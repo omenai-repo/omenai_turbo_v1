@@ -330,6 +330,7 @@ export type AddressTypes = {
   country: string;
   countryCode: string;
   state: string;
+  stateCode: string;
   zip: string;
 };
 export type PaymentStatusTypes = {

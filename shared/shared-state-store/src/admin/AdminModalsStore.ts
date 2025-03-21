@@ -65,6 +65,7 @@ export const adminModals = create<AdminModalsStore>((set, get) => ({
       countryCode: "",
       state: "",
       zip: "",
+      stateCode: "",
     },
     description: "",
     _id: "",

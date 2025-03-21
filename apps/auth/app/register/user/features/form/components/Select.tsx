@@ -70,6 +70,7 @@ export default function SelectInput({
         individualSignupData.countryCode,
         selectedCode as string
       );
+      updateSignUpData("stateCode", selectedCode as string);
       setSelectedCityList(cities);
     }
     setIsFieldDirty(

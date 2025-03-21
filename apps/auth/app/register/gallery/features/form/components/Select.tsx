@@ -56,6 +56,7 @@ export default function SelectInput({
         gallerySignupData.countryCode,
         selectedCode as string
       );
+      updateGallerySignupData("stateCode", selectedCode as string);
       setSelectedCityList(cities);
     }
 

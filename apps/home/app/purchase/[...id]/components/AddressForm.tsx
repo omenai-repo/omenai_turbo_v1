@@ -59,15 +59,9 @@ export default function AddressForm({
       (address as AddressTypes).countryCode
     );
 
-    const selectedState = stateList.find(
-      (state: IState) =>
-        state.name.toLowerCase() ===
-        (address as AddressTypes).state.toLowerCase()
-    );
-
     const cityList = City.getCitiesOfState(
       (address as AddressTypes).countryCode,
-      selectedState?.isoCode as string
+      (address as AddressTypes).stateCode
     );
 
     setSelectedStateList(stateList);

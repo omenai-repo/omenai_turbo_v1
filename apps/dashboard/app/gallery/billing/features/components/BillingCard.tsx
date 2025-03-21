@@ -43,8 +43,8 @@ export default function BillingCard({
         <Image
           src={`/icons/${type.toLowerCase()}.png`}
           alt={`${type.toLowerCase()} logo`}
-          height={60}
-          width={80}
+          height={20}
+          width={40}
           className="w-fit h-fit mt-5 2xl:mt-0"
         />
       </div>

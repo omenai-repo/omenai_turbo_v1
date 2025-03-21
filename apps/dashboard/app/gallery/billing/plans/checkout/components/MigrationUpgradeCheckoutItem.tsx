@@ -15,6 +15,10 @@ import {
 import { determinePlanChange } from "@omenai/shared-utils/src/determinePlanChange";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { calculateSubscriptionPricing } from "@omenai/shared-utils/src/calculateSubscriptionPricing";
+import { useMemo } from "react";
+
+// New utility function
 
 export default function MigrationUpgradeCheckoutItem({
   plan,
@@ -33,49 +37,27 @@ export default function MigrationUpgradeCheckoutItem({
   };
 }) {
   const days_used = daysElapsedSince(sub_data.start_date);
-
   const startDate = new Date(sub_data.start_date);
-
-  const daysInYear = differenceInDays(
-    endOfYear(startDate),
-    startOfYear(startDate)
-  );
-
-  const daysInMonth = getDaysInMonth(startDate);
-
-  // const days_left = getDaysLeft(startDate, sub_data.plan_details.interval);
-
-  const dailyRate =
-    (sub_data.plan_details.interval === "yearly"
-      ? +sub_data.plan_details.value.annual_price
-      : +sub_data.plan_details.value.monthly_price) /
-    (sub_data.plan_details.interval === "yearly" ? daysInYear : daysInMonth);
-
-  const proratedPrice =
-    (sub_data.plan_details.interval === "yearly"
-      ? +sub_data.plan_details.value.annual_price
-      : +sub_data.plan_details.value.monthly_price) -
-    days_used * dailyRate;
-
-  // const prorated_cost = days_used > 0 ? proratedPrice : 0;
-  const upgrade_cost =
-    interval === "monthly"
-      ? +plan.pricing.monthly_price
-      : +plan.pricing.annual_price;
-
   const currency = getCurrencySymbol(plan.currency);
 
-  const total = upgrade_cost - proratedPrice;
+  // Memoize calculations
+  const { proratedPrice, upgradeCost, grandTotal } = useMemo(
+    () =>
+      calculateSubscriptionPricing(
+        startDate,
+        interval,
+        sub_data.plan_details,
+        plan,
+        days_used
+      ),
+    [startDate, interval, sub_data.plan_details, plan, days_used]
+  );
 
-  const grand_total = Math.round((total + Number.EPSILON) * 100) / 100;
+  // Memoize plan change parameters
+  const plan_change_params = useMemo(() => {
+    if (!sub_data) return { action: "", shouldCharge: false };
 
-  let plan_change_params: { action: string; shouldCharge: boolean } = {
-    action: "",
-    shouldCharge: false,
-  };
-
-  if (sub_data !== null) {
-    const { action, shouldCharge } = determinePlanChange(
+    return determinePlanChange(
       sub_data.plan_details.type.toLowerCase(),
       sub_data.plan_details.interval.toLowerCase() as "yearly" | "monthly",
       interval === "yearly"
@@ -84,8 +66,27 @@ export default function MigrationUpgradeCheckoutItem({
       interval,
       sub_data.status
     );
-    plan_change_params = { action, shouldCharge };
-  }
+  }, [sub_data, interval, plan.pricing]);
+
+  // Extract price display component
+  const PriceDisplay = ({
+    label,
+    value,
+    showMinus = false,
+  }: {
+    label: string;
+    value: number;
+    showMinus?: boolean;
+  }) => (
+    <div className="flex justify-between items-center">
+      <p className="text-[14px] font-semibold">{label}</p>
+      <p className="text-[14px] font-semibold">
+        {showMinus
+          ? `-${formatPrice(value, currency)}`
+          : formatPrice(value, currency)}
+      </p>
+    </div>
+  );
 
   return (
     <>
@@ -94,43 +95,31 @@ export default function MigrationUpgradeCheckoutItem({
           <p className="text-[13px] font-normal">
             Subscription {plan_change_params.action}
           </p>
-          <h1 className="text-base font-normal ">
+          <h1 className="text-14px font-semibold">
             Omenai {plan.name} subscription
           </h1>
-          <p className="mt-1 flex items-baseline text-[14px] font-bold tracking-tight">
+          <p className="mt-1 flex items-baseline text-[14px] font-semibold tracking-tight">
             Billed {interval}
           </p>
         </div>
 
-        <div className="p-5 flex-flex-col space-y-3 my-4 rounded-[20px]">
-          <div className="flex justify-between items-center">
-            <p className="text-[14px] font-bold">Current plan duration</p>
-            <p className="text-[14px] font-bold">{days_used} days elapsed</p>
+        <div className="p-5 flex flex-col space-y-3 my-4 rounded-[20px]">
+          <div className="flex justify-between items-center text-[14px] font-semibold">
+            <p>Current plan usage</p>
+            <p>{days_used} day(s) used</p>
           </div>
-          <div className="flex justify-between items-center">
-            <p className="text-[14px] font-bold">Plan cost</p>
-            <p className="text-[14px] font-bold">
-              {formatPrice(upgrade_cost, currency)}
-            </p>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-[14px] font-bold">Prorated cost</p>
 
-            <p className="text-[14px] font-bold">
-              {!plan_change_params.shouldCharge
-                ? formatPrice(0, currency)
-                : `-${formatPrice(proratedPrice, currency)}`}
-            </p>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-[14px] font-bold">Due today</p>
+          <PriceDisplay label="Plan cost" value={upgradeCost} />
+          <PriceDisplay
+            label="Prorated cost"
+            value={plan_change_params.shouldCharge ? proratedPrice : 0}
+            showMinus={plan_change_params.shouldCharge}
+          />
+          <PriceDisplay
+            label="Due today"
+            value={plan_change_params.shouldCharge ? grandTotal : 0}
+          />
 
-            <p className="text-[14px] font-bold">
-              {!plan_change_params.shouldCharge
-                ? formatPrice(0, currency)
-                : `${formatPrice(grand_total, currency)}`}
-            </p>
-          </div>
           {!plan_change_params.shouldCharge && (
             <p className="text-[13px] font-bold text-red-600 mt-5">
               NOTE: Your plan change will take effect at the end of your current
@@ -138,13 +127,12 @@ export default function MigrationUpgradeCheckoutItem({
             </p>
           )}
         </div>
-        {/* Card info */}
       </div>
       <CheckoutBillingCard
         sub_data={sub_data}
         interval={interval}
         plan={plan}
-        amount={grand_total}
+        amount={grandTotal}
         shouldCharge={plan_change_params.shouldCharge}
       />
     </>

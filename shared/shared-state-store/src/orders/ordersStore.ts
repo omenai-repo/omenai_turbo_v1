@@ -14,6 +14,7 @@ export const orderStore = create<OrderStoreTypes>((set, get) => ({
     state: "",
     zip: "",
     countryCode: "",
+    stateCode: "",
   },
   setAddress: (label: string, value: string) => {
     const data: Record<string, any> = get().address;

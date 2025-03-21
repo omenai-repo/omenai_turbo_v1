@@ -17,7 +17,7 @@ type GalleryAuthStoreTypes = {
   clearData: () => void;
   isFieldDirty: Record<
     | keyof Omit<GallerySignupData, "address">
-    | keyof Omit<AddressTypes, "countryCode">,
+    | keyof Omit<AddressTypes, "countryCode" | "stateCode">,
     boolean
   >;
   setIsFieldDirty: (key: keyof GallerySignupData, value: boolean) => void;
@@ -56,6 +56,7 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       country: "",
       countryCode: "",
       state: "",
+      stateCode: "",
       zip: "",
       admin: "",
       description: "",
@@ -102,6 +103,7 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
           city: "",
           country: "",
           state: "",
+          stateCode: "",
           zip: "",
           countryCode: "",
           admin: "",

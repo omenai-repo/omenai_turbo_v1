@@ -113,7 +113,6 @@ export default function CardInput({
       };
 
       const response = await initiateDirectCharge(data);
-      console.log(response);
       if (response?.data) {
         if (response.data.status === "error") {
           toast.error("Error notification", {
