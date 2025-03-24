@@ -76,7 +76,13 @@ export async function POST(request: NextRequest) {
 
     await AccountArtist.updateOne(
       { artist_id: data.artist_id },
-      { $set: { documentation: data.documentation, bio: data.bio } }
+      {
+        $set: {
+          documentation: data.documentation,
+          bio: data.bio,
+          isOnboardingCompleted: true,
+        },
+      }
     ).session(session);
 
     await session.commitTransaction();

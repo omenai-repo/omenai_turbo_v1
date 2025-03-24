@@ -83,20 +83,16 @@ function isAnswers(
     typeof obj === "object" &&
     obj !== null &&
     keys.every((key) => key in obj) &&
-    (obj.graduate.toLowerCase() === "yes" ||
-      obj.graduate.toLowerCase() === "no") &&
-    (obj.mfa.toLowerCase() === "yes" || obj.mfa.toLowerCase() === "no") &&
+    (obj.graduate === "yes" || obj.graduate === "no") &&
+    (obj.mfa === "yes" || obj.mfa === "no") &&
     typeof obj.solo === "number" &&
     typeof obj.group === "number" &&
-    (obj.museum_collection.toLowerCase() === "yes" ||
-      obj.museum_collection.toLowerCase() === "no") &&
-    (obj.biennale.toLowerCase() === "venice" ||
-      obj.biennale.toLowerCase() === "other" ||
-      obj.biennale.toLowerCase() === "none") &&
-    (obj.museum_exhibition.toLowerCase() === "yes" ||
-      obj.museum_exhibition.toLowerCase() === "no") &&
-    (obj.art_fair.toLowerCase() === "yes" ||
-      obj.art_fair.toLowerCase() === "no")
+    (obj.museum_collection === "yes" || obj.museum_collection === "no") &&
+    (obj.biennale === "venice" ||
+      obj.biennale === "other" ||
+      obj.biennale === "none") &&
+    (obj.museum_exhibition === "yes" || obj.museum_exhibition === "no") &&
+    (obj.art_fair === "yes" || obj.art_fair === "no")
   );
 }
 
