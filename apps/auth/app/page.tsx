@@ -1,5 +1,27 @@
-import React from "react";
+import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
+import { AnimatePresence, motion } from "framer-motion";
+import LoginOptions from "./login/components/LoginOptions";
+import Link from "next/link";
 
 export default function page() {
-  return <div>page</div>;
+  return (
+    <section className="h-[100vh] w-full xl:container py-12 grid place-items-center overflow-x-hidden">
+      {/* Login options section */}
+
+      <div className="w-full h-full flex items-center justify-center gap-x-8">
+        <div className="flex gap-x-4 justify-center w-full ">
+          <Link href={"/login"}>
+            <button className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal">
+              Login account
+            </button>
+          </Link>
+          <Link href="/register">
+            <button className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal">
+              Create account
+            </button>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
 }

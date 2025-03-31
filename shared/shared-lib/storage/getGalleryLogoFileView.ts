@@ -1,7 +1,7 @@
 import {
   appwrite_image_format,
   appwrite_image_gravity,
-  gallery_logo_storage,
+  logo_storage,
 } from "@omenai/appwrite-config/appwrite";
 
 export const getGalleryLogoFileView = (
@@ -9,7 +9,7 @@ export const getGalleryLogoFileView = (
   width: number,
   height?: number
 ) => {
-  const fileData = gallery_logo_storage.getFilePreview(
+  const fileData = logo_storage.getFilePreview(
     process.env.NEXT_PUBLIC_APPWRITE_GALLERY_LOGO_BUCKET_ID!,
     fileId,
 

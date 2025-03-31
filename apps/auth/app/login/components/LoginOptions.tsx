@@ -11,7 +11,7 @@ export default function LoginOptions() {
               Login as Gallery
             </button>
           </Link>
-          <Link href={"/login"}>
+          <Link href={"/login/artist"}>
             <button className="hover:bg-dark hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center bg-white cursor-pointer">
               Login as Artist
             </button>

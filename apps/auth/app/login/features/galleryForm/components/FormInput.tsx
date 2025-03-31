@@ -122,7 +122,7 @@ export default function FormInput() {
           value={form.email}
           name="email"
           placeholder="Enter your Email Address"
-          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
+          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full text-xs placeholder:text-xs placeholder:text-dark/40 placeholder:font-medium font-medium"
           onChange={handleChange}
           required
         />
@@ -134,19 +134,17 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name="password"
             placeholder="Enter your Password"
-            className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
+            className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full text-xs placeholder:text-xs placeholder:text-dark/40 placeholder:font-medium font-medium"
             onChange={handleChange}
             required
           />
-          <div className="absolute top-4 right-2 w-fit cursor-pointer">
-            {show ? (
-              <PiEyeSlashThin
-                className="text-md"
-                onClick={() => setShow(false)}
-              />
-            ) : (
-              <PiEyeThin className="text-md" onClick={() => setShow(true)} />
-            )}
+          <div className="w-full h-fit flex justify-end mr-5 my-5">
+            <span
+              className="text-[12px] font-semibold cursor-pointer underline duration-200"
+              onClick={() => setShow(!show)}
+            >
+              {show ? "Hide Password" : "Show Password"}
+            </span>
           </div>
         </div>
       </div>

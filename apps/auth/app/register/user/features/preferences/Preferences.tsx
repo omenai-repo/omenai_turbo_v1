@@ -5,22 +5,22 @@ import Pill from "./components/Pill";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import ActionButton from "../actions/ActionButton";
 let artTypes = [
-  "Acylic",
+  "Acrylic",
   "Oil",
   "Fabric",
   "Mixed media",
   "Ankara",
   "Photography",
-  "Collage or other works on paper",
+  "Canvas",
   "Charcoal",
-  "Paper",
+  "Ink",
 ];
 function Preferences() {
   const { preferences } = useIndividualAuthStore();
   return (
     <AnimatePresence key={7}>
       <div className="">
-        <p className="text-[14px] font-normal text-center">
+        <p className="text-[14px] font-medium text-center">
           Select up to 5 artwork mediums that resonate with you.
         </p>
         <p className="text-center text-[14px] font-semibold my-[1.5rem]">
@@ -35,7 +35,18 @@ function Preferences() {
         >
           <div className="flex flex-wrap justify-center gap-y-3 gap-x-1">
             {artTypes.map((art, index) => {
-              return <Pill key={art + index} text={art} />;
+              return (
+                <Pill
+                  key={art + index}
+                  text={art}
+                  logo={
+                    art === "Mixed media"
+                      ? "mixed-media_art"
+                      : `${art.toLowerCase()}_art`
+                  }
+                  artTypes={artTypes}
+                />
+              );
             })}
           </div>
         </motion.div>

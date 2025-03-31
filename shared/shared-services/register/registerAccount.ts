@@ -1,12 +1,13 @@
 import {
   IndividualRegisterData,
   GalleryRegisterData,
+  ArtistRegisterData,
 } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function registerAccount(
-  payload: IndividualRegisterData | GalleryRegisterData,
-  route: "gallery" | "individual"
+  payload: IndividualRegisterData | GalleryRegisterData | ArtistRegisterData,
+  route: "gallery" | "individual" | "artist"
 ) {
   const url = getApiUrl();
   const result = await fetch(`${url}/api/auth/${route}/register`, {

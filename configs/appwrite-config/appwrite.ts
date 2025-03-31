@@ -28,14 +28,13 @@ export const promotional_storage = new Storage(promotional_client);
 
 // Gallery logo upload
 
-const gallery_logo_client = new Client();
+const logo_client = new Client();
 
-gallery_logo_client
+logo_client
   .setEndpoint(endpoint)
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_GALLERY_LOGO_CLIENT_ID!);
 
-export const gallery_logo_storage = new Storage(gallery_logo_client);
-
+export const logo_storage = new Storage(logo_client);
 //editorials content
 const editorial_client = new Client();
 

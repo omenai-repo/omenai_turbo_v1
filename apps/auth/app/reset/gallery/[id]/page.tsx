@@ -19,11 +19,10 @@ export default async function ResetPassword({
         <div className="flex xxs:flex-row flex-col gap-y-4 justify-between items-center">
           <GalleryLogo />
 
-          <Link href={auth_url} className="underline">
+          <Link href={auth_url} className="underline text-xs">
             Back to login
           </Link>
         </div>
-        <hr className="bg-gray-400/20 my-8" />
         {/* Body */}
         <PasswordBlock token={slug} />
       </div>

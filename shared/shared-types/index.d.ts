@@ -48,9 +48,9 @@ export type ArtistSignupData = {
   email: string;
   password: string;
   confirmPassword: string;
-  logo: string;
   art_style: string | string[];
   address: AddressTypes;
+  logo: File | null;
 };
 
 export type ArtistDocumentationTypes = {
@@ -151,7 +151,15 @@ export type GalleryRegisterData = Pick<
   logo: string;
 };
 
-export type RouteIdentifier = "individual" | "gallery";
+export type ArtistRegisterData = Pick<
+  ArtistSignupData,
+  "name" | "email" | "password" | "art_style"
+> & {
+  address: AddressTypes;
+  logo: string;
+};
+
+export type RouteIdentifier = "individual" | "gallery" | "artist";
 
 export type Form = {
   email: string;
@@ -736,4 +744,55 @@ export type ShipmentRequestDataTypes = {
     fullname: string;
   };
   invoice_number: string;
+};
+
+// NEXUS THRESHOLDS
+
+export type ThresholdTypeDef =
+  | "SALES_ONLY"
+  | "SALES_OR_TRANSACTIONS"
+  | "SALES_AND_TRANSACTIONS";
+
+export type EvaluationPeriodTypeDef =
+  | "PREVIOUS_CALENDAR_YEAR"
+  | "PREVIOUS_OR_CURRENT_CALENDAR_YEAR"
+  | "ROLLING_12_MONTHS"
+  | "TWELVE_MONTHS_ENDING_SEPTEMBER_30"
+  | "PREVIOUS_12_MONTHS";
+
+// Nexus Rule Interface
+export type NexusRule = {
+  sales_threshold: number;
+  transactions_threshold: number | null;
+  threshold_type: ThresholdType;
+  evaluation_period_type: EvaluationPeriodType;
+};
+
+// Nexus Calculation Interface
+export type NexusCalculation = {
+  total_sales: number;
+  total_transactions: number;
+  sales_exposure_percentage: number;
+  transactions_exposure_percentage: number;
+};
+
+// Nexus Schema Interface
+export type NexusDocument = {
+  state: string;
+  stateCode: string;
+  nexus_rule: NexusRule;
+  calculation: NexusCalculation;
+  is_nexus_breached: boolean;
+  date_of_breach?: Date | null;
+  last_reset?: Date;
+  tax_withholding_eligibility: boolean;
+};
+
+export type US_NEXUS_THRESHOLD_LIST = {
+  state: string;
+  stateCode: string;
+  nexus_rule: Pick<NexusRule, "sales_threshold" | "transactions_threshold"> & {
+    threshold_type: ThresholdTypeDef;
+    evaluation_period_type: EvaluationPeriodTypeDef;
+  };
 };

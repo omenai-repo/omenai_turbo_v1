@@ -17,7 +17,8 @@
     "@omenai/shared-models": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-utils": "*",
-    "@omenai/typescript-config": "*"
+    "@omenai/typescript-config": "*",
+    "@omenai/shared-json": "*"
   },
   "dependencies": {
     "cors": "^2.8.5",

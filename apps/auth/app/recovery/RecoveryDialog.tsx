@@ -19,13 +19,13 @@ export default function Recovery() {
               <GrClose
                 className="cursor-pointer"
                 onClick={() => {
-                  updateRecoveryModal("individual");
+                  updateRecoveryModal("closed");
                 }}
               />
             </div>
             <div className="">
-              <h1 className="text-sm font-normal">Let us help</h1>
-              <p className="text-[14px] font-light">
+              <h1 className="text-sm font-light">Let us help</h1>
+              <p className="text-[14px] font-semibold">
                 Enter your email so we can help recover your account
               </p>
             </div>

@@ -8,10 +8,10 @@ import { ICity, IState } from "country-state-city";
 
 type ActionStoreTypes = {
   recoveryModal: {
-    type: RouteIdentifier;
+    type: RouteIdentifier | "closed";
     value: boolean;
   };
-  updateRecoveryModal: (label: RouteIdentifier) => void;
+  updateRecoveryModal: (label: RouteIdentifier | "closed") => void;
   openSideNav: boolean;
   updateOpenSideNav: (val: boolean) => void;
   filterModal: boolean;
@@ -74,11 +74,11 @@ type ActionStoreTypes = {
 
 export const actionStore = create<ActionStoreTypes>((set, get) => ({
   recoveryModal: {
-    type: "individual",
+    type: "closed",
     value: false,
   },
 
-  updateRecoveryModal: (label: RouteIdentifier) => {
+  updateRecoveryModal: (label: RouteIdentifier | "closed") => {
     const modalState = get().recoveryModal;
     set({ recoveryModal: { type: label, value: !modalState.value } });
   },

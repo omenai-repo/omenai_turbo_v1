@@ -1,8 +1,9 @@
+import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { toast } from "sonner";
 
 export async function resendCode(
-  route: "individual" | "gallery",
+  route: RouteIdentifier,
   payload: { author: string }
 ) {
   try {

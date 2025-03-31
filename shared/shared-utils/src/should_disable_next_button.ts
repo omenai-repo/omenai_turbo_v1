@@ -7,6 +7,7 @@ export const shouldDisableNext = (
 ): boolean => {
   // Get all inputs for the current step
   const inputsForStep = steps[step];
+  console.log(isFieldDirty);
 
   // Check if all inputs in the current step have isFieldDirty set to `true`
   return inputsForStep.some((input) => isFieldDirty[input]);

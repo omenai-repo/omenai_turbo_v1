@@ -83,8 +83,8 @@ export default function SelectInput({
             disabled={
               (labelText === "state" && gallerySignupData.country === "") ||
               (labelText === "city" &&
-                gallerySignupData.state === "" &&
-                gallerySignupData.country === "")
+                (gallerySignupData.state === "" ||
+                  gallerySignupData.country === ""))
             }
             className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
           >

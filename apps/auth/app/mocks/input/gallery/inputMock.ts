@@ -6,13 +6,13 @@ export const gallery_signup_step_one = [
   {
     label: "Gallery name?",
     type: "text",
-    placeholder: "Louvre museum",
+    placeholder: "Example Gallery",
     labelText: "name",
   },
   {
     label: "Email address",
     type: "email",
-    placeholder: "Louvre museum",
+    placeholder: "example@gmail.com",
     labelText: "email",
   },
 

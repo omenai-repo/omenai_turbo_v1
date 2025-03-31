@@ -5,7 +5,7 @@ import { registerAccount } from "@omenai/shared-services/register/registerAccoun
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import uploadGalleryLogoContent from "../../uploadGalleryLogo";
-import { gallery_logo_storage } from "@omenai/appwrite-config/appwrite";
+import { logo_storage } from "@omenai/appwrite-config/appwrite";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 export default function FormInput() {
@@ -89,7 +89,7 @@ export default function FormInput() {
         router.push(`/verify/gallery/${response.body.data}`);
         clearData();
       } else {
-        await gallery_logo_storage.deleteFile(
+        await logo_storage.deleteFile(
           process.env.NEXT_PUBLIC_APPWRITE_GALLERY_LOGO_BUCKET_ID!,
           file.fileId
         );

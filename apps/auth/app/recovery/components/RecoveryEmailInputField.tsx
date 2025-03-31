@@ -1,6 +1,7 @@
 "use client";
 import { sendPasswordResetLink } from "@omenai/shared-services/password/sendPasswordResetLink";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { RouteIdentifier } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -15,46 +16,12 @@ export default function RecoveryEmailInputField() {
     setIsloading(true);
 
     try {
-      const data = await sendPasswordResetLink(recoveryModal.type, {
-        email,
-      });
-      if (data.isOk) {
-        toast.success("Operation successful", {
-          description: data.body.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
-        updateRecoveryModal(recoveryModal.type);
-      } else
-        toast.error("Error notification", {
-          description: data.body.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-    } catch (error) {
-      toast.error("Error notification", {
-        description:
-          "Something went wrong, please try again or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    } finally {
-      setIsloading(false);
-      setEmail("");
-    }
-    try {
-      const data = await sendPasswordResetLink(recoveryModal.type, {
-        email,
-      });
+      const data = await sendPasswordResetLink(
+        recoveryModal.type as RouteIdentifier,
+        {
+          email,
+        }
+      );
       if (data.isOk) {
         toast.success("Operation successful", {
           description: data.body.message,
@@ -93,15 +60,16 @@ export default function RecoveryEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-white w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none"
+        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
         placeholder="Email address"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
       />
       <button
         disabled={isLoading}
         type="submit"
-        className=" disabled:cursor-not-allowed grid disabled:bg-white disabled:border disabled:border-dark place-items-center w-full h-[40px]  bg-dark hover:bg-dark/80 hover:text-white rounded-sm text-white text-[14px] "
+        className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
       >
         {isLoading ? <LoadSmall /> : "Send reset link"}
       </button>

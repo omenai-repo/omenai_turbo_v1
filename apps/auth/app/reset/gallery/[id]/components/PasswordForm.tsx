@@ -83,9 +83,12 @@ export default function PasswordForm({ id }: IdProps) {
   }
   return (
     <div>
-      <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
-          <label className="self-start font-normal" htmlFor="password">
+          <label
+            className="text-[#858585] text-xs font-normal self-start"
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -94,11 +97,14 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Enter a new password"
             onChange={handleInputChange}
             required
-            className="ring-1 ring-black focus:ring-primary ease-linear duration-150 transition-all px-3 py-2 rounded-sm text-[14px] italic placeholder:text-gray-400"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="self-start font-normal" htmlFor="confirmpassword">
+          <label
+            className="text-[#858585] text-xs font-normal self-start"
+            htmlFor="confirmpassword"
+          >
             Confirm password
           </label>
           <input
@@ -107,11 +113,11 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Confirm new password"
             required
             onChange={handleInputChange}
-            className="ring-1 ring-black focus:ring-primary ease-linear duration-150 transition-all px-3 py-2 rounded-sm text-[14px] italic placeholder:text-gray-400"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
           />
 
           {errorList.length > 0 &&
-            errorList.map((error: string, index: Key) => {
+            errorList.map((error, index) => {
               return (
                 <p
                   key={`${error}-error_list`}
@@ -123,12 +129,12 @@ export default function PasswordForm({ id }: IdProps) {
             })}
         </div>
 
-        <div className="self-end">
+        <div className="w-full">
           <button
             disabled={isLoading}
-            className="grid disabled:cursor-not-allowed disabled:bg-dark/20 place-items-center rounded-md bg-dark h-[40px] px-4 text-white hover:bg-dark/90"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
-            {isLoading ? <LoadSmall /> : "Update"}
+            {isLoading ? <LoadSmall /> : "Change password"}
           </button>
         </div>
       </form>

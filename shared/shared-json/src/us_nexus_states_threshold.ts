@@ -1,4 +1,6 @@
-[
+import { US_NEXUS_THRESHOLD_LIST } from "@omenai/shared-types";
+
+export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
   {
     state: "Alabama",
     stateCode: "AL",
@@ -66,7 +68,7 @@
       sales_threshold: 100000,
       transactions_threshold: 200,
       threshold_type: "SALES_AND_TRANSACTIONS",
-      evaluation_period_type: "12_MONTHS_ENDING_SEPTEMBER_30",
+      evaluation_period_type: "TWELVE_MONTHS_ENDING_SEPTEMBER_30",
     },
   },
   {

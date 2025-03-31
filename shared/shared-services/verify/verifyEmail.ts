@@ -1,8 +1,9 @@
+import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function verifyEmail(
   payload: { params: string; token: string },
-  route: "gallery" | "individual"
+  route: RouteIdentifier
 ) {
   const url = getApiUrl();
 

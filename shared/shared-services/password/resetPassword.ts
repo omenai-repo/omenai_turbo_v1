@@ -7,7 +7,7 @@ export async function resetPassword(
 ) {
   const url = getApiUrl();
 
-  const result = await fetch(`${url}/api/auth/${route}/resetPassword`, {
+  const result = await fetch(`${url}/api/requests/${route}/resetPassword`, {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
