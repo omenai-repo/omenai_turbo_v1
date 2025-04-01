@@ -12,7 +12,9 @@ export default function TabSelector({
       {/* User */}
       <div
         className={`h-[40px] px-4 rounded-sm cursor-pointer w-fit grid place-items-center text-[14px] ${
-          tab === "pending" ? "bg-dark  text-white" : "bg-transparent text-dark"
+          tab === "pending"
+            ? "bg-dark  text-white"
+            : "bg-transparent text-gray-700"
         }  cursor-pointer rounded-sm `}
         onClick={() => setTab("pending")}
       >
@@ -23,7 +25,7 @@ export default function TabSelector({
         className={`h-[40px] px-4 rounded-sm cursor-pointer w-fit grid text-[14px] place-items-center ${
           tab === "verified"
             ? "bg-dark  text-white"
-            : "bg-transparent text-dark"
+            : "bg-transparent text-gray-700"
         }  cursor-pointer rounded-sm `}
         onClick={() => setTab("verified")}
       >

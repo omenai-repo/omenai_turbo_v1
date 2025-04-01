@@ -35,10 +35,10 @@ export default function OrderDetails({
               />
               <div className="">
                 <div className="flex flex-col gap-y-1">
-                  <p className="font-semibold text-dark text-base">
+                  <p className="font-semibold text-gray-700 text-base">
                     {order.artwork_data.title}
                   </p>
-                  <p className="font-normal text-[14px] italic text-dark">
+                  <p className="font-normal text-[14px] italic text-gray-700">
                     {order.artwork_data.artist}
                   </p>
                 </div>
@@ -47,9 +47,9 @@ export default function OrderDetails({
             <hr className="border-[#e0e0e0] my-4" />
 
             <div className="text-[14px]">
-              <div className="flex flex-col text-dark my-3">
+              <div className="flex flex-col text-gray-700 my-3">
                 <p>Delivery address</p>
-                <p className="font-semibold text-dark">
+                <p className="font-semibold text-gray-700">
                   {order.shipping_details.addresses.destination.address_line},{" "}
                   {order.shipping_details.addresses.destination.city},{" "}
                   {order.shipping_details.addresses.destination.state},{" "}
@@ -57,19 +57,19 @@ export default function OrderDetails({
                 </p>
               </div>
               {/* Uncomment when the new endpoint has been connected */}
-              {/* <div className="flex flex-col text-dark my-3">
+              {/* <div className="flex flex-col text-gray-700 my-3">
                 <p>Shipping carrier</p>
                 <p className="font-semibold">
                   {order.shipping_details.shipment_information.carrier}
                 </p>
               </div> */}
-              <div className="flex flex-col  my-3 text-dark">
+              <div className="flex flex-col  my-3 text-gray-700">
                 <p>Price</p>
                 <p className="font-semibold">
                   {formatPrice(order.artwork_data.pricing.usd_price)}
                 </p>
               </div>
-              <div className="flex flex-col text-dark my-3">
+              <div className="flex flex-col text-gray-700 my-3">
                 <p>Shipping</p>
                 <p className="font-semibold">
                   {formatPrice(
@@ -79,7 +79,7 @@ export default function OrderDetails({
                   )}
                 </p>
               </div>
-              <div className="flex flex-col text-dark my-3">
+              <div className="flex flex-col text-gray-700 my-3">
                 <p>Taxes</p>
                 <p className="font-semibold">
                   {formatPrice(
@@ -96,7 +96,7 @@ export default function OrderDetails({
                   {formatPrice(total_price_number)}
                 </p>
               </div>
-              <p className="my-3 text-dark italic text-[14px]">
+              <p className="my-3 text-gray-700 italic text-[14px]">
                 *Additional duties and taxes may apply at import
               </p>
 

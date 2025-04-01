@@ -6,12 +6,12 @@ export default function OrderReceived() {
   return (
     <div className="grid place-items-center">
       <div className="flex flex-col justify-center items-center gap-1 text-center">
-        <p className="text-dark text-[14px] font-medium ">
+        <p className="text-gray-700 text-[14px] font-medium ">
           Your order has been successfully received, we&apos;ll be in touch
           within the next 48 hours with an accurate shipping quote and next
           steps.
         </p>
-        <p className="text-dark text-[14px] font-medium my-5">
+        <p className="text-gray-700 text-[14px] font-medium my-5">
           Thank you for your patience.
         </p>
 

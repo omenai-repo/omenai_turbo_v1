@@ -23,10 +23,10 @@ export default function ProductItem({
           />
           <div className="">
             <div className="flex flex-col gap-y1">
-              <h1 className="font-bold text-dark/80 text-base">
+              <h1 className="font-bold text-gray-700/80 text-base">
                 {artwork.title}
               </h1>
-              <p className="font-medium italic text-base text-dark/80">
+              <p className="font-medium italic text-base text-gray-700/80">
                 {artwork.artist}
               </p>
             </div>
@@ -35,17 +35,17 @@ export default function ProductItem({
         <hr className="border-dark/30 my-5" />
 
         <div className="text-[14px]">
-          <div className="flex justify-between items-center  my-3 text-dark/80">
+          <div className="flex justify-between items-center  my-3 text-gray-700/80">
             <p>Price</p>
             <p className="font-bold">
               {formatPrice(artwork.pricing.usd_price)}
             </p>
           </div>
-          <div className="flex justify-between items-center text-dark/80 my-3">
+          <div className="flex justify-between items-center text-gray-700/80 my-3">
             <p>Shipping fee</p>
             <p className="font-normal">To be calculated</p>
           </div>
-          <div className="flex justify-between items-center text-dark/80 my-3">
+          <div className="flex justify-between items-center text-gray-700/80 my-3">
             <p>Taxes</p>
             <p className="font-normal">To be calculated</p>
           </div>
@@ -53,7 +53,7 @@ export default function ProductItem({
             <p>Grand total</p>
             <p className="text-[14px]">Waiting for final cost</p>
           </div>
-          <p className="my-3 text-dark/80 font-normal italic text-[14px]">
+          <p className="my-3 text-gray-700/80 font-normal italic text-[14px]">
             *Additional duties and taxes may apply at import
           </p>
         </div>

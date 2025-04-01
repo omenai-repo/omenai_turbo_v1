@@ -54,7 +54,7 @@ const SubscriptionPaymentSuccessfulMail = (name: string) => {
               feel free to reach out to us at{" "}
               <Link
                 href="mailto:contact@omenani.net"
-                className="underline text-dark italic"
+                className="underline text-gray-700 italic"
               >
                 contact@omeani.net
               </Link>
@@ -70,7 +70,7 @@ const SubscriptionPaymentSuccessfulMail = (name: string) => {
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
+            <Text className="text-gray-700 text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

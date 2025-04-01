@@ -47,7 +47,9 @@ export default function SimilarArtworksByArtist({
   );
   return (
     <div className="w-full h-full py-5">
-      <h1 className="text-dark font-bold text-sm">Other works by {artist}</h1>
+      <h1 className="text-gray-700 font-bold text-sm">
+        Other works by {artist}
+      </h1>
 
       <div className="w-full my-5">
         <div className="flex flex-wrap gap-x-4 justify-center">

@@ -15,10 +15,10 @@ export default function NavbarActionButtons() {
       <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-[14px] sm:text-[14px] ml-2">
         <Link
           href={`${login_base_url}/login`}
-          className="h-[40px] whitespace-nowrap rounded-full px-5 flex items-center gap-x-2 text-[14px] font-normal hover:border-dark bg-white border border-dark/50 text-dark duration-200"
+          className="h-[40px] whitespace-nowrap rounded-full px-5 flex items-center gap-x-2 text-[14px] font-normal hover:border-dark bg-white border border-dark/50 text-gray-700 duration-200"
         >
           Login
-          <GoHome className="text-dark" />
+          <GoHome className="text-gray-700" />
         </Link>
 
         <Link

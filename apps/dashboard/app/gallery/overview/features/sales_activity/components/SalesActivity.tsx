@@ -45,7 +45,7 @@ export function SalesActivity({ activityData }: any) {
       }}
     >
       <div
-        className="text-[14px] text-dark"
+        className="text-[14px] text-gray-700"
         style={{
           position: "absolute",
           top: 20,

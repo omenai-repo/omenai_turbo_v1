@@ -88,8 +88,8 @@ export default function RefreshStripe() {
         </div>
       ) : (
         <div className="grid place-items-center h-[78vh]">
-          <div className="bg-white border border-[#E0E0E0] text-dark p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative">
-            <h1 className="text-[14px] font-normal text-dark mb-1">
+          <div className="bg-white border border-[#E0E0E0] text-gray-700 p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative">
+            <h1 className="text-[14px] font-normal text-gray-700 mb-1">
               Looks like you didn&apos;t complete your Stripe Onboarding.
             </h1>
             <p className="font-bold text-sm">
@@ -99,7 +99,7 @@ export default function RefreshStripe() {
             <div className="flex flex-col mt-3">
               <div className="relative w-full">
                 <label
-                  className="text-dark font-normal text-[14px]"
+                  className="text-gray-700 font-normal text-[14px]"
                   htmlFor="name"
                 >
                   Name
@@ -113,7 +113,7 @@ export default function RefreshStripe() {
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-dark font-normal text-[14px]"
+                  className="text-gray-700 font-normal text-[14px]"
                   htmlFor="email"
                 >
                   Email

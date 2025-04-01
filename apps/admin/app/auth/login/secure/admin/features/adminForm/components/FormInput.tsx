@@ -71,7 +71,7 @@ export default function FormInput() {
           type="email"
           value={form.email}
           name="email"
-          className="focus:ring-0 border-[1px] px-2 border-dark/20 outline-none focus:outline-none text-[14px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-3"
+          className="focus:ring-0 border-[1px] px-2 border-dark/20 outline-none focus:outline-none text-[14px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-gray-700/40 py-3"
           onChange={handleChange}
           required
         />
@@ -84,7 +84,7 @@ export default function FormInput() {
           value={form.password}
           type="password"
           name="password"
-          className="focus:ring-0 border-[1px] p-2 border-dark/20 outline-none focus:outline-none text-[14px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-3"
+          className="focus:ring-0 border-[1px] p-2 border-dark/20 outline-none focus:outline-none text-[14px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-gray-700/40 py-3"
           onChange={handleChange}
           required
         />

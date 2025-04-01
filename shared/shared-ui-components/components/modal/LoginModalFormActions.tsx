@@ -20,7 +20,7 @@ export default function LoginModalFormActions({
             Forgot password?{" "}
             <span
               onClick={() => toggleLoginModalRecoveryForm(true)}
-              className="text-dark cursor-pointer font-bold underline"
+              className="text-gray-700 cursor-pointer font-bold underline"
             >
               Let us help
             </span>
@@ -36,12 +36,12 @@ export default function LoginModalFormActions({
         </button>
       </div>
       <div className="w-full flex justify-center my-2">
-        <p className="text-[14px] text-dark/80 font-medium">
+        <p className="text-[14px] text-gray-700/80 font-medium">
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>
             <Link
               href={`${auth_url}/register/user`}
-              className="text-dark underline font-bold"
+              className="text-gray-700 underline font-bold"
             >
               Create one
             </Link>

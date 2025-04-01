@@ -35,7 +35,7 @@ export default function NavigationItem({
           className={`p-2 ${
             pathname.startsWith(url)
               ? "bg-dark text-white"
-              : "bg-white text-dark"
+              : "bg-white text-gray-700"
           } group flex items-center w-full hover:bg-dark rounded-full`}
         >
           <IconWrapper

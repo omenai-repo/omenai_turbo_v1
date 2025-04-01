@@ -47,7 +47,7 @@ export default function SearchResultDetails({
       ) : (
         <div className="w-full h-full">
           <div className="px-5 py-8">
-            <h1 className="text-base font-normal text-dark">
+            <h1 className="text-base font-normal text-gray-700">
               {data.length} result(s) found for term{" "}
               <span className="text-blue-600">&apos;{searchTerm}&apos;</span>
             </h1>

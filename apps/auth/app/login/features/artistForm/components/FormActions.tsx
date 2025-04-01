@@ -35,18 +35,18 @@ export default function FormActions() {
 
       <div className="flex flex-col gap-y-2 my-6 justify-between items-center">
         <div className="flex gap-x-6">
-          <p className="font-medium text-[14px] text-dark/70 ">
+          <p className="font-medium text-[14px] text-gray-700/70 ">
             <Link
               href={`${auth_url}/login/user`}
-              className="text-dark underline"
+              className="text-gray-700 underline"
             >
               Sign in as Collector{" "}
             </Link>
           </p>
-          <p className="font-medium text-[14px] text-dark/70">
+          <p className="font-medium text-[14px] text-gray-700/70">
             <Link
               href={`${auth_url}/login/gallery`}
-              className="text-dark underline"
+              className="text-gray-700 underline"
             >
               Sign in as Gallery{" "}
             </Link>
@@ -54,7 +54,7 @@ export default function FormActions() {
         </div>
 
         <p
-          className="text-[14px] text-dark/70 text-red-600 cursor-pointer underline font-medium"
+          className="text-[14px] text-gray-700/70 text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("artist")}
         >
           Forgot password?

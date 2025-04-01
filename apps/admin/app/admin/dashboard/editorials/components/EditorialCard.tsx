@@ -42,11 +42,11 @@ export default function EditorialCard({
         </div>
       </div>
       <div className="mt-3 space-y-2">
-        <p className="text-dark/60 text-[14px]">{minutes} minutes read</p>
+        <p className="text-gray-700/60 text-[14px]">{minutes} minutes read</p>
         <h1 className="text-sm lg:text-md leading-tight font-normal">
           {title}
         </h1>
-        {/* <p className="text-dark/60">Posted on <span className="text-dark/90 font-medium">{date !== null && date?.getDate()}</span></p> */}
+        {/* <p className="text-gray-700/60">Posted on <span className="text-gray-700/90 font-medium">{date !== null && date?.getDate()}</span></p> */}
         <a href={"https://" + link} target="_blank" rel="noopener noreferrer">
           <p className="flex items-center gap-x-2 underline text-[14px]">
             Read full article <MdArrowRightAlt />

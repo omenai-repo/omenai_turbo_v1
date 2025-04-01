@@ -9,7 +9,7 @@ export default function Accordion({ header, items }: AccordionPropTypes) {
   const [open, setOpen] = useState(true);
   return (
     <div className="relative">
-      <div className="text-dark/80">
+      <div className="text-gray-700/80">
         <hr className="border-1 border-[#e0e0e0]" />
         <div className="py-4 cursor-pointer" onClick={() => setOpen(!open)}>
           <div className="flex justify-between items-center cursor-pointer">

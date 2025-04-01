@@ -54,7 +54,7 @@ export default function Plan({
           <div className="flex flex-col rounded-3xl bg-white shadow-xl ring-1 ring-[#E0E0E0]">
             <div className="p-8">
               <h3
-                className="text-sm font-semibold leading-4 tracking-tight text-dark"
+                className="text-sm font-semibold leading-4 tracking-tight text-gray-700"
                 id="tier-hobby"
               >
                 {name}
@@ -82,7 +82,7 @@ export default function Plan({
                       <li key={benefit} className="flex items-start">
                         <span className="flex-shrink-0">
                           <svg
-                            className="h-4 w-4 text-dark"
+                            className="h-4 w-4 text-gray-700"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"

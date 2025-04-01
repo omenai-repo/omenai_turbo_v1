@@ -19,7 +19,7 @@ export default function SingleSlide({
         <p className="text-[14px] xs:text-base font-bold">{headline}</p>
         <p className="text-[14px] font-normal">{subheadline}</p>
         <Link href={cta} className="group">
-          <button className="flex items-center gap-x-2 bg-dark group-hover:bg-white group-hover:text-dark ring-1 ring-white group-hover:ring-dark duration-200 text-white px-3 xs:px-4 py-1.5 xs:py-2 text-[14px] rounded-full">
+          <button className="flex items-center gap-x-2 bg-dark group-hover:bg-white group-hover:text-gray-700 ring-1 ring-white group-hover:ring-dark duration-200 text-white px-3 xs:px-4 py-1.5 xs:py-2 text-[14px] rounded-full">
             <span>Explore</span>
             <IoIosArrowRoundForward />
           </button>

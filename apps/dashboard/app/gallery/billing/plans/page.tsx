@@ -48,7 +48,7 @@ export default function Plans() {
             </p>
             <h1
               role="heading"
-              className="text-xl font-bold leading-10 mt-3 text-dark"
+              className="text-xl font-bold leading-10 mt-3 text-gray-700"
             >
               Our pricing plans
             </h1>

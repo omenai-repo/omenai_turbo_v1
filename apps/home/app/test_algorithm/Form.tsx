@@ -32,7 +32,7 @@ export default function Form({
             onChange={onchange}
             className="border-0 ring-1 ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
           >
-            <option value="" className="text-dark/40">
+            <option value="" className="text-gray-700/40">
               Select
             </option>
             {options?.map((option) => (
@@ -46,7 +46,7 @@ export default function Form({
             onChange={onchange}
             required
             name={name}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/30 placeholder:text-xs"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/30 placeholder:text-xs"
             type="number"
             placeholder="Enter a number"
           />

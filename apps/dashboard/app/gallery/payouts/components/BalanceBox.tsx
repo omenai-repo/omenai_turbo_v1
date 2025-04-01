@@ -37,7 +37,7 @@ export default function BalanceBox({
 
   return (
     <div className="bg-[#FAFAFA] border border-[#E0E0E0] p-6 w-[500px] rounded-[20px]">
-      <div className="flex flex-col items-center my-4 space-y-4 text-dark">
+      <div className="flex flex-col items-center my-4 space-y-4 text-gray-700">
         <p className="text-[14px]">Stripe Available Balance</p>
 
         <h1 className="text-md font-bold">

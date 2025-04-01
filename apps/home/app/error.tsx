@@ -324,10 +324,10 @@ export default function Error({
         </svg>
 
         <div className="flex flex-col items-center justify-center">
-          <p className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-dark mt-8">
+          <p className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-gray-700 mt-8">
             500
           </p>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-dark mt-2">
+          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 mt-2">
             Server Error
           </p>
 

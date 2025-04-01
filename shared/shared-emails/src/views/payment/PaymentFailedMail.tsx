@@ -40,7 +40,7 @@ const PaymentFailedMail = (name: string, artwork: string, order_id: string) => {
               Thank you for your recent order of{" "}
               <Link
                 href={`${url}/artwork/${artwork}`}
-                className="underline text-dark italic font-bold"
+                className="underline text-gray-700 italic font-bold"
               >
                 {artwork}
               </Link>{" "}
@@ -58,7 +58,7 @@ const PaymentFailedMail = (name: string, artwork: string, order_id: string) => {
               To ensure you receive your order for{" "}
               <Link
                 href={`${url}/artwork/${artwork}`}
-                className="underline text-dark italic font-bold"
+                className="underline text-gray-700 italic font-bold"
               >
                 {artwork}
               </Link>{" "}
@@ -80,7 +80,7 @@ const PaymentFailedMail = (name: string, artwork: string, order_id: string) => {
               Once we receive a successful payment, your order for{" "}
               <Link
                 href={`${url}/artwork/${artwork}`}
-                className="underline text-dark italic font-bold"
+                className="underline text-gray-700 italic font-bold"
               >
                 {artwork}
               </Link>{" "}
@@ -94,7 +94,7 @@ const PaymentFailedMail = (name: string, artwork: string, order_id: string) => {
               feel free to reach out to us at{" "}
               <Link
                 href="mailto:contact@omenani.net"
-                className="underline text-dark italic font-bold"
+                className="underline text-gray-700 italic font-bold"
               >
                 contact@omeani.net
               </Link>
@@ -110,7 +110,7 @@ const PaymentFailedMail = (name: string, artwork: string, order_id: string) => {
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
+            <Text className="text-gray-700 text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

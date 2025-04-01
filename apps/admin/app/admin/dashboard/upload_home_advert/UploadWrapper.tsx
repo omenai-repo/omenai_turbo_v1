@@ -149,7 +149,7 @@ export default function Upload() {
     <div className="md:container">
       <form onSubmit={handlePromotionalContentUpload}>
         <div className=" mt-5 mb-[3rem]">
-          <h1 className="divide-y text-sm text-dark">
+          <h1 className="divide-y text-sm text-gray-700">
             Create a promotional content
           </h1>
         </div>

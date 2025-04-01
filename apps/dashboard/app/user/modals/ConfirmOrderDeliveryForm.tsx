@@ -62,7 +62,7 @@ export default function ConfirmOrderDeliveryForm() {
 
   return (
     <div>
-      <h1 className="text-sm font-normal mb-4 text-dark">
+      <h1 className="text-sm font-normal mb-4 text-gray-700">
         Confirm order delivery
       </h1>
       <div className="flex flex-col gap-4 font-normal text-base">

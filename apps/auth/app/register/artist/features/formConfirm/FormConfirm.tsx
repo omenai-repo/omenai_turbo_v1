@@ -37,7 +37,7 @@ export default function FormConfirm() {
           />
           <Label
             htmlFor="terms of use"
-            className="text-dark text-xs sm:text-[14px]"
+            className="text-gray-700 text-xs sm:text-[14px]"
           >
             By ticking this box, I accept the{" "}
             <Link href={"/"} className="underline font-bold">
@@ -62,7 +62,7 @@ export default function FormConfirm() {
         </button>
         <button
           disabled={isLoading}
-          className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-dark cursor-pointer`}
+          className={` bg-white  text-gray-700 focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-dark cursor-pointer`}
           type={"button"}
           onClick={decrementCurrentArtistSignupFormIndex}
         >

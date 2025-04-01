@@ -18,7 +18,7 @@ export const TextareaCard = (props: Props) => {
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={id} className="text-[14px]  text-dark">
+      <label htmlFor={id} className="text-[14px]  text-gray-700">
         {label}
       </label>
       <div className={clsx("flex items-center justify-between py-1")}>
@@ -28,7 +28,7 @@ export const TextareaCard = (props: Props) => {
             handleChange(name, e.target.value)
           }
           className={
-            "p-3 border border-[#E0E0E0] text-[14px] placeholder:text-dark font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+            "p-3 border border-[#E0E0E0] text-[14px] placeholder:text-gray-700 font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
           }
           {...rest}
         />

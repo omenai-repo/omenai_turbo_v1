@@ -14,6 +14,7 @@ const allowed_origins = [
 
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
+const artistDashboardRegex = /\/artist\/.*/;
 const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
 function redirect(url: string) {
@@ -21,12 +22,6 @@ function redirect(url: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  //   const hostname = request.headers.get("host") || ""; // Get the host (e.g., "auth.omenai.app")
-
-  // Exclude the "auth" subdomain
-  //   if (hostname.startsWith("auth.")) {
-  //     return NextResponse.next(); // Skip middleware for auth.omenai.app
-  //   }
   const session = await getSession();
   const auth_url = auth_uri();
   const base_path_url = base_url();
@@ -39,16 +34,22 @@ export async function middleware(request: NextRequest) {
   const isGalleryDashboard = galleryDashboardRegex.test(request.url);
   const isPurchasePage = purchasePageRegex.test(request.url);
   const isPaymentPage = paymentPageRegex.test(request.url);
+  const isArtistDashboard = artistDashboardRegex.test(request.url);
 
   if (session) {
     switch (session.role) {
       case "user":
-        if (isGalleryDashboard) {
+        if (isGalleryDashboard || isArtistDashboard) {
           return redirect(`${auth_url}/login`);
         }
         break;
       case "gallery":
-        if (isUserDashboard || isPurchasePage || isPaymentPage) {
+        if (
+          isUserDashboard ||
+          isPurchasePage ||
+          isPaymentPage ||
+          isArtistDashboard
+        ) {
           return redirect(`${auth_url}/login`);
         }
         break;
@@ -56,6 +57,17 @@ export async function middleware(request: NextRequest) {
         if (
           isGalleryDashboard ||
           isUserDashboard ||
+          isPurchasePage ||
+          isPaymentPage ||
+          isArtistDashboard
+        ) {
+          return redirect(`${auth_url}/login`);
+        }
+        break;
+      case "artist":
+        if (
+          isUserDashboard ||
+          isGalleryDashboard ||
           isPurchasePage ||
           isPaymentPage
         ) {

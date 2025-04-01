@@ -29,12 +29,16 @@ export default function OverviewOrdersCard({
           className="rounded-[10px] w-[100px] h-[100px]"
         />
         <div className="flex flex-col">
-          <p className="text-dark font-medium text-base">{title}</p>{" "}
-          <span className="text-dark text-[14px] font-medium">{artist}</span>
+          <p className="text-gray-700 font-medium text-base">{title}</p>{" "}
+          <span className="text-gray-700 text-[14px] font-medium">
+            {artist}
+          </span>
         </div>
       </div>
       <div className="flex flex-col items-end gap-y-2 text-[14px]">
-        <span className="text-dark font-medium text-[14px]">{order_date}</span>
+        <span className="text-gray-700 font-medium text-[14px]">
+          {order_date}
+        </span>
         <span className="text-amber-600 font-medium px-2 py-1 text-[12px] rounded-full bg-amber-200/50">
           PENDING
         </span>

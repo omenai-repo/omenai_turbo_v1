@@ -23,7 +23,9 @@ export default function SubDetail({
   return (
     <div className="ring-1 ring-[#e0e0e0] rounded-[20px] p-4 h-[250px] relative">
       <div className="w-full flex justify-start relative z-10 my-2">
-        <p className="text-dark text-[14px] font-semibold">Subscription Info</p>
+        <p className="text-gray-700 text-[14px] font-semibold">
+          Subscription Info
+        </p>
       </div>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-x-3">

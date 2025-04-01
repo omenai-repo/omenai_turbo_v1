@@ -17,7 +17,9 @@ export default function ArtworkPriceInputGroup() {
   const usd_symbol = getCurrencySymbol("USD");
   return (
     <div className="my-10">
-      <h2 className="text-dark font-normal text-base my-4">Artwork Pricing</h2>
+      <h2 className="text-gray-700 font-normal text-base my-4">
+        Artwork Pricing
+      </h2>
 
       <div className="grid grid-cols-2 space-x-2 w-full">
         <div className="grid grid-cols-4 space-x-2 items-center w-full">
@@ -67,7 +69,7 @@ export default function ArtworkPriceInputGroup() {
         {artworkUploadData.currency !== "" &&
           artworkUploadData.price !== 0 &&
           artworkUploadData.usd_price !== 0 && (
-            <span className=" text-dark font-semibold">
+            <span className=" text-gray-700 font-semibold">
               Exchange rate:{" "}
               {`${formatPrice(
                 artworkUploadData.price,

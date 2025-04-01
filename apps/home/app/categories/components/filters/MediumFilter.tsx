@@ -34,7 +34,7 @@ export default function MediumFilter({
     <div className="p-2 relative w-fit">
       <div
         onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 whitespace-nowrap rounded-full cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[30px] hover:bg-[#FAFAFA] hover:ring-dark"
+        className="ring-1 whitespace-nowrap rounded-full cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-gray-700 flex justify-between items-center px-3 h-[30px] hover:bg-[#FAFAFA] hover:ring-dark"
       >
         <p className="flex gap-x-2 items-center">
           <span className="text-[14px] font-light">Medium</span>

@@ -13,19 +13,25 @@ import {
 import { FaStripeS } from "react-icons/fa";
 import { FaStripe } from "react-icons/fa6";
 
-const overview = <CiGrid41 className="text-dark group-hover:text-white" />;
-const order = <TfiPackage className="text-dark group-hover:text-white" />;
+const overview = <CiGrid41 className="text-gray-700 group-hover:text-white" />;
+const order = <TfiPackage className="text-gray-700 group-hover:text-white" />;
 const subscription = (
-  <BsCreditCard2Front className="text-dark group-hover:text-white" />
+  <BsCreditCard2Front className="text-gray-700 group-hover:text-white" />
 );
-// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
-const upload = <CiExport className="text-dark group-hover:text-white" />;
-const profile = <CiUser className="text-dark group-hover:text-white" />;
-const settings = <CiSettings className="text-dark group-hover:text-white" />;
-const logout = <CiLogout className="text-dark group-hover:text-white" />;
-const album = <IoAlbumsOutline className="text-dark group-hover:text-white" />;
-const wallet = <IoWalletOutline className="text-dark group-hover:text-white" />;
-const stripe = <FaStripe className="text-dark group-hover:text-white" />;
+// const auction = <RiAuctionLine className="text-gray-700 group-hover:text-white" />;
+const upload = <CiExport className="text-gray-700 group-hover:text-white" />;
+const profile = <CiUser className="text-gray-700 group-hover:text-white" />;
+const settings = (
+  <CiSettings className="text-gray-700 group-hover:text-white" />
+);
+const logout = <CiLogout className="text-gray-700 group-hover:text-white" />;
+const album = (
+  <IoAlbumsOutline className="text-gray-700 group-hover:text-white" />
+);
+const wallet = (
+  <IoWalletOutline className="text-gray-700 group-hover:text-white" />
+);
+const stripe = <FaStripe className="text-gray-700 group-hover:text-white" />;
 export const navMockData: NavMockData = {
   general: [
     { title: "Overview", icon: overview, url: "/gallery/overview" },

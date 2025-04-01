@@ -55,7 +55,7 @@ export function TransactionTable({
             {TABLE_HEAD.map((head) => (
               <th
                 key={head}
-                className="whitespace-nowrap  py-3 pl-3 text-[14px] font-medium text-dark"
+                className="whitespace-nowrap  py-3 pl-3 text-[14px] font-medium text-gray-700"
               >
                 <p className="font-bold text-[14px]">{head}</p>
               </th>
@@ -73,24 +73,34 @@ export function TransactionTable({
                 key={data.id}
                 className="cursor-pointer bg-white ring-1 ring-[#EFEFEF] duration-200 my-2"
               >
-                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                <td
+                  className={`py-4 pl-3 text-[14px] font-medium text-gray-700`}
+                >
                   <p className="font-medium text-[14px]">{data.id}</p>
                 </td>
-                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                <td
+                  className={`py-4 pl-3 text-[14px] font-medium text-gray-700`}
+                >
                   <p className="font-medium text-[14px]">{data.date}</p>
                 </td>
-                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                <td
+                  className={`py-4 pl-3 text-[14px] font-medium text-gray-700`}
+                >
                   <p className="font-medium text-[14px]">{data.gross}</p>
                 </td>
-                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                <td
+                  className={`py-4 pl-3 text-[14px] font-medium text-gray-700`}
+                >
                   <p className="font-medium text-[14px]">{data.net}</p>
                 </td>
                 <td
-                  className={`py-4 pl-3 text-[14px] font-medium text-dark flex items-center space-x-2`}
+                  className={`py-4 pl-3 text-[14px] font-medium text-gray-700 flex items-center space-x-2`}
                 >
                   <p className="font-medium text-[14px]">{data.commission}</p>
                 </td>
-                <td className={`py-4 pl-3 text-[14px] font-medium text-dark`}>
+                <td
+                  className={`py-4 pl-3 text-[14px] font-medium text-gray-700`}
+                >
                   <p className="font-medium text-[12px] px-4 py-1 rounded-full text-white bg-green-600 w-fit">
                     {data.status}
                   </p>

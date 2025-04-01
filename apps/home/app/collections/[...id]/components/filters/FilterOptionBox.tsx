@@ -58,11 +58,11 @@ export default function FilterOptionBox({
                     checked={hasFilterValue(selectedFilters, filter.option)}
                     value={JSON.stringify(filter.value)}
                     onChange={(e) => handleChange(e, filter.option)}
-                    className="w-4 h-4 text-dark bg-gray-100 border-dark/10 rounded focus:ring-dark dark:focus:ring-dark dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                    className="w-4 h-4 text-gray-700 bg-gray-100 border-dark/10 rounded focus:ring-dark dark:focus:ring-dark dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                   />
                   <label
                     htmlFor={filter.option}
-                    className="w-full ms-2 text-[14px] font-normal text-dark rounded dark:text-white"
+                    className="w-full ms-2 text-[14px] font-normal text-gray-700 rounded dark:text-white"
                   >
                     {filter.option}
                   </label>

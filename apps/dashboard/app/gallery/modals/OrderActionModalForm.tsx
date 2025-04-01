@@ -44,19 +44,19 @@ export default function OrderActionModalForm() {
             />
           </div>
           <div className="flex flex-col">
-            <p className="text-dark font-light">Artwork name</p>
+            <p className="text-gray-700 font-light">Artwork name</p>
             <p className="font-semibold">
               {galleryOrderActionModalData.artwork.title}
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-dark font-light">Artist name</p>
+            <p className="text-gray-700 font-light">Artist name</p>
             <p className="font-semibold">
               {galleryOrderActionModalData.artwork.artist}
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-dark font-light">Price</p>
+            <p className="text-gray-700 font-light">Price</p>
             <p className="font-semibold">
               {formatPrice(
                 galleryOrderActionModalData.artwork.pricing.usd_price
@@ -64,11 +64,11 @@ export default function OrderActionModalForm() {
             </p>
           </div>
           <div className="flex flex-col">
-            <p className="text-dark font-light">Buyer name</p>
+            <p className="text-gray-700 font-light">Buyer name</p>
             <p className="font-semibold">{galleryOrderActionModalData.buyer}</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-dark font-light">Buyer address</p>
+            <p className="text-gray-700 font-light">Buyer address</p>
             <p className="font-semibold">
               {galleryOrderActionModalData.shipping_address.address_line},{" "}
               {galleryOrderActionModalData.shipping_address.city},{" "}
@@ -93,7 +93,7 @@ export default function OrderActionModalForm() {
         <div className="my-4 flex items-center justify-center gap-x-2 w-full text-[13px]">
           <button
             onClick={handleDeclineOrderRequest}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white ring-1 ring-[#e0e0e0] text-dark text-[14px] font-normal"
+            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white ring-1 ring-[#e0e0e0] text-gray-700 text-[14px] font-normal"
           >
             Decline Order
           </button>

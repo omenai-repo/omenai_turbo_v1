@@ -69,7 +69,7 @@ export default function UploadTrackingInformationModalForm() {
 
   return (
     <div>
-      <h1 className="text-base font-bold mb-4 text-dark">
+      <h1 className="text-base font-bold mb-4 text-gray-700">
         Tracking information
       </h1>
       <form className="w-full" onSubmit={handleSubmitTrackingInfo}>
@@ -87,7 +87,7 @@ export default function UploadTrackingInformationModalForm() {
               type="text"
               required
               placeholder="Please provide a link to track this order"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
             />
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function UploadTrackingInformationModalForm() {
               type="text"
               placeholder="Please provide a tracking ID for this package"
               required
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
             />
           </div>
         </div>

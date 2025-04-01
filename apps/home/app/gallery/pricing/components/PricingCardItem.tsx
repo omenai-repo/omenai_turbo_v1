@@ -100,7 +100,7 @@ export default function PricingCardItem({
   }
 
   return (
-    <div className="w-fit rounded-lg text-dark border border-dark/20 shadow-sm">
+    <div className="w-fit rounded-lg text-gray-700 border border-dark/20 shadow-sm">
       {/* Plan name and popularity tag (optional) */}
       <div className="p-8 w-full flex flex-col gap-3">
         <div className="flex justify-between items-center">
@@ -122,7 +122,7 @@ export default function PricingCardItem({
         <div className="flex flex-col gap-4 w-full">
           <button
             onClick={handleSubscribe}
-            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-dark disabled:cursor-pointer text-white`}
+            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-gray-700 disabled:cursor-pointer text-white`}
           >
             {loading ? <LoadSmall /> : "Subscribe"}
           </button>

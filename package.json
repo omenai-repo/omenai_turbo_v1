@@ -31,11 +31,13 @@
     "providers/*"
   ],
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@tanstack/react-query": "^5.61.0",
     "@vercel/analytics": "^1.4.1",
     "cloc": "^2.4.0-cloc",
     "country-state-city": "^3.2.1",
     "dotenv": "^16.4.5",
+    "embla-carousel-class-names": "^8.5.2",
     "embla-carousel-react": "^8.5.1",
     "firebase": "^11.1.0",
     "framer-motion": "^11.11.17",
@@ -46,6 +48,7 @@
     "react-icons": "^5.3.0",
     "react-loading-skeleton": "^3.5.0",
     "react-spinners": "^0.14.1",
+    "react-tooltip": "^5.28.0",
     "sharp": "^0.33.5",
     "sonner": "^1.7.0",
     "usehooks-ts": "^3.1.0",

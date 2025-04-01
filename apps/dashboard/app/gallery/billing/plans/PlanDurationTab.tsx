@@ -12,7 +12,9 @@ export default function PlanDurationTab({
       {/* User */}
       <div
         className={`px-4 py-2 rounded-full ring-1 ring-[#E0E0E0]  cursor-pointer w-fit grid place-items-center text-[14px] p-2 ${
-          tab === "monthly" ? "bg-dark text-white" : "bg-[#FAFAFA] text-dark"
+          tab === "monthly"
+            ? "bg-dark text-white"
+            : "bg-[#FAFAFA] text-gray-700"
         }  cursor-pointer `}
         onClick={() => setTab("monthly")}
       >
@@ -21,7 +23,9 @@ export default function PlanDurationTab({
       {/* Gallery */}
       <div
         className={`px-4 py-2 rounded-full ring-1 ring-[#E0E0E0]  cursor-pointer w-fit text-[14px] grid place-items-center p-2 ${
-          tab === "yearly" ? "bg-dark  text-white" : "bg-[#FAFAFA] text-dark"
+          tab === "yearly"
+            ? "bg-dark  text-white"
+            : "bg-[#FAFAFA] text-gray-700"
         }  cursor-pointer `}
         onClick={() => setTab("yearly")}
       >

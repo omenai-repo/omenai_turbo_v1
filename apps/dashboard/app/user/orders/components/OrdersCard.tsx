@@ -170,9 +170,9 @@ export default function OrdersCard({
           className="object-fill object-center rounded-[20px] h-[100px] w-[100px]"
         />
         <div className="flex flex-col sapce-y-1 text-[14px]">
-          <p className="text-dark font-medium text-base">{title}</p>
-          {/* <span className="text-dark text-[14px]">{artist}</span> */}
-          <span className="text-dark text-base font-bold">
+          <p className="text-gray-700 font-medium text-base">{title}</p>
+          {/* <span className="text-gray-700 text-[14px]">{artist}</span> */}
+          <span className="text-gray-700 text-base font-bold">
             {formatPrice(price, currency)}
           </span>
           <div className="mt-3">
@@ -188,8 +188,10 @@ export default function OrdersCard({
         </div>
       </div>
       <div className="flex flex-col md:mt-0 mt-5 text-[14px] md:items-end items-start gap-y-1">
-        <span className="text-dark font-medium text-[14px]">{order_date}</span>
-        <span className="text-dark text-[14px] font-medium">
+        <span className="text-gray-700 font-medium text-[14px]">
+          {order_date}
+        </span>
+        <span className="text-gray-700 text-[14px] font-medium">
           Order ID: <span className="font-medium">#{order_id}</span>
         </span>
 

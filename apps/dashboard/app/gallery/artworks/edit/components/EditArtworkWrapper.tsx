@@ -160,7 +160,7 @@ export default function EditArtworkWrapper({
   return (
     <div className="mt-5">
       <div className="w-full py-3 bg-white">
-        <h1 className="text-base text-dark font-normal">
+        <h1 className="text-base text-gray-700 font-normal">
           Update artwork pricing
         </h1>
       </div>
@@ -171,7 +171,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor={"currency"}
-                className="text-dark/80 font-normal text-[14px]"
+                className="text-gray-700/80 font-normal text-[14px]"
               >
                 Currency
               </label>
@@ -188,7 +188,7 @@ export default function EditArtworkWrapper({
                       <option
                         key={item.code}
                         value={item.code}
-                        className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                        className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
                       >
                         {item.name}
                       </option>
@@ -214,7 +214,7 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
 
@@ -222,7 +222,7 @@ export default function EditArtworkWrapper({
               {data.currency !== "" &&
                 data.price !== "" &&
                 data.usd_price !== "" && (
-                  <span className=" text-dark font-normal">
+                  <span className=" text-gray-700 font-normal">
                     Exchange rate:{" "}
                     {`${formatPrice(
                       +data.price,
@@ -241,7 +241,7 @@ export default function EditArtworkWrapper({
           <div className="flex flex-col gap-1">
             <label
               htmlFor={"shouldShowPrice"}
-              className="text-dark/80 font-normal text-[14px]"
+              className="text-gray-700/80 font-normal text-[14px]"
             >
               Display price value
             </label>
@@ -254,13 +254,13 @@ export default function EditArtworkWrapper({
               <option value="">Select</option>
               <option
                 value="Yes"
-                className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
               >
                 Yes
               </option>
               <option
                 value="No"
-                className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
               >
                 No
               </option>

@@ -36,7 +36,7 @@ export default async function page({
           <div className="flex items-center gap-2">
             <Link
               href={"/collections"}
-              className="text-dark font-light hover:underline"
+              className="text-gray-700 font-light hover:underline"
             >
               {" "}
               Collections
@@ -44,7 +44,7 @@ export default async function page({
             <p>/</p>
             <Link
               href={`/collections/${slug[0]}`}
-              className="text-dark font-semibold hover:underline"
+              className="text-gray-700 font-semibold hover:underline"
             >
               {pageTitleParser()}
             </Link>

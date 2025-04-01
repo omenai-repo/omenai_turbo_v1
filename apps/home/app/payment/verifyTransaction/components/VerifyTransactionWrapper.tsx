@@ -89,10 +89,10 @@ export default function VerifyTransactionWrapper() {
               animationData={animationData}
               className="w-[200px] h-[200px]"
             />
-            <p className="text-dark">
+            <p className="text-gray-700">
               Your transaction has been successfully confirmed.
             </p>
-            <p className="text-dark">Thank you!</p>
+            <p className="text-gray-700">Thank you!</p>
             <div>
               <button
                 onClick={handleRedirect}

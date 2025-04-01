@@ -34,10 +34,10 @@ const AcceptGalleryMail = (gallery_name?: string) => {
               className="mx-auto my-10"
             />
 
-            <Text className="text-dark text-[14px] leading-[24px]">
+            <Text className="text-gray-700 text-[14px] leading-[24px]">
               Dear {gallery_name},
             </Text>
-            <Text className="text-dark text-[14px] leading-[24px]">
+            <Text className="text-gray-700 text-[14px] leading-[24px]">
               We are excited to inform you that your gallery account has been
               successfully verified on <strong>OMENAI INC.</strong> You can now
               fully access all the features of our platform and start showcasing
@@ -78,7 +78,7 @@ const AcceptGalleryMail = (gallery_name?: string) => {
               to us at{" "}
               <Link
                 href="mailto:contact@omenai.net"
-                className="text-dark font-bold underline"
+                className="text-gray-700 font-bold underline"
               >
                 contact@omenai.net
               </Link>
@@ -92,11 +92,11 @@ const AcceptGalleryMail = (gallery_name?: string) => {
             </Text>
 
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
+            <Text className="text-gray-700 text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
-              <span className="text-dark">{gallery_name} </span>. In the event
-              that you were not anticipating the receipt of this email, we
+              <span className="text-gray-700">{gallery_name} </span>. In the
+              event that you were not anticipating the receipt of this email, we
               respectfully request that you refrain from taking any action based
               on its contents. This communication may contain confidential and
               legally privileged information, and it is intended solely for the

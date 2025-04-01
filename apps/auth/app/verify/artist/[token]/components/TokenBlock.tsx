@@ -92,9 +92,9 @@ export default function TokenBlock({ token }: TokenProps) {
         <div className="flex flex-col gap-4 my-[2rem]">
           <p className="leading-32 font-medium text-[14px]">
             Thank you for choosing to join{" "}
-            <span className="text-dark font-[900]">Omenai Inc.</span> We extend
-            our warmest welcome and look forward to providing you an enjoyable
-            journey with us
+            <span className="text-gray-700 font-[900]">Omenai Inc.</span> We
+            extend our warmest welcome and look forward to providing you an
+            enjoyable journey with us
           </p>
           <p className="leading-32 text-[14px]">
             A token has been sent to the email address you provided to us,
@@ -111,7 +111,7 @@ export default function TokenBlock({ token }: TokenProps) {
       >
         <input
           type="text"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40"
           placeholder="Verification token"
           required
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -130,7 +130,7 @@ export default function TokenBlock({ token }: TokenProps) {
         Did not recieve a code?{" "}
         <button
           disabled={resendTokenLoading}
-          className="text-dark underline font-bold cursor-pointer"
+          className="text-gray-700 underline font-bold cursor-pointer"
           onClick={resendVerification}
         >
           {resendTokenLoading ? <LoadSmall /> : "Resend code"}
@@ -142,7 +142,7 @@ export default function TokenBlock({ token }: TokenProps) {
           Feel free to contact us should you have any issues on{" "}
           <Link
             href={"mailto:contact@omenai.net"}
-            className="text-dark font-normal underline"
+            className="text-gray-700 font-normal underline"
           >
             contact@omenai.net
           </Link>

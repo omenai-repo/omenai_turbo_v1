@@ -30,7 +30,7 @@ export default function LayoutWrapper({
             duration={7000}
           />
           <div className=" w-full h-screen">
-            <NextTopLoader color="#6246EA" height={6} />
+            <NextTopLoader color="#030303" height={6} />
             <SessionProvider session={session}>
               <QueryProvider>{children}</QueryProvider>
             </SessionProvider>

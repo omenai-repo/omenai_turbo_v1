@@ -34,8 +34,10 @@ export const UserBanner = () => {
           )}
 
           <div className="">
-            <p className="text-dark font-normal text-base">{session?.name}</p>
-            <p className="text-dark text-[14px] font-light">
+            <p className="text-gray-700 font-normal text-base">
+              {session?.name}
+            </p>
+            <p className="text-gray-700 text-[14px] font-light">
               {(session as GallerySchemaTypes).address.address_line}
             </p>
           </div>

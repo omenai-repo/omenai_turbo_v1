@@ -180,7 +180,7 @@ export default function AvsNoauthInput({
       <div className="w-full  flex flex-col gap-y-2">
         <label
           htmlFor={"country"}
-          className="text-dark/80 font-normal text-[14px]"
+          className="text-gray-700/80 font-normal text-[14px]"
         >
           Country
         </label>
@@ -188,7 +188,7 @@ export default function AvsNoauthInput({
           onChange={handleInputChange}
           required={true}
           name="country"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
         >
           <option value="">Select Country</option>
           <>
@@ -198,7 +198,7 @@ export default function AvsNoauthInput({
                   key={country.code}
                   value={country.name}
                   data-code={country.code}
-                  className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                  className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
                 >
                   {country.name}
                 </option>
@@ -209,7 +209,10 @@ export default function AvsNoauthInput({
       </div>
       {/* State select */}
       <div className="w-full flex flex-col gap-y-2">
-        <label htmlFor={""} className="text-dark/80 font-normal text-[14px]">
+        <label
+          htmlFor={""}
+          className="text-gray-700/80 font-normal text-[14px]"
+        >
           State
         </label>
         <select
@@ -217,7 +220,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === ""}
           required={true}
           name="state"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
         >
           <option value="">Select State</option>
           <>
@@ -227,7 +230,7 @@ export default function AvsNoauthInput({
                   key={state.isoCode}
                   value={state.name}
                   data-code={state.isoCode}
-                  className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                  className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
                 >
                   {state.name}
                 </option>
@@ -238,7 +241,10 @@ export default function AvsNoauthInput({
       </div>
       {/* City select */}
       <div className="w-full flex flex-col gap-y-2">
-        <label htmlFor={""} className="text-dark/80 font-normal text-[14px]">
+        <label
+          htmlFor={""}
+          className="text-gray-700/80 font-normal text-[14px]"
+        >
           City
         </label>
         <select
@@ -246,7 +252,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === "" || address_info.state === ""}
           required={true}
           name="city"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
         >
           <option value="">Select City</option>
           <>
@@ -255,7 +261,7 @@ export default function AvsNoauthInput({
                 <option
                   key={city.name}
                   value={city.name}
-                  className="px-3 py-5 my-5 font-normal text-[14px] text-dark"
+                  className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
                 >
                   {city.name}
                 </option>
@@ -278,7 +284,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="e.g 7, example street"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 "
         />
       </div>
       <div className="relative w-fullS flex flex-col gap-y-1">
@@ -294,7 +300,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="ZIP"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 "
         />
       </div>
 

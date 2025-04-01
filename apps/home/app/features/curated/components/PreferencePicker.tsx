@@ -21,13 +21,13 @@ export default function PreferencePicker({
   return (
     <div className="w-full flex justify-center items-center mb-8">
       <div>
-        <ul className="flex flex-wrap justify-center gap-5 text-dark font-medium text-sm">
+        <ul className="flex flex-wrap justify-center gap-5 text-gray-700 font-medium text-sm">
           <li onClick={() => handleFilterChange("All")}>
             <button
               className={`rounded-full w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-[14px] transition-all ease-linear duration-100 px-4 py-2 ${
                 curated_preference === "All"
                   ? "bg-dark text-white"
-                  : "bg-transparent text-dark"
+                  : "bg-transparent text-gray-700"
               }`}
             >
               All
@@ -43,7 +43,7 @@ export default function PreferencePicker({
                   className={`rounded-full w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-[14px] transition-all ease-linear duration-100 px-4 py-2 ${
                     curated_preference === preference
                       ? "bg-dark text-white"
-                      : "bg-transparent text-dark"
+                      : "bg-transparent text-gray-700"
                   }`}
                 >
                   {preference}

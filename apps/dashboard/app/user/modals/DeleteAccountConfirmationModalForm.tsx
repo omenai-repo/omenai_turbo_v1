@@ -65,7 +65,7 @@ export default function DeleteAccountConfirmationModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-bold mb-4 text-dark">
+      <h1 className="text-sm font-bold mb-4 text-gray-700">
         Confirm Account Deletion
       </h1>
       <div className="flex flex-col gap-4 font-normal text-base">

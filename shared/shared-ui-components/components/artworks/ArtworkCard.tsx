@@ -70,7 +70,7 @@ export default function ArtworkCard({
             {isDashboard ? (
               <Link href={`/gallery/artworks/edit?id=${name}`}>
                 <button
-                  className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-[14px] font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
+                  className={`bg-white text-gray-700 rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-gray-700/20 text-[14px] font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
                 >
                   Edit artwork
                 </button>

@@ -122,7 +122,7 @@ export default function UpdatePasswordModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-bold mb-4 text-dark">
+      <h1 className="text-sm font-bold mb-4 text-gray-700">
         Update Password Information
       </h1>
       <form onSubmit={handlePasswordUpdate}>
@@ -140,7 +140,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               required
               placeholder="Enter a new password"
-              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
             />
           </div>
         </div>
@@ -158,7 +158,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               placeholder="Confirm your password"
               required
-              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
             />
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function UpdatePasswordModalForm() {
               type="text"
               placeholder="Enter confirmation code"
               required
-              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
             />
           </div>
 

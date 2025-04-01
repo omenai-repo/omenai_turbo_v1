@@ -52,7 +52,7 @@ export default function EditorialItem({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <button className="flex bg-white text-dark px-4 py-2 items-center gap-x-2 rounded-full text-[14px] whitespace-nowrap">
+              <button className="flex bg-white text-gray-700 px-4 py-2 items-center gap-x-2 rounded-full text-[14px] whitespace-nowrap">
                 Read full article
               </button>
             </Link>

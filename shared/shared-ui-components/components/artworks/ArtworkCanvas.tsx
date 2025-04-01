@@ -127,7 +127,7 @@ export default function ArtworkCanvas({
 
         <div className=" bg-transparent pr-3 py-1 w-full">
           <div className="flex flex-col my-2">
-            <p className="font-normal text-[14px] text-dark text-ellipsis overflow-hidden whitespace-nowrap">
+            <p className="font-normal text-[14px] text-gray-700 text-ellipsis overflow-hidden whitespace-nowrap">
               {name}
             </p>
 
@@ -139,7 +139,7 @@ export default function ArtworkCanvas({
               {isDashboard && (
                 <Link href={`/gallery/artworks/edit?id=${name}`}>
                   <button
-                    className={`disabled:cursor-not-allowed disabled:text-dark/20 text-[14px] font-normal underline cursor-pointer`}
+                    className={`disabled:cursor-not-allowed disabled:text-gray-700/20 text-[14px] font-normal underline cursor-pointer`}
                   >
                     Edit artwork
                   </button>
@@ -149,14 +149,14 @@ export default function ArtworkCanvas({
 
             {pricing?.price && pricing.shouldShowPrice === "Yes" ? (
               !availability ? (
-                <p className="font-medium text-[14px] text-dark">Sold</p>
+                <p className="font-medium text-[14px] text-gray-700">Sold</p>
               ) : (
-                <p className="font-medium text-[14px] text-dark">
+                <p className="font-medium text-[14px] text-gray-700">
                   USD {formatPrice(pricing.usd_price)}
                 </p>
               )
             ) : !availability ? (
-              <p className="font-medium text-[14px] text-dark">Sold</p>
+              <p className="font-medium text-[14px] text-gray-700">Sold</p>
             ) : (
               <p className="font-medium text-[14px]">Price on request</p>
             )}

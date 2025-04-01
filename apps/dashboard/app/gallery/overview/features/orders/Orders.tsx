@@ -63,7 +63,7 @@ export default function Orders() {
           <div className="w-full flex justify-center my-4">
             <Link
               href="/gallery/orders"
-              className="text-dark/80 flex gap-x-1 text-[14px] items-center font-medium underline mt-4 cursor-pointer"
+              className="text-gray-700/80 flex gap-x-1 text-[14px] items-center font-medium underline mt-4 cursor-pointer"
             >
               View {limitedOrders.length} pending order(s)
               <IoIosArrowRoundForward />

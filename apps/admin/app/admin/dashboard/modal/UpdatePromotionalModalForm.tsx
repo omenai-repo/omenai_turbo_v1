@@ -140,7 +140,7 @@ export default function UpdatePromotionalModalForm() {
 
   return (
     <div>
-      <h1 className="text-base font-normal mb-4 text-dark">
+      <h1 className="text-base font-normal mb-4 text-gray-700">
         Update Promotional Data Info
       </h1>
       <form className="w-full" onSubmit={handlePromotionalDataUpdate}>

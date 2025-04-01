@@ -16,7 +16,7 @@ export default function Pill({ text }: PillProps) {
     ${
       updateData?.preferences?.includes(text)
         ? "bg-dark text-white"
-        : "bg-transparent text-dark"
+        : "bg-transparent text-gray-700"
     }
       `}
     >

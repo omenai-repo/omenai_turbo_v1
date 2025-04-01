@@ -99,7 +99,7 @@ export default function QuoteForm() {
   return (
     <div className="my-5">
       <div className="w-full py-3 px-4 bg-white">
-        <h1 className="text-base text-dark font-normal">
+        <h1 className="text-base text-gray-700 font-normal">
           Provide shipping quote
         </h1>
       </div>
@@ -112,7 +112,7 @@ export default function QuoteForm() {
           <div className=" flex flex-col space-y-2 w-full">
             <div className="relative w-full flex flex-col space-y-2">
               <label
-                className="text-dark font-light text-[14px]"
+                className="text-gray-700 font-light text-[14px]"
                 htmlFor="shipping"
               >
                 Package carrier
@@ -122,7 +122,7 @@ export default function QuoteForm() {
                 name="package_carrier"
                 type="text"
                 placeholder="e.g DHL, USPS, UPS, etc..."
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function QuoteForm() {
             <div className="flex flex-col space-y-2 w-full">
               <div className="relative w-full flex flex-col space-y-2">
                 <label
-                  className="text-dark font-light text-[14px]"
+                  className="text-gray-700 font-light text-[14px]"
                   htmlFor="shipping"
                 >
                   Shipping fees ($)
@@ -141,14 +141,14 @@ export default function QuoteForm() {
                   type="number"
                   step="any"
                   placeholder="e.g 150.00"
-                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
                 />
-                <BsCurrencyDollar className="absolute right-3 top-9 text-dark font-light" />
+                <BsCurrencyDollar className="absolute right-3 top-9 text-gray-700 font-light" />
               </div>
             </div>
             <div className="flex flex-col space-y-2 w-full">
               <label
-                className="text-dark font-light text-[14px]"
+                className="text-gray-700 font-light text-[14px]"
                 htmlFor="shipping"
               >
                 Taxes and other fees ($)
@@ -160,16 +160,16 @@ export default function QuoteForm() {
                   placeholder="e.g 150.00"
                   type="number"
                   step="any"
-                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
                 />
-                <BsCurrencyDollar className="absolute right-3 top-3 text-dark font-light" />
+                <BsCurrencyDollar className="absolute right-3 top-3 text-gray-700 font-light" />
               </div>
             </div>
           </div>
 
           <div className=" flex flex-col space-y-2 w-full">
             <label
-              className="text-dark font-light text-[14px]"
+              className="text-gray-700 font-light text-[14px]"
               htmlFor="shipping"
             >
               Additional information (optional)
@@ -179,7 +179,7 @@ export default function QuoteForm() {
                 onChange={handleInputChange}
                 name="additional_information"
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-dark font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-gray-700 font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
               />
             </div>
           </div>
@@ -206,19 +206,19 @@ export default function QuoteForm() {
               />
             </div>
             <div className="flex flex-col">
-              <p className="text-dark font-light">Artwork name</p>
+              <p className="text-gray-700 font-light">Artwork name</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.artwork.title}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-dark font-light">Artist name</p>
+              <p className="text-gray-700 font-light">Artist name</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.artwork.artist}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-dark font-light">Price</p>
+              <p className="text-gray-700 font-light">Price</p>
               <p className="font-semibold">
                 {formatPrice(
                   galleryOrderActionModalData.artwork.pricing.usd_price
@@ -226,13 +226,13 @@ export default function QuoteForm() {
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-dark font-light">Buyer name</p>
+              <p className="text-gray-700 font-light">Buyer name</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.buyer}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-dark font-light">Buyer address</p>
+              <p className="text-gray-700 font-light">Buyer address</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.shipping_address.address_line},
                 {galleryOrderActionModalData.shipping_address.city},

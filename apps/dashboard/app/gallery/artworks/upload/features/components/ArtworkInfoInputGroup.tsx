@@ -5,7 +5,9 @@ import ArtworkTextInput from "./ArtworkTextInput";
 export default function ArtworkInfoInputGroup() {
   return (
     <div className="my-10">
-      <h2 className="text-dark font-normal text-base my-4">Artwork details</h2>
+      <h2 className="text-gray-700 font-normal text-base my-4">
+        Artwork details
+      </h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 ">
         {uploadArtworkDetailInputMocks.map((input, index) => {
           if (input.type === "text" || input.type === "textarea") {

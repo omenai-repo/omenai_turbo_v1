@@ -27,7 +27,9 @@ export default function MobilePageLayout() {
           <div className="flex flex-col gap-y-8 mt-6">
             {/* General navigation */}
             <div>
-              <h4 className={`text-dark font-normal text-[14px] `}>General</h4>
+              <h4 className={`text-gray-700 font-normal text-[14px] `}>
+                General
+              </h4>
               <ul className="flex flex-col gap-y-1">
                 {navMockData.general.map((item, index) => {
                   return (
@@ -45,7 +47,9 @@ export default function MobilePageLayout() {
             </div>
             {/* Account pages */}
             <div>
-              <h4 className={`text-dark font-normal text-[14px]`}>Account</h4>
+              <h4 className={`text-gray-700 font-normal text-[14px]`}>
+                Account
+              </h4>
               <ul className="flex flex-col gap-y-1">
                 {navMockData.account.map((item, index) => {
                   return (

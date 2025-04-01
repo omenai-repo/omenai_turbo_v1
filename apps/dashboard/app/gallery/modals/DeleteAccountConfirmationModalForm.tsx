@@ -63,7 +63,7 @@ export default function DeleteAccountConfirmationModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-normal mb-4 text-dark">
+      <h1 className="text-sm font-normal mb-4 text-gray-700">
         Confirm Account Deletion
       </h1>
       <div className="flex flex-col gap-4 font-normal text-base">
@@ -77,7 +77,7 @@ export default function DeleteAccountConfirmationModalForm() {
             <span className="text-[#FFA500] text-[14px]">Warning</span>
           </p>
 
-          <p className="text-[14px] text-dark">
+          <p className="text-[14px] text-gray-700">
             Deleting your account will permanently erase all your uploaded
             artwork and prevent you from using any of the platform&apos;s
             features.{" "}

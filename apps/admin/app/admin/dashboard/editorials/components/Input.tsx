@@ -28,7 +28,7 @@ export function AdminUploadInput({
           onChange={handleChange}
           name={name}
           placeholder={placeholder ? placeholder : ""}
-          className="focus:ring-0 border px-4 border-dark/20 outline-none focus:outline-none h-[50px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-1"
+          className="focus:ring-0 border px-4 border-dark/20 outline-none focus:outline-none h-[50px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-gray-700/40 py-1"
           required
         />
       </div>

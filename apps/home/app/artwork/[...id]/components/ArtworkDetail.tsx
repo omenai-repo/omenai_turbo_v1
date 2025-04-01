@@ -89,13 +89,13 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   }
   return (
     <div className="flex flex-col gap-y-4">
-      <div className="text-dark/80">
+      <div className="text-gray-700/80">
         <h1 className="text-sm sm:text-md font-bold">{data.title}</h1>
-        <h3 className="text-base font-normal italic text-dark/70">
+        <h3 className="text-base font-normal italic text-gray-700/70">
           {data.artist}
         </h3>
       </div>
-      <p className="text-[14px] font-medium text-dark/80 gap-x-4 flex items-center">
+      <p className="text-[14px] font-medium text-gray-700/80 gap-x-4 flex items-center">
         <span>{data.medium}</span>
         <span>|</span>
         <span>{data.rarity}</span>
@@ -136,7 +136,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         <button
           disabled={loading || !data.availability}
           onClick={handleBuyButtonClick}
-          className="w-full bg-dark h-[50px] px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
+          className="w-full bg-dark h-[50px] px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-gray-700/50 hover:text-white hover:duration-200 grid place-items-center group"
         >
           {loading ? (
             <LoadSmall />
@@ -157,7 +157,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           (sessionId && !likedState.ids.includes(sessionId))) && (
           <button
             onClick={() => handleLike(true)}
-            className="w-full h-[50px] px-4 justify-center rounded-full flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark ring-1 ring-dark/50 duration-300 group"
+            className="w-full h-[50px] px-4 justify-center rounded-full flex items-center gap-2  text-gray-700 hover:bg-dark/10 hover:text-gray-700 ring-1 ring-dark/50 duration-300 group"
           >
             <span>Save artwork</span>
             <IoHeartOutline />
@@ -166,7 +166,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {sessionId !== undefined && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
-            className="w-full h-[50px] px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-[14px] group"
+            className="w-full h-[50px] px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-gray-700 text-[14px] group"
           >
             <span>Remove from saved</span>
             <GiCheckMark />

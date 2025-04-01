@@ -38,7 +38,9 @@ export default function GalleryInfo() {
             <RxAvatar />
           )}
         </div>
-        <p className="text-dark px-5 lg:px-2 text-[14px]">Edit profile logo</p>
+        <p className="text-gray-700 px-5 lg:px-2 text-[14px]">
+          Edit profile logo
+        </p>
       </div>
 
       <FormCard />

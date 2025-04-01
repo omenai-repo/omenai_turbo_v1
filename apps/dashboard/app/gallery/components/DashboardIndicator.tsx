@@ -55,12 +55,12 @@ export default function DashboardIndicator({
   return (
     <div className="w-full flex justify-between items-center">
       <div className="text-[14px]">
-        <p className="font-normal text-dark">
+        <p className="font-normal text-gray-700">
           Welcome back, <strong>{gallery_name}</strong>
         </p>
 
-        <p className="text-dark">
-          <span className="font-normal capitalize text-dark">
+        <p className="text-gray-700">
+          <span className="font-normal capitalize text-gray-700">
             {getFormattedDateTime()}
           </span>
         </p>
@@ -75,16 +75,16 @@ export default function DashboardIndicator({
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>
-          <p className="text-[14px] text-dark font-medium">
+          <p className="text-[14px] text-gray-700 font-medium">
             Account currently under review
           </p>
         </div>
       ) : (
         <div className="flex gap-2 items-center">
-          <RiAdminLine className="text-sm font-light text-dark" />
+          <RiAdminLine className="text-sm font-light text-gray-700" />
           <div>
-            <p className="text-dark text-[14px] font-bold">{admin_name}</p>
-            <p className="text-dark text-[14px] font-semibold">Admin</p>
+            <p className="text-gray-700 text-[14px] font-bold">{admin_name}</p>
+            <p className="text-gray-700 text-[14px] font-semibold">Admin</p>
           </div>
         </div>
       )}

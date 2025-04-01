@@ -28,7 +28,7 @@ export const InputCard = (props: Props) => {
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={id} className="text-[14px] text-dark">
+      <label htmlFor={id} className="text-[14px] text-gray-700">
         {label}
       </label>
       <div className={clsx("flex items-center justify-between py-1 px-1")}>
@@ -42,9 +42,9 @@ export const InputCard = (props: Props) => {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleChange(labelText, e.target.value)
           }
-          className={`w-full ${labelText === "email" && "text-dark/40"} ${
-            labelText === "gallery" && "text-dark/40"
-          } focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-dark/40 `}
+          className={`w-full ${labelText === "email" && "text-gray-700/40"} ${
+            labelText === "gallery" && "text-gray-700/40"
+          } focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 `}
           {...rest}
         />
       </div>

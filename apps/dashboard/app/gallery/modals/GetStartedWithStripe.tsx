@@ -99,7 +99,7 @@ export default function GetStartedWithStripe() {
           animate={{ scale: 1, rotate: "0deg" }}
           exit={{ scale: 0, rotate: "0deg" }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-white border border-[#E0E0E0] text-dark p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative"
+          className="bg-white border border-[#E0E0E0] text-gray-700 p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative"
         >
           <div className="">
             <h1 className="text-[14px] font-light text-[#858585] mb-1">
@@ -124,7 +124,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.name}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40"
                 />
               </div>
               <div className="relative w-full">
@@ -138,7 +138,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.email}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40"
                 />
               </div>
               <div className="relative w-full flex flex-col">
@@ -159,7 +159,7 @@ export default function GetStartedWithStripe() {
                   {country_codes.map((country, index) => {
                     return (
                       <option
-                        className="p-3 font-light text-dark"
+                        className="p-3 font-light text-gray-700"
                         value={country.code}
                         key={country.code}
                       >

@@ -60,7 +60,7 @@ export default function RecoveryEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
+        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
         placeholder="Email address"
         value={email}
         onChange={(e) => setEmail(e.target.value)}

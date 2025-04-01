@@ -91,7 +91,7 @@ const PaymentSuccessfulMail = (
                   You can track your order status by visiting your{" "}
                   <Link
                     href={`${url}/dashboard/user/orders`}
-                    className="underline text-dark italic font-bold"
+                    className="underline text-gray-700 italic font-bold"
                   >
                     Account Page
                   </Link>
@@ -109,7 +109,7 @@ const PaymentSuccessfulMail = (
               feel free to reach out to us at{" "}
               <Link
                 href="mailto:contact@omenani.net"
-                className="underline text-dark italic font-bold"
+                className="underline text-gray-700 italic font-bold"
               >
                 contact@omeani.net
               </Link>
@@ -125,7 +125,7 @@ const PaymentSuccessfulMail = (
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
+            <Text className="text-gray-700 text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

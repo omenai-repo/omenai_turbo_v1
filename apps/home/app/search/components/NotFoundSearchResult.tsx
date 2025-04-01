@@ -11,11 +11,11 @@ export default function NotFoundSearchResult() {
     <>
       <div className="w-full h-[60svh]">
         <div className="px-5 py-8">
-          <h1 className="text-base font-normal text-dark">
+          <h1 className="text-base font-normal text-gray-700">
             No results found for term{" "}
             <span className="text-blue-600">&apos;{searchTerm}&apos;</span>
           </h1>
-          <h2 className="text-base md:text-sm lg:text-md font-normal text-dark">
+          <h2 className="text-base md:text-sm lg:text-md font-normal text-gray-700">
             Try checking for spelling errors or try another search term.
           </h2>
         </div>

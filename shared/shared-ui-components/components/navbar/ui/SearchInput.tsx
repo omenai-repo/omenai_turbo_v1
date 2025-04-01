@@ -37,7 +37,7 @@ export default function SearchInput() {
     <div className="relative flex w-full justify-between gap-x-5 items-center rounded-sm border bg-transparent border-dark/30">
       <input
         type="text"
-        className="w-full h-[40px] bg-transparent px-3 border-none rounded-sm placeholder:text-[14px] placeholder:font-normal placeholder:text-dark focus:border-none focus:ring-0 focus:border-0"
+        className="w-full h-[40px] bg-transparent px-3 border-none rounded-sm placeholder:text-[14px] placeholder:font-normal placeholder:text-gray-700 focus:border-none focus:ring-0 focus:border-0"
         placeholder="Search for anything"
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={handleEnterKeyPress}

@@ -23,7 +23,7 @@ export const UpdatePasswordModal = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white text-dark p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
+            className="bg-white text-gray-700 p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">
