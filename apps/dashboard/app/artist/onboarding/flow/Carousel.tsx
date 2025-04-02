@@ -88,14 +88,13 @@ const onboardingOptions = [
 const EmblaCarousel = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [ClassNames()]);
 
-  // const {
-  //   prevBtnDisabled,
-  //   nextBtnDisabled,
-  //   onPrevButtonClick,
-  //   onNextButtonClick,
-  // } = usePrevNextButtons(emblaApi);
-
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setActiveIndex(emblaApi!.selectedScrollSnap()); // Get current active slide
+  }, [emblaApi]);
 
   const updateScrollProgress = () => {
     if (!emblaApi) return;
@@ -105,6 +104,9 @@ const EmblaCarousel = () => {
 
   useEffect(() => {
     if (!emblaApi) return;
+
+    emblaApi.on("select", onSelect); // Listen for slide change
+    onSelect(); // Initial check
 
     const handleScroll = () => {
       requestAnimationFrame(updateScrollProgress);
@@ -132,7 +134,7 @@ const EmblaCarousel = () => {
     }
   }, [emblaApi]);
   return (
-    <div className="embla relative">
+    <div className="embla sm:max-w-[100vw] lg:max-w-[90vw] xl:max-w-[75vw] relative">
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container p-5">
           {onboardingOptions.map((options, index) => (
@@ -141,6 +143,7 @@ const EmblaCarousel = () => {
                 <CarouselItemText
                   question={options.question}
                   label={options.label as keyof ArtistOnboardingData}
+                  isInteractable={index === activeIndex}
                 />
               )}
               {options.type === "select" && options.options && (
@@ -148,18 +151,27 @@ const EmblaCarousel = () => {
                   question={options.question}
                   label={options.label}
                   options={options.options}
+                  isInteractable={index === activeIndex}
                 />
               )}
-              {options.type === "cv" && <CarouselCVUpload />}
-              {options.type === "socials" && <CarouselSocials />}
-              {options.type === "confirmation" && <CarouselAcknowledgement />}
+              {options.type === "cv" && (
+                <CarouselCVUpload isInteractable={index === activeIndex} />
+              )}
+              {options.type === "socials" && (
+                <CarouselSocials isInteractable={index === activeIndex} />
+              )}
+              {options.type === "confirmation" && (
+                <CarouselAcknowledgement
+                  isInteractable={index === activeIndex}
+                />
+              )}
             </div>
           ))}
         </div>
       </div>
 
       <div className="w-full flex gap-x-4 items-center px-6 mb-4 mt-[6rem]">
-        <div className=" w-full h-[0.5px] bg-[#fafafa]">
+        <div className=" w-full h-[1px] bg-[#fafafa]">
           <div
             className="h-full bg-dark "
             style={{ width: `${scrollProgress * 100}%` }}

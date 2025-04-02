@@ -2,6 +2,9 @@
   "name": "@omenai/dashboard-app",
   "version": "1.0.0",
   "private": true,
+  "overrides": {
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
+  },
   "scripts": {
     "dev": "next dev -p 5000",
     "build": "next build",

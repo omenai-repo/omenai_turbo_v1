@@ -28,7 +28,7 @@ export default function OnboardingFlow() {
     }
   }
   return (
-    <div className="container p-5">
+    <div className=" px-5">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-y-3 mt-8">
           <IndividualLogo />
@@ -49,7 +49,7 @@ export default function OnboardingFlow() {
 
       <div className="min-h-[85svh] relative w-full flex items-center justify-center">
         <EmblaCarousel />
-        <div className="absolute bottom-0 left-0 ml-[5rem]">
+        <div className="absolute bottom-10 left-0 ml-[5rem]">
           <div
             data-tooltip-id="onboarding-help"
             data-tooltip-content="Before you start showcasing your work, we need to confirm your artistic background."

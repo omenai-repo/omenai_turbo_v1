@@ -6,7 +6,11 @@ import React, { ChangeEvent, useRef, useState } from "react";
 import { BsFile, BsImage } from "react-icons/bs";
 import { toast } from "sonner";
 
-export default function CarouselCVUpload() {
+export default function CarouselCVUpload({
+  isInteractable,
+}: {
+  isInteractable: boolean;
+}) {
   const [cv, setCv] = useState<File | null>(null);
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const acceptedFileTypes = ["pdf"];
@@ -15,7 +19,9 @@ export default function CarouselCVUpload() {
     artistOnboardingStore();
 
   return (
-    <div className="flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md">
+    <div
+      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md`}
+    >
       <div className="w-full">
         <h2 className="text-[14px] font-medium mb-6 text-left">
           Upload your CV
@@ -34,7 +40,7 @@ export default function CarouselCVUpload() {
             }}
             className="w-full h-full border border-dashed text-[14px] grid place-items-center duration-300 border-dark/20 rounded-[20px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
           >
-            <span>{cv.name}</span>
+            <span className="break-words">{cv.name.substring(0, 30)}</span>
           </button>
         ) : (
           <button

@@ -20,7 +20,10 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@babel/types": ["node_modules/@babel/types"]
+    }
   },
   "exclude": ["node_modules"]
 }

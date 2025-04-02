@@ -36,7 +36,6 @@ body {
 
 /* EMBLA */
 .embla {
-  max-width: 84rem;
   margin: auto;
   --slide-height: 25rem;
   --slide-spacing: 1rem;

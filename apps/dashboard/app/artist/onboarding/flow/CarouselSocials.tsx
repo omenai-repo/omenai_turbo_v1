@@ -1,8 +1,12 @@
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import { ArtistOnboardingData, Socials } from "@omenai/shared-types";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 
-export default function CarouselSocials() {
+export default function CarouselSocials({
+  isInteractable,
+}: {
+  isInteractable: boolean;
+}) {
   const { updateOnboardingData, update_field_completion_state } =
     artistOnboardingStore();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +24,9 @@ export default function CarouselSocials() {
     );
   };
   return (
-    <div className="flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md">
+    <div
+      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md`}
+    >
       <div className="w-full">
         <h2 className="text-[14px] font-medium mb-6 text-left">
           Upload social handles{" "}

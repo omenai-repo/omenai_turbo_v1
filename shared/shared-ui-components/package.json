@@ -17,5 +17,7 @@
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@babel/types": "^7.27.0"
+  }
 }

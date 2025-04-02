@@ -15,7 +15,11 @@ import { documentation_storage } from "@omenai/appwrite-config";
 import { ClipLoader } from "react-spinners";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 type Option = "yes" | "no";
-export default function CarouselAcknowledgement() {
+export default function CarouselAcknowledgement({
+  isInteractable,
+}: {
+  isInteractable: boolean;
+}) {
   const [loading, setLoading] = useState(false);
   const { onboardingData, field_completion_state } = artistOnboardingStore();
   const { setOpenOnboardingCompletedModal } = actionStore();
@@ -114,7 +118,9 @@ export default function CarouselAcknowledgement() {
     }
   };
   return (
-    <div className="flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md">
+    <div
+      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md`}
+    >
       <div className="w-full">
         {loading ? (
           <div className="w-full grid h-[6rem] place-items-center">
