@@ -1,15 +1,19 @@
 "use client";
 import { DocumentPlusIcon } from "@heroicons/react/24/solid";
-import React, { useRef, useState } from "react";
+import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
+import { ArtistOnboardingData } from "@omenai/shared-types";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { BsFile, BsImage } from "react-icons/bs";
 import { toast } from "sonner";
 
 export default function CarouselCVUpload() {
   const [cv, setCv] = useState<File | null>(null);
-
   const imagePickerRef = useRef<HTMLInputElement>(null);
-
   const acceptedFileTypes = ["pdf"];
+
+  const { updateOnboardingData, update_field_completion_state } =
+    artistOnboardingStore();
+
   return (
     <div className="flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] shadow-md">
       <div className="w-full">
@@ -22,6 +26,11 @@ export default function CarouselCVUpload() {
           <button
             onClick={() => {
               setCv(null);
+              updateOnboardingData("cv" as keyof ArtistOnboardingData, null);
+              update_field_completion_state(
+                "cv" as keyof ArtistOnboardingData,
+                false
+              );
             }}
             className="w-full h-full border border-dashed text-[14px] grid place-items-center duration-300 border-dark/20 rounded-[20px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
           >
@@ -44,14 +53,13 @@ export default function CarouselCVUpload() {
           hidden
           ref={imagePickerRef}
           onChange={(e) => {
-            // Check if input is actaully an image
-            console.log(e.target.files);
+            // Check if input is actaully a pdf document
             const type = e.target.files![0].type.split("/");
 
             if (!acceptedFileTypes.includes(type[1])) {
               toast.error("Error notification", {
                 description:
-                  "File type unsupported. Supported file types are: PDF",
+                  "File type is unsupported. Supported file types are: PDF",
                 style: {
                   background: "red",
                   color: "white",
@@ -61,6 +69,14 @@ export default function CarouselCVUpload() {
               return;
             } else {
               setCv(e.target.files![0]);
+              updateOnboardingData(
+                "cv" as keyof ArtistOnboardingData,
+                e.target.files![0]
+              );
+              update_field_completion_state(
+                "cv" as keyof ArtistOnboardingData,
+                true
+              );
               e.target.value = "";
             }
           }}

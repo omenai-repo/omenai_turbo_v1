@@ -58,7 +58,7 @@ export type ArtistDocumentationTypes = {
   socials?: { [key?: Socials]: string };
 };
 
-type Socials = "instagram" | "twitter" | "facebook" | "linkedin";
+type Socials = "instagram" | "twitter" | "linkedin";
 
 export type GallerySchemaTypes = {
   name: string;
@@ -645,6 +645,20 @@ export type ArtistCategorizationAnswerTypes = {
   biennale: "venice" | "other" | "none";
   museum_exhibition: "yes" | "no";
   art_fair: "yes" | "no";
+};
+
+type ArtistOnboardingData = {
+  bio: string;
+  cv: File | null;
+  graduate: string;
+  mfa: string;
+  biennale: "venice" | "other" | "none" | string;
+  museum_collection: string;
+  art_fair: string;
+  museum_exhibition: string;
+  solo: string;
+  group: string;
+  socials: { [K in Socials]?: string };
 };
 
 type ArtistCategorizationAlgorithmResult = {

@@ -41,8 +41,10 @@ export async function POST(request: NextRequest) {
 
     if (is_algorithmCalculated)
       throw new ForbiddenError(
-        "Categorization determined. Please update if necessary"
+        "Duplicate request detected. Cannot fulfill request."
       );
+
+    console.log(data.answers);
 
     // Calculate new algorithm
     const algorithm_result: ArtistCategorizationAlgorithmResult =

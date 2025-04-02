@@ -1,5 +1,7 @@
+import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
+import { ArtistOnboardingData } from "@omenai/shared-types";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { ChangeEvent } from "react";
 interface CarouselItemSelectProps {
   question: string;
   label: string;
@@ -11,6 +13,17 @@ export default function CarouselItemSelect({
   options,
 }: CarouselItemSelectProps) {
   const [selectedOption, setSelectedOption] = React.useState<string>("");
+  const { updateOnboardingData, update_field_completion_state } =
+    artistOnboardingStore();
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    updateOnboardingData(
+      label as keyof ArtistOnboardingData,
+      value.toLowerCase()
+    );
+    update_field_completion_state(label as keyof ArtistOnboardingData, true);
+    setSelectedOption(e.target.value);
+  };
   return (
     <div>
       <div className="flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/10 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[20px] drop-shadow-lg">
@@ -29,7 +42,7 @@ export default function CarouselItemSelect({
                   id={label}
                   value={option}
                   checked={selectedOption === option}
-                  onChange={() => setSelectedOption(option)}
+                  onChange={handleChange}
                   className="hidden"
                 />
                 <motion.div

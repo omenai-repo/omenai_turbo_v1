@@ -4,11 +4,10 @@ import FormController from "./FormController";
 import { registerAccount } from "@omenai/shared-services/register/registerAccount";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import uploadGalleryLogoContent from "../../uploadArtistLogo";
 import { logo_storage } from "@omenai/appwrite-config/appwrite";
-import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
+import uploadArtistLogoContent from "../../uploadArtistLogo";
 export default function FormInput() {
   const { artistSignupData, setIsLoading, clearData } = useArtistAuthStore();
 
@@ -45,11 +44,9 @@ export default function FormInput() {
       stateCode,
     } = artistSignupData;
 
-    console.log(artistSignupData);
-
     if (logo === null) return;
 
-    const fileUploaded = await uploadGalleryLogoContent(logo);
+    const fileUploaded = await uploadArtistLogoContent(logo);
 
     if (fileUploaded) {
       let file: { bucketId: string; fileId: string } = {

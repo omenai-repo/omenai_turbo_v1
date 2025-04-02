@@ -70,6 +70,8 @@ type ActionStoreTypes = {
   setSeaDragonZoomableImageViewerUrl: (url: string) => void;
   openSeadragonImageViewer: boolean;
   setOpenSeaDragonImageViewer: (value: boolean) => void;
+  openOnboardingCompletedModal: boolean;
+  setOpenOnboardingCompletedModal: (value: boolean) => void;
 };
 
 export const actionStore = create<ActionStoreTypes>((set, get) => ({
@@ -245,5 +247,9 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
   openSeadragonImageViewer: false,
   setOpenSeaDragonImageViewer: (value: boolean) => {
     set({ openSeadragonImageViewer: value });
+  },
+  openOnboardingCompletedModal: false,
+  setOpenOnboardingCompletedModal: (value: boolean) => {
+    set({ openOnboardingCompletedModal: value });
   },
 }));

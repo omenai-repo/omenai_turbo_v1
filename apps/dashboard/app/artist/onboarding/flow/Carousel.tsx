@@ -3,12 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import ClassNames from "embla-carousel-class-names";
-import {
-  NextButton,
-  PrevButton,
-  usePrevNextButtons,
-} from "./CarouselArrowButtons";
-import { DotButton, useDotButton } from "./CarouselDotButton";
+
 import CarouselItemText from "./CarouselItemText";
 import CarouselItemSelect from "./CarouselItemSelect";
 import {
@@ -18,6 +13,7 @@ import {
 import CarouselCVUpload from "./CarouselCVUpload";
 import CarouselSocials from "./CarouselSocials";
 import CarouselAcknowledgement from "./CarouselAcknowledgement";
+import { ArtistOnboardingData } from "@omenai/shared-types";
 
 const options: EmblaOptionsType = { containScroll: false };
 
@@ -52,8 +48,8 @@ const onboardingOptions = [
   {
     question: "Which Bienalle have you participated in?",
     type: "select",
-    label: "bienalle",
-    options: ["Venice", "Others", "None"],
+    label: "biennale",
+    options: ["Venice", "Other", "None"],
   },
   {
     question: "Have you been featured in an Art Fair by a gallery?",
@@ -86,7 +82,6 @@ const onboardingOptions = [
   {
     question: "",
     type: "confirmation",
-    label: "confirmation",
   },
 ];
 
@@ -145,7 +140,7 @@ const EmblaCarousel = () => {
               {options.type === "text" && (
                 <CarouselItemText
                   question={options.question}
-                  label={options.label}
+                  label={options.label as keyof ArtistOnboardingData}
                 />
               )}
               {options.type === "select" && options.options && (
