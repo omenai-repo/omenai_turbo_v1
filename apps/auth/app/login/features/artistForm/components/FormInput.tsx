@@ -89,7 +89,7 @@ export default function FormInput() {
               set_redirect_uri("");
               // TODO: Redirect to artist dashboard
               session.isOnboardingCompleted
-                ? router.replace(base_uri)
+                ? router.replace(`${dashboard_uri}/artist/app/overview`)
                 : router.replace(`${dashboard_uri}/artist/onboarding`);
               router.refresh();
             } else {
