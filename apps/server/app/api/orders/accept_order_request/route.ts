@@ -41,13 +41,13 @@ const calculate_taxes = async (
   }
 
   console.log(amount, shipping);
-  const nexus_state = await NexusTransactions.findOne({
-    stateCode: origin_address.stateCode,
-  });
+  // const nexus_state = await NexusTransactions.findOne({
+  //   stateCode: origin_address.stateCode,
+  // });
 
-  if (!nexus_state) return 0;
+  // if (!nexus_state) return 0;
 
-  if (!nexus_state.is_nexus_breached) return 0;
+  // if (!nexus_state.is_nexus_breached) return 0;
 
   const res = await client.taxForOrder({
     to_country: "CA",
