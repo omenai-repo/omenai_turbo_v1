@@ -1,13 +1,27 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  NotFoundError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { sendGalleryAcceptedMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryAcceptedMail";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
-    const { gallery_id, name, email } = await request.json();
+    const { gallery_id } = await request.json();
+
+    if (!gallery_id)
+      throw new ServerError("Invalid Parameters - Gallery ID is required");
+    const get_gallery = await AccountGallery.findOne(
+      { gallery_id },
+      "name, email"
+    );
+    if (!get_gallery)
+      throw new NotFoundError("Gallery not found for the given gallery ID");
+
+    const { name, email } = get_gallery;
 
     const verify_gallery = await AccountGallery.updateOne(
       { gallery_id },

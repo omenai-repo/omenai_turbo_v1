@@ -1,9 +1,10 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function createStripeCheckoutSession(
-  item: string,
+export async function createFlwCheckoutSession(
   amount: number,
-  seller_id: string,
+  customer: { email: string },
+  fullname: string,
+  tx_ref: string,
   meta: {
     buyer_id: string;
     buyer_email: string;
@@ -16,20 +17,19 @@ export async function createStripeCheckoutSession(
     unit_price: number;
     tax_fees: number;
   },
-  success_url: string,
-  cancel_url: string
+  redirect: string
 ) {
   try {
     const url = getApiUrl();
-    const res = await fetch(`${url}/api/stripe/createCheckoutSession`, {
+    const res = await fetch(`${url}/api/flw/createCheckoutSession`, {
       method: "POST",
       body: JSON.stringify({
-        item,
         amount,
-        seller_id,
+        customer,
+        fullname,
+        tx_ref,
         meta,
-        cancel_url,
-        success_url,
+        redirect,
       }),
     });
 
@@ -38,7 +38,7 @@ export async function createStripeCheckoutSession(
     return {
       isOk: res.ok,
       message: result.message,
-      url: result.url,
+      url: result.data,
     };
   } catch (error: any) {
     console.log(error);

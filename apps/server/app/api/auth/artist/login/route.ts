@@ -45,6 +45,7 @@ export async function POST(request: Request) {
       role,
       isOnboardingCompleted,
       artist_verified,
+      logo,
     } = artist;
 
     const session_payload = {
@@ -55,6 +56,7 @@ export async function POST(request: Request) {
       email: artist.email,
       isOnboardingCompleted,
       artist_verified,
+      logo,
     };
 
     await createSession(session_payload);

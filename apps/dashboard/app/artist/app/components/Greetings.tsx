@@ -30,6 +30,7 @@ export default function Greeting({ name }: { name: string }) {
       <div className="flex items-center gap-2 tracking-tighter">
         <span>{message}</span>
         <span>{name}</span>
+
         {icon}
       </div>
     </div>

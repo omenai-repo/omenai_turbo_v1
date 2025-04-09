@@ -7,12 +7,13 @@ import { useContext, useState } from "react";
 import { CiLock } from "react-icons/ci";
 import { toast } from "sonner";
 
-import { createCheckoutSession } from "@omenai/shared-services/stripe/createCheckoutSession";
+import { createStripeCheckoutSession } from "@omenai/shared-services/stripe/createCheckoutSession";
+import { createFlwCheckoutSession } from "@omenai/shared-services/flw/createCheckout";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { IndividualSchemaTypes, RoleAccess } from "@omenai/shared-types";
-
+import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 export default function PayNowButton({
   art_id,
   artwork,
@@ -33,7 +34,7 @@ export default function PayNowButton({
   lock_status: boolean;
   seller_email: string;
   seller_name: string;
-  role_access: RoleAccess;
+  role_access: "artist" | "gallery";
   shipping_cost: number;
   unit_price: number;
   tax_fees: number;
@@ -55,27 +56,52 @@ export default function PayNowButton({
         get_purchase_lock.data.lock_data.user_id ===
         (session as IndividualSchemaTypes)?.user_id
       ) {
-        const checkout_session = await createCheckoutSession(
-          artwork,
-          amount,
-          seller_id,
-          {
-            buyer_id: (session as IndividualSchemaTypes)?.user_id,
-            buyer_email: (session as IndividualSchemaTypes)?.email,
-            art_id,
-            seller_email,
-            seller_name,
+        let checkout_session_response;
+        console.log(role_access);
+        if (role_access === "artist") {
+          const checkout_session = await createFlwCheckoutSession(
+            amount,
+            { email: (session as IndividualSchemaTypes).email },
+            (session as IndividualSchemaTypes).name,
+            generateAlphaDigit(16),
+            {
+              buyer_id: (session as IndividualSchemaTypes).user_id,
+              buyer_email: (session as IndividualSchemaTypes).email,
+              art_id,
+              seller_email,
+              seller_name,
+              seller_id,
+              artwork_name: artwork,
+              shipping_cost,
+              unit_price,
+              tax_fees,
+            },
+            `${url}/verifyTransaction`
+          );
+          checkout_session_response = checkout_session;
+        } else {
+          const checkout_session = await createStripeCheckoutSession(
+            artwork,
+            amount,
             seller_id,
-            artwork_name: artwork,
-            shipping_cost,
-            unit_price,
-            tax_fees,
-          },
-          `${url}/payment/success`,
-          `${url}/payment/cancel?a_id=${art_id}&u_id=${(session as IndividualSchemaTypes)?.user_id}`
-        );
-
-        if (!checkout_session?.isOk) {
+            {
+              buyer_id: (session as IndividualSchemaTypes)?.user_id,
+              buyer_email: (session as IndividualSchemaTypes)?.email,
+              art_id,
+              seller_email,
+              seller_name,
+              seller_id,
+              artwork_name: artwork,
+              shipping_cost,
+              unit_price,
+              tax_fees,
+            },
+            `${url}/payment/success`,
+            `${url}/payment/cancel?a_id=${art_id}&u_id=${(session as IndividualSchemaTypes)?.user_id}`
+          );
+          checkout_session_response = checkout_session;
+        }
+        if (!checkout_session_response?.isOk) {
           toast.error("Error notification", {
             description:
               "Something went wrong, please try again or contact support",
@@ -87,7 +113,7 @@ export default function PayNowButton({
           });
         } else {
           toast.info("Checkout session initiated...Redirecting!");
-          router.replace(checkout_session.url);
+          router.replace(checkout_session_response.url);
         }
       } else {
         toast.error("Error notification", {

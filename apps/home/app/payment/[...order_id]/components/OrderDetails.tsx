@@ -109,7 +109,7 @@ export default function OrderDetails({
                   lock_status={lock_status}
                   seller_email={order.seller_details.email}
                   seller_name={order.seller_details.name}
-                  role_access={order.artwork_data.role_access}
+                  role_access={order.seller_designation}
                   shipping_cost={
                     +order.shipping_details.shipment_information.quote.fees
                   }
