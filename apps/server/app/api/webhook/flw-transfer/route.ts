@@ -217,6 +217,7 @@ export async function POST(request: Request) {
         `https://api.flutterwave.com/v3/transfers/${req.data.id}`
       );
 
+      console.log(verified_transaction);
       const client = await getMongoClient();
 
       const session = await client.startSession();

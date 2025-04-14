@@ -11,6 +11,7 @@ import { WalletTransaction } from "@omenai/shared-models/models/wallet/WalletTra
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function POST(request: Request) {
   try {
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
       reference: generateAlphaDigit(12),
       debit_currency: "USD",
       destination_branch_code: "GH280103",
-      callback_url: "https://webhook.site/fc3775eb-e301-4b1e-aaf5-0ad54ee0aa85",
+      callback_url: `${getApiUrl()}/api/webhook/flw-transfer`,
       narration: "Payment for goods purchased",
       meta: {
         wallet_id,
