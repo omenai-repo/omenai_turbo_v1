@@ -7,9 +7,9 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
-    const data = await request.json();
+    const { owner_id, base_currency } = await request.json();
 
-    const createWallet = await Wallet.create({ owner_id: data.owner_id });
+    const createWallet = await Wallet.create({ owner_id, base_currency });
 
     if (!createWallet)
       throw new ServerError(

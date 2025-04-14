@@ -17,11 +17,6 @@ export async function POST(request: Request) {
 
     if (!activities) throw new ServerError("No orders were found");
 
-    // const updatedActivities = activities.reduce(
-    //   (acc, current) => acc + current.age,
-    //   0
-    // );
-
     return NextResponse.json(
       {
         message: "Successful",

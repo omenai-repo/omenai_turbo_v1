@@ -1,15 +1,10 @@
 "use client";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
-import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
-import {
-  GallerySignupData,
-  AddressTypes,
-  ArtistSignupData,
-} from "@omenai/shared-types";
+import { AddressTypes, ArtistSignupData } from "@omenai/shared-types";
 import { City, ICity, IState, State } from "country-state-city";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
-import { MdError, MdOutlineArrowForward } from "react-icons/md";
+import { MdError } from "react-icons/md";
 
 type SelectInputProps = {
   label: string;

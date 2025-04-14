@@ -12,7 +12,8 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 
 export async function POST(request: Request) {
   try {
-    await connectMongoDB();
+    const client = await connectMongoDB();
+    const session = await client.startSession();
 
     const { id, password, code } = await request.json();
 
@@ -41,24 +42,25 @@ export async function POST(request: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    const updatePassword = await AccountGallery.updateOne(
-      { gallery_id: id },
-      { $set: { password: hashedPassword } }
-    );
-
-    if (!updatePassword)
-      throw new ServerError(
-        "Something went wrong with this request, Please contact support."
+    try {
+      session.startTransaction();
+      const updatePassword = await AccountGallery.updateOne(
+        { gallery_id: id },
+        { $set: { password: hashedPassword } }
       );
 
-    const delete_code = await VerificationCodes.deleteOne({
-      code,
-    });
+      const delete_code = await VerificationCodes.deleteOne({
+        code,
+      });
 
-    if (!delete_code)
-      throw new Error(
-        "Something went wrong with this request, Please contact support."
-      );
+      await Promise.all([updatePassword, delete_code]);
+
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+    } finally {
+      await session.endSession();
+    }
 
     return NextResponse.json(
       { message: "Password updated successfully" },

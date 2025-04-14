@@ -37,6 +37,7 @@ export type ArtistSchemaTypes = {
   algo_data_id?: string | null;
   role: AccessRoleTypes;
   wallet_id?: string | null;
+  base_currency: string;
   categorization?: ArtistCategorization;
   art_style: string | string[];
   documentation?: ArtistDocumentationTypes;
@@ -157,6 +158,7 @@ export type ArtistRegisterData = Pick<
 > & {
   address: AddressTypes;
   logo: string;
+  base_currency: string;
 };
 
 export type RouteIdentifier = "individual" | "gallery" | "artist";
@@ -413,7 +415,24 @@ export type WalletModelSchemaTypes = {
   available_balance: number;
   pending_balance: number;
   primary_withdrawal_account?: WithdrawalAccount | null;
+  wallet_currency: string;
+  base_currency: string;
 };
+export type WalletTransactionModelSchemaTypes = {
+  wallet_id: string;
+  trans_amount: number;
+  trans_status: WalletTransactionStatusTypes;
+  trans_date: Date;
+  trans_id: string;
+  trans_flw_ref_id: string;
+};
+
+export type WalletTransactionStatusTypes =
+  | "PENDING"
+  | "SUCCESSFUL"
+  | "FAILED"
+  | "NEW";
+
 export type WithdrawalAccount = {
   account_number: number;
   bank_name: string;
@@ -422,6 +441,7 @@ export type WithdrawalAccount = {
   bank_code: string;
   bank_branch?: string;
   bank_country: string;
+  beneficiary_id: number;
 };
 
 export type PurchaseTransactionModelSchemaTypes = {

@@ -14,8 +14,6 @@ export async function POST(request: Request) {
       { $set: { logo: url } }
     );
 
-    // if (!updateLogo) throw new ConflictError("Invalid code");
-
     return NextResponse.json(
       {
         message: "Logo updated",

@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       { $set: { ...data.filter } }
     );
 
-    if (!updateArtworkPrice)
+    if (updateArtworkPrice.modifiedCount === 0)
       throw new ServerError("Request could not be completed at this time.");
 
     return NextResponse.json(

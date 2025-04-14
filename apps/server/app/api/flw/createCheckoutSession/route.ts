@@ -1,5 +1,3 @@
-import { string } from "zod";
-import { encryptPayload } from "@omenai/shared-lib/encryption/encrypt_payload";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
@@ -8,7 +6,7 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     const payload = {
-      currency: "USD",
+      currency: "NGN",
       customer: data.customer,
       amount: data.amount,
       email: data.customer.email,

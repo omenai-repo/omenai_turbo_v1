@@ -66,6 +66,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       type: String,
       default: () => "",
     },
+    base_currency: { type: String, required: true },
 
     role: {
       type: String,

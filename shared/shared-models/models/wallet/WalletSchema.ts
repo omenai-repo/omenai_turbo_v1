@@ -12,6 +12,8 @@ const wallet = new Schema<WalletModelSchemaTypes>(
       type: Schema.Types.Mixed,
       default: () => null,
     },
+    wallet_currency: { type: String, default: () => "USD" },
+    base_currency: { type: String, required: true },
   },
   { timestamps: true }
 );

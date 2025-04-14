@@ -46,11 +46,11 @@ export async function POST(request: Request) {
 
     const updateAccountInfo = await AccountArtist.updateOne(filter, update);
 
-    if (!updateAccountInfo)
+    if (updateAccountInfo.modifiedCount === 0)
       throw new ServerError("A server error has occured, please try again");
 
     await VerificationCodes.findOneAndDelete({ code: id });
-    
+
     return NextResponse.json(
       { message: "Password updated! Please login with new credentials." },
       { status: 200 }

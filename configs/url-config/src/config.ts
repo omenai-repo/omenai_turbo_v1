@@ -1,7 +1,7 @@
 export const getApiUrl = (): string => {
   return process.env.NODE_ENV === "production"
     ? "https://api.omenai.app"
-    : "http://localhost:8080";
+    : "http://localhost:8001";
 };
 export const session_auth_url = (): string => {
   if (process.env.NODE_ENV === "development") {

@@ -128,7 +128,7 @@ export async function POST(request: Request) {
         }
       );
 
-      if (!update_order_data) {
+      if (update_order_data.modifiedCount === 0) {
         return NextResponse.json(
           {
             message: "Unable to verify transaction. Please contact support3",

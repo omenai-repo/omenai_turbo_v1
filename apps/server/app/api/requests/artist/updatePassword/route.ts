@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       { $set: { password: hashedPassword } }
     );
 
-    if (!updatePassword)
+    if (updatePassword.modifiedCount === 0)
       throw new ServerError(
         "Something went wrong with this request, Please contact support."
       );

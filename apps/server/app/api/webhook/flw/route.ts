@@ -116,7 +116,7 @@ export async function POST(request: Request) {
             }
           ).session(session);
 
-          await Proration.findOneAndUpdate(
+          await Proration.updateOne(
             { gallery_id },
             { $inc: { value: 1 } },
             { upsert: true, new: true, setDefaultsOnInsert: true }

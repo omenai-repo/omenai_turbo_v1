@@ -2,6 +2,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +15,10 @@ export async function POST(request: Request) {
       { $set: { logo: url } }
     );
 
-    // if (!updateLogo) throw new ConflictError("Invalid code");
+    if (updateLogo.modifiedCount === 0)
+      throw new ServerError(
+        "Error updating logo. Please try again or contact support"
+      );
 
     return NextResponse.json(
       {

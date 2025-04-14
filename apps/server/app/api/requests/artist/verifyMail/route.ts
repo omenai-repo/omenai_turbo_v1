@@ -13,13 +13,14 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 export async function POST(request: Request) {
+  const client = await connectMongoDB();
+  const session = await client.startSession();
   try {
     const ip = await getIp();
 
     const { success } = await limiter.limit(ip);
     if (!success)
       throw new RateLimitExceededError("Too many requests, try again later.");
-    await connectMongoDB();
 
     const { params, token } = await request.json();
 
@@ -40,9 +41,20 @@ export async function POST(request: Request) {
 
     if (!isTokenActive) throw new BadRequestError("Invalid token data");
 
-    await AccountArtist.updateOne({ artist_id: params }, { verified: true });
+    try {
+      session.startTransaction();
+      await AccountArtist.updateOne({ artist_id: params }, { verified: true });
 
-    await VerificationCodes.deleteOne({ code: token, author: params });
+      await VerificationCodes.deleteOne({
+        code: token,
+        author: params,
+      });
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+    } finally {
+      session.endSession();
+    }
 
     return NextResponse.json(
       { message: "Verification was successful. Please login" },

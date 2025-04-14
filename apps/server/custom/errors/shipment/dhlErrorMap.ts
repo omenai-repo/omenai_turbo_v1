@@ -25,6 +25,9 @@ export const dhlErrorMap: { [code: string]: string } = {
     "The destination location for this shipment is invalid, please check the address and try again",
   "420504":
     "The Origin location for this shipment is invalid, please check the address and try again",
-
+  "420506":
+    "Invalid Postcode Format for this country. Valid formats: CA - A9A 9A9(6),A9A 9A(6)",
+  "410301":
+    "No shipment products are available between the origin and destination country",
   // Add additional mappings as needed
 };

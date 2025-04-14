@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 
     const updateAccountInfo = await AccountGallery.updateOne(filter, update);
 
-    if (!updateAccountInfo)
+    if (updateAccountInfo.modifiedCount === 0)
       throw new ServerError("A server error has occured, please try again");
 
     await VerificationCodes.findOneAndDelete({ code: id });

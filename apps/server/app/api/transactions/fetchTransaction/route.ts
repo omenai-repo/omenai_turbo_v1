@@ -7,10 +7,10 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 export async function POST(request: Request) {
   try {
     await connectMongoDB();
-    const { gallery_id } = await request.json();
+    const { trans_recipient_id } = await request.json();
 
     const fetchTransactions = await PurchaseTransactions.find({
-      trans_recipient_id: gallery_id,
+      trans_recipient_id,
     });
 
     if (!fetchTransactions)

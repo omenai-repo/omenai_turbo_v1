@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       { $inc: { impressions: value === true ? 1 : -1 } }
     );
 
-    if (!updateImpression)
+    if (updateImpression.modifiedCount === 0)
       throw new ServerError("An unexpected error has occured.");
 
     if (value) {

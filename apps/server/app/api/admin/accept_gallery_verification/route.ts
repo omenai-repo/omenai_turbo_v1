@@ -28,7 +28,8 @@ export async function POST(request: Request) {
       { $set: { gallery_verified: true } }
     );
 
-    if (!verify_gallery) throw new ServerError("Something went wrong");
+    if (verify_gallery.modifiedCount === 0)
+      throw new ServerError("Something went wrong");
 
     // TODO: Send mail to gallery
     sendGalleryAcceptedMail({

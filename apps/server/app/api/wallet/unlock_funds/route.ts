@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       { new: true } // Return updated document
     );
 
-    if (!move_funds_to_available_balance)
+    if (move_funds_to_available_balance.modifiedCount === 0)
       throw new ServerError(
         "An error was encountered. Please try again or contact IT support"
       );

@@ -13,12 +13,13 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 
 export async function POST(request: Request) {
   try {
+    const client = await connectMongoDB();
+    const session = await client.startSession();
     const ip = await getIp();
 
     const { success } = await limiter.limit(ip);
     if (!success)
       throw new RateLimitExceededError("Too many requests, try again later.");
-    await connectMongoDB();
 
     const { params, token } = await request.json();
 
@@ -39,9 +40,25 @@ export async function POST(request: Request) {
 
     if (!isTokenActive) throw new BadRequestError("Invalid token data");
 
-    await AccountGallery.updateOne({ gallery_id: params }, { verified: true });
+    try {
+      await session.startTransaction();
 
-    await VerificationCodes.deleteOne({ code: token, author: params });
+      await AccountGallery.updateOne(
+        { gallery_id: params },
+        { verified: true }
+      ).session(session);
+
+      await VerificationCodes.deleteOne({
+        code: token,
+        author: params,
+      }).session(session);
+
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+    } finally {
+      await session.endSession();
+    }
 
     return NextResponse.json(
       { message: "Verification was successful. Please login" },

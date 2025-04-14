@@ -8,6 +8,7 @@ import { logo_storage } from "@omenai/appwrite-config/appwrite";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
 import uploadArtistLogoContent from "../../uploadArtistLogo";
+import { artist_countries_codes_currency } from "@omenai/shared-json/src/artist_onboarding_countries";
 export default function FormInput() {
   const { artistSignupData, setIsLoading, clearData } = useArtistAuthStore();
 
@@ -53,6 +54,9 @@ export default function FormInput() {
         bucketId: fileUploaded.bucketId,
         fileId: fileUploaded.$id,
       };
+      const base_currency = artist_countries_codes_currency.find(
+        (item) => item.alpha2 === countryCode
+      );
       const payload = {
         name,
         email,
@@ -66,6 +70,7 @@ export default function FormInput() {
           zip,
           stateCode,
         },
+        base_currency: base_currency?.currency || "USD",
         art_style,
         logo: file.fileId,
       };

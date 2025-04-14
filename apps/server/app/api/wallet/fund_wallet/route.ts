@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       { $inc: { pending_balance: data.amount } }
     );
 
-    if (!fund_wallet)
+    if (fund_wallet.modifiedCount === 0)
       throw new ServerError(
         "An error was encountered. Please try again or contact IT support"
       );

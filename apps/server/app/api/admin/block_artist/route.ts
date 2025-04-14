@@ -14,7 +14,8 @@ export async function POST(request: Request) {
       { $set: { status } }
     );
 
-    if (!block_artist) throw new ServerError("Something went wrong");
+    if (block_artist.modifiedCount === 0)
+      throw new ServerError("Something went wrong");
 
     // TODO: Send mail to gallery
 

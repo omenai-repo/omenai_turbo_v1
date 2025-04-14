@@ -46,6 +46,7 @@ export async function POST(request: Request) {
       isOnboardingCompleted,
       artist_verified,
       logo,
+      base_currency,
     } = artist;
 
     const session_payload = {
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
       isOnboardingCompleted,
       artist_verified,
       logo,
+      base_currency,
     };
 
     await createSession(session_payload);
