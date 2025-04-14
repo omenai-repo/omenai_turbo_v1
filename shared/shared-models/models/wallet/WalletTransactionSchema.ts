@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const walletTransaction = new Schema<WalletTransactionModelSchemaTypes>(
   {
-    wallet_id: { type: String, required: true, unique: true },
+    wallet_id: { type: String, required: true },
     trans_amount: { type: Number, required: true },
     trans_status: { type: String, required: true },
     trans_date: { type: Date, required: true },

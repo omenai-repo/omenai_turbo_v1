@@ -3,7 +3,14 @@ import { encryptPayload } from "@omenai/shared-lib/encryption/encrypt_payload";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { WithdrawalAccount } from "@omenai/shared-types";
-import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
+import {
+  generateAlphaDigit,
+  generateDigit,
+} from "@omenai/shared-utils/src/generateToken";
+import { WalletTransaction } from "@omenai/shared-models/models/wallet/WalletTransactionSchema";
+import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
+import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 export async function POST(request: Request) {
   try {
@@ -18,6 +25,8 @@ export async function POST(request: Request) {
     //   currency: string;
     //   url: string;
     // } = await request.json();
+    await connectMongoDB();
+    const { wallet_id, amount } = await request.json();
 
     const payload = {
       account_bank: "044",
@@ -27,7 +36,7 @@ export async function POST(request: Request) {
       // debit_subaccount: "PSA******07974",
       // beneficiary: 3768,
       // beneficiary_name: "Yemi Desola",
-      reference: "newFLWXTrans",
+      reference: generateAlphaDigit(12),
       debit_currency: "USD",
       destination_branch_code: "GH280103",
       callback_url: "https://webhook.site/fc3775eb-e301-4b1e-aaf5-0ad54ee0aa85",
@@ -48,7 +57,15 @@ export async function POST(request: Request) {
     //   narration: `Omenai wallet transfer`,
     // };
 
-    console.log(payload);
+    const get_wallet = await Wallet.findOne({ wallet_id }, "available_balance");
+    if (!get_wallet)
+      throw new NotFoundError("No wallet with the given ID found");
+
+    if (get_wallet.available_balance < amount)
+      return NextResponse.json(
+        { message: "Insufficient wallet balance" },
+        { status: 403 }
+      );
 
     const options = {
       method: "POST",
@@ -68,12 +85,27 @@ export async function POST(request: Request) {
 
     if (!response.ok)
       return NextResponse.json({ message: result.message }, { status: 400 });
-    console.log(result);
 
-    return NextResponse.json({
-      message: "Done",
-      data: result,
-    });
+    if (result.status === "success") {
+      const wallet_transaction_payload = {
+        wallet_id,
+        trans_amount: result.data.amount,
+        trans_status: "PENDING",
+        trans_date: new Date(),
+        trans_flw_ref_id: result.data.id,
+      };
+
+      await WalletTransaction.create({ ...wallet_transaction_payload });
+      await Wallet.updateOne(
+        { wallet_id },
+        { $inc: { available_balance: -result.data.amount } }
+      );
+
+      return NextResponse.json({
+        message: "Done",
+        data: result,
+      });
+    }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 
