@@ -104,16 +104,3 @@ export async function POST(request: NextRequest) {
     await session.endSession();
   }
 }
-
-// TODO:       // Update artist bio etc
-// await AccountArtist.updateOne(
-//   { artist_id: artist.artist_id },
-//   {
-//     $set: {
-//       bio: data.bio,
-//       algo_data_id: create_categorization[0].id,
-//       categorization:
-//         create_categorization[0].categorization.artist_categorization,
-//     },
-//   }
-// ).session(session);

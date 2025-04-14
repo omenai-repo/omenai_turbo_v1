@@ -13,26 +13,25 @@ export async function POST(request: Request) {
     const { owner_id } = await request.json();
 
     // Check if wallet exists
-    const fetch_wallet = await Wallet.findOne(
+    const fetchWallet = await Wallet.findOne(
       { owner_id },
-      "available_balance pending_balance wallet_id"
+      "available_balance pending_balance wallet_id primary_withdrawal_account, wallet_currency, base_currency"
     );
 
-    if (!fetch_wallet)
+    if (!fetchWallet)
       throw new NotFoundError(
         "Wallet doesn't exists for this user, please escalate to IT support"
       );
 
-    const balances = {
-      available: fetch_wallet.available_balance,
-      pending: fetch_wallet.pending_balance,
-      wallet_id: fetch_wallet.wallet_id,
-    };
+    if (!fetchWallet)
+      throw new ServerError(
+        "An error was encountered. Please try again or contact IT support"
+      );
 
     return NextResponse.json(
       {
-        message: "Wallet balance fetched",
-        balances,
+        message: "Wallet data fetched",
+        wallet: fetchWallet,
       },
       { status: 200 }
     );
