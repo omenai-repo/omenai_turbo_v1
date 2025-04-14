@@ -7,7 +7,7 @@ const walletTransaction = new Schema<WalletTransactionModelSchemaTypes>(
     wallet_id: { type: String, required: true },
     trans_amount: { type: Number, required: true },
     trans_status: { type: String, required: true },
-    trans_date: { type: Date, required: true },
+    trans_date: { type: Schema.Types.Mixed, required: true },
     trans_id: { type: String, default: () => uuidv4(), unique: true },
     trans_flw_ref_id: { type: String, required: true },
   },

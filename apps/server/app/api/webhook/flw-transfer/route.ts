@@ -170,11 +170,18 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
   const { amount, id, meta, status } = verified_transaction.data;
   try {
     session.startTransaction();
+
+    const now = new Date();
+    const date_obj = {
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+      day: now.getDate(),
+    };
     const wallet_transaction_payload = {
       wallet_id: meta.wallet_id,
       trans_amount: amount,
       trans_status: status,
-      trans_date: new Date(),
+      trans_date: date_obj,
       trans_flw_ref_id: id,
     };
     await Promise.all([

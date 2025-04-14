@@ -422,7 +422,7 @@ export type WalletTransactionModelSchemaTypes = {
   wallet_id: string;
   trans_amount: number;
   trans_status: WalletTransactionStatusTypes;
-  trans_date: Date;
+  trans_date: { year: number; month: number; day: number };
   trans_id: string;
   trans_flw_ref_id: string;
 };
