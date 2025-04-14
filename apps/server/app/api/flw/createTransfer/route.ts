@@ -41,6 +41,9 @@ export async function POST(request: Request) {
       destination_branch_code: "GH280103",
       callback_url: "https://webhook.site/fc3775eb-e301-4b1e-aaf5-0ad54ee0aa85",
       narration: "Payment for goods purchased",
+      meta: {
+        wallet_id,
+      },
     };
 
     // const payload = {

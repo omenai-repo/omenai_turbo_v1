@@ -67,7 +67,7 @@ async function checkAndHandleTransferStatus(
     });
 
     if (!fetchTransactionInDB) {
-      return await handleStatusUtility(status, verified_transaction, session);
+      return await handleTransferCreation(verified_transaction, session);
     } else {
       // Check status against webhook status
 
@@ -152,6 +152,36 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
       Wallet.updateOne(
         { wallet_id: verified_transaction.data.meta.wallet_id },
         { $inc: { available_balance: verified_transaction.data.amount } }
+      ),
+    ]);
+
+    await session.commitTransaction();
+    // TODO: Send a mail, defer to job queue
+    return { isOk: true };
+  } catch (error) {
+    await session.abortTransaction();
+    return { isOk: false };
+  } finally {
+    session.endSession();
+  }
+}
+
+async function handleTransferCreation(verified_transaction: any, session: any) {
+  const { amount, id, meta, status } = verified_transaction.data;
+  try {
+    session.startTransaction();
+    const wallet_transaction_payload = {
+      wallet_id: meta.wallet_id,
+      trans_amount: amount,
+      trans_status: status,
+      trans_date: new Date(),
+      trans_flw_ref_id: id,
+    };
+    await Promise.all([
+      WalletTransaction.create({ ...wallet_transaction_payload }),
+      Wallet.updateOne(
+        { wallet_id: meta.wallet_id },
+        { $inc: { available_balance: -amount } }
       ),
     ]);
 
