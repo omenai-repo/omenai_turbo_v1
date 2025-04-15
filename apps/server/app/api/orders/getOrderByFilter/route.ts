@@ -1,23 +1,28 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-export async function POST(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     await connectMongoDB();
 
-    const { id, filter } = await request.json();
+    const searchParams = request.nextUrl.searchParams;
+    const id = searchParams.get("id");
 
     const orders = await CreateOrder.find({
       "seller_details.id": id,
-      "order_accepted.status": filter,
+      "order_accepted.status": "",
     })
       .sort({ updatedAt: -1 })
       .exec();
 
-    if (!orders) throw new ServerError("No orders were found");
+    if (!orders)
+      return NextResponse.json(
+        { message: "No orders were found matching this filter", data: [] },
+        { status: 200 }
+      );
 
     return NextResponse.json(
       {
