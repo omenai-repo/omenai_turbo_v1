@@ -1,16 +1,18 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   NotFoundError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-export async function POST(request: Request) {
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const owner_id = searchParams.get("id");
+
   try {
     await connectMongoDB();
-    const { owner_id } = await request.json();
 
     // Check if wallet exists
     const fetchWallet = await Wallet.findOne(
