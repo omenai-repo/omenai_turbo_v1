@@ -15,10 +15,7 @@ export async function GET(request: NextRequest) {
     await connectMongoDB();
 
     // Check if wallet exists
-    const fetchWallet = await Wallet.findOne(
-      { owner_id },
-      "available_balance pending_balance wallet_id primary_withdrawal_account, wallet_currency, base_currency"
-    );
+    const fetchWallet = await Wallet.findOne({ owner_id });
 
     if (!fetchWallet)
       throw new NotFoundError(
