@@ -52,6 +52,7 @@ export type ArtistSignupData = {
   art_style: string | string[];
   address: AddressTypes;
   logo: File | null;
+  base_currency: string;
 };
 
 export type ArtistDocumentationTypes = {
@@ -417,6 +418,7 @@ export type WalletModelSchemaTypes = {
   primary_withdrawal_account?: WithdrawalAccount | null;
   wallet_currency: string;
   base_currency: string;
+  wallet_pin: string | null;
 };
 export type WalletTransactionModelSchemaTypes = {
   wallet_id: string;

@@ -6,9 +6,9 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     const payload = {
-      currency: "NGN",
+      currency: "USD",
       customer: data.customer,
-      amount: data.amount,
+      amount: 5,
       email: data.customer.email,
       fullname: data.customer.name,
       tx_ref: data.tx_ref,

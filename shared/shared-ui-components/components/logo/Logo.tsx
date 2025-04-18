@@ -16,7 +16,7 @@ export const GalleryLogo = ({ className, theme = "dark" }: LogoProps) => {
       >
         <Image
           src={
-            "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/679292dc001c0e14f322/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
           }
           alt="omenai logo"
           width={130}
@@ -38,7 +38,7 @@ export const AdminLogo = ({ className, theme = "dark" }: LogoProps) => {
       >
         <Image
           src={
-            "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/679292dc001c0e14f322/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
           }
           alt="omenai logo"
           width={130}
@@ -65,7 +65,7 @@ export const IndividualLogo = ({ className }: LogoProps) => {
       <Link href={base_uri} className={`flex gap-1 items-end ${className}`}>
         <Image
           src={
-            "https://cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/679292dc001c0e14f322/view?project=66aa198b0038ad614178&project=66aa198b0038ad614178&mode=admin"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
           }
           alt="omenai logo"
           width={130}

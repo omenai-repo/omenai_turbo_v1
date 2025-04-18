@@ -14,6 +14,7 @@ const wallet = new Schema<WalletModelSchemaTypes>(
     },
     wallet_currency: { type: String, default: () => "USD" },
     base_currency: { type: String, required: true },
+    wallet_pin: { type: String, default: () => null },
   },
   { timestamps: true }
 );

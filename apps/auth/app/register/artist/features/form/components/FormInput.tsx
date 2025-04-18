@@ -43,6 +43,7 @@ export default function FormInput() {
       zip,
       art_style,
       stateCode,
+      base_currency,
     } = artistSignupData;
 
     if (logo === null) return;
@@ -54,9 +55,7 @@ export default function FormInput() {
         bucketId: fileUploaded.bucketId,
         fileId: fileUploaded.$id,
       };
-      const base_currency = artist_countries_codes_currency.find(
-        (item) => item.alpha2 === countryCode
-      );
+
       const payload = {
         name,
         email,
@@ -70,7 +69,7 @@ export default function FormInput() {
           zip,
           stateCode,
         },
-        base_currency: base_currency?.currency || "USD",
+        base_currency,
         art_style,
         logo: file.fileId,
       };

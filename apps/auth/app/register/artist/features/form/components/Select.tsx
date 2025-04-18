@@ -40,6 +40,8 @@ export default function SelectInput({
     const value = e.target.value;
     const selectedCode =
       e.target.options[e.target.selectedIndex].getAttribute("data-code");
+    const selectedCurrency =
+      e.target.options[e.target.selectedIndex].getAttribute("data-currency");
 
     updateArtistSignupData(labelText, value);
     if (labelText === "country") {
@@ -47,6 +49,7 @@ export default function SelectInput({
       updateArtistSignupData("city", "");
       setSelectedCityList([]);
       updateArtistSignupData("countryCode", selectedCode as string);
+      updateArtistSignupData("base_currency", selectedCurrency as string);
       const stateList = State.getStatesOfCountry(selectedCode as string);
       setSelectedStateList(stateList);
     }
@@ -108,6 +111,7 @@ export default function SelectInput({
                         key={item.alpha2}
                         value={item.name}
                         data-code={item.alpha2}
+                        data-currency={item.currency}
                         className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
                       >
                         {item.name}

@@ -23,12 +23,12 @@ export async function POST(request: Request) {
 
     const payload = {
       account_bank: account_details.bank_code,
-      account_number: account_details.account_number,
+      account_number: Number(account_details.account_number),
       beneficiary_name: account_details.account_name,
       currency: base_currency,
       bank_name: account_details.bank_name,
     };
-
+    console.log(payload);
     // Check if wallet exists
     const wallet_exists = await Wallet.findOne({ owner_id });
 
@@ -55,7 +55,10 @@ export async function POST(request: Request) {
     const result = await response.json();
 
     if (!response.ok)
-      return NextResponse.json({ message: result.message }, { status: 400 });
+      return NextResponse.json(
+        { message: result.message, data: result },
+        { status: 400 }
+      );
 
     const updated_account_data = {
       ...account_details,
@@ -82,6 +85,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.log(error);
 
     return NextResponse.json(
       { message: error_response?.message },

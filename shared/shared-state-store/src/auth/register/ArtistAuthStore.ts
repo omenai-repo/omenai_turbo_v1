@@ -16,7 +16,7 @@ type ArtistAuthStoreTypes = {
   setIsLoading: () => void;
   clearData: () => void;
   isFieldDirty: Record<
-    | keyof Omit<ArtistSignupData, "address">
+    | keyof Omit<ArtistSignupData, "address" | "base_currency">
     | keyof Omit<AddressTypes, "countryCode" | "stateCode">,
     boolean
   >;
@@ -59,6 +59,7 @@ export const useArtistAuthStore = create<ArtistAuthStoreTypes>((set, get) => ({
     zip: "",
     logo: null,
     art_style: "",
+    base_currency: "",
   },
 
   // UPDATE SIGNUP FORM DATA ON INPUT CHANGE
@@ -106,6 +107,7 @@ export const useArtistAuthStore = create<ArtistAuthStoreTypes>((set, get) => ({
         countryCode: "",
         art_style: "",
         logo: null,
+        base_currency: "",
       },
       currentArtistSignupFormIndex: 0,
     });

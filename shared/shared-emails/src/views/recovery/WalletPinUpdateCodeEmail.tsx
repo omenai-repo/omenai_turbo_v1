@@ -1,4 +1,3 @@
-import { getApiUrl, auth_uri } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
@@ -14,12 +13,7 @@ import {
   Text,
 } from "@react-email/components";
 
-const PasswordRecoveryEmail = (
-  username: string,
-  token: string,
-  route: string
-) => {
-  const url = auth_uri();
+const WalletPinUpdateCode = (username: string, token: string) => {
   return (
     <Html>
       <Head />
@@ -36,20 +30,21 @@ const PasswordRecoveryEmail = (
               className="mx-auto my-10"
             />
             <Heading className="text-black text-[24px] font-normal text-center p-0 mb-[20px] mx-0">
-              Password Reset verification
+              Pin reset code
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">
               Dear {username},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              We have received a request to reset your password. Below, you will
-              find your verification link. Please note that the validity of this
-              link will expire in <strong>10 minutes.</strong>
+              We have received a request to reset your wallet pin for your
+              Omenai Wallet account. Below, you will find your Confirmation
+              code. Please note that the validity of this code will expire in{" "}
+              <strong>10 minutes.</strong>
             </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-[14px] font-normal leading-[24px]">
-                <strong>{`${url}/reset/${route}/${token}`}</strong>
+              <Text className="text-black text-[14px] font-bold leading-[24px]">
+                {token}
               </Text>
             </Section>
 
@@ -85,4 +80,4 @@ const PasswordRecoveryEmail = (
   );
 };
 
-export default PasswordRecoveryEmail;
+export default WalletPinUpdateCode;

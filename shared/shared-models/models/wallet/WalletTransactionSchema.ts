@@ -1,4 +1,5 @@
 import { WalletTransactionModelSchemaTypes } from "@omenai/shared-types";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -8,7 +9,11 @@ const walletTransaction = new Schema<WalletTransactionModelSchemaTypes>(
     trans_amount: { type: Number, required: true },
     trans_status: { type: String, required: true },
     trans_date: { type: Schema.Types.Mixed, required: true },
-    trans_id: { type: String, default: () => uuidv4(), unique: true },
+    trans_id: {
+      type: String,
+      default: () => `OM_${generateDigit(7)}`,
+      unique: true,
+    },
     trans_flw_ref_id: { type: String, required: true },
   },
   { timestamps: true }

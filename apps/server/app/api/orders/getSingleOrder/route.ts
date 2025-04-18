@@ -2,6 +2,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 
 export async function POST(request: Request) {
   try {
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
 
     const order = await CreateOrder.findOne({ order_id });
 
-    // if (!order) throw new ServerError("No order matching this id found");
+    if (!order) throw new ServerError("No order matching this id found");
 
     return NextResponse.json(
       {
