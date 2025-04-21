@@ -460,11 +460,9 @@ export async function POST(request: Request) {
     const session = await client.startSession();
 
     if (transactionType === "subscription") {
-      console.log(verified_transaction);
-
-      await handleSubscriptionPayment(transactionType, req, session);
+      await handleSubscriptionPayment(verified_transaction, req, session);
     } else {
-      await handlePurchaseTransaction(transactionType, req, session);
+      await handlePurchaseTransaction(verified_transaction, req, session);
     }
   }
 
