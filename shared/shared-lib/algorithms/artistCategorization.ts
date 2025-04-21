@@ -36,19 +36,19 @@ const ratingCategories: {
   {
     min: 30,
     max: 49,
-    rating: "Early Mid-career",
+    rating: "Early Mid-Career",
     price_range: { min: 4000, max: 5750 },
   },
   {
     min: 50,
     max: 69,
-    rating: "Mid-career",
+    rating: "Mid-Career",
     price_range: { min: 5000, max: 9000 },
   },
   {
     min: 70,
     max: 89,
-    rating: "Late Mid-career",
+    rating: "Late Mid-Career",
     price_range: { min: 6500, max: 10000 },
   },
   {
