@@ -4,6 +4,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 export async function POST(request: Request) {
   try {
     const data = await request.json();
+    console.log(data);
     const response = await fetch(
       "https://api.flutterwave.com/v3/validate-charge",
       {

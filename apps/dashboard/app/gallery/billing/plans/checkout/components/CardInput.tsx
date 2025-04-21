@@ -45,7 +45,7 @@ export default function CardInput({
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const interval = searchParams.get("plan_interval");
+  const interval = searchParams.get("interval");
   const plan_object_id = searchParams.get("plan_id");
   const charge_type = searchParams.get("charge_type");
   const redirect = searchParams.get("redirect");
@@ -88,6 +88,7 @@ export default function CardInput({
         className: "class",
       });
     else {
+      console.log(interval);
       const data: FLWDirectChargeDataTypes & { name: string } = {
         ...card_info,
         year: card_info.year.slice(2, 4),

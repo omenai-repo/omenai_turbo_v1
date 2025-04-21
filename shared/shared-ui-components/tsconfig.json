@@ -21,6 +21,7 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
       "@babel/types": ["node_modules/@babel/types"]
     }

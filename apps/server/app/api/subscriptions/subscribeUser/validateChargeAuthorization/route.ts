@@ -6,6 +6,8 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
+    console.log(data);
+
     const payload_data = {
       card_number: data.card,
       cvv: data.cvv,
@@ -17,7 +19,6 @@ export async function POST(request: Request) {
       fullname: data.customer.name,
       tx_ref: `${data.tx_ref}&${data.customer.gallery_id}&${data.customer.plan_id}&${data.customer.plan_interval}&${data.charge_type}`,
       redirect_url: data.redirect,
-
       authorization: data.authorization,
     };
     const encrypted_payload = encryptPayload(

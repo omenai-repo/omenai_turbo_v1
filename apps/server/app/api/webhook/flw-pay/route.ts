@@ -79,7 +79,7 @@ async function handleSubscriptionPayment(
     return NextResponse.json({ status: 200 });
   }
 
-  if (req.data.status === "failed") {
+  if (verified_transaction.data.status === "failed") {
     sendSubscriptionPaymentFailedMail({
       name: req.data.customer.name,
       email: req.data.customer.email,
@@ -90,7 +90,7 @@ async function handleSubscriptionPayment(
     return NextResponse.json({ status: 200 });
   }
 
-  if (req.data.status === "pending") {
+  if (verified_transaction.data.status === "pending") {
     return NextResponse.json({ status: 401 });
   }
 
@@ -451,6 +451,8 @@ export async function POST(request: Request) {
     const verified_transaction = await verifyFlutterwaveTransaction(
       req.data.id
     );
+
+    console.log(req);
 
     console.log(verified_transaction);
 
