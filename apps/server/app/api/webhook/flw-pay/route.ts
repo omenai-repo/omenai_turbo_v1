@@ -154,7 +154,9 @@ async function handleSubscriptionPayment(
         }).session(session);
         console.log(10);
         const expiry_date = getSubscriptionExpiryDate(plan_interval);
-        const plan = await SubscriptionPlan.findById(plan_id).session(session);
+        const plan = await SubscriptionPlan.findOne({ plan_id }).session(
+          session
+        );
         console.log(11);
         const subscription_data = {
           card: verified_transaction.data.card,
