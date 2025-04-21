@@ -75,10 +75,11 @@ async function handleSubscriptionPayment(
     reference: req.data.id,
   });
 
+  console.log(1);
   if (existingTransaction) {
     return NextResponse.json({ status: 200 });
   }
-
+  console.log(2);
   if (verified_transaction.data.status === "failed") {
     sendSubscriptionPaymentFailedMail({
       name: req.data.customer.name,
@@ -89,11 +90,11 @@ async function handleSubscriptionPayment(
 
     return NextResponse.json({ status: 200 });
   }
-
+  console.log(3);
   if (verified_transaction.data.status === "pending") {
     return NextResponse.json({ status: 401 });
   }
-
+  console.log(4);
   if (
     verified_transaction.data.status === "successful" &&
     verified_transaction.data.tx_ref === req.data.tx_ref &&
@@ -101,7 +102,7 @@ async function handleSubscriptionPayment(
     verified_transaction.data.currency === req.data.currency
   ) {
     const currency = getCurrencySymbol("USD");
-
+    console.log(5);
     try {
       const date = new Date();
       session.startTransaction();
@@ -114,7 +115,7 @@ async function handleSubscriptionPayment(
       }
 
       const [ref, gallery_id, plan_id, plan_interval, charge_type] = parts;
-
+      console.log(6);
       if (charge_type === "card_change") {
         await Subscriptions.updateOne(
           { "customer.gallery_id": gallery_id },
@@ -131,7 +132,7 @@ async function handleSubscriptionPayment(
           { upsert: true, new: true, setDefaultsOnInsert: true }
         ).session(session);
         //TODO: Send a mail after card change
-
+        console.log(7);
         await session.commitTransaction();
         return NextResponse.json({ status: 200 });
       } else {
@@ -142,19 +143,19 @@ async function handleSubscriptionPayment(
             gallery_id,
             reference: verified_transaction.data.id,
           };
-
+        console.log(8);
         const create_transaction = await SubscriptionTransactions.create(
           [data],
           { session }
         );
-
+        console.log(9);
         const found_customer = await Subscriptions.findOne({
           "customer.gallery_id": gallery_id,
         }).session(session);
-
+        console.log(10);
         const expiry_date = getSubscriptionExpiryDate(plan_interval);
         const plan = await SubscriptionPlan.findById(plan_id).session(session);
-
+        console.log(11);
         const subscription_data = {
           card: verified_transaction.data.card,
           start_date: date.toISOString(),
@@ -189,7 +190,7 @@ async function handleSubscriptionPayment(
             id: plan._id,
           },
         };
-
+        console.log(12);
         if (!found_customer) {
           await Subscriptions.create([subscription_data], { session });
         } else {
@@ -207,7 +208,7 @@ async function handleSubscriptionPayment(
             },
           }
         ).session(session);
-
+        console.log(13);
         await session.commitTransaction();
       }
     } catch (error) {
@@ -236,13 +237,13 @@ async function handlePurchaseTransaction(
   req: any,
   session: any
 ) {
-  if (req.data.status === "failed") {
+  if (verified_transaction.data.status === "failed") {
     //TODO: Send email to user about failed payment
 
     return NextResponse.json({ status: 200 });
   }
 
-  if (req.data.status === "pending") {
+  if (verified_transaction.data.status === "pending") {
     return NextResponse.json({ status: 401 });
   }
 
@@ -452,18 +453,15 @@ export async function POST(request: Request) {
       req.data.id
     );
 
-    console.log(req);
-
-    console.log(verified_transaction);
-
-    const transactionType = verified_transaction.data.meta
-      ? "purchase"
-      : "subscription";
+    const transactionType =
+      verified_transaction.data.meta !== null ? "purchase" : "subscription";
     // Spin up DB Server
     const client = await connectMongoDB();
     const session = await client.startSession();
 
     if (transactionType === "subscription") {
+      console.log(verified_transaction);
+
       await handleSubscriptionPayment(transactionType, req, session);
     } else {
       await handlePurchaseTransaction(transactionType, req, session);
