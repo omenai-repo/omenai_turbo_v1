@@ -1,10 +1,4 @@
-type ArtistCategory =
-  | "Emerging"
-  | "Early Mid-Career"
-  | "Mid-Career"
-  | "Late Mid-Career"
-  | "Established"
-  | "Elite";
+import { ArtistCategory } from "@omenai/shared-types";
 
 const CATEGORY_PRICE_RANGES: Record<ArtistCategory, [number, number]> = {
   Emerging: [1000, 2750],
@@ -42,7 +36,7 @@ const calculateSizePoints = (width: number, height: number): number => {
 };
 
 // Logarithmic Price Calculation
-const calculatePrice = (
+export const calculatePrice = (
   category: ArtistCategory,
   medium: string,
   width: number,

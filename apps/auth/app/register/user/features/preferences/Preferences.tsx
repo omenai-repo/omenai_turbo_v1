@@ -5,15 +5,13 @@ import Pill from "./components/Pill";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import ActionButton from "../actions/ActionButton";
 let artTypes = [
-  "Acrylic",
-  "Oil",
-  "Fabric",
-  "Mixed media",
-  "Ankara",
   "Photography",
-  "Canvas",
-  "Charcoal",
-  "Ink",
+  "Works on paper",
+  "Acrylic on canvas/linen/panel",
+  "Mixed media on paper/canvas",
+  "Sculpture (Resin/plaster/clay)",
+  "Oil on canvas/panel",
+  "Sculpture (Bronze/stone/metal)",
 ];
 function Preferences() {
   const { preferences } = useIndividualAuthStore();

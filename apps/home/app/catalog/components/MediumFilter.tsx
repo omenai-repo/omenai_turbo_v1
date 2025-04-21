@@ -5,18 +5,13 @@ import { useState } from "react";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 
 const options = [
-  "Acrylic",
-  "Oil",
-  "Fabric",
-  "Mixed media",
-  "Ink",
-  "Collage or other works on paper",
-  "Ankara",
   "Photography",
-  "Charcoal",
-  "Canvas",
-  "Paper",
-  "Other",
+  "Works on paper",
+  "Acrylic on canvas/linen/panel",
+  "Mixed media on paper/canvas",
+  "Sculpture (Resin/plaster/clay)",
+  "Oil on canvas/panel",
+  "Sculpture (Bronze/stone/metal)",
 ];
 const mediumFilterOptions = options.map((option) => ({
   option: option,

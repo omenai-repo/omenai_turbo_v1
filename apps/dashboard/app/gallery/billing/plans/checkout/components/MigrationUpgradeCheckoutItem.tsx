@@ -1,13 +1,5 @@
-import { daysElapsedSince } from "@omenai/shared-utils/src/daysElapsedSince";
-
 import CheckoutBillingCard from "./CheckoutBillingCard";
-import { getDaysLeft } from "@omenai/shared-utils/src/getDaysLeft";
-import {
-  differenceInDays,
-  startOfYear,
-  endOfYear,
-  getDaysInMonth,
-} from "date-fns";
+import { differenceInCalendarDays } from "date-fns";
 import {
   SubscriptionPlanDataTypes,
   SubscriptionModelSchemaTypes,
@@ -36,9 +28,18 @@ export default function MigrationUpgradeCheckoutItem({
     updatedAt: string;
   };
 }) {
-  const days_used = daysElapsedSince(sub_data.start_date);
+  const now = new Date();
   const startDate = new Date(sub_data.start_date);
+  const expiryDate = new Date(sub_data.expiry_date); // 💡 use actual expiry
   const currency = getCurrencySymbol(plan.currency);
+
+  // Use actual duration based on expiry
+  const totalDays = differenceInCalendarDays(expiryDate, startDate);
+  const days_used = Math.min(
+    differenceInCalendarDays(now, startDate),
+    totalDays
+  );
+  const days_left = Math.max(totalDays - days_used, 0); // Just in case
 
   // Memoize calculations
   const { proratedPrice, upgradeCost, grandTotal } = useMemo(
@@ -48,9 +49,10 @@ export default function MigrationUpgradeCheckoutItem({
         interval,
         sub_data.plan_details,
         plan,
-        days_used
+        days_used,
+        totalDays // 🆕 pass the actual total
       ),
-    [startDate, interval, sub_data.plan_details, plan, days_used]
+    [startDate, interval, sub_data.plan_details, plan, days_used, totalDays]
   );
 
   // Memoize plan change parameters
@@ -106,7 +108,7 @@ export default function MigrationUpgradeCheckoutItem({
         <div className="p-5 flex flex-col space-y-3 my-4 rounded-[20px]">
           <div className="flex justify-between items-center text-[14px] font-semibold">
             <p>Current plan usage</p>
-            <p>{days_used} day(s) used</p>
+            <p>{days_left} day(s) left</p>
           </div>
 
           <PriceDisplay label="Plan cost" value={upgradeCost} />

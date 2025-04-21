@@ -173,7 +173,7 @@ export type ArtworkSchemaTypes = {
   artist: string;
   year: number;
   title: string;
-  medium: string;
+  medium: ArtworkMediumTypes;
   rarity: string;
   materials: string;
   dimensions: ArtworkDimensions;
@@ -212,12 +212,29 @@ export type ArtworkPricing = {
   shouldShowPrice: "Yes" | "No" | string;
 };
 
+export type ArtworkMediumTypes =
+  | "Photography"
+  | "Works on paper"
+  | "Acrylic on canvas/linen/panel"
+  | "Mixed media on paper/canvas"
+  | "Sculpture (Resin/plaster/clay)"
+  | "Oil on canvas/panel"
+  | "Sculpture (Bronze/stone/metal)";
+
 export type ArtworkPriceFilterData = {
   "pricing.price": number;
   "pricing.usd_price": number;
   "pricing.shouldShowPrice": string;
   "pricing.currency": string;
 };
+
+export type ArtistCategory =
+  | "Emerging"
+  | "Early Mid-Career"
+  | "Mid-Career"
+  | "Late Mid-Career"
+  | "Established"
+  | "Elite";
 
 export type FilterOptions = {
   price: {

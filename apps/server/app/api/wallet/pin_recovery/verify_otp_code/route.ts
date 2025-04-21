@@ -1,16 +1,11 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { NextResponse } from "next/server";
-
-import { hashPassword } from "@omenai/shared-lib/hash/hashPassword";
-import { isRepeatingOrConsecutive } from "@omenai/shared-utils/src/checkIfPinRepeating";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import {
   BadRequestError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
-import Server from "next/dist/server/base-server";
 export async function POST(request: Request) {
   try {
     await connectMongoDB();

@@ -14,25 +14,17 @@ export const calculateSubscriptionPricing = (
   interval: "yearly" | "monthly",
   planDetails: SubscriptionModelSchemaTypes["plan_details"],
   newPlan: SubscriptionPlanDataTypes,
-  daysUsed: number
+  daysUsed: number,
+  totalDays: number
 ) => {
-  const daysInYear = differenceInDays(
-    endOfYear(startDate),
-    startOfYear(startDate)
-  );
-  const daysInMonth = getDaysInMonth(startDate);
+  const isYearly = planDetails.interval === "yearly";
+  const planPrice = isYearly
+    ? +planDetails.value.annual_price
+    : +planDetails.value.monthly_price;
 
-  const dailyRate =
-    (planDetails.interval === "yearly"
-      ? +planDetails.value.annual_price
-      : +planDetails.value.monthly_price) /
-    (planDetails.interval === "yearly" ? daysInYear : daysInMonth);
+  const dailyRate = planPrice / totalDays;
 
-  const proratedPrice =
-    (planDetails.interval === "yearly"
-      ? +planDetails.value.annual_price
-      : +planDetails.value.monthly_price) -
-    daysUsed * dailyRate;
+  const proratedPrice = Math.max(planPrice - daysUsed * dailyRate, 0);
 
   const upgradeCost =
     interval === "monthly"

@@ -10,6 +10,12 @@ module.exports = {
       },
       {
         protocol: "https",
+        hostname: "fra.cloud.appwrite.io",
+        port: "",
+        pathname: "/v1/**",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
         // pathname: "/v1/**",

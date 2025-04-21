@@ -452,6 +452,8 @@ export async function POST(request: Request) {
       req.data.id
     );
 
+    console.log(verified_transaction);
+
     const transactionType = verified_transaction.data.meta
       ? "purchase"
       : "subscription";

@@ -2,6 +2,8 @@ import { Proration } from "@omenai/shared-models/models/prorations/ProrationSche
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { redirect } from "next/dist/server/api-utils";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function POST(request: Request) {
   try {
@@ -28,6 +30,7 @@ export async function POST(request: Request) {
       }&${null}`,
       token: data.token,
       narration: `Payment for Omenai Inc. ${data.plan_interval} subscription`,
+      redirect_url: `${getApiUrl()}/gallery/billing/plans/checkout/verification`,
       meta: {
         gallery_id: data.gallery_id,
         type: "subscription",
@@ -49,6 +52,8 @@ export async function POST(request: Request) {
     );
 
     const result = await response.json();
+
+    if (!response.ok) return NextResponse.json(result, { status: 401 });
 
     await Proration.updateOne(
       { gallery_id: data.gaallery_id },

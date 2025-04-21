@@ -136,10 +136,9 @@ export default function ({
           ) : currentSignupFormIndex === 1 ? (
             "Verify Address"
           ) : (
-            "Continue"
+            "Next"
           )}
         </span>
-        {currentSignupFormIndex !== 1 && <MdOutlineArrowForward />}
       </button>
     </div>
   );

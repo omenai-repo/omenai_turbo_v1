@@ -21,7 +21,6 @@ export async function POST(request: Request) {
       account_details,
       amount,
       currency,
-
       wallet_id,
       wallet_pin,
     }: {
