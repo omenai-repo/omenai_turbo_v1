@@ -259,7 +259,7 @@ export type ArtworkUploadStateTypes = {
   artist: string;
   year: number;
   title: string;
-  medium: string;
+  medium: ArtworkMediumTypes;
   rarity: string;
   materials: string;
   height: string;
