@@ -115,6 +115,7 @@ async function handleSubscriptionPayment(
       }
 
       const [ref, gallery_id, plan_id, plan_interval, charge_type] = parts;
+      console.log(parts);
       console.log(6);
       if (charge_type === "card_change") {
         await Subscriptions.updateOne(

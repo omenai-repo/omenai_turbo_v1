@@ -39,15 +39,12 @@ export default function UploadArtworkDetails() {
         <ArtistInfoInputGroup />
         <ArtworkDimensionsInputGroup />
         <ArtworkPriceInputGroup />
-        <div className="w-full flex mb-4 text-[14px]">
+        <div className="w-full flex justify-center mb-4 text-[14px]">
           <button
             type="submit"
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[40px] p-6 rounded-full w-fit self-end flex items-center justify-end gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
-            <>
-              Proceed
-              <BsArrowRight />
-            </>
+            Proceed
           </button>
         </div>
       </form>

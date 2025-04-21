@@ -43,7 +43,7 @@ export const uploadArtworkDetailInputMocks = [
     type: "text",
     label: "Materials",
     required: true,
-    placeholder: "Add materials",
+    placeholder: "e.g Acrylic on canvas",
   },
   {
     name: "certificate_of_authenticity",

@@ -23,9 +23,11 @@ export default function NavigationItem({
       {title === "Sign out" ? (
         <li
           onClick={onClick}
-          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded-sm`}
+          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded-full cursor-pointer`}
         >
-          <IconWrapper>{icon}</IconWrapper>
+          <IconWrapper className="hover:bg-white hover:text-dark group">
+            {icon}
+          </IconWrapper>
           <p className={`text-[14px] p-2 font-normal`}>{title}</p>
         </li>
       ) : (

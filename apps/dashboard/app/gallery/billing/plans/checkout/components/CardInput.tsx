@@ -12,7 +12,7 @@ import ExpiryMonth from "./CardExpiryMonth";
 import ExpiryYear from "./CardExpiryYear";
 import { initiateDirectCharge } from "@omenai/shared-services/subscriptions/subscribeUser/initiateDirectCharge";
 import { toast } from "sonner";
-import { useRouter, useSearchParams } from "next/navigation";
+import { notFound, useRouter, useSearchParams } from "next/navigation";
 
 import { IoIosLock } from "react-icons/io";
 import { useLocalStorage } from "usehooks-ts";
@@ -55,6 +55,7 @@ export default function CardInput({
     ""
   );
 
+  if (!interval || !plan_object_id) return notFound();
   const [card_info, set_card_info] = useState<CardInputTypes>({
     card: "",
     cvv: "",
@@ -88,7 +89,6 @@ export default function CardInput({
         className: "class",
       });
     else {
-      console.log(interval);
       const data: FLWDirectChargeDataTypes & { name: string } = {
         ...card_info,
         year: card_info.year.slice(2, 4),
