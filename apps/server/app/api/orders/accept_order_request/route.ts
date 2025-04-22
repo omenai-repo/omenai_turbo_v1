@@ -36,23 +36,24 @@ const calculate_taxes = async (
   amount: number,
   shipping: number
 ): Promise<number> => {
-  if (origin_address.countryCode !== "US") {
+  if (
+    origin_address.countryCode !== "US" &&
+    destination_address.countryCode !== "US"
+  )
     return 0;
-  }
 
-  console.log(amount, shipping);
-  // const nexus_state = await NexusTransactions.findOne({
-  //   stateCode: origin_address.stateCode,
-  // });
+  const nexus_state = await NexusTransactions.findOne({
+    stateCode: origin_address.stateCode,
+  });
 
-  // if (!nexus_state) return 0;
+  if (!nexus_state) return 0;
 
-  // if (!nexus_state.is_nexus_breached) return 0;
+  if (!nexus_state.is_nexus_breached) return 0;
 
   const res = await client.taxForOrder({
-    to_country: "CA",
-    to_zip: "J7Z 4V1",
-    to_state: "QC",
+    to_country: destination_address.countryCode,
+    to_zip: destination_address.zip,
+    to_state: destination_address.stateCode,
     from_country: origin_address.countryCode,
     from_zip: origin_address.zip,
     from_state: origin_address.stateCode,
@@ -61,7 +62,6 @@ const calculate_taxes = async (
   });
 
   const response = res.tax?.amount_to_collect;
-  console.log(response);
   return response;
 };
 
@@ -156,7 +156,6 @@ export async function POST(request: NextRequest) {
       order.artwork_data.pricing.usd_price,
       +shipping_rate_data.chargeable_price_in_usd
     );
-    // TODO: Implement tax calculations
     // Save shipping and order information
     const shipment_information = {
       ...order.shipping_details.shipment_information,
@@ -184,6 +183,8 @@ export async function POST(request: NextRequest) {
     );
 
     await session.commitTransaction();
+
+    //TODO: Send mail to user
 
     // Return response
     return NextResponse.json(

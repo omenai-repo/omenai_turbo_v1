@@ -173,7 +173,7 @@ export type ArtworkSchemaTypes = {
   artist: string;
   year: number;
   title: string;
-  medium: ArtworkMediumTypes;
+  medium: ArtworkMediumTypes | "";
   rarity: string;
   materials: string;
   dimensions: ArtworkDimensions;
@@ -259,7 +259,7 @@ export type ArtworkUploadStateTypes = {
   artist: string;
   year: number;
   title: string;
-  medium: ArtworkMediumTypes;
+  medium: ArtworkMediumTypes | "";
   rarity: string;
   materials: string;
   height: string;

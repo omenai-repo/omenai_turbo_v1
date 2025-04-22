@@ -20,6 +20,8 @@ export async function POST(request: Request) {
         "Delivery confirmation could not be updated. Please try again"
       );
 
+    // TODO: Send mail to buyer and seller about the order delivery confirmation
+
     return NextResponse.json(
       {
         message: "Successfully confirmed order delivery.",

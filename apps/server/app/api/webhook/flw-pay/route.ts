@@ -343,9 +343,6 @@ async function handlePurchaseTransaction(
       ).session(session);
 
       // Update the wallet balance
-      const find_wallet = await Wallet.findOne({
-        owner_id: meta.seller_id,
-      });
 
       const wallet_increment_amount = Math.round(
         verified_transaction.data.amount -
@@ -367,7 +364,6 @@ async function handlePurchaseTransaction(
         createSalesActivityPromise,
         releaseOrderLockPromise,
         updateManyOrdersPromise,
-        find_wallet,
         fund_wallet,
       ]);
 

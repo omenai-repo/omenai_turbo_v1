@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const payload = {
       currency: "USD",
       customer: data.customer,
-      amount: 5,
+      amount: data.amount,
       email: data.customer.email,
       fullname: data.customer.name,
       tx_ref: data.tx_ref,

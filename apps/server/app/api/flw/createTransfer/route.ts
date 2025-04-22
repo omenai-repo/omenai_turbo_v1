@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     //   // debit_subaccount: "PSA******07974",
     //   // beneficiary: 3768,
     //   beneficiary_name: "Yemi Desola",
-    //   reference: generateAlphaDigit(12),
+    //   reference: `${generateAlphaDigit(12)}_PMCKDU_1`,
     //   debit_currency: "USD",
     //   // destination_branch_code: "GH280103",
     //   callback_url: `https://api.omenai.app/api/webhook/flw-transfer`,
