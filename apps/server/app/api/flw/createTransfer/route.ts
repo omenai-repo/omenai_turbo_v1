@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       currency,
       beneficiary: account_details.beneficiary_id,
       beneficiary_name: account_details.account_name,
-      reference: `OMENAI_TRANSFER_${generateAlphaDigit(12)}`,
+      reference: `OMENAI_TRANSFER_${generateAlphaDigit(12)}_PMCKDU_1`,
       debit_currency: "USD",
       destination_branch_code: account_details.bank_branch,
       callback_url: `${getApiUrl()}/api/webhook/flw-transfer`,
