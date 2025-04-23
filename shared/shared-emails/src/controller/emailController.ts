@@ -11,7 +11,7 @@ type EmailPayload = {
   bcc?: string[];
   attachments?: {
     filename: string;
-    path: string;
+    content: string;
   }[];
 };
 

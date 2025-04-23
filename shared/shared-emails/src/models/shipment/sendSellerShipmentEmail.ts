@@ -19,7 +19,7 @@ export const sendSellerShipmentEmail = async ({
     attachments: [
       {
         filename: "waybill.pdf",
-        path: fileContent,
+        content: fileContent,
       },
     ],
   });

@@ -126,16 +126,16 @@ export const { POST } = serve<Payload>(async (ctx) => {
         );
       }
 
+      await sendSellerShipmentEmail({
+        name: data.seller_details.fullname,
+        email: data.seller_details.email,
+        fileContent: waybillDocument,
+      });
+
       await sendBuyerShipmentEmail({
         name: data.receiver_data.fullname,
         email: data.receiver_data.email,
         trackingCode,
-      });
-
-      await sendSellerShipmentEmail({
-        name: data.seller_details.fullname,
-        email: data.seller_details.email,
-        fileContent: waybillDoc || "",
       });
 
       return true;
