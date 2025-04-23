@@ -55,6 +55,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
     invoice_number: fetchOrder.order_id,
   };
 
+  console.log(data);
   const [create_shipment] = await Promise.all([
     ctx.run("create_new_shipment", async () => {
       const response = await fetch(
@@ -68,6 +69,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
           body: JSON.stringify(data),
         }
       );
+      const result = await response.json();
+      console.log(result);
       if (!response.ok) {
         return false;
       } else {
@@ -141,4 +144,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
   ]);
   if (create_shipment)
     return NextResponse.json({ data: "Successful" }, { status: 201 });
+  else
+    return NextResponse.json(
+      { data: "Failed to create shipment" },
+      { status: 500 }
+    );
 });
