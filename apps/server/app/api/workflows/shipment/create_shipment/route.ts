@@ -43,7 +43,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
       phone: fetchOrder.seller_details.phone,
       fullname: fetchOrder.seller_details.name,
     },
-    receiver_adress: fetchOrder.shipping_details.addresses.destination,
+    receiver_address: fetchOrder.shipping_details.addresses.destination,
     shipment_product_code:
       fetchOrder.shipping_details.shipment_information.shipment_product_code,
     dimensions: fetchOrder.shipping_details.shipment_information.dimensions,
@@ -55,7 +55,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
     invoice_number: fetchOrder.order_id,
   };
 
-  console.log(data);
   const [create_shipment] = await Promise.all([
     ctx.run("create_new_shipment", async () => {
       const response = await fetch(
