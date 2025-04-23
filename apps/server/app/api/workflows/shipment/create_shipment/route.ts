@@ -8,6 +8,7 @@ import { sendBuyerShipmentEmail } from "@omenai/shared-emails/src/models/shipmen
 import { sendSellerShipmentEmail } from "@omenai/shared-emails/src/models/shipment/sendSellerShipmentEmail";
 import uploadWaybillDocument from "../resources";
 import { documentation_storage } from "@omenai/appwrite-config";
+import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 
 const base64ToPDF = (base64: string, filename = "document.pdf"): File => {
   const byteCharacters = atob(base64);
@@ -77,7 +78,10 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
       const trackingCode = responseData.data.shipmentTrackingNumber;
       const waybillDocument = responseData.data.documents[0].content;
-      const file: File = base64ToPDF(waybillDocument, "waybilldoc.pdf");
+      const file: File = base64ToPDF(
+        waybillDocument,
+        `waybilldoc_${generateAlphaDigit(6)}.pdf`
+      );
 
       const uploadDoc = await uploadWaybillDocument(file);
       let waybillDoc = "";
