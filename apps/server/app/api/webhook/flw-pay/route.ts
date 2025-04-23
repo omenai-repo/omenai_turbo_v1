@@ -301,7 +301,7 @@ async function handlePurchaseTransaction(
       const commission = Math.round(
         0.5 * Number(meta.unit_price) +
           Number(meta.shipping_cost) +
-          Number(meta.tax_fees)
+          Number(meta.tax_fees || 0)
       );
       const transaction_pricing: PurchaseTransactionPricing = {
         amount_total: Math.round(verified_transaction.data.amount),
@@ -359,7 +359,7 @@ async function handlePurchaseTransaction(
 
       const wallet_increment_amount = Math.round(
         verified_transaction.data.amount -
-          (commission + Number(meta.tax_fees) + Number(meta.shipping_cost))
+          (commission + Number(meta.tax_fees || 0) + Number(meta.shipping_cost))
       );
       console.log(verified_transaction);
       console.log(wallet_increment_amount);
