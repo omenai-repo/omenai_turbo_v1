@@ -14,7 +14,7 @@ export async function createWorkflow(
       url: `${getApiUrl()}${task_route}`,
       body: params, // Optional body
       workflowRunId: workflowRun_id,
-      headers: { Origin: "http://omenai.app" }, // Optional headers
+      headers: { Origin: "https://omenai.app" }, // Optional headers
       retries: 3, // Optional retries for the initial request
     });
 
