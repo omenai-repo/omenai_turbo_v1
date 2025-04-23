@@ -19,7 +19,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       required: true,
       unique: true,
     },
-
+    phone: { type: String, default: () => "" },
     password: {
       type: String,
       required: true,

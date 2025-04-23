@@ -1,23 +1,20 @@
 import { sendMailVerification } from "../../controller/emailController";
-import PaymentSuccessfulMail, {
-  PurchaseConfirmationEmail,
-} from "../../views/payment/PaymentSuccessMail";
+import PaymentSuccessfulGalleryMail from "../../views/payment/PaymentSuccessGalleryMail";
+import PaymentSuccessMailArtist from "../../views/payment/PaymentSuccessMailForArtist";
 
 type EmailData = {
   email: string;
   name: string;
   artwork: string;
   price: string;
-  order_id: string;
   order_date: string;
   transactionId: string;
 };
-export const sendPaymentSuccessMail = async ({
+export const sendPaymentSuccessMailArtist = async ({
   email,
   name,
   artwork,
   price,
-  order_id,
   order_date,
   transactionId,
 }: EmailData) => {
@@ -26,14 +23,13 @@ export const sendPaymentSuccessMail = async ({
     prefix: "Orders",
     from: "transactions",
     to: email,
-    subject: "Confirmation: Successful Order Payment",
-    react: PurchaseConfirmationEmail({
+    subject: "Successful Payment for Your Artwork",
+    react: PaymentSuccessMailArtist({
       name,
       artwork,
       amount: price,
-      order_id,
-      date: order_date,
       transactionId,
+      date: order_date,
     }),
   });
 

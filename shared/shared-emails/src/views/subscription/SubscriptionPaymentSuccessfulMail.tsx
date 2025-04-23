@@ -1,94 +1,125 @@
 import {
-  Body,
-  Button,
-  Container,
+  Html,
   Head,
+  Preview,
+  Body,
+  Container,
+  Section,
+  Text,
   Heading,
   Hr,
-  Html,
   Img,
   Link,
-  Tailwind,
-  Text,
 } from "@react-email/components";
+import * as React from "react";
 
-const SubscriptionPaymentSuccessfulMail = (name: string) => {
+export const SubscriptionPaymentSuccessfulEmail = (name: string) => {
   return (
     <Html>
       <Head />
-      <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
-            />
+      <Preview>Your subscription has been successfully activated</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Img
+            src="https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
+            alt="Omenai logo"
+            width="120"
+            style={{ margin: "0 auto 30px" }}
+          />
 
-            <Heading className="text-black text-[20px] font-normal text-center p-0 mb-[40px] mx-0">
-              SUBSCRIPTION ACTIVATED
-            </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              We hope this email finds you in good spirits. <br />
-              We&apos;re delighted to inform you that the recent payment attempt
-              for your subscription was successful! Your account is now
-              up-to-date, and your subscription has been successfully activated.
-            </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              We want to take this opportunity to express our gratitude for your
-              continued support and trust in our services. Your subscription
-              allows us to continue providing you with valuable benefits and
-              access to our platform.
-            </Text>
+          <Heading style={heading}>✅ Subscription Activated</Heading>
+          <Text style={text}>Hi {name},</Text>
 
-            <Text className="text-black text-[14px] leading-[24px]">
-              As always, if you have any questions, feedback, or concerns
-              regarding your subscription or any aspect of our service, please
-              feel free to reach out to us at{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-gray-700 italic"
-              >
-                contact@omeani.net
-              </Link>
-              . Our dedicated customer support team is available to assist you
-              and ensure your experience remains exceptional.{" "}
-            </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              Once again, thank you for choosing <strong>Omenai Inc.</strong> We
-              appreciate your business and look forward to serving you.
-            </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
-          </Container>
-        </Body>
-      </Tailwind>
+          <Text style={text}>
+            We’re excited to inform you that your recent subscription payment
+            was <strong>successful</strong>. Your account is now active, and
+            your subscription has been updated accordingly.
+          </Text>
+
+          <Text style={text}>
+            Thank you for your continued support. Your subscription enables us
+            to offer exclusive access, premium features, and ongoing
+            improvements to your experience on our platform.
+          </Text>
+
+          <Hr style={hr} />
+
+          <Text style={text}>
+            If you have any questions or concerns, feel free to contact us at{" "}
+            <Link
+              href="mailto:contact@omenani.net"
+              style={{
+                textDecoration: "underline",
+                color: "#1A1A1A",
+                fontWeight: "bold",
+              }}
+            >
+              contact@omenani.net
+            </Link>
+            . We're here to help.
+          </Text>
+
+          <Text style={text}>
+            Thank you again for choosing <strong>Omenai Inc.</strong>.
+          </Text>
+
+          <Text style={text}>
+            Best regards,
+            <br />
+            Moses from Omenai
+          </Text>
+
+          <Hr style={hr} />
+
+          <Text style={footer}>
+            This email was intended for <strong>{name}</strong>. If you received
+            this in error, please disregard or delete it. Unauthorized use or
+            distribution of this email is prohibited.
+          </Text>
+        </Container>
+      </Body>
     </Html>
   );
 };
 
-export default SubscriptionPaymentSuccessfulMail;
+export default SubscriptionPaymentSuccessfulEmail;
+
+const main = {
+  backgroundColor: "#ffffff",
+  color: "#1A1A1A",
+  fontFamily: "Helvetica, Arial, sans-serif",
+  padding: "40px 0",
+} as const;
+
+const container = {
+  backgroundColor: "#ffffff",
+  padding: "40px",
+  borderRadius: "12px",
+  maxWidth: "600px",
+  margin: "0 auto",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+} as const;
+
+const heading = {
+  fontSize: "24px",
+  fontWeight: "bold",
+  marginBottom: "20px",
+  textAlign: "center",
+} as const;
+
+const text = {
+  fontSize: "16px",
+  lineHeight: "1.6",
+  marginBottom: "16px",
+} as const;
+
+const hr = {
+  border: "none",
+  borderTop: "1px solid #EAEAEA",
+  margin: "20px 0",
+} as const;
+
+const footer = {
+  fontSize: "14px",
+  color: "#666666",
+} as const;

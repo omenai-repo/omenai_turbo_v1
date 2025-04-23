@@ -44,6 +44,7 @@ export default function FormInput() {
       art_style,
       stateCode,
       base_currency,
+      phone,
     } = artistSignupData;
 
     if (logo === null) return;
@@ -69,6 +70,7 @@ export default function FormInput() {
           zip,
           stateCode,
         },
+        phone,
         base_currency,
         art_style,
         logo: file.fileId,

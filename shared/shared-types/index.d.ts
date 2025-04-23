@@ -33,6 +33,7 @@ export type ArtistSchemaTypes = {
   logo: string;
   bio?: string;
   address: AddressTypes;
+  phone: string;
   bio_video_link?: string | null;
   algo_data_id?: string | null;
   role: AccessRoleTypes;
@@ -49,6 +50,7 @@ export type ArtistSignupData = {
   email: string;
   password: string;
   confirmPassword: string;
+  phone: string;
   art_style: string | string[];
   address: AddressTypes;
   logo: File | null;
@@ -74,6 +76,7 @@ export type GallerySchemaTypes = {
   verified: boolean;
   role: AccessRoleTypes;
   logo?: string;
+  phone?: string;
   subscription_status: {
     type: "basic" | "premium" | "pro" | null;
     active: boolean;
@@ -87,6 +90,7 @@ export type IndividualSchemaTypes = {
   email: string;
   password: string;
   user_id: string;
+  phone: string;
   preferences: string[];
   verified: boolean;
   role: AccessRoleTypes;
@@ -113,6 +117,7 @@ export type IndividualSignupData = {
   password: string;
   confirmPassword: string;
   address: AddressTypes;
+  phone: string;
 };
 export type AdminSignupData = {
   name: string;
@@ -128,6 +133,7 @@ export type GallerySignupData = {
   confirmPassword: string;
   address: AddressTypes;
   admin: string;
+  phone: string;
   description: string;
   logo: File | null;
 };
@@ -331,6 +337,7 @@ export type OrderShippingDetailsTypes = {
     };
     tracking: TrackingInformationTypes;
     quote: ShippingQuoteTypes;
+    waybill_document: string;
   };
 };
 
@@ -339,6 +346,7 @@ type OrderBuyerAndSellerDetails = {
   name: string;
   email: string;
   address: AddressTypes;
+  phone: string;
 };
 export type OrderAcceptedStatusTypes = {
   status: "accepted" | "declined" | "";
@@ -785,10 +793,16 @@ export type ShipmentRateRequestTypes = {
 };
 
 export type ShipmentRequestDataTypes = {
-  originCountryCode;
-  specialInstructions;
-  artistDetails;
-  shipment_product_code;
+  originCountryCode: string;
+  specialInstructions: string;
+  artwork_name: string;
+  seller_details: {
+    address: AddressTypes;
+    email: string;
+    phone: string;
+    fullname: string;
+  };
+  shipment_product_code: string;
   dimensions: ShipmentDimensions;
   receiver_address: AddressTypes;
   receiver_data: {

@@ -3,13 +3,14 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 
 export async function POST() {
   try {
     const workflowID = await createWorkflow(
       "/api/workflows",
-      "test_workflow2",
-      JSON.stringify({ title: "My lovely Berry" })
+      `test_workflow${generateDigit(2)}`,
+      JSON.stringify({ title: "1215688" })
     );
     if (!workflowID) throw new ServerError("Workflow failed");
     return NextResponse.json(

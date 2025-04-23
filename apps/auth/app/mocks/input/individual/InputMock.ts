@@ -54,6 +54,12 @@ export const user_signup_step_two = [
     placeholder: "Your region's postal code",
     labelText: "zip",
   },
+  {
+    label: "Phone number",
+    type: "text",
+    placeholder: "+12345678901",
+    labelText: "phone",
+  },
 ];
 export const user_signup_step_three = [
   {

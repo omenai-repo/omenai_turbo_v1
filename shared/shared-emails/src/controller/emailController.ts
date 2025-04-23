@@ -9,6 +9,10 @@ type EmailPayload = {
   subject: string;
   react: React.ReactNode;
   bcc?: string[];
+  attachments?: {
+    filename: string;
+    path: string;
+  }[];
 };
 
 export const sendMailVerification = async (datum: EmailPayload) => {
@@ -21,6 +25,7 @@ export const sendMailVerification = async (datum: EmailPayload) => {
     bcc: datum.bcc,
     subject: datum.subject,
     react: datum.react,
+    attachments: datum.attachments,
   });
 
   return { data, error };

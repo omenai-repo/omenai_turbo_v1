@@ -1,3 +1,4 @@
+import { getApiUrl } from "@omenai/url-config/src/config";
 // Using the workflow client
 import { Client } from "@upstash/workflow";
 
@@ -10,10 +11,10 @@ export async function createWorkflow(
 ) {
   try {
     const { workflowRunId } = await client.trigger({
-      url: `${process.env.UPSTASH_WORKFLOW_URL}${task_route}`,
+      url: `${getApiUrl()}${task_route}`,
       body: params, // Optional body
       workflowRunId: workflowRun_id,
-      headers: { Origin: "http://localhost" }, // Optional headers
+      headers: { Origin: "http://omenai.app" }, // Optional headers
       retries: 3, // Optional retries for the initial request
     });
 

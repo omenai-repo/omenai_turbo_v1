@@ -76,6 +76,7 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       countryCode: "",
       state: "",
       stateCode: "",
+      phone: "",
     },
 
     // UPDATE SIGNUP FORM DATA ON INPUT CHANGE
@@ -122,6 +123,7 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
           countryCode: "",
           state: "",
           stateCode: "",
+          phone: "",
         },
         preferences: [],
         currentSignupFormIndex: 0,
@@ -137,6 +139,7 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       country: true,
       zip: true,
       state: true,
+      phone: true,
     },
     setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => {
       set((state: any) => ({

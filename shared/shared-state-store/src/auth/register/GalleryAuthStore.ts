@@ -61,6 +61,7 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       admin: "",
       description: "",
       logo: null,
+      phone: "",
     },
 
     // UPDATE SIGNUP FORM DATA ON INPUT CHANGE
@@ -109,6 +110,7 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
           admin: "",
           description: "",
           logo: null,
+          phone: "",
         },
         currentGallerySignupFormIndex: 0,
       });
@@ -127,6 +129,7 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
       admin: true,
       description: true,
       logo: true,
+      phone: true,
     },
     setIsFieldDirty: (key: keyof GallerySignupData, value: boolean) => {
       set((state: any) => ({

@@ -50,6 +50,7 @@ export async function POST(request: Request) {
       subscription_status,
       connected_account_id,
       status,
+      phone,
     } = user;
     const session_payload = {
       gallery_id,
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
       connected_account_id,
       email: user.email,
       status,
+      phone,
     };
 
     await createSession(session_payload);

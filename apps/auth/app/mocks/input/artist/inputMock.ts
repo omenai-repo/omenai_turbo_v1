@@ -52,6 +52,13 @@ export const artist_signup_step_two = [
     placeholder: "Your region's postal code",
     labelText: "zip",
   },
+  {
+    label:
+      "Phone number (Preferably a WhatsApp number to facilitate notifications via whatapp)",
+    type: "text",
+    placeholder: "+12345678901",
+    labelText: "phone",
+  },
 ];
 
 export const artist_signup_step_three = [

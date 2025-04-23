@@ -46,6 +46,7 @@ export default function FormInput() {
       zip,
       address_line,
       stateCode,
+      phone,
     } = individualSignupData;
     const data: Omit<IndividualRegisterData, "confirmPassword"> & {
       preferences: string[];
@@ -54,6 +55,7 @@ export default function FormInput() {
       email,
       password,
       preferences,
+      phone,
       address: {
         country,
         countryCode,

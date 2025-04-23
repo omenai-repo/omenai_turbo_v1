@@ -34,6 +34,8 @@ export default function Input({
           ? individualSignupData.password
           : undefined
       );
+
+    console.log(success);
     if (!success) {
       setIsFieldDirty(e.target.name as keyof IndividualSignupData, true);
       setErrorList(errors);

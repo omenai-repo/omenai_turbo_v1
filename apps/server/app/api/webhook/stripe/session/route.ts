@@ -181,7 +181,7 @@ export async function POST(request: Request) {
       artwork: email_order_info.artwork_data.title,
       order_id: email_order_info.order_id,
       order_date: formatIntlDateTime(email_order_info.createdAt),
-      transaction_Id: transaction_id,
+      transactionId: transaction_id,
       price,
     }).catch((err) =>
       console.error("Failed to send payment success email:", err)

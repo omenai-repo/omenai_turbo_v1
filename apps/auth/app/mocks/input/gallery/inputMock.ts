@@ -4,22 +4,22 @@ export const inputProperties: any = [];
 
 export const gallery_signup_step_one = [
   {
-    label: "Gallery name?",
+    label: "Gallery name",
     type: "text",
-    placeholder: "Example Gallery",
+    placeholder: "Enter your gallery name",
     labelText: "name",
   },
   {
     label: "Email address",
     type: "email",
-    placeholder: "example@gmail.com",
+    placeholder: "example@email.com",
     labelText: "email",
   },
 
   {
     label: "Admin name",
     type: "text",
-    placeholder: "Jack bauer",
+    placeholder: "Jane Doe",
     labelText: "admin",
   },
 ];
@@ -57,6 +57,12 @@ export const gallery_signup_step_two = [
     type: "text",
     placeholder: "Your region's postal code",
     labelText: "zip",
+  },
+  {
+    label: "Phone number",
+    type: "text",
+    placeholder: "+12345678901",
+    labelText: "phone",
   },
 ];
 

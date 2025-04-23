@@ -20,6 +20,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       required: true,
       min: 3,
     },
+    phone: { type: String, default: () => "" },
     admin: {
       type: String,
       required: true,

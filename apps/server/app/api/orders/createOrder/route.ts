@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     const buyerData = await AccountIndividual.findOne(
       { user_id: buyer_id },
-      "name email user_id"
+      "name email user_id phone"
     ).exec();
 
     // Update seller data based on order designation
@@ -39,13 +39,13 @@ export async function POST(request: Request) {
     if (designation === "gallery") {
       const gallery_data = await AccountGallery.findOne(
         { gallery_id: seller_id },
-        "name email address"
+        "name email address phone"
       ).exec();
       seller_data = gallery_data;
     } else {
       const artist_data = await AccountArtist.findOne(
         { artist_id: seller_id },
-        "name, email"
+        "name, email phone"
       ).exec();
       seller_data = artist_data;
     }
@@ -74,6 +74,7 @@ export async function POST(request: Request) {
           name: buyerData.name,
           email: buyerData.email,
           id: buyerData.user_id,
+          phone: buyerData.phone,
         },
         shipping_details: {
           addresses: {
@@ -105,6 +106,7 @@ export async function POST(request: Request) {
               fees: "",
               taxes: "",
             },
+            waybill_document: "",
           },
         },
         hold_status: null,
@@ -113,6 +115,7 @@ export async function POST(request: Request) {
           id: seller_id,
           name: seller_data.name,
           email: seller_data.email,
+          phone: seller_data.phone,
         },
         seller_designation: designation,
         payment_information: {

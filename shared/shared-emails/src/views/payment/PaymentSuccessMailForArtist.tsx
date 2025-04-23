@@ -9,7 +9,6 @@ import {
   Heading,
   Hr,
   Img,
-  Link,
 } from "@react-email/components";
 import * as React from "react";
 
@@ -19,52 +18,57 @@ interface Props {
   amount: string;
   transactionId: string;
   date: string;
-  order_id: string;
 }
 
-export const PurchaseConfirmationEmail = ({
+export const PaymentSuccessMailArtist = ({
   name,
   artwork,
   amount,
   transactionId,
   date,
-  order_id,
 }: Props) => {
   return (
     <Html>
       <Head />
-      <Preview>Your purchase has been successfully processed</Preview>
+      <Preview>Your artwork has been sold – next steps</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Img
-            src="https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
-            alt="Omenai logo"
-            width="120"
-            style={{ margin: "0 auto 30px" }}
-          />
-
-          <Heading style={heading}>✅ Purchase Confirmed</Heading>
+          <Heading style={heading}>🎉 Your Artwork Has Been Sold</Heading>
           <Text style={text}>Hi {name},</Text>
           <Text style={text}>
-            Thank you for your purchase of <strong>{artwork}</strong> (Order #
-            {order_id}). Your payment has been successfully processed.
+            Great news! A collector has successfully purchased your artwork,{" "}
+            <strong>{artwork}</strong>.
           </Text>
 
           <Section style={section}>
-            <Text style={text}>We’re preparing your order for shipment.</Text>
             <Text style={text}>
-              A shipment order will be created shortly and you’ll receive
-              updates with tracking information and expected delivery.
+              The payment has been processed and the funds have been added to
+              your <strong>pending balance</strong> in your wallet.
             </Text>
             <Text style={text}>
-              Please keep an eye on your inbox for further instructions.
+              A <strong>shipment will be created</strong> and a{" "}
+              <strong>courier pickup</strong> will be scheduled shortly.
+            </Text>
+            <Text style={text}>
+              Please ensure the piece is <strong>packaged and ready</strong> for
+              shipment.
+            </Text>
+            <Text style={text}>
+              Further shipping instructions and the waybill will be sent to you
+              via email.
             </Text>
           </Section>
 
           <Hr style={hr} />
 
-          <Heading style={subHeading}>🧾 Purchase Receipt</Heading>
+          <Heading style={subHeading}>🧾 Payment Receipt</Heading>
           <Section style={receiptSection}>
+            <Img
+              src="https://yourdomain.com/logo.png"
+              alt="Platform Logo"
+              width="120"
+              style={{ marginBottom: "20px" }}
+            />
             <div style={receiptRow}>
               <span style={label}>Artwork:</span> <span>{artwork}</span>
             </div>
@@ -83,38 +87,21 @@ export const PurchaseConfirmationEmail = ({
           <Hr style={hr} />
 
           <Text style={text}>
-            You can manage and track your order in your{" "}
-            <Link
-              href="https://omenai.net/dashboard/user/orders"
-              style={{
-                textDecoration: "underline",
-                color: "#1A1A1A",
-                fontWeight: "bold",
-              }}
-            >
-              Account Dashboard
-            </Link>
-            .
+            Once the buyer receives the piece, the funds will be{" "}
+            <strong>unlocked</strong> and available for withdrawal.
           </Text>
 
           <Text style={footer}>
-            If you have any questions, please reach out to us at{" "}
-            <Link
-              href="mailto:contact@omenani.net"
-              style={{ textDecoration: "underline", color: "#1A1A1A" }}
-            >
-              contact@omenani.net
-            </Link>
-            .
+            If you have any questions or need help, feel free to reach out to
+            our support team.
           </Text>
-          <Text style={footer}>Thank you for shopping with Omenai.</Text>
         </Container>
       </Body>
     </Html>
   );
 };
 
-export default PurchaseConfirmationEmail;
+export default PaymentSuccessMailArtist;
 
 const main = {
   backgroundColor: "#ffffff",
@@ -136,7 +123,6 @@ const heading = {
   fontSize: "24px",
   fontWeight: "bold",
   marginBottom: "20px",
-  textAlign: "center",
 } as const;
 
 const subHeading = {

@@ -24,6 +24,18 @@ export default function () {
   const [loading, setLoading] = useState<boolean>(false);
 
   const validateAddressCapability = async () => {
+    if (gallerySignupData.phone === "") {
+      toast.error("Error notification", {
+        description: "Invalid input. Please enter a valid phone number",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+
+      return;
+    }
     const payload = {
       type: "pickup" as "delivery" | "pickup",
       countryCode: gallerySignupData.countryCode,
@@ -116,7 +128,10 @@ export default function () {
       <button
         className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
         type={"button"}
-        disabled={currentGallerySignupFormIndex === 1 && loading}
+        disabled={
+          (currentGallerySignupFormIndex === 1 && loading) ||
+          (currentGallerySignupFormIndex === 1 && isFieldDirty["phone"])
+        }
         onClick={
           currentGallerySignupFormIndex === 1
             ? validateAddressCapability

@@ -43,6 +43,7 @@ export default function FormInput() {
       city,
       zip,
       stateCode,
+      phone,
     } = gallerySignupData;
 
     console.log(gallerySignupData);
@@ -70,6 +71,7 @@ export default function FormInput() {
           zip,
           stateCode,
         },
+        phone,
         description,
         logo: file.fileId,
       };

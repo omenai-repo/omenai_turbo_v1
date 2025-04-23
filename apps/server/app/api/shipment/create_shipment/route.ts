@@ -6,20 +6,22 @@ import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmen
 export async function POST(request: NextRequest) {
   const {
     specialInstructions,
-    artistDetails,
+    seller_details,
     shipment_product_code,
     dimensions,
     receiver_address,
     receiver_data,
     invoice_number,
+    artwork_name,
   }: ShipmentRequestDataTypes = await request.json();
   if (
-    !artistDetails ||
+    !seller_details ||
     !shipment_product_code ||
     !dimensions ||
     !receiver_address ||
     !receiver_data ||
-    !invoice_number
+    !invoice_number ||
+    !artwork_name
   ) {
     return NextResponse.json(
       {
@@ -33,7 +35,7 @@ export async function POST(request: NextRequest) {
   const plannedShippingDateAndTime = getFutureShipmentDate(
     3,
     true,
-    artistDetails.address.countryCode,
+    seller_details.address.countryCode,
     {
       hours: "12",
       minutes: "00",
@@ -43,8 +45,10 @@ export async function POST(request: NextRequest) {
   const invoiceDate = getFutureShipmentDate(
     0,
     false,
-    artistDetails.address.countryCode
+    seller_details.address.countryCode
   );
+
+  console.log(plannedShippingDateAndTime);
 
   const shipmentPayloadData = {
     plannedShippingDateAndTime,
@@ -61,16 +65,16 @@ export async function POST(request: NextRequest) {
       ],
       pickupDetails: {
         postalAddress: {
-          postalCode: artistDetails.address.zip,
-          cityName: artistDetails.address.city,
-          countryCode: artistDetails.address.countryCode,
-          addressLine1: artistDetails.address.address_line,
+          postalCode: seller_details.address.zip,
+          cityName: seller_details.address.city,
+          countryCode: seller_details.address.countryCode,
+          addressLine1: seller_details.address.address_line,
         },
         contactInformation: {
-          email: artistDetails.email,
-          phone: artistDetails.phone,
+          email: seller_details.email,
+          phone: seller_details.phone,
           companyName: "OMENAI INC",
-          fullName: artistDetails.fullname,
+          fullName: seller_details.fullname,
         },
       },
     },
@@ -121,18 +125,16 @@ export async function POST(request: NextRequest) {
     customerDetails: {
       shipperDetails: {
         postalAddress: {
-          postalCode: "60616",
-          cityName: "Illinois",
-          countryCode: "US",
-          countyName: "Chicago",
-          addressLine1: "2035 S State St",
-          countryName: "UNITED STATES OF AMERICA",
+          postalCode: seller_details.address.zip,
+          cityName: seller_details.address.city,
+          countryCode: seller_details.address.countryCode,
+          addressLine1: seller_details.address.address_line,
         },
         contactInformation: {
-          email: "gbenro@omenai.net",
-          phone: " +7733521307",
-          companyName: "OMENAI INC.",
-          fullName: "OMENAI Incorporated",
+          email: seller_details.email,
+          phone: seller_details.phone,
+          companyName: "OMENAI INC",
+          fullName: seller_details.fullname,
         },
       },
       receiverDetails: {
@@ -161,18 +163,18 @@ export async function POST(request: NextRequest) {
             height: dimensions.height,
           },
 
-          description: "An artpiece",
+          description: `Artpiece: ${artwork_name}`,
         },
       ],
       isCustomsDeclarable:
-        artistDetails.address.countryCode !== receiver_address.countryCode,
+        seller_details.address.countryCode !== receiver_address.countryCode,
       declaredValue: 200,
       declaredValueCurrency: "USD",
       exportDeclaration: {
         lineItems: [
           {
             number: 1,
-            description: "An artpiece",
+            description: `Artpiece: ${artwork_name}`,
             price: 200,
             quantity: {
               value: 1,
@@ -180,7 +182,7 @@ export async function POST(request: NextRequest) {
             },
 
             exportReasonType: "permanent",
-            manufacturerCountry: artistDetails.address.countryCode,
+            manufacturerCountry: seller_details.address.countryCode,
             weight: {
               netValue: dimensions.weight,
               grossValue: dimensions.weight,
@@ -193,7 +195,7 @@ export async function POST(request: NextRequest) {
           date: invoiceDate,
         },
       },
-      description: "An artpiece",
+      description: `Artpiece: ${artwork_name}`,
       incoterm: "DAP",
       unitOfMeasurement: "metric",
     },

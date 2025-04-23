@@ -20,9 +20,6 @@ import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src
 import { getSubscriptionExpiryDate } from "@omenai/shared-utils/src/getSubscriptionExpiryDate";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessGalleryMail";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
@@ -30,6 +27,9 @@ import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 
 async function verifyWebhookSignature(
   signature: string | null,
@@ -227,8 +227,22 @@ async function handlePurchaseTransaction(
   req: any,
   session: any
 ) {
+  const meta = verified_transaction.data.meta;
+
+  const order_info = await CreateOrder.findOne(
+    {
+      "buyer_details.email": meta.buyer_email,
+      "artwork_data.art_id": meta.art_id,
+    },
+    "artwork_data order_id createdAt buyer_details"
+  );
   if (verified_transaction.data.status === "failed") {
     //TODO: Send email to user about failed payment
+    await sendPaymentFailedMail({
+      email: meta.buyer_email,
+      name: order_info.buyer_details.name,
+      artwork: order_info.artwork_data.title,
+    });
 
     return NextResponse.json({ status: 200 });
   }
@@ -247,7 +261,6 @@ async function handlePurchaseTransaction(
 
     const formatted_date = getFormattedDateTime();
     const currency = getCurrencySymbol("USD");
-    const meta = verified_transaction.data.meta;
 
     try {
       const date = new Date();
@@ -378,39 +391,29 @@ async function handlePurchaseTransaction(
     } finally {
       await session.endSession();
     }
-    const email_order_info = await CreateOrder.findOne(
-      {
-        "buyer_details.email": meta.buyer_email,
-        "artwork_data.art_id": meta.art_id,
-      },
-      "artwork_data order_id createdAt buyer_details"
+
+    await createWorkflow(
+      "/api/workflows/shipment/create_shipment",
+      `create_shipment_${generateDigit(6)}`,
+      JSON.stringify({ order_id: order_info.order_id })
     );
 
     const price = formatPrice(verified_transaction.data.amount, currency);
 
-    // Send emails asynchronously
-    sendPaymentSuccessMail({
-      email: meta.buyer_email,
-      name: email_order_info.buyer_details.name,
-      artwork: email_order_info.artwork_data.title,
-      order_id: email_order_info.order_id,
-      order_date: formatIntlDateTime(email_order_info.createdAt),
-      transaction_Id: transaction_id,
-      price,
-    }).catch((err) =>
-      console.error("Failed to send payment success email:", err)
-    );
-
-    sendPaymentSuccessGalleryMail({
-      email: meta.seller_email,
-      name: meta.seller_name,
-      artwork: meta.artwork_name,
-      order_id: email_order_info.order_id,
-      order_date: formatIntlDateTime(email_order_info.createdAt),
-      transaction_Id: transaction_id,
-      price,
-    }).catch((err) =>
-      console.error("Failed to send payment success gallery email:", err)
+    await createWorkflow(
+      "/api/workflows/emails/sendPaymentSuccessMail",
+      `send_payment_success_mail${generateDigit(6)}`,
+      JSON.stringify({
+        buyer_email: meta.buyer_email,
+        buyer_name: order_info.buyer_details.name,
+        artwork_title: order_info.artwork_data.title,
+        order_id: order_info.order_id,
+        order_date: order_info.createdAt,
+        transaction_id: transaction_id,
+        price,
+        seller_email: meta.seller_email,
+        seller_name: meta.seller_name,
+      })
     );
 
     return NextResponse.json({ status: 200 });

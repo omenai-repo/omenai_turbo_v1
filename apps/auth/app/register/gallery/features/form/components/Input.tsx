@@ -89,6 +89,7 @@ export default function Input({
             onChange={handleChange}
             onKeyDown={handleKeyPress}
             name={labelText}
+            required
             value={(gallerySignupData as Record<string, any>)[labelText]}
           />
           {type === "password" && (

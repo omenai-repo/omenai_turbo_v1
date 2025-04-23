@@ -60,6 +60,7 @@ export const useArtistAuthStore = create<ArtistAuthStoreTypes>((set, get) => ({
     logo: null,
     art_style: "",
     base_currency: "",
+    phone: "",
   },
 
   // UPDATE SIGNUP FORM DATA ON INPUT CHANGE
@@ -108,6 +109,7 @@ export const useArtistAuthStore = create<ArtistAuthStoreTypes>((set, get) => ({
         art_style: "",
         logo: null,
         base_currency: "",
+        phone: "",
       },
       currentArtistSignupFormIndex: 0,
     });
@@ -125,6 +127,7 @@ export const useArtistAuthStore = create<ArtistAuthStoreTypes>((set, get) => ({
     zip: true,
     logo: true,
     art_style: true,
+    phone: true,
   },
   setIsFieldDirty: (key: keyof ArtistSignupData, value: boolean) => {
     set((state: any) => ({

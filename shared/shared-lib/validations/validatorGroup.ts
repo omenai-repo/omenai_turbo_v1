@@ -3,6 +3,7 @@ import { validateConfirmPassword } from "./confirmPasswordValidator";
 import { validateEmail } from "./emailValidator";
 import { validataGeneralText } from "./generalValidator";
 import { validatePassword } from "./passwordValidator";
+import { validatePhoneNumber } from "./phoneValidator";
 import { validatePostalCode } from "./postalCodeValidator";
 import { validateText } from "./textValidator";
 
@@ -22,6 +23,7 @@ export function validate(
     address_line: (value: string) => validateText(value),
     zip: (value: string) => validatePostalCode(value),
     general: (value: string) => validataGeneralText(value),
+    phone: (value: string) => validatePhoneNumber(value),
   };
 
   const validationFunction = validationFunctions[checkLabel(label)];

@@ -5,13 +5,11 @@ type EmailData = {
   email: string;
   name: string;
   artwork: string;
-  order_id: string;
 };
 export const sendPaymentFailedMail = async ({
   email,
   name,
   artwork,
-  order_id,
 }: EmailData) => {
   // Set up resend here instead
   await sendMailVerification({
@@ -19,6 +17,6 @@ export const sendPaymentFailedMail = async ({
     from: "transactions",
     to: email,
     subject: "We encountered an issue processing your payment",
-    react: PaymentFailedMail(name, artwork, order_id),
+    react: PaymentFailedMail(name, artwork),
   });
 };

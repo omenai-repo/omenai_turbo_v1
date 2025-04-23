@@ -56,8 +56,18 @@
     "QSTASH_TOKEN",
     "UPSTASH_WORKFLOW_URL",
     "QSTASH_CURRENT_SIGNING_KEY",
-    "QSTASH_NEXT_SIGNING_KEY"
+    "QSTASH_NEXT_SIGNING_KEY",
+    "DHL_SHIPPER_NAME",
+    "DHL_SHIPPER_COMPANY",
+    "DHL_SHIPPER_ADDRESS",
+    "DHL_SHIPPER_CITY",
+    "DHL_SHIPPER_STATE",
+    "DHL_SHIPPER_POSTAL_CODE",
+    "DHL_SHIPPER_COUNTRY",
+    "DHL_SHIPPER_PHONE",
+    "DHL_SHIPPER_EMAIL"
   ],
+
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -117,7 +127,16 @@
         "QSTASH_TOKEN",
         "UPSTASH_WORKFLOW_URL",
         "QSTASH_CURRENT_SIGNING_KEY",
-        "QSTASH_NEXT_SIGNING_KEY"
+        "QSTASH_NEXT_SIGNING_KEY",
+        "DHL_SHIPPER_NAME",
+        "DHL_SHIPPER_COMPANY",
+        "DHL_SHIPPER_ADDRESS",
+        "DHL_SHIPPER_CITY",
+        "DHL_SHIPPER_STATE",
+        "DHL_SHIPPER_POSTAL_CODE",
+        "DHL_SHIPPER_COUNTRY",
+        "DHL_SHIPPER_PHONE",
+        "DHL_SHIPPER_EMAIL"
       ]
     },
     "lint": {
