@@ -131,7 +131,7 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({
-        message: "Trasfer initiated successfully",
+        message: "Transfer initiated successfully",
         data: result,
       });
     }

@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
   const category: ArtistCategory = searchParams.get(
     "category"
   ) as ArtistCategory;
+  const currency = searchParams.get("currency") as string;
   try {
     if (!medium || !height || !width || !category) {
       throw new ServerError(
@@ -32,8 +33,33 @@ export async function GET(request: NextRequest) {
       throw new ServerError("Price calculation failed");
     }
 
+    // Get currency rate
+    const response = await fetch(
+      `https://api.omenai.app/api/flw/getTransferRate?source=${currency.toUpperCase()}&destination=USD&amount=${price}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://omenai.app",
+        },
+      }
+    );
+
+    if (!response.ok)
+      throw new ServerError(
+        "Failed to calculate Price. Try again or contact support"
+      );
+    const result = await response.json();
+
+    const price_response_data = {
+      price: result.data.source.amount,
+      usd_price: price,
+      shouldShowPrice: "Yes",
+      currency,
+    };
+
     return NextResponse.json(
-      { message: "Proposed Price calculated", price },
+      { message: "Proposed Price calculated", data: price_response_data },
       { status: 200 }
     );
   } catch (error) {
