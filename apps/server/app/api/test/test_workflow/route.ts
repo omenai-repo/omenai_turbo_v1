@@ -8,9 +8,9 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 export async function POST() {
   try {
     const workflowID = await createWorkflow(
-      "/api/workflows",
+      "/api/workflows/shipment/create_shipment",
       `test_workflow${generateDigit(2)}`,
-      JSON.stringify({ title: "1215688" })
+      JSON.stringify({ order_id: "4029468" })
     );
     if (!workflowID) throw new ServerError("Workflow failed");
     return NextResponse.json(

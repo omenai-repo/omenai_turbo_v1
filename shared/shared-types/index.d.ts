@@ -863,3 +863,13 @@ export type US_NEXUS_THRESHOLD_LIST = {
     evaluation_period_type: EvaluationPeriodTypeDef;
   };
 };
+// CRONS
+export type FailedCronJobTypes = {
+  jobType: string;
+  payload: any;
+  reason: string;
+  retryCount: number;
+  status: "pending" | "reprocessed" | "failed";
+  lastAttempted: Date;
+  jobId: string;
+};
