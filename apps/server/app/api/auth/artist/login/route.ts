@@ -50,6 +50,7 @@ export async function POST(request: Request) {
       wallet_id,
       address,
       phone,
+      categorization,
     } = artist;
 
     const session_payload = {
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
       wallet_id,
       address,
       phone,
+      categorization,
     };
 
     await createSession(session_payload);

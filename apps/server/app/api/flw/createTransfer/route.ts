@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
     if (get_wallet.available_balance < amount)
       throw new ForbiddenError(
-        "Inssufficient wallet balance for this transaction"
+        "Insufficient wallet balance for this transaction"
       );
 
     const options = {
