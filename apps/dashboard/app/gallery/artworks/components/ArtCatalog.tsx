@@ -9,17 +9,18 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
+import { GallerySchemaTypes } from "@omenai/shared-types";
 
 export default function ArtCatalog() {
   const { session } = useContext(SessionContext);
-  const sessionId = session?.gallery_id as string;
+  const sessionId = (session as GallerySchemaTypes).gallery_id as string;
 
   const { width } = useWindowSize();
 
   const { data: artworks, isLoading } = useQuery({
     queryKey: ["fetch_artworks_by_id"],
     queryFn: async () => {
-      const artworks = await getAllArtworksById();
+      const artworks = await getAllArtworksById(sessionId);
       if (artworks!.isOk) {
         return artworks!.data;
       } else {

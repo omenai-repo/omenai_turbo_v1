@@ -7,13 +7,16 @@ import ProcessingOrders from "./ProcessingOrders";
 import CompletedOrders from "./CompletedOrders";
 import { getOverviewOrders } from "@omenai/shared-services/orders/getOverviewOrders";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { GallerySchemaTypes } from "@omenai/shared-types";
+import { useSession } from "@omenai/package-provider/SessionProvider";
 
 export default function OrdersGroup() {
+  const session = useSession() as GallerySchemaTypes;
   const [tab, setTab] = useState("pending");
   const { data: orders, isLoading } = useQuery({
     queryKey: ["fetch_orders_by_category"],
     queryFn: async () => {
-      const result = await getOverviewOrders();
+      const result = await getOverviewOrders(session.gallery_id);
 
       // Handle potential undefined result
       if (!result) {

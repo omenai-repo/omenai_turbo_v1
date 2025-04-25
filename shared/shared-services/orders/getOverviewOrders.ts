@@ -1,17 +1,16 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { GallerySchemaTypes } from "@omenai/shared-types";
 
-export async function getOverviewOrders() {
+export async function getOverviewOrders(session_id: string) {
   const session = await getServerSession();
   try {
     const url = getApiUrl();
-    const res = await fetch(`${url}/api/orders/getOrdersBySellerId`, {
-      method: "POST",
-      body: JSON.stringify({
-        id: (session as GallerySchemaTypes).gallery_id,
-      }),
-    });
+    const res = await fetch(
+      `${url}/api/orders/getOrdersBySellerId?id=${session_id}`,
+      {
+        method: "GET",
+      }
+    );
     const result = await res.json();
     return { isOk: res.ok, message: result.message, data: result.data };
   } catch (error: any) {

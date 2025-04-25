@@ -1,8 +1,7 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 
-export async function getSalesActivityData(id: string) {
-  const { year } = getCurrentMonthAndYear();
+export async function getSalesActivityData(id: string, year: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/sales/getActivityById`, {

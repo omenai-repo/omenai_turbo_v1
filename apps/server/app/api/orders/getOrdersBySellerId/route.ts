@@ -1,14 +1,14 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-export async function POST(request: Request) {
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const id = searchParams.get("id");
   try {
     await connectMongoDB();
-
-    const { id } = await request.json();
 
     const orders = await CreateOrder.find({ "seller_details.id": id })
       .sort({ updatedAt: -1 })

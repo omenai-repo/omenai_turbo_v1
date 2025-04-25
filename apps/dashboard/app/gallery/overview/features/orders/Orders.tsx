@@ -9,13 +9,18 @@ import { useQuery } from "@tanstack/react-query";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-import { CreateOrderModelTypes } from "@omenai/shared-types";
+import {
+  CreateOrderModelTypes,
+  GallerySchemaTypes,
+} from "@omenai/shared-types";
+import { useSession } from "@omenai/package-provider/SessionProvider";
 
 export default function Orders() {
+  const session = useSession() as GallerySchemaTypes;
   const { data: orders, isLoading } = useQuery({
     queryKey: ["get_overview_order"],
     queryFn: async () => {
-      const orders = await getOverviewOrders();
+      const orders = await getOverviewOrders(session.gallery_id);
       if (orders?.isOk) {
         return orders.data;
       }

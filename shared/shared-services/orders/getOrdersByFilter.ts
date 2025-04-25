@@ -1,0 +1,19 @@
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
+
+export async function getOrderByFilter(session_id: string) {
+  const session = await getServerSession();
+  try {
+    const url = getApiUrl();
+    const res = await fetch(
+      `${url}/api/orders/getOrderByFilter?id=${session_id}`,
+      {
+        method: "GET",
+      }
+    );
+    const result = await res.json();
+    return { isOk: res.ok, message: result.message, data: result.data };
+  } catch (error: any) {
+    console.log(error);
+  }
+}

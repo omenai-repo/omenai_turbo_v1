@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     } else {
       const artist_data = await AccountArtist.findOne(
         { artist_id: seller_id },
-        "name, email phone"
+        "name email phone address"
       ).exec();
       seller_data = artist_data;
     }

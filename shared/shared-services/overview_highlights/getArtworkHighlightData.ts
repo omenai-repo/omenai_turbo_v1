@@ -10,10 +10,8 @@ export async function getArtworkHighlightData(session_id: string) {
         "Content-Type": "application/json",
       },
     });
-    if (!response.ok) return undefined;
     const result = await response.json();
-
-    return result;
+    return { isOk: response.ok, data: result.data, count: result.count };
   } catch (error: any) {
     console.log(error);
   }

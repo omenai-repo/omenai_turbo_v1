@@ -9,11 +9,13 @@ export async function POST(request: Request) {
 
     const { id } = await request.json();
     const allSales = await SalesActivity.find({ id }, "_id").exec();
+    const allSalesCount = await SalesActivity.countDocuments({ id });
 
     return NextResponse.json(
       {
         message: "Successful",
         data: allSales,
+        count: allSalesCount,
       },
       { status: 200 }
     );

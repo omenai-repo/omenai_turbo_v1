@@ -2,7 +2,15 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import LayoutWrapper from "./LayoutWrapper";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
+import "@mantine/core/styles.css";
+
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from "@mantine/core";
+
 const dm_sans = Poppins({
   subsets: ["latin"],
   variable: "--font-sans_serif",
@@ -15,11 +23,16 @@ export default async function DashboardRootLayout({
 }) {
   const session = await getServerSession();
   return (
-    <html lang="en">
+    <html lang="en" {...mantineHtmlProps}>
+      <head>
+        <ColorSchemeScript />
+      </head>
       <body
         className={`${dm_sans.className} flex flex-col px-4 justify-center`}
       >
-        <LayoutWrapper session={session} children={children} />
+        <MantineProvider>
+          <LayoutWrapper session={session} children={children} />
+        </MantineProvider>
         <Analytics />
       </body>
     </html>

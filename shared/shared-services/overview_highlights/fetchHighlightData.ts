@@ -10,7 +10,7 @@ export async function fetchHighlightData(
 ) {
   if (tag === "artworks") {
     const result = await getArtworkHighlightData(session_id);
-    return result.data.length;
+    return result?.isOk ? result.count : 0;
   }
 
   if (tag === "impressions") {
@@ -30,6 +30,6 @@ export async function fetchHighlightData(
 
   if (tag === "sales") {
     const result = await getSalesHighlightData(session_id);
-    return result.data.length;
+    return result?.isOk ? result.count : 0;
   }
 }

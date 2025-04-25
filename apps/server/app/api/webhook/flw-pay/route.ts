@@ -361,9 +361,6 @@ async function handlePurchaseTransaction(
         verified_transaction.data.amount -
           (commission + Number(meta.tax_fees || 0) + Number(meta.shipping_cost))
       );
-      console.log(verified_transaction);
-      console.log(wallet_increment_amount);
-      console.log(commission);
 
       const fund_wallet = await Wallet.updateOne(
         { owner_id: meta.seller_id },

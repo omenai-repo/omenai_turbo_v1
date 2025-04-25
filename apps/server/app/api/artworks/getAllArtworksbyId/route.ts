@@ -14,10 +14,14 @@ export async function POST(request: Request) {
       "artist title url art_id like_IDs pricing availability"
     ).exec();
 
+    const allArtworksCount = await Artworkuploads.countDocuments({
+      author_id: id,
+    });
     return NextResponse.json(
       {
         message: "Successful",
         data: allArtworks,
+        count: allArtworksCount,
       },
       { status: 200 }
     );
