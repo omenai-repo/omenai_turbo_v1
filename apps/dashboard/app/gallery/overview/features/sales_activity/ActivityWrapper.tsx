@@ -19,7 +19,10 @@ export default function ActivityWrapper() {
   const { data: sales, isLoading } = useQuery({
     queryKey: ["get_overview_sales_activity"],
     queryFn: async () => {
-      const data = await getSalesActivityData(session?.gallery_id as string);
+      const data = await getSalesActivityData(
+        session?.gallery_id as string,
+        "2025"
+      );
       if (data?.isOk) {
         return data.data;
       }
@@ -34,7 +37,7 @@ export default function ActivityWrapper() {
       </div>
     );
 
-  const activityData = salesDataAlgorithm(sales);
+  const activityData = salesDataAlgorithm(sales, sales);
 
   return (
     <>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
-import NoVerificationBlock from "../../components/NoVerificationBlock";
+
 import PageTitle from "../../components/PageTitle";
 import UploadArtworkDetails from "./features/UploadArtworkDetails";
 
@@ -71,15 +70,7 @@ export default function UploadArtwork() {
   return (
     <div className="relative">
       <PageTitle title="Upload an artwork" />
-      {!session?.gallery_verified && !isConfirmed?.isSubActive && (
-        <NoVerificationBlock gallery_name={session?.name as string} />
-      )}
-      {(session?.gallery_verified as boolean) && !isConfirmed?.isSubActive && (
-        <NoSubscriptionBlock />
-      )}
-      {!session?.gallery_verified && isConfirmed?.isSubActive && (
-        <NoVerificationBlock gallery_name={session?.name as string} />
-      )}
+
       {(session?.gallery_verified as boolean) && isConfirmed?.isSubActive && (
         <div className="">
           <UploadArtworkDetails />

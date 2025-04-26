@@ -15,7 +15,6 @@ export function formatISODate(isoDate: string) {
     "Nov",
     "Dec",
   ];
-
   const dayOfWeek = days[date.getUTCDay()];
   const month = months[date.getUTCMonth()];
   const day = ("0" + date.getUTCDate()).slice(-2); // Add leading zero if needed
@@ -26,9 +25,6 @@ export function formatISODate(isoDate: string) {
   hours = hours % 12;
   hours = hours ? hours : 12; // Handle midnight
   const formattedHours = ("0" + hours).slice(-2); // Add leading zero if needed
-
-  const dateString = `${dayOfWeek}, ${day}, ${month}, ${year}`;
-  // ${formattedHours}:${minutes} ${ampm}
-
+  const dateString = `${dayOfWeek}, ${day} ${month}, ${year} ${formattedHours}:${minutes} ${ampm}`;
   return dateString;
 }

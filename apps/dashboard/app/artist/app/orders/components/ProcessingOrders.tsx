@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ObjectId } from "mongoose";
-import OrdersTable from "./OrdersTable";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { OrdersGroupAccordion } from "./OrdersGroupAccordion";
 
 export default function ProcessingOrders({
   orders,
@@ -22,7 +22,11 @@ export default function ProcessingOrders({
         transition={{ duration: 0.33 }}
         className="w-full"
       >
-        {orders.length === 0 ? <NotFoundData /> : <OrdersTable data={orders} />}
+        {orders.length === 0 ? (
+          <NotFoundData />
+        ) : (
+          <OrdersGroupAccordion orders={orders} />
+        )}
       </motion.div>
     </AnimatePresence>
   );

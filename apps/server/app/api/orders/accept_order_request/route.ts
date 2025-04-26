@@ -18,6 +18,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { getApiUrl } from "@omenai/url-config/src/config";
 import Taxjar from "taxjar";
 import { NexusTransactions } from "@omenai/shared-models/models/transactions/NexusModelSchema";
+import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -75,8 +76,10 @@ export async function POST(request: NextRequest) {
       dimensions: ShipmentDimensions;
       exhibition_status: OrderArtworkExhibitionStatus | null;
       hold_status: HoldStatus | null;
+      specialInstructions?: string;
     } = await request.json();
 
+    // console.log(data);
     // Basic validation check
     if (!data.order_id || !data.dimensions) {
       throw new BadRequestError("Invalid params");
@@ -87,9 +90,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if order exists in DB
-    if (!order) {
-      throw new NotFoundError("Order data not found. Try again");
-    }
+    if (!order) throw new NotFoundError("Order data not found. Try again");
 
     // Calculate order shipping rate
     const rate_payload: ShipmentRateRequestTypes = {
@@ -129,6 +130,7 @@ export async function POST(request: NextRequest) {
         );
 
         const rate_response = await calculate_order_shipping_rate.json();
+        console.log(rate_response);
         if (!calculate_order_shipping_rate.ok)
           return NextResponse.json(
             { message: rate_response?.message },
@@ -175,6 +177,9 @@ export async function POST(request: NextRequest) {
         $set: {
           exhibition_status: data.exhibition_status,
           hold_status: data.hold_status,
+          "shipping_details.additional_information": data.specialInstructions
+            ? data.specialInstructions
+            : "",
           "shipping_details.shipment_information": shipment_information,
           "order_accepted.status": "accepted",
         },
@@ -185,6 +190,13 @@ export async function POST(request: NextRequest) {
     await session.commitTransaction();
 
     //TODO: Send mail to user
+    await sendOrderAcceptedMail({
+      name: order.buyer_details.name,
+      email: order.buyer_details.email,
+      order_id: order.order_id,
+      user_id: order.buyer_details.id,
+      artwork_data: order.artwork_data,
+    });
 
     // Return response
     return NextResponse.json(

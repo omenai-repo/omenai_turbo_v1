@@ -60,11 +60,13 @@ export async function POST(request: NextRequest) {
       headers: HEADERS,
     };
 
-    const plannedShippingDate = getFutureShipmentDate(
+    const plannedShippingDate = await getFutureShipmentDate(
       5,
       false,
       originCountryCode
     );
+
+    console.log(plannedShippingDate);
 
     const url = new URL(API_URL);
     url.searchParams.append(

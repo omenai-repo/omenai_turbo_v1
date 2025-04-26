@@ -41,6 +41,15 @@ export async function GET(request: NextRequest) {
     ];
 
     const result = await PurchaseTransactions.aggregate(pipeline);
+    if (result.length === 0) {
+      return NextResponse.json(
+        {
+          message: "Income data fetched successfully",
+          data: { netIncome: 0, salesRevenue: 0 },
+        },
+        { status: 200 }
+      );
+    }
 
     return NextResponse.json(
       { message: "Income data fetched successfully", data: result[0] },

@@ -1,7 +1,6 @@
 "use client";
 import PageTitle from "../components/PageTitle";
 import PayoutDashboard from "./components/PayoutDashboard";
-import NoVerificationBlock from "../components/NoVerificationBlock";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
@@ -15,13 +14,8 @@ export default function Payouts() {
   return (
     <div>
       <PageTitle title="Payout with Stripe" />
-      {!session?.gallery_verified ? (
-        <NoVerificationBlock
-          gallery_name={session !== null ? (session?.name as string) : ""}
-        />
-      ) : (
-        <PayoutDashboard />
-      )}
+
+      <PayoutDashboard />
     </div>
   );
 }

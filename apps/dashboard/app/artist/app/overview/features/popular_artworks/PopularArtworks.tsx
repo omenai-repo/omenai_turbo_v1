@@ -1,10 +1,9 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import OverviewComponentCard from "../../components/OverviewComponentCard";
 import PopulartArtworkCard from "./components/PopulartArtworkCard";
 import { fetchPopularArtworks } from "@omenai/shared-services/artworks/fetchPopularArtworks";
-import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+
+import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
 
 export default function PopularArtworks() {
   const { data: popularArtworks, isLoading } = useQuery({
@@ -18,42 +17,40 @@ export default function PopularArtworks() {
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading)
-    return (
-      <div className="h-[40vh] grid place-items-center">
-        <Load />
-      </div>
-    );
+  console.log(popularArtworks);
 
   return (
-    <>
-      <OverviewComponentCard
-        fullWidth={false}
-        title="Most Popular artworks"
-        id="tour-search"
-      >
-        <div className="w-full">
-          {popularArtworks.length === 0 ? (
-            <div className="w-full h-full grid pb-10">
-              <NotFoundData />
-            </div>
+    <div className="p-4 min-h-[300px] flex flex-col gap-y-4">
+      <div className="w-full h-full ring-1 ring-[#eeeeee] p-6 rounded-[20px]">
+        <h1 className="font-medium self-start">Popular artworks</h1>
+        <div className="grid place-items-center w-full h-full">
+          {isLoading ? (
+            <OrderRequestSkeleton />
           ) : (
-            <div className="flex flex-col gap-3 w-full" id="tour-search">
-              {popularArtworks.map((artwork: any, index: number) => {
-                return (
-                  <PopulartArtworkCard
-                    key={artwork.title}
-                    url={artwork.url}
-                    title={artwork.title}
-                    artist={artwork.artist}
-                    impression_count={artwork.impressions}
-                  />
-                );
-              })}
-            </div>
+            <>
+              {popularArtworks.length === 0 ? (
+                <p className="text-gray-700 text-[14px] font-medium">
+                  No available data
+                </p>
+              ) : (
+                <div className="flex flex-col gap-3 w-full" id="tour-search">
+                  {popularArtworks.map((artwork: any, index: number) => {
+                    return (
+                      <PopulartArtworkCard
+                        key={artwork.title}
+                        url={artwork.url}
+                        title={artwork.title}
+                        artist={artwork.artist}
+                        impression_count={artwork.impressions}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
-      </OverviewComponentCard>
-    </>
+      </div>
+    </div>
   );
 }

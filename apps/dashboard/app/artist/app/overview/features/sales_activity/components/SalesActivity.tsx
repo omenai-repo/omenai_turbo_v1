@@ -57,7 +57,7 @@ export const SalesActivityChart = ({
     <ResponsiveLine
       key={year}
       data={data}
-      margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
+      margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
