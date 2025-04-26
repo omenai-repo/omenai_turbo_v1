@@ -10,9 +10,7 @@ import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Banknote, BanknoteX, CheckCheck, Info, Truck } from "lucide-react";
 import { renderButtonAction } from "./construct_response";
-import { formatISODate } from "@omenai/shared-utils/src/formatIsoDate";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-import Link from "next/link";
+import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { useRouter } from "next/navigation";
 
