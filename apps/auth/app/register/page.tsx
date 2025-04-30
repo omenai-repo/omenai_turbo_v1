@@ -7,7 +7,7 @@ import RegisterOptions from "./components/RegisterOptions";
 
 function Page() {
   return (
-    <section className="h-[100vh] w-full xl:container py-12  overflow-x-hidden">
+    <section className="h-[100vh] w-full overflow-x-hidden">
       <div className="w-full h-full md:grid grid-cols-2">
         {/* Side section */}
         <div className="h-full w-full relative flex-1 hidden md:block">
@@ -16,7 +16,7 @@ function Page() {
             alt="Individual sign up image block"
             width={960}
             height={1024}
-            className="absolute inset-0 w-full rounded-[20px] h-full object-center object-cover"
+            className="absolute inset-0 w-full h-full object-center object-cover"
           />
         </div>
 
@@ -30,12 +30,12 @@ function Page() {
             transition={{ duration: 0.33 }}
             className="w-full h-full flex items-center justify-center gap-x-8"
           >
-            <div className="flex flex-col space-y-8 w-full ">
-              <div className="w-full h-full flex flex-col gap-y-8 p-5 md:px-[50px] overflow-x-hidden">
+            <div className="flex justify-center w-full">
+              <div className="w-full h-full flex flex-col max-w-[500px] px-4 gap-y-8 overflow-x-hidden">
                 <div className="flex flex-col space-y-6">
                   <IndividualLogo />
-                  <h1 className="text-sm sm:text-lg font-bold">
-                    Create an account today.
+                  <h1 className="text-base sm:text-sm font-bold">
+                    Create an account today
                   </h1>
                 </div>
                 <RegisterOptions />

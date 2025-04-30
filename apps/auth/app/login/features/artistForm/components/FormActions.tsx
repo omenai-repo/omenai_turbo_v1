@@ -22,12 +22,12 @@ export default function FormActions() {
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
         >
           {isLoading ? <LoadSmall /> : "Login to your account"}{" "}
         </button>
         <Link href={"/register"}>
-          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center bg-white cursor-pointer">
+          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded-full h-[35px] p-5 w-full text-center text-xs flex items-center justify-center bg-white cursor-pointer">
             Create an account
           </button>
         </Link>
@@ -35,26 +35,20 @@ export default function FormActions() {
 
       <div className="flex flex-col gap-y-2 my-6 justify-between items-center">
         <div className="flex gap-x-6">
-          <p className="font-medium text-[14px] text-gray-700/70 ">
-            <Link
-              href={`${auth_url}/login/user`}
-              className="text-gray-700 underline"
-            >
+          <p className="font-semibold text-xs text-dark ">
+            <Link href={`${auth_url}/login/user`} className="text-dark">
               Sign in as Collector{" "}
             </Link>
           </p>
-          <p className="font-medium text-[14px] text-gray-700/70">
-            <Link
-              href={`${auth_url}/login/gallery`}
-              className="text-gray-700 underline"
-            >
+          <p className="font-semibold text-xs text-dark">
+            <Link href={`${auth_url}/login/gallery`} className="text-dark">
               Sign in as Gallery{" "}
             </Link>
           </p>
         </div>
 
         <p
-          className="text-[14px] text-gray-700/70 text-red-600 cursor-pointer underline font-medium"
+          className="text-xs text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("artist")}
         >
           Forgot password?

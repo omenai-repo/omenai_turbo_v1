@@ -38,19 +38,19 @@ export default function Editorials() {
                 <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
                   Editorials
                 </p>
-                <p className="text-sm sm:text-lg font-bold text-[#000000] mt-[20px]">
+                <p className="text-sm sm:text-md font-bold text-[#000000] mt-[20px]">
                   Editorial articles
                 </p>
               </div>
 
               <div className="hidden sm:flex flex-col items-end">
-                <p className="text-sm font-bold">
+                <p className="text-base font-bold">
                   Unveiling the Stories Behind the Canvas:
                 </p>
-                <p className="justify-self-end font-medium">
+                <p className="justify-self-end font-medium text-xs">
                   Stories and Perspectives
                 </p>
-                <p className="justify-self-end font-medium">
+                <p className="justify-self-end font-medium text-xs">
                   from the Art World
                 </p>
               </div>

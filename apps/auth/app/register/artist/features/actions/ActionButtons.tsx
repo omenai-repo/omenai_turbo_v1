@@ -131,7 +131,7 @@ export default function () {
     incrementCurrentArtistSignupFormIndex();
   };
   return (
-    <div className="w-full flex px-3 gap-4">
+    <div className="w-full flex gap-4">
       <button
         className={`${
           currentArtistSignupFormIndex > 0 ? "block" : "hidden"

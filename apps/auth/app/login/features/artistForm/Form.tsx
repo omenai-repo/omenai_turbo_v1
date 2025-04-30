@@ -19,7 +19,7 @@ export default function ArtistLoginForm() {
             <IndividualLogo />
           </div>
           <div className="flex flex-col space-y-10 w-full">
-            <h1 className="text-sm sm:text-lg font-bold">
+            <h1 className="text-base sm:text-sm font-bold">
               Login to your artist account.
             </h1>
 

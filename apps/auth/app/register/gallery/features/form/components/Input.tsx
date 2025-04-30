@@ -72,7 +72,7 @@ export default function Input({
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col gap-y-1 w-full xl:container"
+        className="flex flex-col gap-y-1 w-full"
       >
         <label
           htmlFor={labelText}
@@ -83,8 +83,8 @@ export default function Input({
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 sm:p-6 rounded-full w-full text-xs placeholder:text-xs placeholder:text-gray-700/40 placeholder:font-medium font-medium"
-            placeholder={`e.g ${placeholder}`}
+            className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] py-5 rounded-full w-full text-xs placeholder:text-xs placeholder:text-gray-700/40 placeholder:font-medium font-medium"
+            placeholder={`${placeholder}`}
             disabled={disabled}
             onChange={handleChange}
             onKeyDown={handleKeyPress}

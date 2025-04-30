@@ -6,13 +6,13 @@ export const artist_signup_step_one = [
   {
     label: "Fullname",
     type: "text",
-    placeholder: "John Doe",
+    placeholder: "e.g John Doe",
     labelText: "name",
   },
   {
     label: "Email address",
     type: "email",
-    placeholder: "example@gmail.com",
+    placeholder: "e.g johndoe@gmail.com",
     labelText: "email",
   },
 ];
@@ -56,7 +56,7 @@ export const artist_signup_step_two = [
     label:
       "Phone number (Preferably a WhatsApp number to facilitate notifications via whatapp)",
     type: "text",
-    placeholder: "+12345678901",
+    placeholder: "e.g +12345678901",
     labelText: "phone",
   },
 ];

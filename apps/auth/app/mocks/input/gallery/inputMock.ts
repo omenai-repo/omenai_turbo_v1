@@ -12,14 +12,14 @@ export const gallery_signup_step_one = [
   {
     label: "Email address",
     type: "email",
-    placeholder: "example@email.com",
+    placeholder: "e.g johndoe@email.com",
     labelText: "email",
   },
 
   {
     label: "Admin name",
     type: "text",
-    placeholder: "Jane Doe",
+    placeholder: "e.g Jane Doe",
     labelText: "admin",
   },
 ];
@@ -48,7 +48,7 @@ export const gallery_signup_step_two = [
   {
     label: "Address line",
     type: "text",
-    placeholder: "e.g 79, example street",
+    placeholder: "79, example street",
     labelText: "address_line",
     items: [],
   },
@@ -61,7 +61,7 @@ export const gallery_signup_step_two = [
   {
     label: "Phone number",
     type: "text",
-    placeholder: "+12345678901",
+    placeholder: "e.g +12345678901",
     labelText: "phone",
   },
 ];

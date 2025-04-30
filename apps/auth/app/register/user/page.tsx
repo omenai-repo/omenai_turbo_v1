@@ -3,16 +3,18 @@ import ImageBlock from "./features/image/Image";
 
 export default function GallerySignup() {
   return (
-    <section className="h-[100vh] w-full xl:container py-12 px-4 grid place-items-center overflow-x-hidden">
-      <div className="w-full h-full md:grid grid-cols-2">
-        {/* Side section */}
-        <div className="h-full w-full relative flex-1 hidden md:block">
-          <ImageBlock />
-        </div>
+    <section className="w-full h-screen lg:grid lg:grid-cols-2 overflow-hidden">
+      {/* Side Image - hidden on small screens, fixed on large screens */}
+      <div className="hidden lg:block fixed top-0 left-0 w-1/2 h-screen">
+        <ImageBlock />
+      </div>
 
-        {/* Form section */}
-        <div className="w-full h-full p-2 lg:px-[50px] overflow-x-hidden">
-          <Form />
+      {/* Form Section - full width on mobile, scrollable, and centered */}
+      <div className="w-full h-screen overflow-y-auto lg:ml-[100%]">
+        <div className="flex items-center justify-center min-h-screen p-6">
+          <div className="w-full max-w-md">
+            <Form />
+          </div>
         </div>
       </div>
     </section>

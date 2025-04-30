@@ -8,7 +8,7 @@ export default function ImageBlock() {
         alt="Individual sign up image block"
         width={500}
         height={500}
-        className="absolute inset-0 w-full h-full object-center object-cover rounded-tr-xl rounded-br-xl"
+        className="absolute inset-0 w-full h-full object-center object-cover"
       />
 
       <div className="absolute inset-0 bg-dark opacity-50 z-10" />

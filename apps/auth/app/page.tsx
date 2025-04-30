@@ -1,11 +1,8 @@
-import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
-import { AnimatePresence, motion } from "framer-motion";
-import LoginOptions from "./login/components/LoginOptions";
 import Link from "next/link";
 
 export default function page() {
   return (
-    <section className="h-[100vh] w-full xl:container py-12 grid place-items-center overflow-x-hidden">
+    <section className="h-[100vh] w-full py-12 grid place-items-center overflow-x-hidden">
       {/* Login options section */}
 
       <div className="w-full h-full flex items-center justify-center gap-x-8">

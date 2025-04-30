@@ -86,7 +86,7 @@ export default function SelectInput({
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col gap-y-1 xl:container"
+        className="flex flex-col gap-y-1"
       >
         <div className="flex flex-col gap-1">
           <label

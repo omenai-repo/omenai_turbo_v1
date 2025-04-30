@@ -130,7 +130,7 @@ export default function TokenBlock({ token }: TokenProps) {
         Did not recieve a code?{" "}
         <button
           disabled={resendTokenLoading}
-          className="text-gray-700 underline font-bold cursor-pointer"
+          className="text-dark font-bold cursor-pointer"
           onClick={resendVerification}
         >
           {resendTokenLoading ? <LoadSmall /> : "Resend code"}

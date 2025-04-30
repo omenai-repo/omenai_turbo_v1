@@ -16,10 +16,10 @@ export default function SingleSlide({
   return (
     <section className="min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] bg-dark flex h-[200px] items-center p-2 xs:p-4 rounded-lg">
       <div className="text-white p-2 flex col-span-1 w-full flex-col gap-y-3">
-        <p className="text-[14px] xs:text-base font-bold">{headline}</p>
-        <p className="text-[14px] font-normal">{subheadline}</p>
+        <p className="text-xs xs:text-[14px] font-bold">{headline}</p>
+        <p className="text-xs font-normal">{subheadline}</p>
         <Link href={cta} className="group">
-          <button className="flex items-center gap-x-2 bg-dark group-hover:bg-white group-hover:text-gray-700 ring-1 ring-white group-hover:ring-dark duration-200 text-white px-3 xs:px-4 py-1.5 xs:py-2 text-[14px] rounded-full">
+          <button className="flex items-center gap-x-2 bg-dark group-hover:bg-white group-hover:text-gray-700 ring-1 ring-white group-hover:ring-dark duration-200 text-white px-3 xs:px-4 py-1.5 xs:py-2 text-xs rounded-full">
             <span>Explore</span>
             <IoIosArrowRoundForward />
           </button>
@@ -27,9 +27,9 @@ export default function SingleSlide({
       </div>
       <div className="col-span-1">
         <Image
-          width={250}
+          width={200}
           height={200}
-          className="max-h-full object-center rounded-md w-full sm:w-[250px] object-fit h-[150px] sm:h-[180px] object-cover"
+          className="max-h-full object-center rounded-md w-full sm:w-[200px] object-fit h-[200px] sm:h-[180px] object-cover"
           src={image_url}
           alt={`hero image ${headline}`}
         />

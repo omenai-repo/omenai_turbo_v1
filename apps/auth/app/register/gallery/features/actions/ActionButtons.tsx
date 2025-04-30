@@ -115,7 +115,7 @@ export default function () {
     incrementCurrentGallerySignupFormIndex();
   };
   return (
-    <div className="w-full flex px-3 gap-4">
+    <div className="w-full flex gap-4">
       <button
         className={`${
           currentGallerySignupFormIndex > 0 ? "block" : "hidden"

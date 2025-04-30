@@ -14,7 +14,9 @@ import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { toast } from "sonner";
 import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  HomeLoad,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 export default function GalleryDashboardLayout({
   children,
@@ -44,11 +46,7 @@ export default function GalleryDashboardLayout({
   });
 
   if (isLoading) {
-    return (
-      <div className="h-[85vh] w-full grid place-items-center">
-        <Load />
-      </div>
-    );
+    return <HomeLoad />;
   }
 
   const isNotStripeConnected = account.connected_account_id === null;

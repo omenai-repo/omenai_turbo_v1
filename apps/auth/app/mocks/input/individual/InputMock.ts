@@ -5,14 +5,14 @@ export const user_signup_step_one = [
   {
     label: "Full name",
     type: "text",
-    placeholder: "Jack Bauear",
+    placeholder: "e.g John Doe",
     labelText: "name",
     id: 0,
   },
   {
     label: "Email address",
     type: "email",
-    placeholder: "johndoe@example.com",
+    placeholder: "e.g johndoe@example.com",
     labelText: "email",
     id: 1,
   },
@@ -77,5 +77,3 @@ export const user_signup_step_three = [
     id: 3,
   },
 ];
-
-export const emails = ["dantereus1@gmail.com"];

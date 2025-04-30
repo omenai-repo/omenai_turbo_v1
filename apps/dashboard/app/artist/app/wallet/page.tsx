@@ -71,7 +71,7 @@ export default function Wallet() {
 
   return (
     <div className="flex flex-col space-y-5">
-      {/* <PageTitle title="Wallet" /> */}
+      <PageTitle title="Wallet" />
 
       {loading ? (
         <WalletSkeleton />

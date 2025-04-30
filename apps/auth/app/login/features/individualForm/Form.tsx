@@ -19,8 +19,8 @@ export default function IndividualLoginForm() {
             <IndividualLogo />
           </div>
           <div className="flex flex-col space-y-10 w-full">
-            <h1 className="text-sm sm:text-lg font-bold">
-              Login to your account.
+            <h1 className="text-sm sm:text-md font-bold">
+              Login to your collector account.
             </h1>
 
             <FormInput />

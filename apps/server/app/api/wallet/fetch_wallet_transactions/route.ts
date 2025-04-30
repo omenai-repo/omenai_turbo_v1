@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
 
     let mongoQuery = WalletTransaction.find(query)
       .skip(skip)
-      .sort({ trans_date: -1 });
+      .sort({ createdAt: -1 });
 
     if (numericLimit && numericLimit > 0) {
       mongoQuery = mongoQuery.limit(numericLimit);

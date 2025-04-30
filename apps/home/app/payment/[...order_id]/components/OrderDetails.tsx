@@ -92,7 +92,7 @@ export default function OrderDetails({
 
               <div className="flex flex-col font-bold text-base mt-10">
                 <p>Grand total</p>
-                <p className="text-sm font-bold">
+                <p className="text-base font-bold">
                   {formatPrice(total_price_number)}
                 </p>
               </div>

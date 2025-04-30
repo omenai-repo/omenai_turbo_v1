@@ -122,7 +122,7 @@ export default function ({
     incrementCurrentSignupFormIndex();
   };
   return (
-    <div className="mt-6 flex px-3 gap-4">
+    <div className="mt-6 flex gap-4">
       <button
         className={`${
           currentSignupFormIndex > 0 ? "block" : "hidden"

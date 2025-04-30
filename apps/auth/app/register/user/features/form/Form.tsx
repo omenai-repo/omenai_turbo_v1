@@ -22,7 +22,7 @@ export default function FormBlock() {
           </div>
           <div className="flex flex-col space-y-6 w-full">
             <div>
-              <h1 className="text-base sm:text-lg font-bold">
+              <h1 className="text-base sm:text-sm font-bold">
                 Create a user Account
               </h1>
               <p className="text-xs sm:text-[14px]">

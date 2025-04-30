@@ -136,7 +136,7 @@ export default function WithdrawalModalForm() {
             >
               <p className="text-xs font-medium">You Send ($)</p>
               <input
-                className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 sm:p-6 rounded-lg w-full placeholder:text-xs placeholder:text-gray-700/40 "
+                className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 rounded-lg w-full placeholder:text-xs placeholder:text-gray-700/40 "
                 placeholder="0.0"
                 onChange={handleAmountChange}
               />

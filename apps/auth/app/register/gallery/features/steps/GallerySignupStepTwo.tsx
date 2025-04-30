@@ -12,7 +12,7 @@ export default function GallerySignupStepTwo() {
     updateGallerySignupData(fieldName, e.target.value);
   }
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-4">
       {gallery_signup_step_two.map((form_step, index) => {
         return (
           <div key={index}>

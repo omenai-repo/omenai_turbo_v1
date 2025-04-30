@@ -60,7 +60,7 @@ export default function Collections({
     <div className="">
       {isCatalog ? (
         <>
-          <h1 className="text-sm sm:text-lg md:text-xl font-normal mt-5 text-[#000000]">
+          <h1 className="text-sm sm:text-md md:text-xl font-normal mt-5 text-[#000000]">
             Curate creativity and design in the digital realm.
           </h1>
           <hr className="w-full border border-dark/10 my-2" />
@@ -72,19 +72,19 @@ export default function Collections({
               <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
                 Art collections
               </p>
-              <p className="text-sm sm:text-lg font-bold text-[#000000] mt-[20px]">
+              <p className="text-sm sm:text-md font-bold text-[#000000] mt-[20px]">
                 Art collections.
               </p>
             </div>
 
             <div className="hidden sm:flex flex-col items-end">
-              <p className="text-sm font-bold">
+              <p className="text-base font-bold">
                 Curated Creativity, All in One Place:
               </p>
-              <p className="justify-self-end font-medium">
+              <p className="justify-self-end font-medium text-xs">
                 Dive Into Diverse Art Collections,
               </p>
-              <p className="justify-self-end font-medium">
+              <p className="justify-self-end font-medium text-xs">
                 Thoughtfully Curated for Your Exploration
               </p>
             </div>
