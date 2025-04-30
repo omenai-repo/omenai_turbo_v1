@@ -7,7 +7,6 @@ export async function isHoliday(
   countryCode: string
 ): Promise<boolean> {
   const apiKey = "QQowDk3rKdlhZuyPHQO7aoKk0JWkZpVq";
-  console.log(apiKey);
   if (!apiKey) {
     console.warn("Calendarific API key not set.");
     return false;

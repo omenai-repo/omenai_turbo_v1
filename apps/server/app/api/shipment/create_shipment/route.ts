@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const plannedShippingDateAndTime = getFutureShipmentDate(
+  const plannedShippingDateAndTime = await getFutureShipmentDate(
     3,
     true,
     seller_details.address.countryCode,
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
   );
 
-  const invoiceDate = getFutureShipmentDate(
+  const invoiceDate = await getFutureShipmentDate(
     0,
     false,
     seller_details.address.countryCode
