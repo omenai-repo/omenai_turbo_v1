@@ -29,41 +29,41 @@ const PaymentPendingMail = (name: string, artwork: string) => {
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-[20px] font-normal text-center p-0 mb-[40px] mx-0">
+            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
               PURCHASE PAYMENT PROCESSING
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               <strong>Dear {name},</strong>
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for your recent order of ${artwork}! Your payment is
               currently being processed. You'll receive a confirmation email
               once your payment has been confirmed.
             </Text>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               As always, if you have any questions, feedback, or concerns
               regarding your Order or any other aspect of our service, please
               feel free to reach out to us at{" "}
               <Link
                 href="mailto:contact@omenani.net"
-                className="underline text-gray-700 italic font-bold"
+                className="underline text-dark italic font-bold"
               >
                 contact@omeani.net
               </Link>
               . Our dedicated customer support team is available to assist you
               and ensure your experience remains exceptional.{" "}
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Once again, thank you for choosing <strong>Omenai Inc.</strong> We
               appreciate your business and look forward to serving you.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

@@ -37,7 +37,7 @@ const Chip = ({
     <Link
       href={`/user/${text.toLowerCase()}`}
       onClick={() => setSelectedTab(text.toLowerCase())}
-      className={`hover:text-gray-700 hover:underline text-[14px] font-normal transition-colors py-0.5 relative text-center`}
+      className={`hover:text-dark hover:underline text-fluid-xs font-normal transition-colors py-0.5 relative text-center`}
     >
       <span className="relative z-10 font-medium">{text}</span>
       {selectedTab && (

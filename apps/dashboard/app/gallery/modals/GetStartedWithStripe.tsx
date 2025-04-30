@@ -99,13 +99,13 @@ export default function GetStartedWithStripe() {
           animate={{ scale: 1, rotate: "0deg" }}
           exit={{ scale: 0, rotate: "0deg" }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-white border border-[#E0E0E0] text-gray-700 p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative"
+          className="bg-white border border-[#E0E0E0] text-dark p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative"
         >
           <div className="">
-            <h1 className="text-[14px] font-light text-[#858585] mb-1">
+            <h1 className="text-fluid-xs font-light text-[#858585] mb-1">
               Let&apos;s get you setup to receive payments!
             </h1>
-            <p className="font-bold text-sm">
+            <p className="font-bold text-fluid-sm">
               Create a connected account on{" "}
               <span className="text-[#5247ee]">Stripe</span>
             </p>
@@ -115,7 +115,7 @@ export default function GetStartedWithStripe() {
             >
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-[14px] mb-2"
+                  className="text-[#858585] font-normal text-fluid-xs mb-2"
                   htmlFor="name"
                 >
                   Name
@@ -124,12 +124,12 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.name}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-[14px] mb-2"
+                  className="text-[#858585] font-normal text-fluid-xs mb-2"
                   htmlFor="email"
                 >
                   Email
@@ -138,12 +138,12 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.email}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full flex flex-col">
                 <label
-                  className="text-[#858585] font-normal text-[14px] mb-2"
+                  className="text-[#858585] font-normal text-fluid-xs mb-2"
                   htmlFor="email"
                 >
                   Business Location
@@ -153,13 +153,13 @@ export default function GetStartedWithStripe() {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setCountrySelect(e.target.value)
                   }
-                  className="border-0 ring-1 ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full"
+                  className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-full"
                 >
                   <option value="">Select</option>
                   {country_codes.map((country, index) => {
                     return (
                       <option
-                        className="p-3 font-light text-gray-700"
+                        className="p-3 font-light text-dark"
                         value={country.code}
                         key={country.code}
                       >
@@ -175,22 +175,22 @@ export default function GetStartedWithStripe() {
                 <div className="dev-callout">
                   {connectedAccountId && (
                     <div className="my-5">
-                      <p className="text-[14px] font-normal">
+                      <p className="text-fluid-xs font-normal">
                         Your connected account ID is:{" "}
                         <code className="font-bold">{connectedAccountId}</code>{" "}
                       </p>
-                      <span className="text-[14px] my-3 font-medium">
+                      <span className="text-fluid-xs my-3 font-medium">
                         Hey, don&apos;t worry, we&apos;ll remember it for you!
                       </span>
                     </div>
                   )}
                   {accountCreatePending && (
-                    <p className="text-[14px] font-bold mt-6">
+                    <p className="text-fluid-xs font-bold mt-6">
                       Creating a connected account for you...
                     </p>
                   )}
                   {accountLinkCreatePending && (
-                    <p className="text-[14px] font-bold mt-6">
+                    <p className="text-fluid-xs font-bold mt-6">
                       Creating a new Account Link for you...
                     </p>
                   )}
@@ -200,7 +200,7 @@ export default function GetStartedWithStripe() {
                 <button
                   type="submit"
                   disabled={accountCreatePending}
-                  className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                  className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 >
                   {accountCreatePending ? (
                     <LoadSmall />
@@ -214,7 +214,7 @@ export default function GetStartedWithStripe() {
             {connectedAccountId && (
               <button
                 disabled={accountLinkCreatePending}
-                className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 onClick={handleAccountLink}
               >
                 {accountLinkCreatePending ? (

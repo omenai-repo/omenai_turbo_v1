@@ -7,7 +7,7 @@ export default function PricingCardFeatureListItem({
 }: PricingCardFeatureListItemProps) {
   return (
     <div className="flex gap-2">
-      <AiOutlineCheckCircle className="text-primary text-sm" />
+      <AiOutlineCheckCircle className="text-primary text-fluid-sm" />
       {feature_title}
     </div>
   );

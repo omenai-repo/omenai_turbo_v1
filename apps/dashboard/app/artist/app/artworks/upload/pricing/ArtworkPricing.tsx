@@ -160,24 +160,24 @@ export default function ArtworkPricing() {
         <ArtworkPricingSkeleton />
       ) : (
         <>
-          <h1 className="font-bold text-base">Proposed Artwork Price</h1>
+          <h1 className="font-bold text-fluid-base">Proposed Artwork Price</h1>
           <Paper
             radius="lg"
             className="flex flex-col space-y-2 p-5 my-6"
             withBorder
           >
-            <p className="text-[14px]">Omenai will list your art piece for</p>
-            <h1 className="text-md font-bold">
+            <p className="text-fluid-xs">Omenai will list your art piece for</p>
+            <h1 className="text-fluid-md font-bold">
               {formatPrice(pricing.usd_price, "USD")}
             </h1>
-            <p className="text-xs font-medium">
+            <p className="text-fluid-xxs font-medium">
               ({pricing.currency} equivalent:{" "}
-              <span className="font-bold text-[14px]">
+              <span className="font-bold text-fluid-xs">
                 {formatPrice(pricing.price, pricing.currency)})
               </span>
             </p>
           </Paper>
-          <p className="text-xs font-medium">
+          <p className="text-fluid-xxs font-medium">
             If you agree with the price, you can proceed to upload your piece.
             If not, tap cancel to review your details.
           </p>
@@ -198,7 +198,7 @@ export default function ArtworkPricing() {
 
           <div className="w-full flex justify-between items-center gap-x-4 mb-2 mt-6">
             <Link href={"/artist/app/artworks/upload"} className="w-fit h-fit">
-              <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white hover:bg-[#f1f1f1] text-dark ring-1 ring-dark text-[14px] font-normal whitespace-nowrap">
+              <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white hover:bg-[#f1f1f1] text-dark ring-1 ring-dark text-fluid-xs font-normal whitespace-nowrap">
                 Cancel
               </button>
             </Link>
@@ -206,7 +206,7 @@ export default function ArtworkPricing() {
             <button
               type="submit"
               disabled={loading}
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] hover:bg-dark/90 font-normal whitespace-nowrap"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs hover:bg-dark/90 font-normal whitespace-nowrap"
             >
               {loading ? <LoadSmall /> : "Upload"}
             </button>

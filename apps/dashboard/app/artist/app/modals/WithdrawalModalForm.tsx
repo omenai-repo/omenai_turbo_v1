@@ -134,9 +134,9 @@ export default function WithdrawalModalForm() {
               withBorder
               className="p-5 flex flex-col space-y-2"
             >
-              <p className="text-xs font-medium">You Send ($)</p>
+              <p className="text-fluid-xxs font-medium">You Send ($)</p>
               <input
-                className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 rounded-lg w-full placeholder:text-xs placeholder:text-gray-700/40 "
+                className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-lg w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
                 placeholder="0.0"
                 onChange={handleAmountChange}
               />
@@ -147,7 +147,7 @@ export default function WithdrawalModalForm() {
                 <button
                   disabled={transferRateLoading || amount_data.amount === 0}
                   onClick={handleAmountConvert}
-                  className=" p-3 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+                  className=" p-3 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
                 >
                   {transferRateLoading ? (
                     <Loader color="rgba(255, 255, 255, 1)" size="sm" />
@@ -170,11 +170,11 @@ export default function WithdrawalModalForm() {
               withBorder
               className="p-5 flex flex-col space-y-2"
             >
-              <p className="text-xs font-medium">
+              <p className="text-fluid-xxs font-medium">
                 You Get ({session.base_currency})
               </p>
               <Paper className="p-5" radius="lg" withBorder>
-                <span className="text-[14px] font-medium">
+                <span className="text-fluid-xs font-medium">
                   {formatPrice(
                     amount_data.currency_amount,
                     session.base_currency
@@ -188,7 +188,7 @@ export default function WithdrawalModalForm() {
               withBorder
               className="p-5 flex flex-col space-y-2"
             >
-              <p className="text-xs font-medium">Enter wallet pin</p>
+              <p className="text-fluid-xxs font-medium">Enter wallet pin</p>
               <div className="flex flex-col space-y-4">
                 <div className="w-full flex justify-center">
                   <PinInput
@@ -202,7 +202,7 @@ export default function WithdrawalModalForm() {
                 <Link
                   onClick={() => toggleWithdrawalFormPopup(false)}
                   href="/artist/app/wallet/pin_recovery"
-                  className="text-red-600 font-medium text-xs text-center my-5"
+                  className="text-red-600 font-medium text-fluid-xxs text-center my-5"
                 >
                   Forgot pin?
                 </Link>
@@ -214,7 +214,7 @@ export default function WithdrawalModalForm() {
             <button
               onClick={handleWithdrawal}
               disabled={withdrawalLoading || amount_data.amount === 0}
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
             >
               {withdrawalLoading ? (
                 <Loader color="rgba(255, 255, 255, 1)" size="sm" />

@@ -32,13 +32,13 @@ const OrderRequestReminder = (name: string) => {
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-[24px] font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
               You have an order request
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello <strong>{name}</strong>,
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               I hope this email finds you well. <br />
               This is a friendly reminder that there are pending order requests
               awaiting your attention on your dashboard. To ensure a positive
@@ -55,35 +55,35 @@ const OrderRequestReminder = (name: string) => {
               </Link>
             </div>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Upon logging into your dashboard, you will be able to:
             </Text>
             <div className="my-0">
               <ul>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Review the order details.
                   </Text>
                 </li>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Accept or decline the order request.
                   </Text>
                 </li>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Provide a quote for the artwork, including shipping fees and
                     any applicable taxes.
                   </Text>
                 </li>
               </ul>
             </div>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Please note that timely responses to order requests are crucial in
               ensuring a positive user experience and facilitating successful
               transactions.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Should you encounter any difficulties or have any questions
               regarding this order request, please do not hesitate to reach out
               to our support team for assistance at{" "}
@@ -95,17 +95,17 @@ const OrderRequestReminder = (name: string) => {
               </Link>
               .
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for your continued partnership with our platform. We
               appreciate your dedication to showcasing your artworks and serving
               our community of art enthusiasts.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

@@ -4,12 +4,14 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { BadgeDollarSign, BanknoteArrowUp, ImageUp } from "lucide-react";
 
-const total_artworks_icon = <CiBoxList className="text-purple-600 text-sm" />;
+const total_artworks_icon = (
+  <CiBoxList className="text-purple-600 text-fluid-sm" />
+);
 const sales_revenue = (
   <BadgeDollarSign
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-purple-600 text-sm"
+    className="text-purple-600 text-fluid-sm"
   />
 );
 const net = (
@@ -24,7 +26,7 @@ const art_sold = (
   <ImageUp
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-orange-600 text-sm"
+    className="text-orange-600 text-fluid-sm"
   />
 );
 

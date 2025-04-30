@@ -29,23 +29,23 @@ const OrderDeclinedWarning = (name: string) => {
               className="mx-auto mt-10"
             />
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello <strong>{name}</strong>,
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               I hope this email finds you well. <br />
               We wanted to bring to your attention that there are pending order
               requests associated with your gallery that have not yet received a
               response. If these orders remain unacknowledged, they will be
               subject to automatic decline within the next 24 hours.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               To avoid any inconvenience and ensure a smooth experience for your
               customers, we encourage you to review and respond to the pending
               requests at your earliest convenience.
             </Text>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               If you have any questions or require further assistance, please
               don't hesitate to reach out to us at{" "}
               <Link
@@ -57,16 +57,16 @@ const OrderDeclinedWarning = (name: string) => {
               . We value your partnership and appreciate your prompt attention
               to this matter.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for your understanding and continued support of our
               platform
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

@@ -30,13 +30,13 @@ export default async function page({
       <div className=" items-start justify-start w-full">
         {/* banner */}
         <div className="h-full text-black pt-10 pb-5">
-          <h1 className="text-lg lg:text-xl font-semibold">
+          <h1 className="text-fluid-lg lg:text-fluid-xl font-semibold">
             {pageTitleParser()}
           </h1>
           <div className="flex items-center gap-2">
             <Link
               href={"/collections"}
-              className="text-gray-700 font-light hover:underline"
+              className="text-dark font-light hover:underline"
             >
               {" "}
               Collections
@@ -44,14 +44,14 @@ export default async function page({
             <p>/</p>
             <Link
               href={`/collections/${slug[0]}`}
-              className="text-gray-700 font-semibold hover:underline"
+              className="text-dark font-semibold hover:underline"
             >
               {pageTitleParser()}
             </Link>
           </div>
           {/* History */}
           <div className="my-4 lg:w-1/2 w-full">
-            <p className="text-xs font-medium">
+            <p className="text-fluid-xxs font-medium">
               {artMediumHistory[page_title]}
             </p>
           </div>

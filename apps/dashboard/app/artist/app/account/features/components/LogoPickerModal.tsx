@@ -128,10 +128,10 @@ export default function LogoPickerModal() {
               animate={{ scale: 1, rotate: "0deg" }}
               exit={{ scale: 0, rotate: "0deg" }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white text-gray-700 p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
+              className="bg-white text-dark p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
             >
               <div className="p-5">
-                <p className="text-base font-normal">Upload logo image</p>
+                <p className="text-fluid-base font-normal">Upload logo image</p>
               </div>
 
               <div className="w-full flex justify-center h-full p-5">
@@ -150,7 +150,7 @@ export default function LogoPickerModal() {
                   ) : (
                     <button
                       type="button"
-                      className="w-full text-[14px] h-full border border-dark/10 rounded-md outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+                      className="w-full text-fluid-xs h-full border border-dark/10 rounded-md outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
                       onClick={() => {
                         logoPickerRef.current?.click();
                       }}
@@ -184,10 +184,10 @@ export default function LogoPickerModal() {
                   />
                 </div>
               </div>
-              <div className=" w-full px-5 py-8 text-[14px]">
+              <div className=" w-full px-5 py-8 text-fluid-xs">
                 <div className="w-full items-center gap-x-2 flex">
                   <button
-                    className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                    className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                     onClick={() => updateModal(false)}
                   >
                     Cancel
@@ -195,7 +195,7 @@ export default function LogoPickerModal() {
                   <button
                     onClick={handleLogoUpdate}
                     disabled={loading || !logo}
-                    className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                    className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                   >
                     {loading ? <LoadSmall /> : "Upload logo"}
                   </button>

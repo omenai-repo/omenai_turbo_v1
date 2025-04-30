@@ -100,29 +100,29 @@ export default function PricingCardItem({
   }
 
   return (
-    <div className="w-fit rounded-lg text-gray-700 border border-dark/20 shadow-sm">
+    <div className="w-fit rounded-lg text-dark border border-dark/20 shadow-sm">
       {/* Plan name and popularity tag (optional) */}
       <div className="p-8 w-full flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <p className="font-normal">{plan} plan</p>
           {/* <div className="border border-primary rounded-full px-2 py-[0.1rem]">
-            <span className="text-[14px] text-primary font-normal">popular</span>
+            <span className="text-fluid-xs text-primary font-normal">popular</span>
           </div> */}
         </div>
         {/* Plan price */}
         <div className="w-full flex gap-1 items-center">
-          <p className="text-xl font-normal">{price}</p>
-          <p className="text-base">{duration}</p>
+          <p className="text-fluid-xl font-normal">{price}</p>
+          <p className="text-fluid-base">{duration}</p>
         </div>
         {/* Plan description if applicable */}
         <div className="w-full">
-          <p className="font-light text-[14px]">{description}</p>
+          <p className="font-light text-fluid-xs">{description}</p>
         </div>
         {/* Action buttons */}
         <div className="flex flex-col gap-4 w-full">
           <button
             onClick={handleSubscribe}
-            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-gray-700 disabled:cursor-pointer text-white`}
+            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-dark disabled:cursor-pointer text-white`}
           >
             {loading ? <LoadSmall /> : "Subscribe"}
           </button>
@@ -133,8 +133,8 @@ export default function PricingCardItem({
 
       {/* Features */}
       <div className="flex-col flex gap-2 p-8">
-        <h6 className="font-normal text-sm">Features</h6>
-        <span className="text-[14px] font-light">
+        <h6 className="font-normal text-fluid-sm">Features</h6>
+        <span className="text-fluid-xs font-light">
           Everything in the <span className="font-normal">{plan}</span> plan
           plus...
         </span>

@@ -14,7 +14,7 @@ export default function Form() {
         transition={{ duration: 0.33 }}
         className="w-full py-[20px] md:py-[30px] lg:px-[2rem] xl:px-[4rem] 2xl:px-[7rem]"
       >
-        <div className="text-center text-[14px] flex items-center flex-col mt-10">
+        <div className="text-center text-fluid-xs flex items-center flex-col mt-10">
           <AdminLogo />
           <p className="text-[#616161] mt-5">
             Welcome back. kindly login to your admin account

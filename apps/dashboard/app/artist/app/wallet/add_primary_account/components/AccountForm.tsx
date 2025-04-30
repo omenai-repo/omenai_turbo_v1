@@ -145,7 +145,7 @@ export default function AccountForm() {
         bank_name: selectedBank.name,
         account_name: validatedAccount.account_name,
         bank_id: selectedBank.id,
-        bank_code: selectedBank.code,
+        bank_code: "044", // TODO: Change to appropriate bank code
         branch: selectedBranch,
         bank_country: session.address.countryCode,
       };

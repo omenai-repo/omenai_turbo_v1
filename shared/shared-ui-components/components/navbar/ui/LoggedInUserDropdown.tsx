@@ -23,12 +23,12 @@ const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
       <motion.div animate={open ? "open" : "closed"} className="relative">
         <button
           onClick={() => setOpen((pv) => !pv)}
-          className="flex items-center gap-1 pl-3 py-2 rounded-sm text-gray-700 transition-colors"
+          className="flex items-center gap-1 pl-3 py-2 rounded-sm text-dark transition-colors"
         >
-          <span className="md:block font-medium whitespace-nowrap text-base hidden">
+          <span className="md:block font-medium whitespace-nowrap text-fluid-base hidden">
             {user}
           </span>
-          <BiUser className="text-sm" />
+          <BiUser className="text-fluid-sm" />
 
           <motion.span variants={iconVariants}>
             <FiChevronDown />
@@ -39,7 +39,7 @@ const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
           initial={wrapperVariants.closed}
           variants={wrapperVariants}
           style={{ originY: "top", translateX: "-100%" }}
-          className="flex flex-col gap-2 p-5 text-gray-700 bg-white shadow-xl absolute top-[120%] left-[140%] md:left-[100%] w-48 overflow-hidden z-40 ring-1 ring-dark/20 rounded-[20px]"
+          className="flex flex-col gap-2 p-5 text-dark bg-white shadow-xl absolute top-[120%] left-[140%] md:left-[100%] w-48 overflow-hidden z-40 ring-1 ring-dark/20 rounded-[20px]"
         >
           <Option
             setSelectedTab={setSelected}
@@ -115,7 +115,7 @@ const Option = ({
           <motion.li
             variants={itemVariants}
             onClick={handleSignout}
-            className="flex items-center gap-2 w-full p-3 text-base font-medium whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
+            className="flex items-center gap-2 w-full p-3 text-fluid-base font-medium whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
           >
             <motion.span variants={actionIconVariants}>
               <Icon />
@@ -131,7 +131,7 @@ const Option = ({
               setSelectedTab(text.toLowerCase());
               setOpen(false);
             }}
-            className="flex items-center gap-2 w-full p-3 text-base font-medium whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
+            className="flex items-center gap-2 w-full p-3 text-fluid-base font-medium whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
           >
             <motion.span variants={actionIconVariants}>
               <Icon />

@@ -34,7 +34,7 @@ export default function ImageUpload() {
       >
         <label
           htmlFor="logo"
-          className="text-[#858585] text-xs font-light sm:text-[14px]"
+          className="text-[#858585] text-fluid-xxs font-light sm:text-fluid-xs"
         >
           Upload a logo or a picture of yourself
         </label>
@@ -54,12 +54,12 @@ export default function ImageUpload() {
           ) : (
             <button
               type="button"
-              className="w-full h-full border text-[14px] grid place-items-center duration-300 border-dark/50 rounded-md outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+              className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded-md outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
               onClick={() => {
                 imagePickerRef.current?.click();
               }}
             >
-              <BsImage className="text-2xl" />
+              <BsImage className="text-fluid-2xl" />
             </button>
           )}
 
@@ -101,7 +101,7 @@ export default function ImageUpload() {
                 className="flex items-center gap-x-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-[14px]">{error}</p>
+                <p className="text-red-600 text-fluid-xs">{error}</p>
               </div>
             );
           })}

@@ -47,7 +47,7 @@ export default function Balances({
       <div className="flex flex-col space-y-4">
         <div className="flex flex-col space-y-1">
           <div className="flex items-center gap-x-3">
-            <p className="text-[14px]">Available balance</p>
+            <p className="text-fluid-xs">Available balance</p>
             {showBalance ? (
               <Eye
                 onClick={() => setShowBalance(!showBalance)}
@@ -67,7 +67,7 @@ export default function Balances({
             )}
           </div>
 
-          <h1 className="text-lg font-normal">
+          <h1 className="text-fluid-lg font-normal">
             {showBalance ? formatPrice(available, "USD") : "********"}
           </h1>
         </div>
@@ -75,7 +75,7 @@ export default function Balances({
         <div className="flex justify-between items-center space-y-1">
           <div className="flex flex-col space-y-2">
             <div className="flex items-center gap-x-3">
-              <p className="text-xs">Pending balance</p>
+              <p className="text-fluid-xxs">Pending balance</p>
               <Tooltip
                 multiline
                 w={220}
@@ -92,7 +92,7 @@ export default function Balances({
               </Tooltip>
             </div>
 
-            <h1 className="text-sm font-normal">
+            <h1 className="text-fluid-sm font-normal">
               {" "}
               {showBalance ? formatPrice(pending, "USD") : "********"}
             </h1>
@@ -100,7 +100,7 @@ export default function Balances({
           <div>
             <button
               onClick={toggleForm}
-              className="h-[35px] p-5 rounded-full w-full flex items-center border-0 ring-1 ring-[#fafafa] hover:bg-[#fafafa] hover:text-dark duration-200 justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center border-0 ring-1 ring-[#fafafa] hover:bg-[#fafafa] hover:text-dark duration-200 justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
             >
               Withdraw funds
             </button>

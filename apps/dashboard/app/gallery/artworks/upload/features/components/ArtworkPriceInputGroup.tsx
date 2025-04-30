@@ -17,7 +17,7 @@ export default function ArtworkPriceInputGroup() {
   const usd_symbol = getCurrencySymbol("USD");
   return (
     <div className="my-10">
-      <h2 className="text-gray-700 font-normal text-base my-4">
+      <h2 className="text-dark font-normal text-fluid-base my-4">
         Artwork Pricing
       </h2>
 
@@ -69,7 +69,7 @@ export default function ArtworkPriceInputGroup() {
         {artworkUploadData.currency !== "" &&
           artworkUploadData.price !== 0 &&
           artworkUploadData.usd_price !== 0 && (
-            <span className=" text-gray-700 font-semibold">
+            <span className=" text-dark font-semibold">
               Exchange rate:{" "}
               {`${formatPrice(
                 artworkUploadData.price,
@@ -78,7 +78,7 @@ export default function ArtworkPriceInputGroup() {
             </span>
           )}
 
-        <p className="font-semibold text-[14px] mt-1 text-red-600">
+        <p className="font-semibold text-fluid-xs mt-1 text-red-600">
           Please note: To ensure consistent pricing across the platform, all
           uploaded prices will be displayed in US Dollar equivalents.
         </p>

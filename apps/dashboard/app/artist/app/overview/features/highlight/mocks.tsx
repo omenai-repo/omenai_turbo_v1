@@ -9,7 +9,7 @@ const wallet = (
   <Wallet
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-blue-600 text-sm"
+    className="text-blue-600 text-fluid-sm"
   />
 );
 
@@ -17,7 +17,7 @@ const sales_revenue = (
   <BadgeDollarSign
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-purple-600 text-sm"
+    className="text-purple-600 text-fluid-sm"
   />
 );
 const net = (
@@ -32,7 +32,7 @@ const art_sold = (
   <ImageUp
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-orange-600 text-sm"
+    className="text-orange-600 text-fluid-sm"
   />
 );
 

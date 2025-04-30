@@ -9,8 +9,8 @@ export default function PackageTab() {
       <div
         className={`p-2 ${
           activeTab === "monthly"
-            ? "bg-white  text-gray-700"
-            : "bg-transparent text-gray-700"
+            ? "bg-white  text-dark"
+            : "bg-transparent text-dark"
         }  cursor-pointer rounded-lg`}
         onClick={() => updateActiveTab("monthly")}
       >
@@ -20,8 +20,8 @@ export default function PackageTab() {
       <div
         className={`p-2 ${
           activeTab === "annual"
-            ? "bg-white  text-gray-700"
-            : "bg-transpaerent text-gray-700"
+            ? "bg-white  text-dark"
+            : "bg-transpaerent text-dark"
         }  cursor-pointer rounded-lg`}
         onClick={() => updateActiveTab("annual")}
       >

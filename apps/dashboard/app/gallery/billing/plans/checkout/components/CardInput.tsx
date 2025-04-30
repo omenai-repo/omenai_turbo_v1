@@ -160,7 +160,7 @@ export default function CardInput({
   return (
     <form className="space-y-4" onSubmit={handleCardInputSubmit}>
       <div className="flex justify-between items-center">
-        <h1 className="text-[14px] font-bold">Payment Method</h1>
+        <h1 className="text-fluid-xs font-bold">Payment Method</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -179,7 +179,7 @@ export default function CardInput({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleCardDetailInputChange(e.target.name, e.target.value)
           }
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
         />
       </div>
       <CardNumber onChange={handleCardDetailInputChange} />
@@ -193,7 +193,7 @@ export default function CardInput({
         <button
           type="submit"
           disabled={cardInputLoading}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
         >
           {cardInputLoading ? <LoadSmall /> : "Submit"}
         </button>

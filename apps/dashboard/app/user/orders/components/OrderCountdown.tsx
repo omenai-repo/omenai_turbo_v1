@@ -35,9 +35,9 @@ export default function OrderCountdown({
   return (
     <div className=" text-center w-fit">
       {isRunning ? (
-        <div className="text-gray-700 text-sm flex gap-x-2 items-center font-medium">
-          <p className="text-[14px]">Order expires in:</p>
-          <div className="flex justify-center gap-2 text-black font-semibold text-sm">
+        <div className="text-dark text-fluid-sm flex gap-x-2 items-center font-medium">
+          <p className="text-fluid-xs">Order expires in:</p>
+          <div className="flex justify-center gap-2 text-black font-semibold text-fluid-sm">
             {days > 0 && <span>{String(days).padStart(2, "0")}d</span>}
             <span>{String(hours).padStart(2, "0")}h</span>
             <span>{String(minutes).padStart(2, "0")}m</span>
@@ -45,7 +45,7 @@ export default function OrderCountdown({
           </div>
         </div>
       ) : (
-        <span className="text-red-600 font-semibold text-sm">
+        <span className="text-red-600 font-semibold text-fluid-sm">
           Order expired
         </span>
       )}

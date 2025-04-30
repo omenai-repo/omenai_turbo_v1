@@ -124,7 +124,7 @@ export default function AddressForm({
   return (
     <>
       <div className="w-full my-[1rem]">
-        <h1 className="my-6 text-[14px] font-medium">Address Information</h1>
+        <h1 className="my-6 text-fluid-xs font-medium">Address Information</h1>
         <form onSubmit={handleOrderSubmission}>
           <div className="">
             {userDetails.map((detail, index) => {
@@ -189,7 +189,7 @@ export default function AddressForm({
                   id="save_address"
                   onChange={(e) => setSaveShippingAddress(e.target.checked)}
                 />
-                <label htmlFor="age" className="text-[14px]">
+                <label htmlFor="age" className="text-fluid-xs">
                   Save my address
                 </label>
               </div>
@@ -198,7 +198,7 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-full h-[35px] px-4 text-[14px] disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline grid place-items-center group"
+                className="w-full rounded-full h-[35px] px-4 text-fluid-xs disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline grid place-items-center group"
               >
                 {!loading ? "Request price quote" : <LoadSmall />}
               </button>

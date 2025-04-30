@@ -10,20 +10,20 @@ export default function NavbarActionButtons() {
   return (
     <div>
       <Link href={`${login_base_url}/login`} className="w-fit lg:hidden block">
-        <BiUser className="text-sm" />
+        <BiUser className="text-fluid-sm" />
       </Link>
-      <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-[14px] sm:text-[14px] ml-2">
+      <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-fluid-xs sm:text-fluid-xs ml-2">
         <Link
           href={`${login_base_url}/login`}
-          className="h-[35px] whitespace-nowrap rounded-full px-5 flex items-center gap-x-2 text-[14px] font-normal hover:border-dark bg-white border border-dark/50 text-gray-700 duration-200"
+          className="h-[35px] whitespace-nowrap rounded-full px-5 flex items-center gap-x-2 text-fluid-xs font-normal hover:border-dark bg-white border border-dark/50 text-dark duration-200"
         >
           Login
-          <GoHome className="text-gray-700" />
+          <GoHome className="text-dark" />
         </Link>
 
         <Link
           href={`${login_base_url}/register`}
-          className="h-[35px] whitespace-nowrap rounded-full grid place-items-center px-5 text-[14px] font-normal bg-dark hover:bg-dark/80 text-white ring-1 ring-dark/10 duration-200"
+          className="h-[35px] whitespace-nowrap rounded-full grid place-items-center px-5 text-fluid-xs font-normal bg-dark hover:bg-dark/80 text-white ring-1 ring-dark/10 duration-200"
         >
           Create an account
         </Link>

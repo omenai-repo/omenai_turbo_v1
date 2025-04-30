@@ -4,14 +4,14 @@ import { IoAlbumsOutline, IoDocumentTextOutline } from "react-icons/io5";
 
 import { CiUser, CiLogout, CiGrid41, CiExport } from "react-icons/ci";
 
-const overview = <CiGrid41 className="text-gray-700 group-hover:text-white" />;
+const overview = <CiGrid41 className="text-dark group-hover:text-white" />;
 const subscription = (
-  <BsCreditCard2Front className="text-gray-700 group-hover:text-white" />
+  <BsCreditCard2Front className="text-dark group-hover:text-white" />
 );
-// const auction = <RiAuctionLine className="text-gray-700 group-hover:text-white" />;
-const upload = <CiExport className="text-gray-700 group-hover:text-white" />;
-const profile = <CiUser className="text-gray-700 group-hover:text-white" />;
-const logout = <CiLogout className="text-gray-700 group-hover:text-white" />;
+// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
+const upload = <CiExport className="text-dark group-hover:text-white" />;
+const profile = <CiUser className="text-dark group-hover:text-white" />;
+const logout = <CiLogout className="text-dark group-hover:text-white" />;
 const album = <IoAlbumsOutline />;
 const editorial = <IoDocumentTextOutline />;
 

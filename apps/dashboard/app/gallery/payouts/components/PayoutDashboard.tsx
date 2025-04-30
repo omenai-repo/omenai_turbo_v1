@@ -76,7 +76,7 @@ export default function PayoutDashboard() {
         <div className="h-[85vh] w-full grid place-items-center">
           <div className="flex flex-col space-y-1">
             <LoadIcon />
-            <p className="text-[14px] font-semibold">
+            <p className="text-fluid-xs font-semibold">
               Redirecting...Please wait
             </p>
           </div>

@@ -84,7 +84,7 @@ export default function page() {
 //         ) : (
 //           <button
 //             type="button"
-//             className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded-sm text-[14px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+//             className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded-sm text-fluid-xs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
 //             onClick={() => {
 //               imagePickerRef.current?.click();
 //             }}
@@ -118,10 +118,10 @@ export default function page() {
 //           }}
 //         />
 //       </div>
-//       <div className="mt-4 flex w-full text-[14px]">
+//       <div className="mt-4 flex w-full text-fluid-xs">
 //         <button
 //           disabled={loading || !image}
-//           className={`h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal`}
+//           className={`h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal`}
 //           type="button"
 //           onClick={handleImageUpload}
 //         >

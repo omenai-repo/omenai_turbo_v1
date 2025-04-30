@@ -3,7 +3,7 @@ import ArtsByMediumCard from "./components/ArtsByMediumCard";
 export default function ArtsByMedium() {
   return (
     <div className=" mt-8 p-4 relative mb-[4rem]">
-      <h1 className="text-gray-700 font-normal text-[20px] sm:text-md mb-8">
+      <h1 className="text-dark font-normal text-fluid-md sm:text-fluid-md mb-8">
         Browse by collections
       </h1>
 

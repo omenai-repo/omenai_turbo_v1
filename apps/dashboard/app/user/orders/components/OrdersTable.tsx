@@ -145,33 +145,33 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
       <div className="mt-1 mb-8 w-fit h-fit relative pl-1">
         <input
           type="text"
-          className="h-[35px] px-4 pl-10 w-[500px] border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-transparent focus:border-none focus:ring-1 focus:ring-dark/80 duration-300 focus:outline-none"
+          className="h-[35px] px-4 pl-10 w-[500px] border border-[#E0E0E0] text-fluid-xs placeholder:text-[#858585] placeholder:text-fluid-xs bg-transparent focus:border-none focus:ring-1 focus:ring-dark/80 duration-300 focus:outline-none"
           placeholder="Search by order ID, artwork name or buyer name"
           onChange={handleSearchChange}
         />
         <RiSearch2Line className="absolute left-5 top-4 text-[#858585]" />
       </div>
       <table className=" w-full table-auto border-separate border-spacing-y-2 overflow-scroll text-left md:overflow-auto">
-        <thead className="w-full rounded-lg bg-[#EFEFEF] text-base font-semibold text-white">
+        <thead className="w-full rounded-lg bg-[#EFEFEF] text-fluid-base font-semibold text-white">
           <tr className="px-1">
-            <th className="whitespace-nowrap  py-3 pl-3 text-[14px] font-normal text-gray-700">
+            <th className="whitespace-nowrap  py-3 pl-3 text-fluid-xs font-normal text-dark">
               Order ID
             </th>
-            <th className="whitespace-nowrap py-3 pl-1 text-[14px] font-normal text-gray-700">
+            <th className="whitespace-nowrap py-3 pl-1 text-fluid-xs font-normal text-dark">
               Artwork name
             </th>
-            <th className="whitespace-nowrap py-3 text-[14px] font-normal text-gray-700">
+            <th className="whitespace-nowrap py-3 text-fluid-xs font-normal text-dark">
               Order Date
             </th>
-            <th className="whitespace-nowrap px-2.5 py-3 text-[14px] font-normal text-gray-700">
+            <th className="whitespace-nowrap px-2.5 py-3 text-fluid-xs font-normal text-dark">
               Status
             </th>
             {tab === "completed" && (
-              <th className="whitespace-nowrap py-3 pl-1 text-[14px] font-normal text-gray-700">
+              <th className="whitespace-nowrap py-3 pl-1 text-fluid-xs font-normal text-dark">
                 Order completion date
               </th>
             )}
-            <th className="whitespace-nowrap rounded-r-lg py-3 pl-1 text-[14px] font-normal text-gray-700">
+            <th className="whitespace-nowrap rounded-r-lg py-3 pl-1 text-fluid-xs font-normal text-dark">
               Action
             </th>
           </tr>
@@ -183,19 +183,19 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                 key={order.order_id}
                 className="cursor-pointer bg-white ring-1 ring-[#EFEFEF] duration-200 my-2"
               >
-                <td className=" py-4 pl-3 text-[14px] font-normal text-gray-700">
+                <td className=" py-4 pl-3 text-fluid-xs font-normal text-dark">
                   {order.order_id}
                 </td>
-                <td className="px-1 py-4 text-[14px] font-normal text-gray-700">
+                <td className="px-1 py-4 text-fluid-xs font-normal text-dark">
                   {order.artwork_data.title}
                 </td>
-                <td className="px-1 py-4 text-[14px] font-normal text-gray-700">
+                <td className="px-1 py-4 text-fluid-xs font-normal text-dark">
                   {formatIntlDateTime(order.createdAt)}
                 </td>
-                {/* <td className="px-1 py-4 text-[14px] font-normal text-gray-700">
+                {/* <td className="px-1 py-4 text-fluid-xs font-normal text-dark">
                   {formatPrice(order.artwork_data.pricing.usd_price)}
                 </td> */}
-                <td className="px-2.5 py-4 text-[14px] font-normal text-gray-700">
+                <td className="px-2.5 py-4 text-fluid-xs font-normal text-dark">
                   {construct_status(
                     order.status,
                     order.payment_information.status,
@@ -205,11 +205,11 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                   )}
                 </td>
                 {order.status === "completed" && (
-                  <td className="px-1 py-4 text-[14px] font-normal text-gray-700">
+                  <td className="px-1 py-4 text-fluid-xs font-normal text-dark">
                     {formatIntlDateTime(order.updatedAt)}
                   </td>
                 )}
-                <td className="rounded-r-[8px] px-1 py-4 text-[14px] font-normal text-gray-700">
+                <td className="rounded-r-[8px] px-1 py-4 text-fluid-xs font-normal text-dark">
                   {order.payment_information.status === "pending" &&
                     order.status !== "completed" &&
                     order.order_accepted.status === "accepted" && (

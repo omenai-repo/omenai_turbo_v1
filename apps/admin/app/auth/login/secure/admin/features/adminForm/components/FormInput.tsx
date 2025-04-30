@@ -64,27 +64,27 @@ export default function FormInput() {
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col">
-        <label htmlFor={"email"} className="text-[14px] text-[#858585]">
+        <label htmlFor={"email"} className="text-fluid-xs text-[#858585]">
           Email address
         </label>
         <input
           type="email"
           value={form.email}
           name="email"
-          className="focus:ring-0 border-[1px] px-2 border-dark/20 outline-none focus:outline-none text-[14px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-gray-700/40 py-3"
+          className="focus:ring-0 border-[1px] px-2 border-dark/20 outline-none focus:outline-none text-fluid-xs focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-3"
           onChange={handleChange}
           required
         />
       </div>
       <div className="flex flex-col">
-        <label htmlFor={"password"} className="text-[14px] text-[#858585]">
+        <label htmlFor={"password"} className="text-fluid-xs text-[#858585]">
           Password
         </label>
         <input
           value={form.password}
           type="password"
           name="password"
-          className="focus:ring-0 border-[1px] p-2 border-dark/20 outline-none focus:outline-none text-[14px] focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-gray-700/40 py-3"
+          className="focus:ring-0 border-[1px] p-2 border-dark/20 outline-none focus:outline-none text-fluid-xs focus:border-dark transition-all duration-200 ease-in-out ring-0 placeholder:text-dark/40 py-3"
           onChange={handleChange}
           required
         />
@@ -94,10 +94,12 @@ export default function FormInput() {
           <button
             disabled={isLoading}
             type="submit"
-            className="h-[35px] px-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[35px] px-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
           >
             {isLoading ? <LoadSmall /> : "Login"}{" "}
-            {!isLoading && <GoArrowRight className="text-md opacity-70" />}
+            {!isLoading && (
+              <GoArrowRight className="text-fluid-md opacity-70" />
+            )}
           </button>
         </div>
       </div>

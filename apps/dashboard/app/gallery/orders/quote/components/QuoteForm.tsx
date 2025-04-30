@@ -135,10 +135,10 @@ export default function QuoteForm() {
   return (
     <div className="my-5">
       <div className="w-full py-3 bg-white">
-        <h1 className="text-base text-dark font-semibold">
+        <h1 className="text-fluid-base text-dark font-semibold">
           Artpiece Dimension (Including packaging)
         </h1>
-        <span className="text-xs">
+        <span className="text-fluid-xxs">
           Kindly provide the dimensions of the piece after packaging so we can
           calculate an accurate shipping cost for it.
         </span>
@@ -152,7 +152,7 @@ export default function QuoteForm() {
           <div className=" flex flex-col space-y-5 w-full">
             <div className="relative w-full flex flex-col space-y-2">
               <label
-                className="text-dark font-normal text-xs"
+                className="text-dark font-normal text-fluid-xxs"
                 htmlFor="shipping"
               >
                 Length (in cm)
@@ -163,12 +163,12 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter length after packaging  in centimeters"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
               <label
-                className="text-dark font-normal text-xs"
+                className="text-dark font-normal text-fluid-xxs"
                 htmlFor="shipping"
               >
                 Height (in cm)
@@ -179,12 +179,12 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter height after packaging in centimeters"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
               <label
-                className="text-dark font-normal text-xs"
+                className="text-dark font-normal text-fluid-xxs"
                 htmlFor="shipping"
               >
                 Width (in cm)
@@ -195,12 +195,12 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter width after packaging in centimeters"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
               <label
-                className="text-dark font-normal text-xs"
+                className="text-dark font-normal text-fluid-xxs"
                 htmlFor="shipping"
               >
                 Weight (in kg)
@@ -211,13 +211,16 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter weight after packaging in kilograms"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
               />
             </div>
           </div>
 
           <div className=" flex flex-col space-y-2 mt-5 w-full">
-            <label className="text-dark font-normal text-xs" htmlFor="shipping">
+            <label
+              className="text-dark font-normal text-fluid-xxs"
+              htmlFor="shipping"
+            >
               Special instructions (optional)
             </label>
             <div className="relative w-full flex flex-col space-y-2">
@@ -226,7 +229,7 @@ export default function QuoteForm() {
                 name="specialInstructions"
                 placeholder="Enter any special instructions for picking up the piece (e.g., Ring the doorbell)."
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-[14px] font-medium placeholder:text-dark placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                className="p-3 border border-[#E0E0E0] text-fluid-xs font-medium placeholder:text-dark placeholder:text-fluid-xxs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
               />
             </div>
           </div>
@@ -234,15 +237,15 @@ export default function QuoteForm() {
             <button
               disabled={loading}
               type="submit"
-              className="h-[35px] text-[14px] font-medium p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white"
+              className="h-[35px] text-fluid-xs font-medium p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white"
             >
               {loading ? <LoadSmall /> : " Accept order request"}
             </button>
           </div>
         </form>
         {/* Details */}
-        <div className="p-3 border border-[#E0E0E0] text-xs rounded-lg">
-          <div className="flex flex-col gap-y-4 text-xs">
+        <div className="p-3 border border-[#E0E0E0] text-fluid-xxs rounded-lg">
+          <div className="flex flex-col gap-y-4 text-fluid-xxs">
             <div className="flex flex-col">
               <Image
                 src={image_url}

@@ -30,7 +30,7 @@ export default function ManagePromoContent() {
   return (
     <div>
       <div className=" mt-5 my-[3rem]">
-        <h1 className="divide-y text-sm ">My promotional contents</h1>
+        <h1 className="divide-y text-fluid-sm ">My promotional contents</h1>
       </div>
       <div className="grid grid-cols-4 gap-5">
         {contents.map(

@@ -23,7 +23,9 @@ export default function SubDetail({
   return (
     <div className="ring-1 ring-[#e0e0e0] rounded-[20px] p-5 max-h-[300px] relative">
       <div className="w-full flex justify-start relative z-10 my-2">
-        <p className="text-gray-700 text-xs font-semibold">Subscription Info</p>
+        <p className="text-dark text-fluid-xxs font-semibold">
+          Subscription Info
+        </p>
       </div>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-x-3">
@@ -35,7 +37,7 @@ export default function SubDetail({
             className="w-fit h-fit"
           />
           <div>
-            <h1 className="font-bold text-xs">
+            <h1 className="font-bold text-fluid-xxs">
               Omenai {sub_data.plan_details.type}
             </h1>
             <p className="font-semibold text-[12px]">
@@ -56,7 +58,7 @@ export default function SubDetail({
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="text-base font-bold">
+          <h1 className="text-fluid-base font-bold">
             {formatPrice(
               sub_data.plan_details.interval === "monthly"
                 ? +sub_data.plan_details.value.monthly_price
@@ -74,23 +76,23 @@ export default function SubDetail({
       <div className=" mt-4">
         {sub_data.status === "canceled" || sub_data.status === "expired" ? (
           <Link href={`/gallery/billing/plans?plan_action=reactivation`}>
-            <button className=" h-[35px] px-4 rounded-full w-fit text-[12px] 2xl:text-xs bg-dark text-white hover:bg-dark/70 flex gap-2 items-center">
+            <button className=" h-[35px] px-4 rounded-full w-fit text-[12px] 2xl:text-fluid-xxs bg-dark text-white hover:bg-dark/70 flex gap-2 items-center">
               Reactivate Subscription
             </button>
           </Link>
         ) : (
           <div className="flex md:flex-col gap-2 items-center">
             <button
-              className=" h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 duration-300 text-white text-xs font-normal"
+              className=" h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 duration-300 text-white text-fluid-xxs font-normal"
               onClick={() => updateOpenModal()}
             >
-              {/* <RxCross1 className="text-base text-white" /> */}
+              {/* <RxCross1 className="text-fluid-base text-white" /> */}
               <span className="text-white whitespace-nowrap">
                 Cancel Subscription
               </span>
             </button>
             <Link href="/gallery/billing/plans" className="w-full">
-              <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal">
+              <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal">
                 <span className="text-white whitespace-nowrap">
                   Upgrade/Downgrade plan
                 </span>

@@ -20,8 +20,8 @@ export default function ArtCollectionCard({
             className="min-w-[250px] w-auto min-h-[200px] h-[250px] object-cover object-top cursor-pointer"
           />
           <div className="bg-[#FAFAFA] flex flex-col p-4">
-            <p className="text-[14px] font-light">{title}</p>
-            {/* <span className="w-fit text-[14px] font-light text-[#858585] border-none">
+            <p className="text-fluid-xs font-light">{title}</p>
+            {/* <span className="w-fit text-fluid-xs font-light text-[#858585] border-none">
                     Omenai&apos;s best picks
                     </span> */}
           </div>

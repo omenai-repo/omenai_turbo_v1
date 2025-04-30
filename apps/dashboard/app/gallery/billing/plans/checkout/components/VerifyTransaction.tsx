@@ -36,7 +36,7 @@ export default function VerifyTransaction({
   return (
     <div className="grid place-items-center">
       <div className="flex justify-between items-center mb-2 w-full">
-        <h1 className="text-base font-bold">Transaction verification</h1>
+        <h1 className="text-fluid-base font-bold">Transaction verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -45,7 +45,9 @@ export default function VerifyTransaction({
       {isLoading ? (
         <div className="w-full h-full flex flex-col justify-center items-center gap-y-4">
           <Load />
-          <p className="text-[14px]">Verification in progress...please wait</p>
+          <p className="text-fluid-xs">
+            Verification in progress...please wait
+          </p>
         </div>
       ) : (
         <div className=" w-[20vw] flex-flex-col space-y-6 h-[30vh] grid place-items-center">
@@ -58,7 +60,7 @@ export default function VerifyTransaction({
                 alt="verification icon"
                 className="text-center"
               />
-              <p className="text-[14px] font-bold whitespace-nowrap">
+              <p className="text-fluid-xs font-bold whitespace-nowrap">
                 {verified?.message}
               </p>
             </div>
@@ -67,7 +69,7 @@ export default function VerifyTransaction({
               <Link
                 href={"/gallery/billing"}
                 type="button"
-                className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+                className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
               >
                 {verified?.isOk ? "View subscription info" : "Go back"}
               </Link>

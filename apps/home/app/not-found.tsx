@@ -156,10 +156,10 @@ export default function NotFound() {
         ></path>
       </svg>
       <div className="flex flex-col items-center justify-center">
-        <p className="text-3xl md:text-4xl lg:text-5xl text-gray-700 mt-12 font-bold">
+        <p className="text-fluid-3xl md:text-4xl lg:text-5xl text-dark mt-12 font-bold">
           Page Not Found
         </p>
-        <p className="text-base text-gray-700 mt-8">
+        <p className="text-fluid-base text-dark mt-8">
           Sorry, the page you are looking for could not be found.
         </p>
         <Link
@@ -179,7 +179,7 @@ export default function NotFound() {
               clipRule="evenodd"
             ></path>
           </svg>
-          <span className="text-[14px]">Return Home</span>
+          <span className="text-fluid-xs">Return Home</span>
         </Link>
       </div>
     </div>

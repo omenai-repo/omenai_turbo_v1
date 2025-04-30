@@ -13,7 +13,7 @@ export default function PrimaryWithdrawalAccount({
       {withdrawal_account === null ? (
         <div className="my-5">
           <Link
-            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
             href="/artist/app/wallet/add_primary_account"
           >
             Add primary account
@@ -28,26 +28,32 @@ export default function PrimaryWithdrawalAccount({
               withBorder
             >
               <p className=" font-semibold">Primary withdrawal account</p>
-              <div className=" text-[14px] font-medium">
+              <div className=" text-fluid-xs font-medium">
                 <div className="flex justify-between items-center">
-                  <p>Bank name</p>
-                  <p>{withdrawal_account.bank_name.toUpperCase()}</p>
+                  <p className="text-fluid-xs">Bank name</p>
+                  <p className="text-fluid-xs">
+                    {withdrawal_account.bank_name.toUpperCase()}
+                  </p>
                 </div>
-                <Divider my="md" />
+                <Divider my="sm" />
                 <div className="flex justify-between items-center">
-                  <p>Account number</p>
-                  <p>{withdrawal_account.account_number}</p>
+                  <p className="text-fluid-xs">Account number</p>
+                  <p className="text-fluid-xs">
+                    {withdrawal_account.account_number}
+                  </p>
                 </div>
-                <Divider my="md" />
+                <Divider my="sm" />
                 <div className="flex justify-between items-center">
-                  <p>Account name</p>
-                  <p>{withdrawal_account.account_name}</p>
+                  <p className="text-fluid-xs">Account name</p>
+                  <p className="text-fluid-xs">
+                    {withdrawal_account.account_name}
+                  </p>
                 </div>
               </div>
 
-              <div className="mt-6">
+              <div className="">
                 <Link
-                  className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                  className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                   href="/artist/app/wallet/add_primary_account"
                 >
                   Change primary account

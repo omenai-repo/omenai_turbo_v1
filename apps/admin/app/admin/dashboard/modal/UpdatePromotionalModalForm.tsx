@@ -140,7 +140,7 @@ export default function UpdatePromotionalModalForm() {
 
   return (
     <div>
-      <h1 className="text-base font-normal mb-4 text-gray-700">
+      <h1 className="text-fluid-base font-normal mb-4 text-dark">
         Update Promotional Data Info
       </h1>
       <form className="w-full" onSubmit={handlePromotionalDataUpdate}>
@@ -148,7 +148,7 @@ export default function UpdatePromotionalModalForm() {
           <div className="relative w-full h-auto">
             <label
               htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
+              className="text-fluid-xs text-[#858585] mb-2"
             >
               Headline
             </label>
@@ -158,7 +158,7 @@ export default function UpdatePromotionalModalForm() {
               type="text"
               required
               value={updateData.headline}
-              className="h-[35px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="h-[35px] px-4 border border-dark/20 w-full text-fluid-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-fluid-xse"
             />
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function UpdatePromotionalModalForm() {
           <div className="relative w-full h-auto">
             <label
               htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
+              className="text-fluid-xs text-[#858585] mb-2"
             >
               Subheadline
             </label>
@@ -176,7 +176,7 @@ export default function UpdatePromotionalModalForm() {
               type="text"
               value={updateData.subheadline}
               required
-              className="h-[35px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="h-[35px] px-4 border border-dark/20 w-full text-fluid-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-fluid-xse"
             />
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function UpdatePromotionalModalForm() {
           <div className="relative w-full h-auto">
             <label
               htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
+              className="text-fluid-xs text-[#858585] mb-2"
             >
               CTA (A link to this resource)
             </label>
@@ -194,7 +194,7 @@ export default function UpdatePromotionalModalForm() {
               type="text"
               value={updateData.cta}
               required
-              className="h-[35px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="h-[35px] px-4 border border-dark/20 w-full text-fluid-xs focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-fluid-xse"
             />
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function UpdatePromotionalModalForm() {
           <button
             disabled={loading || deleteLoading}
             type="submit"
-            className="h-[35px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+            className="h-[35px] px-4 w-full text-fluid-xs text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
           >
             {loading ? <LoadSmall /> : "Update this promotional content"}
           </button>
@@ -214,7 +214,7 @@ export default function UpdatePromotionalModalForm() {
           disabled={loading || deleteLoading}
           type="submit"
           onClick={handleDeletePromotionalData}
-          className="h-[35px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-red-600/80 bg-red-600 duration-300 grid place-items-center"
+          className="h-[35px] px-4 w-full text-fluid-xs text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-red-600/80 bg-red-600 duration-300 grid place-items-center"
         >
           {deleteLoading ? <LoadSmall /> : "Delete this promotional content"}
         </button>

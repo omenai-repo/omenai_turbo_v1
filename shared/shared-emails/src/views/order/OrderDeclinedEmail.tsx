@@ -39,13 +39,13 @@ const OrderDeclinedEmail = (
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-[20px] font-normal text-center p-0 mb-[40px] mx-0">
+            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
               Unfortunately, your order request has been declined
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello <strong>{name}</strong>,
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               I hope this email finds you well. <br />
               We regret to inform you that the order request for{" "}
               <Link
@@ -58,12 +58,12 @@ const OrderDeclinedEmail = (
               they have decided not to proceed with the sale of this artwork at
               this time.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               <strong>
                 Reason: <span className="italic">{reason}</span>
               </strong>
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               We understand that this may come as disappointing news, and we
               sincerely apologize for any inconvenience this may cause you. We
               encourage you to{" "}
@@ -77,7 +77,7 @@ const OrderDeclinedEmail = (
               selection of pieces from talented artists.{" "}
             </Text>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               If you have any questions or require further assistance, please
               don't hesitate to reach out to us. Our team is here to support you
               and help you find the perfect artwork for your collection.{" "}
@@ -89,16 +89,16 @@ const OrderDeclinedEmail = (
               </Link>
               .
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for your understanding and continued support of our
               platform
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

@@ -23,7 +23,7 @@ export default function ArtCollectionCard({
             className={`min-w-[250px] rounded-[20px] w-auto min-h-[180px] ${isCatalog ? "h-[180px]" : "h-[250px]"} object-cover object-center cursor-pointer`}
           />
           <div className="w-fit ring-1 ring-white bg-dark text-white flex flex-col px-3 py-2 left-5 absolute bottom-10 rounded-3xl">
-            <p className="text-[14px] font-light">{title}</p>
+            <p className="text-fluid-xs font-light">{title}</p>
           </div>
         </div>
       </Link>

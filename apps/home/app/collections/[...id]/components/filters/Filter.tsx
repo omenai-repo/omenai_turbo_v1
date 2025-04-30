@@ -94,7 +94,7 @@ export default function Filter({ medium }: { medium: string }) {
           className={`${
             showFilterBlock
               ? "bg-dark text-white"
-              : "border-dark/10 border bg-white text-gray-700"
+              : "border-dark/10 border bg-white text-dark"
           } duration-200 border px-3 py-1 border-dark/10 rounded-full h-[35px] flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
           onClick={() => setShowFilterBlock((prev) => !prev)}
         >

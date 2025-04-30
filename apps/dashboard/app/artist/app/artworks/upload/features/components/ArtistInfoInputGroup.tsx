@@ -9,7 +9,7 @@ export default function ArtistInfoInputGroup() {
   const session = useSession();
   return (
     <div className="my-10">
-      <h2 className="text-gray-700 font-semibold text-base my-4">
+      <h2 className="text-dark font-semibold text-fluid-base my-4">
         Artist information
       </h2>
       <div className="grid grid-cols-3 gap-5 ">

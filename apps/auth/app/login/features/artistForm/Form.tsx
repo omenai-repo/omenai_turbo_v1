@@ -15,11 +15,11 @@ export default function ArtistLoginForm() {
         className="w-full h-full flex items-center gap-x-8"
       >
         <div className="flex flex-col space-y-8 w-full ">
-          <div className="text-[14px] ">
+          <div className="text-fluid-xs ">
             <IndividualLogo />
           </div>
           <div className="flex flex-col space-y-10 w-full">
-            <h1 className="text-base sm:text-sm font-bold">
+            <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
               Login to your artist account.
             </h1>
 

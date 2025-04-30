@@ -7,8 +7,10 @@ export default function page() {
     <main>
       <DesktopNavbar />
       <div className="h-full w-full text-black pt-10 pb-5 px-4 md:px-8 space-y-1">
-        <h1 className="text-sm md:text-md font-normal">Art Collections</h1>
-        <p className="text-base md:text-sm text-[#858585] font-light italic">
+        <h1 className="text-fluid-sm md:text-fluid-md font-normal">
+          Art Collections
+        </h1>
+        <p className="text-fluid-base md:text-fluid-sm text-[#858585] font-light italic">
           Dive Into Diverse Art Collections, Thoughtfully Curated for Your
           Exploration
         </p>

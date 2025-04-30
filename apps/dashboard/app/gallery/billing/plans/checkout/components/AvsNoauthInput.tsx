@@ -170,7 +170,7 @@ export default function AvsNoauthInput({
       onSubmit={submitAddressInfo}
     >
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-base font-bold">Address verification</h1>
+        <h1 className="text-fluid-base font-bold">Address verification</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
@@ -180,7 +180,7 @@ export default function AvsNoauthInput({
       <div className="w-full  flex flex-col gap-y-2">
         <label
           htmlFor={"country"}
-          className="text-gray-700/80 font-normal text-[14px]"
+          className="text-dark/80 font-normal text-fluid-xs"
         >
           Country
         </label>
@@ -188,7 +188,7 @@ export default function AvsNoauthInput({
           onChange={handleInputChange}
           required={true}
           name="country"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
         >
           <option value="">Select Country</option>
           <>
@@ -198,7 +198,7 @@ export default function AvsNoauthInput({
                   key={country.code}
                   value={country.name}
                   data-code={country.code}
-                  className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
+                  className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
                 >
                   {country.name}
                 </option>
@@ -209,10 +209,7 @@ export default function AvsNoauthInput({
       </div>
       {/* State select */}
       <div className="w-full flex flex-col gap-y-2">
-        <label
-          htmlFor={""}
-          className="text-gray-700/80 font-normal text-[14px]"
-        >
+        <label htmlFor={""} className="text-dark/80 font-normal text-fluid-xs">
           State
         </label>
         <select
@@ -220,7 +217,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === ""}
           required={true}
           name="state"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
         >
           <option value="">Select State</option>
           <>
@@ -230,7 +227,7 @@ export default function AvsNoauthInput({
                   key={state.isoCode}
                   value={state.name}
                   data-code={state.isoCode}
-                  className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
+                  className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
                 >
                   {state.name}
                 </option>
@@ -241,10 +238,7 @@ export default function AvsNoauthInput({
       </div>
       {/* City select */}
       <div className="w-full flex flex-col gap-y-2">
-        <label
-          htmlFor={""}
-          className="text-gray-700/80 font-normal text-[14px]"
-        >
+        <label htmlFor={""} className="text-dark/80 font-normal text-fluid-xs">
           City
         </label>
         <select
@@ -252,7 +246,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === "" || address_info.state === ""}
           required={true}
           name="city"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
         >
           <option value="">Select City</option>
           <>
@@ -261,7 +255,7 @@ export default function AvsNoauthInput({
                 <option
                   key={city.name}
                   value={city.name}
-                  className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
+                  className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
                 >
                   {city.name}
                 </option>
@@ -273,7 +267,7 @@ export default function AvsNoauthInput({
 
       <div className="relative w-full flex flex-col gap-y-1">
         <label
-          className="text-[#858585] font-normal text-[14px] mb-2"
+          className="text-[#858585] font-normal text-fluid-xs mb-2"
           htmlFor="otp"
         >
           Address
@@ -284,12 +278,12 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="e.g 7, example street"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
         />
       </div>
       <div className="relative w-fullS flex flex-col gap-y-1">
         <label
-          className="text-[#858585] font-normal text-[14px] mb-2"
+          className="text-[#858585] font-normal text-fluid-xs mb-2"
           htmlFor="zipcode"
         >
           Zipcode
@@ -300,7 +294,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="ZIP"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-700/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
         />
       </div>
 
@@ -308,7 +302,7 @@ export default function AvsNoauthInput({
         <button
           type="submit"
           disabled={isLoading || hasEmptyString(address_info)}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

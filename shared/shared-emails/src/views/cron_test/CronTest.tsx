@@ -30,13 +30,13 @@ const CronTest = () => {
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-[20px] font-normal text-center p-0 mb-[40px] mx-0">
+            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
               CRON TEST
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello Moses
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               This cron ran successfully.
             </Text>
           </Container>

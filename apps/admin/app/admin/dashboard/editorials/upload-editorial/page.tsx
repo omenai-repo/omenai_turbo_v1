@@ -136,7 +136,7 @@ export default function Upload_Editorial() {
   return (
     <div>
       <div className="mt-5 my-[3rem]">
-        <h1 className="divide-y text-sm ">Upload Editorial</h1>
+        <h1 className="divide-y text-fluid-sm ">Upload Editorial</h1>
       </div>
       <div className="flex gap-5">
         <div className="">
@@ -179,7 +179,7 @@ export default function Upload_Editorial() {
             <button
               disabled={loading}
               type="submit"
-              className={`whitespace-nowrap bg-dark text-[14px] disabled:bg-dark/10 disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 mt-5`}
+              className={`whitespace-nowrap bg-dark text-fluid-xs disabled:bg-dark/10 disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 mt-5`}
             >
               {loading ? <LoadSmall /> : "Upload new editorial"}
             </button>

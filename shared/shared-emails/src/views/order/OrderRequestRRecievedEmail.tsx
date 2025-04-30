@@ -39,13 +39,13 @@ const OrderRequestReceivedEmail = (
               className="mx-auto my-10"
             />
 
-            <Heading className="text-black text-[24px] font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
               Order request received
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello <strong>{username}</strong>,
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               I hope this email finds you well. <br />
               Thank you for expressing your interest in purchasing the{" "}
               <Link
@@ -56,18 +56,18 @@ const OrderRequestReceivedEmail = (
               </Link>{" "}
               artwork from our store.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               I am writing to confirm that we have received your order request.
               Our team is currently in the process of calculating the applicable
               shipping fees and taxes to your location. We aim to provide you
               with an accurate quote within the next 24 to 48 hours.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Once we have finalized the details, we will promptly reach out to
               you with the quote and outline the next steps to proceed with your
               order.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Should you have any questions or require further assistance in the
               meantime, please do not hesitate to contact us at{" "}
               <Link
@@ -78,15 +78,15 @@ const OrderRequestReceivedEmail = (
               </Link>
               .
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for choosing Omenai. We look forward to serving you.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{username} </span>. In the event that

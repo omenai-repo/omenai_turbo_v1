@@ -58,7 +58,7 @@ export default function UploadArtworkImage() {
         ) : (
           <button
             type="button"
-            className="w-[300px] h-[300px] border border-[#c0c0c0] bg-white rounded-[20px] text-[14px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-[300px] h-[300px] border border-[#c0c0c0] bg-white rounded-[20px] text-fluid-xs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
             onClick={() => {
               imagePickerRef.current?.click();
             }}
@@ -92,11 +92,11 @@ export default function UploadArtworkImage() {
           }}
         />
       </div>
-      <div className="mt-4 flex w-full text-[14px] justify-center">
+      <div className="mt-4 flex w-full text-fluid-xs justify-center">
         <button
           onClick={handleImageSubmit}
           type="button"
-          className={`h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal`}
+          className={`h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal`}
         >
           Calculate artwork price
         </button>

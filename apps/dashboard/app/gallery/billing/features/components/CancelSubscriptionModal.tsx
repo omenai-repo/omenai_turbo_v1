@@ -64,17 +64,17 @@ export default function CancelSubscriptionModal({
               animate={{ scale: 1, rotate: "0deg" }}
               exit={{ scale: 0, rotate: "0deg" }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white text-gray-700 p-6 rounded-3xl w-full max-w-lg shadow-xl cursor-default relative h-auto"
+              className="bg-white text-dark p-6 rounded-3xl w-full max-w-lg shadow-xl cursor-default relative h-auto"
             >
               {/* Add modal form here */}
               <div className="h-auto w-full">
-                <div className="flex flex-col gap-4 font-normal text-[14px]">
-                  <h2 className="text-red-600 text-base font-bold">
+                <div className="flex flex-col gap-4 font-normal text-fluid-xs">
+                  <h2 className="text-red-600 text-fluid-base font-bold">
                     You are about to cancel your subscription.
                   </h2>
                   <p>
                     Your current subscription will remain active till{" "}
-                    <span className="font-bold text-[14px]">
+                    <span className="font-bold text-fluid-xs">
                       {formatIntlDateTime(sub_end)}.
                     </span>{" "}
                     If you would like to proceed with canceling your
@@ -84,8 +84,8 @@ export default function CancelSubscriptionModal({
                   </p>
 
                   {/* Warning block */}
-                  <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3 text-[14px]">
-                    <IoWarning className="text-md text-[#ff3434]" />
+                  <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3 text-fluid-xs">
+                    <IoWarning className="text-fluid-md text-[#ff3434]" />
                     <p className="font-medium">
                       Are you sure? After{" "}
                       <span className="font-bold">

@@ -103,7 +103,7 @@ export default function WalletPinModalForm() {
 
       <div className="flex flex-col space-y-3">
         <div className="flex flex-col space-y-4">
-          <span className="font-medium text-[14px]">Enter wallet pin</span>
+          <span className="font-medium text-fluid-xs">Enter wallet pin</span>
           <PinInput
             size="lg"
             mask
@@ -114,7 +114,7 @@ export default function WalletPinModalForm() {
           />
         </div>
         <div className="flex flex-col space-y-4">
-          <span className="font-medium text-[14px]">Confirm wallet pin</span>
+          <span className="font-medium text-fluid-xs">Confirm wallet pin</span>
           <PinInput
             size="lg"
             mask
@@ -125,12 +125,12 @@ export default function WalletPinModalForm() {
           />
         </div>
       </div>
-      <span className="text-xs text-red-600 my-1">{error.value}</span>
+      <span className="text-fluid-xxs text-red-600 my-1">{error.value}</span>
       <div className="w-full flex justify-center my-4">
         <button
           disabled={isDisabled() || loading}
           onClick={handlePinChange}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
         >
           {loading ? <LoadSmall /> : "Create pin"}
         </button>

@@ -38,7 +38,7 @@ export default function ArtistInfo() {
             <RxAvatar />
           )}
         </div>
-        <button className="h-[35px] py-4 px-6 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal">
+        <button className="h-[35px] py-4 px-6 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
           Edit profile logo
         </button>
       </div>

@@ -96,7 +96,7 @@ export default function AcceptConfirmationPopupModal() {
       } w-full h-screen fixed top-0 left-0 backdrop-blur-lg place-items-center bg-dark/10`}
     >
       <div className="bg-white p-5 rounded-md w-[500px] text-center">
-        <h1 className="text-base font-normal mb-4">Are you certain?</h1>
+        <h1 className="text-fluid-base font-normal mb-4">Are you certain?</h1>
         <p className="text-red-600 font-bold">
           Proceed to verify this Gallery account
         </p>
@@ -107,7 +107,7 @@ export default function AcceptConfirmationPopupModal() {
             disabled={loading}
             className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center px-4 py-2.5 bg-green-600 text-white"
           >
-            <span className="text-[14px] ">
+            <span className="text-fluid-xs ">
               {loading ? <LoadSmall /> : "Confirm"}
             </span>
             <IoCheckmarkOutline />
@@ -124,7 +124,7 @@ export default function AcceptConfirmationPopupModal() {
             }
             className=" flex gap-x-2 w-fit rounded-md items-center px-4 py-2.5 bg-red-600 text-white"
           >
-            <span className="text-[14px] ">Cancel</span>
+            <span className="text-fluid-xs ">Cancel</span>
             <MdClose />
           </button>
         </div>

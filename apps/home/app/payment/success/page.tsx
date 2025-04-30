@@ -16,7 +16,7 @@ export default function OrderCompletedPage() {
             src={"/images/done.png"}
             alt="success-icon"
           />
-          <p className="text-[14px] font-medium my-4">
+          <p className="text-fluid-xs font-medium my-4">
             Your payment has been completed successfuly. Your order will be on
             it&apos;s way to you shortly
           </p>
@@ -24,7 +24,7 @@ export default function OrderCompletedPage() {
           <div className="flex sm:flex-row flex-col gap-2 justify-center items-center">
             <Link
               href="/"
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
               title="Return Home"
             >
               <svg
@@ -39,11 +39,13 @@ export default function OrderCompletedPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px] whitespace-nowrap">Return Home</span>
+              <span className="text-fluid-xs whitespace-nowrap">
+                Return Home
+              </span>
             </Link>
             <Link
               href={`${dashboard_uri}/user/orders`}
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
               title="Return Home"
             >
               <svg
@@ -59,7 +61,7 @@ export default function OrderCompletedPage() {
                 ></path>
               </svg>
               <span
-                className="text-[14px] whitespace-nowrap
+                className="text-fluid-xs whitespace-nowrap
               "
               >
                 Return to dashboard

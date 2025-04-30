@@ -81,8 +81,8 @@ export default function MigrationUpgradeCheckoutItem({
     showMinus?: boolean;
   }) => (
     <div className="flex justify-between items-center">
-      <p className="text-[14px] font-semibold">{label}</p>
-      <p className="text-[14px] font-semibold">
+      <p className="text-fluid-xs font-semibold">{label}</p>
+      <p className="text-fluid-xs font-semibold">
         {showMinus
           ? `-${formatPrice(value, currency)}`
           : formatPrice(value, currency)}
@@ -100,13 +100,13 @@ export default function MigrationUpgradeCheckoutItem({
           <h1 className="text-14px font-semibold">
             Omenai {plan.name} subscription
           </h1>
-          <p className="mt-1 flex items-baseline text-[14px] font-semibold tracking-tight">
+          <p className="mt-1 flex items-baseline text-fluid-xs font-semibold tracking-tight">
             Billed {interval}
           </p>
         </div>
 
         <div className="p-5 flex flex-col space-y-3 my-4 rounded-[20px]">
-          <div className="flex justify-between items-center text-[14px] font-semibold">
+          <div className="flex justify-between items-center text-fluid-xs font-semibold">
             <p>Current plan usage</p>
             <p>{days_left} day(s) left</p>
           </div>

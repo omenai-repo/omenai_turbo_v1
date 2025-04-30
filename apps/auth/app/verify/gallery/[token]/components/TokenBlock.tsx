@@ -86,17 +86,17 @@ export default function TokenBlock({ token }: TokenProps) {
   return (
     <div className="text-center flex flex-col items-center">
       <div className="info_text my-[1rem]">
-        <h1 className="lg:text-xl md:text-lg text-sm font-bold">
+        <h1 className="lg:text-fluid-xl md:text-fluid-lg text-fluid-sm font-bold">
           Verify your email to kickstart your journey.
         </h1>
         <div className="flex flex-col gap-4 my-[2rem]">
-          <p className="leading-32 font-medium text-[14px]">
+          <p className="leading-32 font-medium text-fluid-xs">
             Thank you for choosing to join{" "}
-            <span className="text-gray-700 font-[900]">Omenai Inc.</span> We
-            extend our warmest welcome and look forward to providing you with an
+            <span className="text-dark font-[900]">Omenai Inc.</span> We extend
+            our warmest welcome and look forward to providing you with an
             enjoyable journey with us
           </p>
-          <p className="leading-32 text-[14px]">
+          <p className="leading-32 text-fluid-xs">
             A token has been sent to the email address you provided to us,
             Kindly utilize this token to authenticate your account and access
             our services.
@@ -111,7 +111,7 @@ export default function TokenBlock({ token }: TokenProps) {
       >
         <input
           type="text"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40"
           placeholder="Verification token"
           required
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -120,13 +120,13 @@ export default function TokenBlock({ token }: TokenProps) {
         />
         <button
           disabled={isLoading}
-          className="disabled:bg-dark/10 h-[35px] p-5 rounded-full w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal duration-200"
+          className="disabled:bg-dark/10 h-[35px] p-5 rounded-full w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal duration-200"
           type={"submit"}
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>
       </form>
-      <p className="text-[14px]">
+      <p className="text-fluid-xs">
         Did not recieve a code?{" "}
         <button
           disabled={resendTokenLoading}
@@ -137,12 +137,12 @@ export default function TokenBlock({ token }: TokenProps) {
         </button>
       </p>
 
-      <div className="contact my-[3rem] md:w-[50%] font-medium text-[14px] mx-auto leading-32">
+      <div className="contact my-[3rem] md:w-[50%] font-medium text-fluid-xs mx-auto leading-32">
         <p className="text-center">
           Feel free to contact us should you have any issues on{" "}
           <Link
             href={"mailto:contact@omenai.net"}
-            className="text-gray-700 font-normal underline"
+            className="text-dark font-normal underline"
           >
             contact@omenai.net
           </Link>

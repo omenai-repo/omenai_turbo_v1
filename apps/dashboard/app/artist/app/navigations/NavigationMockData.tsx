@@ -11,51 +11,51 @@ const overview = (
   <Kanban
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 const order = (
   <ShoppingBasket
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 
-// const auction = <RiAuctionLine className="text-gray-700 group-hover:text-white" />;
+// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
 const wallet = (
   <Wallet
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 const profile = (
   <UserRoundPen
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 const settings = (
   <Settings
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 const logout = (
   <LogOut
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 const artworks = (
   <ImageUp
     strokeWidth={1.5}
     absoluteStrokeWidth
-    className="text-gray-700 group-hover:text-white"
+    className="text-dark group-hover:text-white"
   />
 );
 

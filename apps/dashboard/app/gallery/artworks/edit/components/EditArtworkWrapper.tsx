@@ -160,7 +160,7 @@ export default function EditArtworkWrapper({
   return (
     <div className="mt-5">
       <div className="w-full py-3 bg-white">
-        <h1 className="text-base text-gray-700 font-normal">
+        <h1 className="text-fluid-base text-dark font-normal">
           Update artwork pricing
         </h1>
       </div>
@@ -171,7 +171,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor={"currency"}
-                className="text-gray-700/80 font-normal text-[14px]"
+                className="text-dark/80 font-normal text-fluid-xs"
               >
                 Currency
               </label>
@@ -179,7 +179,7 @@ export default function EditArtworkWrapper({
                 onChange={handleChange}
                 name="currency"
                 required={true}
-                className="border-0 ring-1 ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
+                className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
               >
                 <option value="">Select</option>
                 <>
@@ -188,7 +188,7 @@ export default function EditArtworkWrapper({
                       <option
                         key={item.code}
                         value={item.code}
-                        className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
+                        className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
                       >
                         {item.name}
                       </option>
@@ -202,7 +202,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col w-full">
               <label
                 htmlFor={"price"}
-                className="text-[#858585] font-normal text-[14px]"
+                className="text-[#858585] font-normal text-fluid-xs"
               >
                 Price (Enter price in your preferred currency)
               </label>
@@ -214,15 +214,15 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
               />
             </div>
 
-            <div className="w-full text-[14px] my-4">
+            <div className="w-full text-fluid-xs my-4">
               {data.currency !== "" &&
                 data.price !== "" &&
                 data.usd_price !== "" && (
-                  <span className=" text-gray-700 font-normal">
+                  <span className=" text-dark font-normal">
                     Exchange rate:{" "}
                     {`${formatPrice(
                       +data.price,
@@ -231,7 +231,7 @@ export default function EditArtworkWrapper({
                   </span>
                 )}
 
-              <p className="font-semibold text-[14px] mt-1 text-red-600">
+              <p className="font-semibold text-fluid-xs mt-1 text-red-600">
                 Please note: To ensure consistent pricing across the platform,
                 all uploaded prices will be displayed in US Dollar equivalents.
               </p>
@@ -241,7 +241,7 @@ export default function EditArtworkWrapper({
           <div className="flex flex-col gap-1">
             <label
               htmlFor={"shouldShowPrice"}
-              className="text-gray-700/80 font-normal text-[14px]"
+              className="text-dark/80 font-normal text-fluid-xs"
             >
               Display price value
             </label>
@@ -249,18 +249,18 @@ export default function EditArtworkWrapper({
               onChange={handleChange}
               name="shouldShowPrice"
               required={true}
-              className="border-0 ring-1 ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
+              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
             >
               <option value="">Select</option>
               <option
                 value="Yes"
-                className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
+                className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
               >
                 Yes
               </option>
               <option
                 value="No"
-                className="px-3 py-5 my-5 font-normal text-[14px] text-gray-700"
+                className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
               >
                 No
               </option>
@@ -271,7 +271,7 @@ export default function EditArtworkWrapper({
             <button
               disabled={loading}
               type="submit"
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
             >
               {loading ? <LoadSmall /> : " Update pricing details"}
             </button>
@@ -282,7 +282,7 @@ export default function EditArtworkWrapper({
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
             >
               {deleteLoading ? <LoadSmall /> : " Delete ths artwork"}
             </button>

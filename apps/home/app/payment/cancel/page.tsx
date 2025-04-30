@@ -51,14 +51,14 @@ export default function OrderCanceledPage() {
             height={100}
             width={100}
           />
-          <p className="text-base font-medium">
+          <p className="text-fluid-base font-medium">
             Your transaction has been canceled
           </p>
 
           <div className="flex flex-col space-y-2 items-center">
             <Link
               href="/"
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
               title="Return Home"
             >
               <svg
@@ -73,11 +73,13 @@ export default function OrderCanceledPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px] whitespace-nowrap">Return Home</span>
+              <span className="text-fluid-xs whitespace-nowrap">
+                Return Home
+              </span>
             </Link>
             <Link
               href={`${dashboard_uri}/user/orders`}
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
               title="Return Home"
             >
               <svg
@@ -92,7 +94,7 @@ export default function OrderCanceledPage() {
                   clipRule="evenodd"
                 ></path>
               </svg>
-              <span className="text-[14px] whitespace-nowrap">
+              <span className="text-fluid-xs whitespace-nowrap">
                 Return to dashboard
               </span>
             </Link>

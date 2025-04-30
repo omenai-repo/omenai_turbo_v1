@@ -5,7 +5,7 @@ export default function AppStoreAd() {
   return (
     <div className="p-4 bg-[#eee7e7] py-[5rem] lg:py-[6rem] h-full max-h-full">
       <div className="flex flex-col justify-center items-center w-full ">
-        <h1 className="text-[20px] xs:text-[24px] sm:text-[28px] xl:text-[36px] 2xl:text-[48px] font-bold text-dark text-center leading-none">
+        <h1 className="text-fluid-md xs:text-fluid-lg sm:text-[28px] xl:text-[36px] 2xl:text-[48px] font-bold text-dark text-center leading-none">
           Care for a more Immersive experience? <br /> Download the Omenai App
           today.
         </h1>

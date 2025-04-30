@@ -28,7 +28,7 @@ export default function NavigationItem({
           <IconWrapper className="hover:bg-white hover:text-dark group">
             {icon}
           </IconWrapper>
-          <p className={`text-[14px] p-2 font-normal`}>{title}</p>
+          <p className={`text-fluid-xs p-2 font-normal`}>{title}</p>
         </li>
       ) : (
         <Link
@@ -37,7 +37,7 @@ export default function NavigationItem({
           className={`p-2 ${
             pathname.startsWith(url)
               ? "bg-dark text-white"
-              : "bg-white text-gray-700"
+              : "bg-white text-dark"
           } group flex items-center w-full hover:bg-dark rounded-full`}
         >
           <IconWrapper
@@ -45,7 +45,7 @@ export default function NavigationItem({
           >
             {icon}
           </IconWrapper>
-          <p className={`text-[14px] p-2 font-normal group-hover:text-white`}>
+          <p className={`text-fluid-xs p-2 font-normal group-hover:text-white`}>
             {title}
           </p>
         </Link>

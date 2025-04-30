@@ -19,7 +19,7 @@ export default function PageTitle({ title }: { title: string }) {
 
     // Render breadcrumb item - conditionally add separator (>)
     return (
-      <span key={link} className="flex items-center gap-x-1 text-[14px]">
+      <span key={link} className="flex items-center gap-x-1 text-fluid-xs">
         {index !== 0 && index < pathSegments.length && (
           <IoMdArrowDropright className="ml-3" />
         )}
@@ -43,14 +43,14 @@ export default function PageTitle({ title }: { title: string }) {
   return (
     <div className="flex justify-between items-center w-full">
       <div className="w-full flex flex-col gap-y-1">
-        <h1 className="font-bold text-sm text-dark">{title}</h1>
-        <p className="text-base flex">{breadcrumbs}</p>
+        <h1 className="font-bold text-fluid-sm text-dark">{title}</h1>
+        <p className="text-fluid-base flex">{breadcrumbs}</p>
       </div>
       {title === "My Artworks" && (
         <Link href={"/gallery/artworks/upload"} className="w-fit">
-          <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal whitespace-nowrap">
+          <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal whitespace-nowrap">
             <span>Upload Artwork</span>
-            <IoAdd className="text-sm" />
+            <IoAdd className="text-fluid-sm" />
           </button>
         </Link>
       )}

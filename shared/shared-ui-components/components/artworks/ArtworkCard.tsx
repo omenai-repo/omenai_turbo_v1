@@ -74,13 +74,13 @@ export default function ArtworkCard({
             {isDashboard ? (
               <Link href={`/gallery/artworks/edit?id=${name}`}>
                 <button
-                  className={`bg-white text-gray-700 rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-gray-700/20 text-[14px] font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
+                  className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-fluid-xs font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
                 >
                   Edit artwork
                 </button>
               </Link>
             ) : (
-              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] text-[14px] ring ring-[#e0e0e0]/50">
+              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] text-fluid-xs ring ring-[#e0e0e0]/50">
                 {medium}
               </div>
             )}
@@ -89,7 +89,7 @@ export default function ArtworkCard({
           {/* Impressions and Like Component */}
           <div className="absolute top-[20px] right-[12px] flex items-center gap-1">
             {trending && (
-              <p className="text-white text-[14px]">
+              <p className="text-white text-fluid-xs">
                 Liked by {impressions} {impressions > 1 ? "people" : "person"}
               </p>
             )}
@@ -107,10 +107,10 @@ export default function ArtworkCard({
           <div className="flex items-center justify-center">
             <div className="p-3 flex flex-col gap-y-1 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
               {/* Title */}
-              <div className="text-gray-400 text-[14px] xs:text-base font-light">
+              <div className="text-gray-400 text-fluid-xs xs:text-fluid-base font-light">
                 {name}
               </div>
-              <div className="text-gray-400 text-[14px] font-light">
+              <div className="text-gray-400 text-fluid-xs font-light">
                 {artist.substring(0, 20)}
                 {artist.length > 20 && "..."}
               </div>
@@ -119,7 +119,7 @@ export default function ArtworkCard({
                 : !trending && (
                     <div className="flex justify-between mt-1.5">
                       {/* Price */}
-                      <div className="text-white text-[14px] xs:text-[14px] font-bold">
+                      <div className="text-white text-fluid-xs xs:text-fluid-xs font-bold">
                         {pricing?.price && pricing.shouldShowPrice === "Yes"
                           ? !availability
                             ? "Sold"
@@ -133,7 +133,7 @@ export default function ArtworkCard({
                       {!availability ? null : (
                         <Link
                           href={`${base_uri}/artwork/${name}`}
-                          className="px-4 py-[5px] duration-300 ring ring-[#e0e0e0]/50 hover:bg-dark hover:text-white rounded-full bg-white text-black text-[14px] font-medium shadow"
+                          className="px-4 py-[5px] duration-300 ring ring-[#e0e0e0]/50 hover:bg-dark hover:text-white rounded-full bg-white text-black text-fluid-xs font-medium shadow"
                         >
                           {pricing?.price && pricing.shouldShowPrice === "Yes"
                             ? "Purchase"

@@ -37,12 +37,12 @@ export default function Banner() {
           </div>
 
           <div>
-            <h1 className="text-base font-semibold">{session?.name}</h1>
-            <p className="text-[14px] font-normal">{session?.email}</p>
+            <h1 className="text-fluid-base font-semibold">{session?.name}</h1>
+            <p className="text-fluid-xs font-normal">{session?.email}</p>
           </div>
         </div>
         <div className="" onClick={() => handleSignout()}>
-          <button className="px-2 py-1 rounded-full sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-[14px] border-dark hover:border-dark/30">
+          <button className="px-2 py-1 rounded-full sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-fluid-xs border-dark hover:border-dark/30">
             Logout
           </button>
         </div>

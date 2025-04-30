@@ -20,7 +20,7 @@ export default function UpcomingSub({
   return (
     <div className="ring-1 ring-[#e0e0e0] rounded-[20px] p-4 h-[250px] relative">
       <div className="w-full flex justify-start relative z-10 my-2">
-        <p className="text-gray-700 text-[14px] font-semibold">Upcoming</p>
+        <p className="text-dark text-fluid-xs font-semibold">Upcoming</p>
       </div>
       {(sub_data.status === "canceled" || sub_data.status === "expired") && (
         <div className="flex flex-col gap-y-3">
@@ -46,13 +46,13 @@ export default function UpcomingSub({
                 className="w-fit h-fit"
               />
               <div>
-                <h1 className="font-bold text-[14px]">
+                <h1 className="font-bold text-fluid-xs">
                   Omenai {sub_data.next_charge_params.type}
                 </h1>
               </div>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-base font-bold">
+              <h1 className="text-fluid-base font-bold">
                 {formatPrice(
                   sub_data.next_charge_params.value,
                   currency_symbol

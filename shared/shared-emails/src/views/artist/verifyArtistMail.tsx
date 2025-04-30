@@ -27,29 +27,29 @@ const ArtistVerificationEmail = (username: string, token: string) => {
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Heading className="text-black text-[24px] font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
               Welcome on board to <strong>Omenai for Artists</strong>
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello {username},
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               We, at <strong>Omenai Inc.</strong>, are thrilled to have you on
               board and eagerly await the beginning of your journey with us
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Your email verification token is located below. Enter this code
               into the designated input field on the verification page. Please
               be aware that the validity of this token will expire in{" "}
               <strong>10 minutes.</strong>
             </Text>
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-[14px] font-normal leading-[24px]">
+              <Text className="text-black text-fluid-xs font-normal leading-[24px]">
                 <strong>{token}</strong>
               </Text>
             </Section>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{username} </span>. In the event that

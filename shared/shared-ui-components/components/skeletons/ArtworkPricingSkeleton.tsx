@@ -8,7 +8,7 @@ export default function ArtworkPricingSkeleton() {
         h={20}
         w={"30%"}
         radius={"xl"}
-        className="font-bold text-base"
+        className="font-bold text-fluid-base"
       />
       <Skeleton
         radius={"lg"}

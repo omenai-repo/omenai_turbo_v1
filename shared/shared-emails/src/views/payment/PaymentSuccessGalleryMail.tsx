@@ -37,10 +37,10 @@ const PaymentSuccessfulGalleryMail = (
               className="mx-auto mt-10"
             />
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               <strong>Dear {name},</strong>
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               We are excited to inform you that your artwork, titled{" "}
               <strong>{artwork}</strong> with{" "}
               <strong>(Order ID #{order_id})</strong> has been successfully
@@ -78,12 +78,12 @@ const PaymentSuccessfulGalleryMail = (
               </div>
             </div>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               You can view the details of this payment and manage your funds
               through your{" "}
               <Link href={`${url}/gallery/payouts`}>Stripe dashboard</Link>.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Please ensure the artwork is prepared for delivery based on the
               agreed terms with the buyer. <br />
               As always, if you have any questions, feedback, or concerns
@@ -91,7 +91,7 @@ const PaymentSuccessfulGalleryMail = (
               feel free to reach out to us at{" "}
               <Link
                 href="mailto:contact@omenani.net"
-                className="underline text-gray-700 italic font-bold"
+                className="underline text-dark italic font-bold"
               >
                 contact@omeani.net
               </Link>
@@ -101,17 +101,17 @@ const PaymentSuccessfulGalleryMail = (
               .
             </Text>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for being a valued member of{" "}
               <strong>Omenai Inc.</strong>, and we look forward to seeing more
               of your incredible work!
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

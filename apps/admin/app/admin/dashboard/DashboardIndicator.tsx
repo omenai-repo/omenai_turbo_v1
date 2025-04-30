@@ -7,9 +7,9 @@ export default function DashboardIndicator() {
   const lastPath = pathname.at(-1);
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-[14px] flex-1">
-        <p className="font-normal text-gray-700">Welcome, Admin</p>
-        <p className="text-gray-700">
+      <div className="text-fluid-xs flex-1">
+        <p className="font-normal text-dark">Welcome, Admin</p>
+        <p className="text-dark">
           <span className="font-light">Admin</span> /{" "}
           <span className="font-normal capitalize text-primary">
             {lastPath}

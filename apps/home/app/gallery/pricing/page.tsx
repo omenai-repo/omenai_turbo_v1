@@ -31,7 +31,7 @@ export default function Plans() {
           <div className="mt-10 text-center">
             <h1
               role="heading"
-              className="text-xl font-bold leading-10 mt-3 text-gray-700"
+              className="text-fluid-xl font-bold leading-10 mt-3 text-dark"
             >
               Our pricing plans
             </h1>

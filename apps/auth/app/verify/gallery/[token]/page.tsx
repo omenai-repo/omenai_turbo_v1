@@ -18,7 +18,10 @@ export default async function VerifyEmail({
       <div className="flex xxs:flex-row flex-col gap-y-4 justify-between items-center">
         <GalleryLogo />
 
-        <Link href={"/login/gallery"} className="underline text-xs font-medium">
+        <Link
+          href={"/login/gallery"}
+          className="underline text-fluid-xxs font-medium"
+        >
           Back to login
         </Link>
       </div>

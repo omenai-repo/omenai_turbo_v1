@@ -17,15 +17,15 @@ export default function FormBlock() {
         className="w-full h-full flex items-center gap-x-8"
       >
         <div className="flex flex-col space-y-4 w-full ">
-          <div className="text-[14px] ">
+          <div className="text-fluid-xs ">
             <IndividualLogo />
           </div>
           <div className="flex flex-col space-y-6 w-full">
             <div>
-              <h1 className="text-base sm:text-sm font-bold">
+              <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
                 Create a user Account
               </h1>
-              <p className="text-xs sm:text-[14px]">
+              <p className="text-fluid-xxs sm:text-fluid-xs">
                 Please fill your information below
               </p>
             </div>

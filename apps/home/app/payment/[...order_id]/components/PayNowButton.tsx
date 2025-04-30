@@ -141,14 +141,14 @@ export default function PayNowButton({
             style="dark"
             animation="duration-500"
             trigger="hover"
-            className={`w-[400px] bg-dark text-[14px] text-white p-2 relative ${
+            className={`w-[400px] bg-dark text-fluid-xs text-white p-2 relative ${
               !lock_status && "hidden"
             }`}
           >
             <button
               onClick={handleClickPayNow}
               disabled={lock_status || loading}
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
             >
               {loading ? <LoadSmall /> : "Proceed to payment"}
             </button>
@@ -159,7 +159,7 @@ export default function PayNowButton({
         </div>
 
         <p className="font-normal text-red-600 w-full mt-6 leading-6">
-          <span className="text-base font-bold uppercase underline">
+          <span className="text-fluid-base font-bold uppercase underline">
             Please note:
           </span>
           <br /> To protect your purchase and prevent duplicate transactions, we

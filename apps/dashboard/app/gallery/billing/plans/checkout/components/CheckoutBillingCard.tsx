@@ -135,15 +135,15 @@ export default function CheckoutBillingCard({
   return (
     <>
       <div className="flex justify-between items-center my-5">
-        <h1 className="text-[14px] font-bold">Payment Method</h1>
+        <h1 className="text-fluid-xs font-bold">Payment Method</h1>
         <p className="text-[13px] flex items-center gap-x-1 font-bold">
           <IoIosLock />
           <span className="text-[13px]">Secure form</span>
         </p>
       </div>
-      <div className="rounded-[20px] ring-1 ring-[#e0e0e0] bg-no-repeat text-gray-700 bg-blend-overlay p-5 relative w-full h-fit">
+      <div className="rounded-[20px] ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
         <div className="w-full flex justify-start relative z-10 my-2">
-          <p className="text-gray-700 text-[14px] font-semibold">
+          <p className="text-dark text-fluid-xs font-semibold">
             Billing card details
           </p>
         </div>
@@ -151,12 +151,12 @@ export default function CheckoutBillingCard({
         <div className="flex justify-between items-center relative z-10">
           <div>
             <div className="flex space-x-3 items-center">
-              <p className="text-[14px] text-gray-700 font-bold dark whitespace-nowrap tracking-widest">
+              <p className="text-fluid-xs text-dark font-bold dark whitespace-nowrap tracking-widest">
                 {sub_data.card.first_6digits} ** ****{" "}
                 {sub_data.card.last_4digits}
               </p>
             </div>
-            <p className="text-normal text-[14px] font-normal text-gray-700 ">
+            <p className="text-normal text-fluid-xs font-normal text-dark ">
               {sub_data.card.expiry}
             </p>
           </div>
@@ -174,7 +174,7 @@ export default function CheckoutBillingCard({
             href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan.plan_id}&plan_interval=${interval}`}
             className="w-full flex justify-start mt-5 mb-2"
           >
-            <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal">
+            <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
               <span>Change card</span>
             </button>
           </Link>
@@ -187,7 +187,7 @@ export default function CheckoutBillingCard({
         <button
           disabled={migrationLoading}
           onClick={handleMigrateToPlan}
-          className="h-[35px] p-5 mt-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal my-5"
+          className="h-[35px] p-5 mt-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal my-5"
         >
           {migrationLoading ? (
             <LoadSmall />
@@ -201,7 +201,7 @@ export default function CheckoutBillingCard({
         <button
           onClick={handlePayNow}
           disabled={loading}
-          className="h-[35px] p-5 mt-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[35px] p-5 mt-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
         >
           {loading ? (
             <LoadSmall />

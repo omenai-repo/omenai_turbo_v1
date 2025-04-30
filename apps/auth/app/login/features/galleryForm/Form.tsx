@@ -14,11 +14,11 @@ export default function GalleryLoginForm() {
         className="w-full h-full flex items-center gap-x-8"
       >
         <div className="flex flex-col space-y-8 w-full ">
-          <div className="text-[14px] ">
+          <div className="text-fluid-xs ">
             <GalleryLogo />
           </div>
           <div className="flex flex-col space-y-10 w-full">
-            <h1 className="text-sm sm:text-md font-bold">
+            <h1 className="text-fluid-sm sm:text-fluid-md font-bold">
               Login to your gallery account.
             </h1>
 

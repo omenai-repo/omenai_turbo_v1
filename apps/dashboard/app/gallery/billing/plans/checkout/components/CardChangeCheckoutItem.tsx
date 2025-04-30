@@ -4,7 +4,7 @@ export default function CardChangeCheckoutItem() {
   return (
     <div className="bg-white shadow-lg">
       <div className="w-full p-5 bg-dark rounded-full text-white">
-        <h1 className="text-base font-normal ">Card change</h1>
+        <h1 className="text-fluid-base font-normal ">Card change</h1>
       </div>
 
       <div className="p-5 rounded-[20px]">

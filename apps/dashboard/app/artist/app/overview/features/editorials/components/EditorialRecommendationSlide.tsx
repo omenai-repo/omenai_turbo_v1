@@ -25,10 +25,12 @@ export default function EditorialRecommendationSlide({
       />
       <div className="bg-dark/30 absolute inset-0 z-10 rounded-xl" />
       <div className="self-end text-white flex flex-col gap-y-1 relative z-20">
-        <span className="text-base  font-light">{category}</span>
-        <h4 className="text-base md:text-sm xl:text-md font-normal">{title}</h4>
-        <p className="text-[14px] md:text-base font-light">{author}</p>
-        <p className="text-[14px] md:text-base font-light">{date}</p>
+        <span className="text-fluid-base  font-light">{category}</span>
+        <h4 className="text-fluid-base md:text-fluid-sm xl:text-fluid-md font-normal">
+          {title}
+        </h4>
+        <p className="text-fluid-xs md:text-fluid-base font-light">{author}</p>
+        <p className="text-fluid-xs md:text-fluid-base font-light">{date}</p>
       </div>
     </div>
   );

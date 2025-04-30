@@ -34,10 +34,10 @@ export const ProfileBanner = () => {
           )}
 
           <div className="">
-            <p className="text-gray-700 font-normal text-base">
+            <p className="text-dark font-normal text-fluid-base">
               {session?.name}
             </p>
-            <p className="text-gray-700 text-[14px] font-light">
+            <p className="text-dark text-fluid-xs font-light">
               {(session as ArtistSchemaTypes).address.address_line}
             </p>
           </div>

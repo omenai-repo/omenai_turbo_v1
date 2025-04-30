@@ -41,10 +41,10 @@ const RequestPriceEmail = (
               alt="Omenai logo"
               className="mx-auto mt-10"
             />
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello <strong>{name}</strong>,
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for your interest in{" "}
               <Link
                 href={`${url}/artwork/${artwork_data.title}`}
@@ -56,7 +56,7 @@ const RequestPriceEmail = (
               of this artwork, and we're delighted to provide you with the
               requested information.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Here are the details of the artwork:
             </Text>
 
@@ -69,22 +69,22 @@ const RequestPriceEmail = (
             <div className="my-0">
               <ul>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Artwork: <strong> {artwork_data.title}</strong>
                   </Text>
                 </li>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Artist name: <strong>{artwork_data.artist}</strong>
                   </Text>
                 </li>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Medium: <strong>{artwork_data.medium}</strong>
                   </Text>
                 </li>
                 <li>
-                  <Text className="text-black text-[14px] leading-[24px]">
+                  <Text className="text-black text-fluid-xs leading-[24px]">
                     Base price:{" "}
                     <strong>
                       {formatPrice(artwork_data.pricing.usd_price)}
@@ -102,12 +102,12 @@ const RequestPriceEmail = (
               </Link>
             </div>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Please note that the base price provided is for the artwork itself
               and does not include any additional fees such as shipping or
               taxes.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               If you have any further questions about the artwork please don't
               hesitate to contact us. We're here to assist you in any way we
               can.{" "}
@@ -119,7 +119,7 @@ const RequestPriceEmail = (
               </Link>
               .
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you again for your interest in{" "}
               <Link
                 href={`${url}/artwork/${artwork_data.title}`}
@@ -129,12 +129,12 @@ const RequestPriceEmail = (
               </Link>
               . We look forward to the possibility of serving you further.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

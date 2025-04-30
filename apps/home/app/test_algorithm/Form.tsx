@@ -24,15 +24,15 @@ export default function Form({
   return (
     <>
       <div className="p-5 flex flex-col gap-2">
-        <label className="text-xs font-medium">{label}</label>
+        <label className="text-fluid-xxs font-medium">{label}</label>
         {type_input === "select" ? (
           <select
             required
             name={name}
             onChange={onchange}
-            className="border-0 ring-1 ring-dark/20 focus:ring text-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
+            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
           >
-            <option value="" className="text-gray-700/40">
+            <option value="" className="text-dark/40">
               Select
             </option>
             {options?.map((option) => (
@@ -46,7 +46,7 @@ export default function Form({
             onChange={onchange}
             required
             name={name}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/30 placeholder:text-xs"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/30 placeholder:text-fluid-xxs"
             type="number"
             placeholder="Enter a number"
           />

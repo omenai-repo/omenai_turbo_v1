@@ -9,11 +9,11 @@ export default function Accordion({ header, items }: AccordionPropTypes) {
   const [open, setOpen] = useState(true);
   return (
     <div className="relative">
-      <div className="text-gray-700/80">
+      <div className="text-dark">
         <hr className="border-1 border-[#e0e0e0]" />
         <div className="py-4 cursor-pointer" onClick={() => setOpen(!open)}>
           <div className="flex justify-between items-center cursor-pointer">
-            <p className="text-[14px] font-medium ">{header}</p>
+            <p className="text-fluid-xs font-medium ">{header}</p>
             <MdOutlineKeyboardArrowDown
               className={`${open ? "rotate-180" : "rotate-[-180]"} duration-300`}
             />
@@ -25,7 +25,7 @@ export default function Accordion({ header, items }: AccordionPropTypes) {
               {items.map((item, index) => {
                 return (
                   <li
-                    className="flex items-center gap-x-2 text-base"
+                    className="flex items-center gap-x-2 text-fluid-xs"
                     key={index + item.content}
                   >
                     {item.icon && item.icon}

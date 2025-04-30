@@ -40,13 +40,13 @@ const OrderAcceptedEmail = (
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-[20px] font-normal text-center p-0 mb-[40px] mx-0">
+            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
               Your order request has been accepted
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Hello <strong>{name}</strong>,
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               I hope this email finds you well. <br />
               We are thrilled to inform you that your order request for{" "}
               <Link
@@ -59,7 +59,7 @@ const OrderAcceptedEmail = (
               necessary information, including shipping quotes and applicable
               taxes, to facilitate the purchase of this exquisite artwork.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               You can now proceed with the payment for your artwork. To complete
               your purchase, please click on the following link to visit the
               artwork payment page:
@@ -72,7 +72,7 @@ const OrderAcceptedEmail = (
                 Pay for this artwork
               </Link>
             </div>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               If you have any questions or need further assistance regarding the
               payment process or your order, please feel free to reach out to
               us. We are here to help ensure a smooth and enjoyable experience
@@ -85,17 +85,17 @@ const OrderAcceptedEmail = (
               </Link>
               .
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Thank you for choosing to support artists on our platform. We
               greatly appreciate your patronage and look forward to seeing this
               stunning artwork find its new home with you.
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{name} </span>. In the event that you

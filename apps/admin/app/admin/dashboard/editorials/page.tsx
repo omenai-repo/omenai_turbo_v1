@@ -33,7 +33,7 @@ export default function Editorial_Page() {
       ) : (
         <>
           <div className="mt-5 my-[3rem]">
-            <h1 className="divide-y text-sm ">Omenai Editorials</h1>
+            <h1 className="divide-y text-fluid-sm ">Omenai Editorials</h1>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {editorials &&

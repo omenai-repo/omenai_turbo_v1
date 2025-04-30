@@ -33,12 +33,12 @@ export default function PromotionalCard({
           />
         </div>
         <div className="col-span-2 p-4 flex flex-col space-y-3">
-          <h1 className="text-base font-bold w-4/5">{headline}</h1>
-          <h2 className="text-[14px] font-normal">{subheadline}</h2>
+          <h1 className="text-fluid-base font-bold w-4/5">{headline}</h1>
+          <h2 className="text-fluid-xs font-normal">{subheadline}</h2>
 
           <Link
             href={cta}
-            className="cursor-pointer bg-dark text-white px-4 py-1.5 rounded-sm w-fit mt-5 text-[14px]"
+            className="cursor-pointer bg-dark text-white px-4 py-1.5 rounded-sm w-fit mt-5 text-fluid-xs"
           >
             View
           </Link>

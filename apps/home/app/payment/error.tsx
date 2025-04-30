@@ -19,7 +19,7 @@ export default function Error({
             // Attempt to recover by trying to re-render the segment
             () => reset()
           }
-          className="w-fit px-5 disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark py-3 text-white text-base hover:bg-white hover:text-gray-700 hover:border hover:border-dark hover:underline duration-300 grid place-items-center group"
+          className="w-fit px-5 disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark py-3 text-white text-fluid-base hover:bg-white hover:text-dark hover:border hover:border-dark hover:underline duration-300 grid place-items-center group"
         >
           Let&apos;s try it again.
         </button>

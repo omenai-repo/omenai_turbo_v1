@@ -11,7 +11,7 @@ export default function OverviewComponentCard({
 }) {
   return (
     <div className="pt-5 pb-2 mb-8">
-      <h4 className="text-gray-700 text-base font-semibold mb-5">{title}</h4>
+      <h4 className="text-dark text-fluid-base font-semibold mb-5">{title}</h4>
       <div
         id={id}
         className={` ${

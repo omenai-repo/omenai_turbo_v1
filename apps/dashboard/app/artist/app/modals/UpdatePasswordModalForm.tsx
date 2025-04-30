@@ -100,13 +100,16 @@ export default function UpdatePasswordModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-bold mb-4 text-gray-700">
+      <h1 className="text-fluid-sm font-bold mb-4 text-dark">
         Update Password Information
       </h1>
       <form onSubmit={handlePasswordUpdate} className="flex flex-col space-y-4">
         <div className="space-y-4 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto">
-            <label htmlFor="pasword" className="text-xs text-[#858585] mb-2">
+            <label
+              htmlFor="pasword"
+              className="text-fluid-xxs text-[#858585] mb-2"
+            >
               Password
             </label>
             <input
@@ -115,7 +118,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               required
               placeholder="Enter a new password"
-              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-xs p-6 rounded-full placeholder:text-[#606060] placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-full placeholder:text-[#606060] placeholder:text-fluid-xxs"
             />
           </div>
         </div>
@@ -123,7 +126,7 @@ export default function UpdatePasswordModalForm() {
           <div className="relative w-full h-auto">
             <label
               htmlFor="confirm_password"
-              className="text-xs text-[#858585] mb-2"
+              className="text-fluid-xxs text-[#858585] mb-2"
             >
               Confirm password
             </label>
@@ -133,7 +136,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               placeholder="Confirm your password"
               required
-              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-xs p-6 rounded-full placeholder:text-[#606060] placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-full placeholder:text-[#606060] placeholder:text-fluid-xxs"
             />
           </div>
         </div>
@@ -142,7 +145,7 @@ export default function UpdatePasswordModalForm() {
           <div className="relative w-full h-auto">
             <label
               htmlFor="confirmationCode"
-              className="text-xs text-[#858585] mb-2"
+              className="text-fluid-xxs text-[#858585] mb-2"
             >
               Confirmation code
             </label>
@@ -152,7 +155,7 @@ export default function UpdatePasswordModalForm() {
               type="text"
               placeholder="Enter confirmation code"
               required
-              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-xs p-6 rounded-full placeholder:text-[#606060] placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-full placeholder:text-[#606060] placeholder:text-fluid-xxs"
             />
           </div>
 
@@ -167,7 +170,7 @@ export default function UpdatePasswordModalForm() {
                 info.password === "" ||
                 codeLoading
               }
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
             >
               {codeLoading ? <LoadSmall /> : "Get code"}
             </button>
@@ -181,7 +184,7 @@ export default function UpdatePasswordModalForm() {
                 className="flex items-center gap-x-2 my-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-xs">{error}</p>
+                <p className="text-red-600 text-fluid-xxs">{error}</p>
               </div>
             );
           })}
@@ -195,7 +198,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
           >
             {loading ? <LoadSmall /> : "Update Password"}
           </button>

@@ -127,7 +127,7 @@ export default function CarouselAcknowledgement({
             <LoadIcon />
           </div>
         ) : (
-          <span className="text-dark text-xs">
+          <span className="text-dark text-fluid-xxs">
             By submitting, you confirm that all information provided is true and
             accurate. Any discrepancies may impact the verification process.
           </span>
@@ -136,7 +136,7 @@ export default function CarouselAcknowledgement({
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
+            className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
           >
             Submit verification request
           </button>

@@ -71,16 +71,16 @@ export default function AddressSelectInput({
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <label htmlFor={name} className="text-gray-700/80 font-normal text-xs">
+      <label htmlFor={name} className="text-dark/80 font-normal text-fluid-xxs">
         {label}
       </label>
       <select
         required={true}
         onChange={handleChange}
         value={selectValue()}
-        className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
+        className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
       >
-        <option value="" className="text-gray-700/40">
+        <option value="" className="text-dark/40">
           Select {labelText}
         </option>
         <>
@@ -91,7 +91,7 @@ export default function AddressSelectInput({
                   key={item.isoCode}
                   value={item.name}
                   data-code={item.isoCode}
-                  className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
+                  className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
                 >
                   {item.name}
                 </option>
@@ -104,7 +104,7 @@ export default function AddressSelectInput({
                   key={state.isoCode}
                   value={state.name}
                   data-code={state.isoCode}
-                  className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
+                  className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
                 >
                   {state.name}
                 </option>
@@ -118,7 +118,7 @@ export default function AddressSelectInput({
                   key={city.name}
                   defaultValue={city.name}
                   data-code={city.name}
-                  className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
+                  className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
                 >
                   {city.name}
                 </option>

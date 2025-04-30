@@ -50,7 +50,7 @@ export default function DesktopNavbar() {
             )}
           <div className="md:hidden block">
             <SlMenu
-              className="text-sm"
+              className="text-fluid-sm"
               onClick={() => updateOpenSideNav(true)}
             />
           </div>

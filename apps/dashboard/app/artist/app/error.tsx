@@ -324,19 +324,19 @@ export default function Error({
         </svg>
 
         <div className="flex flex-col items-center justify-center">
-          <p className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-gray-700 mt-8">
+          <p className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-dark mt-8">
             500
           </p>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 mt-2">
+          <p className="text-fluid-2xl md:text-fluid-3xl lg:text-4xl font-bold text-dark mt-2">
             Server Error
           </p>
 
-          <p className="text-base text-gray-500 mt-4">
+          <p className="text-fluid-base text-gray-500 mt-4">
             You can try reloading the page using the button below or reach out
             to customer support.
           </p>
           <button
-            className="h-[35px] text-[14px] font-normal w-fit disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] px-4 bg-dark text-white cursor-pointer mt-5 grid place-items-center"
+            className="h-[35px] text-fluid-xs font-normal w-fit disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] px-4 bg-dark text-white cursor-pointer mt-5 grid place-items-center"
             onClick={
               // Attempt to recover by trying to re-render the segment
               () => reset()

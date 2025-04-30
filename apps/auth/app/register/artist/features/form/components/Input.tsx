@@ -76,14 +76,14 @@ export default function Input({
       >
         <label
           htmlFor={labelText}
-          className="text-[#858585] text-xs font-normal"
+          className="text-[#858585] text-fluid-xxs font-normal"
         >
           {label}
         </label>
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-xs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 "
+            className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
             placeholder={`${placeholder}`}
             disabled={disabled}
             onChange={handleChange}
@@ -96,11 +96,14 @@ export default function Input({
             <div className="absolute top-2 sm:top-4 right-4 w-fit cursor-pointer">
               {show ? (
                 <PiEyeSlashThin
-                  className="text-md"
+                  className="text-fluid-md"
                   onClick={() => setShow(false)}
                 />
               ) : (
-                <PiEyeThin className="text-md" onClick={() => setShow(true)} />
+                <PiEyeThin
+                  className="text-fluid-md"
+                  onClick={() => setShow(true)}
+                />
               )}
             </div>
           )}
@@ -113,7 +116,9 @@ export default function Input({
                 className="flex items-center gap-x-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-xs sm:text-[14px]">{error}</p>
+                <p className="text-red-600 text-fluid-xxs sm:text-fluid-xs">
+                  {error}
+                </p>
               </div>
             );
           })}

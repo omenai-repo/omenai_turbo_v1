@@ -8,7 +8,7 @@ export default function NoMobileView() {
       <div className="h-full w-full grid place-items-center p-5">
         <div className="flex flex-col gap-4 items-center">
           <Image src="/icons/computer.webp" alt="" width={50} height={50} />
-          <p className="text-base text-center">
+          <p className="text-fluid-base text-center">
             For optimal experience, please visit this page on a desktop device.
           </p>
         </div>

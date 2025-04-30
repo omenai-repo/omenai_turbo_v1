@@ -149,7 +149,7 @@ export default function Upload() {
     <div className="md:container">
       <form onSubmit={handlePromotionalContentUpload}>
         <div className=" mt-5 mb-[3rem]">
-          <h1 className="divide-y text-sm text-gray-700">
+          <h1 className="divide-y text-fluid-sm text-dark">
             Create a promotional content
           </h1>
         </div>
@@ -176,12 +176,12 @@ export default function Upload() {
         />
 
         <div className="flex flex-col gap-3">
-          <label htmlFor="Cover" className="text-[14px]">
+          <label htmlFor="Cover" className="text-fluid-xs">
             Cover image
           </label>
           <label
             htmlFor="label_description"
-            className="text-[14px] text-red-600 font-semibold"
+            className="text-fluid-xs text-red-600 font-semibold"
           >
             Note: Uploading a landscaped or square-shaped image would be most
             ideal for display
@@ -193,7 +193,7 @@ export default function Upload() {
           <button
             disabled={loading}
             type="submit"
-            className={`whitespace-nowrap bg-dark text-[14px] disabled:bg-dark/10 disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 `}
+            className={`whitespace-nowrap bg-dark text-fluid-xs disabled:bg-dark/10 disabled:text-[#858585] rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80 `}
           >
             {loading ? <LoadSmall /> : "Upload promotional content"}
           </button>

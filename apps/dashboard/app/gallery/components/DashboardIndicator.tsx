@@ -54,13 +54,13 @@ export default function DashboardIndicator({
   }
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-[14px]">
-        <p className="font-normal text-gray-700">
+      <div className="text-fluid-xs">
+        <p className="font-normal text-dark">
           Welcome back, <strong>{gallery_name}</strong>
         </p>
 
-        <p className="text-gray-700">
-          <span className="font-normal capitalize text-gray-700">
+        <p className="text-dark">
+          <span className="font-normal capitalize text-dark">
             {getFormattedDateTime()}
           </span>
         </p>
@@ -71,20 +71,20 @@ export default function DashboardIndicator({
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className=" h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>
-          <p className="text-[14px] text-gray-700 font-medium">
+          <p className="text-fluid-xs text-dark font-medium">
             Account currently under review
           </p>
         </div>
       ) : (
         <div className="flex gap-2 items-center">
-          <RiAdminLine className="text-sm font-light text-gray-700" />
+          <RiAdminLine className="text-fluid-sm font-light text-dark" />
           <div>
-            <p className="text-gray-700 text-[14px] font-bold">{admin_name}</p>
-            <p className="text-gray-700 text-[14px] font-semibold">Admin</p>
+            <p className="text-dark text-fluid-xs font-bold">{admin_name}</p>
+            <p className="text-dark text-fluid-xs font-semibold">Admin</p>
           </div>
         </div>
       )}

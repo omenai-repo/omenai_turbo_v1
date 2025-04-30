@@ -35,25 +35,25 @@ const PasswordRecoveryEmail = (
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Heading className="text-black text-[24px] font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
               Password Reset verification
             </Heading>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               Dear {username},
             </Text>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               We have received a request to reset your password. Below, you will
               find your verification link. Please note that the validity of this
               link will expire in <strong>10 minutes.</strong>
             </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-[14px] font-normal leading-[24px]">
+              <Text className="text-black text-fluid-xs font-normal leading-[24px]">
                 <strong>{`${url}/reset/${route}/${token}`}</strong>
               </Text>
             </Section>
 
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-black text-fluid-xs leading-[24px]">
               If you did not authorize this action. Please contact us
               immediately on{" "}
               <Link
@@ -64,7 +64,7 @@ const PasswordRecoveryEmail = (
               </Link>
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-gray-700 text-[12px] leading-[24px]">
+            <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
               <span className="text-black">{username} </span>. In the event that

@@ -95,10 +95,10 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Previous Button */}
         <li>
           <button
-            className={`${width > 380 && "px-3 py-2 disabled:bg-dark/10 disabled:text-gray-700/50 rounded text-xs text-white bg-dark"} ${
+            className={`${width > 380 && "px-3 py-2 disabled:bg-dark/10 disabled:text-dark/50 rounded text-fluid-xxs text-white bg-dark"} ${
               currentPage === 1
-                ? "text-gray-700/80 cursor-not-allowed"
-                : "text-gray-700"
+                ? "text-dark/80 cursor-not-allowed"
+                : "text-dark"
             }`}
             disabled={currentPage === 1}
             onClick={handleClickPrev}
@@ -112,10 +112,10 @@ const Pagination: React.FC<PaginationProps> = ({
           typeof page === "number" ? (
             <li key={index}>
               <button
-                className={`px-3 py-1 rounded disabled:bg-dark/10 disabled:text-gray-700/50 disabled:cursor-not-allowed ${
+                className={`px-3 py-1 rounded disabled:bg-dark/10 disabled:text-dark/50 disabled:cursor-not-allowed ${
                   page === currentPage
                     ? "bg-dark text-white"
-                    : "text-gray-700 hover:bg-dark/50"
+                    : "text-dark hover:bg-dark/50"
                 }`}
                 onClick={() => handleClickPage(page)}
               >
@@ -132,10 +132,10 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Next Button */}
         <li>
           <button
-            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-gray-700/50 px-3 py-2 rounded text-white text-xs bg-dark"}  ${
+            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-2 rounded text-white text-fluid-xxs bg-dark"}  ${
               currentPage === total
-                ? "text-gray-700/80 cursor-not-allowed"
-                : "text-gray-700"
+                ? "text-dark/80 cursor-not-allowed"
+                : "text-dark"
             }`}
             disabled={currentPage === total}
             onClick={handleClickNext}

@@ -18,10 +18,10 @@ function ArtStyle() {
   return (
     <AnimatePresence key={7}>
       <div className="">
-        <p className="text-[14px] font-normal text-center">
+        <p className="text-fluid-xs font-normal text-center">
           Choose an art style that best represents your work.
         </p>
-        <p className="text-center text-[14px] font-semibold my-[1.5rem]">
+        <p className="text-center text-fluid-xs font-semibold my-[1.5rem]">
           Selected art style: {artistSignupData.art_style}
         </p>
 

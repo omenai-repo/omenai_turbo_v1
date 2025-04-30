@@ -12,7 +12,7 @@ export default async function CuratedArtworks() {
       <DesktopNavbar />
       <div>
         <div className="space-y-1 my-5">
-          <p className="text-lg lg:text-xl font-semibold">
+          <p className="text-fluid-lg lg:text-fluid-xl font-semibold">
             Your Art, Your Way:
           </p>
           <p className=" font-medium">Discover Captivating Pieces </p>

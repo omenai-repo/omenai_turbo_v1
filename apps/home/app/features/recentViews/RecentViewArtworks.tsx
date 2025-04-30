@@ -59,17 +59,17 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
             <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
               View history
             </p>
-            <p className="text-sm sm:text-md font-bold text-[#000000] mt-[20px]">
+            <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
               Recently viewed by you.
             </p>
           </div>
 
           <div className="hidden sm:flex flex-col items-end">
-            <p className="text-base font-bold">Back for a Second Look:</p>
-            <p className="justify-self-end font-medium text-xs">
+            <p className="text-fluid-base font-bold">Back for a Second Look:</p>
+            <p className="justify-self-end font-medium text-fluid-xxs">
               Rediscover the Art
             </p>
-            <p className="justify-self-end font-medium text-xs">
+            <p className="justify-self-end font-medium text-fluid-xxs">
               That Captured Your Attention
             </p>
           </div>

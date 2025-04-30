@@ -171,10 +171,10 @@ export default function OrdersCard({
           width={100}
           className="object-fill object-center rounded-[20px] h-[100px] w-[100px]"
         />
-        <div className="flex flex-col sapce-y-1 text-[14px]">
-          <p className="text-gray-700 font-medium text-base">{title}</p>
-          {/* <span className="text-gray-700 text-[14px]">{artist}</span> */}
-          <span className="text-gray-700 text-base font-bold">
+        <div className="flex flex-col sapce-y-1 text-fluid-xs">
+          <p className="text-dark font-medium text-fluid-base">{title}</p>
+          {/* <span className="text-dark text-fluid-xs">{artist}</span> */}
+          <span className="text-dark text-fluid-base font-bold">
             {formatPrice(price, currency)}
           </span>
           <div className="mt-3">
@@ -190,18 +190,18 @@ export default function OrdersCard({
         </div>
       </div>
 
-      <div className="flex flex-col md:mt-0 mt-5 text-[14px] md:items-end items-start gap-y-1">
-        <span className="text-gray-700 font-medium text-[14px]">
+      <div className="flex flex-col md:mt-0 mt-5 text-fluid-xs md:items-end items-start gap-y-1">
+        <span className="text-dark font-medium text-fluid-xs">
           {order_date}
         </span>
-        <span className="text-gray-700 text-[14px] font-medium">
+        <span className="text-dark text-fluid-xs font-medium">
           Order ID: <span className="font-medium">#{order_id}</span>
         </span>
 
         {!availability ? (
           <button
             disabled
-            className="whitespace-nowrap rounded-full bg-dark text-xs text-white disabled:bg-dark/10 disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+            className="whitespace-nowrap rounded-full bg-dark text-fluid-xxs text-white disabled:bg-dark/10 disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
           >
             <span>No action required</span>
           </button>
@@ -221,7 +221,7 @@ export default function OrdersCard({
                   <Link
                     href={`${base_uri}/payment/${order_id}?id_key=${session?.user_id}`}
                   >
-                    <button className="whitespace-nowrap rounded-full bg-dark text-xs text-white disabled:bg-dark/10 disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                    <button className="whitespace-nowrap rounded-full bg-dark text-fluid-xxs text-white disabled:bg-dark/10 disabled:text-[#858585] w-full disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                       <span>Pay for this artwork</span>
                     </button>
                   </Link>
@@ -233,7 +233,7 @@ export default function OrdersCard({
                 !delivery_confirmed &&
                 tracking_information.link !== "" && (
                   <Link href={tracking_information.link} target="_blank">
-                    <button className="whitespace-nowrap rounded-full bg-dark disabled:bg-dark/10 disabled:text-[#858585] text-xs w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                    <button className="whitespace-nowrap rounded-full bg-dark disabled:bg-dark/10 disabled:text-[#858585] text-fluid-xxs w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                       <span>Track this order</span>
                     </button>
                   </Link>
@@ -245,7 +245,7 @@ export default function OrdersCard({
                     onClick={() =>
                       updateConfirmOrderDeliveryPopup(true, order_id)
                     }
-                    className="whitespace-nowrap rounded-full bg-green-600 disabled:bg-dark/10 disabled:text-[#858585] text-xs w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                    className="whitespace-nowrap rounded-full bg-green-600 disabled:bg-dark/10 disabled:text-[#858585] text-fluid-xxs w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                   >
                     <span>Confirm order delivery</span>
                   </button>
@@ -258,7 +258,7 @@ export default function OrdersCard({
               tracking_information.link === "" && (
                 <button
                   disabled
-                  className="whitespace-nowrap rounded-full bg-dark disabled:bg-dark/10 disabled:text-[#858585] text-xs w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                  className="whitespace-nowrap rounded-full bg-dark disabled:bg-dark/10 disabled:text-[#858585] text-fluid-xxs w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                 >
                   <span>Awaiting tracking information</span>
                 </button>
@@ -268,7 +268,7 @@ export default function OrdersCard({
               <div className="relative flex items-center gap-x-1">
                 <button
                   disabled
-                  className="whitespace-nowrap rounded-full bg-dark text-xs disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                  className="whitespace-nowrap rounded-full bg-dark text-fluid-xxs disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                 >
                   <MdOutlineCallToAction />
                   <span>Order in review</span>
@@ -279,7 +279,7 @@ export default function OrdersCard({
               <div className="relative flex items-center gap-x-1">
                 <button
                   disabled
-                  className="whitespace-nowrap rounded-full bg-dark text-xs disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                  className="whitespace-nowrap rounded-full bg-dark text-fluid-xxs disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                 >
                   <GoIssueClosed />
                   <span>This order has been fulfilled</span>

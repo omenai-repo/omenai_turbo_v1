@@ -33,7 +33,7 @@ export default function SubscriptionCheckout() {
       ) : (
         <>
           <div className="my-8 space-y-1">
-            {/* <p className="text-[#858585] text-[14px]">
+            {/* <p className="text-[#858585] text-fluid-xs">
               Please fill in all information below to fully activate your
               subscription
             </p> */}

@@ -128,7 +128,7 @@ export default function VerifyOTP({
   return (
     <div>
       <div className="mt-8 flex flex-col space-y-6">
-        <p className="text-[14px]">
+        <p className="text-fluid-xs">
           An OTP (One time password) has been sent to your registered email.
           Please entr the 4-digit code below
         </p>
@@ -148,14 +148,14 @@ export default function VerifyOTP({
         {otpVerified && (
           <div className="flex flex-col space-y-4">
             <p
-              className="text-green-600 text-xs font-semibold"
+              className="text-green-600 text-fluid-xxs font-semibold"
               aria-live="polite"
             >
               ✅ OTP successfully verified!
             </p>
             <button
               onClick={() => setVerification(otpVerified)}
-              className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
+              className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
             >
               Proceed
             </button>
@@ -163,13 +163,13 @@ export default function VerifyOTP({
         )}
 
         {loading && (
-          <span className="text-xs font-semibold " aria-live="polite">
+          <span className="text-fluid-xxs font-semibold " aria-live="polite">
             Sending OTP code. Please wait...
           </span>
         )}
 
         {!loading && !otpVerified && (
-          <p className="text-xs font-semibold">
+          <p className="text-fluid-xxs font-semibold">
             Didn’t get the code?{" "}
             <button
               className={` underline ${

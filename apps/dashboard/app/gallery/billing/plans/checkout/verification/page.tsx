@@ -47,7 +47,7 @@ export default function TransactionVerification() {
         {isLoading ? (
           <div className=" w-[20vw] flex flex-col items-center justify-center space-y-6">
             <LoadIcon />
-            <p className="text-[14px] font-medium whitespace-nowrap">
+            <p className="text-fluid-xs font-medium whitespace-nowrap">
               Verification in progress...please wait
             </p>
           </div>
@@ -61,7 +61,7 @@ export default function TransactionVerification() {
                 alt="verification icon"
                 className="text-center"
               />
-              <p className="text-[14px] font-bold whitespace-nowrap">
+              <p className="text-fluid-xs font-bold whitespace-nowrap">
                 {verified?.message}
               </p>
             </div>
@@ -71,7 +71,7 @@ export default function TransactionVerification() {
                 <Link
                   href={"/gallery/billing"}
                   type="button"
-                  className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                  className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 >
                   View subscription info
                 </Link>

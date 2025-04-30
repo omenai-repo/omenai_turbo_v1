@@ -17,7 +17,7 @@ export default function TC() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      <p className="text-xs my-4 font-normal">
+      <p className="text-fluid-xxs my-4 font-normal">
         Please read through and confirm that you understand and accept all the
         terms stated
       </p>
@@ -34,7 +34,7 @@ export default function TC() {
           />
           <Label
             htmlFor="terms of use"
-            className="text-gray-700 text-xs sm:text-[14px]"
+            className="text-dark text-fluid-xxs sm:text-fluid-xs"
           >
             By ticking this box, I accept the{" "}
             <Link href={"/"} className="underline font-bold">
@@ -53,13 +53,13 @@ export default function TC() {
         <button
           type="submit"
           disabled={isLoading || !isChecked}
-          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
+          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           {isLoading ? <LoadSmall /> : "Create account"}
         </button>
         <button
           disabled={isLoading}
-          className={` bg-white  text-gray-700 focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center hover:ring-dark cursor-pointer`}
+          className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-dark cursor-pointer`}
           type={"button"}
           onClick={decrementCurrentSignupFormIndex}
         >

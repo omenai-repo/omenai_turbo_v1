@@ -115,7 +115,7 @@ export default function AlgorithmTest() {
             <div className="w-full flex justify-center">
               <button
                 type="submit"
-                className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
+                className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
               >
                 Run Algorithm
               </button>
@@ -124,12 +124,14 @@ export default function AlgorithmTest() {
             <div className="w-full">
               {result && result.status !== "error" && (
                 <div className="bg-dark/10 p-8 rounded-lg">
-                  <h1 className="text-xs font-bold mb-4">Algorithm Result</h1>
-                  <p className="text-xs">
+                  <h1 className="text-fluid-xxs font-bold mb-4">
+                    Algorithm Result
+                  </h1>
+                  <p className="text-fluid-xxs">
                     Points earned:{" "}
                     <span className="font-bold">{result.totalPoints}/200</span>
                   </p>
-                  <p className="text-xs">
+                  <p className="text-fluid-xxs">
                     Artist category:{" "}
                     <span className="font-bold">{result.rating}</span>{" "}
                   </p>

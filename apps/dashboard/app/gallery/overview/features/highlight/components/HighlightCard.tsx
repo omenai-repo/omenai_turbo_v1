@@ -36,7 +36,7 @@ export default function HighlightCard({ tag }: HightlightCardProps) {
           <Loader color="rgba(255, 255, 255, 1)" size="xs" type="bars" />
         </div>
       ) : (
-        <h1 className="font-semibold text-base text-white">{data}</h1>
+        <h1 className="font-semibold text-fluid-base text-white">{data}</h1>
       )}
     </div>
   );

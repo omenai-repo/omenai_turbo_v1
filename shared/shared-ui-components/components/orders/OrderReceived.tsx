@@ -6,19 +6,19 @@ export default function OrderReceived() {
   return (
     <div className="grid place-items-center">
       <div className="flex flex-col justify-center items-center gap-1 text-center">
-        <p className="text-gray-700 text-[14px] font-medium ">
+        <p className="text-dark text-fluid-xs font-medium ">
           Your order has been successfully received, we&apos;ll be in touch
           within the next 48 hours with an accurate shipping quote and next
           steps.
         </p>
-        <p className="text-gray-700 text-[14px] font-medium my-5">
+        <p className="text-dark text-fluid-xs font-medium my-5">
           Thank you for your patience.
         </p>
 
         <Link
           onClick={() => toggleOrderReceivedModal(false)}
           href={"/catalog"}
-          className="h-[35px] rounded-full text-[14px] px-4 w-full bg-dark grid place-items-center text-white cursor-pointer mt-[50px]"
+          className="h-[35px] rounded-full text-fluid-xs px-4 w-full bg-dark grid place-items-center text-white cursor-pointer mt-[50px]"
         >
           Continue shopping
         </Link>

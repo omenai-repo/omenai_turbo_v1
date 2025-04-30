@@ -17,8 +17,10 @@ export default function GalleryDetailPopupModal() {
       } w-full h-screen fixed top-0 left-0 backdrop-blur-lg place-items-center bg-dark/10`}
     >
       <div className="bg-white p-5 rounded-md w-[500px]">
-        <h1 className="text-base font-normal mb-4">Gallery Information</h1>
-        <div className="flex flex-col gap-y-2 text-[14px]">
+        <h1 className="text-fluid-base font-normal mb-4">
+          Gallery Information
+        </h1>
+        <div className="flex flex-col gap-y-2 text-fluid-xs">
           <p>Name: {singleGalleryListItemData.name}</p>
           <p>Email: {singleGalleryListItemData.email}</p>
           <p>

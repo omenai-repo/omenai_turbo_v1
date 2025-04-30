@@ -13,7 +13,7 @@ export default function Highlight() {
           >
             <div className="flex justify-between items-center w-full">
               <div>
-                <p className="text-[#909090] text-xs font-normal">
+                <p className="text-[#909090] text-fluid-xxs font-normal">
                   {item.title}
                 </p>
                 <HighlightCard

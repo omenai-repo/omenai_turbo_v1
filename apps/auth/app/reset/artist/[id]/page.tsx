@@ -19,7 +19,7 @@ export default async function ResetPassword({
         <div className="flex xxs:flex-row flex-col gap-y-4 justify-between items-center">
           <IndividualLogo />
 
-          <Link href={auth_url} className="text-xs underline">
+          <Link href={auth_url} className="text-fluid-xxs underline">
             Back to login
           </Link>
         </div>

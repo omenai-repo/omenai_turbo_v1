@@ -48,7 +48,7 @@ export const AdminLogo = ({ className, theme = "dark" }: LogoProps) => {
           priority={true}
         />
         <span
-          className={`font-normal text-[14px] relative xxs:top-1 ${
+          className={`font-normal text-fluid-xs relative xxs:top-1 ${
             theme === "light" ? "text-white" : "text-black"
           } ${className}`}
         >
@@ -94,7 +94,7 @@ export const ArtistLogo = ({ className }: LogoProps) => {
           priority={true}
         />
 
-        <span className={`font-normal text-[14px] relative xxs:top-1`}>
+        <span className={`font-normal text-fluid-xs relative xxs:top-1`}>
           For Artist
         </span>
       </Link>

@@ -13,8 +13,10 @@ export default async function RecentArtworks() {
       <DesktopNavbar />
       <div className="p-4">
         <div className="space-y-1 my-5 px-4">
-          <h1 className="text-sm md:text-md font-normal">Latest artworks</h1>
-          <p className="text-base md:text-sm text-[#858585] font-light italic">
+          <h1 className="text-fluid-sm md:text-fluid-md font-normal">
+            Latest artworks
+          </h1>
+          <p className="text-fluid-base md:text-fluid-sm text-[#858585] font-light italic">
             Fresh Off the Easel: Explore the Newest Masterpieces, Just for You
           </p>
         </div>

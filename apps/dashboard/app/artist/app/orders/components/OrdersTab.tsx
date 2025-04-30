@@ -37,7 +37,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
       orientation="vertical"
       defaultValue="pending"
     >
-      <Tabs.List className="space-y-5">
+      <Tabs.List className="space-y-5 text-fluid-xs">
         <Tabs.Tab
           value="pending"
           leftSection={<PackageMinus strokeWidth={1.5} absoluteStrokeWidth />}

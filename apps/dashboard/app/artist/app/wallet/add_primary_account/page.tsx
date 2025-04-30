@@ -14,7 +14,7 @@ export default function page() {
         >
           <div>
             <h5 className="font-semibold">Add a primary bank account</h5>
-            <span className="text-xs">
+            <span className="text-fluid-xxs">
               Fill in the details below to add a primary bank account for
               withdrawals
             </span>

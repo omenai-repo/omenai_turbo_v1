@@ -15,10 +15,10 @@ export default function Tab({ title, tag, mobile = false }: TabTypes) {
       className={` ${
         selectedTab.tag === tag
           ? "bg-dark text-white border-none"
-          : `bg-[#FAFAFA] text-gray-700 border-dark/10 border hover:bg-dark/10`
+          : `bg-[#FAFAFA] text-dark border-dark/10 border hover:bg-dark/10`
       } ${
         mobile ? "border-0 border-b-1 border-b-dark/30" : ""
-      } text-[14px]  px-4 py-2 rounded-full duration-200`}
+      } text-fluid-xs  px-4 py-2 rounded-full duration-200`}
     >
       {title}
     </button>

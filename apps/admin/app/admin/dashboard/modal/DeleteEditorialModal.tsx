@@ -77,7 +77,7 @@ export const DeleteEditorialModal = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white text-gray-700 p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
+            className="bg-white text-dark p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">
@@ -86,7 +86,7 @@ export const DeleteEditorialModal = () => {
                 <button
                   disabled={loading}
                   onClick={handleEditorialDelete}
-                  className="h-[35px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+                  className="h-[35px] px-4 w-full text-fluid-xs text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
                 >
                   {loading ? <LoadSmall /> : "Delete editorial"}
                 </button>

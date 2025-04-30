@@ -62,16 +62,16 @@ export default function ConfirmOrderDeliveryForm() {
 
   return (
     <div>
-      <h1 className="text-sm font-normal mb-4 text-gray-700">
+      <h1 className="text-fluid-sm font-normal mb-4 text-dark">
         Confirm order delivery
       </h1>
-      <div className="flex flex-col gap-4 font-normal text-base">
+      <div className="flex flex-col gap-4 font-normal text-fluid-base">
         <div className="bg-[#fafafa] p-5 flex flex-col gap-3">
           <p className="font-bold flex items-center gap-x-2">
-            <IoWarning className="text-md text-[#FFA500]" />
+            <IoWarning className="text-fluid-md text-[#FFA500]" />
           </p>
 
-          <p className="text-[14px]">
+          <p className="text-fluid-xs">
             By confirming you are acknowledging that the artwork has been
             delivered to you in good condition. If you mistakenly confirm or
             encounter any issues with your order, please contact customer
@@ -85,7 +85,7 @@ export default function ConfirmOrderDeliveryForm() {
           disabled={loading}
           type="button"
           onClick={confirmDelivery}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, confirm delivery"}
         </button>

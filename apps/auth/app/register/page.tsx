@@ -34,7 +34,7 @@ function Page() {
               <div className="w-full h-full flex flex-col max-w-[500px] px-4 gap-y-8 overflow-x-hidden">
                 <div className="flex flex-col space-y-6">
                   <IndividualLogo />
-                  <h1 className="text-base sm:text-sm font-bold">
+                  <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
                     Create an account today
                   </h1>
                 </div>

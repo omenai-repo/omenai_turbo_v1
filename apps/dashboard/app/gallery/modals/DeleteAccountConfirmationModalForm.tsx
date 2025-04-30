@@ -63,21 +63,21 @@ export default function DeleteAccountConfirmationModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-normal mb-4 text-gray-700">
+      <h1 className="text-fluid-sm font-normal mb-4 text-dark">
         Confirm Account Deletion
       </h1>
-      <div className="flex flex-col gap-4 font-normal text-base">
-        <h2 className="text-red-600 text-base font-bold">
+      <div className="flex flex-col gap-4 font-normal text-fluid-base">
+        <h2 className="text-red-600 text-fluid-base font-bold">
           You are about to delete your Gallery account!
         </h2>
 
         <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3">
           <p className="font-bold flex items-center gap-x-2">
-            <IoWarning className="text-md text-[#FFA500]" />
-            <span className="text-[#FFA500] text-[14px]">Warning</span>
+            <IoWarning className="text-fluid-md text-[#FFA500]" />
+            <span className="text-[#FFA500] text-fluid-xs">Warning</span>
           </p>
 
-          <p className="text-[14px] text-gray-700">
+          <p className="text-fluid-xs text-dark">
             Deleting your account will permanently erase all your uploaded
             artwork and prevent you from using any of the platform&apos;s
             features.{" "}
@@ -93,7 +93,7 @@ export default function DeleteAccountConfirmationModalForm() {
           disabled={loading}
           type="button"
           onClick={handleDeleteGalleryAccount}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, delete this account"}
         </button>

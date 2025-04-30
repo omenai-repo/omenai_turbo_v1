@@ -23,13 +23,13 @@ export default function WithdrawalSuccessScreen() {
       />
       <div className="w-full flex flex-col space-y-6 text-center">
         <h5 className="font-semibold">Transfer initiated successfully</h5>
-        <p className="text-xs">
+        <p className="text-fluid-xxs">
           Your transfer request has been queued. It will be deposited into your
           bank account shortly
         </p>
         <button
           onClick={() => toggleWithdrawalFormPopup(false)}
-          className="text-xs h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white font-normal"
+          className="text-fluid-xxs h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white font-normal"
         >
           Go to wallet
         </button>

@@ -17,39 +17,37 @@ export default function ArtistOnboarding() {
           <IndividualLogo />
         </div>
 
-        <h1 className="text-md font-bold text-gray-900">
+        <h1 className="text-fluid-md font-bold text-gray-900">
           One last step before you begin… 🎨✨
         </h1>
-        <p className="text-gray-600 mt-3 text-xs">
+        <p className="text-gray-600 mt-3 text-fluid-xxs">
           To ensure a high standard of artistry and credibility on our platform,
           we need to learn more about your artistic journey.
         </p>
 
-        <div className="mt-6 space-y-3 text-xs text-left">
+        <div className="mt-6 space-y-3 text-fluid-xxs text-left">
           <div className="flex items-center space-x-3">
             <BriefcaseIcon className="w-6 h-6 text-blue-600" />
-            <span className="text-gray-700">Your art style and background</span>
+            <span className="text-dark">Your art style and background</span>
           </div>
           <div className="flex items-center space-x-3">
             <AcademicCapIcon className="w-6 h-6 text-green-600" />
-            <span className="text-gray-700">
-              Your education and exhibitions
-            </span>
+            <span className="text-dark">Your education and exhibitions</span>
           </div>
           <div className="flex items-center space-x-3">
             <BuildingLibraryIcon className="w-6 h-6 text-purple-600" />
-            <span className="text-gray-700">
+            <span className="text-dark">
               Museum collections featuring your work
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <DocumentTextIcon className="w-6 h-6 text-red-600" />
-            <span className="text-gray-700">Your CV and credentials</span>
+            <span className="text-dark">Your CV and credentials</span>
           </div>
         </div>
 
         <div className="my-5">
-          <p className="text-gray-600 mt-3 text-xs">
+          <p className="text-gray-600 mt-3 text-fluid-xxs">
             Once submitted, our team will review your information and verify
             your profile. After approval, you&apos;ll gain full access to
             showcase and sell your work to collectors worldwide. Your data will
@@ -59,7 +57,7 @@ export default function ArtistOnboarding() {
 
         <div className="mt-8 space-y-3">
           <Link href={"/artist/onboarding/flow"}>
-            <button className="w-full bg-dark text-xs hover:bg-dark/70 text-white py-3 rounded-full font-semibold transition">
+            <button className="w-full bg-dark text-fluid-xxs hover:bg-dark/70 text-white py-3 rounded-full font-semibold transition">
               Start onboarding process
             </button>
           </Link>

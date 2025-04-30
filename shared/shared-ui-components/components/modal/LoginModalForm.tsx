@@ -109,7 +109,7 @@ export default function LoginModalForm() {
     <>
       <div className="flex flex-col items-center justify-center gap-2 my-4">
         <IndividualLogo />
-        <h1 className="text-[14px] text-gray-700 font-bold mt-3 mb-5">
+        <h1 className="text-fluid-xs text-dark font-bold mt-3 mb-5">
           Login to your user account
         </h1>
       </div>
@@ -119,21 +119,21 @@ export default function LoginModalForm() {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col space-y-2">
-          <label htmlFor={"email"} className="text-[14px]">
+          <label htmlFor={"email"} className="text-fluid-xs">
             Email address
           </label>
           <input
             type="email"
             name="email"
             value={form.email}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full w-full placeholder:text-gray-700/40 placeholder:text-xs"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full w-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
             required
             placeholder="e.g john@doe.examplemail.com"
             onChange={handleChange}
           />
         </div>
         <div className="flex flex-col space-y-2">
-          <label htmlFor={"email"} className="text-[14px]">
+          <label htmlFor={"email"} className="text-fluid-xs">
             Password
           </label>
           <input
@@ -141,7 +141,7 @@ export default function LoginModalForm() {
             name="password"
             value={form.password}
             placeholder="********"
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full w-full placeholder:text-gray-700/40 placeholder:text-sx"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full w-full placeholder:text-dark/40 placeholder:text-sx"
             required
             onChange={handleChange}
           />

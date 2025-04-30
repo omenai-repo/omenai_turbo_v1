@@ -17,12 +17,12 @@ export default function ArtsByMediumCard({ name, tag }: ArtsByMediumCardProps) {
           className="h-[200px] max-w-[400px] object-cover object-top"
         />
         <div className="flex flex-col">
-          <span className="text-[14px] font-normal text-gray-700 italic">
+          <span className="text-fluid-xs font-normal text-dark italic">
             Omenai picks
           </span>
           <Link
             href={"/"}
-            className="md:text-[20px] text-base text-gray-700 font-normal"
+            className="md:text-fluid-md text-fluid-base text-dark font-normal"
           >
             {name}
           </Link>
