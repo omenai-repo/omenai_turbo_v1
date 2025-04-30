@@ -32,17 +32,17 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
 
   // Memoize the defaultZoomLevel based on window size
   const defaultZoomLevel = useMemo(() => {
-    if (width < 460) return 1.2;
-    if (width < 1024) return 1;
-    if (width < 1280) return 0.7;
+    if (width <= 460) return 1.2;
+    if (width <= 1024) return 1;
+    if (width <= 1280) return 0.7;
     return 0.5;
   }, [width]);
 
   const maxZoomLevel = useMemo(() => {
-    if (width < 460) return 4.5;
-    if (width < 1024) return 3;
-    if (width < 1280) return 2.5;
-    if (width < 1440) return 2;
+    if (width <= 460) return 4.5;
+    if (width <= 1024) return 3;
+    if (width <= 1280) return 2.5;
+    if (width <= 1440) return 2;
     return 1.5;
   }, [width]);
 
@@ -130,7 +130,7 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
 
       {/* Zoom slider */}
       <div className="flex translate-x-[-50%] absolute bottom-[30px] left-[50%] max-h-[100%]">
-        <div className="w-[240px] h-[30px] rounded-[2px] bg-dark/60 flex justify-center items-center">
+        <div className="w-[240px] h-[35px] rounded-[2px] bg-dark/60 flex justify-center items-center">
           <div className="relative align-middle flex">
             <input
               type="range"

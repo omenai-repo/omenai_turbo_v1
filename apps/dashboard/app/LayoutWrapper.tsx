@@ -18,19 +18,19 @@ export default function LayoutWrapper({
   const { width } = useWindowSize();
   return (
     <div>
-      {width < 768 ? (
+      {width <= 768 ? (
         <NoMobileView />
       ) : (
         <>
+          <NextTopLoader color="#030303" height={6} />
           <Toaster
-            position="top-right"
+            position="top-center"
             expand
             visibleToasts={3}
             closeButton
             duration={7000}
           />
           <div className=" w-full h-screen">
-            <NextTopLoader color="#030303" height={6} />
             <SessionProvider session={session}>
               <QueryProvider>{children}</QueryProvider>
             </SessionProvider>

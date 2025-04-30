@@ -106,7 +106,7 @@ export default function Plan({
                 </ul>
                 <div className="mt-8">
                   <Link href={"/auth/login"}>
-                    <button className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center">
+                    <button className="h-[35px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center">
                       Get started
                     </button>
                   </Link>

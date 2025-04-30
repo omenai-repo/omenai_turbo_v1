@@ -9,6 +9,7 @@ import {
 } from "@omenai/shared-ui-components/components/logo/Logo";
 import { useRouter } from "next/navigation";
 import { auth_uri } from "@omenai/url-config/src/config";
+import Appbar from "../components/Appbar";
 
 export default function PageLayout() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function PageLayout() {
       className={` h-screen hidden fixed left-0 top-0 sm:block xl:w-72 md:w-56`}
       id="navigation-items"
     >
-      <div className="flex flex-col p-5">
+      <div className="flex relative flex-col p-5 h-full">
         <div className={` py-5 w-full`}>
           <ArtistLogo />
         </div>

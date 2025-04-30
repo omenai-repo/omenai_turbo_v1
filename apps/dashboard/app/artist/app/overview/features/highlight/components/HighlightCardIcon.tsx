@@ -7,7 +7,7 @@ export default function HighlightCardIcon({
 }) {
   return (
     <div
-      className={`p-3 rounded-[40%] ${color} text-white grid place-items-center`}
+      className={`p-4 rounded-full ${color} text-white grid place-items-center`}
     >
       {icon}
     </div>

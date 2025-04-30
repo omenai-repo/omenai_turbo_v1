@@ -9,11 +9,11 @@ export default function Highlight() {
         return (
           <div
             key={item.title}
-            className="flex flex-col rounded-lg shadow py-5 px-4 bg-white"
+            className="flex flex-col rounded-full shadow py-4 px-8 bg-dark text-white"
           >
-            <div className="flex justify-between items-start w-full">
+            <div className="flex justify-between items-center w-full">
               <div>
-                <p className="text-gray-700 text-[12px] font-normal">
+                <p className="text-[#909090] text-xs font-normal">
                   {item.title}
                 </p>
                 <HighlightCard

@@ -1,10 +1,10 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import UpdatePasswordModalForm from "./UpdatePasswordModalForm";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 
 export const UpdatePasswordModal = () => {
-  const { updatePasswordModalPopup, passwordModalPopup } = actionStore();
+  const { updatePasswordModalPopup, passwordModalPopup } = artistActionStore();
 
   return (
     <AnimatePresence key={13}>

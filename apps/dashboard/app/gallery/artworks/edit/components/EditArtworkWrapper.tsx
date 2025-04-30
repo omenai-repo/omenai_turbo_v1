@@ -214,7 +214,7 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
 
@@ -271,7 +271,7 @@ export default function EditArtworkWrapper({
             <button
               disabled={loading}
               type="submit"
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
             >
               {loading ? <LoadSmall /> : " Update pricing details"}
             </button>
@@ -282,7 +282,7 @@ export default function EditArtworkWrapper({
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
             >
               {deleteLoading ? <LoadSmall /> : " Delete ths artwork"}
             </button>

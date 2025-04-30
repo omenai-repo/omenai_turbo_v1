@@ -2,42 +2,56 @@ import { CiBoxList } from "react-icons/ci";
 import { TbChartHistogram } from "react-icons/tb";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
+import { BadgeDollarSign, BanknoteArrowUp, ImageUp } from "lucide-react";
 
 const total_artworks_icon = <CiBoxList className="text-purple-600 text-sm" />;
-const total_impressions_icon = (
-  <TbChartHistogram className="text-orange-600 text-sm" />
+const sales_revenue = (
+  <BadgeDollarSign
+    strokeWidth={1.5}
+    absoluteStrokeWidth
+    className="text-purple-600 text-sm"
+  />
 );
-const sold_artworks_icon = (
-  <RiMoneyDollarCircleLine className="text-green-600 text-sm" />
+const net = (
+  <BanknoteArrowUp
+    strokeWidth={1.5}
+    absoluteStrokeWidth
+    className="text-green-600"
+  />
 );
-const subscription_type_icon = (
-  <MdOutlineWorkspacePremium className="text-red-600 text-sm" />
+
+const art_sold = (
+  <ImageUp
+    strokeWidth={1.5}
+    absoluteStrokeWidth
+    className="text-orange-600 text-sm"
+  />
 );
 
 export const highlightCardEl: HighlightCardElProps[] = [
   {
-    title: "Total artworks",
-    icon: total_artworks_icon,
-    tag: "artworks",
-    color: "bg-purple-600/10",
+    title: "Total net earned",
+    icon: net,
+    tag: "net",
+    color: "bg-white",
   },
   {
-    title: "Total impressions",
-    icon: total_impressions_icon,
-    tag: "impressions",
-    color: "bg-orange-600/10",
+    title: "Total Revenue",
+    icon: sales_revenue,
+    tag: "revenue",
+    color: "bg-white",
+  },
+  {
+    title: "Total artworks uploaded",
+    icon: total_artworks_icon,
+    tag: "artworks",
+    color: "bg-white",
   },
   {
     title: "Sold artworks",
-    icon: sold_artworks_icon,
+    icon: art_sold,
     tag: "sales",
-    color: "bg-green-600/10",
-  },
-  {
-    title: "Subscription",
-    icon: subscription_type_icon,
-    tag: "subscription",
-    color: "bg-red-400/10",
+    color: "bg-white",
   },
 ];
 

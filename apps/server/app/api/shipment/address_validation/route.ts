@@ -39,13 +39,12 @@ export async function POST(request: NextRequest) {
     };
 
     const response = await fetch(
-      `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country || ""}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || country || ""}&strictValidation=${false}`,
+      `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${false}`,
       requestOptions
     );
     const data = await response.json();
     // TODO: Fix for multiple DHL error responses
     if (!response.ok) {
-      console.log(data);
       const error_message = getUserFriendlyError(data.detail);
       throw new BadRequestError(error_message);
     }

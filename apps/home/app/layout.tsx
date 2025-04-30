@@ -10,7 +10,7 @@ import { OrderReceivedModal } from "@omenai/shared-ui-components/components/moda
 import { Toaster } from "sonner";
 import type { Viewport } from "next";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,

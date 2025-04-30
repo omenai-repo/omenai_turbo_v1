@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ObjectId } from "mongoose";
 import React from "react";
-import OrdersTable from "./OrdersTable";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { OrdersGroupAccordion } from "./OrdersGroupAccordion";
 
 export default function CompletedOrders({
   orders,
@@ -26,7 +26,7 @@ export default function CompletedOrders({
         {orders.length === 0 ? (
           <NotFoundData />
         ) : (
-          <OrdersTable data={orders} tab="completed" />
+          <OrdersGroupAccordion orders={orders} tab="completed" />
         )}
       </motion.div>
     </AnimatePresence>

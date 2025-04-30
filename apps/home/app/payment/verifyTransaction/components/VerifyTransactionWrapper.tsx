@@ -96,7 +96,7 @@ export default function VerifyTransactionWrapper() {
             <div>
               <button
                 onClick={handleRedirect}
-                className=" h-[40px] px-4 bg-dark text-white"
+                className=" h-[35px] px-4 bg-dark text-white"
               >
                 Go to dashboard
               </button>

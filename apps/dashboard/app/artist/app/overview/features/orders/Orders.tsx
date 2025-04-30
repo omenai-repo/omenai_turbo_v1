@@ -5,9 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { useSession } from "@omenai/package-provider/SessionProvider";
-import { OrdersAccordion } from "./OrdersAccordion";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
+import { OrdersAccordion } from "../../../../../components/OrdersAccordion";
 
 export default function Orders() {
   const session = useSession() as ArtistSchemaTypes;
@@ -35,7 +35,7 @@ export default function Orders() {
               {orders.length === 0 ? (
                 <NotFoundData />
               ) : (
-                <OrdersAccordion orders={orders} />
+                <OrdersAccordion orders={orders} route="/artist/app/orders" />
               )}
             </>
           )}

@@ -21,13 +21,22 @@ export function OrdersGroupAccordion({
   orders: CreateOrderModelTypes[];
   tab?: "completed";
 }) {
-  const { updateArtistOrderActionModalData } = artistActionStore();
+  const {
+    updateArtistOrderActionModalData,
+    toggleDeclineOrderModal,
+    update_current_order_id,
+  } = artistActionStore();
   // See groceries data above
   const router = useRouter();
   const get_image_url = (url: string) => {
     const image_url = getImageFileView(url, 200);
     return image_url;
   };
+
+  function handleDeclineOrderRequest(order_id: string) {
+    update_current_order_id(order_id);
+    toggleDeclineOrderModal(true);
+  }
 
   function updateOrderDataInState(
     buyer: string,
@@ -216,7 +225,7 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "track" && (
           <div className="mt-5">
-            <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[40px] py-2 px-4 w-fit text-center text-xs flex items-center justify-center bg-dark cursor-pointer">
+            <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-xs flex items-center justify-center bg-dark cursor-pointer">
               Track this shipment
             </button>
           </div>
@@ -229,7 +238,10 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "action" && (
           <div className="mt-5 flex items-center gap-x-6">
-            <button className="hover:bg-red-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[40px] py-2 px-4 w-fit text-center text-xs flex items-center justify-center bg-red-600 cursor-pointer">
+            <button
+              onClick={() => handleDeclineOrderRequest(order.order_id)}
+              className="hover:bg-red-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-xs flex items-center justify-center bg-red-600 cursor-pointer"
+            >
               Decline order
             </button>
             <button
@@ -246,7 +258,7 @@ export function OrdersGroupAccordion({
                   order.artwork_data
                 )
               }
-              className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[40px] py-2 px-4 w-fit text-center text-xs flex items-center justify-center bg-green-600 cursor-pointer"
+              className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-xs flex items-center justify-center bg-green-600 cursor-pointer"
             >
               Accept order
             </button>

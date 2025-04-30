@@ -170,6 +170,10 @@ export async function POST(request: NextRequest) {
       },
     };
 
+    const now = new Date();
+    const hrs24Later = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const expiresAt = hrs24Later.toISOString();
+
     // Update order document with new data
     await CreateOrder.updateOne(
       { order_id: data.order_id },
@@ -182,6 +186,7 @@ export async function POST(request: NextRequest) {
             : "",
           "shipping_details.shipment_information": shipment_information,
           "order_accepted.status": "accepted",
+          expiresAt,
         },
       },
       { session }
@@ -189,7 +194,7 @@ export async function POST(request: NextRequest) {
 
     await session.commitTransaction();
 
-    //TODO: Send mail to user
+    //TODO: Update mail to indicate the user has 24 hrs to pay
     await sendOrderAcceptedMail({
       name: order.buyer_details.name,
       email: order.buyer_details.email,

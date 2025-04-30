@@ -23,7 +23,7 @@ export default function LayoutWrapper({
   const { width } = useWindowSize();
   return (
     <div>
-      {width < 768 ? (
+      {width <= 768 ? (
         <NoMobileView />
       ) : (
         <>

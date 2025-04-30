@@ -4,8 +4,7 @@ import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
 import NoMobileView from "./components/NoMobileView";
-import { OrderActionModal } from "./modals/OrderActionModal";
-import { UploadTrackingIDModal } from "./modals/ProvideTrackingIDModal";
+
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
@@ -13,6 +12,8 @@ import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { useRouter } from "next/navigation";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { WithdrawalModal } from "./modals/WithdrawalModal";
+import { WalletPinModal } from "./modals/WalletPinModal";
 
 export default function GalleryDashboardLayout({
   children,
@@ -29,7 +30,7 @@ export default function GalleryDashboardLayout({
 
   return (
     <>
-      {width < 991 ? (
+      {width <= 991 ? (
         <NoMobileView />
       ) : (
         <div className=" w-full h-full">
@@ -42,11 +43,11 @@ export default function GalleryDashboardLayout({
             >
               <Appbar />
               <div className="h-auto rounded-lg relative my-5 px-5">
-                <OrderActionModal />
-                <UploadTrackingIDModal />
                 <UploadOrderRejectionReason />
                 <UpdatePasswordModal />
                 <DeleteAccountConfirmationModal />
+                <WithdrawalModal />
+                <WalletPinModal />
 
                 {children}
               </div>

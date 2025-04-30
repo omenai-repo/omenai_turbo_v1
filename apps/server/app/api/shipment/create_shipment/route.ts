@@ -48,8 +48,6 @@ export async function POST(request: NextRequest) {
     seller_details.address.countryCode
   );
 
-  console.log(plannedShippingDateAndTime);
-
   const shipmentPayloadData = {
     plannedShippingDateAndTime,
     productCode: shipment_product_code,

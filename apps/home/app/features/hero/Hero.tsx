@@ -86,13 +86,13 @@ export default function Hero({ promotionals }: any) {
         <div className="flex items-center justify-center w-fit space-x-2">
           <button
             onClick={scrollPrev}
-            className="h-[40px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowLeft />
           </button>
           <button
             onClick={scrollNext}
-            className="h-[40px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowRight />
           </button>

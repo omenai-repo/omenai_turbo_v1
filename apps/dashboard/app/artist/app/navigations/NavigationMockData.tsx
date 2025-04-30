@@ -76,11 +76,10 @@ export const navMockData: NavMockData = {
   ],
   account: [
     {
-      title: "Profile management",
+      title: "Account management",
       icon: profile,
-      url: "/artist/app/profile",
+      url: "/artist/app/account",
     },
-    { title: "Settings", icon: settings, url: "/artist/app/settings" },
 
     { title: "Sign out", icon: logout, url: "/" },
   ],

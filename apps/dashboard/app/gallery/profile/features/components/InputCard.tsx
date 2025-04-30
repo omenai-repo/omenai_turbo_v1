@@ -44,7 +44,7 @@ export const InputCard = (props: Props) => {
           }
           className={`w-full ${labelText === "email" && "text-gray-700/40"} ${
             labelText === "gallery" && "text-gray-700/40"
-          } focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 `}
+          } focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 sm:p-6 rounded-full w-full placeholder:text-xs placeholder:text-gray-700/40 `}
           {...rest}
         />
       </div>

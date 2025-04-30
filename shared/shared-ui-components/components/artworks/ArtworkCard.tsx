@@ -44,11 +44,15 @@ export default function ArtworkCard({
   const image_href = getImageFileView(image, 500);
   const base_uri = base_url();
 
+  const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
   return (
     <div className="my-2 max-w-full p-0 max-h-full rounded-[20px]">
       <div className="flex flex-col w-full h-full justify-end">
         <div className="relative w-full artContainer">
-          <Link href={`${base_uri}/artwork/${name}`} className="relative block">
+          <Link
+            href={`${base_uri}/artwork/${encoded_url}`}
+            className="relative block"
+          >
             {/* Reserved space for the image using aspect ratio */}
             <div className="w-full aspect-w-1 aspect-h-1">
               <Image

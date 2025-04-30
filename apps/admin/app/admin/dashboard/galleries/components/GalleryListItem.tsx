@@ -56,7 +56,7 @@ export default function GalleryListItem({
           </p>
           <button
             onClick={updateGalleryPopupData}
-            className="flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-dark text-white"
+            className="flex gap-x-2 w-fit rounded-md items-center h-[35px] px-4 bg-dark text-white"
           >
             <span className="text-[14px] ">View</span>
 
@@ -74,7 +74,7 @@ export default function GalleryListItem({
                     status: "blocked",
                   })
                 }
-                className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
+                className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[35px] px-4 bg-red-600 text-white"
               >
                 <span className="text-[14px] ">Block Gallery</span>
               </button>
@@ -89,7 +89,7 @@ export default function GalleryListItem({
                     status: "active",
                   })
                 }
-                className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center  h-[40px] px-4 bg-dark text-white"
+                className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center  h-[35px] px-4 bg-dark text-white"
               >
                 <span className="text-[14px] ">Unblock Gallery</span>
               </button>
@@ -106,7 +106,7 @@ export default function GalleryListItem({
                   gallery_id,
                 })
               }
-              className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
+              className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[35px] px-4 bg-red-600 text-white"
             >
               <span className="text-[14px] ">Reject Gallery</span>
 
@@ -122,7 +122,7 @@ export default function GalleryListItem({
                   email,
                 })
               }
-              className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center  h-[40px] px-4 bg-green-600 text-white"
+              className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center  h-[35px] px-4 bg-green-600 text-white"
             >
               <span className="text-[14px] ">Accept Gallery</span>
 

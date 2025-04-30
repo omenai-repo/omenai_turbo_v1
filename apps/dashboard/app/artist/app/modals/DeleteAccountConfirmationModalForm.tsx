@@ -3,7 +3,7 @@
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { deleteAccount } from "@omenai/shared-services/requests/deleteGalleryAccount";
-import { GallerySchemaTypes } from "@omenai/shared-types";
+import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -24,7 +24,7 @@ export default function DeleteAccountConfirmationModalForm() {
       toast.info("Operation successful", {
         description: "Successfully signed out...redirecting",
       });
-      router.replace(`${auth_url}/login`);
+      router.replace(`${auth_url}/login/artist`);
     } else {
       toast.error("Operation successful", {
         description:
@@ -32,11 +32,11 @@ export default function DeleteAccountConfirmationModalForm() {
       });
     }
   }
-  async function handleDeleteGalleryAccount() {
+  async function handleDeleteArtistAccount() {
     setLoading(true);
     const response = await deleteAccount(
-      "gallery",
-      (session as GallerySchemaTypes).gallery_id
+      "artist",
+      (session as ArtistSchemaTypes).artist_id
     );
 
     if (response?.isOk) {
@@ -63,12 +63,12 @@ export default function DeleteAccountConfirmationModalForm() {
   }
   return (
     <div>
-      <h1 className="text-sm font-normal mb-4 text-gray-700">
+      <h1 className="text-sm font-semibold mb-4 text-dark">
         Confirm Account Deletion
       </h1>
       <div className="flex flex-col gap-4 font-normal text-base">
         <h2 className="text-red-600 text-base font-bold">
-          You are about to delete your Gallery account!
+          You are about to delete your Artist account!
         </h2>
 
         <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3">
@@ -92,8 +92,8 @@ export default function DeleteAccountConfirmationModalForm() {
         <button
           disabled={loading}
           type="button"
-          onClick={handleDeleteGalleryAccount}
-          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
+          onClick={handleDeleteArtistAccount}
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, delete this account"}
         </button>

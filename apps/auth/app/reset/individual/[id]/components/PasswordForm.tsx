@@ -96,7 +96,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Enter a new password"
             onChange={handleInputChange}
             required
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -112,7 +112,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Confirm new password"
             required
             onChange={handleInputChange}
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs placeholder:font-medium text-xs font-medium"
           />
 
           {errorList.length > 0 &&
@@ -131,7 +131,7 @@ export default function PasswordForm({ id }: IdProps) {
         <div className="w-full">
           <button
             disabled={isLoading}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             {isLoading ? <LoadSmall /> : "Change password"}
           </button>

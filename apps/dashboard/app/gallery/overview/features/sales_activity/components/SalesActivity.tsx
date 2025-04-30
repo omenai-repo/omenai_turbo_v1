@@ -1,146 +1,108 @@
-"use client";
+import { ResponsiveLine } from "@nivo/line";
 
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ComposedChart,
-  Bar,
-} from "recharts";
+// make sure parent container have a defined height when using
+// responsive component, otherwise height will be 0 and
+// no chart will be rendered.
+// website examples showcase many properties,
+// you'll often use just a few of them.
 
-function CustomTooltip({
-  payload,
-  label,
-  active,
-}: {
-  payload: any;
-  label: any;
-  active: any;
-}) {
-  if (active) {
-    return (
-      <div className="custom-tooltip bg-dark text-white p-5 rounded-md border border-white">
-        {/* <p className="label">{`${label}`}</p> */}
-        <p className="label">
-          {`Total revenue for month of ${label}:`}{" "}
-          <strong>{payload[0].payload.value}</strong>
-        </p>
-      </div>
-    );
+// Calculate Y-axis ticks dynamically based on min and max values
+function calculateYTicks(min: number, max: number, maxTicks = 6) {
+  // Handle case where min and/or max is 0
+  if (min === 0 && max === 0) {
+    return []; // No data to show
   }
 
-  return null;
+  // If only one of min or max is 0, set it to a small value to avoid division by 0
+  if (min === 0 && max > 0) {
+    min = 1; // Ensure a small starting value
+  }
+
+  if (max === 0 && min > 0) {
+    max = min; // Set max equal to min to avoid invalid range
+  }
+
+  const range = max - min;
+  const step = Math.round(range / maxTicks);
+
+  const ticks = [];
+
+  // Calculate the ticks based on the step, rounding to the nearest thousand
+  for (let i = Math.floor(min / 1000) * 1000; i <= max; i += step) {
+    ticks.push(Math.round(i / 1000) * 1000); // Round to nearest thousand
+  }
+
+  // Ensure that we don't exceed maxTicks
+  if (ticks.length > maxTicks) {
+    ticks.length = maxTicks;
+  }
+
+  return ticks;
 }
-export function SalesActivity({ activityData }: any) {
+
+export const SalesActivityChart = ({
+  data /* see data tab */,
+  year,
+}: {
+  data: { id: string; data: { x: string; y: number }[] }[];
+  year: string;
+}) => {
+  const allYValues = data.flatMap((serie) => serie.data.map((item) => item.y));
+  const minYValue = Math.min(...allYValues);
+  const maxYValue = Math.max(...allYValues);
+
+  // Calculate Y-axis ticks
+  const yTicks = calculateYTicks(minYValue, maxYValue);
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        paddingBottom: "400px",
+    <ResponsiveLine
+      key={year}
+      data={data}
+      margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
+      xScale={{ type: "point" }}
+      yScale={{
+        type: "linear",
+        min: "auto",
+        max: "auto",
+        stacked: true,
+        reverse: false,
       }}
-    >
-      <div
-        className="text-[14px] text-gray-700"
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 20,
-          bottom: 20,
-          left: 20,
-        }}
-      >
-        <ResponsiveContainer>
-          <ComposedChart data={activityData} margin={{ top: 3, bottom: 35 }}>
-            <CartesianGrid stroke="#f5f5f5" />
-
-            <XAxis
-              dataKey="name"
-              className="text-[14px]"
-              padding={{ left: 50, right: 10 }}
-              scale="point"
-            />
-            <YAxis className="text-[14px] " />
-            <Tooltip
-              content={
-                <CustomTooltip
-                  payload={activityData[0].revenue}
-                  label={`${activityData[0].name}`}
-                  active={true}
-                />
-              }
-            />
-            <Legend verticalAlign="bottom" />
-
-            <Bar dataKey="revenue" barSize={100} fill="#1a1a1a" />
-            {/* <Line type="monotone" dataKey={"Revenue"} stroke="#1a1a1a" /> */}
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+      yFormat=" >-$0,.1~f"
+      axisTop={null}
+      axisRight={null}
+      axisBottom={{
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: "Month",
+        legendOffset: 36,
+        legendPosition: "middle",
+        truncateTickAt: 0,
+      }}
+      axisLeft={{
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: "Revenue ($)",
+        legendOffset: -50,
+        legendPosition: "middle",
+        truncateTickAt: 20,
+        tickValues: yTicks, // Use the calculated ticks
+      }}
+      pointSize={10}
+      pointColor={{ theme: "background" }}
+      pointBorderWidth={2}
+      pointBorderColor={{ from: "serieColor" }}
+      pointLabel="data.yFormatted"
+      pointLabelYOffset={-12}
+      enableTouchCrosshair={true}
+      useMesh={true}
+      curve="cardinal"
+      crosshairType="cross"
+      enableGridX={true}
+      enableGridY={false}
+      motionConfig="gentle"
+      colors={["#666666"]}
+      lineWidth={1}
+    />
   );
-}
-
-// const data = [
-//   {
-//     name: "Page A",
-//     uv: 590,
-//     pv: 800,
-//     amt: 1400,
-//   },
-//   {
-//     name: "Page B",
-//     uv: 868,
-//     pv: 967,
-//     amt: 1506,
-//   },
-//   {
-//     name: "Page C",
-//     uv: 1397,
-//     pv: 1098,
-//     amt: 989,
-//   },
-//   {
-//     name: "Page D",
-//     uv: 1480,
-//     pv: 1200,
-//     amt: 1228,
-//   },
-//   {
-//     name: "Page E",
-//     uv: 1520,
-//     pv: 1108,
-//     amt: 1100,
-//   },
-//   {
-//     name: "Page F",
-//     uv: 1400,
-//     pv: 680,
-//     amt: 1700,
-//   },
-// ];
-//         <ResponsiveContainer width="100%" height="100%">
-//           <ComposedChart
-//             width={500}
-//             height={400}
-//             data={data}
-//             margin={{
-//               top: 20,
-//               right: 20,
-//               bottom: 20,
-//               left: 20,
-//             }}
-//           >
-//             <CartesianGrid stroke="#f5f5f5" />
-//             <XAxis dataKey="name" scale="band" />
-//             <YAxis />
-//             <Tooltip />
-//             <Legend />
-//             <Bar dataKey="uv" barSize={20} fill="#413ea0" />
-//             <Line type="monotone" dataKey="uv" stroke="#ff7300" />
-//           </ComposedChart>
-//         </ResponsiveContainer>;
+};

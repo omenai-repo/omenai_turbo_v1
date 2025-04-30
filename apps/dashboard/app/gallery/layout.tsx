@@ -4,8 +4,7 @@ import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
 import NoMobileView from "./components/NoMobileView";
-import { OrderActionModal } from "./modals/OrderActionModal";
-import { UploadTrackingIDModal } from "./modals/ProvideTrackingIDModal";
+
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
@@ -58,7 +57,7 @@ export default function GalleryDashboardLayout({
 
   return (
     <>
-      {width < 991 ? (
+      {width <= 991 ? (
         <NoMobileView />
       ) : (
         <div className=" w-full h-full">
@@ -75,8 +74,6 @@ export default function GalleryDashboardLayout({
                   <GetStartedWithStripe />
                 ) : (
                   <>
-                    <OrderActionModal />
-                    <UploadTrackingIDModal />
                     <UploadOrderRejectionReason />
                     <UpdatePasswordModal />
                     <DeleteAccountConfirmationModal />

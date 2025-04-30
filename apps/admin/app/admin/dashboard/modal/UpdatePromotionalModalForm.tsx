@@ -158,7 +158,7 @@ export default function UpdatePromotionalModalForm() {
               type="text"
               required
               value={updateData.headline}
-              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="h-[35px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
             />
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function UpdatePromotionalModalForm() {
               type="text"
               value={updateData.subheadline}
               required
-              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="h-[35px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
             />
           </div>
         </div>
@@ -194,7 +194,7 @@ export default function UpdatePromotionalModalForm() {
               type="text"
               value={updateData.cta}
               required
-              className="h-[40px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
+              className="h-[35px] px-4 border border-dark/20 w-full text-[14px] focus:border-none focus:ring-1 focus:ring-dark focus:outline-none placeholder:text-[14px]e"
             />
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function UpdatePromotionalModalForm() {
           <button
             disabled={loading || deleteLoading}
             type="submit"
-            className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
+            className="h-[35px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center"
           >
             {loading ? <LoadSmall /> : "Update this promotional content"}
           </button>
@@ -214,7 +214,7 @@ export default function UpdatePromotionalModalForm() {
           disabled={loading || deleteLoading}
           type="submit"
           onClick={handleDeletePromotionalData}
-          className="h-[40px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-red-600/80 bg-red-600 duration-300 grid place-items-center"
+          className="h-[35px] px-4 w-full text-[14px] text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-red-600/80 bg-red-600 duration-300 grid place-items-center"
         >
           {deleteLoading ? <LoadSmall /> : "Delete this promotional content"}
         </button>

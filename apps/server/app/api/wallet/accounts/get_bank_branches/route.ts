@@ -24,6 +24,15 @@ export async function GET(request: NextRequest) {
     );
     const result = await response.json();
     if (!response.ok) {
+      if ((result.message = "No branches found for specified bank id"))
+        return NextResponse.json(
+          {
+            message: "Bank branches fetched successfully",
+            no_of_bank_branches: 0,
+            bank_branches: [],
+          },
+          { status: 200 }
+        );
       return NextResponse.json(
         { message: result.message },
         { status: response.status }

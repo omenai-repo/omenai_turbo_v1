@@ -9,6 +9,7 @@ import {
 import { WalletTransaction } from "@omenai/shared-models/models/wallet/WalletTransactionSchema";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import {
+  BadRequestError,
   ForbiddenError,
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
@@ -18,49 +19,37 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function POST(request: Request) {
   try {
     const {
-      account_details,
       amount,
-      currency,
       wallet_id,
       wallet_pin,
     }: {
-      account_details: WithdrawalAccount;
       amount: number;
-      currency: string;
       wallet_id: string;
       wallet_pin: string;
     } = await request.json();
     await connectMongoDB();
 
-    // const payload = {
-    //   account_bank: "044",
-    //   account_number: "0690000040",
-    //   amount: 100,
-    //   currency: "NGN",
-    //   // debit_subaccount: "PSA******07974",
-    //   // beneficiary: 3768,
-    //   beneficiary_name: "Yemi Desola",
-    //   reference: `${generateAlphaDigit(12)}_PMCKDU_1`,
-    //   debit_currency: "USD",
-    //   // destination_branch_code: "GH280103",
-    //   callback_url: `https://api.omenai.app/api/webhook/flw-transfer`,
-    //   narration: "Payment for goods purchased",
-    //   meta: {
-    //     wallet_id,
-    //     url: `https://api.omenai.app/api/webhook/flw-transfer`,
-    //   },
-    // };
+    if (!amount || !wallet_id || !wallet_pin)
+      throw new BadRequestError("Invalid body parameters");
+
+    const get_wallet = await Wallet.findOne(
+      { wallet_id },
+      "available_balance wallet_pin primary_withdrawal_account base_currency"
+    );
+    if (!get_wallet)
+      throw new NotFoundError("No wallet with the given ID found");
 
     const payload = {
-      account_bank: account_details.bank_code,
-      account_number: account_details.account_number,
+      account_bank: get_wallet.primary_withdrawal_account.bank_code,
+      account_number: get_wallet.primary_withdrawal_account.account_number,
       amount,
-      currency,
-      beneficiary: account_details.beneficiary_id,
-      beneficiary_name: account_details.account_name,
+      currency: get_wallet.base_currency,
+      beneficiary: get_wallet.primary_withdrawal_account.beneficiary_id,
+      beneficiary_name: get_wallet.primary_withdrawal_account.account_name,
       reference: `OMENAI_TRANSFER_${generateAlphaDigit(12)}_PMCKDU_1`,
       debit_currency: "USD",
-      destination_branch_code: account_details.bank_branch,
+      destination_branch_code:
+        get_wallet.primary_withdrawal_account.branch?.branch_code,
       callback_url: `${getApiUrl()}/api/webhook/flw-transfer`,
       narration: `Omenai wallet transfer`,
       meta: {
@@ -68,13 +57,6 @@ export async function POST(request: Request) {
         url: `${getApiUrl()}/api/webhook/flw-transfer`,
       },
     };
-
-    const get_wallet = await Wallet.findOne(
-      { wallet_id },
-      "available_balance wallet_pin"
-    );
-    if (!get_wallet)
-      throw new NotFoundError("No wallet with the given ID found");
 
     const isPinMatch = bcrypt.compareSync(wallet_pin, get_wallet.wallet_pin);
 

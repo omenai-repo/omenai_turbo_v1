@@ -1,31 +1,22 @@
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { fetchIncomeData } from "./fetchIncomeData";
 import { getArtworkHighlightData } from "./getArtworkHighlightData";
-import { getImpressionHighlightData } from "./getImpressionHighlightData";
 import { getSalesHighlightData } from "./getSalesHighlightData";
-import { getSubscriptionHighlightData } from "./getSubscriptionHighlightData";
 
-export async function fetchHighlightData(
-  tag: string,
-  session_id: string,
-  sub_active: boolean
-) {
+export async function fetchHighlightData(tag: string, session_id: string) {
   if (tag === "artworks") {
     const result = await getArtworkHighlightData(session_id);
     return result?.isOk ? result.count : 0;
   }
-
-  if (tag === "impressions") {
-    const impressions = await getImpressionHighlightData(session_id);
-
-    const impression_count = impressions.data.reduce(
-      (acc: any, current: any) => acc + current.impressions,
-      0
-    );
-    return impression_count;
+  if (tag === "net") {
+    const result = await fetchIncomeData(session_id, "gallery");
+    return result?.isOk ? formatPrice(result.data.netIncome) : formatPrice(0);
   }
-
-  if (tag === "subscription") {
-    const result = await getSubscriptionHighlightData(sub_active);
-    return result;
+  if (tag === "revenue") {
+    const result = await fetchIncomeData(session_id, "gallery");
+    return result?.isOk
+      ? formatPrice(result.data.salesRevenue)
+      : formatPrice(0);
   }
 
   if (tag === "sales") {

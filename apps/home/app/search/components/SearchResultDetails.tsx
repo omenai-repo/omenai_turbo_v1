@@ -35,7 +35,15 @@ export default function SearchResultDetails({
 
   const arts = catalogChunk(
     data,
-    width < 400 ? 1 : width < 768 ? 2 : width < 1280 ? 3 : width < 1440 ? 4 : 5
+    width <= 400
+      ? 1
+      : width <= 768
+        ? 2
+        : width <= 1280
+          ? 3
+          : width <= 1440
+            ? 4
+            : 5
   );
 
   return (

@@ -302,6 +302,7 @@ export type CreateOrderModelTypes = {
   createdAt: string;
   updatedAt: string;
   availability: boolean;
+  expiresAt: Date | null;
 };
 
 type OrderArtworkExhibitionStatus = {
@@ -464,9 +465,9 @@ export type WithdrawalAccount = {
   account_number: number;
   bank_name: string;
   account_name: string;
-  bank_id: string;
+  bank_id: number;
   bank_code: string;
-  bank_branch?: string;
+  branch: BankBranchType | null;
   bank_country: string;
   beneficiary_id: number;
 };
@@ -872,4 +873,14 @@ export type FailedCronJobTypes = {
   status: "pending" | "reprocessed" | "failed";
   lastAttempted: Date;
   jobId: string;
+};
+
+export type BankType = { id: number; code: string; name: string };
+export type BankBranchType = {
+  id: number;
+  branch_code: string;
+  branch_name: string;
+  swift_code: string;
+  bic: string;
+  bank_id: number;
 };

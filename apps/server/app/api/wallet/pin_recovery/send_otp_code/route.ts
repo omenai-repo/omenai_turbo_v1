@@ -16,6 +16,9 @@ export async function POST(request: Request) {
     });
     if (!account) throw new NotFoundError("Artist not found for given ID");
     const token = generateDigit(4);
+    const isCodeActive = await VerificationCodes.findOne({ author: artist_id });
+
+    if (isCodeActive) await VerificationCodes.deleteOne({ author: artist_id });
 
     const create_code = await VerificationCodes.create({
       code: token,

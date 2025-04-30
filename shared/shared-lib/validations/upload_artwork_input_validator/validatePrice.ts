@@ -5,7 +5,7 @@ export const validatePrice = (value: string): string[] => {
 
   // Validate if the value contains only digits
   if (!/^\d+$/.test(value)) {
-    errors.push("Invalid price format. Please enter numbers only.");
+    errors.push("We need straight-up digits 🔢, not whatever that was.");
   }
 
   return errors;

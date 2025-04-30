@@ -1,4 +1,5 @@
 import { Skeleton } from "@mantine/core";
+import { useState, useEffect } from "react";
 
 export const HighlightsSkeleton = () => {
   return (

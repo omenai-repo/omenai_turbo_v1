@@ -7,6 +7,8 @@ import Load, {
 } from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
+import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useContext } from "react";
@@ -27,7 +29,7 @@ export default function TransactionTable() {
   return (
     <div className="flex flex-col gap-y-4 w-full rounded-[20px] overflow-y-scroll overflow-x-hidden text-[14px] p-4 ring-1 ring-[#e0e0e0]">
       <div className="flex justify-center">
-        <h2 className="text-base font-bold">Transaction History</h2>
+        <h2 className="text-base font-semibold">Transaction History</h2>
       </div>
       {isLoading ? (
         <div className="w-full h-full grid place-items-center">
@@ -51,16 +53,18 @@ export default function TransactionTable() {
                   />
 
                   <div>
-                    <h2 className="font-bold text-[14px]">
+                    <h2 className="font-semibold text-[14px]">
                       {transaction.trans_id}
                     </h2>
-                    <p className="text-[13px]">
-                      {formatIntlDateTime(transaction.date)}
+                    <p className="text-xs font-medium">
+                      {formatISODate(transaction.date)}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <h1 className="font-bold">{transaction.amount}.00</h1>
+                  <h1 className="font-semibold">
+                    {formatPrice(transaction.amount)}
+                  </h1>
                 </div>
               </div>
             );
@@ -73,7 +77,9 @@ export default function TransactionTable() {
         >
           <div>
             <NotFoundData />
-            <p className="text-[14px] font-semibold">No transactions found</p>
+            <p className="text-[14px] font-semisemibold">
+              No transactions found
+            </p>
           </div>
         </div>
       )}

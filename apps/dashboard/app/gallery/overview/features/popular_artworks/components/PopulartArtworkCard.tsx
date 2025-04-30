@@ -21,19 +21,17 @@ export default function PopulartArtworkCard({
         <Image
           src={image_url}
           alt={title}
-          height={100}
-          width={100}
-          className="object-top h-[100px] w-[100px] rounded-lg"
+          height={70}
+          width={70}
+          className="object-top h-[70px] w-[70px] rounded-lg"
         />
         <div className="flex flex-col gap-y-1">
-          <p className="text-gray-700 font-normal text-[14px] sm:text-base">
-            {title}
-          </p>
-          <span className="text-gray-700 text-[14px] font-light">{artist}</span>
+          <p className="text-dark font-semibold text-[14px]">{title}</p>
+          <span className="text-dark text-xs font-normal">{artist}</span>
         </div>
       </div>
       <div className="w-fit">
-        <span className="text-gray-700 text-[14px] font-light">
+        <span className="text-dark text-xs font-normal">
           {`${impression_count} impressions`}
         </span>
       </div>

@@ -38,13 +38,13 @@ export default function BalanceBox({
   return (
     <div className="bg-[#FAFAFA] border border-[#E0E0E0] p-6 w-[500px] rounded-[20px]">
       <div className="flex flex-col items-center my-4 space-y-4 text-gray-700">
-        <p className="text-[14px]">Stripe Available Balance</p>
+        <p className="text-[14px] font-medium">Stripe Available Balance</p>
 
         <h1 className="text-md font-bold">
           {formatPrice(balance.available[0].amount / 100, currency)}
         </h1>
 
-        <p className="text-[14px]">
+        <p className="text-[14px] font-medium">
           Balance pending on Stripe:{" "}
           <span className="font-bold text-base">
             {formatPrice(balance.pending[0].amount / 100, currency)}
@@ -52,16 +52,16 @@ export default function BalanceBox({
         </p>
 
         <div className="mt-16 w-full flex space-x-2">
-          <button
+          {/* <button
             disabled={balance.available[0].amount / 100 === 0}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             Payout Balance
-          </button>
+          </button> */}
           <button
             onClick={generateLoginLink}
             disabled={generatingLoginLink}
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
           >
             {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
           </button>

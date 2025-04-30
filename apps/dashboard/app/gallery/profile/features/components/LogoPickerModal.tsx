@@ -64,6 +64,7 @@ export default function LogoPickerModal() {
           const { isOk, body } = await updateLogo({
             id: session?.gallery_id as string,
             url: file.fileId,
+            route: "gallery",
           });
 
           if (!isOk)
@@ -182,7 +183,7 @@ export default function LogoPickerModal() {
               <div className=" w-full px-5 py-8 text-[14px]">
                 <div className="w-full items-center gap-x-2 flex">
                   <button
-                    className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                    className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                     onClick={() => updateModal(false)}
                   >
                     Cancel
@@ -190,7 +191,7 @@ export default function LogoPickerModal() {
                   <button
                     onClick={handleLogoUpdate}
                     disabled={loading || !logo}
-                    className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                    className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                   >
                     {loading ? <LoadSmall /> : "Upload logo"}
                   </button>

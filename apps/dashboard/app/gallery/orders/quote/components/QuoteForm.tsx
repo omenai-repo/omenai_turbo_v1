@@ -1,30 +1,36 @@
 "use client";
 
-import { updateShippingQuote } from "@omenai/shared-services/orders/updateShippingQuote";
-
+import { acceptOrderRequest } from "@omenai/shared-services/orders/acceptOrderRequest";
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { BsCurrencyDollar } from "react-icons/bs";
 import { toast } from "sonner";
 import Image from "next/image";
-import { PiSealWarning } from "react-icons/pi";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { ShippingQuoteTypes } from "@omenai/shared-types";
+
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
+import { ShipmentDimensions } from "@omenai/shared-types";
+import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 
 export default function QuoteForm() {
   const { galleryOrderActionModalData, clearGalleryOrderActionModalData } =
     actionStore();
   const queryClient = useQueryClient();
 
-  const [quoteData, setQuoteData] = useState<ShippingQuoteTypes>({
-    fees: "",
-    taxes: "",
+  const [package_details, setPackageDetails] = useState<{
+    height: string;
+    weight: string;
+    width: string;
+    length: string;
+    specialInstructions?: string;
+  }>({
+    height: "",
+    weight: "",
+    width: "",
+    length: "",
+    specialInstructions: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -33,17 +39,21 @@ export default function QuoteForm() {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     const { name, value } = e.target;
-    setQuoteData((prev) => ({
+    setPackageDetails((prev) => ({
       ...prev,
       [name]: value,
     }));
   }
   const handleSubmitQuoteFees = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { height, weight, width, length, specialInstructions } =
+      package_details;
     if (
       allKeysEmpty({
-        fees: quoteData.fees,
-        taxes: quoteData.taxes,
+        height,
+        weight,
+        width,
+        length,
       })
     ) {
       toast.error("Error notification", {
@@ -58,10 +68,37 @@ export default function QuoteForm() {
       return;
     }
     setLoading(true);
-    const response = await updateShippingQuote(
-      quoteData,
-      galleryOrderActionModalData.order_id
+    if (
+      Number.isNaN(height) ||
+      Number.isNaN(weight) ||
+      Number.isNaN(width) ||
+      Number.isNaN(length)
+    ) {
+      toast.error("Error notification", {
+        description: "Only numerical values are allowed for dimensions",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+    const numerical_dimensions: ShipmentDimensions = {
+      height: Number(height),
+      width: Number(width),
+      weight: Number(weight),
+      length: Number(length),
+    };
+
+    const response = await acceptOrderRequest(
+      galleryOrderActionModalData.order_id,
+      numerical_dimensions,
+      null,
+      null,
+      specialInstructions
     );
+    // Accept order request call
     if (!response?.isOk) {
       toast.error("Error notification", {
         description: response?.message,
@@ -94,14 +131,17 @@ export default function QuoteForm() {
     200
   );
 
-  const session = useSession();
   // session.data?.user.
   return (
     <div className="my-5">
-      <div className="w-full py-3 px-4 bg-white">
-        <h1 className="text-base text-gray-700 font-normal">
-          Provide shipping quote
+      <div className="w-full py-3 bg-white">
+        <h1 className="text-base text-dark font-semibold">
+          Artpiece Dimension (Including packaging)
         </h1>
+        <span className="text-xs">
+          Kindly provide the dimensions of the piece after packaging so we can
+          calculate an accurate shipping cost for it.
+        </span>
       </div>
 
       <div className="grid lg:grid-cols-2 mt-10 gap-5 items-center justify-center">
@@ -109,77 +149,84 @@ export default function QuoteForm() {
           className="w-full flex flex-col gap-y-4"
           onSubmit={handleSubmitQuoteFees}
         >
-          <div className=" flex flex-col space-y-2 w-full">
+          <div className=" flex flex-col space-y-5 w-full">
             <div className="relative w-full flex flex-col space-y-2">
               <label
-                className="text-gray-700 font-light text-[14px]"
+                className="text-dark font-normal text-xs"
                 htmlFor="shipping"
               >
-                Package carrier
+                Length (in cm)
               </label>
               <input
                 onChange={handleInputChange}
-                name="package_carrier"
-                type="text"
-                placeholder="e.g DHL, USPS, UPS, etc..."
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                name="length"
+                type="number"
+                step="any"
+                placeholder="Enter length after packaging  in centimeters"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+              />
+            </div>
+            <div className="relative w-full flex flex-col space-y-2">
+              <label
+                className="text-dark font-normal text-xs"
+                htmlFor="shipping"
+              >
+                Height (in cm)
+              </label>
+              <input
+                onChange={handleInputChange}
+                name="height"
+                type="number"
+                step="any"
+                placeholder="Enter height after packaging in centimeters"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+              />
+            </div>
+            <div className="relative w-full flex flex-col space-y-2">
+              <label
+                className="text-dark font-normal text-xs"
+                htmlFor="shipping"
+              >
+                Width (in cm)
+              </label>
+              <input
+                onChange={handleInputChange}
+                name="width"
+                type="number"
+                step="any"
+                placeholder="Enter width after packaging in centimeters"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
+              />
+            </div>
+            <div className="relative w-full flex flex-col space-y-2">
+              <label
+                className="text-dark font-normal text-xs"
+                htmlFor="shipping"
+              >
+                Weight (in kg)
+              </label>
+              <input
+                onChange={handleInputChange}
+                name="weight"
+                type="number"
+                step="any"
+                placeholder="Enter weight after packaging in kilograms"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-[14px] font-medium p-6 rounded-full placeholder:text-dark/40 placeholder:text-xs"
               />
             </div>
           </div>
-          <div className="flex gap-x-2 items-center">
-            <div className="flex flex-col space-y-2 w-full">
-              <div className="relative w-full flex flex-col space-y-2">
-                <label
-                  className="text-gray-700 font-light text-[14px]"
-                  htmlFor="shipping"
-                >
-                  Shipping fees ($)
-                </label>
-                <input
-                  onChange={handleInputChange}
-                  name="fees"
-                  type="number"
-                  step="any"
-                  placeholder="e.g 150.00"
-                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
-                />
-                <BsCurrencyDollar className="absolute right-3 top-9 text-gray-700 font-light" />
-              </div>
-            </div>
-            <div className="flex flex-col space-y-2 w-full">
-              <label
-                className="text-gray-700 font-light text-[14px]"
-                htmlFor="shipping"
-              >
-                Taxes and other fees ($)
-              </label>
-              <div className="relative w-full flex flex-col space-y-2">
-                <input
-                  onChange={handleInputChange}
-                  name="taxes"
-                  placeholder="e.g 150.00"
-                  type="number"
-                  step="any"
-                  className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
-                />
-                <BsCurrencyDollar className="absolute right-3 top-3 text-gray-700 font-light" />
-              </div>
-            </div>
-          </div>
 
-          <div className=" flex flex-col space-y-2 w-full">
-            <label
-              className="text-gray-700 font-light text-[14px]"
-              htmlFor="shipping"
-            >
-              Additional information (optional)
+          <div className=" flex flex-col space-y-2 mt-5 w-full">
+            <label className="text-dark font-normal text-xs" htmlFor="shipping">
+              Special instructions (optional)
             </label>
             <div className="relative w-full flex flex-col space-y-2">
               <textarea
                 onChange={handleInputChange}
-                name="additional_information"
+                name="specialInstructions"
+                placeholder="Enter any special instructions for picking up the piece (e.g., Ring the doorbell)."
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-[14px] placeholder:text-gray-700 font-light placeholder:text-[14px] bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                className="p-3 border border-[#E0E0E0] text-[14px] font-medium placeholder:text-dark placeholder:text-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
               />
             </div>
           </div>
@@ -187,15 +234,15 @@ export default function QuoteForm() {
             <button
               disabled={loading}
               type="submit"
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normalr"
+              className="h-[35px] text-[14px] font-medium p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white"
             >
               {loading ? <LoadSmall /> : " Accept order request"}
             </button>
           </div>
         </form>
         {/* Details */}
-        <div className="p-3 border border-[#E0E0E0] text-[14px] rounded-lg">
-          <div className="flex flex-col gap-y-4 text-[14px]">
+        <div className="p-3 border border-[#E0E0E0] text-xs rounded-lg">
+          <div className="flex flex-col gap-y-4 text-xs">
             <div className="flex flex-col">
               <Image
                 src={image_url}
@@ -206,19 +253,19 @@ export default function QuoteForm() {
               />
             </div>
             <div className="flex flex-col">
-              <p className="text-gray-700 font-light">Artwork name</p>
+              <p className="text-dark font-normal">Artwork name</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.artwork.title}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-gray-700 font-light">Artist name</p>
+              <p className="text-dark font-normal">Artist name</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.artwork.artist}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-gray-700 font-light">Price</p>
+              <p className="text-dark font-normal">Price</p>
               <p className="font-semibold">
                 {formatPrice(
                   galleryOrderActionModalData.artwork.pricing.usd_price
@@ -226,27 +273,16 @@ export default function QuoteForm() {
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-gray-700 font-light">Buyer name</p>
+              <p className="text-dark font-normal">Buyer name</p>
               <p className="font-semibold">
                 {galleryOrderActionModalData.buyer}
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-gray-700 font-light">Buyer address</p>
+              <p className="text-dark font-normal">Buyer address</p>
               <p className="font-semibold">
-                {galleryOrderActionModalData.shipping_address.address_line},
-                {galleryOrderActionModalData.shipping_address.city},
-                {galleryOrderActionModalData.shipping_address.state},
-                {galleryOrderActionModalData.shipping_address.country},
-                {galleryOrderActionModalData.shipping_address.zip}
-              </p>
-            </div>
-
-            <div className="bg-green-100 p-3 font-normal rounded-md flex items-center gap-x-2">
-              <PiSealWarning />
-              <p>
-                Please confirm buyer&apos;s shipping address before providing
-                quote
+                {galleryOrderActionModalData.shipping_address.state},{" "}
+                {galleryOrderActionModalData.shipping_address.country}
               </p>
             </div>
           </div>

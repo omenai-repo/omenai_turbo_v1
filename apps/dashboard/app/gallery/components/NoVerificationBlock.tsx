@@ -65,7 +65,7 @@ export default function NoVerificationBlock({
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white text-gray-700 hover:bg-[#e0e0e0] duration-300 text-[14px] font-normal"
+            className=" h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white text-gray-700 hover:bg-[#e0e0e0] duration-300 text-[14px] font-normal"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>

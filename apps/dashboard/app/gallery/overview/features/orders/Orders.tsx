@@ -1,81 +1,46 @@
 "use client";
-import { getOverviewOrders } from "@omenai/shared-services/orders/getOverviewOrders";
-import OverviewComponentCard from "../../components/OverviewComponentCard";
-import OverviewOrdersCard from "../../../components/OverviewOrdersCard";
+import { getOrderByFilter } from "@omenai/shared-services/orders/getOrdersByFilter";
 
-import Link from "next/link";
-import { IoIosArrowRoundForward } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
-import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-import {
-  CreateOrderModelTypes,
-  GallerySchemaTypes,
-} from "@omenai/shared-types";
+
+import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
 import { useSession } from "@omenai/package-provider/SessionProvider";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
+import { OrdersAccordion } from "../../../../components/OrdersAccordion";
 
 export default function Orders() {
   const session = useSession() as GallerySchemaTypes;
   const { data: orders, isLoading } = useQuery({
     queryKey: ["get_overview_order"],
     queryFn: async () => {
-      const orders = await getOverviewOrders(session.gallery_id);
+      const orders = await getOrderByFilter(session.gallery_id);
       if (orders?.isOk) {
         return orders.data;
       }
+      throw new Error(orders?.message);
     },
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading)
-    return (
-      <div className="h-[40vh] grid place-items-center">
-        <Load />
-      </div>
-    );
-
-  const limitedOrders = orders!.filter(
-    (order: any) => order.order_accepted.status === ""
-  );
   return (
-    <OverviewComponentCard
-      fullWidth={false}
-      title={"Recent orders"}
-      id="tour-footer"
-      data-tg-tour="Welcome to the tour"
-    >
-      {orders!.length === 0 ? (
-        <NotFoundData />
-      ) : (
-        <>
-          <div className="flex flex-col gap-3 w-full">
-            {limitedOrders
-              .slice(0, 2)
-              .map((order: CreateOrderModelTypes, index: number) => {
-                return (
-                  <OverviewOrdersCard
-                    key={order.order_id}
-                    url={order.artwork_data.url}
-                    title={order.artwork_data.title}
-                    artist={order.artwork_data.artist}
-                    order_date={formatIntlDateTime(order.createdAt)}
-                    status={order.status}
-                  />
-                );
-              })}
-          </div>
-          <div className="w-full flex justify-center my-4">
-            <Link
-              href="/gallery/orders"
-              className="text-gray-700/80 flex gap-x-1 text-[14px] items-center font-medium underline mt-4 cursor-pointer"
-            >
-              View {limitedOrders.length} pending order(s)
-              <IoIosArrowRoundForward />
-            </Link>
-          </div>
-        </>
-      )}
-    </OverviewComponentCard>
+    <div className="p-4 min-h-[300px] flex flex-col gap-y-4">
+      <div className="w-full h-full ring-1 ring-[#eeeeee] p-6 rounded-[20px]">
+        <h1 className="font-medium self-start">Order Requests</h1>
+        <div className="grid place-items-center w-full h-full">
+          {isLoading ? (
+            <OrderRequestSkeleton />
+          ) : (
+            <>
+              {orders.length === 0 ? (
+                <NotFoundData />
+              ) : (
+                <OrdersAccordion orders={orders} route="/gallery/orders" />
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

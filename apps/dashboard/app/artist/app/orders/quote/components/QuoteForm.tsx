@@ -159,15 +159,15 @@ export default function QuoteForm() {
                 className="text-gray-700 font-light text-xs"
                 htmlFor="shipping"
               >
-                Length
+                Length (in cm)
               </label>
               <input
                 onChange={handleInputChange}
                 name="length"
                 type="number"
                 step="any"
-                placeholder="Enter the length after packaging"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                placeholder="Enter length after packaging  in centimeters"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
@@ -175,15 +175,15 @@ export default function QuoteForm() {
                 className="text-gray-700 font-light text-xs"
                 htmlFor="shipping"
               >
-                Height
+                Height (in cm)
               </label>
               <input
                 onChange={handleInputChange}
                 name="height"
                 type="number"
                 step="any"
-                placeholder="Enter the height after packaging"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                placeholder="Enter height after packaging in centimeters"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
@@ -191,15 +191,15 @@ export default function QuoteForm() {
                 className="text-gray-700 font-light text-xs"
                 htmlFor="shipping"
               >
-                Width
+                Width (in cm)
               </label>
               <input
                 onChange={handleInputChange}
                 name="width"
                 type="number"
                 step="any"
-                placeholder="Enter the width after packaging"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                placeholder="Enter width after packaging in centimeters"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
@@ -207,15 +207,15 @@ export default function QuoteForm() {
                 className="text-gray-700 font-light text-xs"
                 htmlFor="shipping"
               >
-                Weight
+                Weight (in kg)
               </label>
               <input
                 onChange={handleInputChange}
                 name="weight"
                 type="number"
                 step="any"
-                placeholder="Enter the weight after packaging"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+                placeholder="Enter weight after packaging in kilograms"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
               />
             </div>
           </div>
@@ -241,7 +241,7 @@ export default function QuoteForm() {
             <button
               disabled={loading}
               type="submit"
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normalr"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normalr"
             >
               {loading ? <LoadSmall /> : " Accept order request"}
             </button>
@@ -288,8 +288,8 @@ export default function QuoteForm() {
             <div className="flex flex-col">
               <p className="text-gray-700 font-light">Buyer address</p>
               <p className="font-semibold">
-                {artistOrderActionModalData.shipping_address.state},
-                {artistOrderActionModalData.shipping_address.country},
+                {artistOrderActionModalData.shipping_address.state},{" "}
+                {artistOrderActionModalData.shipping_address.country}
               </p>
             </div>
           </div>

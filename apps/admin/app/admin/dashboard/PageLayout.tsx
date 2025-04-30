@@ -20,12 +20,26 @@ export default function PageLayout() {
       });
       router.replace("/auth/login/secure/admin");
     } else {
-      toast.error("Operation successful", {
+      toast.error("Error Notification", {
         description:
           "Something went wrong, please try again or contact support",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
       });
     }
   }
+
+  toast.error("Error notification", {
+    description: "Admin session expired. Please login again",
+    style: {
+      background: "red",
+      color: "white",
+    },
+    className: "class",
+  });
 
   return (
     <div

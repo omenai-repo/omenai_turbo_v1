@@ -1,8 +1,10 @@
 "use client";
+import { useSession } from "@omenai/package-provider/SessionProvider";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
+import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { IState, ICity, ICountry, State, City } from "country-state-city";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { MdError } from "react-icons/md";
 
 type AddressSelectInputProps = {
@@ -30,18 +32,28 @@ export default function AddressSelectInput({
     selectedCountry,
   } = actionStore();
 
-  const { setAddress } = orderStore();
+  const { address, setAddress } = orderStore();
+  const session = useSession() as IndividualSchemaTypes;
+
+  const selectValue = () => {
+    if (labelText === "country") return address.country;
+    if (labelText === "city") return address.city;
+    if (labelText === "state") return address.state;
+  };
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    const selectedCode =
-      e.target.options[e.target.selectedIndex].getAttribute("data-code");
+    const selectedCode = e.target.options[e.target.selectedIndex].getAttribute(
+      "data-code"
+    ) as string;
 
     if (labelText === "country") {
       setSelectedCityList([]);
       setSelectedCountry(value, selectedCode as string);
       const stateList = State.getStatesOfCountry(selectedCode as string);
       setSelectedStateList(stateList);
+      setAddress(labelText, value);
+      setAddress("countryCode", selectedCode);
     }
     if (labelText === "state") {
       const cities = City.getCitiesOfState(
@@ -49,6 +61,11 @@ export default function AddressSelectInput({
         selectedCode as string
       );
       setSelectedCityList(cities);
+      setAddress(labelText, value);
+      setAddress("stateCode", selectedCode);
+    }
+    if (labelText === "city") {
+      setAddress(labelText, value);
     }
   };
 
@@ -60,13 +77,10 @@ export default function AddressSelectInput({
       <select
         required={true}
         onChange={handleChange}
+        value={selectValue()}
         className="border-0 ring-1 ring-dark/20 focus:ring text-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-xs placeholder:text-gray-700/40"
       >
-        <option
-          value=""
-          selected={defaultValue === ""}
-          className="text-gray-700/40"
-        >
+        <option value="" className="text-gray-700/40">
           Select {labelText}
         </option>
         <>
@@ -77,9 +91,6 @@ export default function AddressSelectInput({
                   key={item.isoCode}
                   value={item.name}
                   data-code={item.isoCode}
-                  selected={
-                    defaultValue?.toLowerCase() === item.name.toLowerCase()
-                  }
                   className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
                 >
                   {item.name}
@@ -93,9 +104,6 @@ export default function AddressSelectInput({
                   key={state.isoCode}
                   value={state.name}
                   data-code={state.isoCode}
-                  selected={
-                    defaultValue?.toLowerCase() === state.name.toLowerCase()
-                  }
                   className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
                 >
                   {state.name}
@@ -108,11 +116,8 @@ export default function AddressSelectInput({
               return (
                 <option
                   key={city.name}
-                  value={city.name}
+                  defaultValue={city.name}
                   data-code={city.name}
-                  selected={
-                    defaultValue?.toLowerCase() === city.name.toLowerCase()
-                  }
                   className="px-3 py-5 my-5 text-xs font-medium text-gray-700/40"
                 >
                   {city.name}

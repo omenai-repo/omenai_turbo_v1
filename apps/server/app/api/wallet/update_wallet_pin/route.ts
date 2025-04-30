@@ -1,7 +1,9 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
+import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import {
+  ConflictError,
   ForbiddenError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
@@ -18,6 +20,15 @@ export async function POST(request: Request) {
     if (isPinRepeatingOrConsecutive)
       throw new ForbiddenError(
         "Wallet pin cannot be repeating or consecutive. Please try again"
+      );
+
+    const wallet = await Wallet.findOne({ wallet_id }, "wallet_pin");
+
+    const isPinMatch = bcrypt.compareSync(pin, wallet.wallet_pin);
+
+    if (isPinMatch)
+      throw new ConflictError(
+        "Your pin cannot be identical to your previous wallet pin"
       );
 
     const hashedPin = await hashPassword(pin);

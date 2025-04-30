@@ -99,7 +99,7 @@ export default function RejectConfirmationPopupModal() {
           <button
             onClick={() => rejectGalleryVerificationMutation}
             disabled={loading}
-            className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-red-600 text-white"
+            className="disabled:cursor-not-allowed disabled:bg-dark/10 flex gap-x-2 w-fit rounded-md items-center h-[35px] px-4 bg-red-600 text-white"
           >
             <span className="text-[14px] ">
               {loading ? <LoadSmall /> : "Confirm"}
@@ -116,7 +116,7 @@ export default function RejectConfirmationPopupModal() {
                 gallery_id: "",
               })
             }
-            className=" flex gap-x-2 w-fit rounded-md items-center h-[40px] px-4 bg-green-600 text-white"
+            className=" flex gap-x-2 w-fit rounded-md items-center h-[35px] px-4 bg-green-600 text-white"
           >
             <span className="text-[14px] ">Cancel</span>
 

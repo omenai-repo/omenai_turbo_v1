@@ -65,6 +65,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 
+    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

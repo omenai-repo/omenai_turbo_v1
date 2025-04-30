@@ -5,14 +5,15 @@ import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
 import { updatePassword } from "@omenai/shared-services/requests/updateGalleryPassword";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { GallerySchemaTypes } from "@omenai/shared-types";
+import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
+import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
 
 export default function UpdatePasswordModalForm() {
-  const { updatePasswordModalPopup } = actionStore();
+  const { updatePasswordModalPopup } = artistActionStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [codeLoading, setCodeLoading] = useState<boolean>(false);
   const [info, setInfo] = useState({
@@ -27,8 +28,8 @@ export default function UpdatePasswordModalForm() {
   async function requestConfirmationCode() {
     setCodeLoading(true);
     const response = await requestPasswordConfirmationCode(
-      "gallery",
-      (session as GallerySchemaTypes).gallery_id
+      "artist",
+      (session as ArtistSchemaTypes).artist_id
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -71,8 +72,8 @@ export default function UpdatePasswordModalForm() {
     const response = await updatePassword(
       info.password,
       info.code,
-      "gallery",
-      (session as GallerySchemaTypes).gallery_id
+      "artist",
+      (session as ArtistSchemaTypes).artist_id
     );
 
     if (response?.isOk) {
@@ -102,13 +103,10 @@ export default function UpdatePasswordModalForm() {
       <h1 className="text-sm font-bold mb-4 text-gray-700">
         Update Password Information
       </h1>
-      <form onSubmit={handlePasswordUpdate}>
-        <div className="space-y-2 mb-2 flex flex-col w-full">
+      <form onSubmit={handlePasswordUpdate} className="flex flex-col space-y-4">
+        <div className="space-y-4 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto">
-            <label
-              htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
-            >
+            <label htmlFor="pasword" className="text-xs text-[#858585] mb-2">
               Password
             </label>
             <input
@@ -117,15 +115,15 @@ export default function UpdatePasswordModalForm() {
               type="password"
               required
               placeholder="Enter a new password"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-xs p-6 rounded-full placeholder:text-[#606060] placeholder:text-xs"
             />
           </div>
         </div>
         <div className="space-y-2 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto">
             <label
-              htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
+              htmlFor="confirm_password"
+              className="text-xs text-[#858585] mb-2"
             >
               Confirm password
             </label>
@@ -135,7 +133,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               placeholder="Confirm your password"
               required
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-xs p-6 rounded-full placeholder:text-[#606060] placeholder:text-xs"
             />
           </div>
         </div>
@@ -143,8 +141,8 @@ export default function UpdatePasswordModalForm() {
         <div className="space-y-2 mb-2 flex flex-col w-full relative">
           <div className="relative w-full h-auto">
             <label
-              htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
+              htmlFor="confirmationCode"
+              className="text-xs text-[#858585] mb-2"
             >
               Confirmation code
             </label>
@@ -154,11 +152,11 @@ export default function UpdatePasswordModalForm() {
               type="text"
               placeholder="Enter confirmation code"
               required
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-xs p-6 rounded-full placeholder:text-[#606060] placeholder:text-xs"
             />
           </div>
 
-          <div className="absolute right-0 translate-y-[25%] top-[4px]">
+          <div className="absolute right-0 translate-y-[25%] top-[5px]">
             <button
               type="button"
               onClick={requestConfirmationCode}
@@ -169,7 +167,7 @@ export default function UpdatePasswordModalForm() {
                 info.password === "" ||
                 codeLoading
               }
-              className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
             >
               {codeLoading ? <LoadSmall /> : "Get code"}
             </button>
@@ -183,7 +181,7 @@ export default function UpdatePasswordModalForm() {
                 className="flex items-center gap-x-2 my-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-[14px]">{error}</p>
+                <p className="text-red-600 text-xs">{error}</p>
               </div>
             );
           })}
@@ -197,7 +195,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-xs font-normal"
           >
             {loading ? <LoadSmall /> : "Update Password"}
           </button>

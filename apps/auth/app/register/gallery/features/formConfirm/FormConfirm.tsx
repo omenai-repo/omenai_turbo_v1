@@ -56,13 +56,13 @@ export default function FormConfirm() {
         <button
           type="submit"
           disabled={isLoading || !isConsentChecked}
-          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
+          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center hover:ring-white cursor-pointer"
         >
           {isLoading ? <LoadSmall /> : "Create account"}
         </button>
         <button
           disabled={isLoading}
-          className={` bg-white  text-gray-700 focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[40px] p-6 w-full text-center text-[14px] flex items-center justify-center hover:ring-dark cursor-pointer`}
+          className={` bg-white  text-gray-700 focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full h-[35px] p-5 w-full text-center text-[14px] flex items-center justify-center hover:ring-dark cursor-pointer`}
           type={"button"}
           onClick={decrementCurrentGallerySignupFormIndex}
         >

@@ -40,12 +40,11 @@ export default function AddressForm({
     setSelectedCityList,
     setSelectedCountry,
     selectedCountry,
+    toggleOrderReceivedModal,
   } = actionStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [save_shipping_address, setSaveShippingAddress] =
     useState<boolean>(false);
-
-  const { toggleOrderReceivedModal } = actionStore();
 
   const session = useSession();
 
@@ -95,16 +94,12 @@ export default function AddressForm({
       });
       setLoading(false);
     } else {
-      let shipping_address;
-      if (userAddress.address_line === "") shipping_address = address;
-      else shipping_address = userAddress;
-
       const createdShippingOrder = await createShippingOrder(
         (session as IndividualSchemaTypes)?.user_id,
         art_id,
         author_id,
         save_shipping_address,
-        shipping_address,
+        address,
         null,
         role_access.role
       );
@@ -203,7 +198,7 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-full h-[40px] px-4 text-[14px] disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline grid place-items-center group"
+                className="w-full rounded-full h-[35px] px-4 text-[14px] disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline grid place-items-center group"
               >
                 {!loading ? "Request price quote" : <LoadSmall />}
               </button>

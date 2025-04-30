@@ -20,7 +20,8 @@ export const dhlErrorMap: { [code: string]: string } = {
   "3010": "Please provide a valid address containing a city or postal code.",
   "3011":
     "DHL's Service area not available for the given address. Please choose a different address.",
-  "410304": "No DHL product found for this shipment. Please contact support",
+  "410304":
+    "Oops! We can’t deliver to this address right now. Our support team can help if you have questions.",
   "420505":
     "The destination location for this shipment is invalid, please check the address and try again",
   "420504":

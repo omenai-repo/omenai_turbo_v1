@@ -41,7 +41,7 @@ export function createUploadedArtworkData(
       artwork_description: data.artwork_description,
       framing: data.framing,
       signature: data.signature,
-      role_access
+      role_access,
     };
 
   return updatedArwordData;

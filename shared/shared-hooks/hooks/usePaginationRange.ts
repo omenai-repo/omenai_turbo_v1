@@ -9,9 +9,9 @@ export function usePaginationRange(currentPage: number, total: number) {
 
   // Update the visible range based on screen size
   const updateVisibleRange = useCallback(() => {
-    if (width < 460) {
+    if (width <= 460) {
       setVisibleRange(2); // Extra small screens (e.g., mobile)
-    } else if (width < 640) {
+    } else if (width <= 640) {
       setVisibleRange(2); // Small screens (e.g., mobile)
     } else {
       setVisibleRange(5); // Medium screens (e.g., tablets)

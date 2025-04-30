@@ -1,9 +1,12 @@
 "use client";
+import { useSession } from "@omenai/package-provider/SessionProvider";
 import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_validator/validator";
 import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
+import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
+import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type ArtworkTextInputProps = {
@@ -26,7 +29,12 @@ export default function ArtworkTextInput({
   type = "text",
 }: ArtworkTextInputProps) {
   const { updateArtworkUploadData, updateErrorField, artworkUploadData } =
-    galleryArtworkUploadStore();
+    artistArtworkUploadStore();
+  const session = useSession() as ArtistSchemaTypes;
+
+  useEffect(() => {
+    if (name === "artist") updateArtworkUploadData(name, session.name);
+  }, []);
 
   const [errorList, setErrorList] = useState<string[]>([]);
 
@@ -42,32 +50,6 @@ export default function ArtworkTextInput({
     } else {
       updateArtworkUploadData(label, trimmedValue);
       updateErrorField(label, "");
-    }
-
-    if (label === "price") {
-      const conversion_value = await getCurrencyConversion(
-        artworkUploadData.currency.toUpperCase(),
-        +value
-      );
-
-      if (!conversion_value?.isOk)
-        toast.error("Error notification", {
-          description:
-            "Issue encountered while retrieving exchange rate value. Please try again.",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      else {
-        const rounded_conversion_value =
-          Math.round(+conversion_value.data * 10) / 10;
-        updateArtworkUploadData(
-          "usd_price",
-          rounded_conversion_value.toString()
-        );
-      }
     }
   };
 
@@ -92,7 +74,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           defaultValue={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40 placeholder:text-xs"
+          className="w-full focus:ring ring-1 border-0 disabled:cursor-not-allowed disabled:ring-dark/10 disabled:text-[#e0e0e0] ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full text-xs placeholder:text-gray-700/40 placeholder:text-xs"
         />
       )}
       {type === "textarea" && (
@@ -102,7 +84,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 rounded-[10px]  disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light placeholder:text-[#858585] placeholder:text-xs"
+          className="border px-2 ring-0 rounded-[10px]  disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light text-xs placeholder:text-[#858585] placeholder:text-xs"
         />
       )}
       {errorList.length > 0 &&

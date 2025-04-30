@@ -85,7 +85,7 @@ export default function ConfirmOrderDeliveryForm() {
           disabled={loading}
           type="button"
           onClick={confirmDelivery}
-          className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, confirm delivery"}
         </button>

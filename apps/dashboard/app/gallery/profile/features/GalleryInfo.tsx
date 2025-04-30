@@ -25,14 +25,14 @@ export default function GalleryInfo() {
         className="flex gap-3 items-center my-5 cursor-pointer"
         onClick={() => updateModal(true)}
       >
-        <div className=" bg-[#eee] rounded-[20px] flex items-center justify-center">
+        <div className=" bg-[#eee] rounded-full flex items-center justify-center">
           {logo !== "" ? (
             <Image
               src={logo}
               alt="user avatar"
               width={100}
               height={100}
-              className="rounded-[20px] h-[100px] w-[100px] object-top overflow-hidden"
+              className="rounded-full h-[100px] w-[100px] object-top overflow-hidden"
             />
           ) : (
             <RxAvatar />

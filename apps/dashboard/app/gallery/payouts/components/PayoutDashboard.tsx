@@ -10,9 +10,11 @@ import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  LoadIcon,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
-
+import PayoutSkeleton from "@omenai/shared-ui-components/components/skeletons/PayoutSkeleton";
 export default function PayoutDashboard() {
   const { session } = useContext(SessionContext);
   const router = useRouter();
@@ -60,8 +62,8 @@ export default function PayoutDashboard() {
 
   if (isLoading) {
     return (
-      <div className="h-[78vh] w-full grid place-items-center">
-        <Load />
+      <div className="mt-10">
+        <PayoutSkeleton />
       </div>
     );
   }
@@ -73,7 +75,7 @@ export default function PayoutDashboard() {
       {!isConfirmed?.isSubmitted ? (
         <div className="h-[85vh] w-full grid place-items-center">
           <div className="flex flex-col space-y-1">
-            <Load />
+            <LoadIcon />
             <p className="text-[14px] font-semibold">
               Redirecting...Please wait
             </p>

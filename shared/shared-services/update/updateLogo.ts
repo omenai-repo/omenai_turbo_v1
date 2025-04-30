@@ -1,9 +1,13 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function updateLogo(payload: { id: string; url: string }) {
+export async function updateLogo(payload: {
+  id: string;
+  url: string;
+  route: "gallery" | "artist";
+}) {
   const url = getApiUrl();
 
-  const result = await fetch(`${url}/api/auth/gallery/logo`, {
+  const result = await fetch(`${url}/api/requests/${payload.route}/logo`, {
     method: "POST",
     body: JSON.stringify({ ...payload }),
     headers: {

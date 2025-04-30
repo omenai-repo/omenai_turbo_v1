@@ -23,6 +23,17 @@ type ArtistActionStoreTypes = {
   clearArtistOrderActionModalData: () => void;
   current_order_id: string;
   update_current_order_id: (id: string) => void;
+  openDeclineOrderModal: boolean;
+  toggleDeclineOrderModal: (value: boolean) => void;
+
+  deleteArtistAccountModalPopup: boolean;
+  updateDeleteArtistAccountModalPopup: (value: boolean) => void;
+  passwordModalPopup: boolean;
+  updatePasswordModalPopup: (value: boolean) => void;
+  withdrawalFormPopup: boolean;
+  toggleWithdrawalFormPopup: (value: boolean) => void;
+  walletPinPopup: boolean;
+  toggleWalletPinPopup: (value: boolean) => void;
 };
 
 const now = new Date();
@@ -98,5 +109,25 @@ export const artistActionStore = create<ArtistActionStoreTypes>((set, get) => ({
   current_order_id: "",
   update_current_order_id: (id: string) => {
     set({ current_order_id: id });
+  },
+  openDeclineOrderModal: false,
+  toggleDeclineOrderModal: (value: boolean) => {
+    set({ openDeclineOrderModal: value });
+  },
+  deleteArtistAccountModalPopup: false,
+  updateDeleteArtistAccountModalPopup: (value: boolean) => {
+    set({ deleteArtistAccountModalPopup: value });
+  },
+  passwordModalPopup: false,
+  updatePasswordModalPopup: (value: boolean) => {
+    set({ passwordModalPopup: value });
+  },
+  withdrawalFormPopup: false,
+  toggleWithdrawalFormPopup: (value: boolean) => {
+    set({ withdrawalFormPopup: value });
+  },
+  walletPinPopup: false,
+  toggleWalletPinPopup: (value: boolean) => {
+    set({ walletPinPopup: value });
   },
 }));

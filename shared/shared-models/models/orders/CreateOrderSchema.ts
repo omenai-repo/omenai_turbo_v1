@@ -28,6 +28,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
       required: true,
     },
     availability: { type: Boolean, default: () => true },
+    expiresAt: { type: Date || null, default: null },
   },
   { timestamps: true }
 );

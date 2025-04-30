@@ -1,133 +1,56 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import { FormEvent, useContext, useRef, useState } from "react";
-import Image from "next/image";
-import uploadImage from "@omenai/shared-services/artworks/uploadArtworkImage";
-import { createUploadedArtworkData } from "@omenai/shared-utils/src/createUploadedArtworkData";
-import { uploadArtworkData } from "@omenai/shared-services/artworks/uploadArtworkData";
+import { useRef } from "react";
 
+import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
-import { storage } from "@omenai/appwrite-config";
-import {
-  SessionContext,
-  useSession,
-} from "@omenai/package-provider/SessionProvider";
-import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
-import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
-  const { image, setImage, artworkUploadData, clearData } =
-    galleryArtworkUploadStore();
-  const [loading, setLoading] = useState(false);
-  const { session } = useContext(SessionContext);
+  const { image, setImage } = artistArtworkUploadStore();
   const router = useRouter();
-  const queryClient = useQueryClient();
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
 
-  const handleArtworkUpload = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (!image) {
+  function handleImageSubmit() {
+    if (image === null)
       toast.error("Error notification", {
-        description: "Please select an image",
+        description: "Please upload your artwork before proceeding",
         style: {
           background: "red",
           color: "white",
         },
         className: "class",
       });
-      setLoading(false);
-      return;
-    }
-
-    const fileType = image.type.split("/")[1];
-    if (!acceptedFileTypes.includes(fileType)) {
-      toast.error("Error notification", {
-        description:
-          "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
-      });
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const fileUploaded = await uploadImage(image);
-
-      if (!fileUploaded) {
-        throw new Error("Image upload failed");
-      }
-
-      const file = {
-        bucketId: fileUploaded.bucketId,
-        fileId: fileUploaded.$id,
-      };
-      const data = createUploadedArtworkData(
-        artworkUploadData,
-        file.fileId,
-        (session?.gallery_id as string) ?? "",
-        {
-          role: "gallery",
-          designation: null,
-        }
-      );
-
-      const uploadResponse = await uploadArtworkData(data);
-
-      if (!uploadResponse?.isOk) {
-        await storage.deleteFile(
-          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-          file.fileId
-        );
+    else {
+      const fileType = image.type.split("/")[1];
+      if (!acceptedFileTypes.includes(fileType)) {
         toast.error("Error notification", {
-          description: uploadResponse?.body.message,
+          description:
+            "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
           style: {
             background: "red",
             color: "white",
           },
           className: "class",
         });
-        setImage(null);
         return;
       }
-
-      toast.success("Operation successful", {
-        description: uploadResponse.body.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
+      toast.info("Operation in progress", {
+        description: "Processing, please wait",
       });
-      queryClient.invalidateQueries();
-      clearData();
-      router.replace("/gallery/artworks");
-    } catch (error) {
-      console.error("Error uploading artwork:", error);
-      toast.error("Error notification", {
-        description:
-          "An error occurred while uploading the artwork. Please try again.",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    } finally {
-      setLoading(false);
+      router.push("/artist/app/artworks/upload/pricing");
     }
-  };
+  }
+
   return (
-    <form onSubmit={handleArtworkUpload}>
+    <div>
       <div className="w-full h-[60vh] grid place-items-center">
         {image ? (
           <img
             src={URL.createObjectURL(image)}
             alt="uploaded image"
-            className="w-auto h-auto max-h-[60vh] max-w-full object-cover mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
+            className="w-auto h-auto max-h-[50vh] max-w-full object-cover mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
             onClick={() => {
               setImage(null);
             }}
@@ -135,7 +58,7 @@ export default function UploadArtworkImage() {
         ) : (
           <button
             type="button"
-            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded-sm text-[14px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-[300px] h-[300px] border border-[#c0c0c0] bg-white rounded-[20px] text-[14px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
             onClick={() => {
               imagePickerRef.current?.click();
             }}
@@ -169,15 +92,15 @@ export default function UploadArtworkImage() {
           }}
         />
       </div>
-      <div className="mt-4 flex w-full text-[14px]">
+      <div className="mt-4 flex w-full text-[14px] justify-center">
         <button
-          disabled={loading || !image}
-          className={`h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal`}
-          type="submit"
+          onClick={handleImageSubmit}
+          type="button"
+          className={`h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal`}
         >
-          {loading ? <LoadSmall /> : "Upload artwork"}
+          Calculate artwork price
         </button>
       </div>
-    </form>
+    </div>
   );
 }

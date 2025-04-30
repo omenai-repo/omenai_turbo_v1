@@ -17,8 +17,6 @@ export default function PopularArtworks() {
     refetchOnWindowFocus: false,
   });
 
-  console.log(popularArtworks);
-
   return (
     <div className="p-4 min-h-[300px] flex flex-col gap-y-4">
       <div className="w-full h-full ring-1 ring-[#eeeeee] p-6 rounded-[20px]">

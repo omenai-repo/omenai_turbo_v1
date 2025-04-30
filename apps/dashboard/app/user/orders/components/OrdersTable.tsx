@@ -145,7 +145,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
       <div className="mt-1 mb-8 w-fit h-fit relative pl-1">
         <input
           type="text"
-          className="h-[40px] px-4 pl-10 w-[500px] border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-transparent focus:border-none focus:ring-1 focus:ring-dark/80 duration-300 focus:outline-none"
+          className="h-[35px] px-4 pl-10 w-[500px] border border-[#E0E0E0] text-[14px] placeholder:text-[#858585] placeholder:text-[14px] bg-transparent focus:border-none focus:ring-1 focus:ring-dark/80 duration-300 focus:outline-none"
           placeholder="Search by order ID, artwork name or buyer name"
           onChange={handleSearchChange}
         />
@@ -213,7 +213,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                   {order.payment_information.status === "pending" &&
                     order.status !== "completed" &&
                     order.order_accepted.status === "accepted" && (
-                      <button className=" bg-dark rounded-sm text-white disabled:bg-dark/10 w-full disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                      <button className=" bg-dark rounded-sm text-white disabled:bg-dark/10 w-full disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                         <span>Pay for this artwork</span>
                       </button>
                     )}
@@ -223,7 +223,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                       !order.shipping_details.delivery_confirmed &&
                       order.shipping_details.shipment_information.tracking
                         .link !== "" && (
-                        <button className=" bg-dark disabled:bg-dark/10 rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                        <button className=" bg-dark disabled:bg-dark/10 rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                           <span>View tracking information</span>
                         </button>
                       )}
@@ -231,7 +231,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                       !order.shipping_details.delivery_confirmed &&
                       order.shipping_details.shipment_information.tracking
                         .link !== "" && (
-                        <button className=" bg-green-600 disabled:bg-dark/10 rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                        <button className=" bg-green-600 disabled:bg-dark/10 rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
                           <span>Confirm order delivery</span>
                         </button>
                       )}
@@ -244,7 +244,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                       .link === "" && (
                       <button
                         disabled
-                        className=" bg-dark disabled:bg-dark/10 rounded-sm w-full text-white disabled:cursor-not-allowed h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" bg-dark disabled:bg-dark/10 rounded-sm w-full text-white disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                       >
                         <span>Awaiting tracking information</span>
                       </button>
@@ -254,7 +254,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                     <div className="relative flex items-center gap-x-1">
                       <button
                         disabled
-                        className=" bg-dark rounded-sm disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" bg-dark rounded-sm disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                       >
                         <MdOutlineCallToAction />
                         <span>Order in review</span>
@@ -265,7 +265,7 @@ export default function UserOrdersTable({ data, tab }: OrdersTableProps) {
                     <div className="relative flex items-center gap-x-1">
                       <button
                         disabled
-                        className=" bg-dark rounded-sm disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[40px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
+                        className=" bg-dark rounded-sm disabled:cursor-not-allowed w-full disabled:bg-dark/10 disabled:text-[#A1A1A1] text-white h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80"
                       >
                         <GoIssueClosed />
                         <span>This order has been fulfilled</span>

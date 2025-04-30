@@ -17,6 +17,7 @@ import { useContext } from "react";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
 import AppStoreAd from "./features/appStoreAd/AppStoreAd";
+import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
 export default function Home() {
   const { session } = useContext(SessionContext);
   const { data: promotionals, isLoading } = useQuery({
@@ -31,10 +32,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="w-full h-screen grid place-items-center">
-        <div className="flex flex-col space-y-5 justify-center items-center">
-          <HomeLoader />
-          <IndividualLogo />
-        </div>
+        <HomeLoad />
       </div>
     );
   }

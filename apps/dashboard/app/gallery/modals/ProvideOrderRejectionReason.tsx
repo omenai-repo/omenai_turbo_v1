@@ -8,7 +8,7 @@ export const UploadOrderRejectionReason = () => {
   const { openDeclineOrderModal, toggleDeclineOrderModal } = actionStore();
 
   return (
-    <AnimatePresence key={11}>
+    <AnimatePresence key={101}>
       {openDeclineOrderModal && (
         <motion.div
           initial={{ opacity: 0 }}

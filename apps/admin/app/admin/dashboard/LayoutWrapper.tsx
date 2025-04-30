@@ -23,7 +23,7 @@ export default function GalleryDashboardLayoutWrapper({
   return (
     <SessionProvider session={session}>
       <QueryProvider>
-        {width < 768 ? (
+        {width <= 768 ? (
           <NoMobileView />
         ) : (
           <div className=" w-full h-screen">

@@ -36,31 +36,18 @@ export default function Dropdown() {
       {isOpen && (
         <div className="absolute mt-2 w-fit px-4 bg-white shadow-lg z-30 rounded-[20px] overflow-hidden">
           <ul className="py-1 text-gray-700 text-xs">
-            {/* {getDynamicYears().map((year) => {
+            {getDynamicYears().map((year) => {
               return (
                 <li key={year}>
-                  <button className="block w-full px-4 py-2 hover:bg-gray-100">
+                  <button
+                    onClick={() => handleYearChange(year)}
+                    className="block w-full px-4 py-2 hover:bg-gray-100"
+                  >
                     {year}
                   </button>
                 </li>
               );
-            })} */}
-            <li>
-              <button
-                onClick={() => handleYearChange("2025")}
-                className="block w-full px-4 py-2 hover:bg-gray-100"
-              >
-                2025
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleYearChange("2026")}
-                className="block w-full px-4 py-2 hover:bg-gray-100"
-              >
-                2026
-              </button>
-            </li>
+            })}
           </ul>
         </div>
       )}

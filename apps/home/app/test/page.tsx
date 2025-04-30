@@ -1,7 +1,12 @@
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import React from "react";
 
 export default function page() {
-  return <div>page</div>;
+  return (
+    <div className="h-[80vh] w-full grid place-items-center">
+      <Load />
+    </div>
+  );
 }
 
 // "use client";
@@ -116,7 +121,7 @@ export default function page() {
 //       <div className="mt-4 flex w-full text-[14px]">
 //         <button
 //           disabled={loading || !image}
-//           className={`h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal`}
+//           className={`h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal`}
 //           type="button"
 //           onClick={handleImageUpload}
 //         >

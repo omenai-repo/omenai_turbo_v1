@@ -2,10 +2,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 import ProvideOrderRejectionModalForm from "./ProvideOrderRejectionModalForm";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 
 export const UploadOrderRejectionReason = () => {
-  const { openDeclineOrderModal, toggleDeclineOrderModal } = actionStore();
+  const { openDeclineOrderModal, toggleDeclineOrderModal } =
+    artistActionStore();
 
   return (
     <AnimatePresence key={11}>

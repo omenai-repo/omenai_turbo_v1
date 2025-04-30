@@ -2,6 +2,7 @@
 
 import { declineOrderRequest } from "@omenai/shared-services/orders/declineOrderRequest";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { OrderAcceptedStatusTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,7 +11,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 
 export default function ProvideOrderRejectionModalForm() {
-  const { toggleDeclineOrderModal, current_order_id } = actionStore();
+  const { toggleDeclineOrderModal, current_order_id } = artistActionStore();
   const queryClient = useQueryClient();
   const [accepted_status, setAcceptedStatus] =
     useState<OrderAcceptedStatusTypes>({
@@ -68,25 +69,22 @@ export default function ProvideOrderRejectionModalForm() {
 
   return (
     <div>
-      <h1 className="text-base font-normal mb-4 text-gray-700">
-        Sure to decline?
+      <h1 className="text-base font-medium mb-4 text-dark">
+        Sure to decline this order request?
       </h1>
       <form className="w-full" onSubmit={handleOrderRejection}>
-        <div className="space-y-2 mb-2 flex flex-col w-full">
+        <div className="space-y-4 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto my-2">
-            <label
-              htmlFor="shipping"
-              className="text-[14px] text-[#858585] mb-2"
-            >
+            <label htmlFor="shipping" className="text-[14px] text-dark mb-2">
               Reason for declining request
             </label>
-            <input
+            <textarea
               onChange={handleInputChange}
               name="reason"
-              type="text"
               required
+              rows={5}
               placeholder="e.g Artwork no longer available"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out p-6 rounded-[20px] placeholder:text-gray-700/40 text-[14px] placeholder:text-xs"
             />
           </div>
         </div>
@@ -95,7 +93,7 @@ export default function ProvideOrderRejectionModalForm() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
+            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-[14px] font-normal"
           >
             {loading ? <LoadSmall /> : " Decline order"}
           </button>

@@ -12,6 +12,8 @@ export async function GET(request: NextRequest) {
     const year = searchParams.get("year");
     const limit = searchParams.get("limit");
     const status = searchParams.get("status")?.toLowerCase(); // make it case-insensitive
+    const page = searchParams.get("page") || 1;
+    const skip = (Number(page) - 1) * 10;
 
     if (!year || !wallet_id)
       throw new BadRequestError("Missing url params - year and id is required");
@@ -41,7 +43,9 @@ export async function GET(request: NextRequest) {
       query.trans_status = status.toUpperCase(); // Assuming status in DB is in uppercase
     }
 
-    let mongoQuery = WalletTransaction.find(query).sort({ trans_date: -1 });
+    let mongoQuery = WalletTransaction.find(query)
+      .skip(skip)
+      .sort({ trans_date: -1 });
 
     if (numericLimit && numericLimit > 0) {
       mongoQuery = mongoQuery.limit(numericLimit);
@@ -49,10 +53,13 @@ export async function GET(request: NextRequest) {
 
     const fetch_wallet_transactions = await mongoQuery.exec();
 
+    const total = await WalletTransaction.countDocuments({ wallet_id });
+
     return NextResponse.json(
       {
         message: "Wallet transactions retrieved successfully",
         data: fetch_wallet_transactions,
+        pageCount: Math.ceil(total / 10),
       },
       { status: 200 }
     );

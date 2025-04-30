@@ -9,11 +9,13 @@ import { NextResponse } from "next/server";
 import {
   ServerError,
   ForbiddenError,
+  BadRequestError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { getCurrentDate } from "@omenai/shared-utils/src/getCurrentDate";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-import { CreateOrderModelTypes } from "@omenai/shared-types";
+import { AddressTypes, CreateOrderModelTypes } from "@omenai/shared-types";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function POST(request: Request) {
   try {
@@ -26,6 +28,13 @@ export async function POST(request: Request) {
       save_shipping_address,
       shipping_address,
       designation,
+    }: {
+      buyer_id: string;
+      art_id: string;
+      seller_id: string;
+      save_shipping_address: boolean;
+      shipping_address: AddressTypes;
+      designation: string;
     } = await request.json();
 
     const buyerData = await AccountIndividual.findOne(
@@ -49,6 +58,33 @@ export async function POST(request: Request) {
       ).exec();
       seller_data = artist_data;
     }
+
+    const response = await fetch(
+      `${getApiUrl()}/api/shipment/address_validation`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          type: "delivery",
+          countryCode: shipping_address.countryCode,
+          postalCode: shipping_address.zip,
+          cityName: shipping_address.state,
+          countyName: shipping_address.city,
+          country: shipping_address.country,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://omenai.app",
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok)
+      throw new BadRequestError(
+        result.message ||
+          "Oops! We can't ship to this address just yet 🚫. Double-check your address or try a different one!"
+      );
 
     const artwork = await Artworkuploads.findOne(
       { art_id },

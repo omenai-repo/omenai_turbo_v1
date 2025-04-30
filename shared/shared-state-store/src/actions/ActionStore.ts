@@ -39,14 +39,14 @@ type ActionStoreTypes = {
 
   galleryOrderActionModalData: {
     buyer: string;
-    shipping_address: AddressTypes;
+    shipping_address: Pick<AddressTypes, "country" | "state">;
     order_id: string;
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">;
     status: string;
   };
   updateGalleryOrderActionModalData: (
     buyer: string,
-    shipping_address: AddressTypes,
+    shipping_address: Pick<AddressTypes, "country" | "state">,
     order_id: string,
     status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
@@ -164,7 +164,7 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
   },
   updateGalleryOrderActionModalData: (
     buyer: string,
-    shipping_address: AddressTypes,
+    shipping_address: Pick<AddressTypes, "country" | "state">,
     order_id: string,
     status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
@@ -185,13 +185,8 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
       galleryOrderActionModalData: {
         buyer: "",
         shipping_address: {
-          address_line: "",
-          city: "",
           country: "",
           state: "",
-          zip: "",
-          countryCode: "",
-          stateCode: "",
         },
         order_id: "",
         artwork: {

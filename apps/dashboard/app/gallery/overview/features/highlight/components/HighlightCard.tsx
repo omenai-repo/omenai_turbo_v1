@@ -1,4 +1,5 @@
 "use client";
+import { Loader, Skeleton } from "@mantine/core";
 import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { fetchHighlightData } from "@omenai/shared-services/overview_highlights/fetchHighlightData";
 import { GallerySchemaTypes } from "@omenai/shared-types";
@@ -21,24 +22,22 @@ export default function HighlightCard({ tag }: HightlightCardProps) {
     queryFn: async () => {
       const data = await fetchHighlightData(
         tag,
-        (session as GallerySchemaTypes).gallery_id,
-        (session as GallerySchemaTypes).subscription_status.active
+        (session as GallerySchemaTypes).gallery_id
       );
       return data;
     },
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading) return <LoadSmall />;
-
   return (
     <div className="flex flex-col">
-      <h4 className="font-medium text-base text-gray-700">{data}</h4>
-      {/* <p className=" font-normal text-[13px] flex gap-x-1 items-center w-full whitespace-nowrap">
-        <IoIosTrendingUp className="text-green-600" />{" "}
-        <span className="text-green-600 font-semibold"> 9.5% </span>up from
-        yesterday
-      </p> */}
+      {isLoading ? (
+        <div className="mt-2">
+          <Loader color="rgba(255, 255, 255, 1)" size="xs" type="bars" />
+        </div>
+      ) : (
+        <h1 className="font-semibold text-base text-white">{data}</h1>
+      )}
     </div>
   );
 }

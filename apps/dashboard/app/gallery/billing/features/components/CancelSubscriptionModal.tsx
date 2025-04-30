@@ -104,14 +104,14 @@ export default function CancelSubscriptionModal({
                   <div className="flex gap-3 text-[15px]">
                     <button
                       disabled={loading}
-                      className=" h-[40px] px-4 rounded-full text-white disabled:cursor-not-allowed text-[13px] bg-dark hover:bg-dark/90 duration-200"
+                      className=" h-[35px] px-4 rounded-full text-white disabled:cursor-not-allowed text-[13px] bg-dark hover:bg-dark/90 duration-200"
                       onClick={() => updateOpenModal()}
                     >
                       Close
                     </button>
                     <button
                       disabled={loading}
-                      className=" h-[40px] px-4 text-white rounded-full disabled:cursor-not-allowed text-[13px] bg-red-600 hover:bg-red-600/90 duration-200"
+                      className=" h-[35px] px-4 text-white rounded-full disabled:cursor-not-allowed text-[13px] bg-red-600 hover:bg-red-600/90 duration-200"
                       color="gray"
                       onClick={cancel_subscription}
                     >

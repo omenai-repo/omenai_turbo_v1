@@ -21,8 +21,10 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
     ) {
       processing_orders.push(order);
     } else if (
-      order.status === "completed" &&
-      order.shipping_details.delivery_confirmed
+      (order.order_accepted.status === "accepted" &&
+        order.status === "completed" &&
+        order.shipping_details.delivery_confirmed) ||
+      order.order_accepted.status === "declined"
     ) {
       completed_orders.push(order);
     }

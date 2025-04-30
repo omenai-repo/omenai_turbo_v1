@@ -124,7 +124,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.name}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40"
                 />
               </div>
               <div className="relative w-full">
@@ -138,7 +138,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={session?.email}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[40px] p-6 rounded-full placeholder:text-gray-700/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-gray-700/40"
                 />
               </div>
               <div className="relative w-full flex flex-col">
@@ -200,7 +200,7 @@ export default function GetStartedWithStripe() {
                 <button
                   type="submit"
                   disabled={accountCreatePending}
-                  className="h-[40px] p-6 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                  className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                 >
                   {accountCreatePending ? (
                     <LoadSmall />
@@ -214,7 +214,7 @@ export default function GetStartedWithStripe() {
             {connectedAccountId && (
               <button
                 disabled={accountLinkCreatePending}
-                className="h-[40px] p-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
+                className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-[14px] font-normal"
                 onClick={handleAccountLink}
               >
                 {accountLinkCreatePending ? (
