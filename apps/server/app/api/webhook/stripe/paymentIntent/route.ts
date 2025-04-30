@@ -20,6 +20,9 @@ import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/
 import { sendPaymentPendingMail } from "@omenai/shared-emails/src/models/payment/sendPaymentPendingMail";
 import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessGalleryMail";
 import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 
 export async function POST(request: Request) {
   const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET!;
@@ -47,14 +50,29 @@ export async function POST(request: Request) {
   const meta = paymentIntent.metadata;
 
   const client = await connectMongoDB();
-
-  const email_order_info = await CreateOrder.findOne(
+  const order_info = await CreateOrder.findOne(
     {
       "buyer_details.email": meta.buyer_email,
       "artwork_data.art_id": meta.art_id,
     },
     "artwork_data order_id createdAt buyer_details"
   );
+
+  if (event.type === "payment_intent.processing") {
+    await sendPaymentPendingMail({
+      email: meta.buyer_email,
+      name: order_info.buyer_details.name,
+      artwork: order_info.artwork_data.title,
+    });
+  }
+
+  if (event.type === "payment_intent.payment_failed") {
+    await sendPaymentFailedMail({
+      email: meta.buyer_email,
+      name: order_info.buyer.name,
+      artwork: order_info.artwork_data.title,
+    });
+  }
 
   if (event.type === "payment_intent.succeeded") {
     // Then define and call a method to handle the successful payment intent.
@@ -160,6 +178,30 @@ export async function POST(request: Request) {
       // Once all operations are run with no errors, commit the transaction
       await session.commitTransaction();
 
+      const price = formatPrice(paymentIntent.amount_received / 100, currency);
+
+      await createWorkflow(
+        "/api/workflows/shipment/create_shipment",
+        `create_shipment_${generateDigit(6)}`,
+        JSON.stringify({ order_id: order_info.order_id })
+      );
+
+      await createWorkflow(
+        "/api/workflows/emails/sendPaymentSuccessMail",
+        `send_payment_success_mail${generateDigit(6)}`,
+        JSON.stringify({
+          buyer_email: meta.buyer_email,
+          buyer_name: order_info.buyer_details.name,
+          artwork_title: order_info.artwork_data.title,
+          order_id: order_info.order_id,
+          order_date: order_info.createdAt,
+          transaction_id: transaction_id,
+          price,
+          seller_email: meta.seller_email,
+          seller_name: meta.seller_name,
+        })
+      );
+
       console.log("Transaction committed.");
     } catch (error) {
       console.log("An error occurred during the transaction:" + error);
@@ -174,53 +216,8 @@ export async function POST(request: Request) {
     }
 
     // Catch error above
-
-    const price = formatPrice(paymentIntent.amount_received / 100, currency);
-
-    await sendPaymentSuccessMail({
-      email: meta.buyer_email,
-      name: email_order_info.buyer_details.name,
-      artwork: email_order_info.artwork_data.title,
-      order_id: email_order_info.order_id,
-      order_date: formatIntlDateTime(email_order_info.createdAt),
-      transactionId: transaction_id,
-      price,
-    });
-
-    // Send mail to gallery
-    await sendPaymentSuccessGalleryMail({
-      email: meta.gallery_email,
-      name: meta.gallery_name,
-      artwork: meta.artwork_name,
-      order_id: email_order_info.order_id,
-      order_date: formatIntlDateTime(email_order_info.createdAt),
-      transaction_Id: transaction_id,
-      price,
-    });
   }
 
-  if (event.type === "payment_intent.processing") {
-    await sendPaymentPendingMail({
-      email: meta.buyer_email,
-      name: email_order_info.buyer_details.name,
-      artwork: email_order_info.artwork_data.title,
-    });
-  }
-
-  if (event.type === "payment_intent.payment_failed") {
-    await sendPaymentFailedMail({
-      email: meta.buyer_email,
-      name: email_order_info.buyer.name,
-      artwork: email_order_info.artwork_data.title,
-    });
-  }
-
-  const release_lock_status = await releaseOrderLock(
-    meta.art_id,
-    meta.buyer_id
-  );
-
-  if (!release_lock_status?.isOk) return NextResponse.json({ status: 400 });
   // Return a 200 response to acknowledge receipt of the event
   return NextResponse.json({ status: 200 });
 }

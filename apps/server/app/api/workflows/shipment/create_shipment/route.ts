@@ -19,6 +19,8 @@ import {
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
+import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
+import { CreateOrderModelTypes } from "@omenai/shared-types";
 type Payload = {
   order_id: string;
 };
@@ -36,11 +38,21 @@ export const { POST } = serve<Payload>(async (ctx) => {
     const session = await client.startSession();
     session.startTransaction();
     try {
-      const order = await CreateOrder.findOne({ order_id: payload.order_id });
+      const order:
+        | (CreateOrderModelTypes & {
+            createdAt: string;
+            updatedAt: string;
+          })
+        | null = await CreateOrder.findOne({ order_id: payload.order_id });
       if (!order)
         throw new NotFoundError(
           `Order with order_id: ${payload.order_id} not found`
         );
+
+      await LockMechanism.deleteOne({
+        user_id: order.buyer_details.id,
+        art_id: order.artwork_data.art_id,
+      }).session(session);
 
       const data = buildShipmentData(order);
 

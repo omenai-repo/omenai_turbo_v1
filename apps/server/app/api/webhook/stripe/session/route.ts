@@ -2,6 +2,7 @@ import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/
 import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
@@ -13,6 +14,7 @@ import {
   PurchaseTransactionPricing,
 } from "@omenai/shared-types";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
@@ -57,6 +59,14 @@ export async function POST(request: Request) {
 
     try {
       session.startTransaction();
+
+      const order_info = await CreateOrder.findOne(
+        {
+          "buyer_details.email": meta.buyer_email,
+          "artwork_data.art_id": meta.art_id,
+        },
+        "artwork_data order_id createdAt buyer_details"
+      ).session(session);
 
       // Check if the transaction already exists
       const existingTransaction = await PurchaseTransactions.findOne({
@@ -130,11 +140,6 @@ export async function POST(request: Request) {
         session,
       });
 
-      const releaseOrderLockPromise = releaseOrderLock(
-        meta.art_id,
-        meta.buyer_id
-      );
-
       const updateManyOrdersPromise = CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
@@ -148,13 +153,35 @@ export async function POST(request: Request) {
         updateOrderPromise,
         updateArtworkPromise,
         createSalesActivityPromise,
-        releaseOrderLockPromise,
         updateManyOrdersPromise,
       ]);
 
       transaction_id = createTransactionResult[0].trans_id;
 
       await session.commitTransaction();
+      const price = formatPrice(paymentIntent.amount_total, currency);
+
+      await createWorkflow(
+        "/api/workflows/shipment/create_shipment",
+        `create_shipment_${generateDigit(6)}`,
+        JSON.stringify({ order_id: order_info.order_id })
+      );
+
+      await createWorkflow(
+        "/api/workflows/emails/sendPaymentSuccessMail",
+        `send_payment_success_mail${generateDigit(6)}`,
+        JSON.stringify({
+          buyer_email: meta.buyer_email,
+          buyer_name: order_info.buyer_details.name,
+          artwork_title: order_info.artwork_data.title,
+          order_id: order_info.order_id,
+          order_date: order_info.createdAt,
+          transaction_id: transaction_id,
+          price,
+          seller_email: meta.seller_email,
+          seller_name: meta.seller_name,
+        })
+      );
       console.log("Transaction committed.");
     } catch (error) {
       console.error("An error occurred during the transaction:", error);
@@ -163,53 +190,13 @@ export async function POST(request: Request) {
     } finally {
       await session.endSession();
     }
-
-    const email_order_info = await CreateOrder.findOne(
-      {
-        "buyer_details.email": meta.buyer_email,
-        "artwork_data.art_id": meta.art_id,
-      },
-      "artwork_data order_id createdAt buyer_details"
-    );
-
-    const price = formatPrice(paymentIntent.amount_total / 100, currency);
-
-    // Send emails asynchronously
-    sendPaymentSuccessMail({
-      email: meta.buyer_email,
-      name: email_order_info.buyer_details.name,
-      artwork: email_order_info.artwork_data.title,
-      order_id: email_order_info.order_id,
-      order_date: formatIntlDateTime(email_order_info.createdAt),
-      transactionId: transaction_id,
-      price,
-    }).catch((err) =>
-      console.error("Failed to send payment success email:", err)
-    );
-
-    sendPaymentSuccessGalleryMail({
-      email: meta.seller_email,
-      name: meta.seller_name,
-      artwork: meta.artwork_name,
-      order_id: email_order_info.order_id,
-      order_date: formatIntlDateTime(email_order_info.createdAt),
-      transaction_Id: transaction_id,
-      price,
-    }).catch((err) =>
-      console.error("Failed to send payment success gallery email:", err)
-    );
   }
 
   if (event.type === "checkout.session.expired") {
     const paymentIntent = event.data.object;
     const meta = paymentIntent.metadata;
 
-    const release_lock_status = await releaseOrderLock(
-      meta.art_id,
-      meta.buyer_id
-    );
-
-    if (!release_lock_status?.isOk) return NextResponse.json({ status: 400 });
+    await releaseOrderLock(meta.art_id, meta.buyer_id);
   }
 
   return NextResponse.json({ status: 200 });

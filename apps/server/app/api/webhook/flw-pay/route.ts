@@ -24,7 +24,6 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
-import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
@@ -342,11 +341,6 @@ async function handlePurchaseTransaction(
         session,
       });
 
-      const releaseOrderLockPromise = releaseOrderLock(
-        meta.art_id,
-        meta.buyer_id
-      );
-
       const updateManyOrdersPromise = CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
@@ -375,7 +369,6 @@ async function handlePurchaseTransaction(
         updateOrderPromise,
         updateArtworkPromise,
         createSalesActivityPromise,
-        releaseOrderLockPromise,
         updateManyOrdersPromise,
         fund_wallet,
       ]);
