@@ -111,6 +111,12 @@ export const { POST } = serve<Payload>(async (ctx) => {
         }
       );
 
+      await FailedJob.deleteOne({
+        jobId: payload.order_id,
+        jobType: "create_shipment",
+      });
+
+      session.commitTransaction();
       await createWorkflow(
         "/api/workflows/emails/sendShipmentEmail",
         `email_workflow_${generateDigit(2)}`,
@@ -123,13 +129,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
           fileContent: waybillDocBase64,
         })
       );
-
-      await FailedJob.deleteOne({
-        jobId: payload.order_id,
-        jobType: "create_shipment",
-      });
-
-      session.commitTransaction();
       return true;
     } catch (error: any) {
       await handleWorkflowError(error, session, payload);
