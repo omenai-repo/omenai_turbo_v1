@@ -1,0 +1,4 @@
+1. Orders that are declined should not be accounted for as processing when trying to repurchase it
+2. Update order request mail sent to gallery to remove the information that indicates they will add the quote data
+3. Update all emails
+4. Set up 24 hr limit for purchase

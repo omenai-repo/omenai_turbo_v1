@@ -1,7 +1,7 @@
 const dt = {
   plannedShippingDateAndTime: "2022-10-19T19:19:40 GMT+00:00",
   pickup: {
-    isRequested: false,
+    isRequested: true,
   },
   productCode: "P",
   localProductCode: "P",

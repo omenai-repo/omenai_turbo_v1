@@ -123,3 +123,27 @@ export function getUserFriendlyError(dhlErrorMessage: string): string {
   // Return a generic friendly message if the error code is unknown or extraction fails
   return "An unexpected error occurred. Please try again later or contact support.";
 }
+
+export async function getLatLng(
+  location: string
+): Promise<{ lat: number; lng: number } | null> {
+  const accessKey = process.env.POSITION_STACK_API;
+
+  const url = `http://api.positionstack.com/v1/forward?access_key=${accessKey}&query=${encodeURIComponent(location)}&limit=1`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data?.data?.length > 0) {
+      const result = data.data[0];
+      console.log(result);
+      return { lat: result.latitude, lng: result.longitude };
+    } else {
+      console.warn("No results found for location:", location);
+      return null;
+    }
+  } catch (error) {
+    console.error("Geocoding error:", error);
+    return null;
+  }
+}

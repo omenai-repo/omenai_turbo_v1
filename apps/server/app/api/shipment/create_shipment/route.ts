@@ -123,16 +123,17 @@ export async function POST(request: NextRequest) {
     customerDetails: {
       shipperDetails: {
         postalAddress: {
-          postalCode: seller_details.address.zip,
-          cityName: seller_details.address.city,
-          countryCode: seller_details.address.countryCode,
-          addressLine1: seller_details.address.address_line,
+          postalCode: "60616",
+          cityName: "Illinois",
+          countryCode: "US",
+          addressLine1: "2035 S State St",
+          countryName: "UNITED STATES OF AMERICA",
         },
         contactInformation: {
-          email: seller_details.email,
-          phone: seller_details.phone,
-          companyName: "OMENAI INC",
-          fullName: seller_details.fullname,
+          email: "gbenro@omenai.net",
+          phone: " +7733521307",
+          companyName: "OMENAI INC.",
+          fullName: "OMENAI Incorporated",
         },
       },
       receiverDetails: {
