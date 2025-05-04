@@ -1,5 +1,12 @@
-module.exports = {
-  /** @type {import('next').NextConfig} */
+// module.exports = {
+//   /** @type {import('next').NextConfig} */
+
+// };
+
+// next.config.mjs
+import { withHighlightConfig } from "@highlight-run/next/config";
+
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -28,4 +35,7 @@ module.exports = {
       },
     ],
   },
+  // ...additional config
 };
+
+export default withHighlightConfig(nextConfig as any);

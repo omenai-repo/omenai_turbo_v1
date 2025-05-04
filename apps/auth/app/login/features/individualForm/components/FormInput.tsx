@@ -12,6 +12,7 @@ import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { auth_uri, base_url } from "@omenai/url-config/src/config";
+import { H } from "@highlight-run/next/client";
 
 export default function FormInput() {
   const router = useRouter();
@@ -82,6 +83,11 @@ export default function FormInput() {
           if (session.verified) {
             if (url === "" || url === null) {
               set_redirect_uri("");
+              H.identify(session.email, {
+                id: session.user_id as string,
+                name: session.name,
+                role: session.role,
+              });
               router.replace(base_uri);
               router.refresh();
             } else {

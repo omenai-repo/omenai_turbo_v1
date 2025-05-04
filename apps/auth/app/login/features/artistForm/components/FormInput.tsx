@@ -16,6 +16,7 @@ import {
   base_url,
   dashboard_url,
 } from "@omenai/url-config/src/config";
+import { H } from "@highlight-run/next/client";
 
 export default function FormInput() {
   const router = useRouter();
@@ -87,6 +88,11 @@ export default function FormInput() {
           if (session.verified) {
             if (url === "" || url === null) {
               set_redirect_uri("");
+              H.identify(session.email, {
+                id: session.artist_id as string,
+                name: session.name,
+                role: session.role,
+              });
               // TODO: Redirect to artist dashboard
               session.isOnboardingCompleted
                 ? router.replace(`${dashboard_uri}/artist/app/overview`)

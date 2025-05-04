@@ -1,5 +1,6 @@
 import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessGalleryMail";
 import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
@@ -21,7 +22,9 @@ import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonth
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   const secretHash = process.env.STRIPE_CHECKOUT_SESSION_WEBHOOK_SECRET!;
   const rawBody = await request.text();
 
@@ -200,4 +203,4 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ status: 200 });
-}
+});

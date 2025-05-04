@@ -42,7 +42,7 @@ export default function GalleryDashboardLayout({
               className={`w-full xl:ml-[19rem] md:ml-[15rem]  rounded-xl relative duration-200`}
             >
               <Appbar />
-              <div className="h-auto rounded-lg relative my-5 px-5">
+              <div className="h-auto rounded-lg relative my-5">
                 <UploadOrderRejectionReason />
                 <UpdatePasswordModal />
                 <DeleteAccountConfirmationModal />

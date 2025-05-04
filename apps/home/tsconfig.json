@@ -18,7 +18,8 @@
     "app/catalog/components/FilterOptionBox.tsx",
     "app/catalog/components/FilterActions.tsx",
     "app/catalog/components/Filter.tsx",
-    "app/catalog/components/CancelFilter.tsx"
+    "app/catalog/components/CancelFilter.tsx",
+    "../../arc.d.ts"
   ],
   "exclude": ["node_modules"]
 }

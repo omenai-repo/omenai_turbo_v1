@@ -1,13 +1,16 @@
 "use client";
 
 import { DotLoader, PulseLoader } from "react-spinners";
-import Lottie from "lottie-react";
 import animationData from "@omenai/shared-json/src/black_loader.json";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Dynamically import Lottie with SSR turned off
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 // import "@dotlottie/react-player/dist/index.css";
 export default function Load() {
   return (
-    <div className="w-fit flex justify-center items-center">
+    <div className="w-full h-[calc(100dvh-10rem)] grid place-items-center">
       <Lottie
         animationData={animationData}
         loop

@@ -11,6 +11,8 @@ import { Toaster } from "sonner";
 import type { Viewport } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import { HighlightInit } from "@highlight-run/next/client";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -35,26 +37,38 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession();
   return (
-    <html lang="en">
-      <body className={`${dm_sans.className} flex flex-col justify-center`}>
-        <NextTopLoader color="#1A1A1A" height={6} />
-        <Toaster
-          position="top-right"
-          expand
-          visibleToasts={3}
-          closeButton
-          duration={7000}
-        />
-        <SessionProvider session={session}>
-          <QueryProvider>
-            <LoginModal />
-            <RecoveryModal />
-            <OrderReceivedModal />
-            <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
-            <Analytics />
-          </QueryProvider>
-        </SessionProvider>
-      </body>
-    </html>
+    <>
+      <HighlightInit
+        projectId={"ng2zpqyg"}
+        serviceName="Omenai root domain"
+        tracingOrigins
+        networkRecording={{
+          enabled: true,
+          recordHeadersAndBody: true,
+          urlBlocklist: [],
+        }}
+      />
+      <html lang="en">
+        <body className={`${dm_sans.className} flex flex-col justify-center`}>
+          <NextTopLoader color="#1A1A1A" height={6} />
+          <Toaster
+            position="top-right"
+            expand
+            visibleToasts={3}
+            closeButton
+            duration={7000}
+          />
+          <SessionProvider session={session}>
+            <QueryProvider>
+              <LoginModal />
+              <RecoveryModal />
+              <OrderReceivedModal />
+              <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
+              <Analytics />
+            </QueryProvider>
+          </SessionProvider>
+        </body>
+      </html>
+    </>
   );
 }

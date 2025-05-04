@@ -65,7 +65,8 @@
     "DHL_SHIPPER_PHONE",
     "DHL_SHIPPER_EMAIL",
     "CALENDARIFIC_API_KEY",
-    "POSITION_STACK_API"
+    "POSITION_STACK_API",
+    "GOOGLE_MAPS_API_KEY"
   ],
 
   "tasks": {
@@ -136,7 +137,8 @@
         "DHL_SHIPPER_PHONE",
         "DHL_SHIPPER_EMAIL",
         "CALENDARIFIC_API_KEY",
-        "POSITION_STACK_API"
+        "POSITION_STACK_API",
+        "GOOGLE_MAPS_API_KEY"
       ]
     },
     "lint": {

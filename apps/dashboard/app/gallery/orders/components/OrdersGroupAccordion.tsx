@@ -14,6 +14,7 @@ import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { useSession } from "@omenai/package-provider/SessionProvider";
+import Link from "next/link";
 
 export function OrdersGroupAccordion({
   orders,
@@ -228,9 +229,11 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "track" && (
           <div className="mt-5">
-            <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
-              Track this shipment
-            </button>
+            <Link href={`/gallery/orders/tracking${order.order_id}`}>
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
+                Track this shipment
+              </button>
+            </Link>
           </div>
         )}
         {renderButtonAction({

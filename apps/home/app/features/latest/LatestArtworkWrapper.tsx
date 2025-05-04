@@ -24,6 +24,8 @@ export default function LatestArtworkWrapper({
 
   if (isLoading) return <SectionLoaderContainers title="Latest artworks" />;
 
+  console.log(artworks);
+
   return (
     <div className="">
       <div className="flex md:flex-row flex-col gap-4 mb-5">
@@ -39,10 +41,10 @@ export default function LatestArtworkWrapper({
 
           <div className="hidden sm:flex flex-col items-end">
             <p className="text-fluid-base font-bold">Fresh Off the Easel:</p>
-            <p className="justify-self-end font-medium text-fluid-xxs text-fluid-xxs">
+            <p className="justify-self-end font-medium text-fluid-xxs">
               Explore the newest
             </p>
-            <p className="justify-self-end font-medium text-fluid-xxs text-fluid-xxs">
+            <p className="justify-self-end font-medium text-fluid-xxs">
               masterpieces, just for you
             </p>
           </div>

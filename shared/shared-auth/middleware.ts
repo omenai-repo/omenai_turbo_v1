@@ -2,16 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, refreshSession } from "./lib/auth/session";
 import { base_url, auth_uri } from "@omenai/url-config/src/config";
 
-const allowed_origins = [
-  "https://auth.omenai.app",
-  "https://dashboard.omenai.app",
-  "https://admin.omenai.app",
-  "https://omenai.app",
-  "http://localhost",
-  "https://prodtest.omenai.app",
-  "https://v1.omenai.app",
-];
-
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const artistDashboardRegex = /\/artist\/.*/;

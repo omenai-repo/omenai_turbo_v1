@@ -37,13 +37,13 @@ export default function PageLayout() {
       className={` h-screen hidden fixed left-0 top-0 sm:block xl:w-72 md:w-56`}
       id="navigation-items"
     >
-      <div className="flex relative flex-col p-5 h-full">
+      <div className="flex relative flex-col px-5 pt-5 h-full">
         <div className={` py-5 w-full`}>
           <ArtistLogo />
         </div>
 
         {/* Nav items */}
-        <div className="flex flex-col mt-6 w-full gap-y-8">
+        <div className="flex flex-col mt-4 w-full gap-y-4">
           {/* General navigation */}
           <div className="w-full">
             <ul className="flex flex-col gap-y-1 w-full">

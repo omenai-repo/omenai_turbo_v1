@@ -10,10 +10,11 @@ import { PiEyeSlashThin } from "react-icons/pi";
 import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { loginGallery } from "@omenai/shared-services/auth/gallery/loginGallery";
 import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/GalleryLoginStore";
-import { Form } from "@omenai/shared-types";
+import { Form, GallerySchemaTypes } from "@omenai/shared-types";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
+import { H } from "@highlight-run/next/client";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -71,7 +72,7 @@ export default function FormInput() {
           className: "class",
         });
       } else {
-        const session = await getServerSession();
+        const session = (await getServerSession()) as GallerySchemaTypes;
 
         if (session && session.role === "gallery") {
           toast.success("Operation successful", {
@@ -86,6 +87,11 @@ export default function FormInput() {
           if (session.verified) {
             if (url === "" || url === null) {
               set_redirect_uri("");
+              H.identify(session.email, {
+                id: session.gallery_id as string,
+                name: session.name,
+                role: session.role,
+              });
               router.replace(`${dashboard_base_url}/gallery/overview`);
               router.refresh();
             } else {

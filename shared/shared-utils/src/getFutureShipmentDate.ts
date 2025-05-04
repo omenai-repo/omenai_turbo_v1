@@ -1,5 +1,5 @@
 import { getUTCOffset } from "./getCountryTimezone";
-import { isHoliday } from "@omenai/shared-lib/holiday_check/isHoliday";
+import { isHoliday } from "../../shared-lib/holiday_check/isHoliday";
 export async function getFutureShipmentDate(
   days: number,
   withTime: boolean,
