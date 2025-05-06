@@ -144,3 +144,17 @@ body {
 .embla__slide:not(.is-snapped) {
   opacity: 0.16;
 }
+
+/* styles/globals.css */
+.custom-leaflet-popup .leaflet-popup-content-wrapper {
+  @apply bg-zinc-900 text-white rounded-lg shadow-lg p-3;
+  border: white;
+}
+
+.custom-leaflet-popup .leaflet-popup-tip {
+  @apply bg-zinc-900;
+}
+
+.custom-leaflet-popup .leaflet-popup-content {
+  @apply text-sm leading-snug;
+}

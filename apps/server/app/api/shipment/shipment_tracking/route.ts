@@ -1,3 +1,4 @@
+import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
 import { getLatLng, HEADERS } from "../resources";
 import {
@@ -17,26 +18,27 @@ export async function GET(request: NextRequest) {
     throw new BadRequestError("Invalid parameters - order_id required");
 
   await connectMongoDB();
-  const order_address = await CreateOrder.findOne(
+  const order = await CreateOrder.findOne(
     { order_id },
-    "shipping_details"
+    "shipping_details createdAt artwork_data"
   );
 
-  const tracking_number =
-    order_address.shipping_details.shipment_information.tracking.id;
+  if (!order) throw new NotFoundError("No order found for the given order id");
 
-  if (!order_address)
-    throw new NotFoundError("No order found for the given order id");
-  const origin_location = `${order_address.shipping_details.addresses.origin.zip}, ${order_address.shipping_details.addresses.origin.state}, ${order_address.shipping_details.addresses.origin.country}`;
-  const destination_location = `${order_address.shipping_details.addresses.destination.zip}, ${order_address.shipping_details.addresses.destination.state}, ${order_address.shipping_details.addresses.destination.country}`;
-  const get_origin_geo_location = await getLatLng(origin_location);
-  await sleep(1100);
-  const get_destination_geo_location = await getLatLng(destination_location);
+  const tracking_number =
+    order.shipping_details.shipment_information.tracking.id;
+
+  // const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
+  // const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
+  // const get_origin_geo_location = await getLatLng(origin_location);
+  // await sleep(1100);
+  // const get_destination_geo_location = await getLatLng(destination_location);
 
   // if (!get_origin_geo_location || !get_destination_geo_location)
   //   throw new ServerError("Unable to determine geo location coordinates");
 
-  const API_URL = `https://express.api.dhl.com/mydhlapi/test/shipments/${tracking_number}/tracking`;
+  // TODO: Change this url to the proper production url
+  const API_URL = `https://api-mock.dhl.com/mydhlapi/shipments/5786694760/tracking?trackingView=all&levelOfDetail=all-checkpoints&requestControlledAccessDataCodes=false&requestGMTOffsetPerEvent=false`;
 
   const url = new URL(API_URL);
   const requestOptions = {
@@ -46,20 +48,24 @@ export async function GET(request: NextRequest) {
 
   try {
     const response = await fetch(url.toString(), requestOptions);
+    const data = await response.json();
     if (!response.ok)
       throw new ServerError(
-        "Something went wrong. Please try again or contact support"
+        "Unable to fetch shipment event at the moment. Please try again later or contact support"
       );
 
-    const data = await response.json();
     return NextResponse.json(
       {
         message: "Successfully fetched shipment events",
         events: data.shipments[0].events,
-        coordinates: {
-          origin: get_origin_geo_location,
-          destination: get_destination_geo_location,
-        },
+        cordinates: {},
+        order_date: formatISODate(order.createdAt),
+        artwork_data: order.artwork_data,
+        tracking_number,
+        // coordinates: {
+        //   origin: get_origin_geo_location,
+        //   destination: get_destination_geo_location,
+        // },
       },
       { status: 200 }
     );

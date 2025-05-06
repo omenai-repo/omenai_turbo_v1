@@ -16,7 +16,7 @@ export const credentials = Buffer.from(`${API_KEY}:${API_SECRET}`).toString(
 // DHL API headers
 export const HEADERS = new Headers({
   "Content-Type": "application/json",
-  Authorization: `Basic ${credentials}`,
+  Authorization: `Basic ZGVtby1rZXk6ZGVtby1zZWNyZXQ='`,
   "x-version": DHL_API_VERSION,
 });
 

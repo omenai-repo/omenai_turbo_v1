@@ -33,6 +33,8 @@ export async function GET(request: NextRequest) {
       throw new ServerError("Price calculation failed");
     }
 
+    console.log(price, currency);
+
     // Get currency rate
     const response = await fetch(
       `https://api.omenai.app/api/flw/getTransferRate?source=${currency.toUpperCase()}&destination=USD&amount=${price}`,
@@ -44,12 +46,12 @@ export async function GET(request: NextRequest) {
         },
       }
     );
+    const result = await response.json();
 
     if (!response.ok)
       throw new ServerError(
         "Failed to calculate Price. Try again or contact support"
       );
-    const result = await response.json();
 
     const price_response_data = {
       price: result.data.source.amount,

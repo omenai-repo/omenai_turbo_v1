@@ -15,15 +15,22 @@ import arc from "arc";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { MarkerWithOpenPopup } from "./MapMarker";
 
 // // Fix missing marker icons (optional but common)
-// delete (L.Icon.Default.prototype as any)._getIconUrl;
+const icon = L.icon({
+  iconUrl: "https://img.icons8.com/color/48/marker--v1.png", // from public folder
+  iconSize: [48, 48],
+  iconAnchor: [23, 46],
+  popupAnchor: [0, -32],
+});
 
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-//   iconUrl: require("leaflet/dist/images/marker-icon.png"),
-//   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-// });
+const destinationIcon = L.icon({
+  iconUrl: "https://img.icons8.com/color/48/marker--v1.png", // remote
+  iconSize: [48, 48],
+  iconAnchor: [23, 46],
+  popupAnchor: [0, -32],
+});
 
 const origin: [number, number] = [41.8781, -87.6298]; // Illinois
 const destination: [number, number] = [6.5244, 3.3792]; // Lagos
@@ -33,7 +40,7 @@ function FitBounds() {
 
   useEffect(() => {
     const bounds = L.latLngBounds([origin, destination]);
-    map.fitBounds(bounds, { padding: [50, 50] });
+    map.fitBounds(bounds, { padding: [100, 100] });
   }, []);
 
   return null;
@@ -65,13 +72,17 @@ export default function MapView() {
         attribution='&copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      <Marker position={origin}>
-        <Popup>Origin: Illinois, USA</Popup>
-      </Marker>
+      <MarkerWithOpenPopup
+        position={origin}
+        icon={icon}
+        message="Origin: Illinois, USA"
+      />
 
-      <Marker position={destination}>
-        <Popup>Destination: Lagos, Nigeria</Popup>
-      </Marker>
+      <MarkerWithOpenPopup
+        position={destination}
+        icon={destinationIcon}
+        message="Destination: Lagos, Nigeria"
+      />
 
       <Polyline
         pathOptions={{ color: "#00bfff", weight: 2 }}

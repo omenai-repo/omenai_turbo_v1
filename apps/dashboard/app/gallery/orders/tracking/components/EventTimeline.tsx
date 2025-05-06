@@ -1,109 +1,114 @@
 "use client";
-import { Timeline, Text, ScrollArea, Divider } from "@mantine/core";
-import { PlaneTakeoff } from "lucide-react";
+import { Timeline, Text, ScrollArea, Divider, Paper } from "@mantine/core";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { MapPinCheckInside, PlaneTakeoff } from "lucide-react";
+import Image from "next/image";
 
-export default function EventTimeline({ events }: { events: any[] }) {
+function formatEventDate(input: string): string {
+  const date = new Date(input.replace(" ", "T")); // Ensures it's parsed correctly
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "short", // Mon
+    day: "2-digit", // 28
+    month: "short", // Apr
+    year: "numeric", // 2025
+    hour: "2-digit", // 12
+    minute: "2-digit", // 16
+    hour12: true, // AM/PM
+  };
+
+  return date.toLocaleString("en-US", options);
+}
+
+export default function EventTimeline({
+  events,
+  order_date,
+  artwork_data,
+  tracking_number,
+}: {
+  events: any[];
+  order_date: string;
+  artwork_data: any;
+  tracking_number: string;
+}) {
+  const image_url = getImageFileView(artwork_data.url, 100);
+
   return (
     <ScrollArea
       h={"100%"}
-      className="w-auto py-5 pr-5 h-full bg-white rounded-xl z-[1500]"
+      className="w-auto min-w-[350px] py-5 pr-5 h-full bg-white rounded-xl z-[1500]"
     >
-      <h5 className="text-fluid-base font-semibold mb-5">Shipment events</h5>
-      <Divider my={"md"} />
-      <Timeline active={1} bulletSize={20} color="#1a1a1a" lineWidth={2}>
-        <Timeline.Item
-          className="text-fluid-xs"
-          bullet={
-            <PlaneTakeoff size={12} strokeWidth={1.5} absoluteStrokeWidth />
-          }
-          title="New branch"
-        >
-          <Text c="dimmed" size="sm">
-            You&apos;ve created new branch{" "}
-            <Text
-              variant="link"
-              component="span"
-              inherit
-              className="text-fluid-xxs"
-            >
-              fix-notifications
-            </Text>{" "}
-            from master
-          </Text>
-          <Text size="xs" mt={4}>
-            2 hours ago
-          </Text>
-        </Timeline.Item>
+      <div className="space-y-2 mb-8">
+        {/* <h5 className="text-fluid-base font-semibold mb-5">Shipment events</h5> */}
+        <Paper shadow="xs" radius="lg" withBorder p={"sm"}>
+          <div className="flex gap-x-2">
+            <Image
+              src={image_url}
+              alt={artwork_data.title}
+              height={60}
+              width={60}
+              className="w-[60px] h-[60px] object-cover object-center rounded-[10px]"
+            />
+            <div className="whitespace-pre-wrap">
+              <p className="font-semibold text-fluid-xs">
+                {artwork_data.title}
+              </p>
+              <div>
+                <span className="text-fluid-xxs text-muted">
+                  Tracking number
+                </span>
+                <p className="font-bold text-fluid-xxs">#{tracking_number}</p>
+              </div>
+            </div>
+          </div>
+        </Paper>
+      </div>
 
+      {/* <Divider my={"md"} /> */}
+      <Timeline color="#1a1a1a" active={1} lineWidth={2} bulletSize={30}>
         <Timeline.Item
           className="text-fluid-xs"
           bullet={
-            <PlaneTakeoff size={12} strokeWidth={1.5} absoluteStrokeWidth />
+            <MapPinCheckInside
+              size={16}
+              strokeWidth={1.5}
+              absoluteStrokeWidth
+            />
           }
-          title="Commits"
+          title="Order created"
         >
-          <Text c="dimmed" size="sm">
-            You&apos;ve pushed 23 commits to
-            <Text
-              variant="link"
-              component="span"
-              inherit
-              className="text-fluid-xxs"
-            >
-              fix-notifications branch
-            </Text>
+          <Text c="dimmed" size="xs">
+            New Order placed. Awaiting pickup
           </Text>
           <Text size="xs" mt={4}>
-            52 minutes ago
+            {order_date}
           </Text>
         </Timeline.Item>
-
-        <Timeline.Item
-          title="Pull request"
-          className="text-fluid-xs"
-          bullet={
-            <PlaneTakeoff size={12} strokeWidth={1.5} absoluteStrokeWidth />
-          }
-          lineVariant="dashed"
-        >
-          <Text c="dimmed" size="sm">
-            You&apos;ve submitted a pull request
-            <Text
-              variant="link"
-              component="span"
-              inherit
-              className="text-fluid-xxs"
+        {events.map((event) => {
+          return (
+            <Timeline.Item
+              key={event.description}
+              className="text-fluid-xs"
+              bullet={
+                <MapPinCheckInside
+                  size={16}
+                  strokeWidth={1.5}
+                  absoluteStrokeWidth
+                />
+              }
+              title={event.description}
             >
-              Fix incorrect notification message (#187)
-            </Text>
-          </Text>
-          <Text size="xs" mt={4}>
-            34 minutes ago
-          </Text>
-        </Timeline.Item>
-
-        <Timeline.Item
-          title="Code review"
-          className="text-fluid-xs"
-          bullet={
-            <PlaneTakeoff size={12} strokeWidth={1.5} absoluteStrokeWidth />
-          }
-        >
-          <Text c="dimmed" size="sm">
-            <Text
-              variant="link"
-              component="span"
-              inherit
-              className="text-fluid-xxs"
-            >
-              Robert Gluesticker
-            </Text>{" "}
-            left a code review on your pull request
-          </Text>
-          <Text size="xs" mt={4}>
-            12 minutes ago
-          </Text>
-        </Timeline.Item>
+              <div className="space-y-3">
+                <Text c="dimmed" size="xs">
+                  {event.serviceArea.description}
+                </Text>
+                <Text size="xs" mt={4}>
+                  {formatEventDate(`${event.date} ${event.time}`)}
+                </Text>
+              </div>
+            </Timeline.Item>
+          );
+        })}
       </Timeline>
     </ScrollArea>
   );

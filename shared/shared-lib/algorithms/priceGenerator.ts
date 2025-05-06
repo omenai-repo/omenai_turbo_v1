@@ -53,11 +53,3 @@ export const calculatePrice = (
 
   return Math.round(price); // Round to nearest whole number
 };
-
-// Example Usage
-console.log(calculatePrice("Emerging", "Oil on canvas/panel", 50, 50)); // Medium-sized artwork
-console.log(
-  calculatePrice("Established", "Sculpture (Bronze/stone/metal)", 120, 120)
-); // Extra large artwork
-console.log(calculatePrice("Mid-Career", "Photography", 30, 30)); // Small artwork
-console.log(calculatePrice("Elite", "Mixed media on paper/canvas", 100, 100)); // Large artwork

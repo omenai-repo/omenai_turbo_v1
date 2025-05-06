@@ -22,23 +22,25 @@ export default function Load() {
 }
 export const HomeLoad = () => {
   return (
-    <div className="w-fit flex flex-col justify-center items-center">
-      <Lottie
-        animationData={animationData}
-        loop
-        autoplay
-        style={{ width: 150 }}
-      />
+    <div className="w-full h-[calc(100dvh-10rem)] grid place-items-center">
+      <div>
+        <Lottie
+          animationData={animationData}
+          loop
+          autoplay
+          style={{ width: 150 }}
+        />
 
-      <Image
-        src={
-          "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
-        }
-        alt="omenai logo"
-        width={130}
-        height={50}
-        priority={true}
-      />
+        <Image
+          src={
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
+          }
+          alt="omenai logo"
+          width={130}
+          height={50}
+          priority={true}
+        />
+      </div>
     </div>
   );
 };
