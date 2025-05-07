@@ -1,6 +1,6 @@
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
-import { getLatLng, HEADERS } from "../resources";
+import { getLatLng, HEADERS, TRACKING_HEADER } from "../resources";
 import {
   BadRequestError,
   NotFoundError,
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
   const url = new URL(API_URL);
   const requestOptions = {
     method: "GET",
-    headers: HEADERS,
+    headers: TRACKING_HEADER,
   };
 
   try {
