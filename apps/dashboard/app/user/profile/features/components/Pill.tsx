@@ -12,7 +12,7 @@ export default function Pill({ text }: PillProps) {
     <button
       type="button"
       onClick={() => setProfileUpdateData("preferences", text)}
-      className={`rounded-full w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0]  transition-all ease-linear duration-100 px-3 py-1 
+      className={`rounded-full w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0]  transition-all ease-linear duration-100 px-3 py-2 
     ${
       updateData?.preferences?.includes(text)
         ? "bg-dark text-white"

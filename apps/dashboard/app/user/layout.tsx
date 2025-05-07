@@ -12,7 +12,7 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="2xl:px-12 xl:px-8 px-4">
+    <div className="2xl:px-12 xl:px-8">
       <NextTopLoader color="#1A1A1A" height={6} />
 
       <DesktopNavbar />

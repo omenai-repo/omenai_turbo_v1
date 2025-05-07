@@ -46,7 +46,7 @@ export default function Form({
             onChange={onchange}
             required
             name={name}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/30 placeholder:text-fluid-xxs"
+            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/30 placeholder:text-fluid-xs"
             type="number"
             placeholder="Enter a number"
           />

@@ -167,7 +167,7 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter length after packaging  in centimeters"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
@@ -183,7 +183,7 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter height after packaging in centimeters"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
@@ -199,7 +199,7 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter width after packaging in centimeters"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs"
               />
             </div>
             <div className="relative w-full flex flex-col space-y-2">
@@ -215,7 +215,7 @@ export default function QuoteForm() {
                 type="number"
                 step="any"
                 placeholder="Enter weight after packaging in kilograms"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs"
               />
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function QuoteForm() {
                 name="specialInstructions"
                 placeholder="Enter any special instructions for picking up the piece (e.g., Ring the doorbell)."
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-fluid-xxs placeholder:text-dark font-light placeholder:text-fluid-xxs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                className="p-3 border border-[#E0E0E0] text-fluid-xxs placeholder:text-dark font-light placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
               />
             </div>
           </div>

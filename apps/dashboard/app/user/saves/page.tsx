@@ -69,7 +69,7 @@ export default function Saves() {
   );
 
   return (
-    <div className="p-2">
+    <div>
       <>
         <p className="text-fluid-xs font-bold my-4">
           {artwork_total} artworks:

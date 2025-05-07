@@ -123,7 +123,7 @@ export default function UpdatePasswordModalForm() {
   return (
     <div>
       <h1 className="text-fluid-sm font-bold mb-4 text-dark">
-        Update Password Information
+        Update Password
       </h1>
       <form onSubmit={handlePasswordUpdate}>
         <div className="space-y-2 mb-2 flex flex-col w-full">
@@ -140,7 +140,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               required
               placeholder="Enter a new password"
-              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
             />
           </div>
         </div>
@@ -158,7 +158,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               placeholder="Confirm your password"
               required
-              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
             />
           </div>
         </div>
@@ -177,11 +177,11 @@ export default function UpdatePasswordModalForm() {
               type="text"
               placeholder="Enter confirmation code"
               required
-              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+              className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
             />
           </div>
 
-          <div className="absolute right-0 translate-y-[25%] top-[4px]">
+          <div className="absolute right-0 translate-y-[25%] top-[6px]">
             <button
               type="button"
               onClick={requestConfirmationCode}

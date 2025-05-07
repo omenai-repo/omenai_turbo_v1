@@ -8,9 +8,9 @@ export const UserBanner = () => {
   const { session } = useContext(SessionContext);
 
   return (
-    <div className="my-5 mx-5 lg:mx-0 flex items-center flex-col justify-center">
+    <div className="my-5 flex items-center flex-col justify-center">
       <div className="w-full flex justify-between items-center">
-        <h1 className="text-fluid-sm font-bold">Profile</h1>
+        <h1 className="text-fluid-sm font-semibold">Profile</h1>
         <div className="flex items-center gap-x-1 px-4 py-2 rounded-full bg-dark text-white">
           <p className="text-fluid-xs">
             Status:{" "}

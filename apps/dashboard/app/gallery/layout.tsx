@@ -3,7 +3,7 @@ import NextTopLoader from "nextjs-toploader";
 import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
-import NoMobileView from "./components/NoMobileView";
+import NoMobileView from "../components/NoMobileView";
 
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";

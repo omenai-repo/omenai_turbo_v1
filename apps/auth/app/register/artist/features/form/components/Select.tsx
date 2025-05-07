@@ -92,7 +92,7 @@ export default function SelectInput({
                 (artistSignupData.state === "" ||
                   artistSignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
+            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
           >
             <option value="" className="text-dark/40">
               Select {labelText}

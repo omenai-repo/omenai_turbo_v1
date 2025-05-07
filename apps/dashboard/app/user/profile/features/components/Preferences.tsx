@@ -21,7 +21,7 @@ export default function Preferences() {
     <AnimatePresence>
       <label
         htmlFor="artType-preferences"
-        className="text-fluid-xs font-normal text-dark"
+        className="text-fluid-xs font-medium text-dark"
       >
         Preferences
       </label>

@@ -214,7 +214,7 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs"
               />
             </div>
 

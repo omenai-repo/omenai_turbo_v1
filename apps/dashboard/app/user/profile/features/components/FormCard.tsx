@@ -82,7 +82,7 @@ export const FormCard = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-5 space-y-8 lg:px-2">
+    <form onSubmit={handleSubmit} className="space-y-8 lg:px-2">
       <InputCard
         label="Full name"
         value={user?.name as string}

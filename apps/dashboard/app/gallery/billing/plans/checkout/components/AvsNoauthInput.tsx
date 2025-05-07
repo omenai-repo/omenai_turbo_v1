@@ -188,7 +188,7 @@ export default function AvsNoauthInput({
           onChange={handleInputChange}
           required={true}
           name="country"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
         >
           <option value="">Select Country</option>
           <>
@@ -217,7 +217,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === ""}
           required={true}
           name="state"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
         >
           <option value="">Select State</option>
           <>
@@ -246,7 +246,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === "" || address_info.state === ""}
           required={true}
           name="city"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
         >
           <option value="">Select City</option>
           <>
@@ -278,7 +278,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="e.g 7, example street"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
         />
       </div>
       <div className="relative w-fullS flex flex-col gap-y-1">
@@ -294,7 +294,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="ZIP"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
         />
       </div>
 

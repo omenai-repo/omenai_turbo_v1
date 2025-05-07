@@ -54,7 +54,7 @@ export default function RecoveryModalEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full w-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full w-full placeholder:text-dark/40 placeholder:text-fluid-xs"
         placeholder="Email address"
         required
         onChange={(e) => setEmail(e.target.value)}

@@ -18,26 +18,35 @@ export default function OrdersGroup({
 }) {
   const [tab, setTab] = useState("pending");
 
-  const pending_orders = orders.filter(
-    (order: CreateOrderModelTypes) =>
-      !order.shipping_details.delivery_confirmed && order.availability
-  ) as CreateOrderModelTypes[] & {
-    createdAt: string;
-    updatedAt: string;
-    _id: ObjectId;
-  };
+  const pending_orders: any = [];
+  const processing_orders: any = [];
+  const completed_orders: any = [];
 
-  const completed_orders = orders.filter(
-    (order: CreateOrderModelTypes) =>
-      order.shipping_details.delivery_confirmed || !order.availability
-  );
+  // Loop through orders once to classify them
+  orders.forEach((order: any) => {
+    if (order.order_accepted.status === "") {
+      pending_orders.push(order);
+    } else if (
+      order.order_accepted.status === "accepted" &&
+      !order.shipping_details.delivery_confirmed
+    ) {
+      pending_orders.push(order);
+    } else if (
+      (order.order_accepted.status === "accepted" &&
+        order.status === "completed" &&
+        order.shipping_details.delivery_confirmed) ||
+      order.order_accepted.status === "declined"
+    ) {
+      completed_orders.push(order);
+    }
+  });
 
   return (
     <>
-      <div className="w-full p-5 grid place-items-center container">
+      <div className="w-full p-4 grid place-items-center container">
         <OrdersTab tab={tab} setTab={setTab} />
       </div>
-      <div className="w-full h-full grid place-items-center container">
+      <div className="w-full h-full grid place-items-center md:container">
         {tab === "pending" ? (
           <Suspense fallback={<Load />}>
             <PendingOrders orders={pending_orders} />
