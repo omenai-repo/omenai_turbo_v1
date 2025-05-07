@@ -12,6 +12,11 @@ import type { Viewport } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { HighlightInit } from "@highlight-run/next/client";
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from "@mantine/core";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -48,7 +53,10 @@ export default async function RootLayout({
           urlBlocklist: [],
         }}
       />
-      <html lang="en">
+      <html lang="en" {...mantineHtmlProps}>
+        <head>
+          <ColorSchemeScript />
+        </head>
         <body className={`${dm_sans.className} flex flex-col justify-center`}>
           <NextTopLoader color="#1A1A1A" height={6} />
           <Toaster
@@ -60,11 +68,13 @@ export default async function RootLayout({
           />
           <SessionProvider session={session}>
             <QueryProvider>
-              <LoginModal />
-              <RecoveryModal />
-              <OrderReceivedModal />
-              <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
-              <Analytics />
+              <MantineProvider>
+                <LoginModal />
+                <RecoveryModal />
+                <OrderReceivedModal />
+                <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
+                <Analytics />
+              </MantineProvider>
             </QueryProvider>
           </SessionProvider>
         </body>

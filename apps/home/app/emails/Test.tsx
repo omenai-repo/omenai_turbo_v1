@@ -18,7 +18,7 @@ interface Props {
   artwork: string;
 }
 
-export const PaymentFailedEmail = ({ buyerName, artwork }: Props) => {
+export const PaymentFailedEmail = (buyerName: string, artwork: string) => {
   return (
     <Html>
       <Head />

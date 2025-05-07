@@ -2,16 +2,16 @@ import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
   Hr,
   Html,
-  Img,
-  Link,
   Tailwind,
+  Section,
+  Img,
   Text,
+  Link,
 } from "@react-email/components";
 
 const OrderAcceptedEmail = (
@@ -29,7 +29,7 @@ const OrderAcceptedEmail = (
       <Head />
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
+          <Container className=" rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
               src={
                 "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
@@ -37,9 +37,8 @@ const OrderAcceptedEmail = (
               width="120"
               height="20"
               alt="Omenai logo"
-              className="mx-auto mt-10"
+              className="mx-auto my-5"
             />
-
             <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
               Your order request has been accepted
             </Heading>
@@ -64,9 +63,9 @@ const OrderAcceptedEmail = (
               your purchase, please click on the following link to visit the
               artwork payment page:
             </Text>
-            <div className="w-full grid place-items-center text-center">
+            <div className="w-full grid place-items-left text-left">
               <Link
-                className="w-fit bg-dark text-white text-center px-5 cursor-pointer py-3"
+                className="w-fit bg-dark text-white text-fluid-xs text-left px-5 rounded-xl border-2 border-white cursor-pointer py-3"
                 href={`${url}/payment/${order_id}?id_key=${user_id}`}
               >
                 Pay for this artwork
@@ -94,20 +93,41 @@ const OrderAcceptedEmail = (
               Best regards, <br />
               Moses from Omenai
             </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
+
+            <Section className="text-left">
+              <table className="w-full">
+                <tr className="w-full">
+                  <td align="left">
+                    <Img
+                      src={
+                        "https://fra.cloud.appwrite.io/v1/storage/buckets/66aa1aa0001a0c51d892/files/68028808001793765300/view?project=66aa198b0038ad614178&mode=admin"
+                      }
+                      width="120"
+                      height="20"
+                      alt="Omenai logo"
+                      className=""
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td align="left">
+                    <Text className="font-normal text-fluid-xs text-dark leading-[24px]">
+                      123 Main Street Anytown, CA 12345
+                    </Text>
+                    <Text className="mb-0 font-normal text-fluid-xs text-dark leading-[24px]">
+                      mail@example.com +123456789
+                    </Text>
+                  </td>
+                </tr>
+              </table>
+            </Section>
+            <Hr className="my-8 border border-gray-200 " />
+            <Text className="text-[12px] leading-5 text-gray-600">
+              This message is intended only for <strong>{name}</strong>. If you
+              received it by mistake, please delete it and notify us
+              immediately. It may contain confidential and legally privileged
+              information.
             </Text>
           </Container>
         </Body>
