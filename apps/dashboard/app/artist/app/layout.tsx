@@ -3,7 +3,6 @@ import NextTopLoader from "nextjs-toploader";
 import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
-import NoMobileView from "./components/NoMobileView";
 
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
@@ -14,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { WithdrawalModal } from "./modals/WithdrawalModal";
 import { WalletPinModal } from "./modals/WalletPinModal";
+import NoMobileView from "../../components/NoMobileView";
 
 export default function GalleryDashboardLayout({
   children,
@@ -30,7 +30,7 @@ export default function GalleryDashboardLayout({
 
   return (
     <>
-      {width <= 991 ? (
+      {width <= 1280 ? (
         <NoMobileView />
       ) : (
         <div className=" w-full h-full">

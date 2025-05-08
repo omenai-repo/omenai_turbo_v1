@@ -5,12 +5,6 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function MobileBlockScreen() {
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth >= 768) {
-      window.location.href = "/dashboard"; // Optional: redirect desktop users back
-    }
-  }, []);
-
   return (
     <main className="min-h-screen  text-dark w-full flex items-center justify-center px-6 py-10">
       <div className="max-w-md w-full text-center space-y-6">

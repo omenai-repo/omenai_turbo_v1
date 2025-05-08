@@ -55,7 +55,7 @@ export default function GalleryDashboardLayout({
 
   return (
     <>
-      {width <= 991 ? (
+      {width <= 1280 ? (
         <NoMobileView />
       ) : (
         <div className=" w-full h-full">
