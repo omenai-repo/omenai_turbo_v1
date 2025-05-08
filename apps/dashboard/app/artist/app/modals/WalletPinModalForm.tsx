@@ -98,7 +98,7 @@ export default function WalletPinModalForm() {
     return false;
   };
   return (
-    <Paper radius={"xl"} className="flex flex-col space-y-6 p-8">
+    <Paper radius={"lg"} className="flex flex-col space-y-6 p-3">
       <p className="font-semibold">Create wallet Pin</p>
 
       <div className="flex flex-col space-y-3">

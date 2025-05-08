@@ -19,7 +19,7 @@ export default function DashboardIndicator() {
       <div>
         {lastPath === "editorials" && (
           <Link href={"/admin/dashboard/editorials/upload-editorial"}>
-            <button className="h-[45px] px-[20px] bg-[#1a1a1a] text-white text-[12px] rounded-md font-medium">
+            <button className="h-[40px] px-[20px] bg-[#1a1a1a] text-white text-[12px] rounded-md font-medium">
               Upload editorial
             </button>
           </Link>

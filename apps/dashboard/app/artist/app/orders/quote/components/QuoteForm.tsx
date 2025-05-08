@@ -8,7 +8,7 @@ import { BsCurrencyDollar } from "react-icons/bs";
 import { toast } from "sonner";
 import Image from "next/image";
 import { PiSealWarning } from "react-icons/pi";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@omenai/package-provider/SessionProvider";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
@@ -16,11 +16,33 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
-import { ShipmentDimensions } from "@omenai/shared-types";
+import {
+  CreateOrderModelTypes,
+  ShipmentDimensions,
+} from "@omenai/shared-types";
+import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
+import WarningAlert from "./WarningAlert";
+import { Checkbox } from "@mantine/core";
 
-export default function QuoteForm() {
-  const { artistOrderActionModalData, clearArtistOrderActionModalData } =
-    artistActionStore();
+export default function QuoteForm({ order_id }: { order_id: string }) {
+  const { data: order_data, isLoading } = useQuery({
+    queryKey: ["get_single_order"],
+    queryFn: async () => {
+      const response = await getSingleOrder(order_id);
+      if (!response?.isOk)
+        throw new Error(
+          response?.message || "Order data cannot be retrieved at this time"
+        );
+
+      return {
+        data: response.data as CreateOrderModelTypes & {
+          createdAt: string;
+          updatedAt: string;
+        },
+      };
+    },
+    refetchOnWindowFocus: false,
+  });
   const queryClient = useQueryClient();
 
   const [package_details, setPackageDetails] = useState<{
@@ -37,6 +59,7 @@ export default function QuoteForm() {
     specialInstructions: "",
   });
   const [loading, setLoading] = useState(false);
+  const [terms_checked, set_terms_checked] = useState<boolean>(false);
 
   const router = useRouter();
   function handleInputChange(
@@ -96,7 +119,7 @@ export default function QuoteForm() {
     };
 
     const response = await acceptOrderRequest(
-      artistOrderActionModalData.order_id,
+      order_data!.data.order_id,
       numerical_dimensions,
       null,
       null,
@@ -126,14 +149,10 @@ export default function QuoteForm() {
       queryClient.invalidateQueries({
         queryKey: ["fetch_orders_by_category"],
       });
-      clearArtistOrderActionModalData();
       router.replace("/artist/app/orders");
     }
   };
-  const image_url = getImageFileView(
-    artistOrderActionModalData.artwork.url,
-    200
-  );
+  const image_url = getImageFileView(order_data!.data.artwork_data.url, 200);
 
   // session.data?.user.
   return (
@@ -237,9 +256,19 @@ export default function QuoteForm() {
               />
             </div>
           </div>
+          <div className="space-y-4">
+            <WarningAlert />
+            <Checkbox
+              checked={terms_checked}
+              onChange={() => set_terms_checked(!terms_checked)}
+              label="I confirm that I have read and understand the terms associated with accepting this order"
+              color="#1a1a1a"
+              size="sm"
+            />
+          </div>
           <div className="w-full mt-5">
             <button
-              disabled={loading}
+              disabled={loading || !terms_checked}
               type="submit"
               className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normalr"
             >
@@ -253,7 +282,7 @@ export default function QuoteForm() {
             <div className="flex flex-col">
               <Image
                 src={image_url}
-                alt={artistOrderActionModalData.artwork.title}
+                alt={order_data!.data.artwork_data.title}
                 height={100}
                 width={100}
                 className="object-top h-[100px] w-[100px] rounded-[10px]"
@@ -262,34 +291,35 @@ export default function QuoteForm() {
             <div className="flex flex-col">
               <p className="text-dark font-light">Artwork name</p>
               <p className="font-semibold">
-                {artistOrderActionModalData.artwork.title}
+                {order_data?.data.artwork_data.title}
               </p>
             </div>
             <div className="flex flex-col">
               <p className="text-dark font-light">Artist name</p>
               <p className="font-semibold">
-                {artistOrderActionModalData.artwork.artist}
+                {order_data?.data.artwork_data.artist}
               </p>
             </div>
             <div className="flex flex-col">
               <p className="text-dark font-light">Price</p>
               <p className="font-semibold">
-                {formatPrice(
-                  artistOrderActionModalData.artwork.pricing.usd_price
-                )}
+                {formatPrice(order_data!.data.artwork_data.pricing.usd_price)}
               </p>
             </div>
             <div className="flex flex-col">
               <p className="text-dark font-light">Buyer name</p>
               <p className="font-semibold">
-                {artistOrderActionModalData.buyer}
+                {order_data?.data.buyer_details.name}
               </p>
             </div>
             <div className="flex flex-col">
               <p className="text-dark font-light">Buyer address</p>
               <p className="font-semibold">
-                {artistOrderActionModalData.shipping_address.state},{" "}
-                {artistOrderActionModalData.shipping_address.country}
+                {order_data?.data.shipping_details.addresses.destination.state},{" "}
+                {
+                  order_data?.data.shipping_details.addresses.destination
+                    .country
+                }
               </p>
             </div>
           </div>

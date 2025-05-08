@@ -1,0 +1,59 @@
+"use client";
+import { Modal, Button } from "@mantine/core";
+import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+import { auth_uri } from "@omenai/url-config/src/config";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+export default function VerificationBlockerModal({ open }: { open: boolean }) {
+  const router = useRouter();
+  async function handleSignout() {
+    toast.info("Signing you out...");
+
+    const auth_url = auth_uri();
+    const res = await signOut();
+
+    if (res.isOk) {
+      toast.info("Operation successful", {
+        description: "Successfully signed out...redirecting",
+      });
+      router.replace(`${auth_url}/login`);
+    } else {
+      toast.error("Operation successful", {
+        description:
+          "Something went wrong, please try again or contact support",
+      });
+    }
+  }
+  return (
+    <>
+      <Modal
+        opened={open}
+        onClose={() => {}}
+        radius={"xl"}
+        centered
+        p={16}
+        size={"lg"}
+      >
+        <div className="bg-white text-black dark:bg-[#1a1a1a] dark:text-white w-full text-center p-8">
+          <h2 className="text-fluid-sm md:text-fluid-md font-semibold mb-4">
+            Verification in Progress
+          </h2>
+          <p className="text-fluid-base text-gray-700 dark:text-gray-300 mb-6">
+            Your profile is currently under review. You&apos;ll be notified once
+            your verification status is updated. In the meantime, access to
+            dashboard features is currently restricted. Please check back later.
+          </p>
+          <div className="w-full flex justify-center mt-8">
+            <button
+              onClick={handleSignout}
+              className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  );
+}

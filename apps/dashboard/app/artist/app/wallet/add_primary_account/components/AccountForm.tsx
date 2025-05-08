@@ -127,9 +127,10 @@ export default function AccountForm() {
   };
 
   const handleAddPrimaryAccount = async () => {
+    console.log(account_number, selectedBank);
     try {
       setLoading(true);
-      if (selectedBank === null || !account_number) {
+      if (selectedBank === null || account_number.length === 0) {
         toast.error("Error Notification", {
           description: "Account number and bank is required",
           style: {
@@ -160,7 +161,7 @@ export default function AccountForm() {
         !add_primary_account_response.isOk
       ) {
         toast.error("Error Notification", {
-          description: "Account number and bank is required",
+          description: add_primary_account_response?.message,
           style: {
             background: "red",
             color: "white",
@@ -169,7 +170,7 @@ export default function AccountForm() {
         });
         return;
       }
-      toast.error("Operation successfull", {
+      toast.error("Operation successful", {
         description: add_primary_account_response.message,
         style: {
           background: "green",

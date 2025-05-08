@@ -19,6 +19,7 @@ import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import OrderCountdown from "./OrderCountdown";
 
 export function OrdersGroupAccordion({
   orders,
@@ -216,10 +217,20 @@ export function OrdersGroupAccordion({
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
         }) === "pay" && (
-          <div className="mt-5 flex items-center gap-x-6">
-            <button className=" bg-dark rounded-full text-white disabled:bg-dark/10 w-full disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+          <div className="mt-5 flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3">
+            <button className=" bg-dark rounded-full text-white w-fit disabled:bg-dark/10 text-fluid-xs disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
               <span>Pay for this artwork</span>
             </button>
+            <OrderCountdown
+              expiresAt={
+                order.hold_status === null
+                  ? new Date(
+                      new Date(order.updatedAt).getTime() + 24 * 60 * 60 * 1000
+                    )
+                  : order.hold_status.hold_end_date
+              }
+              order_id={order.order_id}
+            />
           </div>
         )}
       </Accordion.Panel>

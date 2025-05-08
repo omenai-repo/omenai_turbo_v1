@@ -4,6 +4,7 @@ import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity"
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 
 import {
   ColorSchemeScript,

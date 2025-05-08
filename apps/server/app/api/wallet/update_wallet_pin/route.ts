@@ -14,6 +14,7 @@ export async function POST(request: Request) {
   try {
     await connectMongoDB();
     const { wallet_id, pin } = await request.json();
+    console.log(wallet_id, pin);
 
     const isPinRepeatingOrConsecutive: boolean = isRepeatingOrConsecutive(pin);
 
@@ -23,13 +24,16 @@ export async function POST(request: Request) {
       );
 
     const wallet = await Wallet.findOne({ wallet_id }, "wallet_pin");
+    let isPinMatch;
 
-    const isPinMatch = bcrypt.compareSync(pin, wallet.wallet_pin);
+    if (wallet.wallet_pin !== null) {
+      isPinMatch = bcrypt.compareSync(pin, wallet.wallet_pin);
 
-    if (isPinMatch)
-      throw new ConflictError(
-        "Your pin cannot be identical to your previous wallet pin"
-      );
+      if (isPinMatch)
+        throw new ConflictError(
+          "Your pin cannot be identical to your previous wallet pin"
+        );
+    }
 
     const hashedPin = await hashPassword(pin);
 
@@ -43,6 +47,8 @@ export async function POST(request: Request) {
         "An error was encountered while updating your wallet pin. Please try again or contact IT support"
       );
 
+    // TODO: Send mail informing of pin change
+
     return NextResponse.json(
       {
         message: "Wallet pin updated successfully",
@@ -51,6 +57,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.log(error);
 
     return NextResponse.json(
       { message: error_response?.message },

@@ -82,7 +82,9 @@ export async function POST(request: NextRequest) {
     // console.log(data);
     // Basic validation check
     if (!data.order_id || !data.dimensions) {
-      throw new BadRequestError("Invalid params");
+      throw new BadRequestError(
+        "Invalid params - Order ID or dimensions is missing"
+      );
     }
 
     const order: CreateOrderModelTypes | null = await CreateOrder.findOne({
@@ -180,7 +182,7 @@ export async function POST(request: NextRequest) {
       {
         $set: {
           exhibition_status: data.exhibition_status,
-          hold_status: data.hold_status,
+          hold_status: { is_hold: true, hold_end_date: expiresAt },
           "shipping_details.additional_information": data.specialInstructions
             ? data.specialInstructions
             : "",
