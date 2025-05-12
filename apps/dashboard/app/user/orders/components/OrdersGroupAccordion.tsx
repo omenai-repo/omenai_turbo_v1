@@ -4,6 +4,7 @@ import {
   AddressTypes,
   ArtworkSchemaTypes,
   CreateOrderModelTypes,
+  IndividualSchemaTypes,
 } from "@omenai/shared-types";
 import Image from "next/image";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
@@ -20,6 +21,8 @@ import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OrderCountdown from "./OrderCountdown";
+import { base_url } from "@omenai/url-config/src/config";
+import { useSession } from "@omenai/package-provider/SessionProvider";
 
 export function OrdersGroupAccordion({
   orders,
@@ -39,7 +42,7 @@ export function OrdersGroupAccordion({
     const image_url = getImageFileView(url, 200);
     return image_url;
   };
-
+  const session = useSession() as IndividualSchemaTypes;
   function handleDeclineOrderRequest(order_id: string) {
     update_current_order_id(order_id);
     toggleDeclineOrderModal(true);
@@ -218,9 +221,14 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "pay" && (
           <div className="mt-5 flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3">
-            <button className=" bg-dark rounded-full text-white w-fit disabled:bg-dark/10 text-fluid-xs disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
-              <span>Pay for this artwork</span>
-            </button>
+            <Link
+              href={`${base_url()}/payment/${order.order_id}?id_key=${session.user_id}`}
+            >
+              <button className=" bg-dark rounded-full text-white w-fit disabled:bg-dark/10 text-fluid-xs disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+                <span>Pay for this artwork</span>
+              </button>
+            </Link>
+
             <OrderCountdown
               expiresAt={
                 order.hold_status === null
