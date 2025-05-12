@@ -12,7 +12,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@omenai/package-provider/SessionProvider";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
-import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  LoadSmall,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
@@ -152,6 +154,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       router.replace("/artist/app/orders");
     }
   };
+  if (isLoading) return <Load />;
   const image_url = getImageFileView(order_data!.data.artwork_data.url, 200);
 
   // session.data?.user.
@@ -252,7 +255,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Enter any special instructions for picking up the piece (e.g., Ring the doorbell)."
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-fluid-xxs placeholder:text-dark font-light placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                className="p-3 border border-[#E0E0E0] text-fluid-xs placeholder:text-dark font-normal placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
               />
             </div>
           </div>
@@ -270,7 +273,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <button
               disabled={loading || !terms_checked}
               type="submit"
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normalr"
+              className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normalr"
             >
               {loading ? <LoadSmall /> : " Accept order request"}
             </button>

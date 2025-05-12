@@ -114,34 +114,44 @@ export default function ArtworkCard({
                 {artist.substring(0, 20)}
                 {artist.length > 20 && "..."}
               </div>
-              {isDashboard
-                ? null
-                : !trending && (
-                    <div className="flex justify-between mt-1.5">
-                      {/* Price */}
-                      <div className="text-white text-fluid-xs xs:text-fluid-xs font-bold">
-                        {pricing?.price && pricing.shouldShowPrice === "Yes"
-                          ? !availability
-                            ? "Sold"
-                            : `${formatPrice(pricing.usd_price)}`
-                          : !availability
-                            ? "Sold"
-                            : "Price on request"}
-                      </div>
-
-                      {/* Purchase Button */}
-                      {!availability ? null : (
-                        <Link
-                          href={`${base_uri}/artwork/${name}`}
-                          className="px-4 py-[5px] duration-300 ring ring-[#e0e0e0]/50 hover:bg-dark hover:text-white rounded-full bg-white text-black text-fluid-xs font-medium shadow"
-                        >
-                          {pricing?.price && pricing.shouldShowPrice === "Yes"
-                            ? "Purchase"
-                            : "Request"}
-                        </Link>
-                      )}
+              {isDashboard ? (
+                <div className="text-white text-fluid-xs xs:text-fluid-xs font-bold">
+                  {pricing?.price && pricing.shouldShowPrice === "Yes"
+                    ? !availability
+                      ? "Sold"
+                      : `${formatPrice(pricing.usd_price)}`
+                    : !availability
+                      ? "Sold"
+                      : "Price on request"}
+                </div>
+              ) : (
+                !trending && (
+                  <div className="flex justify-between mt-1.5">
+                    {/* Price */}
+                    <div className="text-white text-fluid-xs xs:text-fluid-xs font-bold">
+                      {pricing?.price && pricing.shouldShowPrice === "Yes"
+                        ? !availability
+                          ? "Sold"
+                          : `${formatPrice(pricing.usd_price)}`
+                        : !availability
+                          ? "Sold"
+                          : "Price on request"}
                     </div>
-                  )}
+
+                    {/* Purchase Button */}
+                    {!availability ? null : (
+                      <Link
+                        href={`${base_uri}/artwork/${name}`}
+                        className="px-4 py-[5px] duration-300 ring ring-[#e0e0e0]/50 hover:bg-dark hover:text-white rounded-full bg-white text-black text-fluid-xs font-medium shadow"
+                      >
+                        {pricing?.price && pricing.shouldShowPrice === "Yes"
+                          ? "Purchase"
+                          : "Request"}
+                      </Link>
+                    )}
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>

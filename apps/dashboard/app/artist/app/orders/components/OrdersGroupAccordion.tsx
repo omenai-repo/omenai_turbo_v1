@@ -46,13 +46,6 @@ export function OrdersGroupAccordion({
     status: "completed" | "processing",
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
   ) {
-    updateArtistOrderActionModalData(
-      buyer,
-      shipping_address,
-      order_id,
-      status,
-      artwork
-    );
     router.push("/artist/app/orders/quote");
   }
 
@@ -247,24 +240,11 @@ export function OrdersGroupAccordion({
             >
               Decline order
             </button>
-            <button
-              onClick={() =>
-                updateOrderDataInState(
-                  order.buyer_details.name,
-                  {
-                    country:
-                      order.shipping_details.addresses.destination.country,
-                    state: order.shipping_details.addresses.destination.state,
-                  },
-                  order.order_id,
-                  order.status,
-                  order.artwork_data
-                )
-              }
-              className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-green-600 cursor-pointer"
-            >
-              Accept order
-            </button>
+            <Link href={`/artist/app/orders/quote/${order.order_id}`}>
+              <button className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-green-600 cursor-pointer">
+                Accept order
+              </button>
+            </Link>
           </div>
         )}
       </Accordion.Panel>
