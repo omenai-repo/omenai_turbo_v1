@@ -53,7 +53,6 @@ export default function ArtworkPricing() {
     },
     refetchOnWindowFocus: false,
     staleTime: 0,
-    gcTime: 0,
   });
   const handleArtworkUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
