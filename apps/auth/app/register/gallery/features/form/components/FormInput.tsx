@@ -92,7 +92,7 @@ export default function FormInput() {
         clearData();
       } else {
         await logo_storage.deleteFile(
-          process.env.NEXT_PUBLIC_APPWRITE_GALLERY_LOGO_BUCKET_ID!,
+          process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
           file.fileId
         );
         toast.error("Error notification", {

@@ -6,7 +6,7 @@ import OrderDeclinedEmail from "@omenai/shared-emails/src/views/order/OrderDecli
 import OrderAutoDeclined from "@omenai/shared-emails/src/views/order/OrderAutoDeclined";
 import OrderRequestReminder from "@omenai/shared-emails/src/views/order/OrderRequessstReminder";
 import OrderDeclinedWarning from "@omenai/shared-emails/src/views/order/OrderDeclinedWarning";
-const resend = new Resend("re_cB7pHY8M_7EDLfsuAKN6iY3RzQ19SwfSg");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET() {
   try {

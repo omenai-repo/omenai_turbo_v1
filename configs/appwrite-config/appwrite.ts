@@ -32,7 +32,7 @@ const logo_client = new Client();
 
 logo_client
   .setEndpoint(endpoint)
-  .setProject(process.env.NEXT_PUBLIC_APPWRITE_GALLERY_LOGO_CLIENT_ID!);
+  .setProject(process.env.NEXT_PUBLIC_APPWRITE_LOGO_CLIENT_ID!);
 
 export const logo_storage = new Storage(logo_client);
 //editorials content

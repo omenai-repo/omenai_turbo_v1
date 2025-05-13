@@ -5,11 +5,13 @@ type EmailData = {
   email: string;
 };
 export const sendTestMail = async ({ name, email }: EmailData) => {
-  await sendMailVerification({
+  console.log(process.env.RESEND_API_KEY!);
+  const data = await sendMailVerification({
     prefix: "Onboarding",
-    from: "onboarding",
+    from: "orders",
     to: email,
     subject: "Your Artist Account Has Been Successfully Verified!",
     react: SendTestMail(name),
   });
+  return data;
 };

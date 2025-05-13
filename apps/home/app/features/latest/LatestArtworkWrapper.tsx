@@ -52,7 +52,7 @@ export default function LatestArtworkWrapper({
       </div>
 
       {artworks.length === 0 && (
-        <div className="h-[500px] w-full place-items-center grid">
+        <div className="h-[300px] w-full place-items-center grid">
           <NotFoundData />
         </div>
       )}

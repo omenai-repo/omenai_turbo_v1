@@ -22,7 +22,7 @@ export default function LatestArtworks({
   );
 
   return (
-    <div className="h-[180vh] sm:h-[130vh] overflow-hidden relative">
+    <div className="max-h-[180vh] sm:max-h-[130vh] min-h-[80vh] h-full overflow-hidden relative">
       {artworks.length > 0 && (
         <div className="flex flex-wrap gap-x-4 justify-center">
           {arts.map((artworks: any[], index) => {

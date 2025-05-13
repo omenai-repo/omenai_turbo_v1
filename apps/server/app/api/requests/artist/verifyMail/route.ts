@@ -16,11 +16,11 @@ export async function POST(request: Request) {
   const client = await connectMongoDB();
   const session = await client.startSession();
   try {
-    const ip = await getIp();
+    // const ip = await getIp();
 
-    const { success } = await limiter.limit(ip);
-    if (!success)
-      throw new RateLimitExceededError("Too many requests, try again later.");
+    // const { success } = await limiter.limit(ip);
+    // if (!success)
+    //   throw new RateLimitExceededError("Too many requests, try again later.");
 
     const { params, token } = await request.json();
 
