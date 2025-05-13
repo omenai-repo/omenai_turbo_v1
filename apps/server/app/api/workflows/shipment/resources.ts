@@ -4,13 +4,17 @@ import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export const uploadWaybillDocument = async (file: File) => {
-  if (!file) return;
-  const fileUploaded = await documentation_storage.createFile(
-    process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
-    ID.unique(),
-    file
-  );
-  return fileUploaded;
+  if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
+  try {
+    const fileUploaded = await documentation_storage.createFile(
+      process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+      ID.unique(),
+      file
+    );
+    if (fileUploaded) return fileUploaded;
+  } catch (error) {
+    throw new Error("Appwrite Exception: Something went wrong on Appwrite");
+  }
 };
 
 export default uploadWaybillDocument;
