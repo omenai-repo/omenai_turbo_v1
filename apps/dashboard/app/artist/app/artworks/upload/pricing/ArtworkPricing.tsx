@@ -38,13 +38,6 @@ export default function ArtworkPricing() {
   const { data: pricing, isLoading } = useQuery({
     queryKey: ["fetch_artwork_price"],
     queryFn: async () => {
-      console.log(
-        artworkUploadData.medium as ArtworkMediumTypes,
-        (session as ArtistSchemaTypes).categorization,
-        artwork_height,
-        artwork_width,
-        (session as ArtistSchemaTypes).base_currency
-      );
       const response = await fetchArtworkPriceForArtist(
         artworkUploadData.medium as ArtworkMediumTypes,
         (session as ArtistSchemaTypes).categorization,
@@ -59,6 +52,8 @@ export default function ArtworkPricing() {
       return response.data;
     },
     refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0,
   });
   const handleArtworkUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -132,7 +127,10 @@ export default function ArtworkPricing() {
         },
         className: "class",
       });
-      queryClient.invalidateQueries();
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch_artwork_price", "fetch_artworks_by_id"],
+      });
+      queryClient.removeQueries({ queryKey: ["fetch_artwork_price"] });
       clearData();
       router.replace("/artist/app/artworks");
     } catch (error) {
