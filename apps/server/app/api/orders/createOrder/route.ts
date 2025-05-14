@@ -138,6 +138,11 @@ export async function POST(request: Request) {
               id: "",
               link: "",
             },
+            planned_shipping_date: "",
+            estimates: {
+              estimatedDeliveryDate: "",
+              estimatedDeliveryType: "",
+            },
             quote: {
               fees: "",
               taxes: "",

@@ -227,7 +227,10 @@ export async function POST(request: NextRequest) {
       requestOptions
     );
     const data = await response.json();
-    return NextResponse.json({ message: "Success", data }, { status: 200 });
+    return NextResponse.json(
+      { message: "Success", data: { ...data, plannedShippingDateAndTime } },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });

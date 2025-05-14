@@ -3,6 +3,10 @@ import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWork
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
+const APPWRITE_BUCKET_ID =
+  process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!;
+export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
+
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
@@ -19,13 +23,8 @@ export const uploadWaybillDocument = async (file: File) => {
 
 export default uploadWaybillDocument;
 
-export async function handleWorkflowError(
-  error: any,
-  session: any,
-  payload: Payload
-) {
+export async function handleWorkflowError(error: any, payload: Payload) {
   const error_response = handleErrorEdgeCases(error);
-  await session.abortTransaction();
   await saveFailedJob({
     jobId: payload.order_id,
     jobType: "create_shipment",
@@ -38,6 +37,15 @@ export async function handleWorkflowError(
 import { Buffer } from "buffer";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import {
+  generateAlphaDigit,
+  generateDigit,
+} from "@omenai/shared-utils/src/generateToken";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
 
 export const base64ToPDF = (
   base64: string,
@@ -79,4 +87,65 @@ export function buildShipmentData(
     },
     invoice_number: order.order_id,
   };
+}
+
+// Utility function to upload waybill document and update the order
+export async function handleWaybillUpload(
+  waybillBase64: string,
+  orderId: string
+): Promise<string> {
+  const waybillFile = base64ToPDF(
+    waybillBase64,
+    `waybilldoc_${generateAlphaDigit(6)}.pdf`
+  );
+  const uploadedDoc = await uploadWaybillDocument(waybillFile);
+
+  if (!uploadedDoc) {
+    throw new ServerError("Waybill document upload failed on Appwrite");
+  }
+
+  const waybillDocLink = documentation_storage.getFileView(
+    APPWRITE_BUCKET_ID,
+    uploadedDoc.$id
+  );
+
+  const updateResult = await CreateOrder.updateOne(
+    { order_id: orderId },
+    {
+      $set: {
+        "shipping_details.shipment_information.waybill_document":
+          waybillDocLink,
+      },
+    }
+  );
+
+  if (updateResult.modifiedCount === 0) {
+    throw new Error("Unable to update order waybill document");
+  }
+
+  await WaybillCache.deleteOne({ order_id: orderId });
+  return waybillDocLink;
+}
+
+// Utility function to create a workflow for sending shipment emails
+export async function sendShipmentEmailWorkflow(
+  buyerName: string,
+  buyerEmail: string,
+  sellerName: string,
+  sellerEmail: string,
+  trackingCode: string,
+  fileContent: string
+) {
+  await createWorkflow(
+    "/api/workflows/emails/sendShipmentEmail",
+    `email_workflow_${generateDigit(8)}`,
+    JSON.stringify({
+      buyerName,
+      buyerEmail,
+      sellerName,
+      sellerEmail,
+      trackingCode,
+      fileContent,
+    })
+  );
 }

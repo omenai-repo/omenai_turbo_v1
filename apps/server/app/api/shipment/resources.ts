@@ -19,6 +19,7 @@ export const HEADERS = new Headers({
   Authorization: `Basic ${credentials}`,
   "x-version": DHL_API_VERSION,
 });
+
 export const TRACKING_HEADER = new Headers({
   "Content-Type": "application/json",
   Authorization: `Basic ZGVtby1rZXk6ZGVtby1zZWNyZXQ='`,
@@ -29,7 +30,8 @@ export const TRACKING_HEADER = new Headers({
 export const DHL_API_URL = "https://api-eu.dhl.com/shipment/v1";
 
 // DHL API express account number
-export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT = "942718371";
+export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT =
+  process.env.DHL_SHIPPER_ACCOUNT!;
 
 // async function to select the most appropriate DHL product for a particular shipment based on price and product relevance to shipment
 export async function selectAppropriateDHLProduct(

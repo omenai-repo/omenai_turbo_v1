@@ -1,63 +1,96 @@
-// /api/workflows/createShipment.ts
 import { serve } from "@upstash/workflow/nextjs";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { getApiUrl } from "@omenai/url-config/src/config";
-import uploadWaybillDocument, {
-  base64ToPDF,
+import {
   buildShipmentData,
   getMongoClient,
+  handleWaybillUpload,
   handleWorkflowError,
-} from "../resources";
-import { documentation_storage } from "@omenai/appwrite-config";
-import {
-  generateAlphaDigit,
-  generateDigit,
-} from "@omenai/shared-utils/src/generateToken";
-import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+  sendShipmentEmailWorkflow,
+  SHIPMENT_API_URL,
+} from "../utils";
 import {
   NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
+import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
+
 type Payload = {
   order_id: string;
 };
-
-const APPWRITE_BUCKET_ID =
-  process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!;
-
-const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
 
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload = ctx.requestPayload;
 
   return await ctx.run("create_shipment", async () => {
-    const client = await getMongoClient();
-    const session = await client.startSession();
-    session.startTransaction();
+    await getMongoClient();
+
     try {
+      // Fetch the order
       const order:
-        | (CreateOrderModelTypes & {
-            createdAt: string;
-            updatedAt: string;
-          })
-        | null = await CreateOrder.findOne({ order_id: payload.order_id });
-      if (!order)
+        | (CreateOrderModelTypes & { createdAt: string; updatedAt: string })
+        | null = await CreateOrder.findOne({
+        order_id: payload.order_id,
+      });
+
+      if (!order) {
         throw new NotFoundError(
           `Order with order_id: ${payload.order_id} not found`
         );
+      }
 
+      // Remove any existing locks
       await LockMechanism.deleteOne({
         user_id: order.buyer_details.id,
         art_id: order.artwork_data.art_id,
-      }).session(session);
+      });
 
+      const existingTrackingId =
+        order.shipping_details.shipment_information.tracking.id;
+      const existingWaybill =
+        order.shipping_details.shipment_information.waybill_document;
+
+      // Handle existing shipment
+      if (existingTrackingId && existingWaybill) {
+        console.log("Shipment already created, skipping shipment API call.");
+        await FailedJob.deleteOne({
+          jobId: payload.order_id,
+          jobType: "create_shipment",
+        });
+        await WaybillCache.deleteOne({ order_id: payload.order_id });
+        return true;
+      }
+
+      // Handle existing tracking ID but no waybill
+      if (existingTrackingId && !existingWaybill) {
+        const waybillCache = await WaybillCache.findOne(
+          { order_id: payload.order_id },
+          "pdf_base64"
+        );
+
+        if (!waybillCache) {
+          throw new Error("No waybill cache data, please contact support");
+        }
+
+        await handleWaybillUpload(waybillCache.pdf_base64, payload.order_id);
+
+        await WaybillCache.deleteOne({ order_id: payload.order_id });
+
+        await FailedJob.deleteOne({
+          jobId: payload.order_id,
+          jobType: "create_shipment",
+        });
+
+        return true;
+      }
+
+      // Create a new shipment
       const data = buildShipmentData(order);
 
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000); // 5 seconds timeout
+      const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
       let shipmentResponse;
       try {
@@ -76,64 +109,49 @@ export const { POST } = serve<Payload>(async (ctx) => {
         throw new ServerError("Shipment API request timed out");
       }
 
-      const shipmentJson = await shipmentResponse.json();
-      if (!shipmentResponse.ok)
-        throw new ServerError(
-          shipmentJson.message || "Shipment creation failed"
-        );
+      const shipment = await shipmentResponse.json();
 
-      const trackingCode = shipmentJson.data.shipmentTrackingNumber;
-      const waybillDocBase64 = shipmentJson.data.documents[0].content;
-      const waybillFile = base64ToPDF(
-        waybillDocBase64,
-        `waybilldoc_${generateAlphaDigit(6)}.pdf`
-      );
-      const uploadedDoc = await uploadWaybillDocument(waybillFile);
+      if (!shipmentResponse.ok) {
+        throw new ServerError(shipment.message || "Shipment creation failed");
+      }
 
-      if (!uploadedDoc)
-        throw new ServerError("Waybill document upload failed on Appwrite");
-
-      const waybillDocLink = documentation_storage.getFileView(
-        APPWRITE_BUCKET_ID,
-        uploadedDoc.$id
-      );
+      // Save shipment details and waybill
+      await WaybillCache.create({
+        order_id: payload.order_id,
+        pdf_base64: shipment.data.documents[0].content,
+      });
 
       await CreateOrder.updateOne(
         { order_id: payload.order_id },
         {
           $set: {
-            "shipping_details.shipment_information.waybill_document":
-              waybillDocLink,
-            "shipping_details.shipment_information.tracking.id": trackingCode,
-            "shipping_details.shipment_information.tracking.link":
-              "https://dashbard.omenai.app/orders",
+            "shipping_details.shipment_information.tracking.id":
+              shipment.data.shipmentTrackingNumber,
+            "shipping_details.shipment_information.tracking.link": `https://omenai.app/tracking/${payload.order_id}`,
+            "shipping_details.shipment_information.estimates":
+              shipment.data.estimatedDeliveryDate,
+            "shipping_details.shipment_information.planned_shipping_date":
+              shipment.data.plannedShippingDateAndTime,
           },
         }
       );
-
-      await FailedJob.deleteOne({
-        jobId: payload.order_id,
-        jobType: "create_shipment",
-      });
-
-      session.commitTransaction();
-      await createWorkflow(
-        "/api/workflows/emails/sendShipmentEmail",
-        `email_workflow_${generateDigit(2)}`,
-        JSON.stringify({
-          buyerName: data.receiver_data.fullname,
-          buyerEmail: data.receiver_data.email,
-          sellerName: data.seller_details.fullname,
-          sellerEmail: data.seller_details.email,
-          trackingCode,
-          fileContent: waybillDocBase64,
-        })
+      await sendShipmentEmailWorkflow(
+        data.receiver_data.fullname,
+        data.receiver_data.email,
+        data.seller_details.fullname,
+        data.seller_details.email,
+        shipment.data.shipmentTrackingNumber,
+        shipment.data.documents[0].content
       );
+
+      await handleWaybillUpload(
+        shipment.data.documents[0].content,
+        payload.order_id
+      );
+
       return true;
     } catch (error: any) {
-      await handleWorkflowError(error, session, payload);
-    } finally {
-      session.endSession();
+      await handleWorkflowError(error, payload);
     }
   });
 });

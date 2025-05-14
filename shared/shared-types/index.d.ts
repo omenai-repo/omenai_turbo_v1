@@ -336,10 +336,20 @@ export type OrderShippingDetailsTypes = {
       pickup_max_time: string;
       pickup_min_time: string;
     };
+    planned_shipping_date: string;
+    estimates: {
+      estimatedDeliveryDate: string;
+      estimatedDeliveryType: string;
+    };
     tracking: TrackingInformationTypes;
     quote: ShippingQuoteTypes;
     waybill_document: string;
   };
+};
+
+type WaybillCacheTypes = {
+  order_id: string;
+  pdf_base64: string;
 };
 
 type OrderBuyerAndSellerDetails = {
