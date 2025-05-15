@@ -162,7 +162,7 @@ export const POST = withAppRouterHighlight(async function POST(
       transaction_id = createTransactionResult[0].trans_id;
 
       await session.commitTransaction();
-      const price = formatPrice(paymentIntent.amount_total, currency);
+      const price = formatPrice(paymentIntent.amount_total / 100, currency);
 
       await createWorkflow(
         "/api/workflows/shipment/create_shipment",

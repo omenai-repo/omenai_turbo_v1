@@ -34,7 +34,7 @@ export async function GET() {
           $set: {
             "order_accepted.status": "declined",
             "order_accepted.reason":
-              "Gallery did not respond within the designated timeframe",
+              "Seller did not respond within the designated timeframe",
           },
         }
       );
@@ -46,7 +46,7 @@ export async function GET() {
           subject: "Your order has been declined",
           react: OrderDeclinedEmail(
             order.buyer.name,
-            "Gallery did not respond within the designated timeframe",
+            "Seller did not respond within the designated timeframe",
             order.artwork_data
           ),
         };

@@ -3,6 +3,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { ArtistCategorization } from "@omenai/shared-models/models/artist/ArtistCategorizationSchema";
 import { NotFoundError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -19,10 +20,15 @@ export async function GET(request: NextRequest) {
         "No credentials were found for this artist id. Try again or contact support"
       );
 
+    const artist_data = await AccountArtist.findOne(
+      { artist_id },
+      "documentation"
+    );
     return NextResponse.json(
       {
         message: "Credentials retrieved successfully",
         credentials: credentials.current,
+        documentation: artist_data.documentation,
       },
       { status: 200 }
     );

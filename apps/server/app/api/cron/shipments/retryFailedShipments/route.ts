@@ -8,7 +8,7 @@ export async function POST() {
   const jobs = await FailedJob.find({
     jobType: "createShipment",
     status: "pending",
-  }).limit(10);
+  });
 
   for (const job of jobs) {
     const { payload } = job;

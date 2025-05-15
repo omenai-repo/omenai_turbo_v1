@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
+// NOTE: Run every hour
 export async function GET() {
   await connectMongoDB();
   // Calculate the date that is three days ago

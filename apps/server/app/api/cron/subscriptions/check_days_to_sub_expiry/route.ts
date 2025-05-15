@@ -2,6 +2,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
 
+// NOTE: Run every hour
 export async function POST() {
   try {
     await connectMongoDB();
