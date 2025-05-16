@@ -29,6 +29,7 @@ import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonth
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 async function verifyWebhookSignature(
   signature: string | null,
@@ -98,7 +99,7 @@ async function handleSubscriptionPayment(
   ) {
     const currency = getCurrencySymbol("USD");
     try {
-      const date = new Date();
+      const date = toUTCDate(new Date());
       session.startTransaction();
 
       const parts = verified_transaction.data.tx_ref.split("&");
@@ -261,8 +262,12 @@ async function handlePurchaseTransaction(
     const formatted_date = getFormattedDateTime();
     const currency = getCurrencySymbol("USD");
 
+    await CreateOrder.updateOne(
+      { order_id: order_info.order_id },
+      { $set: { hold_status: null } }
+    );
     try {
-      const date = new Date();
+      const date = toUTCDate(new Date());
       session.startTransaction();
 
       const existingTransaction = await PurchaseTransactions.findOne({

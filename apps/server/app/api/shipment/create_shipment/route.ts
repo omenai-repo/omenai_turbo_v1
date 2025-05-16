@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { HEADERS, OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT } from "../resources";
 import { ShipmentRequestDataTypes } from "@omenai/shared-types";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 
 export async function POST(request: NextRequest) {
   const {
@@ -227,6 +228,9 @@ export async function POST(request: NextRequest) {
       requestOptions
     );
     const data = await response.json();
+    if (!response.ok)
+      throw new ServerError("Error creating shipment. Please contact support");
+
     return NextResponse.json(
       { message: "Success", data: { ...data, plannedShippingDateAndTime } },
       { status: 200 }

@@ -19,6 +19,7 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 import Taxjar from "taxjar";
 import { NexusTransactions } from "@omenai/shared-models/models/transactions/NexusModelSchema";
 import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -132,7 +133,6 @@ export async function POST(request: NextRequest) {
         );
 
         const rate_response = await calculate_order_shipping_rate.json();
-        console.log(rate_response);
         if (!calculate_order_shipping_rate.ok)
           return NextResponse.json(
             { message: rate_response?.message },
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    const now = new Date();
+    const now = toUTCDate(new Date());
     const hrs24Later = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     const expiresAt = hrs24Later.toISOString();
 
@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
       { order_id: data.order_id },
       {
         $set: {
-          exhibition_status: data.exhibition_status,
+          exhibition_status: { ...data.exhibition_status, status: "pending" },
           hold_status: { is_hold: true, hold_end_date: expiresAt },
           "shipping_details.additional_information": data.specialInstructions
             ? data.specialInstructions

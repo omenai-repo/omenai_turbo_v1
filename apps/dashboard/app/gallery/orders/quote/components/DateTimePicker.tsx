@@ -1,5 +1,6 @@
 import { DateTimePicker } from "@mantine/dates";
 import { OrderArtworkExhibitionStatus } from "@omenai/shared-types";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { Dispatch, SetStateAction } from "react";
 
 export default function DateTimePickerComponent({
@@ -9,7 +10,7 @@ export default function DateTimePickerComponent({
     SetStateAction<OrderArtworkExhibitionStatus | null>
   >;
 }) {
-  const now = new Date();
+  const now = toUTCDate(new Date());
   const maxDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000);
   const formattedMaxDate = maxDate.toISOString().split("T")[0];
 
@@ -25,6 +26,7 @@ export default function DateTimePickerComponent({
         handleDateTimeChange({
           is_on_exhibition: true,
           exhibition_end_date: new Date(e).toISOString(),
+          status: "pending",
         })
       }
       className="placeholder:text-fluid-xxs"

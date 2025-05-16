@@ -1,3 +1,4 @@
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NexusDocument } from "@omenai/shared-types";
 import mongoose, { Schema } from "mongoose";
 // Enum for threshold types
@@ -42,7 +43,7 @@ const nexusTransactions = new Schema<NexusDocument>({
   },
   is_nexus_breached: { type: Boolean, default: false },
   date_of_breach: { type: Date, default: null },
-  last_reset: { type: Date, default: new Date() },
+  last_reset: { type: Date, default: toUTCDate(new Date()) },
   tax_withholding_eligibility: { type: Boolean, default: false },
 });
 

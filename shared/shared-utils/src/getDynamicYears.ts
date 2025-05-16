@@ -1,5 +1,7 @@
+import { toUTCDate } from "./toUtcDate";
+
 export function getDynamicYears() {
-  const currentYear = new Date().getFullYear();
+  const currentYear = toUTCDate(new Date()).getFullYear();
   const startingYear = 2025;
 
   // Create an array with years starting from 2025

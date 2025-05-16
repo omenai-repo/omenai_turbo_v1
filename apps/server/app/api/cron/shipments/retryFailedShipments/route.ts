@@ -3,7 +3,7 @@ import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 
-export async function POST() {
+export async function GET() {
   await connectMongoDB();
   const jobs = await FailedJob.find({
     jobType: "createShipment",

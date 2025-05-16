@@ -308,6 +308,7 @@ export type CreateOrderModelTypes = {
 type OrderArtworkExhibitionStatus = {
   is_on_exhibition: boolean;
   exhibition_end_date: Date | string;
+  status: "pending" | "scheduled";
 };
 
 type HoldStatus = {
@@ -347,9 +348,16 @@ export type OrderShippingDetailsTypes = {
   };
 };
 
-type WaybillCacheTypes = {
+export type WaybillCacheTypes = {
   order_id: string;
   pdf_base64: string;
+};
+
+export type ScheduledShipments = {
+  order_id: string;
+  executeAt: Date | string;
+  reminderSent: boolean;
+  status: "scheduled" | "resolved";
 };
 
 type OrderBuyerAndSellerDetails = {

@@ -6,13 +6,14 @@ import OrderDeclinedEmail from "@omenai/shared-emails/src/views/order/OrderDecli
 import OrderAutoDeclined from "@omenai/shared-emails/src/views/order/OrderAutoDeclined";
 import OrderRequestReminder from "@omenai/shared-emails/src/views/order/OrderRequessstReminder";
 import OrderDeclinedWarning from "@omenai/shared-emails/src/views/order/OrderDeclinedWarning";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET() {
   try {
     await connectMongoDB();
 
-    const currentDate = new Date();
+    const currentDate = toUTCDate(new Date());
 
     // Check for orders older than 96 hours with empty order_accepted.status
     const orders96 = await CreateOrder.find({

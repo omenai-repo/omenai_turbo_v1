@@ -1,12 +1,13 @@
 import { getUTCOffset } from "./getCountryTimezone";
 import { isHoliday } from "../../shared-lib/holiday_check/isHoliday";
+import { toUTCDate } from "./toUtcDate";
 export async function getFutureShipmentDate(
   days: number,
   withTime: boolean,
   countryCode: string,
   pickup_earliest_time?: { hours: string; minutes: string }
 ): Promise<string> {
-  const date = new Date();
+  const date = toUTCDate(new Date());
   date.setDate(date.getDate() + days);
 
   while (true) {

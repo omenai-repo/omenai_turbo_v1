@@ -3,7 +3,7 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { NextResponse } from "next/server";
 
 // NOTE: Run every hour
-export async function POST() {
+export async function GET() {
   try {
     await connectMongoDB();
 

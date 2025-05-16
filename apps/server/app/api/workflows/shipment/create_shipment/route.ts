@@ -1,3 +1,4 @@
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { serve } from "@upstash/workflow/nextjs";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import {
@@ -16,24 +17,66 @@ import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
+import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
 
 type Payload = {
   order_id: string;
 };
 
+// Utility function to handle shipment API call with timeout
+async function callShipmentAPI(data: any): Promise<any> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+
+  try {
+    const response = await fetch(SHIPMENT_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://omenai.app",
+      },
+      body: JSON.stringify(data),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new ServerError(
+        errorResponse.message || "Shipment creation failed"
+      );
+    }
+
+    return result;
+  } catch (error) {
+    clearTimeout(timeout);
+    throw new ServerError("Shipment API request timed out");
+  }
+}
+
+// Utility function to handle waybill upload and order update
+async function processWaybill(
+  waybillBase64: string,
+  orderId: string
+): Promise<void> {
+  await handleWaybillUpload(waybillBase64, orderId);
+  await WaybillCache.deleteOne({ order_id: orderId });
+  await FailedJob.deleteOne({ jobId: orderId, jobType: "create_shipment" });
+}
+
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload = ctx.requestPayload;
 
   return await ctx.run("create_shipment", async () => {
-    await getMongoClient();
+    const client = await getMongoClient();
 
     try {
       // Fetch the order
-      const order:
-        | (CreateOrderModelTypes & { createdAt: string; updatedAt: string })
-        | null = await CreateOrder.findOne({
+      const order = (await CreateOrder.findOne({
         order_id: payload.order_id,
-      });
+      })) as CreateOrderModelTypes & { createdAt: string; updatedAt: string };
 
       if (!order) {
         throw new NotFoundError(
@@ -74,46 +117,53 @@ export const { POST } = serve<Payload>(async (ctx) => {
           throw new Error("No waybill cache data, please contact support");
         }
 
-        await handleWaybillUpload(waybillCache.pdf_base64, payload.order_id);
-
-        await WaybillCache.deleteOne({ order_id: payload.order_id });
-
-        await FailedJob.deleteOne({
-          jobId: payload.order_id,
-          jobType: "create_shipment",
-        });
-
+        await processWaybill(waybillCache.pdf_base64, payload.order_id);
         return true;
       }
 
+      // Handle exhibition status
+      if (
+        order.exhibition_status !== null &&
+        order.exhibition_status.exhibition_end_date &&
+        order.exhibition_status.status === "pending"
+      ) {
+        const session = await client.startSession();
+        session.startTransaction();
+        try {
+          await ScheduledShipment.updateOne(
+            { order_id: order.order_id },
+            {
+              $set: {
+                order_id: order.order_id,
+                executeAt: toUTCDate(
+                  order.exhibition_status.exhibition_end_date
+                ),
+              },
+            },
+            { upsert: true }
+          ).session(session);
+
+          await CreateOrder.updateOne(
+            { order_id: order.order_id },
+            { $set: { "exhibition_status.status": "scheduled" } }
+          ).session(session);
+
+          // TODO: Send email informing buyer and seller that shipment creation is scheduled for later
+
+          session.commitTransaction();
+          return true;
+        } catch (error) {
+          session.abortTransaction();
+          throw new Error("Transaction error, session was aborted");
+        } finally {
+          session.endSession();
+        }
+      }
+
       // Create a new shipment
-      const data = buildShipmentData(order);
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
-
-      let shipmentResponse;
-      try {
-        const shipmentRes = await fetch(SHIPMENT_API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Origin: "https://omenai.app",
-          },
-          body: JSON.stringify(data),
-        });
-        shipmentResponse = shipmentRes;
-        clearTimeout(timeout);
-      } catch (error) {
-        clearTimeout(timeout);
-        throw new ServerError("Shipment API request timed out");
-      }
-
-      const shipment = await shipmentResponse.json();
-
-      if (!shipmentResponse.ok) {
-        throw new ServerError(shipment.message || "Shipment creation failed");
-      }
+      const shipmentData = buildShipmentData(order);
+      const shipment = await callShipmentAPI(shipmentData);
+      await ScheduledShipment.deleteOne({ order_id: order.order_id });
 
       // Save shipment details and waybill
       await WaybillCache.create({
@@ -135,16 +185,17 @@ export const { POST } = serve<Payload>(async (ctx) => {
           },
         }
       );
+
       await sendShipmentEmailWorkflow(
-        data.receiver_data.fullname,
-        data.receiver_data.email,
-        data.seller_details.fullname,
-        data.seller_details.email,
+        shipmentData.receiver_data.fullname,
+        shipmentData.receiver_data.email,
+        shipmentData.seller_details.fullname,
+        shipmentData.seller_details.email,
         shipment.data.shipmentTrackingNumber,
         shipment.data.documents[0].content
       );
 
-      await handleWaybillUpload(
+      await processWaybill(
         shipment.data.documents[0].content,
         payload.order_id
       );

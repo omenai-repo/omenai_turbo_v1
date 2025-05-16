@@ -1,5 +1,6 @@
 // models/FailedJob.ts
 import { FailedCronJobTypes } from "@omenai/shared-types";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import mongoose from "mongoose";
 
 const FailedJobSchema = new mongoose.Schema<FailedCronJobTypes>({
@@ -12,7 +13,7 @@ const FailedJobSchema = new mongoose.Schema<FailedCronJobTypes>({
     enum: ["pending", "reprocessed", "failed"],
     default: "pending",
   },
-  lastAttempted: { type: Date, default: () => Date.now() },
+  lastAttempted: { type: Date, default: () => toUTCDate(new Date()) },
   jobId: { type: String, unique: true },
 });
 

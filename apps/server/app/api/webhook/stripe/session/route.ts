@@ -20,6 +20,7 @@ import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
 
 export const POST = withAppRouterHighlight(async function POST(
@@ -57,19 +58,23 @@ export const POST = withAppRouterHighlight(async function POST(
     const session = await client.startSession();
     const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
     const formatted_date = getFormattedDateTime();
-    const date = new Date();
+    const date = toUTCDate(new Date());
     const meta = paymentIntent.metadata;
 
+    const order_info = await CreateOrder.findOne(
+      {
+        "buyer_details.email": meta.buyer_email,
+        "artwork_data.art_id": meta.art_id,
+      },
+      "artwork_data order_id createdAt buyer_details"
+    );
     try {
-      session.startTransaction();
+      await CreateOrder.updateOne(
+        { order_id: order_info.order_id },
+        { $set: { hold_status: null } }
+      );
 
-      const order_info = await CreateOrder.findOne(
-        {
-          "buyer_details.email": meta.buyer_email,
-          "artwork_data.art_id": meta.art_id,
-        },
-        "artwork_data order_id createdAt buyer_details"
-      ).session(session);
+      session.startTransaction();
 
       // Check if the transaction already exists
       const existingTransaction = await PurchaseTransactions.findOne({

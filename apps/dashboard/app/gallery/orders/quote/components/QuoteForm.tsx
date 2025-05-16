@@ -82,6 +82,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       set_exhibition_status({
         is_on_exhibition: true,
         exhibition_end_date: "",
+        status: "pending",
       });
     return;
   }
@@ -117,6 +118,19 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
     ) {
       toast.error("Error notification", {
         description: "Only numerical values are allowed for dimensions",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+
+    if (exhibition_status !== null && !exhibition_status.exhibition_end_date) {
+      toast.error("Error notification", {
+        description:
+          "Please input the date of the exhibition closure to proceed",
         style: {
           background: "red",
           color: "white",
@@ -202,8 +216,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     name="length"
                     type="number"
                     step="any"
-                    placeholder="Length after packaging  in centimeters"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-medium placeholder:text-fluid-xxs"
+                    placeholder="Length after packaging  in cm"
+                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
                   />
                 </div>
                 <div className="relative w-full flex flex-col space-y-2">
@@ -218,8 +232,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     name="height"
                     type="number"
                     step="any"
-                    placeholder="Height after packaging in centimeters"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-medium placeholder:text-fluid-xxs"
+                    placeholder="Height after packaging in cm"
+                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
                   />
                 </div>
               </div>
@@ -236,8 +250,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     name="width"
                     type="number"
                     step="any"
-                    placeholder="Width after packaging in centimeters"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-medium placeholder:text-fluid-xxs"
+                    placeholder="Width after packaging in cm"
+                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
                   />
                 </div>
                 <div className="relative w-full flex flex-col space-y-2">
@@ -252,8 +266,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     name="weight"
                     type="number"
                     step="any"
-                    placeholder="Weight after packaging in kilograms"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-medium placeholder:text-fluid-xxs"
+                    placeholder="Weight after packaging in kg"
+                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
                   />
                 </div>
               </div>

@@ -1,5 +1,7 @@
+import { toUTCDate } from "./toUtcDate";
+
 export function getFutureDate(dateString: Date, interval: string): string {
-  const date = new Date(dateString);
+  const date = toUTCDate(new Date(dateString));
 
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -7,9 +9,9 @@ export function getFutureDate(dateString: Date, interval: string): string {
 
   let newDate: Date;
   if (interval === "monthly") {
-    newDate = new Date(year, month + 1, day);
+    newDate = toUTCDate(new Date(year, month + 1, day));
   } else if (interval === "yearly") {
-    newDate = new Date(year + 1, month, day);
+    newDate = toUTCDate(new Date(year + 1, month, day));
   } else {
     throw new Error("Invalid interval");
   }

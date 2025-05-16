@@ -14,15 +14,13 @@ import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonth
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { NextResponse } from "next/server";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 import { sendPaymentPendingMail } from "@omenai/shared-emails/src/models/payment/sendPaymentPendingMail";
-import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessGalleryMail";
-import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
+
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 export async function POST(request: Request) {
   const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET!;
@@ -89,9 +87,13 @@ export async function POST(request: Request) {
 
     const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
     const formatted_date = getFormattedDateTime();
-    const date = new Date();
+    const date = toUTCDate(new Date());
 
     try {
+      await CreateOrder.updateOne(
+        { order_id: order_info.order_id },
+        { $set: { hold_status: null } }
+      );
       // Create a session transaction to group multiple database operations
       // A session transaction ensures that all operations are successful before it it being commited to the DB, if a single error occurs in any operation,
       // the updates are rolled back and the entire process is aborted.

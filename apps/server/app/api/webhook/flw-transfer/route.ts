@@ -1,3 +1,4 @@
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
@@ -171,7 +172,7 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
   try {
     session.startTransaction();
 
-    const now = new Date();
+    const now = toUTCDate(new Date());
     const date_obj = {
       year: now.getFullYear(),
       month: now.getMonth() + 1,

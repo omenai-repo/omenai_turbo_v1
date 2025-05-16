@@ -1,5 +1,7 @@
+import { toUTCDate } from "./toUtcDate";
+
 export function getFormattedDateTime(): string {
-  const now = new Date();
+  const now = toUTCDate(new Date());
 
   // Get the day and month for formatting
   const day = now.getDate();

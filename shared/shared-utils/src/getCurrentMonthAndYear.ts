@@ -1,5 +1,7 @@
+import { toUTCDate } from "./toUtcDate";
+
 export function getCurrentMonthAndYear(): { month: string; year: string } {
-  const date = new Date();
+  const date = toUTCDate(new Date());
   const monthNumber = date.getMonth();
   const year = date.getFullYear().toString();
 

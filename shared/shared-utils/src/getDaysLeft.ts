@@ -4,9 +4,10 @@ import {
   endOfYear,
   getDaysInMonth,
 } from "date-fns";
+import { toUTCDate } from "./toUtcDate";
 
 export function getDaysLeft(startDate: Date, interval: "yearly" | "monthly") {
-  const today = new Date();
+  const today = toUTCDate(new Date());
   const daysUsed = differenceInDays(today, startDate);
 
   const daysInMonth = getDaysInMonth(startDate);
