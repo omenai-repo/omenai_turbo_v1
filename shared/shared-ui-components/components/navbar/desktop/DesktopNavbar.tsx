@@ -41,13 +41,13 @@ export default function DesktopNavbar() {
 
         <div className="flex items-center space-x-4">
           {session && session.role === "user" && (
-            <LoggedInUser user={session.name} />
+            <LoggedInUser user={session.name} email={session.email} />
           )}
           {!session && <NavbarActionButtons />}
           {session &&
-            (session.role === "gallery" || session.role === "admin") && (
-              <NavbarActionButtons />
-            )}
+            (session.role === "gallery" ||
+              session.role === "admin" ||
+              session.role === "artist") && <NavbarActionButtons />}
           <div className="md:hidden block">
             <SlMenu
               className="text-fluid-sm"

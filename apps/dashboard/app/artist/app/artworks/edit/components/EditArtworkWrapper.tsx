@@ -171,7 +171,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor={"currency"}
-                className="text-dark/80 font-normal text-fluid-xs"
+                className="text-dark font-normal text-fluid-xs"
               >
                 Currency
               </label>
@@ -241,7 +241,7 @@ export default function EditArtworkWrapper({
           <div className="flex flex-col gap-1">
             <label
               htmlFor={"shouldShowPrice"}
-              className="text-dark/80 font-normal text-fluid-xs"
+              className="text-dark font-normal text-fluid-xs"
             >
               Display price value
             </label>

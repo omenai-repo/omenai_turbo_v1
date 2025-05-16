@@ -58,7 +58,7 @@ export default function Saves() {
 
   if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
     return (
-      <div className="w-full h-full grid place-items-center my-12">
+      <div className="w-full grid place-items-center h-[50dvh]">
         <NotFoundData />
       </div>
     );
@@ -69,7 +69,7 @@ export default function Saves() {
   );
 
   return (
-    <div>
+    <div className="pb-5">
       <>
         <p className="text-fluid-xs font-bold my-4">
           {artwork_total} artworks:

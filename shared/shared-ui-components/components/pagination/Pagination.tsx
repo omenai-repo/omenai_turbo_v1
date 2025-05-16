@@ -96,9 +96,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             className={`${width > 380 && "px-3 py-2 disabled:bg-dark/10 disabled:text-dark/50 rounded text-fluid-xxs text-white bg-dark"} ${
-              currentPage === 1
-                ? "text-dark/80 cursor-not-allowed"
-                : "text-dark"
+              currentPage === 1 ? "text-dark cursor-not-allowed" : "text-dark"
             }`}
             disabled={currentPage === 1}
             onClick={handleClickPrev}
@@ -134,7 +132,7 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-2 rounded text-white text-fluid-xxs bg-dark"}  ${
               currentPage === total
-                ? "text-dark/80 cursor-not-allowed"
+                ? "text-dark cursor-not-allowed"
                 : "text-dark"
             }`}
             disabled={currentPage === total}

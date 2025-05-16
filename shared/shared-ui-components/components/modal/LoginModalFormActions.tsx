@@ -36,7 +36,7 @@ export default function LoginModalFormActions({
         </button>
       </div>
       <div className="w-full flex justify-center my-2">
-        <p className="text-fluid-xs text-dark/80 font-medium">
+        <p className="text-fluid-xs text-dark font-medium">
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>
             <Link

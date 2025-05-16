@@ -126,7 +126,7 @@ export default function AddressForm({
       <div className="w-full my-[1rem]">
         <h1 className="my-6 text-fluid-xs font-medium">Address Information</h1>
         <form onSubmit={handleOrderSubmission}>
-          <div className="">
+          <div className="grid xl:grid-cols-2 gap-y-2 gap-x-4">
             {userDetails.map((detail, index) => {
               return (
                 <AddressTextInput
@@ -198,9 +198,9 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-full h-[35px] px-4 text-fluid-xs disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline grid place-items-center group"
+                className="w-full rounded-full h-[35px] p-5 text-fluid-xs disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline flex items-center justify-center"
               >
-                {!loading ? "Request price quote" : <LoadSmall />}
+                {!loading ? "Place this order" : <LoadSmall />}
               </button>
             </div>
           </div>

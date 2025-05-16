@@ -46,7 +46,7 @@ export default function OrdersGroup({
       <div className="w-full p-4 grid place-items-center container">
         <OrdersTab tab={tab} setTab={setTab} />
       </div>
-      <div className="w-full h-full grid place-items-center md:container">
+      <div className="w-full h-full grid place-items-center max-w-screen-lg mx-auto">
         {tab === "pending" ? (
           <Suspense fallback={<Load />}>
             <PendingOrders orders={pending_orders} />

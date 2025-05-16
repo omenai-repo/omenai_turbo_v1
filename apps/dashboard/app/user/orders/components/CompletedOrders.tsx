@@ -24,7 +24,9 @@ export default function CompletedOrders({
         className="w-full"
       >
         {orders.length === 0 ? (
-          <NotFoundData />
+          <div className="h-[50dvh] grid place-items-center">
+            <NotFoundData />
+          </div>
         ) : (
           <OrdersGroupAccordion orders={orders} tab="completed" />
         )}

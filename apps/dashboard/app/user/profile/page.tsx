@@ -3,10 +3,12 @@ import GalleryInfo from "./features/UserInfo";
 
 export default async function page() {
   return (
-    <div className="">
+    <div className="max-w-screen-lg mx-auto space-y-4 ">
       <UserBanner />
 
-      <GalleryInfo />
+      <div className="grid place-items-center">
+        <GalleryInfo />
+      </div>
     </div>
   );
 }

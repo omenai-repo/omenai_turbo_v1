@@ -83,17 +83,19 @@ export const FormCard = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 lg:px-2">
-      <InputCard
-        label="Full name"
-        value={user?.name as string}
-        onChange={() => {}}
-        labelText="name"
-      />
-      <InputCard
-        label="Email address"
-        value={user?.email as string}
-        labelText="email"
-      />
+      <div className="grid md:grid-cols-2 gap-4">
+        <InputCard
+          label="Full name"
+          value={user?.name as string}
+          onChange={() => {}}
+          labelText="name"
+        />
+        <InputCard
+          label="Email address"
+          value={user?.email as string}
+          labelText="email"
+        />
+      </div>
 
       <div>
         <Preferences />
@@ -102,7 +104,7 @@ export const FormCard = () => {
       <button
         type="submit"
         disabled={isLoading}
-        className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+        className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
       >
         {isLoading ? <LoadSmall /> : "Save edit data"}
       </button>

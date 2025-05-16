@@ -180,7 +180,7 @@ export default function AvsNoauthInput({
       <div className="w-full  flex flex-col gap-y-2">
         <label
           htmlFor={"country"}
-          className="text-dark/80 font-normal text-fluid-xs"
+          className="text-dark font-normal text-fluid-xs"
         >
           Country
         </label>
@@ -209,7 +209,7 @@ export default function AvsNoauthInput({
       </div>
       {/* State select */}
       <div className="w-full flex flex-col gap-y-2">
-        <label htmlFor={""} className="text-dark/80 font-normal text-fluid-xs">
+        <label htmlFor={""} className="text-dark font-normal text-fluid-xs">
           State
         </label>
         <select
@@ -238,7 +238,7 @@ export default function AvsNoauthInput({
       </div>
       {/* City select */}
       <div className="w-full flex flex-col gap-y-2">
-        <label htmlFor={""} className="text-dark/80 font-normal text-fluid-xs">
+        <label htmlFor={""} className="text-dark font-normal text-fluid-xs">
           City
         </label>
         <select

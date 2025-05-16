@@ -3,19 +3,31 @@ import { FiChevronDown } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useState } from "react";
 import { IconType } from "react-icons";
-import { GrFavorite } from "react-icons/gr";
 import { CgLogOut, CgProfile } from "react-icons/cg";
 import { RiAuctionLine } from "react-icons/ri";
 import { CiSettings } from "react-icons/ci";
 import Link from "next/link";
 import { UserDashboardNavigationStore } from "@omenai/shared-state-store/src/user/navigation/NavigationStore";
 import { toast } from "sonner";
-import { BiUser } from "react-icons/bi";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { useRouter } from "next/navigation";
 import { dashboard_url, auth_uri } from "@omenai/url-config/src/config";
+import {
+  UserRound,
+  HeartPulse,
+  Package,
+  UserRoundPen,
+  Settings,
+  LogOut,
+} from "lucide-react";
 
-const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
+const LoggedInUserDropDown = ({
+  user,
+  email,
+}: {
+  user: string | undefined;
+  email: string | undefined;
+}) => {
   const [open, setOpen] = useState(false);
   const { setSelected } = UserDashboardNavigationStore();
   return (
@@ -25,10 +37,20 @@ const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
           onClick={() => setOpen((pv) => !pv)}
           className="flex items-center gap-1 pl-3 py-2 rounded-sm text-dark transition-colors"
         >
-          <span className="md:block font-medium whitespace-nowrap text-fluid-base hidden">
-            {user}
-          </span>
-          <BiUser className="text-fluid-sm" />
+          <div>
+            <span className="md:block font-normal whitespace-nowrap text-fluid-xs hidden">
+              {user}
+            </span>
+            <span className="md:block font-normal whitespace-nowrap text-fluid-xxs hidden">
+              {email}
+            </span>
+          </div>
+          <UserRound
+            color="#1a1a1a"
+            size={20}
+            strokeWidth={1}
+            absoluteStrokeWidth
+          />
 
           <motion.span variants={iconVariants}>
             <FiChevronDown />
@@ -44,31 +66,66 @@ const LoggedInUserDropDown = ({ user }: { user: string | undefined }) => {
           <Option
             setSelectedTab={setSelected}
             setOpen={setOpen}
-            Icon={GrFavorite}
+            Icon={
+              <HeartPulse
+                color="#1a1a1a"
+                size={20}
+                strokeWidth={1}
+                absoluteStrokeWidth
+              />
+            }
             text="Saves"
           />
           <Option
             setSelectedTab={setSelected}
             setOpen={setOpen}
-            Icon={RiAuctionLine}
+            Icon={
+              <Package
+                color="#1a1a1a"
+                size={20}
+                strokeWidth={1}
+                absoluteStrokeWidth
+              />
+            }
             text="Orders"
           />
           <Option
             setSelectedTab={setSelected}
             setOpen={setOpen}
-            Icon={CgProfile}
+            Icon={
+              <UserRoundPen
+                color="#1a1a1a"
+                size={20}
+                strokeWidth={1}
+                absoluteStrokeWidth
+              />
+            }
             text="Profile"
           />
           <Option
             setSelectedTab={setSelected}
             setOpen={setOpen}
-            Icon={CiSettings}
+            Icon={
+              <Settings
+                color="#1a1a1a"
+                size={20}
+                strokeWidth={1}
+                absoluteStrokeWidth
+              />
+            }
             text="Settings"
           />
           <Option
             setSelectedTab={setSelected}
             setOpen={setOpen}
-            Icon={CgLogOut}
+            Icon={
+              <LogOut
+                color="#1a1a1a"
+                size={20}
+                strokeWidth={1}
+                absoluteStrokeWidth
+              />
+            }
             text="Logout"
           />
         </motion.ul>
@@ -84,13 +141,13 @@ const Option = ({
   setSelectedTab,
 }: {
   text: string;
-  Icon: IconType;
+  Icon: React.ReactNode;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setSelectedTab: (label: string) => void;
 }) => {
   const router = useRouter();
   const auth_url = auth_uri();
-  const base_dashboard_url = dashboard_url();
+  const xs_dashboard_url = dashboard_url();
 
   async function handleSignout() {
     toast.info("Signing you out...");
@@ -115,27 +172,23 @@ const Option = ({
           <motion.li
             variants={itemVariants}
             onClick={handleSignout}
-            className="flex items-center gap-2 w-full p-3 text-fluid-base font-medium whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
+            className="flex items-center gap-2 w-full p-3 text-fluid-xs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
           >
-            <motion.span variants={actionIconVariants}>
-              <Icon />
-            </motion.span>
+            <motion.span variants={actionIconVariants}>{Icon}</motion.span>
             <span>{text}</span>
           </motion.li>
         </>
       ) : (
-        <Link href={`${base_dashboard_url}/user/${text.toLowerCase()}`}>
+        <Link href={`${xs_dashboard_url}/user/${text.toLowerCase()}`}>
           <motion.li
             variants={itemVariants}
             onClick={() => {
               setSelectedTab(text.toLowerCase());
               setOpen(false);
             }}
-            className="flex items-center gap-2 w-full p-3 text-fluid-base font-medium whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
+            className="flex items-center gap-2 w-full p-3 text-fluid-xs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
           >
-            <motion.span variants={actionIconVariants}>
-              <Icon />
-            </motion.span>
+            <motion.span variants={actionIconVariants}>{Icon}</motion.span>
             <span>{text}</span>
           </motion.li>
         </Link>

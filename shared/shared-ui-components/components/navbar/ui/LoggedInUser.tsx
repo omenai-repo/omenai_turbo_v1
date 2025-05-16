@@ -1,9 +1,15 @@
 import LoggedInUserDropDown from "./LoggedInUserDropdown";
 
-export default function LoggedInUser({ user }: { user: string | undefined }) {
+export default function LoggedInUser({
+  user,
+  email,
+}: {
+  user: string | undefined;
+  email: string | undefined;
+}) {
   return (
     <div className="flex items-center">
-      <LoggedInUserDropDown user={user} />
+      <LoggedInUserDropDown user={user} email={email} />
     </div>
   );
 }

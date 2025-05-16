@@ -18,8 +18,7 @@ export default function UserLayout({
       <DesktopNavbar />
 
       <main className="relative">
-        <div className="sticky top-0 left-0 bg-white z-20">
-          <Banner />
+        <div className="sticky top-20 left-0 bg-white z-20">
           <NavigationChipTabs />
         </div>
         <UpdatePasswordModal />
