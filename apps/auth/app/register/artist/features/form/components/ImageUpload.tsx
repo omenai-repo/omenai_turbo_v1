@@ -22,6 +22,45 @@ export default function ImageUpload() {
     (artistSignupData as Record<string, any>)["logo"]
   );
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
+  const MAX_SIZE_MB = 5; // e.g., 5MB
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Check if input is actaully an image
+    const file = e.target.files?.[0];
+    if (!file?.type.startsWith("image/")) return;
+    const type = file.type.split("/");
+
+    if (file.size > MAX_SIZE_BYTES) {
+      toast.error("Error notification", {
+        description: "Image file size exceeds the maximum limit of 5MB.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+
+    if (!acceptedFileTypes.includes(type[1])) {
+      toast.error("Error notification", {
+        description:
+          "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+    setCover(e.target.files![0]);
+    updateArtistSignupData("logo", e.target.files![0]);
+    setIsFieldDirty("logo", false);
+    setErrorList([]);
+    e.target.value = "";
+  };
 
   return (
     <AnimatePresence key={`${currentArtistSignupFormIndex}-gallery`}>
@@ -67,29 +106,7 @@ export default function ImageUpload() {
             type="file"
             hidden
             ref={imagePickerRef}
-            onChange={(e) => {
-              // Check if input is actaully an image
-              if (!e.target.files![0].type.startsWith("image/")) return;
-              const type = e.target.files![0].type.split("/");
-
-              if (!acceptedFileTypes.includes(type[1])) {
-                toast.error("Error notification", {
-                  description:
-                    "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
-                  style: {
-                    background: "red",
-                    color: "white",
-                  },
-                  className: "class",
-                });
-                return;
-              } else {
-                setCover(e.target.files![0]);
-                updateArtistSignupData("logo", e.target.files![0]);
-                setIsFieldDirty("logo", false);
-                setErrorList([]);
-              }
-            }}
+            onChange={handleFileChange}
           />
         </div>
 

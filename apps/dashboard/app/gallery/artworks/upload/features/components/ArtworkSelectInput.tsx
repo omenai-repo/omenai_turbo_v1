@@ -25,6 +25,10 @@ export default function ArtworkSelectInput({
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     updateArtworkUploadData(name, e.target.value);
+    if (name === "currency") {
+      updateArtworkUploadData("price", "0");
+      updateArtworkUploadData("usd_price", "0");
+    }
   };
   return (
     <div className="flex flex-col gap-1">
@@ -35,7 +39,7 @@ export default function ArtworkSelectInput({
         onChange={handleChange}
         required={required}
         disabled={disabled}
-        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
+        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-fluid-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
       >
         <option value={disabled ? "Yes" : ""}>
           {disabled ? "Yes" : "Select"}

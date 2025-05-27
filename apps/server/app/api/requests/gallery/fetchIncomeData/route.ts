@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
           netIncome: {
             $sum: {
               $subtract: [
-                "$trans_pricing.amount_total",
-                "$trans_pricing.commission",
+                { $ifNull: ["$trans_pricing.amount_total", 0] },
+                { $ifNull: ["$trans_pricing.commission", 0] },
               ],
             },
           },

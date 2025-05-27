@@ -11,25 +11,36 @@ import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import ArtistInfoInputGroup from "./components/ArtistInfoInputGroup";
 export default function UploadArtworkDetails() {
   const router = useRouter();
-  const { errorFields } = galleryArtworkUploadStore();
+  const { errorFields, artworkUploadData } = galleryArtworkUploadStore();
 
   function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!allKeysEmpty(errorFields))
+    if (!artworkUploadData.usd_price) {
       toast.error("Error notification", {
-        description: "Invalid field inputs...",
+        description: "Please convert the price to USD before proceeding.",
         style: {
           background: "red",
           color: "white",
         },
         className: "class",
       });
-    else {
-      toast.info("Operation in progress", {
-        description: "Processing, please wait",
-      });
-      router.push("/gallery/artworks/upload/image");
+      return;
     }
+    if (!allKeysEmpty(errorFields)) {
+      toast.error("Error notification", {
+        description: "Invalid field inputs... Please check your inputs.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+    toast.info("Operation in progress", {
+      description: "Processing, please wait",
+    });
+    router.push("/gallery/artworks/upload/image");
   }
   return (
     <div className="">

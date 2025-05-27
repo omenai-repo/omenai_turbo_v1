@@ -25,6 +25,43 @@ export default function LogoPickerModal() {
   const [loading, setLoading] = useState(false);
 
   const [logo, setLogo] = useState<File | null>(null);
+  const acceptedFileTypes = ["jpg", "jpeg", "png"];
+  const MAX_SIZE_MB = 5; // e.g., 5MB
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Check if input is actaully an image
+    const file = e.target.files?.[0];
+    if (!file?.type.startsWith("image/")) return;
+    const type = file.type.split("/");
+
+    if (file.size > MAX_SIZE_BYTES) {
+      toast.error("Error notification", {
+        description: "Image file size exceeds the maximum limit of 5MB.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+
+    if (!acceptedFileTypes.includes(type[1])) {
+      toast.error("Error notification", {
+        description:
+          "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+    setLogo(file);
+    e.target.value = ""; // Reset the input value to allow re-uploading the same file
+  };
 
   const auth_url = auth_uri();
   async function handleSignout() {
@@ -172,11 +209,7 @@ export default function LogoPickerModal() {
                     type="file"
                     hidden
                     ref={logoPickerRef}
-                    onChange={(e) => {
-                      // Check if input is actaully an image
-                      if (!e.target.files![0].type.startsWith("image/")) return;
-                      setLogo(e.target.files![0]);
-                    }}
+                    onChange={handleFileChange}
                   />
                 </div>
               </div>

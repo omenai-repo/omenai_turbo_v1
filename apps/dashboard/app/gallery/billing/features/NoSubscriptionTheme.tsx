@@ -38,7 +38,10 @@ export default function NoSubscriptionTheme() {
   }
 
   if (data === undefined) router.replace(url);
-  if (!data) router.replace("/gallery/payout/refresh");
+  if (!data)
+    router.replace(
+      `/gallery/payouts/refresh?id=${session?.connected_account_id}`
+    );
 
   return (
     <div className=" w-full h-[78vh] grid place-items-center">

@@ -8,13 +8,10 @@ export const dynamic = "force-dynamic";
 
 // NOTE: Run every hour
 export async function GET() {
-  const client = await connectMongoDB();
+  await connectMongoDB();
 
-  // Create a session with the initialized MongoClient
-  const session = await client.startSession();
   try {
     // Strt session transaction
-    session.startTransaction();
 
     // Get current date
     const currentDate = new Date();
@@ -38,7 +35,6 @@ export async function GET() {
     );
 
     if (expired_user_emails.length === 0) {
-      await session.abortTransaction();
       return NextResponse.json(
         { message: "No expired subscriptions" },
         { status: 200 }
@@ -106,11 +102,7 @@ export async function GET() {
     console.log("An error occurred during the transaction:" + error);
 
     // If any errors are encountered, abort the transaction process, this rolls back all updates and ensures that the DB isn't written to.
-    await session.abortTransaction();
     // Exit the webhook
     return NextResponse.json({ status: 500 });
-  } finally {
-    // End the session to avoid reusing the same Mongoclient for different transactions
-    await session.endSession();
   }
 }

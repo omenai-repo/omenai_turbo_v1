@@ -209,12 +209,10 @@ async function handleSubscriptionPayment(
       await session.endSession();
     }
 
-    sendSubscriptionPaymentSuccessfulMail({
+    await sendSubscriptionPaymentSuccessfulMail({
       name: req.data.customer.name,
       email: req.data.customer.email,
-    }).catch((err) =>
-      console.error("Failed to send subscription payment success email:", err)
-    );
+    });
 
     return NextResponse.json({ status: 200 });
   } else {

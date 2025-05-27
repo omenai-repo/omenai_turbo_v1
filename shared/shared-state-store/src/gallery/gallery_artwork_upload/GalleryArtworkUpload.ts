@@ -15,7 +15,7 @@ type GalleryArtworkUploadTypes = {
   image: File | null;
   setImage: (img: File | null) => void;
   artworkUploadData: ArtworkUploadStateTypes;
-  updateArtworkUploadData: (label: string, value: string) => void;
+  updateArtworkUploadData: (label: string, value: string | number) => void;
   clearData: () => void;
   errorFields: ErrorFields;
   updateErrorField: (label: string, value: string) => void;
@@ -47,7 +47,7 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       signature: "",
       currency: "",
     },
-    updateArtworkUploadData: (label: string, value: string) => {
+    updateArtworkUploadData: (label: string, value: string | number) => {
       const data: Record<string, any> = get().artworkUploadData;
 
       if (label in data) {
