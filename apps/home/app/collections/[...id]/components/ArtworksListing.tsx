@@ -34,6 +34,7 @@ export function ArtworksListing({
   } = collectionsStore();
   const { filterOptions } = collectionsFilterStore();
   const { width } = useWindowSize();
+  console.log(medium);
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_artworks_by_collection"],

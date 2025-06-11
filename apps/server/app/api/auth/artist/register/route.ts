@@ -10,8 +10,11 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   try {
     await connectMongoDB();
 
@@ -67,4 +70,4 @@ export async function POST(request: Request) {
       { status: error_response?.status }
     );
   }
-}
+});

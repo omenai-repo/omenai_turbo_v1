@@ -6,152 +6,162 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
-export async function POST(request: Request) {
-  try {
-    const data = await request.json();
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+export const POST = withRateLimitAndHighlight(standardRateLimit)(
+  async function POST(request: Request) {
+    try {
+      const data = await request.json();
 
-    await connectMongoDB();
+      await connectMongoDB();
 
-    const verify_transaction = await fetch(
-      `https://api.flutterwave.com/v3/transactions/${data.transaction_id}/verify`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
-        },
-      }
-    );
-
-    const convert_verify_transaction_json_response =
-      await verify_transaction.json();
-
-    if (convert_verify_transaction_json_response.status !== "success") {
-      return NextResponse.json(
+      const verify_transaction = await fetch(
+        `https://api.flutterwave.com/v3/transactions/${data.transaction_id}/verify`,
         {
-          message: convert_verify_transaction_json_response.message,
-        },
-        { status: 404 }
-      );
-    }
-
-    if (convert_verify_transaction_json_response.data.status !== "successful") {
-      return NextResponse.json(
-        {
-          message: "Transaction failed",
-          data: convert_verify_transaction_json_response.data,
-        },
-        { status: 200 }
-      );
-    } else {
-      const deposit_balance =
-        (30 / 100) *
-        convert_verify_transaction_json_response.data.charged_amount;
-      const balance =
-        convert_verify_transaction_json_response.data.charged_amount -
-        deposit_balance;
-      const gallery_wallet_update = await Wallet.findOneAndUpdate(
-        { owner_id: data.gallery_id },
-        {
-          $inc: {
-            available_balance: balance,
-          },
-        },
-        { new: true }
-      );
-
-      if (!gallery_wallet_update) {
-        return NextResponse.json(
-          {
-            message: "Unable to verify transaction. Please contact support1",
-            data: convert_verify_transaction_json_response.data,
-          },
-          { status: 500 }
-        );
-      }
-
-      const currentDate = new Date();
-
-      const transaction_data = {
-        trans_amount:
-          convert_verify_transaction_json_response.data.charged_amount,
-        trans_wallet_id: gallery_wallet_update.wallet_id,
-        trans_owner_id: data.gallery_id,
-        trans_type: "deposit",
-        trans_date: currentDate,
-      };
-
-      const update_transactions_db =
-        await PurchaseTransactions.create(transaction_data);
-
-      if (!update_transactions_db) {
-        return NextResponse.json(
-          {
-            message: "Unable to verify transaction. Please contact support2",
-            data: convert_verify_transaction_json_response.data,
-          },
-          { status: 500 }
-        );
-      }
-
-      const { month, year } = getCurrentMonthAndYear();
-
-      const create_sales_activity = await SalesActivity.create({
-        month,
-        year,
-        value: balance,
-        gallery_id: data.gallery_id,
-      });
-
-      if (!create_sales_activity) {
-        return NextResponse.json(
-          {
-            message: "Unable to verify transaction. Please contact support3",
-            data: convert_verify_transaction_json_response.data,
-          },
-          { status: 500 }
-        );
-      }
-
-      const update_order_data = await CreateOrder.updateOne(
-        { order_id: data.order_id },
-        {
-          $set: {
-            payment_information: {
-              status: "completed",
-              transaction_value:
-                convert_verify_transaction_json_response.data.charged_amount,
-              transaction_date: currentDate,
-              transaction_reference: update_transactions_db.trans_reference,
-            },
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           },
         }
       );
 
-      if (update_order_data.modifiedCount === 0) {
+      const convert_verify_transaction_json_response =
+        await verify_transaction.json();
+
+      if (convert_verify_transaction_json_response.status !== "success") {
         return NextResponse.json(
           {
-            message: "Unable to verify transaction. Please contact support3",
-            data: convert_verify_transaction_json_response.data,
+            message: convert_verify_transaction_json_response.message,
           },
-          { status: 500 }
+          { status: 404 }
         );
       }
 
+      if (
+        convert_verify_transaction_json_response.data.status !== "successful"
+      ) {
+        return NextResponse.json(
+          {
+            message: "Transaction failed",
+            data: convert_verify_transaction_json_response.data,
+          },
+          { status: 200 }
+        );
+      } else {
+        const deposit_balance =
+          (30 / 100) *
+          convert_verify_transaction_json_response.data.charged_amount;
+        const balance =
+          convert_verify_transaction_json_response.data.charged_amount -
+          deposit_balance;
+        const gallery_wallet_update = await Wallet.findOneAndUpdate(
+          { owner_id: data.gallery_id },
+          {
+            $inc: {
+              available_balance: balance,
+            },
+          },
+          { new: true }
+        );
+
+        if (!gallery_wallet_update) {
+          return NextResponse.json(
+            {
+              message: "Unable to verify transaction. Please contact support1",
+              data: convert_verify_transaction_json_response.data,
+            },
+            { status: 500 }
+          );
+        }
+
+        const currentDate = new Date();
+
+        const transaction_data = {
+          trans_amount:
+            convert_verify_transaction_json_response.data.charged_amount,
+          trans_wallet_id: gallery_wallet_update.wallet_id,
+          trans_owner_id: data.gallery_id,
+          trans_type: "deposit",
+          trans_date: currentDate,
+        };
+
+        const update_transactions_db =
+          await PurchaseTransactions.create(transaction_data);
+
+        if (!update_transactions_db) {
+          return NextResponse.json(
+            {
+              message: "Unable to verify transaction. Please contact support2",
+              data: convert_verify_transaction_json_response.data,
+            },
+            { status: 500 }
+          );
+        }
+
+        const { month, year } = getCurrentMonthAndYear();
+
+        const create_sales_activity = await SalesActivity.create({
+          month,
+          year,
+          value: balance,
+          gallery_id: data.gallery_id,
+        });
+
+        if (!create_sales_activity) {
+          return NextResponse.json(
+            {
+              message: "Unable to verify transaction. Please contact support3",
+              data: convert_verify_transaction_json_response.data,
+            },
+            { status: 500 }
+          );
+        }
+
+        const update_order_data = await CreateOrder.updateOne(
+          { order_id: data.order_id },
+          {
+            $set: {
+              payment_information: {
+                status: "completed",
+                transaction_value:
+                  convert_verify_transaction_json_response.data.charged_amount,
+                transaction_date: currentDate,
+                transaction_reference: update_transactions_db.trans_reference,
+              },
+            },
+          }
+        );
+
+        if (update_order_data.modifiedCount === 0) {
+          return NextResponse.json(
+            {
+              message: "Unable to verify transaction. Please contact support3",
+              data: convert_verify_transaction_json_response.data,
+            },
+            { status: 500 }
+          );
+        }
+
+        return NextResponse.json(
+          {
+            message: "Transaction successful",
+            data: convert_verify_transaction_json_response.data,
+          },
+          { status: 200 }
+        );
+      }
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+
       return NextResponse.json(
-        {
-          message: "Transaction successful",
-          data: convert_verify_transaction_json_response.data,
-        },
-        { status: 200 }
+        { message: error_response?.message },
+        { status: error_response?.status }
       );
     }
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
   }
-}
+);

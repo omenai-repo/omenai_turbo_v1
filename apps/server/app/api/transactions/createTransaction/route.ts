@@ -4,30 +4,35 @@ import { PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    await connectMongoDB();
-    const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_reference"> =
-      await request.json();
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
+      const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_reference"> =
+        await request.json();
 
-    const createTransaction = await PurchaseTransactions.create(data);
+      const createTransaction = await PurchaseTransactions.create(data);
 
-    if (!createTransaction)
-      throw new ServerError("An error was encountered. Please try again");
+      if (!createTransaction)
+        throw new ServerError("An error was encountered. Please try again");
 
-    return NextResponse.json(
-      {
-        message: "Transaction created",
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      return NextResponse.json(
+        {
+          message: "Transaction created",
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

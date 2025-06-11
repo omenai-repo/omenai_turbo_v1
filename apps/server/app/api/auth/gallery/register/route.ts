@@ -11,70 +11,75 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendGalleryMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryMail";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    await connectMongoDB();
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
 
-    const data = await request.json();
+      const data = await request.json();
 
-    const isAccountRegistered = await AccountGallery.findOne({
-      email: data.email,
-    }).exec();
+      const isAccountRegistered = await AccountGallery.findOne({
+        email: data.email,
+      }).exec();
 
-    if (isAccountRegistered)
-      throw new ConflictError("Account already exists, please login");
+      if (isAccountRegistered)
+        throw new ConflictError("Account already exists, please login");
 
-    const isAccountRejected = await RejectedGallery.findOne({
-      email: data.email,
-    }).exec();
+      const isAccountRejected = await RejectedGallery.findOne({
+        email: data.email,
+      }).exec();
 
-    if (isAccountRejected)
-      throw new ConflictError(
-        "Unfortunately, you cannot create an account with us at this time. Please contact support."
+      if (isAccountRejected)
+        throw new ConflictError(
+          "Unfortunately, you cannot create an account with us at this time. Please contact support."
+        );
+
+      const parsedData = await parseRegisterData(data);
+
+      const email_token = generateDigit(7);
+
+      const saveData = await AccountGallery.create({
+        ...parsedData,
+      });
+
+      const { gallery_id, email, name } = saveData;
+
+      if (!saveData)
+        throw new ServerError("A server error has occured, please try again");
+
+      const storeVerificationCode = await VerificationCodes.create({
+        code: email_token,
+        author: saveData.gallery_id,
+      });
+
+      if (!storeVerificationCode)
+        throw new ServerError("A server error has occured, please try again");
+
+      await sendGalleryMail({
+        name: name,
+        email: email,
+        token: email_token,
+      });
+
+      return NextResponse.json(
+        {
+          message: "Account successfully registered",
+          data: gallery_id,
+        },
+        { status: 201 }
       );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+      console.log(error);
 
-    const parsedData = await parseRegisterData(data);
-
-    const email_token = generateDigit(7);
-
-    const saveData = await AccountGallery.create({
-      ...parsedData,
-    });
-
-    const { gallery_id, email, name } = saveData;
-
-    if (!saveData)
-      throw new ServerError("A server error has occured, please try again");
-
-    const storeVerificationCode = await VerificationCodes.create({
-      code: email_token,
-      author: saveData.gallery_id,
-    });
-
-    if (!storeVerificationCode)
-      throw new ServerError("A server error has occured, please try again");
-
-    await sendGalleryMail({
-      name: name,
-      email: email,
-      token: email_token,
-    });
-
-    return NextResponse.json(
-      {
-        message: "Account successfully registered",
-        data: gallery_id,
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    console.log(error);
-
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

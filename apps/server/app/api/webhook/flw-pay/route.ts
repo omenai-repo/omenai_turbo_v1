@@ -30,6 +30,7 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
 async function verifyWebhookSignature(
   signature: string | null,
@@ -418,7 +419,9 @@ async function handlePurchaseTransaction(
   }
 }
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   const secretHash = process.env.FLW_SECRET_HASH!;
   const signature = request.headers.get("verif-hash");
   const isValid = await verifyWebhookSignature(signature, secretHash);
@@ -452,4 +455,4 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ status: 200 });
-}
+});

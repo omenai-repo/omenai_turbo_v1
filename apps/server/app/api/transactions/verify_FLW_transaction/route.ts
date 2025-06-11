@@ -2,8 +2,11 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { ConflictError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   try {
     const data = await request.json();
 
@@ -72,8 +75,7 @@ export async function POST(request: Request) {
       { status: errorResponse?.status }
     );
   }
-}
-
+});
 // Utility function to create a standardized response
 function createResponse(message: string, data: any, status: number) {
   return NextResponse.json(

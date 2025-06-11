@@ -1,40 +1,49 @@
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
 
 // NOTE: Run every hour
-export async function GET() {
-  try {
-    await connectMongoDB();
+export const GET = withRateLimitAndHighlight(lenientRateLimit)(
+  async function GET(): Promise<Response> {
+    try {
+      await connectMongoDB();
 
-    const today = new Date();
+      const today = new Date();
 
-    const results = await Subscriptions.aggregate([
-      {
-        $match: {
-          $expr: {
-            $in: [
-              {
-                $dateDiff: {
-                  startDate: today,
-                  endDate: "$expiry_date",
-                  unit: "day",
+      const results = await Subscriptions.aggregate([
+        {
+          $match: {
+            $expr: {
+              $in: [
+                {
+                  $dateDiff: {
+                    startDate: today,
+                    endDate: "$expiry_date",
+                    unit: "day",
+                  },
                 },
-              },
-              [3, 2, 1],
-            ],
+                [3, 2, 1],
+              ],
+            },
           },
         },
-      },
-      {
-        $project: {
-          "customer.email": 1, // Include userId
+        {
+          $project: {
+            "customer.email": 1, // Include userId
+          },
         },
-      },
-    ]);
+      ]);
 
-    // todo: Send reminder mail to users
+      // todo: Send reminder mail to users
 
-    return NextResponse.json({ data: results, mesage: "Success" });
-  } catch (error) {}
-}
+      return NextResponse.json({ data: results, mesage: "Success" });
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
+  }
+);

@@ -3,35 +3,40 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    await connectMongoDB();
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
 
-    const { id, url } = await request.json();
+      const { id, url } = await request.json();
 
-    const updateLogo = await AccountArtist.updateOne(
-      { artist_id: id },
-      { $set: { logo: url } }
-    );
-
-    if (updateLogo.modifiedCount === 0)
-      throw new ServerError(
-        "Error updating logo. Please try again or contact support"
+      const updateLogo = await AccountArtist.updateOne(
+        { artist_id: id },
+        { $set: { logo: url } }
       );
 
-    return NextResponse.json(
-      {
-        message: "Logo updated",
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      if (updateLogo.modifiedCount === 0)
+        throw new ServerError(
+          "Error updating logo. Please try again or contact support"
+        );
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        {
+          message: "Logo updated",
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

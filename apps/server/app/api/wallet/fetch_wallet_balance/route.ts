@@ -3,43 +3,52 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function GET(request: NextRequest) {
-  try {
-    await connectMongoDB();
-    const searchParams = request.nextUrl.searchParams;
-    const owner_id = searchParams.get("id");
+export const GET = withRateLimitAndHighlight(standardRateLimit)(
+  async function GET(request: Request) {
+    try {
+      await connectMongoDB();
+      const url = new URL(request.url);
+      const searchParams = url.searchParams;
+      const owner_id = searchParams.get("id");
 
-    // Check if wallet exists
-    const fetch_wallet = await Wallet.findOne(
-      { owner_id },
-      "available_balance pending_balance wallet_id"
-    );
-
-    if (!fetch_wallet)
-      throw new NotFoundError(
-        "Wallet doesn't exists for this user, please escalate to IT support"
+      // Check if wallet exists
+      const fetch_wallet = await Wallet.findOne(
+        { owner_id },
+        "available_balance pending_balance wallet_id"
       );
 
-    const balances = {
-      available: fetch_wallet.available_balance,
-      pending: fetch_wallet.pending_balance,
-      wallet_id: fetch_wallet.wallet_id,
-    };
+      if (!fetch_wallet)
+        throw new NotFoundError(
+          "Wallet doesn't exists for this user, please escalate to IT support"
+        );
 
-    return NextResponse.json(
-      {
-        message: "Wallet balance fetched",
-        balances,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      const balances = {
+        available: fetch_wallet.available_balance,
+        pending: fetch_wallet.pending_balance,
+        wallet_id: fetch_wallet.wallet_id,
+      };
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        {
+          message: "Wallet balance fetched",
+          balances,
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

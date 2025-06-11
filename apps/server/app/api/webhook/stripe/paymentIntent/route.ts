@@ -21,8 +21,11 @@ import { sendPaymentPendingMail } from "@omenai/shared-emails/src/models/payment
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET!;
   const rawBody = await request.text();
 
@@ -222,4 +225,4 @@ export async function POST(request: Request) {
 
   // Return a 200 response to acknowledge receipt of the event
   return NextResponse.json({ status: 200 });
-}
+});

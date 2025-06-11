@@ -6,39 +6,44 @@ import {
   BadRequestError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
-export async function POST(request: Request) {
-  try {
-    await connectMongoDB();
-    const { artist_id, otp } = await request.json();
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
+      const { artist_id, otp } = await request.json();
 
-    const isOtpActive = await VerificationCodes.findOne({
-      author: artist_id,
-      code: otp,
-    });
+      const isOtpActive = await VerificationCodes.findOne({
+        author: artist_id,
+        code: otp,
+      });
 
-    if (!isOtpActive) throw new BadRequestError("Invalid OTP code");
+      if (!isOtpActive) throw new BadRequestError("Invalid OTP code");
 
-    const delete_code = await VerificationCodes.deleteOne({
-      author: artist_id,
-      code: otp,
-    });
+      const delete_code = await VerificationCodes.deleteOne({
+        author: artist_id,
+        code: otp,
+      });
 
-    if (delete_code.deletedCount === 0)
-      throw new ServerError("An error has occured. Please contact support");
+      if (delete_code.deletedCount === 0)
+        throw new ServerError("An error has occured. Please contact support");
 
-    return NextResponse.json(
-      {
-        message: "OTP code validated successfully",
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    console.log(error);
+      return NextResponse.json(
+        {
+          message: "OTP code validated successfully",
+        },
+        { status: 201 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+      console.log(error);
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

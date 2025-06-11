@@ -3,8 +3,11 @@ import { RecentView } from "@omenai/shared-models/models/artworks/RecentlyViewed
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   try {
     await connectMongoDB();
 
@@ -35,4 +38,4 @@ export async function POST(request: Request) {
       { status: error_response?.status }
     );
   }
-}
+});

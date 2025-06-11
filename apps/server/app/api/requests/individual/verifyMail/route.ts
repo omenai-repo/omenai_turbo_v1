@@ -1,5 +1,3 @@
-import { getIp } from "@omenai/shared-lib/auth/getIp";
-import { limiter } from "@omenai/shared-lib/auth/limiter";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
@@ -10,51 +8,53 @@ import {
   BadRequestError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    // const ip = await getIp();
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      const { params, token } = await request.json();
 
-    // const { success } = await limiter.limit(ip);
-    // if (!success)
-    //   throw new RateLimitExceededError("Too many requests, try again later.");
+      await connectMongoDB();
 
-    const { params, token } = await request.json();
+      const user = await AccountIndividual.findOne(
+        { user_id: params },
+        "verified"
+      ).exec();
 
-    await connectMongoDB();
+      if (user.verified)
+        throw new ForbiddenError(
+          "This action is not permitted, account already verified"
+        );
 
-    const user = await AccountIndividual.findOne(
-      { user_id: params },
-      "verified"
-    ).exec();
+      const isTokenActive = await VerificationCodes.findOne({
+        author: params,
+        code: token,
+      }).exec();
 
-    if (user.verified)
-      throw new ForbiddenError(
-        "This action is not permitted, account already verified"
+      if (!isTokenActive) throw new BadRequestError("Invalid token data");
+
+      await AccountIndividual.updateOne(
+        { user_id: params },
+        { verified: true }
       );
 
-    const isTokenActive = await VerificationCodes.findOne({
-      author: params,
-      code: token,
-    }).exec();
+      await VerificationCodes.deleteOne({ code: token, author: params });
 
-    if (!isTokenActive) throw new BadRequestError("Invalid token data");
+      return NextResponse.json(
+        { message: "Verification was successful. Please login" },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+      console.log(error);
 
-    await AccountIndividual.updateOne({ user_id: params }, { verified: true });
-
-    await VerificationCodes.deleteOne({ code: token, author: params });
-
-    return NextResponse.json(
-      { message: "Verification was successful. Please login" },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    console.log(error);
-
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

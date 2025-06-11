@@ -1,6 +1,5 @@
 import { sendIndividualMail } from "@omenai/shared-emails/src/models/individuals/sendIndividualMail";
-import { getIp } from "@omenai/shared-lib/auth/getIp";
-import { limiter } from "@omenai/shared-lib/auth/limiter";
+
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
@@ -13,70 +12,70 @@ import {
   ServerError,
 } from "../../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    // const ip = await getIp();
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
 
-    // const { success } = await limiter.limit(ip);
-    // if (!success)
-    //   throw new RateLimitExceededError("Too many requests, try again later.");
-    await connectMongoDB();
+      const { author } = await request.json();
 
-    const { author } = await request.json();
+      const { name, email, verified } = await AccountIndividual.findOne(
+        { user_id: author },
+        "name email verified"
+      ).exec();
 
-    const { name, email, verified } = await AccountIndividual.findOne(
-      { user_id: author },
-      "name email verified"
-    ).exec();
+      if (!name || !email)
+        throw new NotFoundError("Unable to authenticate account");
 
-    if (!name || !email)
-      throw new NotFoundError("Unable to authenticate account");
+      if (verified)
+        throw new ForbiddenError(
+          "This action is not permitted. Account already verified"
+        );
 
-    if (verified)
-      throw new ForbiddenError(
-        "This action is not permitted. Account already verified"
-      );
+      const email_token = generateDigit(7);
 
-    const email_token = generateDigit(7);
-
-    const isVerificationTokenActive = await VerificationCodes.findOne({
-      author,
-    });
-
-    if (isVerificationTokenActive)
-      await VerificationCodes.deleteOne({
+      const isVerificationTokenActive = await VerificationCodes.findOne({
         author,
-        code: isVerificationTokenActive.code,
       });
 
-    const storeVerificationCode = await VerificationCodes.create({
-      code: email_token,
-      author,
-    });
+      if (isVerificationTokenActive)
+        await VerificationCodes.deleteOne({
+          author,
+          code: isVerificationTokenActive.code,
+        });
 
-    if (!storeVerificationCode)
-      throw new ServerError("A server error has occured, please try again");
+      const storeVerificationCode = await VerificationCodes.create({
+        code: email_token,
+        author,
+      });
 
-    await sendIndividualMail({
-      name,
-      email,
-      token: email_token,
-    });
+      if (!storeVerificationCode)
+        throw new ServerError("A server error has occured, please try again");
 
-    return NextResponse.json(
-      {
-        message: "Verification code resent",
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    console.log(error);
+      await sendIndividualMail({
+        name,
+        email,
+        token: email_token,
+      });
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        {
+          message: "Verification code resent",
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+      console.log(error);
+
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

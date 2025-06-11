@@ -2,9 +2,14 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
+export const GET = withAppRouterHighlight(async function GET(
+  request: Request,
+  context: { params: Promise<Record<string, string>> }
+) {
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
 
   const artistId = searchParams.get("id");
   try {
@@ -63,4 +68,4 @@ export async function GET(request: NextRequest) {
       { status: error_response?.status }
     );
   }
-}
+});

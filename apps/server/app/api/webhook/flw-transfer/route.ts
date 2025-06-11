@@ -14,6 +14,7 @@ import {
   verifyWebhookSignature,
   verifyFlutterwaveTransaction,
 } from "../resource-global";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
 const SECRET_HASH = process.env.FLW_SECRET_HASH!;
 
@@ -204,7 +205,10 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request,
+  context: { params: Promise<Record<string, string>> }
+): Promise<Response> {
   const signature = request.headers.get("verif-hash");
   const isValid = await isSignatureValid(signature!, SECRET_HASH);
 
@@ -238,4 +242,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ status: 400 });
     }
   }
-}
+
+  // Always return a Response
+  return NextResponse.json({ status: 200 });
+});

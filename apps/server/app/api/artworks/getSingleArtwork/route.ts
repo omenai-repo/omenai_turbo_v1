@@ -3,8 +3,11 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { NextResponse } from "next/server";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   try {
     await connectMongoDB();
 
@@ -12,7 +15,6 @@ export async function POST(request: Request) {
 
     const artwork = await Artworkuploads.findOne({ title }).exec();
     if (!artwork) throw new NotFoundError("Artwork not found");
-
 
     return NextResponse.json(
       {
@@ -30,4 +32,4 @@ export async function POST(request: Request) {
       { status: error_response!.status }
     );
   }
-}
+});

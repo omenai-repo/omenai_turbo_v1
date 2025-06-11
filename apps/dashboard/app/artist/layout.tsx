@@ -14,7 +14,7 @@ export default function UserLayout({
   const session = useSession() as ArtistSchemaTypes;
   return (
     <>
-      {width < 1280 ? (
+      {width < 1024 ? (
         <NoMobileView />
       ) : (
         <>

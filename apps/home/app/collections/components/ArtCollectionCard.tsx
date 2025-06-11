@@ -13,11 +13,11 @@ export default function ArtCollectionCard({
       <Link href={"/collections/" + title}>
         <div className="flex flex-col ">
           <Image
-            width={250}
+            width={300}
             height={250}
             src={`/images/${url}.jpg`}
             alt={title + " image"}
-            className="min-w-[250px] w-auto min-h-[200px] h-[250px] object-cover object-top cursor-pointer"
+            className="min-w-[300px] w-[300px] min-h-[250px] h-[250px] object-cover object-top cursor-pointer"
           />
           <div className="bg-[#FAFAFA] flex flex-col p-4">
             <p className="text-fluid-xs font-light">{title}</p>

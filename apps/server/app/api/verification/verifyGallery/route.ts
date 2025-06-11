@@ -1,34 +1,29 @@
 import { getIp } from "@omenai/shared-lib/auth/getIp";
-import { requestGalleryVerif } from "@omenai/shared-lib/auth/limiter";
 import { NextResponse } from "next/server";
-import { RateLimitExceededError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendVerifyGalleryMail } from "@omenai/shared-emails/src/models/verification/sendVerifyGalleryMail";
-export async function POST(request: Request) {
-  try {
-    const { name } = await request.json();
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function POST(request: Request) {
+    try {
+      const { name } = await request.json();
 
-    const ip = await getIp();
+      const ip = await getIp();
 
-    const { success } = await requestGalleryVerif.limit(ip);
+      await sendVerifyGalleryMail({ name, email: "moses@omenai.net" });
 
-    if (!success)
-      throw new RateLimitExceededError(
-        "Too many requests attempted. Please try again after 24hrs"
+      return NextResponse.json(
+        { message: "Gallery verification request sent" },
+        { status: 200 }
       );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
 
-    await sendVerifyGalleryMail({ name, email: "moses@omenai.net" });
-
-    return NextResponse.json(
-      { message: "Gallery verification request sent" },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

@@ -4,33 +4,42 @@ import { NextResponse } from "next/server";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    await connectMongoDB();
+export const POST = withRateLimitAndHighlight(standardRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
 
-    const data = await request.json();
+      const data = await request.json();
 
-    const updatedData = await AccountArtist.findOneAndUpdate(
-      { artist_id: data.id },
-      { $set: { ...data } }
-    );
+      const updatedData = await AccountArtist.findOneAndUpdate(
+        { artist_id: data.id },
+        { $set: { ...data } }
+      );
 
-    if (!updatedData) throw new ServerError("An unexpected error has occured.");
+      if (!updatedData)
+        throw new ServerError("An unexpected error has occured.");
 
-    return NextResponse.json(
-      {
-        message: "Artist Profile data updated",
-        data: updatedData,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      return NextResponse.json(
+        {
+          message: "Artist Profile data updated",
+          data: updatedData,
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

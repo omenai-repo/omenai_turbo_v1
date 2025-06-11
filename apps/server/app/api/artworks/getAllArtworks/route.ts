@@ -3,34 +3,41 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function POST(request: Request) {
-  try {
-    await connectMongoDB();
+export const POST = withRateLimitAndHighlight(lenientRateLimit)(
+  async function POST(request: Request) {
+    try {
+      await connectMongoDB();
 
-    const { page } = await request.json();
+      const { page } = await request.json();
 
-    const skip = (page - 1) * 10;
+      const skip = (page - 1) * 10;
 
-    const allArtworks = await Artworkuploads.find().skip(skip).limit(16).sort({
-      createdAt: -1,
-    });
+      const allArtworks = await Artworkuploads.find()
+        .skip(skip)
+        .limit(16)
+        .sort({
+          createdAt: -1,
+        });
 
-    if (!allArtworks) throw new ServerError("An error was encountered");
+      if (!allArtworks) throw new ServerError("An error was encountered");
 
-    return NextResponse.json(
-      {
-        message: "Successful",
-        data: allArtworks,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      return NextResponse.json(
+        {
+          message: "Successful",
+          data: allArtworks,
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

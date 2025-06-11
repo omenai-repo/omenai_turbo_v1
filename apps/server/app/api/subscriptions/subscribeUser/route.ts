@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { createSubscription } from "@omenai/shared-services/subscriptions/createSubscription";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request,
+  context: { params: Promise<Record<string, string>> }
+): Promise<Response> {
   try {
     const { email, name } = await request.json();
     // Get list of subscriptions to check if user is subscribed already
@@ -98,6 +102,11 @@ export async function POST(request: Request) {
         );
       }
     }
+    // Always return a Response
+    return NextResponse.json(
+      { message: "No action performed" },
+      { status: 400 }
+    );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 
@@ -106,4 +115,4 @@ export async function POST(request: Request) {
       { status: error_response?.status }
     );
   }
-}
+});

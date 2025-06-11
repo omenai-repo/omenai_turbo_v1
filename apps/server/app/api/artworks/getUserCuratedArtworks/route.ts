@@ -4,10 +4,13 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   const PAGE_SIZE = 30;
   const BASIC_LIMIT = 25;
   try {
@@ -154,5 +157,5 @@ export async function POST(request: Request) {
       { status: error_response?.status }
     );
   }
-}
+});
 // medium: { $in: preferences },

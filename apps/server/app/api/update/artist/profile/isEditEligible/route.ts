@@ -13,6 +13,12 @@ import {
   isAfter,
   startOfDay,
 } from "date-fns";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
 type Result = {
   isOneYearPassed: boolean;
@@ -31,40 +37,44 @@ const checkIfOneYearPassed = (ts: string): Result => {
   return { isOneYearPassed: false, daysLeft };
 };
 
-export async function POST(request: NextRequest) {
-  try {
-    const { artist_id } = await request.json();
+export const POST = withRateLimitAndHighlight(standardRateLimit)(
+  async function POST(request: Request) {
+    try {
+      const { artist_id } = await request.json();
 
-    const find_artist_categorization = await ArtistCategorization.findOne(
-      { artist_id },
-      "updatedAt request"
-    );
-    if (!find_artist_categorization)
-      throw new NotFoundError("Categorization data not found for this Artist");
-
-    const { updatedAt } = find_artist_categorization;
-
-    if (find_artist_categorization.request !== null)
-      throw new ForbiddenError(
-        "A request to update your credentials is already in progress. Please be patient while we process your request."
+      const find_artist_categorization = await ArtistCategorization.findOne(
+        { artist_id },
+        "updatedAt request"
       );
+      if (!find_artist_categorization)
+        throw new NotFoundError(
+          "Categorization data not found for this Artist"
+        );
 
-    const isEligible: Result = checkIfOneYearPassed(updatedAt);
-    const eligibility = {
-      isEligible: isEligible.isOneYearPassed,
-      daysLeft: isEligible.daysLeft,
-    };
+      const { updatedAt } = find_artist_categorization;
 
-    return NextResponse.json(
-      { message: "Eligibility retrieved successfully", eligibility },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      if (find_artist_categorization.request !== null)
+        throw new ForbiddenError(
+          "A request to update your credentials is already in progress. Please be patient while we process your request."
+        );
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      const isEligible: Result = checkIfOneYearPassed(updatedAt);
+      const eligibility = {
+        isEligible: isEligible.isOneYearPassed,
+        daysLeft: isEligible.daysLeft,
+      };
+
+      return NextResponse.json(
+        { message: "Eligibility retrieved successfully", eligibility },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);

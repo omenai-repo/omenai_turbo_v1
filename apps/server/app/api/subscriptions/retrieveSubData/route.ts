@@ -3,8 +3,11 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   try {
     await connectMongoDB();
     const { gallery_id } = await request.json();
@@ -39,4 +42,4 @@ export async function POST(request: Request) {
       { status: error_response?.status }
     );
   }
-}
+});

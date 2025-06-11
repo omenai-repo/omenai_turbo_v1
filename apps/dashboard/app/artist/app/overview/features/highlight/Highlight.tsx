@@ -9,7 +9,7 @@ export default function Highlight() {
         return (
           <div
             key={item.title}
-            className="flex flex-col rounded-full shadow py-4 px-8 bg-dark text-white"
+            className="flex flex-col rounded-[20px] shadow p-4 bg-dark text-white"
           >
             <div className="flex justify-between items-center w-full">
               <div>

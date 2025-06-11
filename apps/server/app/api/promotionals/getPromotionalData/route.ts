@@ -2,10 +2,11 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PromotionalModel } from "@omenai/shared-models/models/promotionals/PromotionalSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export const GET = withAppRouterHighlight(async function GET() {
   try {
     await connectMongoDB();
 
@@ -28,4 +29,4 @@ export async function GET() {
       { status: error_response?.status }
     );
   }
-}
+});

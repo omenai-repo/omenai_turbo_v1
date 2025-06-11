@@ -7,41 +7,46 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export async function PUT(request: Request) {
-  try {
-    await connectMongoDB();
+export const POST = withRateLimitAndHighlight(strictRateLimit)(
+  async function PUT(request: Request) {
+    try {
+      await connectMongoDB();
 
-    const data: {
-      filter: any;
-      art_id: string;
-    } = await request.json();
+      const data: {
+        filter: any;
+        art_id: string;
+      } = await request.json();
 
-    if (data === null || data === undefined || !data.art_id || !data.filter)
-      throw new ConflictError("Invalid input data");
+      if (data === null || data === undefined || !data.art_id || !data.filter)
+        throw new ConflictError("Invalid input data");
 
-    const updateArtworkPrice = await Artworkuploads.updateOne(
-      { art_id: data.art_id },
-      { $set: { ...data.filter } }
-    );
-
-    if (updateArtworkPrice.modifiedCount === 0)
-      throw new ServerError(
-        "Request could not be completed at this time. Please contact support"
+      const updateArtworkPrice = await Artworkuploads.updateOne(
+        { art_id: data.art_id },
+        { $set: { ...data.filter } }
       );
 
-    return NextResponse.json(
-      {
-        message: "Successfully updated artwork data",
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
+      if (updateArtworkPrice.modifiedCount === 0)
+        throw new ServerError(
+          "Request could not be completed at this time. Please contact support"
+        );
 
-    return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
-    );
+      return NextResponse.json(
+        {
+          message: "Successfully updated artwork data",
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   }
-}
+);
