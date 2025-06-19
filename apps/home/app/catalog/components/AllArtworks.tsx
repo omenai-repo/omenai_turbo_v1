@@ -11,12 +11,11 @@ import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
-export default function AllArtworks({
-  sessionId,
-}: {
-  sessionId: string | undefined;
-}) {
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+export default function AllArtworks() {
   const { currentPage, setCurrentPage } = artworkActionStore();
+  const { user } = useAuth({ requiredRole: "user" });
+
   const {
     isLoading,
     setArtworks,
@@ -86,7 +85,7 @@ export default function AllArtworks({
                     pricing={art.pricing}
                     impressions={art.impressions as number}
                     likeIds={art.like_IDs as string[]}
-                    sessionId={sessionId}
+                    sessionId={user ? user.id : undefined}
                     availability={art.availability}
                     medium={art.medium}
                   />

@@ -1,4 +1,3 @@
-"use client";
 import { Library, Settings, UserRoundPen } from "lucide-react";
 import PageTitle from "../components/PageTitle";
 import ArtistInfo from "./features/ArtistInfo";

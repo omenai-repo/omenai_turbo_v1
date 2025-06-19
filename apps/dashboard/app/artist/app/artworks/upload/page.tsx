@@ -1,5 +1,3 @@
-"use client";
-
 import PageTitle from "../../components/PageTitle";
 import UploadArtworkDetails from "./features/UploadArtworkDetails";
 export default function UploadArtwork() {
