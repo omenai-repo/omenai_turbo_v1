@@ -10,7 +10,7 @@ export default function CheckoutItem({
 }) {
   return (
     <div className="bg-white shadow-lg">
-      <div className="w-full p-8 bg-dark rounded-[20px] text-white">
+      <div className="w-full p-8 bg-dark rounded-[10px] text-white">
         <h1 className="text-fluid-base font-bold ">
           Omenai {plan.name} subscription
         </h1>
@@ -19,7 +19,7 @@ export default function CheckoutItem({
         </p>
       </div>
 
-      <div className="p-5 my-4 rounded-[20px]">
+      <div className="p-5 my-4 rounded-[10px]">
         <div className="flex justify-between items-center">
           <p className="text-fluid-xs font-bold">Due today</p>
           <p className="text-fluid-xs font-bold">

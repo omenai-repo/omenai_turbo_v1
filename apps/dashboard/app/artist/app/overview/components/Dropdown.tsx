@@ -34,7 +34,7 @@ export default function Dropdown() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute mt-2 w-fit px-4 bg-white shadow-lg z-30 rounded-[20px] overflow-hidden">
+        <div className="absolute mt-2 w-fit px-4 bg-white shadow-lg z-30 rounded-[10px] overflow-hidden">
           <ul className="py-1 text-dark text-fluid-xxs">
             {getDynamicYears().map((year) => {
               return (

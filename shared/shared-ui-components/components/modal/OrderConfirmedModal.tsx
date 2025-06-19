@@ -21,7 +21,7 @@ export const OrderReceivedModal = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white text-dark p-6 rounded-[20px] w-full max-w-lg shadow-xl cursor-default relative h-auto"
+            className="bg-white text-dark p-6 rounded-[10px] w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-[500px] w-full grid place-items=center container">

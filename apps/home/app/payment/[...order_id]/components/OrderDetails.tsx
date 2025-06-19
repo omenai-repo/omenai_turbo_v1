@@ -24,7 +24,7 @@ export default function OrderDetails({
     <div className="p-4 max-w-[600px]">
       <div className="w-fit h-full">
         <div className="w-full">
-          <div className="shadow-lg px-5 py-6 rounded-[20px]">
+          <div className="shadow-lg px-5 py-6 rounded-[10px]">
             <div className="flex flex-col gap-2">
               <Image
                 src={image_href}

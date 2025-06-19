@@ -7,7 +7,7 @@ export const OrderRequestSkeleton = () => {
         <div key={idx} className="bg-white p-4 rounded-2xl shadow w-full">
           <Skeleton
             height={50}
-            className="rounded-[20px]"
+            className="rounded-[10px]"
             width={"7%"}
             mb="sm"
           />

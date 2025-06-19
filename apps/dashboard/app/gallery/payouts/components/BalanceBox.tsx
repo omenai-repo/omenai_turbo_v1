@@ -36,7 +36,7 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="bg-[#FAFAFA] border border-[#E0E0E0] p-6 w-[500px] rounded-[20px]">
+    <div className="bg-[#FAFAFA] border border-[#E0E0E0] p-6 w-[500px] rounded-[10px]">
       <div className="flex flex-col items-center my-4 space-y-4 text-dark">
         <p className="text-fluid-xs font-medium">Stripe Available Balance</p>
 

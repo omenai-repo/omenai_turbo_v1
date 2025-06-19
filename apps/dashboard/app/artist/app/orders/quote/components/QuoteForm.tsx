@@ -251,7 +251,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Enter any special instructions for picking up the piece (e.g., Ring the doorbell)."
                 rows={5}
-                className="p-3 border border-[#E0E0E0] text-fluid-xs placeholder:text-dark font-normal placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                className="p-3 border border-[#E0E0E0] text-fluid-xs placeholder:text-dark font-normal placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[10px]"
               />
             </div>
           </div>

@@ -34,7 +34,7 @@ export default function ActivityWrapper() {
   );
 
   return (
-    <div className="h-[350px] mt-8 relative">
+    <div className="h-[350px] mt-8 pr-4 relative">
       <div className="flex justify-between items-center">
         <h1 className="font-medium">Sales Revenue</h1>
         <Dropdown />

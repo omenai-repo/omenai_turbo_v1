@@ -22,6 +22,16 @@ export default function WithdrawalModalForm() {
   const queryClient = useQueryClient();
   const { user } = useAuth({ requiredRole: "artist" });
   const [wallet_pin, set_wallet_pin] = useState("");
+  const [wallet_pin_error, set_wallet_pin_error] = useState<boolean>(false);
+
+  const handlePinChange = (value: string) => {
+    set_wallet_pin(value);
+    if (value.length < 4) {
+      set_wallet_pin_error(true);
+    } else {
+      set_wallet_pin_error(false);
+    }
+  };
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     set_amount_data({ currency_amount: 0, amount: Number(value), rate: null });
@@ -81,6 +91,17 @@ export default function WithdrawalModalForm() {
 
   const handleWithdrawal = async () => {
     try {
+      if (wallet_pin.length < 4) {
+        toast.error("Error Notification", {
+          description: "Please enter a valid wallet pin",
+          style: {
+            background: "red",
+            color: "white",
+          },
+          className: "class",
+        });
+        return;
+      }
       setWithdrawalLoading(true);
       const withdrawal_response = await createTransfer({
         amount: amount_data.amount,
@@ -129,13 +150,13 @@ export default function WithdrawalModalForm() {
           <div className="flex flex-col space-y-5">
             <p className=" font-medium">Enter withdrawal amount</p>
             <Paper
-              radius="lg"
+              radius="md"
               withBorder
               className="p-5 flex flex-col space-y-2"
             >
               <p className="text-fluid-xxs font-medium">You Send ($)</p>
               <input
-                className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-lg w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
+                className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-md w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
                 placeholder="0.0"
                 onChange={handleAmountChange}
               />
@@ -165,14 +186,14 @@ export default function WithdrawalModalForm() {
             </div>
 
             <Paper
-              radius="lg"
+              radius="md"
               withBorder
               className="p-5 flex flex-col space-y-2"
             >
               <p className="text-fluid-xxs font-medium">
                 You Get ({user.base_currency})
               </p>
-              <Paper className="p-5" radius="lg" withBorder>
+              <Paper className="p-5" radius="md" withBorder>
                 <span className="text-fluid-xs font-medium">
                   {formatPrice(amount_data.currency_amount, user.base_currency)}
                 </span>
@@ -180,7 +201,7 @@ export default function WithdrawalModalForm() {
             </Paper>
 
             <Paper
-              radius="lg"
+              radius="md"
               withBorder
               className="p-5 flex flex-col space-y-2"
             >
@@ -191,8 +212,9 @@ export default function WithdrawalModalForm() {
                     size="md"
                     mask
                     placeholder="*"
-                    onChange={set_wallet_pin}
+                    onChange={(e) => handlePinChange(e)}
                     type="number"
+                    error={wallet_pin_error}
                   />
                 </div>
                 <Link
@@ -215,7 +237,7 @@ export default function WithdrawalModalForm() {
               {withdrawalLoading ? (
                 <Loader color="rgba(255, 255, 255, 1)" size="sm" />
               ) : (
-                "Send money"
+                "Withdraw"
               )}
             </button>
           </div>

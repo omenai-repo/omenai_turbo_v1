@@ -11,7 +11,7 @@ export default function WithdrawalSuccessScreen() {
   return (
     <Paper
       withBorder
-      radius={"xl"}
+      radius={"md"}
       className="w-full h-full space-y-8 px-8 py-16 grid place-items-center"
     >
       <Image

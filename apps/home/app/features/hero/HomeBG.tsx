@@ -8,7 +8,7 @@ export default function HomeBG() {
         alt="hero-image"
         width={1000}
         height={1000}
-        className="w-full h-full object-cover object-top aspect-auto rounded-[20px]"
+        className="w-full h-full object-cover object-top aspect-auto rounded-[10px]"
       />
     </div>
   );

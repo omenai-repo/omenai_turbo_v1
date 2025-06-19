@@ -24,7 +24,7 @@ export default function TransactionTable() {
     refetchOnWindowFocus: false,
   });
   return (
-    <div className="flex flex-col gap-y-4 w-full rounded-[20px] overflow-y-scroll overflow-x-hidden text-fluid-xs p-4 ring-1 ring-[#e0e0e0]">
+    <div className="flex flex-col gap-y-4 w-full rounded-[10px] overflow-y-scroll overflow-x-hidden text-fluid-xs p-4 ring-1 ring-[#e0e0e0]">
       <div className="flex justify-center">
         <h2 className="text-fluid-base font-semibold">Transaction History</h2>
       </div>

@@ -16,24 +16,24 @@ export default function PopulartArtworkCard({
 }: PopularArtworkCardProps) {
   const image_url = getImageFileView(url, 100);
   return (
-    <div className="flex justify-between items-center px-5 py-3 rounded-lg ring-1 ring-dark/10 shadow-sm">
+    <div className="flex justify-between items-center px-5 py-3 rounded ring-1 ring-dark/10 shadow-sm">
       <div className=" w-auto flex items-center gap-x-3">
         <Image
           src={image_url}
           alt={title}
-          height={100}
-          width={100}
-          className="object-top h-[100px] w-[100px] rounded-lg"
+          height={60}
+          width={60}
+          className="object-top h-[60px] w-[60px] rounded-lg"
         />
         <div className="flex flex-col gap-y-1">
-          <p className="text-dark font-normal text-fluid-xs sm:text-fluid-base">
+          <p className="text-dark font-normal text-fluid-xxs sm:text-fluid-xs">
             {title}
           </p>
-          <span className="text-dark text-fluid-xs font-light">{artist}</span>
+          <span className="text-dark text-fluid-xxs">{artist}</span>
         </div>
       </div>
       <div className="w-fit">
-        <span className="text-dark text-fluid-xs font-light">
+        <span className="text-dark text-fluid-xxs">
           {`${impression_count} impressions`}
         </span>
       </div>

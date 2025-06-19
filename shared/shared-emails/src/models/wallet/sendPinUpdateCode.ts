@@ -12,8 +12,8 @@ export const sendPinUpdateCode = async ({
   token,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
-    from: "onboarding",
+    prefix: "Omenai",
+    from: "omenai",
     to: email,
     subject: "Pin reset code request",
     react: WalletPinUpdateCode(username, token),

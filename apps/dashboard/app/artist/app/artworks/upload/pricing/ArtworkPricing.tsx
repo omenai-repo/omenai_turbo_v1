@@ -151,7 +151,7 @@ export default function ArtworkPricing() {
   return (
     <form
       onSubmit={handleArtworkUpload}
-      className="bg-[#f8f8f8] p-10 rounded-[20px] flex flex-col"
+      className="bg-[#f8f8f8] p-10 rounded-[10px] flex flex-col"
     >
       {isLoading ? (
         <ArtworkPricingSkeleton />

@@ -33,7 +33,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
     <Tabs
       color="#1a1a1a"
       variant="pills"
-      radius="xl"
+      radius={"md"}
       orientation="vertical"
       defaultValue="pending"
     >

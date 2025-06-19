@@ -3,15 +3,17 @@ import PageTitle from "../components/PageTitle";
 import ArtistInfo from "./features/ArtistInfo";
 import { Tabs } from "@mantine/core";
 import SettingsActions from "../settings/SettingsActions";
-export default function page() {
+export const dynamic = "force-dynamic"; // This page should always be dynamic
+export default function AccountPage() {
   return (
     <div className="space-y-5">
       {/* <UserBanner /> */}
       <PageTitle title="Profile Information" />
-      <Tabs
+      <p>Coming soon</p>
+      {/* <Tabs
         color="#1a1a1a"
         variant="outline"
-        radius="lg"
+        radius="md"
         defaultValue="account"
       >
         <Tabs.List>
@@ -50,7 +52,7 @@ export default function page() {
         <Tabs.Panel value="settings">
           <SettingsActions />
         </Tabs.Panel>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }

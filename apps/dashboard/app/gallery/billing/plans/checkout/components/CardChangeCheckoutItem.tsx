@@ -7,7 +7,7 @@ export default function CardChangeCheckoutItem() {
         <h1 className="text-fluid-base font-normal ">Card change</h1>
       </div>
 
-      <div className="p-5 rounded-[20px]">
+      <div className="p-5 rounded-[10px]">
         <p className="text-[13px] font-bold text-red-600">
           NOTE: A small, temporary charge of $1 will be applied to verify your
           card. This charge will be refunded to you immediately.

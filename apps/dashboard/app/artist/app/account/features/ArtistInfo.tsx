@@ -7,12 +7,11 @@ import Image from "next/image";
 import { RxAvatar } from "react-icons/rx";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import React from "react";
+
 export default function ArtistInfo() {
   const { updateModal } = galleryLogoUpdate();
   const { user } = useAuth({ requiredRole: "gallery" });
-  let logo;
-
-  logo = getGalleryLogoFileView(user.logo as string, 80);
+  let logo = getGalleryLogoFileView(user.logo as string, 80);
 
   return (
     <div>

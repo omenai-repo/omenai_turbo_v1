@@ -47,7 +47,7 @@ export default function NoVerificationBlock({
   }
   return (
     <div
-      className={`w-full h-[78vh] grid place-items-center bg-dark mt-10 rounded-[20px]`}
+      className={`w-full h-[78vh] grid place-items-center bg-dark mt-10 rounded-[10px]`}
     >
       <div className="flex flex-col gap-4 items-center text-fluid-xs">
         <BsShieldLock className="text-fluid-2xl text-white" />

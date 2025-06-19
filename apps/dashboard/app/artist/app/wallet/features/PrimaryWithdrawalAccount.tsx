@@ -23,7 +23,7 @@ export default function PrimaryWithdrawalAccount({
         <>
           <div className="flex flex-col space-y-2">
             <Paper
-              radius="lg"
+              radius="md"
               className="flex flex-col space-y-6 p-5 my-6"
               withBorder
             >

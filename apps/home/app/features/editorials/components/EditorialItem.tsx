@@ -29,7 +29,7 @@ export default function EditorialItem({
 
   return (
     <>
-      <div className="p-5 relative bg-dark flex flex-col gap-[1.5rem] rounded-[20px] h-[400px] max-w-[300px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px]">
+      <div className="p-5 relative bg-dark flex flex-col gap-[1.5rem] rounded-[10px] h-[400px] max-w-[300px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px]">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <Image
@@ -37,7 +37,7 @@ export default function EditorialItem({
             alt={title}
             width={200}
             height={200}
-            className="h-[200px] w-full rounded-[20px] object-cover aspect-square object-top"
+            className="h-[200px] w-full rounded-[10px] object-cover aspect-square object-top"
           />
         ) : (
           <p>No cover</p>

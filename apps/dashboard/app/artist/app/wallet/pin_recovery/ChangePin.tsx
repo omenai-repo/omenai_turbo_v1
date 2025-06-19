@@ -90,7 +90,7 @@ export default function WalletPinResetForm() {
   const isDisabled = pin.length < 4 || confirmPin.length < 4 || loading;
 
   return (
-    <Paper radius="xl" className="flex flex-col space-y-6 w-fit my-8">
+    <Paper radius={"md"} className="flex flex-col space-y-6 w-fit my-8">
       <div className="flex flex-col space-y-6">
         {/* PIN Input */}
         <div className="flex flex-col space-y-4">

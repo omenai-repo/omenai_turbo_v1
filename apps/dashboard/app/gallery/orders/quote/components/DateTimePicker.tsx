@@ -17,7 +17,7 @@ export default function DateTimePickerComponent({
   return (
     <DateTimePicker
       size="md"
-      radius="xl"
+      radius={"md"}
       label="Exhibition end date"
       withAsterisk
       dropdownType="modal"
@@ -25,7 +25,7 @@ export default function DateTimePickerComponent({
       onChange={(e) =>
         handleDateTimeChange({
           is_on_exhibition: true,
-          exhibition_end_date: new Date(e).toISOString(),
+          exhibition_end_date: e ? new Date(e).toISOString() : "",
           status: "pending",
         })
       }

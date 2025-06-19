@@ -128,7 +128,7 @@ export default function VerifyOTP({
       <div className="mt-8 flex flex-col space-y-6">
         <p className="text-fluid-xs">
           An OTP (One time password) has been sent to your registered email.
-          Please entr the 4-digit code below
+          Please enter the 4-digit code below
         </p>
 
         <div className="flex gap-x-4 items-center">

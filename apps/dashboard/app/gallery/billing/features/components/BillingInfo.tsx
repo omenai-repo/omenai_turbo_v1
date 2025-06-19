@@ -3,7 +3,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function BillingInfo() {
   const { user } = useAuth({ requiredRole: "gallery" });
   return (
-    <div className="p-4 border border-dark/20 rounded-[20px] w-full h-[250px]">
+    <div className="p-4 border border-dark/20 rounded-[10px] w-full h-[250px]">
       <p className="text-dark text-fluid-xs font-semibold">Billing Info</p>
 
       <div className="flex flex-col gap-2 text-fluid-xs mt-5">

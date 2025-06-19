@@ -61,34 +61,40 @@ export default function TransactionTable() {
           </div>
         </Accordion.Control>
         <Accordion.Panel>
-          <Paper radius={"xl"} withBorder className="p-6 text-fluid-xxs">
+          <Paper radius={"md"} withBorder className="p-6 text-fluid-xxs">
             <div className="flex flex-col space-y-3">
               <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs">
+                <span className="text-dark/70 text-fluid-xxs font-medium">
                   Transaction ID
                 </span>
                 <p className="font-medium">{transaction.trans_id}</p>
               </div>
               <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs">
+                <span className="text-dark/70 text-fluid-xxs font-medium">
                   Transaction Reference
                 </span>
                 <p className="font-medium">{transaction.trans_flw_ref_id}</p>
               </div>
               <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs">Amount</span>
+                <span className="text-dark/70 text-fluid-xxs font-medium">
+                  Amount
+                </span>
                 <p className="font-medium">
                   {formatPrice(transaction.trans_amount)}
                 </p>
               </div>
               <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs">Date</span>
+                <span className="text-dark/70 text-fluid-xxs font-medium">
+                  Date
+                </span>
                 <p className="font-medium">
                   {formatISODate(transaction.createdAt)}
                 </p>
               </div>
               <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs">Status</span>
+                <span className="text-dark/70 text-fluid-xxs font-medium">
+                  Status
+                </span>
                 <p
                   className={`font-semibold ${transaction.trans_status === "PENDING" ? "text-blue-600" : transaction.trans_status === "SUCCESSFUL" ? "text-green-600" : "text-red-600"}`}
                 >
@@ -96,7 +102,9 @@ export default function TransactionTable() {
                 </p>
               </div>
               <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs">Message</span>
+                <span className="text-dark/70 text-fluid-xxs font-medium">
+                  Message
+                </span>
 
                 <p className={`font-medium `}>
                   {transaction.trans_status === "PENDING" &&
@@ -104,7 +112,7 @@ export default function TransactionTable() {
                   {transaction.trans_status === "SUCCESSFUL" &&
                     "Your funds have been successfully deposited into your bank account"}
                   {transaction.trans_status === "FAILED" &&
-                    "he funds transfer was unsuccessful. Please check your bank details or contact support for assistance"}
+                    "Your funds transfer was unsuccessful. Please check your bank details or contact support for assistance"}
                 </p>
               </div>
             </div>
@@ -122,7 +130,7 @@ export default function TransactionTable() {
         <Accordion
           transitionDuration={500}
           variant="separated"
-          radius="xl"
+          radius="md"
           className="w-full"
         >
           {transactions.length === 0 ? (

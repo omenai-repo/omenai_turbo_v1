@@ -16,7 +16,7 @@ export default function ArtistInformation({
         </h3>
       </div>
 
-      <div className="w-full border rounded-[20px] mt-4 border-dark/10 text-dark justify-center gap-y-3 py-4 font-normal text-fluid-xs">
+      <div className="w-full border rounded-[10px] mt-4 border-dark/10 text-dark justify-center gap-y-3 py-4 font-normal text-fluid-xs">
         <div className="grid grid-cols-12 p-4">
           <p className="font-medium col-span-6">Artist name:</p>
           <p className="col-span-6">{name}</p>

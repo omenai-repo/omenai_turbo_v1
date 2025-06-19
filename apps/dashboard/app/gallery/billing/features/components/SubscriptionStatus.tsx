@@ -21,7 +21,7 @@ export default function SubDetail({
 
   const currency_symbol = getCurrencySymbol(sub_data.plan_details.currency);
   return (
-    <div className="ring-1 ring-[#e0e0e0] rounded-[20px] p-5 max-h-[300px] relative">
+    <div className="ring-1 ring-[#e0e0e0] rounded-[10px] p-5 max-h-[300px] relative">
       <div className="w-full flex justify-start relative z-10 my-2">
         <p className="text-dark text-fluid-xxs font-semibold">
           Subscription Info

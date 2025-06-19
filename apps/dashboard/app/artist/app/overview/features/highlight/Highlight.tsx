@@ -4,12 +4,12 @@ import HighlightCardIcon from "./components/HighlightCardIcon";
 
 export default function Highlight() {
   return (
-    <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5 w-full">
+    <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5 pr-4 w-full">
       {highlightCardEl.map((item, index) => {
         return (
           <div
             key={item.title}
-            className="flex flex-col rounded-[20px] shadow p-4 bg-dark text-white"
+            className="flex flex-col rounded-[10px] shadow p-4 bg-dark text-white"
           >
             <div className="flex justify-between items-center w-full">
               <div>

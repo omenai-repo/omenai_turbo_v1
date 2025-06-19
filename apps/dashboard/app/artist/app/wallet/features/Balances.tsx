@@ -38,7 +38,7 @@ export default function Balances({
     toggleWithdrawalFormPopup(true);
   };
   return (
-    <div className="bg-gradient-to-r from-dark to-dark/80 text-white p-8 rounded-[30px] space-y-6">
+    <div className="bg-gradient-to-r from-dark to-dark/80 text-white p-8 rounded-[10px] space-y-6">
       <div className="flex justify-between items-center">
         <h4>Wallet balance</h4>
         <CurrencyDropdown />

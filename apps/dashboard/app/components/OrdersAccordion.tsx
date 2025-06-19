@@ -77,7 +77,7 @@ export function OrdersAccordion({
   return (
     <Accordion
       variant="contained"
-      radius="xl"
+      radius={"md"}
       defaultValue={orders[0].order_id}
       className="w-full"
     >

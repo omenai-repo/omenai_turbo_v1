@@ -21,7 +21,7 @@ export default function LikeComponent({
     art_id
   );
   return (
-    <span className="flex space-x-1 flex items-center justify-center bg-[#fff] h-[35px] w-[30px] rounded-full">
+    <span className="flex space-x-1 flex items-center justify-center bg-[#fff] h-[40px] w-[40px] rounded-full">
       {/* <span className="text-fluid-xs text-dark">{likedState.count}</span> */}
       {(sessionId === undefined ||
         (sessionId && !likedState.ids.includes(sessionId))) && (

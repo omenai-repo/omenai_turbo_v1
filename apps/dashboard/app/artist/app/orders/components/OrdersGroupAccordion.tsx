@@ -250,7 +250,7 @@ export function OrdersGroupAccordion({
   ));
 
   return (
-    <Accordion variant="separated" radius="xl" className="w-full">
+    <Accordion variant="separated" radius={"md"} className="w-full">
       {items}
     </Accordion>
   );

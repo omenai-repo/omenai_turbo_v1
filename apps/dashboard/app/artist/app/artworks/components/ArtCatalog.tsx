@@ -63,7 +63,8 @@ export default function ArtCatalog() {
                         likeIds={art.like_IDs as string[]}
                         sessionId={user.artist_id as string}
                         availability={art.availability}
-                        isDashboard
+                        isDashboard={true}
+                        dashboard_type="artist"
                         medium={art.medium}
                       />
                     );

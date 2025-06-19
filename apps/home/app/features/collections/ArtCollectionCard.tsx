@@ -12,7 +12,7 @@ export default function ArtCollectionCard({
   isCatalog,
 }: ArtCollectionCardTypes) {
   return (
-    <div className="py-4 min-w-[300px] rounded-[20px] relative">
+    <div className="py-4 min-w-[300px] rounded-[10px] relative">
       <Link href={"/collections/" + title}>
         <div className="flex flex-col ">
           <Image

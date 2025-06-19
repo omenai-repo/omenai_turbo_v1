@@ -12,7 +12,7 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
         </h3>
       </div>
 
-      <div className="w-full text-dark border rounded-[20px] mt-4 border-dark/10 justify-center gap-y-3 py-4 font-normal text-fluid-xs">
+      <div className="w-full text-dark border rounded-[10px] mt-4 border-dark/10 justify-center gap-y-3 py-4 font-normal text-fluid-xs">
         <div className="grid grid-cols-12 p-4">
           <p className="font-medium col-span-6">Materials:</p>
           <p className="col-span-6 font-medium">{data.materials}</p>

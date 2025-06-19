@@ -275,7 +275,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               <div className="relative w-full flex flex-col space-y-2">
                 <NativeSelect
                   size="md"
-                  radius="xl"
+                  radius={"md"}
                   label="Is this piece currently on exhibition?"
                   withAsterisk
                   data={["No", "Yes"]}
@@ -322,7 +322,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                   name="specialInstructions"
                   placeholder="any special instructions for picking up the piece (e.g., Ring the doorbell)."
                   rows={5}
-                  className="p-3 border border-[#E0E0E0] text-fluid-xs font-normal placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[20px]"
+                  className="p-3 border border-[#E0E0E0] text-fluid-xs font-normal placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[10px]"
                 />
               </div>
             </div>

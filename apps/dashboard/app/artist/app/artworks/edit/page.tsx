@@ -1,44 +1,10 @@
-"use client";
-import { notFound, useSearchParams } from "next/navigation";
-import PageTitle from "../../components/PageTitle";
-import { useQuery } from "@tanstack/react-query";
-import { fetchSingleArtwork } from "@omenai/shared-services/artworks/fetchSingleArtwork";
+import React, { Suspense } from "react";
+import EditArtwork from "./EditArtwork";
 
-import EditArtworkWrapper from "./components/EditArtworkWrapper";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { Suspense } from "react";
-
-export default function EditArtwork() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
-  const { data: artwork, isLoading } = useQuery({
-    queryKey: ["get_update_pricing_artwork_details"],
-    queryFn: async () => {
-      if (id === null) return notFound();
-      const title = decodeURIComponent(id);
-
-      const data = await fetchSingleArtwork(title);
-      if (!data?.isOk) throw new Error("Something went wrong");
-      return data.data;
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  if (isLoading) {
-    return (
-      <div className="h-[85vh] w-full grid place-items-center">
-        <Load />
-      </div>
-    );
-  }
-
+export default function page() {
   return (
-    <>
-      <PageTitle title="Edit artwork Price" />
-      <Suspense>
-        <EditArtworkWrapper artwork={artwork} />
-      </Suspense>
-    </>
+    <Suspense>
+      <EditArtwork />
+    </Suspense>
   );
 }

@@ -24,7 +24,7 @@ export default function VerificationBlockerModal({ open }: { open: boolean }) {
       <Modal
         opened={open}
         onClose={() => {}}
-        radius={"xl"}
+        radius={"md"}
         centered
         p={16}
         size={"lg"}

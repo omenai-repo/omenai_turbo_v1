@@ -19,7 +19,7 @@ export const OrderSkeleton = () => {
             <Skeleton
               height={50}
               circle
-              className="rounded-[20px]"
+              className="rounded-[10px]"
               width={"7%"}
               mb="sm"
             />

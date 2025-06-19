@@ -20,6 +20,7 @@ export default function ArtworkCard({
   sessionId,
   art_id,
   isDashboard = false,
+  dashboard_type = "gallery",
   availability,
   medium,
   trending = false,
@@ -37,6 +38,7 @@ export default function ArtworkCard({
     shouldShowPrice: "Yes" | "No" | string;
   };
   isDashboard?: boolean;
+  dashboard_type?: "artist" | "gallery";
   availability: boolean;
   medium: string;
   trending?: boolean;
@@ -70,9 +72,10 @@ export default function ArtworkCard({
           </Link>
 
           {/* Medium/Category Label */}
+
           <div className="absolute px-[14px] top-[1.5rem] left-[1rem]">
-            {isDashboard ? (
-              <Link href={`/gallery/artworks/edit?id=${name}`}>
+            {isDashboard && dashboard_type === "gallery" ? (
+              <Link href={`/artist/app/artworks/edit?id=${name}`}>
                 <button
                   className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-fluid-xs font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
                 >
@@ -93,7 +96,7 @@ export default function ArtworkCard({
                 Liked by {impressions} {impressions > 1 ? "people" : "person"}
               </p>
             )}
-            {isDashboard ? null : (
+            {isDashboard && dashboard_type === "artist" ? null : (
               <LikeComponent
                 impressions={impressions}
                 likeIds={likeIds}

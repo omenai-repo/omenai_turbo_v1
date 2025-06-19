@@ -17,7 +17,7 @@ export default function RecentViewedCard({
 }) {
   const image_href = getImageFileView(image, 500);
   return (
-    <div className="my-2 max-w-full p-0 max-h-full min-w-[300px] w-[400px] rounded-[20px]">
+    <div className="my-2 max-w-full p-0 max-h-full min-w-[300px] w-[400px] rounded-[10px]">
       <div className="flex flex-col w-full h-full justify-end">
         <div className="relative w-full artContainer">
           <Link href={`/artwork/${name}`} className="relative">

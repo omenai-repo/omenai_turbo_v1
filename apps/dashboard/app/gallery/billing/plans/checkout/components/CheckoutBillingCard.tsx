@@ -141,7 +141,7 @@ export default function CheckoutBillingCard({
           <span className="text-[13px]">Secure form</span>
         </p>
       </div>
-      <div className="rounded-[20px] ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
+      <div className="rounded-[10px] ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
         <div className="w-full flex justify-start relative z-10 my-2">
           <p className="text-dark text-fluid-xs font-semibold">
             Billing card details
