@@ -79,6 +79,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       type: String,
       default: () => null,
     },
+    clerkUserId: { type: String, required: false, unique: true, index: true },
   },
   { timestamps: true }
 );

@@ -4,18 +4,17 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { getOverviewOrders } from "@omenai/shared-services/orders/getOverviewOrders";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { OrdersTab } from "./OrdersTab";
 import { OrderSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrdersSkeleton";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function OrdersGroup() {
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
   const [tab, setTab] = useState("pending");
   const { data: orders, isLoading } = useQuery({
     queryKey: ["fetch_orders_by_category"],
     queryFn: async () => {
-      const result = await getOverviewOrders(session.artist_id);
+      const result = await getOverviewOrders(user.artist_id);
 
       // Handle potential undefined result
       if (!result) {

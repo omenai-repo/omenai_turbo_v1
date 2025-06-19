@@ -1,11 +1,11 @@
 "use client";
 
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { deletePromotionalData } from "@omenai/shared-services/promotionals/deletePromotionalData";
 import { updatePromotionalData } from "@omenai/shared-services/promotionals/updatePromotionalData";
 import { promotionalStore } from "@omenai/shared-state-store/src/promotionals/PromotionalStore";
 import { PromotionalDataUpdateTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -18,6 +18,7 @@ export default function UpdatePromotionalModalForm() {
     subheadline: data?.subheadline,
     cta: data?.cta,
   });
+  const { user } = useAuth({ requiredRole: "admin" });
 
   const queryClient = useQueryClient();
 
@@ -38,9 +39,8 @@ export default function UpdatePromotionalModalForm() {
 
   const handlePromotionalDataUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const session = await checkSession();
 
-    if (!session) {
+    if (!user) {
       toast.error("Error notification", {
         description: "Admin session expired. Please login again",
         style: {
@@ -91,9 +91,7 @@ export default function UpdatePromotionalModalForm() {
     if (data === null) return;
     setDeleteLoading(true);
 
-    const session = await checkSession();
-
-    if (!session) {
+    if (!user) {
       toast.error("Error notification", {
         description: "Admin session expired. Please login again",
         style: {

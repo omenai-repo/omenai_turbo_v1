@@ -7,10 +7,10 @@ import uploadPromotionalContentImage from "../controller/uploadPromotionalCoverI
 import { createPromotionalData } from "@omenai/shared-services/promotionals/createPromotionalData";
 import { promotional_storage } from "@omenai/appwrite-config/appwrite";
 import { useQueryClient } from "@tanstack/react-query";
-import { PromotionalSchemaTypes, UserType } from "@omenai/shared-types";
+import { PromotionalSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
-import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function Upload() {
   const queryClient = useQueryClient();
   const [cover, setCover] = useState<File | null>(null);
@@ -25,6 +25,7 @@ export default function Upload() {
   const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useAuth({ requiredRole: "admin" });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
@@ -39,9 +40,8 @@ export default function Upload() {
 
   async function handlePromotionalContentUpload(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const session = await checkSession();
 
-    if (!session) {
+    if (!user) {
       toast.error("Error notification", {
         description: "Admin session expired. Please login again",
         style: {

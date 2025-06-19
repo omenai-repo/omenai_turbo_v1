@@ -8,36 +8,33 @@ import UploadArtworkDetails from "./features/UploadArtworkDetails";
 
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function UploadArtwork() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   const url = auth_uri();
   const router = useRouter();
-  if (session === undefined) router.replace(url);
 
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["upload_precheck"],
     queryFn: async () => {
       try {
-        if (session === undefined) throw new Error("User not authenticated");
-
         // Fetch account ID first, as it's required for the next call
-        const acc = await getAccountId(session?.email as string);
+        const acc = await getAccountId(user.email as string);
         if (!acc?.isOk)
           throw new Error("Something went wrong, Please refresh the page");
 
         // Start retrieving subscription data while fetching Stripe onboarding status
         const [response, sub_check] = await Promise.all([
           checkIsStripeOnboarded(acc.data.connected_account_id), // Dependent on account ID
-          retrieveSubscriptionData(session?.gallery_id as string), // Independent
+          retrieveSubscriptionData(user.gallery_id as string), // Independent
         ]);
 
         if (!response?.isOk || !sub_check?.isOk) {
@@ -71,16 +68,16 @@ export default function UploadArtwork() {
   return (
     <div className="relative">
       <PageTitle title="Upload an artwork" />
-      {!session?.gallery_verified && !isConfirmed?.isSubActive && (
-        <NoVerificationBlock gallery_name={session?.name as string} />
+      {!user.gallery_verified && !isConfirmed?.isSubActive && (
+        <NoVerificationBlock gallery_name={user.name as string} />
       )}
-      {(session?.gallery_verified as boolean) && !isConfirmed?.isSubActive && (
+      {(user.gallery_verified as boolean) && !isConfirmed?.isSubActive && (
         <NoSubscriptionBlock />
       )}
-      {!session?.gallery_verified && isConfirmed?.isSubActive && (
-        <NoVerificationBlock gallery_name={session?.name as string} />
+      {!user.gallery_verified && isConfirmed?.isSubActive && (
+        <NoVerificationBlock gallery_name={user.name as string} />
       )}
-      {(session?.gallery_verified as boolean) && isConfirmed?.isSubActive && (
+      {(user.gallery_verified as boolean) && isConfirmed?.isSubActive && (
         <div className="">
           <UploadArtworkDetails />
         </div>

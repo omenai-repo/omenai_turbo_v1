@@ -5,63 +5,57 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
-import { PiEyeThin } from "react-icons/pi";
-import { PiEyeSlashThin } from "react-icons/pi";
+
 import { Form } from "@omenai/shared-types";
 import { loginArtist } from "@omenai/shared-services/auth/artist/loginArtist";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
+
 import {
   auth_uri,
   base_url,
   dashboard_url,
+  getApiUrl,
 } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
+import { useSignIn } from "@clerk/nextjs";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const auth_url = auth_uri();
+  const dashboard_base_url = dashboard_url();
+  const signInHook = useSignIn();
 
-  const base_uri = base_url();
-  const dashboard_uri = dashboard_url();
-  //simple state to show password visibility
-  // const [hidePassword, setHidePassword] = useState(true);
-
-  const { setIsLoading } = individualLoginStore();
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
     "redirect_uri_on_login",
     ""
   );
+
   const url = useReadLocalStorage("redirect_uri_on_login") as string;
+
+  const { setIsLoading } = individualLoginStore();
+
   const [form, setForm] = useState<Form>({ email: "", password: "" });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
-
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
-  }
+  const { signOut } = useAuth({ requiredRole: "user" });
 
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+
+    if (!signInHook?.isLoaded || !signInHook.signIn) {
+      throw new Error("Sign-in not ready");
+    }
+
+    const { signIn, setActive } = signInHook;
     setIsLoading();
+
     try {
       const response = await loginArtist({ ...form });
 
@@ -75,44 +69,73 @@ export default function FormInput() {
           className: "class",
         });
       } else {
-        const session = await getServerSession();
-        if (session && session.role === "artist") {
-          toast.success("Operation successful", {
-            description: "Login successful... redirecting!",
-            style: {
-              background: "green",
-              color: "white",
-            },
-            className: "class",
-          });
-          if (session.verified) {
-            if (url === "" || url === null) {
-              set_redirect_uri("");
-              H.identify(session.email, {
-                id: session.artist_id as string,
-                name: session.name,
-                role: session.role,
+        const { data, signInToken } = response;
+        console.log(data, signInToken);
+
+        if (response.isOk && data.role === "artist") {
+          if (data.verified) {
+            try {
+              console.log("Starting sign-in process...");
+              // Use the sign-in token to create a session
+              const signInAttempt = await signIn.create({
+                strategy: "ticket",
+                ticket: signInToken,
               });
-              // TODO: Redirect to artist dashboard
-              session.isOnboardingCompleted
-                ? router.replace(`${dashboard_uri}/artist/app/overview`)
-                : router.replace(`${dashboard_uri}/artist/onboarding`);
-              router.refresh();
-            } else {
-              router.replace(url);
-              set_redirect_uri("");
+
+              console.log("Sign-in attempt:", signInAttempt.status);
+
+              if (signInAttempt.status === "complete") {
+                // Set the active session
+
+                await setActive({ session: signInAttempt.createdSessionId });
+
+                toast.success("Operation successful", {
+                  description: "Login successful... redirecting!",
+                  style: {
+                    background: "green",
+                    color: "white",
+                  },
+                  className: "class",
+                });
+                // Your redirect logic
+                if (url === "" || url === null) {
+                  set_redirect_uri("");
+                  H.identify(data.email, {
+                    id: data.id as string,
+                    name: data.name,
+                    role: data.role,
+                  });
+                  router.refresh();
+                  router.replace(`${dashboard_base_url}/artist/app/overview`);
+                  router.refresh();
+                } else {
+                  router.replace(url);
+                  set_redirect_uri("");
+                }
+              } else {
+                throw new Error("Sign-in not complete");
+              }
+            } catch (clerkError) {
+              console.error("Clerk sign-in error:", clerkError);
+              throw clerkError;
             }
           } else {
-            // todo: Redirect to verification page
-            router.replace(`${auth_url}/verify/artist/${session.user_id}`);
+            await signOut();
+            toast.info("Signing out...", {
+              description: "You will be redirected to verify your account",
+            });
+            router.replace(`${auth_uri()}/verify/artist/${data.id}`);
           }
-        } else {
-          await handleSignout();
         }
       }
     } catch (error) {
+      const error_message = (
+        error as unknown as { errors: { message: string }[] }
+      ).errors[0].message;
+
       toast.error("Error notification", {
         description:
+          error_message ||
           "Something went wrong, please try again or contact support",
         style: {
           background: "red",
@@ -124,7 +147,6 @@ export default function FormInput() {
       setIsLoading();
     }
   };
-
   return (
     <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
       <div className="flex flex-col">

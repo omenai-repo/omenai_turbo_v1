@@ -85,7 +85,7 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
 
   // Generate 5 price points with ±20% spread
   const spreadPercentage = 0.1;
-  const totalSpread = spreadPercentage * 2;
+  const totalSpread = spreadPercentage;
   const pricePoints: number[] = [];
   for (let i = 0; i < 5; i++) {
     const factor = -totalSpread + (i * (totalSpread * 2)) / 4;

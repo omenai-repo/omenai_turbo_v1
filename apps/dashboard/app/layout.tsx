@@ -1,11 +1,9 @@
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-
 import {
   ColorSchemeScript,
   MantineProvider,
@@ -22,7 +20,6 @@ export default async function DashboardRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -32,7 +29,7 @@ export default async function DashboardRootLayout({
         className={`${dm_sans.className} flex flex-col px-4 justify-center`}
       >
         <MantineProvider>
-          <LayoutWrapper session={session} children={children} />
+          <LayoutWrapper children={children} />
         </MantineProvider>
         <Analytics />
       </body>

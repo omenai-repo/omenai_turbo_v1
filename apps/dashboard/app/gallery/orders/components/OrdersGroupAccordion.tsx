@@ -13,15 +13,12 @@ import { renderButtonAction } from "./construct_response";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import Link from "next/link";
 
 export function OrdersGroupAccordion({
   orders,
-  tab,
 }: {
   orders: CreateOrderModelTypes[];
-  tab?: "completed";
 }) {
   const {
     updateGalleryOrderActionModalData,
@@ -30,7 +27,6 @@ export function OrdersGroupAccordion({
   } = actionStore();
 
   const router = useRouter();
-  const session = useSession();
 
   const get_image_url = (url: string) => {
     const image_url = getImageFileView(url, 200);

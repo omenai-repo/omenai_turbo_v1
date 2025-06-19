@@ -1,19 +1,17 @@
 "use client";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 import { InputCard } from "./InputCard";
-import { TextareaCard } from "./TextareaCard";
 import { updateProfile } from "@omenai/shared-services/update/updateProfile";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { galleryProfileUpdate } from "@omenai/shared-state-store/src/gallery/gallery_profile_update/GalleryProfileUpdateStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export const FormCard = () => {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "artist" });
 
-  const user = session as ArtistSchemaTypes;
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +24,7 @@ export const FormCard = () => {
     const { isOk, body } = await updateProfile(
       "artist",
       updateData,
-      user.artist_id as string
+      user?.artist_id as string
     );
     if (!isOk)
       toast.error("Error notification", {
@@ -38,7 +36,6 @@ export const FormCard = () => {
         className: "class",
       });
     else {
-      // todo: Add session update fn
       toast.success("Operation successful", {
         description: `${body.message}... Please log back in`,
         style: {
@@ -58,19 +55,19 @@ export const FormCard = () => {
       <div className="w-fit flex flex-col space-y-4">
         <InputCard
           label="Name"
-          value={user.name}
+          value={user?.name}
           onChange={() => {}}
           labelText="artist"
           disabled={false}
         />
         <InputCard
           label="Email address"
-          value={user.email}
+          value={user?.email}
           labelText="email"
           disabled
           rightComponent={
             <div>
-              {user.verified ? (
+              {user?.verified ? (
                 <p className="text-green-400">Verified</p>
               ) : (
                 <p className="text-red-500">Verify</p>
@@ -79,12 +76,14 @@ export const FormCard = () => {
           }
         />
 
-        <InputCard
+        {/* <InputCard
           label="Address"
-          defaultValue={user.address.address_line}
+          defaultValue={
+            user?.address?.address_line as ArtistSchemaTypes["address"]
+          }
           labelText="location"
           disabled
-        />
+        /> */}
       </div>
 
       <button

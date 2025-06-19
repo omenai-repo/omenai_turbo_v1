@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "files": [],
   "devDependencies": {
-    "@omenai/typescript-config": "*",
-    "@omenai/shared-types": "*"
+    "@omenai/shared-types": "*",
+    "@omenai/typescript-config": "*"
   }
 }

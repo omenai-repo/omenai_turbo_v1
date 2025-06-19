@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { editorial_database } from "@omenai/appwrite-config";
-import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export const DeleteEditorialModal = () => {
   const router = useRouter();
@@ -17,13 +17,14 @@ export const DeleteEditorialModal = () => {
     showDeleteEditorialId,
   } = adminModals();
 
+  const { user } = useAuth({ requiredRole: "admin" });
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleEditorialDelete = async () => {
     setLoading(true);
-    const session = await checkSession();
 
-    if (!session) {
+    if (!user) {
       toast.error("Error notification", {
         description: "Admin session expired. Please login again",
         style: {

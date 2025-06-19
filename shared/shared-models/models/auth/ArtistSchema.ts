@@ -99,6 +99,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       default: () => false,
       index: true,
     },
+    clerkUserId: { type: String, required: false, unique: true, index: true },
   },
   { timestamps: true }
 );

@@ -4,19 +4,14 @@ import LogoPickerModal from "./components/LogoPickerModal";
 import { galleryLogoUpdate } from "@omenai/shared-state-store/src/gallery/gallery_logo_upload/GalleryLogoUpload";
 import { getGalleryLogoFileView } from "@omenai/shared-lib/storage/getGalleryLogoFileView";
 import Image from "next/image";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { RxAvatar } from "react-icons/rx";
-import { GallerySchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function GalleryInfo() {
   const { updateModal } = galleryLogoUpdate();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   let logo;
 
-  logo = getGalleryLogoFileView(
-    (session as GallerySchemaTypes).logo as string,
-    80
-  );
+  logo = getGalleryLogoFileView(user.logo as string, 80);
 
   return (
     <div>

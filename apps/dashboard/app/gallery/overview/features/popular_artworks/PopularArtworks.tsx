@@ -4,12 +4,14 @@ import PopulartArtworkCard from "./components/PopulartArtworkCard";
 import { fetchPopularArtworks } from "@omenai/shared-services/artworks/fetchPopularArtworks";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function PopularArtworks() {
+  const { user } = useAuth({ requiredRole: "gallery" });
   const { data: popularArtworks, isLoading } = useQuery({
     queryKey: ["get_overview_ppular_artwork"],
     queryFn: async () => {
-      const data = await fetchPopularArtworks();
+      const data = await fetchPopularArtworks(user.id);
       if (data?.isOk) {
         return data.data;
       }

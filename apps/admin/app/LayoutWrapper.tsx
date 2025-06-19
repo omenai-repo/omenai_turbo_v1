@@ -3,21 +3,19 @@ import NextTopLoader from "nextjs-toploader";
 import { useWindowSize } from "usehooks-ts";
 
 import { adminNavigationActions } from "@omenai/shared-state-store/src/admin/AdminNavigationStore";
-import { QueryProvider, SessionProvider } from "@omenai/package-provider";
+import { QueryProvider } from "@omenai/package-provider";
 import Appbar from "./admin/dashboard/Appbar";
 import { DeleteEditorialModal } from "./admin/dashboard/modal/DeleteEditorialModal";
 import { UpdatePromotionalModal } from "./admin/dashboard/modal/UpdatePromotionalModal";
 import NoMobileView from "./admin/dashboard/NoMobileView";
 import PageLayout from "./admin/dashboard/PageLayout";
 import { Toaster } from "sonner";
-import { UserType } from "@omenai/shared-types";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import { auth_uri } from "@omenai/url-config/src/config";
 export default function LayoutWrapper({
   children,
-  session,
 }: {
   children: React.ReactNode;
-  session: UserType | undefined;
 }) {
   const { open } = adminNavigationActions();
   const { width } = useWindowSize();
@@ -36,7 +34,17 @@ export default function LayoutWrapper({
           />
           <div className=" w-full h-screen">
             <NextTopLoader color="#6246EA" height={6} />
-            <SessionProvider session={session}>
+            <ClerkProvider
+              publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+              appearance={{
+                baseTheme: undefined, // Since you're using custom pages
+              }}
+              // This enables cross-subdomain session sharing
+              domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN as string}
+              isSatellite={true}
+              signInUrl={`${auth_uri()}/login`}
+              signUpUrl={`${auth_uri()}/register`}
+            >
               <QueryProvider>
                 <main className="flex h-full">
                   <div className="hidden md:block">
@@ -57,7 +65,7 @@ export default function LayoutWrapper({
                   </div>
                 </main>
               </QueryProvider>
-            </SessionProvider>
+            </ClerkProvider>
           </div>
         </>
       )}

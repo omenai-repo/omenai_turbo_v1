@@ -9,11 +9,11 @@ import { toast } from "sonner";
 
 import { createStripeCheckoutSession } from "@omenai/shared-services/stripe/createCheckoutSession";
 import { createFlwCheckoutSession } from "@omenai/shared-services/flw/createCheckout";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { IndividualSchemaTypes, RoleAccess } from "@omenai/shared-types";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function PayNowButton({
   art_id,
   artwork,
@@ -40,33 +40,27 @@ export default function PayNowButton({
   tax_fees: number;
 }) {
   const router = useRouter();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
   const [loading, setLoading] = useState(false);
   const url = base_url();
 
   async function handleClickPayNow() {
     setLoading(true);
-    const get_purchase_lock = await createOrderLock(
-      art_id,
-      (session as IndividualSchemaTypes)?.user_id
-    );
+    const get_purchase_lock = await createOrderLock(art_id, user.id);
 
     if (get_purchase_lock?.isOk) {
-      if (
-        get_purchase_lock.data.lock_data.user_id ===
-        (session as IndividualSchemaTypes)?.user_id
-      ) {
+      if (get_purchase_lock.data.lock_data.user_id === user.id) {
         let checkout_session_response;
         console.log(role_access);
         if (role_access === "artist") {
           const checkout_session = await createFlwCheckoutSession(
             amount,
-            { email: (session as IndividualSchemaTypes).email },
-            (session as IndividualSchemaTypes).name,
+            { email: user.email },
+            user.name,
             generateAlphaDigit(16),
             {
-              buyer_id: (session as IndividualSchemaTypes).user_id,
-              buyer_email: (session as IndividualSchemaTypes).email,
+              buyer_id: user.id,
+              buyer_email: user.email,
               art_id,
               seller_email,
               seller_name,
@@ -85,8 +79,8 @@ export default function PayNowButton({
             amount,
             seller_id,
             {
-              buyer_id: (session as IndividualSchemaTypes)?.user_id,
-              buyer_email: (session as IndividualSchemaTypes)?.email,
+              buyer_id: user.id,
+              buyer_email: user.email,
               art_id,
               seller_email,
               seller_name,
@@ -97,7 +91,7 @@ export default function PayNowButton({
               tax_fees,
             },
             `${url}/payment/success`,
-            `${url}/payment/cancel?a_id=${art_id}&u_id=${(session as IndividualSchemaTypes)?.user_id}`
+            `${url}/payment/cancel?a_id=${art_id}&u_id=${user.id}`
           );
           checkout_session_response = checkout_session;
         }

@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
-    "@omenai/typescript-config": "*",
+    "@omenai/shared-json": "*",
     "@omenai/shared-types": "*",
-    "@omenai/shared-json": "*"
+    "@omenai/typescript-config": "*"
   },
   "dependencies": {
     "zustand": "^5.0.1"

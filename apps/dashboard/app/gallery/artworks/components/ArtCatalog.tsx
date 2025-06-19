@@ -6,14 +6,13 @@ import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-import { GallerySchemaTypes } from "@omenai/shared-types";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function ArtCatalog() {
-  const { session } = useContext(SessionContext);
-  const sessionId = (session as GallerySchemaTypes).gallery_id as string;
+  const { user } = useAuth({ requiredRole: "gallery" });
+  const sessionId = user.gallery_id as string;
 
   const { width } = useWindowSize();
 

@@ -110,7 +110,15 @@ export function ArtworksListing({
       <Pagination
         total={pageCount}
         filterOptions={filterOptions}
-        fn={fetchArtworksByCriteria}
+        fn={async (
+          page: number,
+          user_id: string,
+          filterOptionsParam: typeof filterOptions,
+          mediumParam?: string
+        ) => {
+          // Ignore user_id, as fetchArtworksByCriteria does not use it
+          return fetchArtworksByCriteria(page, filterOptionsParam, mediumParam);
+        }}
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}

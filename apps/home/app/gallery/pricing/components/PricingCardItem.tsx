@@ -7,9 +7,9 @@ import { toast } from "sonner";
 
 import { useLocalStorage } from "usehooks-ts";
 import { getApiUrl, auth_uri } from "@omenai/url-config/src/config";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 type PricingCardItemProps = {
   plan: string;
@@ -32,13 +32,10 @@ export default function PricingCardItem({
   );
   const url = getApiUrl();
   const router = useRouter();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const auth_url = auth_uri();
   async function handleSubscribe() {
-    if (
-      session === undefined ||
-      (session && (session as GallerySchemaTypes).role !== "gallery")
-    ) {
+    if (user.role !== "gallery") {
       set_redirect_uri(`${url}/gallery/pricing`);
       toast.error("Error notification", {
         description: "Login to your gallery account",
@@ -54,8 +51,8 @@ export default function PricingCardItem({
       const response = await fetch("/api/subscriptions/subscribeUser", {
         method: "POST",
         body: JSON.stringify({
-          email: session.email,
-          name: session.name,
+          email: user.email,
+          name: user.name,
         }),
       });
 

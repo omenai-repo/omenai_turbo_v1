@@ -17,10 +17,8 @@ import Link from "next/link";
 
 export function OrdersGroupAccordion({
   orders,
-  tab,
 }: {
   orders: CreateOrderModelTypes[];
-  tab?: "completed";
 }) {
   const {
     updateArtistOrderActionModalData,

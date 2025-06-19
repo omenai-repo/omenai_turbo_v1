@@ -1,16 +1,12 @@
 "use client";
-
 import { fetchSearchKeyWordResults } from "@omenai/shared-services/search/fetchSearchKeywordResults";
 import { useSearchParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import NotFoundSearchResult from "./NotFoundSearchResult";
 import SearchResultDetails from "./SearchResultDetails";
-import {
-  ArtworkSchemaTypes,
-  IndividualSchemaTypes,
-} from "@omenai/shared-types";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { ArtworkSchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SearchResultWrapper() {
   const searchParams = useSearchParams();
@@ -56,8 +52,7 @@ export default function SearchResultWrapper() {
     getResults();
   }, [searchTerm]);
 
-  const { session } = useContext(SessionContext);
-
+  const { user } = useAuth({ requiredRole: "user" });
   return (
     <>
       <div className="w-full">
@@ -67,11 +62,7 @@ export default function SearchResultWrapper() {
           <SearchResultDetails
             data={searchResults}
             searchTerm={searchTerm as string}
-            sessionId={
-              (session as IndividualSchemaTypes)?.role === "user"
-                ? (session as IndividualSchemaTypes)?.user_id
-                : undefined
-            }
+            sessionId={user && user.role === "user" ? user.id : undefined}
             isPending={isPending}
           />
         )}

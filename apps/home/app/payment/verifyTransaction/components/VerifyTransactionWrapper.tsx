@@ -6,7 +6,6 @@ import animationData from "@omenai/shared-json/src/order-received.json";
 
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { string } from "zod";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 

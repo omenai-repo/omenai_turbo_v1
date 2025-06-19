@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
-    "@omenai/typescript-config": "*",
-    "@omenai/url-config": "*",
+    "@omenai/appwrite-config": "*",
     "@omenai/shared-utils": "*",
-    "@omenai/appwrite-config": "*"
+    "@omenai/typescript-config": "*",
+    "@omenai/url-config": "*"
   }
 }

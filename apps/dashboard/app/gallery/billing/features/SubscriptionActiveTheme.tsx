@@ -9,12 +9,12 @@ import SubDetail from "./components/SubscriptionStatus";
 import UpcomingSub from "./components/UpcomingSub";
 import { useLocalStorage } from "usehooks-ts";
 import { useContext, useEffect } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { auth_uri } from "@omenai/url-config/src/config";
 import {
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SubscriptionActiveTheme({
   subscription_data,
@@ -29,10 +29,7 @@ export default function SubscriptionActiveTheme({
     updatedAt: string;
   };
 }) {
-  const { session } = useContext(SessionContext);
-  const router = useRouter();
-  const url = auth_uri();
-  if (session === null || session === undefined) router.replace(url);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   const [trans_id, set_trans_id] = useLocalStorage("flw_trans_id", "");
 
@@ -67,7 +64,7 @@ export default function SubscriptionActiveTheme({
 
         <CancelSubscriptionModal
           sub_end={subscription_data.expiry_date}
-          id={session?.gallery_id as string}
+          id={user.gallery_id as string}
         />
       </div>
 

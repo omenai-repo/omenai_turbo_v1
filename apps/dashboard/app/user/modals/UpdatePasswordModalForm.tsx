@@ -7,11 +7,9 @@ import { updatePassword } from "@omenai/shared-services/requests/updateGalleryPa
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { useRouter } from "next/navigation";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function UpdatePasswordModalForm() {
@@ -23,33 +21,28 @@ export default function UpdatePasswordModalForm() {
     confirmPassword: "",
     code: "",
   });
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
 
   const [errorList, setErrorList] = useState<string[]>([]);
-  const auth_url = auth_uri();
 
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+      style: {
+        background: "blue",
+        color: "white",
+      },
+      className: "class",
+    });
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+    router.replace(`${auth_uri}/login`);
   }
 
   async function requestConfirmationCode() {
     setCodeLoading(true);
     const response = await requestPasswordConfirmationCode(
       "individual",
-      (session as IndividualSchemaTypes).user_id
+      user.id
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -94,7 +87,7 @@ export default function UpdatePasswordModalForm() {
       info.password,
       info.code,
       "individual",
-      (session as IndividualSchemaTypes).user_id
+      user.id
     );
 
     if (response?.isOk) {
@@ -107,7 +100,7 @@ export default function UpdatePasswordModalForm() {
         className: "class",
       });
       updatePasswordModalPopup(false);
-      await handleSignout();
+      await handleSignOut();
     } else {
       toast.error("Error notification", {
         description: response?.message,

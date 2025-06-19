@@ -1,12 +1,10 @@
-import { useContext } from "react";
 import { uploadArtistDetailsInputMocks } from "../mocks";
 import ArtworkSelectInput from "./ArtworkSelectInput";
 import ArtworkTextInput from "./ArtworkTextInput";
-import { useSession } from "@omenai/package-provider/SessionProvider";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
-export default function ArtistInfoInputGroup() {
-  const session = useSession();
+export default async function ArtistInfoInputGroup() {
+  const { user } = useAuth({ requiredRole: "artist" });
   return (
     <div className="my-10">
       <h2 className="text-dark font-semibold text-fluid-base my-4">
@@ -23,11 +21,7 @@ export default function ArtistInfoInputGroup() {
                 name={input.name}
                 required={input.required}
                 disabled={input.name === "artist"}
-                value={
-                  input.name === "artist"
-                    ? (session as ArtistSchemaTypes).name
-                    : ""
-                }
+                value={input.name === "artist" ? user.name : ""}
               />
             );
           } else {

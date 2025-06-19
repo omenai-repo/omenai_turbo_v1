@@ -1,12 +1,13 @@
+"use client";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import Filter from "../components/filters/Filter";
 import { ArtworkListing } from "./components/ArtworksListing";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 // import Filter from "./components/Filter";
 
-export default async function RecentArtworks() {
-  const session = await getServerSession();
+export default function RecentArtworks() {
+  const { user } = useAuth({ requiredRole: "user" });
 
   return (
     <main className="relative">
@@ -22,11 +23,7 @@ export default async function RecentArtworks() {
         </div>
         <Filter page_type="recent" />
         <ArtworkListing
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
+          sessionId={user && user.role === "user" ? user.id : undefined}
         />
       </div>
     </main>

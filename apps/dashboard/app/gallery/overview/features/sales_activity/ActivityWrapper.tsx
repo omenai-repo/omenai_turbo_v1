@@ -4,24 +4,22 @@ import { salesDataAlgorithm } from "@omenai/shared-utils/src/salesDataAlgorithm"
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext, useMemo } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { SalesActivityChart } from "./components/SalesActivity";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { ChartSkeleton } from "@omenai/shared-ui-components/components/skeletons/ChartSkeleton";
 import Dropdown from "../../components/Dropdown";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function ActivityWrapper() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const { sales_activity_year } = galleryActionStore();
-  const router = useRouter();
-  const url = auth_uri();
-  if (session === undefined) router.replace(url);
+
   const { data: sales, isLoading } = useQuery({
     queryKey: ["get_overview_sales_activity", sales_activity_year],
     queryFn: async () => {
       const data = await getSalesActivityData(
-        (session as GallerySchemaTypes).gallery_id as string,
+        user.gallery_id as string,
         sales_activity_year
       );
       if (data?.isOk) {

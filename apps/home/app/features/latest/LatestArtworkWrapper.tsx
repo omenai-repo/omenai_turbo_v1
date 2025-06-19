@@ -24,8 +24,6 @@ export default function LatestArtworkWrapper({
 
   if (isLoading) return <SectionLoaderContainers title="Latest artworks" />;
 
-  console.log(artworks);
-
   return (
     <div className="">
       <div className="flex md:flex-row flex-col gap-4 mb-5">

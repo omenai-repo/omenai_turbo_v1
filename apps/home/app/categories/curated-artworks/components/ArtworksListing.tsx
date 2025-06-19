@@ -2,24 +2,21 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { fetchCuratedArtworks } from "@omenai/shared-services/artworks/fetchedCuratedArtworks";
 import { categoriesFilterStore } from "@omenai/shared-state-store/src/categories/categoriesFilterStore";
 import { categoriesStore } from "@omenai/shared-state-store/src/categories/categoriesStore";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export function ArtworkListing({
   sessionId,
 }: {
   sessionId: string | undefined;
 }) {
-  const { session } = useContext(SessionContext);
   const {
     isLoading,
     setArtworks,
@@ -34,11 +31,16 @@ export function ArtworkListing({
   } = categoriesStore();
   const { filterOptions } = categoriesFilterStore();
   const { width } = useWindowSize();
+  const { user } = useAuth({ requiredRole: "user" });
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_curated_paginated_artworks"],
     queryFn: async () => {
-      const response = await fetchCuratedArtworks(currentPage, filterOptions);
+      const response = await fetchCuratedArtworks(
+        currentPage,
+        user.preferences,
+        filterOptions
+      );
       if (response?.isOk) {
         set_artwork_total(response.total);
         setArtworks(response.data);
@@ -100,7 +102,18 @@ export function ArtworkListing({
       <Pagination
         total={pageCount}
         filterOptions={filterOptions}
-        fn={fetchCuratedArtworks}
+        fn={(
+          page: number,
+          user_id: string,
+          filterOptions: any,
+          medium?: string
+        ) =>
+          fetchCuratedArtworks(
+            page,
+            [user_id], // convert user_id to string[] as expected by fetchCuratedArtworks
+            filterOptions
+          )
+        }
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}

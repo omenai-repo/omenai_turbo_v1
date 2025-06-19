@@ -12,7 +12,7 @@ export async function loginAdmin(payload: { email: string; password: string }) {
       credentials: "include",
     });
     const response = await result.json();
-    return { isOk: result.ok, message: response.message };
+    return { isOk: result.ok, message: response.message, data: response.data };
   } catch (error) {
     return { isOk: false, message: "Something went wrong" };
   }

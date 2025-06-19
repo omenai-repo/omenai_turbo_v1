@@ -1,10 +1,9 @@
 "use client";
 import { storage } from "@omenai/appwrite-config";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { uploadArtworkData } from "@omenai/shared-services/artworks/uploadArtworkData";
 import uploadImage from "@omenai/shared-services/artworks/uploadArtworkImage";
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
-import { ArtistSchemaTypes, ArtworkMediumTypes } from "@omenai/shared-types";
+import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { createUploadedArtworkData } from "@omenai/shared-utils/src/createUploadedArtworkData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -17,6 +16,7 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { TriangleAlert } from "lucide-react";
 import ArtworkPricingSkeleton from "@omenai/shared-ui-components/components/skeletons/ArtworkPricingSkeleton";
 import Link from "next/link";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 function extractNumberString(str: string) {
   if (!str) return ""; // handle empty or null input
 
@@ -25,11 +25,11 @@ function extractNumberString(str: string) {
   return cleaned;
 }
 export default function ArtworkPricing() {
+  const { user } = useAuth({ requiredRole: "artist" });
   const { image, setImage, artworkUploadData, clearData } =
     artistArtworkUploadStore();
 
   const [loading, setLoading] = useState(false);
-  const { session } = useContext(SessionContext);
   const router = useRouter();
   const queryClient = useQueryClient();
   const artwork_height = extractNumberString(artworkUploadData.height);
@@ -40,10 +40,10 @@ export default function ArtworkPricing() {
     queryFn: async () => {
       const response = await fetchArtworkPriceForArtist(
         artworkUploadData.medium as ArtworkMediumTypes,
-        (session as ArtistSchemaTypes).categorization,
+        user.categorization,
         artwork_height,
         artwork_width,
-        (session as ArtistSchemaTypes).base_currency
+        user.base_currency as string
       );
 
       if (response === undefined || !response.isOk)
@@ -92,10 +92,10 @@ export default function ArtworkPricing() {
           currency: pricing.currency,
         },
         file.fileId,
-        ((session as ArtistSchemaTypes).artist_id as string) ?? "",
+        (user.artist_id as string) ?? "",
         {
           role: "artist",
-          designation: (session as ArtistSchemaTypes).categorization,
+          designation: user.categorization,
         }
       );
 

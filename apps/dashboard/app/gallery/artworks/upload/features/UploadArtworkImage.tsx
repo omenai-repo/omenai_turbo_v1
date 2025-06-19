@@ -1,7 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import { FormEvent, useContext, useRef, useState } from "react";
-import Image from "next/image";
 import uploadImage from "@omenai/shared-services/artworks/uploadArtworkImage";
 import { createUploadedArtworkData } from "@omenai/shared-utils/src/createUploadedArtworkData";
 import { uploadArtworkData } from "@omenai/shared-services/artworks/uploadArtworkData";
@@ -10,19 +9,17 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { storage } from "@omenai/appwrite-config";
-import {
-  SessionContext,
-  useSession,
-} from "@omenai/package-provider/SessionProvider";
+
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const { image, setImage, artworkUploadData, clearData } =
     galleryArtworkUploadStore();
   const [loading, setLoading] = useState(false);
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const queryClient = useQueryClient();
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
@@ -105,7 +102,7 @@ export default function UploadArtworkImage() {
       const data = createUploadedArtworkData(
         artworkUploadData,
         file.fileId,
-        (session?.gallery_id as string) ?? "",
+        user.gallery_id ?? "",
         {
           role: "gallery",
           designation: null,

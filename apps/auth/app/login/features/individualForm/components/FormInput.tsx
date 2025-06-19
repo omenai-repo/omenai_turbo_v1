@@ -5,24 +5,21 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
-import { PiEyeThin } from "react-icons/pi";
-import { PiEyeSlashThin } from "react-icons/pi";
+import { useSignIn } from "@clerk/nextjs";
 import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
+
 import { auth_uri, base_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
-
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function FormInput() {
   const router = useRouter();
-  const [show, setShow] = useState(false);
-  const auth_url = auth_uri();
 
+  const [show, setShow] = useState(false);
+  const signInHook = useSignIn();
   const base_uri = base_url();
   //simple state to show password visibility
   // const [hidePassword, setHidePassword] = useState(true);
-
   const { setIsLoading } = individualLoginStore();
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
     "redirect_uri_on_login",
@@ -35,28 +32,22 @@ export default function FormInput() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
+  const { signOut } = useAuth({ requiredRole: "user" });
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
-  }
-
+  // CLIENT SIDE - Using session token approach
+  // CLIENT SIDE - Using signIn.create() with token
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+
+    if (!signInHook?.isLoaded || !signInHook.signIn) {
+      throw new Error("Sign-in not ready");
+    }
+
+    const { signIn, setActive } = signInHook;
     setIsLoading();
+
     try {
       const response = await loginUser({ ...form });
 
@@ -70,39 +61,58 @@ export default function FormInput() {
           className: "class",
         });
       } else {
-        const session = await getServerSession();
-        if (session && session.role === "user") {
-          toast.success("Operation successful", {
-            description: "Login successful... redirecting!",
-            style: {
-              background: "green",
-              color: "white",
-            },
-            className: "class",
-          });
-          if (session.verified) {
-            if (url === "" || url === null) {
-              set_redirect_uri("");
-              H.identify(session.email, {
-                id: session.user_id as string,
-                name: session.name,
-                role: session.role,
+        const { data, signInToken } = response;
+
+        if (response.isOk && data.role === "user") {
+          if (data.verified) {
+            try {
+              // Use the sign-in token to create a session
+              const signInAttempt = await signIn.create({
+                strategy: "ticket",
+                ticket: signInToken,
               });
-              router.replace(base_uri);
-              router.refresh();
-            } else {
-              router.replace(url);
-              set_redirect_uri("");
+
+              if (signInAttempt.status === "complete") {
+                // Set the active session
+                await setActive({ session: signInAttempt.createdSessionId });
+
+                toast.success("Operation successful", {
+                  description: "Login successful... redirecting!",
+                  style: {
+                    background: "green",
+                    color: "white",
+                  },
+                  className: "class",
+                });
+                // Your redirect logic
+                if (url === "" || url === null) {
+                  set_redirect_uri("");
+                  H.identify(data.email, {
+                    id: data.user_id as string,
+                    name: data.name,
+                    role: data.role,
+                  });
+                  router.refresh();
+                  router.replace(base_uri);
+                } else {
+                  router.replace(url);
+                  set_redirect_uri("");
+                }
+              } else {
+                throw new Error("Sign-in not complete");
+              }
+            } catch (clerkError) {
+              console.error("Clerk sign-in error:", clerkError);
+              throw clerkError;
             }
           } else {
-            // todo: Redirect to verification page
-            router.replace(`${auth_url}/verify/individual/${session.user_id}`);
+            await signOut();
+            router.replace(`${auth_uri()}/verify/individual/${data.user_id}`);
           }
-        } else {
-          await handleSignout();
         }
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error("Error notification", {
         description:
           "Something went wrong, please try again or contact support",

@@ -1,6 +1,5 @@
 "use client";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
-
 import Editorials from "./features/editorials/Editorials";
 import CuratedArtworkClientWrapper from "./features/curated/CuratedArtworkClientWrapper";
 import Footer from "@omenai/shared-ui-components/components/footer/Footer";
@@ -8,20 +7,18 @@ import Collections from "./features/collections/Collections";
 import { getPromotionalData } from "@omenai/shared-services/promotionals/getPromotionalContent";
 import Hero from "./features/hero/Hero";
 import { useQuery } from "@tanstack/react-query";
-import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
-import HomeLoader from "@omenai/shared-ui-components/components/loader/HomeLoader";
 import LatestArtworkWrapper from "./features/latest/LatestArtworkWrapper";
 import TrendingArtworkWrapper from "./features/trending/TrendingrtworksWrapper";
 import RecentViewWrapper from "./features/recentViews/RecentViewWrapper";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
+
 import AppStoreAd from "./features/appStoreAd/AppStoreAd";
-import Load, {
-  HomeLoad,
-} from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function Home() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
+
+  console.log(user);
+
   const { data: promotionals, isLoading } = useQuery({
     queryKey: ["home"],
     queryFn: async () => {
@@ -47,38 +44,23 @@ export default function Home() {
         {promotionals && <Hero promotionals={promotionals} />}
 
         <LatestArtworkWrapper
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
+          sessionId={user && user.role === "user" ? user.id : undefined}
         />
         <Collections />
         <TrendingArtworkWrapper
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
+          sessionId={user && user.role === "user" ? user.id : undefined}
         />
         <Editorials />
-        {session !== undefined && session.role === "user" && (
+        {user && user.role === "user" && (
           <CuratedArtworkClientWrapper
-            sessionId={
-              session.role === "user"
-                ? (session as IndividualSchemaTypes)?.user_id
-                : undefined
-            }
+            sessionId={user && user.role === "user" ? user.id : undefined}
           />
         )}
-        <RecentViewWrapper
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
-        />
-        {/* <Footer /> */}
+        {user && user.role === "user" && (
+          <RecentViewWrapper
+            sessionId={user && user.role === "user" ? user.id : undefined}
+          />
+        )}
       </div>
       <AppStoreAd />
       <Footer />

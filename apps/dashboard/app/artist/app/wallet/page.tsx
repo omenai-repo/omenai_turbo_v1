@@ -6,22 +6,19 @@ import PrimaryWithdrawalAccount from "./features/PrimaryWithdrawalAccount";
 import TransactionTable from "./features/TransactionTable";
 import { fetchWallet } from "@omenai/shared-services/wallet/fetchWallet";
 import { fetchWalletTransactions } from "@omenai/shared-services/wallet/fetchWalletTransactions";
-import {
-  ArtistSchemaTypes,
-  WalletTransactionModelSchemaTypes,
-} from "@omenai/shared-types";
-import { useSession } from "@omenai/package-provider/SessionProvider";
+import { ArtistSchemaTypes } from "@omenai/shared-types";
 import WalletSkeleton from "@omenai/shared-ui-components/components/skeletons/WalletSkeleton";
 import { useEffect, useState } from "react";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { walletTransactionStore } from "@omenai/shared-state-store/src/artist/wallet/WalletTransactionStateStore";
 import TransactionPagination from "./features/TransactionPagination";
 import Link from "next/link";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function Wallet() {
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
   const { toggleWalletPinPopup } = artistActionStore();
-  const { setTransactions, transactions } = walletTransactionStore();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { setTransactions } = walletTransactionStore();
   const {
     data: wallet_data,
     isLoading: loading,
@@ -30,7 +27,7 @@ export default function Wallet() {
     queryKey: ["fetch_wallet_screen"],
     queryFn: async () => {
       const now = new Date().getFullYear().toString();
-      const response = await fetchWallet(session.artist_id);
+      const response = await fetchWallet(user.artist_id);
 
       if (response === undefined || !response.isOk)
         throw new Error(

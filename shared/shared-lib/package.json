@@ -4,18 +4,18 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
+    "@omenai/shared-models": "*",
     "@omenai/typescript-config": "*",
     "@types/bcrypt": "^5.0.2",
     "@types/node-forge": "^1.3.11",
     "@upstash/ratelimit": "^2.0.4",
-    "@upstash/redis": "^1.34.3",
-    "@omenai/shared-models": "*"
+    "@upstash/redis": "^1.34.3"
   },
   "dependencies": {
     "@omenai/appwrite-config": "*",
+    "@omenai/shared-utils": "*",
     "@upstash/ratelimit": "^2.0.4",
     "@upstash/redis": "^1.34.3",
-    "@omenai/shared-utils": "*",
     "bcrypt": "^5.1.1",
     "mongoose": "^8.8.2",
     "node-forge": "^1.3.1",

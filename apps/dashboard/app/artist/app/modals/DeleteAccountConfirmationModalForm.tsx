@@ -1,43 +1,36 @@
 "use client";
 
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { deleteAccount } from "@omenai/shared-services/requests/deleteGalleryAccount";
-import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { IoWarning } from "react-icons/io5";
 import { toast } from "sonner";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRouter } from "next/navigation";
 import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function DeleteAccountConfirmationModalForm() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { session } = useContext(SessionContext);
-  const router = useRouter();
-  const auth_url = auth_uri();
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
+  const { user } = useAuth({ requiredRole: "artist" });
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login/artist`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+  const router = useRouter();
+
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+      style: {
+        background: "blue",
+        color: "white",
+      },
+      className: "class",
+    });
+
+    router.replace(`${auth_uri}/login`);
   }
+
   async function handleDeleteArtistAccount() {
     setLoading(true);
-    const response = await deleteAccount(
-      "artist",
-      (session as ArtistSchemaTypes).artist_id
-    );
+    const response = await deleteAccount("artist", user.artist_id);
 
     if (response?.isOk) {
       toast.success("Operation successful", {
@@ -48,7 +41,7 @@ export default function DeleteAccountConfirmationModalForm() {
         },
         className: "class",
       });
-      await handleSignout();
+      await handleSignOut();
     } else {
       toast.error("Error notification", {
         description: response?.message,

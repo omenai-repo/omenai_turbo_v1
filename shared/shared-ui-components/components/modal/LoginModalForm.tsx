@@ -4,15 +4,16 @@ import LoginModalFormActions from "./LoginModalFormActions";
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { useRouter } from "next/navigation";
 import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
-import { auth_uri, base_url } from "@omenai/url-config/src/config";
-import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
+
+import { auth_uri, base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useSignIn } from "@clerk/nextjs";
+import { H } from "@highlight-run/next/client";
 
 export default function LoginModalForm() {
   const queryClient = useQueryClient();
@@ -24,81 +25,110 @@ export default function LoginModalForm() {
   const [form, setForm] = useState<Form>({ email: "", password: "" });
   const router = useRouter();
 
+  const signInHook = useSignIn();
+
   const auth_url = auth_uri();
-
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
-
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      //   router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
-  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const { mutateAsync: loginFromModal } = useMutation({
-    mutationFn: async () => {
-      setIsLoading(true);
+  const { signOut } = useAuth({ requiredRole: "user" });
+
+  const loginFromModal = async (
+    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+
+    if (!signInHook?.isLoaded || !signInHook.signIn) {
+      throw new Error("Sign-in not ready");
+    }
+
+    const { signIn, setActive } = signInHook;
+    setIsLoading(true);
+
+    try {
       const response = await loginUser({ ...form });
-      return response;
-    },
-    onSuccess: async (data) => {
-      if (data?.isOk) {
-        const session = await getServerSession();
-        if (session && session.role === "user") {
-          if (!session.verified) {
-            toast.error("Error notification", {
-              description:
-                "User not verified... Redirecting to verification page",
-              style: {
-                background: "red",
-                color: "white",
-              },
-              className: "class",
-            });
-            router.replace(`${auth_url}/verify/individual/${session.user_id}`);
-          } else {
-            toast.success("Operation successful", {
-              description: "Login successful. Refreshing page",
-              style: {
-                background: "green",
-                color: "white",
-              },
-              className: "class",
-            });
-            await queryClient.invalidateQueries();
-            router.refresh();
-            toggleLoginModal(false);
-          }
-        }
-      } else {
-        toast.error("Error notification", {
-          description: data.message,
+
+      if (!response.isOk) {
+        toast.error("Error notification ", {
+          description: response.message,
           style: {
             background: "red",
             color: "white",
           },
           className: "class",
         });
+      } else {
+        const { data, signInToken } = response;
+
+        if (response.isOk && data.role === "user") {
+          if (data.verified) {
+            try {
+              // Use the sign-in token to create a session
+              const signInAttempt = await signIn.create({
+                strategy: "ticket",
+                ticket: signInToken,
+              });
+
+              if (signInAttempt.status === "complete") {
+                // Set the active session
+                await setActive({ session: signInAttempt.createdSessionId });
+
+                toast.success("Operation successful", {
+                  description: "Login successful... redirecting!",
+                  style: {
+                    background: "green",
+                    color: "white",
+                  },
+                  className: "class",
+                });
+                // Your redirect logic
+                H.identify(data.email, {
+                  id: data.id as string,
+                  name: data.name,
+                  role: data.role,
+                });
+
+                await queryClient.invalidateQueries();
+                router.refresh();
+                toggleLoginModal(false);
+              } else {
+                throw new Error("Sign-in not complete");
+              }
+            } catch (clerkError) {
+              console.error("Clerk sign-in error:", clerkError);
+              throw clerkError;
+            }
+          } else {
+            await signOut();
+            toast.info("Signing out...", {
+              description: "You will be redirected to verify your account",
+            });
+            router.replace(`${auth_uri()}/verify/gallery/${data.id}`);
+          }
+        }
       }
-    },
-  });
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Error notification", {
+        description:
+          "Something went wrong, please try again or contact support",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await loginFromModal();
+      await loginFromModal(e);
       setIsLoading(false);
     } catch (error) {
       console.log(error);

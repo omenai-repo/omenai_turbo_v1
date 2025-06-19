@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLocalStorage } from "usehooks-ts";
 import { updateSubscriptionPlan } from "@omenai/shared-services/subscriptions/updateSubscriptionPlan";
 import Link from "next/link";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import {
   SubscriptionPlanDataTypes,
   SubscriptionModelSchemaTypes,
@@ -18,6 +17,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { createTokenizedCharge } from "@omenai/shared-services/subscriptions/createTokenizedCharge";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function CheckoutBillingCard({
   plan,
@@ -39,7 +39,7 @@ export default function CheckoutBillingCard({
   amount: number;
   shouldCharge: boolean;
 }) {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const [transaction_id, set_transaction_id] = useLocalStorage(
     "flw_trans_id",
     ""
@@ -106,7 +106,7 @@ export default function CheckoutBillingCard({
 
     const migrate = await updateSubscriptionPlan(
       data,
-      session?.gallery_id as string,
+      user.gallery_id as string,
       typeof plan_action === "string" ? plan_action : ""
     );
 

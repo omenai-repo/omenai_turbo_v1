@@ -7,9 +7,9 @@
     "@omenai/appwrite-config": "*",
     "@omenai/shared-lib": "*",
     "@omenai/shared-types": "*",
+    "@omenai/shared-ui-components": "*",
     "@omenai/shared-utils": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/shared-ui-components": "*",
     "@omenai/url-config": "*",
     "react-email": "3.0.2"
   },

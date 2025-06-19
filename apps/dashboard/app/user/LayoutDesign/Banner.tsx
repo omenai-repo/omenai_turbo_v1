@@ -1,33 +1,19 @@
 "use client";
 
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
 import { CiUser } from "react-icons/ci";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast } from "sonner";
-import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function Banner() {
-  const { session } = useContext(SessionContext);
-  const router = useRouter();
-  const auth_url = auth_uri();
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
-
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+  const { user, signOut } = useAuth({ requiredRole: "user" });
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+    });
+    await signOut();
+    // router.replace(`${auth_uri}/login`);
   }
+
   return (
     <>
       <div className="flex justify-between items-center py-4">
@@ -37,11 +23,11 @@ export default function Banner() {
           </div>
 
           <div>
-            <h1 className="text-fluid-base font-semibold">{session?.name}</h1>
-            <p className="text-fluid-xs font-normal">{session?.email}</p>
+            <h1 className="text-fluid-base font-semibold">{user.name}</h1>
+            <p className="text-fluid-xs font-normal">{user.email}</p>
           </div>
         </div>
-        <div className="" onClick={() => handleSignout()}>
+        <div className="" onClick={async () => await handleSignOut()}>
           <button className="p-3 rounded-full sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-fluid-xs border-dark hover:border-dark/30">
             Logout
           </button>

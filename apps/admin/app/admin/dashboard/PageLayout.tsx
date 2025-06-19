@@ -5,41 +5,23 @@ import { navMockData } from "./mocks/NavigationMockData";
 import NavigationItem from "./NavigationItem";
 import { adminNavigationActions } from "@omenai/shared-state-store/src/admin/AdminNavigationStore";
 import { useRouter } from "next/navigation";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+import { auth_uri } from "@omenai/url-config/src/config";
 export default function PageLayout() {
   const { open, setOpen } = adminNavigationActions();
-
   const router = useRouter();
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace("/auth/login/secure/admin");
-    } else {
-      toast.error("Error Notification", {
-        description:
-          "Something went wrong, please try again or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    }
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+      style: {
+        background: "blue",
+        color: "white",
+      },
+      className: "class",
+    });
+
+    router.replace(`${auth_uri}/login`);
   }
-
-  toast.error("Error notification", {
-    description: "Admin session expired. Please login again",
-    style: {
-      background: "red",
-      color: "white",
-    },
-    className: "class",
-  });
 
   return (
     <div
@@ -93,7 +75,9 @@ export default function PageLayout() {
                     key={item.title}
                     url={item.url}
                     mobile={false}
-                    onClick={() => item.title === "Sign out" && handleSignout()}
+                    onClick={async () =>
+                      item.title === "Sign out" && (await handleSignOut())
+                    }
                   />
                 );
               })}

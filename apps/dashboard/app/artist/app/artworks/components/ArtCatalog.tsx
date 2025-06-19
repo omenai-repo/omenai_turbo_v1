@@ -6,21 +6,19 @@ import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function ArtCatalog() {
-  const { session } = useContext(SessionContext);
-  const sessionId = (session as ArtistSchemaTypes).artist_id as string;
+  const { user } = useAuth({ requiredRole: "artist" });
 
   const { width } = useWindowSize();
 
   const { data: artworks, isLoading } = useQuery({
     queryKey: ["fetch_artworks_by_id"],
     queryFn: async () => {
-      const artworks = await getAllArtworksById(sessionId);
+      const artworks = await getAllArtworksById(user.artist_id as string);
       if (artworks!.isOk) {
         return artworks!.data;
       } else {
@@ -63,7 +61,7 @@ export default function ArtCatalog() {
                         pricing={art.pricing}
                         impressions={art.impressions as number}
                         likeIds={art.like_IDs as string[]}
-                        sessionId={sessionId}
+                        sessionId={user.artist_id as string}
                         availability={art.availability}
                         isDashboard
                         medium={art.medium}

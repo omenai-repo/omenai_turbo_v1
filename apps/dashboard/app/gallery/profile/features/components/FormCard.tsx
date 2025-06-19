@@ -5,15 +5,14 @@ import { TextareaCard } from "./TextareaCard";
 import { updateProfile } from "@omenai/shared-services/update/updateProfile";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { galleryProfileUpdate } from "@omenai/shared-state-store/src/gallery/gallery_profile_update/GalleryProfileUpdateStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { GallerySchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export const FormCard = () => {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
-  const user = session;
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +80,7 @@ export const FormCard = () => {
       <div className="grid grid-cols-2 items-center">
         <InputCard
           label="Address"
-          defaultValue={(user as GallerySchemaTypes).address.address_line}
+          defaultValue={user.address.address_line}
           labelText="location"
         />
         <InputCard

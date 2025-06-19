@@ -3,16 +3,16 @@
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { MdArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
-import { useContext, useState } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useState } from "react";
 import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 type TabDropdownTypes = {
   catalogue: boolean;
 };
 export function TabsDropdown({ catalogue }: TabDropdownTypes) {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
   const [dropdown, setDropDown] = useState(false);
   const { selectedTab, setSelectedTab } = artworkActionStore();
 
@@ -54,7 +54,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
           Art collections
         </p> */}
         <div>
-          {(session as IndividualSchemaTypes)?.role === "user" && (
+          {user && (
             <p
               className="hover:bg-dark/20 duration-200 py-4 px-2"
               onClick={() => updatetabState("Tailored for you", "tailored")}

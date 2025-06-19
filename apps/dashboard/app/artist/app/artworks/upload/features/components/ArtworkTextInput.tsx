@@ -1,13 +1,9 @@
 "use client";
-import { useSession } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_validator/validator";
-import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
-import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 type ArtworkTextInputProps = {
   label: string;
@@ -30,10 +26,10 @@ export default function ArtworkTextInput({
 }: ArtworkTextInputProps) {
   const { updateArtworkUploadData, updateErrorField, artworkUploadData } =
     artistArtworkUploadStore();
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
 
   useEffect(() => {
-    if (name === "artist") updateArtworkUploadData(name, session.name);
+    if (name === "artist") updateArtworkUploadData(name, user.name as string);
   }, []);
 
   const [errorList, setErrorList] = useState<string[]>([]);

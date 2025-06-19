@@ -17,7 +17,7 @@ function Page() {
             alt="Individual sign up image block"
             width={960}
             height={1024}
-            className="absolute inset-0 w-full rounded-[20px] h-full object-center object-cover"
+            className="absolute inset-0 w-full h-full object-center object-cover"
           />
         </div>
 

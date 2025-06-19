@@ -1,18 +1,17 @@
 "use client";
 
-import { useContext } from "react";
 import DashboardIndicator from "./DashboardIndicator";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Appbar() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   return (
     <>
       <div className="flex justify-between items-center w-full pt-5 sticky top-0 z-10 bg-white ">
         <DashboardIndicator
-          admin_name={session?.admin as string}
-          gallery_name={session?.name}
-          gallery_verified={session?.gallery_verified as boolean}
+          admin_name={user.admin as string}
+          gallery_name={user.name}
+          gallery_verified={user.gallery_verified as boolean}
         />
       </div>
     </>

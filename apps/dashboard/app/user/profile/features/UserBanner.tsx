@@ -1,9 +1,9 @@
 "use client";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useContext } from "react";
 
 export const UserBanner = () => {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
 
   return (
     <div className="my-5 flex items-center flex-col justify-center">
@@ -14,10 +14,10 @@ export const UserBanner = () => {
             Status:{" "}
             <span
               className={`${
-                session?.verified ? "text-green-600" : "text-red-600"
+                user && user.verified ? "text-green-600" : "text-red-600"
               } font-medium`}
             >
-              {session?.verified ? "Verified" : "Not verified"}
+              {user && user.verified ? "Verified" : "Not verified"}
             </span>
           </p>
         </div>

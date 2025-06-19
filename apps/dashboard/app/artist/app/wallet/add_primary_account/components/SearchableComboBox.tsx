@@ -3,13 +3,14 @@ import { useState } from "react";
 import { Combobox, Input, InputBase, Loader, useCombobox } from "@mantine/core";
 import { getBanks } from "@omenai/shared-services/wallet/getBanks";
 import { getBankBranches } from "@omenai/shared-services/wallet/getBankBranches";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import {
   ArtistSchemaTypes,
   BankBranchType,
   BankType,
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 async function getAsyncData(
   type: "banks" | "branches",
@@ -62,7 +63,7 @@ export function SearchableSelect({
   const [value, setValue] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<BankType[] | BankBranchType[]>([]);
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
   const [search, setSearch] = useState("");
 
   const combobox = useCombobox({
@@ -76,7 +77,7 @@ export function SearchableSelect({
         setLoading(true);
         const response = await getAsyncData(
           type,
-          session.address.countryCode,
+          user.address.countryCode,
           bankCode || ""
         );
         setData(response);

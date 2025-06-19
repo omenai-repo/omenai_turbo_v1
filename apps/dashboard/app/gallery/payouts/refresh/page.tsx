@@ -6,16 +6,14 @@ import { createAccountLink } from "@omenai/shared-services/stripe/createAccountL
 import { toast } from "sonner";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { useQuery } from "@tanstack/react-query";
-import {
-  SessionContext,
-  useSession,
-} from "@omenai/package-provider/SessionProvider";
+
 import Load, {
   LoadSmall,
 } from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function RefreshStripe() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const searchParams = useSearchParams();
   const account_Id = searchParams.get("id");
   const router = useRouter();
@@ -107,7 +105,7 @@ export default function RefreshStripe() {
                 <input
                   disabled
                   type="text"
-                  value={session?.name}
+                  value={user.name}
                   className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 />
               </div>
@@ -121,7 +119,7 @@ export default function RefreshStripe() {
                 <input
                   disabled
                   type="text"
-                  value={session?.email}
+                  value={user.email}
                   className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 />
               </div>

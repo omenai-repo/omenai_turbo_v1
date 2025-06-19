@@ -1,7 +1,10 @@
-"use client";
 import PageTitle from "../../components/PageTitle";
 import AccountForm from "./components/AccountForm";
 import { Paper } from "@mantine/core";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function page() {
   return (
     <div>

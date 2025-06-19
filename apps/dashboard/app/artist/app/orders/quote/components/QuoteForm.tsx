@@ -4,12 +4,9 @@ import { acceptOrderRequest } from "@omenai/shared-services/orders/acceptOrderRe
 
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { BsCurrencyDollar } from "react-icons/bs";
 import { toast } from "sonner";
 import Image from "next/image";
-import { PiSealWarning } from "react-icons/pi";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 import Load, {
@@ -17,7 +14,6 @@ import Load, {
 } from "@omenai/shared-ui-components/components/loader/Load";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import {
   CreateOrderModelTypes,
   ShipmentDimensions,

@@ -1,14 +1,15 @@
 "use client";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { AddressTypes } from "@omenai/shared-types";
 import Image from "next/image";
-import { useContext } from "react";
+import React from "react";
 import { RxAvatar } from "react-icons/rx";
 
 export const ProfileBanner = () => {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "artist" });
 
-  const logo = session?.logo as string;
+  const logo = user.logo;
+
   return (
     <div className="my-5 mx-5 lg:mx-0 flex items-center flex-col justify-center">
       <Image
@@ -34,11 +35,11 @@ export const ProfileBanner = () => {
           )}
 
           <div className="">
-            <p className="text-dark font-normal text-fluid-base">
-              {session?.name}
-            </p>
+            <p className="text-dark font-normal text-fluid-base">{user.name}</p>
             <p className="text-dark text-fluid-xs font-light">
-              {(session as ArtistSchemaTypes).address.address_line}
+              {typeof user.address === "object" && user.address !== null
+                ? (user.address as AddressTypes).address_line
+                : ""}
             </p>
           </div>
         </div>
@@ -56,14 +57,10 @@ export const ProfileBanner = () => {
             Status:{" "}
             <span
               className={`${
-                (session as ArtistSchemaTypes).artist_verified
-                  ? "text-green-600"
-                  : "text-red-600"
+                user.artist_verified ? "text-green-600" : "text-red-600"
               }`}
             >
-              {(session as ArtistSchemaTypes).artist_verified
-                ? "Verified"
-                : "Not verified"}
+              {user.artist_verified ? "Verified" : "Not verified"}
             </span>
           </p>
         </div>

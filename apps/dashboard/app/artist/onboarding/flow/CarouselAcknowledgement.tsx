@@ -1,6 +1,5 @@
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
-import React, { useState } from "react";
-import { CiWarning } from "react-icons/ci";
+import { useState } from "react";
 import { validateOnboarding } from "./validateOnboarding";
 import uploadArtistDocument from "./uploadArtistDocs";
 import { onboardArtist } from "@omenai/shared-services/onboarding/onboardArtist";
@@ -9,11 +8,11 @@ import {
   ArtistCategorizationUpdateDataTypes,
   ArtistSchemaTypes,
 } from "@omenai/shared-types";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { toast } from "sonner";
 import { documentation_storage } from "@omenai/appwrite-config";
-import { ClipLoader } from "react-spinners";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 type Option = "yes" | "no";
 export default function CarouselAcknowledgement({
   isInteractable,
@@ -24,7 +23,7 @@ export default function CarouselAcknowledgement({
   const { onboardingData, field_completion_state } = artistOnboardingStore();
   const { setOpenOnboardingCompletedModal } = actionStore();
 
-  const session = useSession();
+  const { user } = useAuth({ requiredRole: "artist" });
 
   const handleSubmit = async () => {
     const isValidated = validateOnboarding(
@@ -71,7 +70,7 @@ export default function CarouselAcknowledgement({
             art_fair: art_fair as Option,
           },
           bio,
-          artist_id: (session as ArtistSchemaTypes).artist_id,
+          artist_id: user.artist_id,
         };
 
         const response = await onboardArtist(payload);

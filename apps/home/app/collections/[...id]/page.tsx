@@ -1,11 +1,9 @@
 import Filter from "./components/filters/Filter";
 import { ArtworksListing } from "./components/ArtworksListing";
-
 import Link from "next/link";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { artMediumHistory } from "./artMediumBriefHistory";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 type ArtMedium = keyof typeof artMediumHistory;
 
@@ -15,7 +13,7 @@ export default async function page({
   params: Promise<{ id: string[] }>;
 }) {
   const slug = (await params).id;
-  const session = await getServerSession();
+  const { user } = useAuth({ requiredRole: "user" });
 
   const pageTitleParser = () => {
     let decodedId = decodeURIComponent(slug[0]);
@@ -63,11 +61,7 @@ export default async function page({
         <div className="">
           <ArtworksListing
             medium={pageTitleParser()}
-            sessionId={
-              (session as IndividualSchemaTypes)?.role === "user"
-                ? (session as IndividualSchemaTypes)?.user_id
-                : undefined
-            }
+            sessionId={user ? user.id : undefined}
           />
         </div>
       </div>

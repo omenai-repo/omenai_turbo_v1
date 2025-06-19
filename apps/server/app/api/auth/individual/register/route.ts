@@ -12,6 +12,9 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { sendIndividualMail } from "@omenai/shared-emails/src/models/individuals/sendIndividualMail";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+
+import { clerkClient } from "@clerk/nextjs/server";
+
 export const POST = withRateLimitAndHighlight(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -31,14 +34,39 @@ export const POST = withRateLimitAndHighlight(strictRateLimit)(
 
       const email_token = generateDigit(7);
 
-      const saveData = await AccountIndividual.create({
-        ...parsedData,
+      const client = await clerkClient();
+      const users = await client.users.getUserList({
+        emailAddress: [parsedData.email],
       });
 
-      const { user_id } = saveData;
+      let clerkUserId;
+
+      if (users && users.data.length > 0) {
+        // Email exists in Clerk
+        clerkUserId = users.data[0].id;
+      } else {
+        const clerkUser = await client.users.createUser({
+          emailAddress: [parsedData.email],
+          publicMetadata: { role: "user" },
+          skipPasswordRequirement: true,
+        });
+
+        if (!clerkUser)
+          throw new ServerError(
+            "Authentication service is currently down, please try again later or contact support"
+          );
+
+        clerkUserId = clerkUser.id;
+      }
+
+      const saveData = await AccountIndividual.create({
+        ...parsedData,
+        clerkUserId,
+      });
 
       if (!saveData)
         throw new ServerError("A server error has occured, please try again");
+      const { user_id, email } = saveData;
 
       const storeVerificationCode = await VerificationCodes.create({
         code: email_token,

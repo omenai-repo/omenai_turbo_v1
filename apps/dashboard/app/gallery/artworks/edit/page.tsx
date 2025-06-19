@@ -6,6 +6,7 @@ import { fetchSingleArtwork } from "@omenai/shared-services/artworks/fetchSingle
 
 import EditArtworkWrapper from "./components/EditArtworkWrapper";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { Suspense } from "react";
 
 export default function EditArtwork() {
   const searchParams = useSearchParams();
@@ -33,9 +34,9 @@ export default function EditArtwork() {
   }
 
   return (
-    <div>
+    <Suspense>
       <PageTitle title="Edit artwork Price" />
       <EditArtworkWrapper artwork={artwork} />
-    </div>
+    </Suspense>
   );
 }

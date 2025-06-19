@@ -6,29 +6,21 @@ import PayoutDashBoardContent from "./PayoutDashBoardContent";
 import { retrieveBalance } from "@omenai/shared-services/stripe/retrieveBalance";
 import { TransactionTable } from "./TransactionTable";
 import { fetchTransactions } from "@omenai/shared-services/transactions/fetchTransactions";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import Load, {
-  LoadIcon,
-} from "@omenai/shared-ui-components/components/loader/Load";
-import { auth_uri } from "@omenai/url-config/src/config";
+import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
 import PayoutSkeleton from "@omenai/shared-ui-components/components/skeletons/PayoutSkeleton";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function PayoutDashboard() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
-  const url = auth_uri();
-  if (session === null || session === undefined) router.replace(url);
-
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["fetch_payout_dataset"],
     queryFn: async () => {
       try {
-        // Ensure session data exists
-        if (session === undefined) throw new Error("User not authenticated");
+        // Ensure user data exists
 
-        const acc = await getAccountId(session.email);
+        const acc = await getAccountId(user.email);
         if (!acc?.isOk) throw new Error("Failed to fetch account ID");
 
         const connectedAccountId = acc.data.connected_account_id;
@@ -36,7 +28,7 @@ export default function PayoutDashboard() {
         // Run independent async calls concurrently
         const [balance, table, response] = await Promise.all([
           retrieveBalance(connectedAccountId),
-          fetchTransactions(session.gallery_id as string),
+          fetchTransactions(user.gallery_id as string),
           checkIsStripeOnboarded(connectedAccountId),
         ]);
 

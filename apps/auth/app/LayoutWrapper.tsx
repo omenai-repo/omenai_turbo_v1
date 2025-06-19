@@ -1,17 +1,14 @@
 "use client";
 import NextTopLoader from "nextjs-toploader";
 
-import { QueryProvider, SessionProvider } from "@omenai/package-provider";
-
+import { QueryProvider } from "@omenai/package-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
-import { UserType } from "@omenai/shared-types";
 
 export default function LayoutWrapper({
   children,
-  session,
 }: {
   children: React.ReactNode;
-  session: UserType | undefined;
 }) {
   return (
     <div>
@@ -25,9 +22,17 @@ export default function LayoutWrapper({
         />
         <div className=" w-full h-screen">
           <NextTopLoader color="#1A1A1A" height={6} />
-          <SessionProvider session={session}>
+          <ClerkProvider
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+            appearance={{
+              baseTheme: undefined, // Since you're using custom pages
+            }}
+            // This enables cross-subdomain session sharing
+            domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN as string}
+            isSatellite={false}
+          >
             <QueryProvider>{children}</QueryProvider>
-          </SessionProvider>
+          </ClerkProvider>
         </div>
       </>
     </div>

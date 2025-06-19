@@ -1,20 +1,17 @@
 "use client";
 import { getOrderByFilter } from "@omenai/shared-services/orders/getOrdersByFilter";
-
 import { useQuery } from "@tanstack/react-query";
-
-import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
 import { OrdersAccordion } from "../../../../components/OrdersAccordion";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Orders() {
-  const session = useSession() as GallerySchemaTypes;
+  const { user } = useAuth({ requiredRole: "gallery" });
   const { data: orders, isLoading } = useQuery({
     queryKey: ["get_overview_order"],
     queryFn: async () => {
-      const orders = await getOrderByFilter(session.gallery_id);
+      const orders = await getOrderByFilter(user.gallery_id);
       if (orders?.isOk) {
         return orders.data;
       }

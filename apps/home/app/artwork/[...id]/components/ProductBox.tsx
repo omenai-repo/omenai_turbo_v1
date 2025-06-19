@@ -5,8 +5,7 @@ import ImageBox from "./ImageBox";
 import { useQueryClient } from "@tanstack/react-query";
 import { createViewHistory } from "@omenai/shared-services/viewHistory/createViewHstory";
 import { ArtworkResultTypes } from "@omenai/shared-types";
-import ArtistInformation from "./ArtistInformation";
-import FullArtworkDetails from "./FullArtworkDetails";
+
 import LegalComponents from "./LegalComponents";
 
 type ProductBoxTypes = {

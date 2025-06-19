@@ -4,10 +4,8 @@ import { userDetails, userLocation } from "../AddressInputFieldMocks";
 import AddressSelectInput from "./AddressSelectInput";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 import { FormEvent, useEffect, useState } from "react";
-import { indexAddress } from "../indexAddressOptions";
 import { createShippingOrder } from "@omenai/shared-services/orders/createShippingOrder";
 import { toast } from "sonner";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import {
@@ -16,7 +14,8 @@ import {
   RoleAccess,
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { City, IState, State } from "country-state-city";
+import { City, State } from "country-state-city";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 type AddressFormTypes = {
   userAddress: AddressTypes;
@@ -46,10 +45,10 @@ export default function AddressForm({
   const [save_shipping_address, setSaveShippingAddress] =
     useState<boolean>(false);
 
-  const session = useSession();
+  const { user } = useAuth({ requiredRole: "user" });
 
   useEffect(() => {
-    const address = (session as IndividualSchemaTypes).address;
+    const address = user.address;
     setSelectedCountry(
       (address as AddressTypes).country,
       (address as AddressTypes).countryCode
@@ -95,7 +94,7 @@ export default function AddressForm({
       setLoading(false);
     } else {
       const createdShippingOrder = await createShippingOrder(
-        (session as IndividualSchemaTypes)?.user_id,
+        user?.user_id,
         art_id,
         author_id,
         save_shipping_address,
@@ -138,9 +137,7 @@ export default function AddressForm({
                   required={detail.required}
                   disabled={true}
                   defaultValue={
-                    detail.name === "name"
-                      ? (session as IndividualSchemaTypes).name || ""
-                      : (session as IndividualSchemaTypes).email || ""
+                    detail.name === "name" ? user.name || "" : user.email || ""
                   }
                 />
               );
@@ -156,9 +153,8 @@ export default function AddressForm({
                   items={location.items}
                   labelText={location.labelText}
                   defaultValue={
-                    (session as IndividualSchemaTypes).address?.[
-                      location.labelText as keyof AddressTypes
-                    ] ?? ""
+                    user.address?.[location.labelText as keyof AddressTypes] ??
+                    ""
                   }
                 />
               ) : (
@@ -171,9 +167,8 @@ export default function AddressForm({
                   required={true}
                   disabled={false}
                   defaultValue={
-                    (session as IndividualSchemaTypes)?.address?.[
-                      location.labelText as keyof AddressTypes
-                    ] || ""
+                    user?.address?.[location.labelText as keyof AddressTypes] ||
+                    ""
                   }
                 />
               );

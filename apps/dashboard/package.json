@@ -18,7 +18,6 @@
     "@omenai/shared-emails": "*",
     "@omenai/shared-hooks": "*",
     "@omenai/shared-json": "*",
-    "@omenai/shared-layout-wrapper": "*",
     "@omenai/shared-lib": "*",
     "@omenai/shared-models": "*",
     "@omenai/shared-services": "*",

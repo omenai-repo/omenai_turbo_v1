@@ -1,79 +1,174 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSession, refreshSession } from "./lib/auth/session";
-import { base_url, auth_uri } from "@omenai/url-config/src/config";
+// src/middleware.ts (or middleware.ts at the root of your UI/Pages app)
+
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+// Assuming these are configured for the UI app (localhost:3000)
+// For `auth_uri`, it should typically point to your Clerk sign-in route within THIS app.
+import {
+  base_url,
+  auth_uri, // This should internally resolve to 'http://localhost:3000/sign-in' or similar
+  dashboard_url,
+} from "@omenai/url-config/src/config";
+import { shouldSkipMiddleware } from "@omenai/shared-auth/middleware_skip";
+// You likely have this type defined somewhere in your monorepo, e.g., in a shared types package
+interface SessionDataType {
+  role: "user" | "artist" | "gallery" | "admin";
+  // Add other properties you expect in publicMetadata
+}
+
+// Define matchers for your protected routes (relative to THIS UI app)
 
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const artistDashboardRegex = /\/artist\/.*/;
+const adminDashboardRegex = /\/admin\/.*/;
 const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
-function redirect(url: string) {
-  return NextResponse.redirect(new URL(url));
+
+// Helper for redirecting unauthenticated users to the Clerk sign-in page of THIS UI app
+function redirectToClerkSignIn(req: NextRequest): NextResponse {
+  // Use Clerk's default sign-in URL or a custom one defined in your Clerk environment variables
+  // (e.g., NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in)
+  const signInUrl = new URL("/login", auth_uri());
+  signInUrl.searchParams.set("redirect_url", req.url); // Preserve intended destination
+  return NextResponse.redirect(signInUrl);
 }
 
-export async function middleware(request: NextRequest) {
-  const session = await getSession();
-  const auth_url = auth_uri();
-  const base_path_url = base_url();
+export default clerkMiddleware(async (auth, req: NextRequest) => {
+  const pathname = req.nextUrl.pathname; // Get the current path
 
-  if (!session && !request.url.startsWith(base_path_url)) {
-    return redirect(`${auth_url}/login`);
+  // Ensure these URLs correctly resolve to the UI app's domain (localhost:3000)
+  // `base_url` should be 'http://localhost:3000'
+  // `auth_uri` should point to where Clerk sign-in/up is mounted in this UI app, e.g., 'http://localhost:3000/sign-in'
+  // `dashboard_url` should be a general dashboard base for this app, e.g., 'http://localhost:3000/dashboard'
+  const app_base_url = base_url();
+  const app_auth_uri = auth_uri(); // Assuming this is like 'http://localhost:3000/login' or similar for the UI app
+
+  // --- 1. Define public routes that don't require authentication in THIS UI app ---
+  // Use direct string paths for clarity and to avoid URL object complexities for simple routes.
+  const publicRoutes = [
+    "/", // Homepage
+    // These should be the paths where Clerk sign-in/sign-up components are mounted in THIS app
+    // e.g., if you have a page at /sign-in and /sign-up
+    new URL("/login", app_auth_uri).pathname, // e.g., /login (if this path is handled by Clerk on 3000)
+    new URL("/register", app_auth_uri).pathname, // e.g., /register (if this path is handled by Clerk on 3000)
+    "/catalog",
+    "/search",
+    "/artwork",
+    "/categories",
+    // Add any other public routes here (e.g., /about, /contact)
+  ];
+
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
+
+  if (isPublicRoute) {
+    return NextResponse.next();
   }
 
-  const isUserDashboard = userDashboardRegex.test(request.url);
-  const isGalleryDashboard = galleryDashboardRegex.test(request.url);
-  const isPurchasePage = purchasePageRegex.test(request.url);
-  const isPaymentPage = paymentPageRegex.test(request.url);
-  const isArtistDashboard = artistDashboardRegex.test(request.url);
+  if (shouldSkipMiddleware(pathname, req)) {
+    return NextResponse.next();
+  }
+  // --- 2. If the user is not authenticated for a protected page, protect the route ---
+  const { userId, sessionClaims } = await auth();
+  console.log(userId, sessionClaims);
 
-  if (session) {
-    switch (session.role) {
-      case "user":
-        if (isGalleryDashboard || isArtistDashboard) {
-          return redirect(`${auth_url}/login`);
-        }
-        break;
-      case "gallery":
-        if (
-          isUserDashboard ||
-          isPurchasePage ||
-          isPaymentPage ||
-          isArtistDashboard
-        ) {
-          return redirect(`${auth_url}/login`);
-        }
-        break;
-      case "admin":
-        if (
-          isGalleryDashboard ||
-          isUserDashboard ||
-          isPurchasePage ||
-          isPaymentPage ||
-          isArtistDashboard
-        ) {
-          return redirect(`${auth_url}/login`);
-        }
-        break;
-      case "artist":
-        if (
-          isUserDashboard ||
-          isGalleryDashboard ||
-          isPurchasePage ||
-          isPaymentPage
-        ) {
-          return redirect(`${auth_url}/login`);
-        }
-        break;
-    }
+  if (!userId) {
+    console.log(
+      `[UI Middleware] Unauthenticated access to protected route: ${pathname}. Redirecting to sign-in.`
+    );
+    return redirectToClerkSignIn(req); // Redirect to the Clerk sign-in page of this UI app
   }
 
-  if (session) {
-    // Refresh session expiry
+  // --- 3. Role-based Authorization Logic ---
+  // Safely get the user's role from publicMetadata (Corrected access)
+  const role = sessionClaims.role;
 
-    await refreshSession(session);
+  // Console log for debugging roles and paths
+  console.log(
+    `[UI Middleware] User ${userId} with role '${role}' attempting to access: ${pathname}`
+  );
+
+  const isUserDashboard = userDashboardRegex.test(pathname);
+  const isGalleryDashboard = galleryDashboardRegex.test(pathname);
+  const isPurchasePage = purchasePageRegex.test(pathname);
+  const isPaymentPage = paymentPageRegex.test(pathname);
+  const isArtistDashboard = artistDashboardRegex.test(pathname);
+  const isAdminDashboard = adminDashboardRegex.test(pathname);
+
+  // User role restrictions
+  if (
+    role === "user" &&
+    (isGalleryDashboard || isArtistDashboard || isAdminDashboard)
+  ) {
+    console.log(
+      `[UI Middleware] User role '${role}' forbidden from ${pathname}. Redirecting to user's dashboard.`
+    );
+    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual user dashboard
   }
-}
 
+  // Gallery role restrictions
+  if (
+    role === "gallery" &&
+    (isUserDashboard ||
+      isAdminDashboard ||
+      isArtistDashboard ||
+      isPurchasePage ||
+      isPaymentPage)
+  ) {
+    console.log(
+      `[UI Middleware] Gallery role '${role}' forbidden from ${pathname}. Redirecting to gallery's dashboard.`
+    );
+    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual gallery dashboard
+  }
+
+  // Artist role restrictions
+  if (
+    role === "artist" &&
+    (isUserDashboard ||
+      isAdminDashboard ||
+      isGalleryDashboard ||
+      isPurchasePage ||
+      isPaymentPage)
+  ) {
+    console.log(
+      `[UI Middleware] Artist role '${role}' forbidden from ${pathname}. Redirecting to artist's dashboard.`
+    );
+    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual artist dashboard
+  }
+
+  // Admin role restrictions (adjust if admins should have full access)
+  if (
+    role === "admin" &&
+    (isUserDashboard ||
+      isAdminDashboard ||
+      isGalleryDashboard ||
+      isArtistDashboard ||
+      isPurchasePage ||
+      isPaymentPage)
+  ) {
+    console.log(
+      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to admin dashboard.`
+    );
+    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual admin dashboard
+  }
+
+  // If no specific rule blocks access, allow the req to proceed
+  return NextResponse.next();
+});
+
+// --- **THE CRUCIAL `config.matcher` for your UI/Pages App (localhost:3000)** ---
 export const config = {
-  matcher: ["/((?!_next|static|favicon.ico).*)"],
+  matcher: [
+    // Only run middleware on these specific paths
+    "/admin/:path*",
+    "/purchase/:path*",
+    "/payment/:path*",
+    "/user/:path*",
+    "/gallery/:path*",
+    "/artist/:path*",
+    // Add other protected routes as needed
+  ],
 };

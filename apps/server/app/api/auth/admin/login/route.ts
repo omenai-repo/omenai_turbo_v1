@@ -5,7 +5,6 @@ import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { NextResponse, NextResponse as res } from "next/server";
 import { ConflictError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { createSession } from "@omenai/shared-auth/lib/auth/session";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 export const POST = withRateLimitAndHighlight(strictRateLimit)(
@@ -29,11 +28,10 @@ export const POST = withRateLimitAndHighlight(strictRateLimit)(
       const session_payload = {
         name: user.name,
         email: user.email,
-        admin_id: user.admin_id,
+        id: user.admin_id,
         role: user.role,
+        admin_id: user.admin_id,
       };
-
-      await createSession(session_payload);
 
       return res.json(
         {

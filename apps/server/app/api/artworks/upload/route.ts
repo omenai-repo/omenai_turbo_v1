@@ -7,9 +7,9 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 
 export const POST = withRateLimitAndHighlight(strictRateLimit)(
   async function POST(request: Request) {
@@ -40,7 +40,10 @@ export const POST = withRateLimitAndHighlight(strictRateLimit)(
           );
       }
 
-      const uploadArt = await Artworkuploads.create({ ...data });
+      const new_title = trimWhiteSpace(data.title);
+      const payload = { ...data, title: new_title };
+
+      const uploadArt = await Artworkuploads.create({ ...payload });
 
       if (!uploadArt)
         throw new ServerError("A server error has occured, please try again");

@@ -4,10 +4,8 @@ import NavbarActionButtons from "../ui/NavbarActionButtons";
 import MobileNavbar from "../mobile/MobileNavbar";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import LoggedInUser from "../ui/LoggedInUser";
-import SearchInput from "../ui/SearchInput";
 import { SlMenu } from "react-icons/sl";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { IndividualLogo } from "../../logo/Logo";
 
 const navbarlinks = [
@@ -18,7 +16,7 @@ const navbarlinks = [
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();
 
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
   return (
     <>
       <MobileNavbar />
@@ -40,14 +38,11 @@ export default function DesktopNavbar() {
         </ul>
 
         <div className="flex items-center space-x-4">
-          {session && session.role === "user" && (
-            <LoggedInUser user={session.name} email={session.email} />
+          {user?.role === "user" && (
+            <LoggedInUser user={user.name} email={user.email} />
           )}
-          {!session && <NavbarActionButtons />}
-          {session &&
-            (session.role === "gallery" ||
-              session.role === "admin" ||
-              session.role === "artist") && <NavbarActionButtons />}
+          {!user && <NavbarActionButtons />}
+          {user && user.role !== "user" && <NavbarActionButtons />}
           <div className="md:hidden block">
             <SlMenu
               className="text-fluid-sm"

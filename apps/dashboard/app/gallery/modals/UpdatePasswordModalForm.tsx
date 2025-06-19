@@ -1,6 +1,6 @@
 "use client";
 
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
 import { updatePassword } from "@omenai/shared-services/requests/updateGalleryPassword";
@@ -22,13 +22,13 @@ export default function UpdatePasswordModalForm() {
   });
 
   const [errorList, setErrorList] = useState<string[]>([]);
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   async function requestConfirmationCode() {
     setCodeLoading(true);
     const response = await requestPasswordConfirmationCode(
       "gallery",
-      (session as GallerySchemaTypes).gallery_id
+      user.gallery_id
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -72,7 +72,7 @@ export default function UpdatePasswordModalForm() {
       info.password,
       info.code,
       "gallery",
-      (session as GallerySchemaTypes).gallery_id
+      user.gallery_id
     );
 
     if (response?.isOk) {

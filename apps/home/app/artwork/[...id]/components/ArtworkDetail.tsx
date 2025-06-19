@@ -9,18 +9,12 @@ import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { requestPrice } from "@omenai/shared-services/requests/requestPrice";
 import { toast } from "sonner";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { PiFrameCornersThin } from "react-icons/pi";
-import {
-  SessionContext,
-  useSession,
-} from "@omenai/package-provider/SessionProvider";
-import {
-  ArtworkResultTypes,
-  IndividualSchemaTypes,
-} from "@omenai/shared-types";
+
+import { ArtworkResultTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import FullArtworkDetails from "./FullArtworkDetails";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 type ArtworkDetailTypes = {
   data: ArtworkResultTypes;
@@ -39,7 +33,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   const { toggleLoginModal } = actionStore();
 
   const router = useRouter();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
 
   async function handleBuyButtonClick() {
     if (sessionId === undefined) toggleLoginModal(true);
@@ -56,11 +50,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           medium: data.medium,
           pricing: data.pricing,
         };
-        const res = await requestPrice(
-          artwork_data,
-          (session as IndividualSchemaTypes).email,
-          (session as IndividualSchemaTypes).name
-        );
+        const res = await requestPrice(artwork_data, user.email, user.name);
 
         if (res?.isOk) {
           toast.success("Operation successful", {

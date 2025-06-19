@@ -1,11 +1,10 @@
 "use client";
-import { useSession } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { IState, ICity, ICountry, State, City } from "country-state-city";
-import { ChangeEvent, useEffect } from "react";
-import { MdError } from "react-icons/md";
+import { ChangeEvent } from "react";
 
 type AddressSelectInputProps = {
   label: string;
@@ -33,7 +32,7 @@ export default function AddressSelectInput({
   } = actionStore();
 
   const { address, setAddress } = orderStore();
-  const session = useSession() as IndividualSchemaTypes;
+  const { user } = useAuth({ requiredRole: "user" });
 
   const selectValue = () => {
     if (labelText === "country") return address.country;

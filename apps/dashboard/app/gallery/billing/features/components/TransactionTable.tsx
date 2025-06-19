@@ -1,12 +1,9 @@
 "use client";
 
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchSubscriptionTransactions } from "@omenai/shared-services/transactions/fetchSubscriptionTransactions";
-import Load, {
-  LoadIcon,
-} from "@omenai/shared-ui-components/components/loader/Load";
+import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { useQuery } from "@tanstack/react-query";
@@ -14,12 +11,12 @@ import Image from "next/image";
 import { useContext } from "react";
 
 export default function TransactionTable() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const { data: transactions, isLoading } = useQuery({
     queryKey: ["fetch_sub_trans"],
     queryFn: async () => {
       const trans = await fetchSubscriptionTransactions(
-        session?.gallery_id as string
+        user.gallery_id as string
       );
       if (trans?.isOk) return trans.data;
       else throw new Error("Something went wrong");

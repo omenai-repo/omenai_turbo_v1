@@ -1,21 +1,19 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
-import PageTitle from "../../components/PageTitle";
+import { useEffect, useState, useCallback } from "react";
 import { Loader, PinInput } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { sendOtp } from "@omenai/shared-services/wallet/sendOtp";
 import { verifyOtp } from "@omenai/shared-services/wallet/verifyOtp";
-import { useSession } from "@omenai/package-provider/SessionProvider";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function VerifyOTP({
   setVerification,
 }: {
   setVerification: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
 
   // State variables
   const [otp, setOtp] = useState("");
@@ -43,7 +41,7 @@ export default function VerifyOTP({
   } = useQuery({
     queryKey: ["send_otp"],
     queryFn: async () => {
-      const response = await sendOtp(session.artist_id);
+      const response = await sendOtp(user.artist_id);
 
       if (!response?.isOk) {
         handleError(
@@ -88,7 +86,7 @@ export default function VerifyOTP({
       const timeout = setTimeout(() => {
         setVerificationLoading(true);
 
-        verifyOtp(session.artist_id, otp)
+        verifyOtp(user.artist_id, otp)
           .then((response: { isOk: boolean; message: string } | undefined) => {
             if (!response?.isOk) {
               handleError(
@@ -117,7 +115,7 @@ export default function VerifyOTP({
 
       return () => clearTimeout(timeout);
     }
-  }, [otp, session.artist_id]);
+  }, [otp, user.artist_id]);
 
   // Resend OTP handler
   const handleResendOtp = useCallback(() => {

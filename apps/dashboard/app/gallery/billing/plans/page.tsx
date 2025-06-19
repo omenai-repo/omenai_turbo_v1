@@ -3,27 +3,21 @@ import PageTitle from "../../components/PageTitle";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPlanData } from "@omenai/shared-services/subscriptions/getAllPlanData";
 import PlanWrapper from "./PlanWrapper";
-import { useRouter } from "next/navigation";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { useContext } from "react";
-import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Plans() {
-  const auth_url = auth_uri();
-  const { session } = useContext(SessionContext);
-  const router = useRouter();
+  const { user } = useAuth({ requiredRole: "gallery" });
   const url = getApiUrl();
-  if (session === null || session === undefined)
-    router.replace(`${auth_url}/login`);
+
   const { data, isLoading } = useQuery({
     queryKey: ["get_all_plan_details"],
     queryFn: async () => {
       const plans = await getAllPlanData();
       const res = await fetch(`${url}/api/subscriptions/retrieveSubData`, {
         method: "POST",
-        body: JSON.stringify({ gallery_id: session!.gallery_id }),
+        body: JSON.stringify({ gallery_id: user.gallery_id }),
       });
 
       const result = await res.json();

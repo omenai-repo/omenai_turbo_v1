@@ -1,28 +1,15 @@
-import { JWTPayload } from "jose";
+// Create discriminated union with role as discriminator
+export type SessionDataType = (
+  | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password">)
+  | ({ role: "user" } & Omit<IndividualSchemaTypes, "password">)
+  | ({ role: "admin" } & Omit<AccountAdminSchemaTypes, "password">)
+  | ({ role: "artist" } & Omit<
+      ArtistSchemaTypes,
+      "password" | "art_style" | "documentation"
+    >)
+) & { id: string };
 
-declare module "next-auth" {
-  interface Session {
-    user: UserType;
-  }
-
-  interface JWT {
-    uid: string;
-  }
-}
-
-export type UserType = JWTPayload &
-  (
-    | Omit<GallerySchemaTypes, "password">
-    | Omit<IndividualSchemaTypes, "password">
-    | Omit<AccountAdminSchemaTypes, "password">
-    | Omit<
-        ArtistSchemaTypes,
-        "password" | "logo" | "address" | "art_style" | "documentation"
-      >
-  );
-
-type AccessRoleTypes = "artist" | "gallery" | "user" | "admin";
-
+export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
 export type ArtistSchemaTypes = {
   name: string;
   email: string;
@@ -43,6 +30,7 @@ export type ArtistSchemaTypes = {
   art_style: string | string[];
   documentation?: ArtistDocumentationTypes;
   isOnboardingCompleted: boolean;
+  clerkUserId?: string;
 };
 
 export type ArtistSignupData = {
@@ -83,6 +71,7 @@ export type GallerySchemaTypes = {
   };
   status: "active" | "blocked";
   connected_account_id: string | null;
+  clerkUserId?: string;
 };
 
 export type IndividualSchemaTypes = {
@@ -95,6 +84,7 @@ export type IndividualSchemaTypes = {
   verified: boolean;
   role: AccessRoleTypes;
   address?: AddressTypes;
+  clerkUserId?: string;
 };
 
 export type InputProps = {

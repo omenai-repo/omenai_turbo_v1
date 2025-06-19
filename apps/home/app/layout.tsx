@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { Inter, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import { SessionProvider } from "@omenai/package-provider/SessionProvider";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
 import LoginModal from "@omenai/shared-ui-components/components/modal/LoginModal";
 import RecoveryModal from "@omenai/shared-ui-components/components/modal/RecoveryModal";
@@ -17,7 +15,8 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import { auth_uri } from "@omenai/url-config/src/config";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -40,7 +39,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
   return (
     <>
       <HighlightInit
@@ -66,7 +64,17 @@ export default async function RootLayout({
             closeButton
             duration={7000}
           />
-          <SessionProvider session={session}>
+          <ClerkProvider
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+            appearance={{
+              baseTheme: undefined, // Since you're using custom pages
+            }}
+            // This enables cross-subdomain session sharing
+            domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN as string}
+            isSatellite={true}
+            signInUrl={`${auth_uri()}/login`}
+            // signUpUrl={`${auth_uri()}/register`}
+          >
             <QueryProvider>
               <MantineProvider>
                 <LoginModal />
@@ -76,7 +84,7 @@ export default async function RootLayout({
                 <Analytics />
               </MantineProvider>
             </QueryProvider>
-          </SessionProvider>
+          </ClerkProvider>
         </body>
       </html>
     </>

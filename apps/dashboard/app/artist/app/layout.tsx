@@ -3,35 +3,28 @@ import NextTopLoader from "nextjs-toploader";
 import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
-
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
-import { useContext } from "react";
-import {
-  SessionContext,
-  useSession,
-} from "@omenai/package-provider/SessionProvider";
-import { useRouter } from "next/navigation";
-import { auth_uri } from "@omenai/url-config/src/config";
 import { WithdrawalModal } from "./modals/WithdrawalModal";
 import { WalletPinModal } from "./modals/WalletPinModal";
 import NoMobileView from "../../components/NoMobileView";
 import VerificationBlockerModal from "./modals/VerificationModalBlocker";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
 
-export default function GalleryDashboardLayout({
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import React from "react";
+
+export default function ArtistDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = useSession() as ArtistSchemaTypes;
-  const { width } = useWindowSize();
-  const router = useRouter();
+  const { user } = useAuth({
+    requiredRole: "artist",
+  });
+  // if (!hasRequiredRole) router.replace(`${auth_uri()}/login`);
 
-  if (session === undefined) {
-    router.replace(`${auth_uri()}/login`);
-  }
+  const { width } = useWindowSize();
 
   return (
     <>
@@ -40,7 +33,9 @@ export default function GalleryDashboardLayout({
       ) : (
         <div className=" w-full h-full">
           <NextTopLoader color="#1A1A1A" height={6} />
-          <VerificationBlockerModal open={!session.artist_verified} />
+          <VerificationBlockerModal
+            open={user && user.role === "artist" && !user.artist_verified}
+          />
           <main className="flex h-full">
             <PageLayout />
 

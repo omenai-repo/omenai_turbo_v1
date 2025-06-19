@@ -3,16 +3,16 @@
 import { Paper, PinInput } from "@mantine/core";
 import { useState } from "react";
 import { isRepeatingOrConsecutive } from "@omenai/shared-utils/src/checkIfPinRepeating";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { setWalletPin } from "@omenai/shared-services/wallet/setWalletPin";
 import { toast } from "sonner";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function WalletPinModalForm() {
   const queryClient = useQueryClient();
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [error, setError] = useState({ isError: false, value: "" });
@@ -42,10 +42,9 @@ export default function WalletPinModalForm() {
       });
       return;
     }
-    console.log(session);
     try {
       setLoading(true);
-      const response = await setWalletPin(session.wallet_id as string, pin);
+      const response = await setWalletPin(user.wallet_id as string, pin);
 
       if (response === undefined || !response?.isOk) {
         toast.error("Error Notification", {

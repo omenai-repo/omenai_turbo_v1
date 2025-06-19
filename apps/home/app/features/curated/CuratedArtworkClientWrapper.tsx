@@ -2,25 +2,20 @@
 import { useQuery } from "@tanstack/react-query";
 import CuratedArtworksLayout from "./CuratedArtworksLayout";
 import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
-import Link from "next/link";
-import { MdArrowRightAlt } from "react-icons/md";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { fetchCuratedArtworks } from "@omenai/shared-services/artworks/fetchedCuratedArtworks";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
-import PreferencePicker from "./components/PreferencePicker";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function CuratedArtworkClientWrapper({
   sessionId,
 }: {
   sessionId: string | undefined;
 }) {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
   const { data: userCuratedArtworks, isLoading } = useQuery({
     queryKey: ["curated"],
     queryFn: async () => {
-      const data = await fetchCuratedArtworks(1);
+      const data = await fetchCuratedArtworks(1, user.preferences);
       if (data?.isOk) return data.data;
       else throw new Error("Something went wrong");
     },

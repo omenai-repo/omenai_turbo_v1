@@ -1,5 +1,4 @@
 "use client";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import { createConnectedAccount } from "@omenai/shared-services/stripe/createConnectedAccount";
 import { createAccountLink } from "@omenai/shared-services/stripe/createAccountLink";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function GetStartedWithStripe() {
   const [accountCreatePending, setAccountCreatePending] = useState(false);
 
@@ -19,7 +19,7 @@ export default function GetStartedWithStripe() {
 
   const [connectedAccountId, setConnectedAccountId] = useState();
 
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   const router = useRouter();
 
@@ -27,9 +27,9 @@ export default function GetStartedWithStripe() {
     e.preventDefault();
     setAccountCreatePending(true);
     const customer = {
-      name: session?.name as string,
-      email: session?.email as string,
-      customer_id: session?.gallery_id as string,
+      name: user.name as string,
+      email: user.email as string,
+      customer_id: user.gallery_id as string,
       country: countrySelect,
     };
     const response = await createConnectedAccount(customer);
@@ -123,7 +123,7 @@ export default function GetStartedWithStripe() {
                 <input
                   disabled
                   type="text"
-                  value={session?.name}
+                  value={user.name}
                   className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40"
                 />
               </div>
@@ -137,7 +137,7 @@ export default function GetStartedWithStripe() {
                 <input
                   disabled
                   type="text"
-                  value={session?.email}
+                  value={user.email}
                   className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40"
                 />
               </div>

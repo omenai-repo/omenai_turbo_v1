@@ -9,20 +9,18 @@ import { ID } from "appwrite";
 import { updateLogo } from "@omenai/shared-services/update/updateLogo";
 import { AnimatePresence, motion } from "framer-motion";
 import { galleryLogoUpdate } from "@omenai/shared-state-store/src/gallery/gallery_logo_upload/GalleryLogoUpload";
-import {
-  SessionContext,
-  useSession,
-} from "@omenai/package-provider/SessionProvider";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { ArtistSchemaTypes } from "@omenai/shared-types";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function LogoPickerModal() {
   const { modal, updateModal } = galleryLogoUpdate();
   const logoPickerRef = useRef<HTMLInputElement>(null);
 
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
 
   const router = useRouter();
 
@@ -31,23 +29,19 @@ export default function LogoPickerModal() {
   const [logo, setLogo] = useState<File | null>(null);
 
   const auth_url = auth_uri();
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+      style: {
+        background: "blue",
+        color: "white",
+      },
+      className: "class",
+    });
+
+    router.replace(`${auth_uri}/login`);
   }
-
   async function handleLogoUpdate() {
     setLoading(true);
 
@@ -66,7 +60,7 @@ export default function LogoPickerModal() {
           };
 
           const { isOk, body } = await updateLogo({
-            id: session.artist_id as string,
+            id: user.artist_id as string,
             url: file.fileId,
             route: "artist",
           });
@@ -82,7 +76,7 @@ export default function LogoPickerModal() {
             });
           else {
             updateModal(false);
-            await handleSignout();
+            await handleSignOut();
 
             toast.success("Operation successful", {
               description: `${body.message}... Please log back in`,

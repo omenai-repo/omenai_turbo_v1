@@ -7,6 +7,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { ArtworkSchemaTypes, FilterOptions } from "@omenai/shared-types";
 import { usePaginationRange } from "@omenai/shared-hooks/hooks/usePaginationRange";
 import { useWindowSize } from "usehooks-ts";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 interface PaginationProps {
   total: number; // Total number of pages
@@ -14,6 +15,7 @@ interface PaginationProps {
   medium?: string;
   fn: (
     page: number,
+    user_id: string,
     filterOptions: FilterOptions,
     medium?: string
   ) => Promise<
@@ -42,6 +44,7 @@ const Pagination: React.FC<PaginationProps> = ({
   medium,
 }: PaginationProps) => {
   const { paginationRange } = usePaginationRange(currentPage, total);
+  const { user } = useAuth({ requiredRole: "user" });
 
   const { width } = useWindowSize();
 
@@ -49,8 +52,8 @@ const Pagination: React.FC<PaginationProps> = ({
     debounce(async (page: number) => {
       setIsLoading(true);
       const response = medium
-        ? await fn(page, filterOptions, medium) // Pass 3 arguments
-        : await fn(page, filterOptions);
+        ? await fn(page, user.id, filterOptions, medium) // Pass 3 arguments
+        : await fn(page, user.id, filterOptions);
       if (response?.isOk) {
         setArtworks(response.data);
       } else {

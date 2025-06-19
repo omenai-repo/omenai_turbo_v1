@@ -1,14 +1,14 @@
 "use client";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import Image from "next/image";
 import { useContext } from "react";
 import { RxAvatar } from "react-icons/rx";
 
 export const UserBanner = () => {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
-  const logo = session?.logo as string;
+  const logo = user.logo as string;
   return (
     <div className="my-5 mx-5 lg:mx-0 flex items-center flex-col justify-center">
       <Image
@@ -34,11 +34,9 @@ export const UserBanner = () => {
           )}
 
           <div className="">
-            <p className="text-dark font-normal text-fluid-base">
-              {session?.name}
-            </p>
+            <p className="text-dark font-normal text-fluid-base">{user.name}</p>
             <p className="text-dark text-fluid-xs font-light">
-              {(session as GallerySchemaTypes).address.address_line}
+              {user.address.address_line}
             </p>
           </div>
         </div>
@@ -56,10 +54,10 @@ export const UserBanner = () => {
             Status:{" "}
             <span
               className={`${
-                session?.gallery_verified ? "text-green-600" : "text-red-600"
+                user.gallery_verified ? "text-green-600" : "text-red-600"
               }`}
             >
-              {session?.gallery_verified ? "Verified" : "Not verified"}
+              {user.gallery_verified ? "Verified" : "Not verified"}
             </span>
           </p>
         </div>

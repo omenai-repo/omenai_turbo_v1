@@ -1,21 +1,14 @@
 "use client";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-
-import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import {
-  MdArrowRightAlt,
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
+
 import { useWindowSize } from "usehooks-ts";
 import PreferencePicker from "./components/PreferencePicker";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function CuratedArtworksLayout({
   sessionId,
@@ -26,7 +19,7 @@ export default function CuratedArtworksLayout({
 }) {
   const { width } = useWindowSize();
   const { curated_preference } = actionStore();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
   const [isFading, setIsFading] = useState(false); // Tracks the fade-out/in state
 
   const curated_artworks = userCuratedArtworks.filter((artwork: any) => {
@@ -42,7 +35,7 @@ export default function CuratedArtworksLayout({
     <>
       <PreferencePicker
         setIsFading={setIsFading}
-        preferences={(session as IndividualSchemaTypes).preferences}
+        preferences={user.preferences}
       />
       <div
         className={`h-[180vh] sm:h-[130vh] overflow-hidden relative transition-opacity duration-300 ${

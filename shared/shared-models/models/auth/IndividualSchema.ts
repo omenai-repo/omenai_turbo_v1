@@ -49,6 +49,7 @@ const individualSignupSchema = new Schema<IndividualSchemaTypes>(
       type: Schema.Types.Mixed,
       required: true,
     },
+    clerkUserId: { type: String, required: false, unique: true, index: true },
   },
   { timestamps: true }
 );

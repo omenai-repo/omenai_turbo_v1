@@ -1,33 +1,30 @@
 "use client";
 import { GiSettingsKnobs } from "react-icons/gi";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import FilterPill from "./FilterPill";
 import { ImBin2 } from "react-icons/im";
 import { FaCheckCircle } from "react-icons/fa";
-import { useWindowSize } from "usehooks-ts";
 import { MdClear } from "react-icons/md";
 import { fetchTrendingArtworks } from "@omenai/shared-services/artworks/fetchTrendingArtworks";
 import PriceFilter from "./PriceFilter";
 import YearFilter from "./YearFilter";
 import MediumFilter from "./MediumFilter";
 import RarityFilter from "./RarityFilter";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { fetchCuratedArtworks } from "@omenai/shared-services/artworks/fetchedCuratedArtworks";
 import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPaginatedArtworks";
 import { categoriesFilterStore } from "@omenai/shared-state-store/src/categories/categoriesFilterStore";
 import { categoriesStore } from "@omenai/shared-state-store/src/categories/categoriesStore";
-import {
-  ArtworkCollectionTypes,
-  IndividualSchemaTypes,
-} from "@omenai/shared-types";
+import { ArtworkCollectionTypes } from "@omenai/shared-types";
 import { isEmptyFilter } from "@omenai/shared-utils/src/isFilterEmpty";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Filter({
   page_type,
 }: {
   page_type: ArtworkCollectionTypes;
 }) {
+  const { user } = useAuth({ requiredRole: "user" });
   const [showFilterBlock, setShowFilterBlock] = useState(false);
 
   const { filterOptions, selectedFilters, clearAllFilters } =
@@ -60,7 +57,11 @@ export default function Filter({
       response = await fetchTrendingArtworks(currentPage, filterOptions);
     } else if (page_type === "curated") {
       //update to curated
-      response = await fetchCuratedArtworks(currentPage, filterOptions);
+      response = await fetchCuratedArtworks(
+        currentPage,
+        user.preferences,
+        filterOptions
+      );
     } else if (page_type === "recent") {
       //update to recent
       response = await fetchPaginatedArtworks(currentPage, filterOptions);
@@ -102,7 +103,11 @@ export default function Filter({
       response = await fetchTrendingArtworks(currentPage, emptyFilters);
     } else if (page_type === "curated") {
       //update to curated
-      response = await fetchCuratedArtworks(currentPage, emptyFilters);
+      response = await fetchCuratedArtworks(
+        currentPage,
+        user.preferences,
+        emptyFilters
+      );
     } else if (page_type === "recent") {
       //update to recent
       response = await fetchPaginatedArtworks(currentPage, emptyFilters);

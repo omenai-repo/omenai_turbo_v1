@@ -4,20 +4,20 @@ import NoVerificationBlock from "../../components/NoVerificationBlock";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function NoSubscriptionTheme() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const url = auth_uri();
   const { data, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
       const response = await checkIsStripeOnboarded(
-        session?.connected_account_id as string
+        user.connected_account_id as string
       );
 
       if (!response?.isOk) {
@@ -39,16 +39,12 @@ export default function NoSubscriptionTheme() {
 
   if (data === undefined) router.replace(url);
   if (!data)
-    router.replace(
-      `/gallery/payouts/refresh?id=${session?.connected_account_id}`
-    );
+    router.replace(`/gallery/payouts/refresh?id=${user.connected_account_id}`);
 
   return (
     <div className=" w-full h-[78vh] grid place-items-center">
-      {!session?.gallery_verified ? (
-        <NoVerificationBlock
-          gallery_name={session !== null ? (session?.name as string) : ""}
-        />
+      {!user.gallery_verified ? (
+        <NoVerificationBlock gallery_name={user.name as string} />
       ) : (
         <div className="flex justify-center items-center flex-col gap-3">
           <h5>No subscriptions plans are active</h5>

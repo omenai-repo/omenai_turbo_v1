@@ -1,2 +1,3 @@
-import { middleware } from "@omenai/shared-auth/middleware";
-export { middleware };
+import clerkMiddleware from "@omenai/shared-auth/middleware";
+
+export default clerkMiddleware;

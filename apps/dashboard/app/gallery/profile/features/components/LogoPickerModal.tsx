@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { logo_storage, storage } from "@omenai/appwrite-config/appwrite";
 import { toast } from "sonner";
@@ -9,16 +9,16 @@ import { ID } from "appwrite";
 import { updateLogo } from "@omenai/shared-services/update/updateLogo";
 import { AnimatePresence, motion } from "framer-motion";
 import { galleryLogoUpdate } from "@omenai/shared-state-store/src/gallery/gallery_logo_upload/GalleryLogoUpload";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function LogoPickerModal() {
   const { modal, updateModal } = galleryLogoUpdate();
   const logoPickerRef = useRef<HTMLInputElement>(null);
 
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   const router = useRouter();
 
@@ -29,6 +29,13 @@ export default function LogoPickerModal() {
   const MAX_SIZE_MB = 5; // e.g., 5MB
   const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+    });
+    await signOut();
+    router.replace(`${auth_uri}/login`);
+  }
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Check if input is actaully an image
     const file = e.target.files?.[0];
@@ -64,22 +71,6 @@ export default function LogoPickerModal() {
   };
 
   const auth_url = auth_uri();
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
-
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
-  }
 
   async function handleLogoUpdate() {
     setLoading(true);
@@ -99,7 +90,7 @@ export default function LogoPickerModal() {
           };
 
           const { isOk, body } = await updateLogo({
-            id: session?.gallery_id as string,
+            id: user.gallery_id as string,
             url: file.fileId,
             route: "gallery",
           });
@@ -115,7 +106,7 @@ export default function LogoPickerModal() {
             });
           else {
             updateModal(false);
-            await handleSignout();
+            await handleSignOut();
 
             toast.success("Operation successful", {
               description: `${body.message}... Please log back in`,

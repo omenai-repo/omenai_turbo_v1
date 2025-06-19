@@ -1,10 +1,7 @@
 "use client";
-
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { useContext } from "react";
-
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function BillingInfo() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   return (
     <div className="p-4 border border-dark/20 rounded-[20px] w-full h-[250px]">
       <p className="text-dark text-fluid-xs font-semibold">Billing Info</p>
@@ -12,10 +9,10 @@ export default function BillingInfo() {
       <div className="flex flex-col gap-2 text-fluid-xs mt-5">
         {/* <h4 className="text-fluid-sm">{session.data?.user.name}</h4> */}
         <p>
-          Gallery name: <span className="font-normal">{session?.name}</span>{" "}
+          Gallery name: <span className="font-normal">{user.name}</span>{" "}
         </p>
         <p>
-          Email address: <span className="font-normal">{session?.email}</span>{" "}
+          Email address: <span className="font-normal">{user.email}</span>{" "}
         </p>
       </div>
     </div>

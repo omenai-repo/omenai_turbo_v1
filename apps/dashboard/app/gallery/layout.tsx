@@ -12,25 +12,21 @@ import GetStartedWithStripe from "./modals/GetStartedWithStripe";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { toast } from "sonner";
-import { useContext } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import Load, {
-  HomeLoad,
-} from "@omenai/shared-ui-components/components/loader/Load";
+import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
 import { GallerySchemaTypes } from "@omenai/shared-types";
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function GalleryDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const { width } = useWindowSize();
   const { data: account, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
-      const acc = await getAccountId(
-        (session as GallerySchemaTypes)?.email as string
-      );
+      const acc = await getAccountId(user.email as string);
       if (!acc?.isOk) {
         toast.error("Error notification", {
           description: "Something went wrong, Please refresh the page",

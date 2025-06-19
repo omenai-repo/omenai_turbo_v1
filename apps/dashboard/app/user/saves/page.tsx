@@ -1,12 +1,10 @@
 "use client";
 
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { fetchUserSaveArtworks } from "@omenai/shared-services/artworks/fetchUserSavedArtworks";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { auth_uri } from "@omenai/url-config/src/config";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
@@ -14,6 +12,7 @@ import { userDashboardActionStore } from "@omenai/shared-state-store/src/dashboa
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Saves() {
   const {
@@ -28,18 +27,14 @@ export default function Saves() {
     current_page,
     set_current_page,
   } = userDashboardActionStore();
-  const { session } = useContext(SessionContext);
-  const router = useRouter();
+  const { user } = useAuth({ requiredRole: "user" });
+  console.log(user);
   const { width } = useWindowSize();
-  const auth_url = auth_uri();
-
-  if (session === null || session === undefined)
-    router.replace(`${auth_url}/login`);
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["fetch_saved_artworks"],
     queryFn: async () => {
-      const response = await fetchUserSaveArtworks(1);
+      const response = await fetchUserSaveArtworks(1, user.id);
       if (!response?.isOk) throw new Error("Something went wrong");
       else {
         setArtworks(response?.data);
@@ -90,7 +85,7 @@ export default function Saves() {
                       pricing={art.pricing}
                       impressions={art.impressions as number}
                       likeIds={art.like_IDs as string[]}
-                      sessionId={session?.user_id as string | undefined}
+                      sessionId={user.id}
                       availability={art.availability}
                       medium={art.medium}
                     />

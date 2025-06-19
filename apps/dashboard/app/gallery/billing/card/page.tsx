@@ -1,21 +1,12 @@
 "use client";
-import React, { useContext } from "react";
-
-import { useRouter } from "next/navigation";
 
 import PageTitle from "../../components/PageTitle";
 import CardChangeCheckoutItem from "../plans/checkout/components/CardChangeCheckoutItem";
 import { CheckoutStepper } from "../plans/checkout/components/CheckoutStepper";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SubscriptionCheckout() {
-  const url = auth_uri();
-
-  const router = useRouter();
-  const { session } = useContext(SessionContext);
-
-  if (session === undefined || session === null) router.replace(url);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   return (
     <div>

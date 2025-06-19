@@ -1,29 +1,23 @@
 "use client";
-import { Modal, Button } from "@mantine/core";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
+import { Modal } from "@mantine/core";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function VerificationBlockerModal({ open }: { open: boolean }) {
   const router = useRouter();
-  async function handleSignout() {
-    toast.info("Signing you out...");
 
-    const auth_url = auth_uri();
-    const res = await signOut();
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+      style: {
+        background: "blue",
+        color: "white",
+      },
+      className: "class",
+    });
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+    router.replace(`${auth_uri}/login`);
   }
   return (
     <>
@@ -46,7 +40,7 @@ export default function VerificationBlockerModal({ open }: { open: boolean }) {
           </p>
           <div className="w-full flex justify-center mt-8">
             <button
-              onClick={handleSignout}
+              onClick={async () => await handleSignOut()}
               className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
             >
               Logout

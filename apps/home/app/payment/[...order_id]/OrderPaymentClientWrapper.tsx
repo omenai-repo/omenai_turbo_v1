@@ -11,8 +11,8 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
 import { useContext, useEffect, useState } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { getApiUrl, auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function OrderPaymentClientWrapper({
   order_id,
@@ -31,22 +31,11 @@ export default function OrderPaymentClientWrapper({
   const user_id_key = searchParams.get("id_key");
 
   const auth_url = auth_uri();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
 
   useEffect(() => {
-    if (session === null) {
-      toast.error("Error notification", {
-        description: "Please login to your account",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-      router.replace("/auth/login");
-    }
     if (user_id_key === "" || undefined) notFound();
-    if (session === undefined || session.user_id !== user_id_key) {
+    if (user.id !== user_id_key) {
       toast.error("Error notification", {
         description:
           "Unauthorized access detected. Please login to the appropriate account to access this page",
@@ -65,11 +54,5 @@ export default function OrderPaymentClientWrapper({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <ComponentWrapper
-      order_id={order_id}
-      session={session}
-      isLoggedIn={isLoggedIn}
-    />
-  );
+  return <ComponentWrapper order_id={order_id} isLoggedIn={isLoggedIn} />;
 }

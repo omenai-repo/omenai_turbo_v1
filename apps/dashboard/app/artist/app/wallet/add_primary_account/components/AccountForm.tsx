@@ -1,8 +1,5 @@
 "use client";
-
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import {
-  ArtistSchemaTypes,
   BankBranchType,
   BankType,
   WithdrawalAccount,
@@ -15,10 +12,11 @@ import { addPrimaryAccount } from "@omenai/shared-services/wallet/addPrimaryAcco
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-
+import React from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function AccountForm() {
   const queryClient = useQueryClient();
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
   const [selectedBank, setSelectedBank] = useState<BankType | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<BankBranchType | null>(
     null
@@ -50,8 +48,9 @@ export default function AccountForm() {
   const router = useRouter();
   const showBranches = () => {
     if (
+      user &&
       selectedBank !== null &&
-      countries_with_bank_branches.includes(session.address.countryCode)
+      countries_with_bank_branches.includes(user.address.countryCode)
     ) {
       return true;
     }
@@ -148,12 +147,12 @@ export default function AccountForm() {
         bank_id: selectedBank.id,
         bank_code: "044", // TODO: Change to appropriate bank code
         branch: selectedBranch,
-        bank_country: session.address.countryCode,
+        bank_country: user.address.countryCode,
       };
       const add_primary_account_response = await addPrimaryAccount({
-        owner_id: session.artist_id,
+        owner_id: user.artist_id,
         account_details,
-        base_currency: session.base_currency,
+        base_currency: user.base_currency,
       });
 
       if (
@@ -201,7 +200,7 @@ export default function AccountForm() {
       <TextInput
         label="Country"
         placeholder="Input placeholder"
-        value={session.address.country}
+        value={user.address.country}
         disabled
         className="font-normal"
       />

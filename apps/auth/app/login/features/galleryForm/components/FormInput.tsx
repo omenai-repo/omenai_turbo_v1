@@ -5,23 +5,25 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
-import { PiEyeThin } from "react-icons/pi";
-import { PiEyeSlashThin } from "react-icons/pi";
-import { getSession } from "@omenai/shared-auth/lib/auth/session";
 import { loginGallery } from "@omenai/shared-services/auth/gallery/loginGallery";
 import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/GalleryLoginStore";
-import { Form, GallerySchemaTypes } from "@omenai/shared-types";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
+import { Form } from "@omenai/shared-types";
+import { useSignIn } from "@clerk/nextjs";
+
+import {
+  auth_uri,
+  base_url,
+  dashboard_url,
+  getApiUrl,
+} from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const auth_url = auth_uri();
   const dashboard_base_url = dashboard_url();
-
-  //simple state to show password visibility
+  const signInHook = useSignIn();
 
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
     "redirect_uri_on_login",
@@ -37,33 +39,26 @@ export default function FormInput() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
-  }
+  const { signOut } = useAuth({ requiredRole: "user" });
 
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+
+    if (!signInHook?.isLoaded || !signInHook.signIn) {
+      throw new Error("Sign-in not ready");
+    }
+
+    const { signIn, setActive } = signInHook;
     setIsLoading();
+
     try {
       const response = await loginGallery({ ...form });
 
       if (!response.isOk) {
-        toast.error("Error notification", {
+        toast.error("Error notification ", {
           description: response.message,
           style: {
             background: "red",
@@ -72,40 +67,61 @@ export default function FormInput() {
           className: "class",
         });
       } else {
-        const session = (await getServerSession()) as GallerySchemaTypes;
+        const { data, signInToken } = response;
 
-        if (session && session.role === "gallery") {
-          toast.success("Operation successful", {
-            description: "Login successful... redirecting!",
-            style: {
-              background: "green",
-              color: "white",
-            },
-            className: "class",
-          });
-
-          if (session.verified) {
-            if (url === "" || url === null) {
-              set_redirect_uri("");
-              H.identify(session.email, {
-                id: session.gallery_id as string,
-                name: session.name,
-                role: session.role,
+        if (response.isOk && data.role === "gallery") {
+          if (data.verified) {
+            try {
+              // Use the sign-in token to create a session
+              const signInAttempt = await signIn.create({
+                strategy: "ticket",
+                ticket: signInToken,
               });
-              router.replace(`${dashboard_base_url}/gallery/overview`);
-              router.refresh();
-            } else {
-              router.replace(url);
-              set_redirect_uri("");
+
+              if (signInAttempt.status === "complete") {
+                // Set the active session
+                await setActive({ session: signInAttempt.createdSessionId });
+
+                toast.success("Operation successful", {
+                  description: "Login successful... redirecting!",
+                  style: {
+                    background: "green",
+                    color: "white",
+                  },
+                  className: "class",
+                });
+                // Your redirect logic
+                if (url === "" || url === null) {
+                  set_redirect_uri("");
+                  H.identify(data.email, {
+                    id: data.id as string,
+                    name: data.name,
+                    role: data.role,
+                  });
+                  router.refresh();
+                  router.replace(`${dashboard_base_url}/gallery/overview`);
+                } else {
+                  router.replace(url);
+                  set_redirect_uri("");
+                }
+              } else {
+                throw new Error("Sign-in not complete");
+              }
+            } catch (clerkError) {
+              console.error("Clerk sign-in error:", clerkError);
+              throw clerkError;
             }
           } else {
-            router.replace(`${auth_url}/verify/gallery/${session.gallery_id}`);
+            await signOut();
+            toast.info("Signing out...", {
+              description: "You will be redirected to verify your account",
+            });
+            router.replace(`${auth_uri()}/verify/gallery/${data.id}`);
           }
-        } else {
-          await handleSignout();
         }
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error("Error notification", {
         description:
           "Something went wrong, please try again or contact support",

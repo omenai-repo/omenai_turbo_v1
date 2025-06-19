@@ -1,21 +1,19 @@
 "use client";
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
-import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { uploadArtworkPriceInputMocks } from "../mocks";
 import ArtworkSelectInput from "./ArtworkSelectInput";
 import ArtworkTextInput from "./ArtworkTextInput";
 import { useContext, useState } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { Loader, RefreshCcwDot } from "lucide-react";
 import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
 import { toast } from "sonner";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function ArtworkPriceInputGroup() {
   const { artworkUploadData, updateArtworkUploadData } =
     galleryArtworkUploadStore();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   const [conversionLoading, setConversionLoading] = useState(false);
 
@@ -142,11 +140,8 @@ export default function ArtworkPriceInputGroup() {
             required={uploadArtworkPriceInputMocks[2].required}
             items={uploadArtworkPriceInputMocks[2].options}
             disabled={
-              (session as GallerySchemaTypes).subscription_status.type ===
-                null ||
-              (
-                session as GallerySchemaTypes
-              ).subscription_status.type?.toLowerCase() === "basic"
+              user.subscription_status.type === null ||
+              user.subscription_status.type?.toLowerCase() === "basic"
             }
           />
         </div>

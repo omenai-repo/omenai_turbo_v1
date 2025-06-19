@@ -16,7 +16,6 @@ import { notFound, useRouter, useSearchParams } from "next/navigation";
 
 import { IoIosLock } from "react-icons/io";
 import { useLocalStorage } from "usehooks-ts";
-import { useSession } from "@omenai/package-provider/SessionProvider";
 import { stepperStore } from "@omenai/shared-state-store/src/stepper/stepperStore";
 import {
   SubscriptionPlanDataTypes,
@@ -27,6 +26,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { hasEmptyString } from "@omenai/shared-utils/src/hasEmptyString";
 import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function CardInput({
   updateAuthorization,
@@ -40,7 +40,7 @@ export default function CardInput({
   plan: SubscriptionPlanDataTypes & { createdAt: string; updatedAt: string };
 }) {
   const { update_flw_charge_payload_data } = stepperStore();
-  const session = useSession();
+  const { user } = useAuth({ requiredRole: "gallery" });
   const url = getApiUrl();
   const router = useRouter();
 
@@ -100,9 +100,9 @@ export default function CardInput({
               ? plan.pricing.monthly_price
               : plan.pricing.annual_price,
         customer: {
-          name: session?.name as string,
-          email: session?.email as string,
-          gallery_id: session?.gallery_id as string,
+          name: user.name as string,
+          email: user.email as string,
+          gallery_id: user.gallery_id as string,
           plan_id: plan_object_id!,
           plan_interval: interval!,
         },

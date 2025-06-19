@@ -6,6 +6,7 @@
 https://claude.ai/public/artifacts/afa4aa09-cce7-408f-9445-4b9268753ddf
 
 Next-auth: https://claude.ai/public/artifacts/6485fd83-ba53-4e92-bff5-cd401b514f5c
+Clerk: https://claude.ai/public/artifacts/39a24cbd-78cf-45a0-a5ad-b9a27596b21d
 
 Go-to market stratgies: https://claude.ai/public/artifacts/cdbc9619-02ee-4843-8636-a2fa45880a48
 

@@ -2,7 +2,6 @@
 import { acceptGalleryVerification } from "@omenai/shared-services/admin/accept_gallery_verification";
 import { adminModals } from "@omenai/shared-state-store/src/admin/AdminModalsStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { checkSession } from "@omenai/shared-utils/src/checkSessionValidity";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,9 +17,8 @@ export default function AcceptConfirmationPopupModal() {
 
   const acceptGalleryVerificationMutation = async () => {
     setLoading(true);
-    const session = await checkSession();
 
-    if (!session) {
+    if (false) {
       toast.error("Error notification", {
         description: "Admin session expired. Please login again",
         style: {

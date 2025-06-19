@@ -1,35 +1,23 @@
 "use client";
 import { Accordion } from "@mantine/core";
-import {
-  AddressTypes,
-  ArtworkSchemaTypes,
-  CreateOrderModelTypes,
-  IndividualSchemaTypes,
-} from "@omenai/shared-types";
+import { CreateOrderModelTypes } from "@omenai/shared-types";
 import Image from "next/image";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Banknote, BanknoteX, CheckCheck, Info, Truck } from "lucide-react";
-import { IoClose } from "react-icons/io5";
-import { MdInfo } from "react-icons/md";
-import { GoIssueClosed } from "react-icons/go";
-import { ChangeEvent, useState } from "react";
-import { RiSearch2Line } from "react-icons/ri";
+
 import { renderButtonAction } from "./construct_response";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import OrderCountdown from "./OrderCountdown";
-import { base_url } from "@omenai/url-config/src/config";
-import { useSession } from "@omenai/package-provider/SessionProvider";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export function OrdersGroupAccordion({
   orders,
-  tab,
 }: {
   orders: CreateOrderModelTypes[];
-  tab?: "completed";
 }) {
   const {
     updateArtistOrderActionModalData,
@@ -42,7 +30,7 @@ export function OrdersGroupAccordion({
     const image_url = getImageFileView(url, 200);
     return image_url;
   };
-  const session = useSession() as IndividualSchemaTypes;
+  const { user } = useAuth({ requiredRole: "user" });
   function handleDeclineOrderRequest(order_id: string) {
     update_current_order_id(order_id);
     toggleDeclineOrderModal(true);
@@ -230,7 +218,7 @@ export function OrdersGroupAccordion({
                   : order.hold_status.hold_end_date
               }
               order_id={order.order_id}
-              user_id={session.user_id}
+              user_id={user.id}
             />
           </div>
         )}

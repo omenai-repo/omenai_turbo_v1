@@ -1,7 +1,6 @@
 "use client";
 
 import { fetchSingleArtwork } from "@omenai/shared-services/artworks/fetchSingleArtwork";
-import { IndividualSchemaTypes, UserType } from "@omenai/shared-types";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { useQuery } from "@tanstack/react-query";
 import ArtistInformation from "./components/ArtistInformation";
@@ -11,18 +10,11 @@ import SimilarArtworks from "./components/SimilarArtworks";
 import SimilarArtworksByArtist from "./components/SimilarArtworksByArtist";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import Footer from "@omenai/shared-ui-components/components/footer/Footer";
-import ZoomableViewerModal from "./modals/ZoomableViewerModal";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import dynamic from "next/dynamic";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
-export default function ArtworkPageWrapper({
-  param,
-  session,
-}: {
-  param: string;
-  session: UserType | undefined;
-}) {
-  const { seaDragonZoomableImageViewerUrl } = actionStore();
+export default function ArtworkPageWrapper({ param }: { param: string }) {
+  const { user } = useAuth({ requiredRole: "user" });
+
   const { data: artworkDetails, isLoading } = useQuery({
     queryKey: ["fetch_single_artwork_data"],
     queryFn: async () => {
@@ -38,6 +30,7 @@ export default function ArtworkPageWrapper({
   if (isLoading) {
     return <Load />;
   }
+
   return (
     <div className="relative">
       <div>
@@ -46,11 +39,7 @@ export default function ArtworkPageWrapper({
         <div className="my-5">
           <ProductBox
             data={artworkDetails}
-            sessionId={
-              (session as IndividualSchemaTypes)?.role === "user"
-                ? (session as IndividualSchemaTypes)?.user_id
-                : undefined
-            }
+            sessionId={user ? user.id : undefined}
           />
           <hr className="border-dark/10 my-5" />
           <div className="grid sm:grid-cols-2 gap-6">
@@ -65,19 +54,11 @@ export default function ArtworkPageWrapper({
         </div>
         <SimilarArtworks
           title={artworkDetails.title}
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
+          sessionId={user ? user.id : undefined}
           medium={artworkDetails.medium}
         />
         <SimilarArtworksByArtist
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
+          sessionId={user ? user.id : undefined}
           artist={artworkDetails.artist}
         />
 

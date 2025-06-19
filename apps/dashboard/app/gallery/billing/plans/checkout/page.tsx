@@ -9,10 +9,10 @@ import { notFound, useSearchParams, useRouter } from "next/navigation";
 
 import MigrationUpgradeCheckoutItem from "./components/MigrationUpgradeCheckoutItem";
 import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SubscriptionCheckout() {
   const searchParams = useSearchParams();
@@ -22,9 +22,8 @@ export default function SubscriptionCheckout() {
   const action = searchParams.get("action");
   const charge_type = searchParams.get("charge_type");
   const router = useRouter();
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "gallery" });
   const url = auth_uri();
-  if (session === undefined || session === null) router.replace(url);
 
   if (
     plan_id === null ||
@@ -40,9 +39,7 @@ export default function SubscriptionCheckout() {
     queryKey: ["get_plan_and_sub_details"],
     queryFn: async () => {
       const plans = await getSinglePlanData(plan_id);
-      const sub_data = await retrieveSubscriptionData(
-        session?.gallery_id as string
-      );
+      const sub_data = await retrieveSubscriptionData(user.gallery_id);
 
       if (!plans?.isOk || !sub_data?.isOk)
         throw new Error("Something went wrong");

@@ -28,7 +28,7 @@ export default function CompletedOrders({
             <NotFoundData />
           </div>
         ) : (
-          <OrdersGroupAccordion orders={orders} tab="completed" />
+          <OrdersGroupAccordion orders={orders} />
         )}
       </motion.div>
     </AnimatePresence>

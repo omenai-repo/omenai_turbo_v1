@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
-    "@omenai/typescript-config": "*",
     "@omenai/shared-types": "*",
+    "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
     "@types/react": "18.3.12"
   },

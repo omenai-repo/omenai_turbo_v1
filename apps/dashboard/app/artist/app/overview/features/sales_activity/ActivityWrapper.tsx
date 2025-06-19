@@ -2,26 +2,21 @@
 import { getSalesActivityData } from "@omenai/shared-services/sales/getSalesActivityData";
 import { salesDataAlgorithm } from "@omenai/shared-utils/src/salesDataAlgorithm";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useContext, useMemo } from "react";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { auth_uri } from "@omenai/url-config/src/config";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { SalesActivityChart } from "./components/SalesActivity";
 import Dropdown from "../../components/Dropdown";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { ChartSkeleton } from "@omenai/shared-ui-components/components/skeletons/ChartSkeleton";
+import React, { useMemo } from "react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+
 export default function ActivityWrapper() {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "artist" });
   const { sales_activity_year } = artistActionStore();
-  const router = useRouter();
-  const url = auth_uri();
-  if (session === undefined) router.replace(url);
   const { data: sales, isLoading } = useQuery({
     queryKey: ["get_overview_sales_activity", sales_activity_year],
     queryFn: async () => {
       const data = await getSalesActivityData(
-        (session as ArtistSchemaTypes).artist_id as string,
+        user.artist_id as string,
         sales_activity_year
       );
       if (data?.isOk) {

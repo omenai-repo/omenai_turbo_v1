@@ -2,6 +2,7 @@ import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/deskto
 import { dashboard_url } from "@omenai/url-config/src/config";
 import Image from "next/image";
 import Link from "next/link";
+export const dynamic = "force-dynamic";
 
 export default function OrderCompletedPage() {
   const dashboard_uri = dashboard_url();

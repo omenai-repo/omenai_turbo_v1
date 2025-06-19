@@ -1,36 +1,30 @@
 "use client";
-import { useState, useContext } from "react";
 import { toast } from "sonner";
 import AddressForm from "./AddressForm";
 import DeliveryMethod from "./DeliveryMethod";
 import ProductItem from "./ProductItem";
 import { fetchUserData } from "@omenai/shared-services/requests/fetchUserData";
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import {
-  ArtworkResultTypes,
-  AddressTypes,
-  IndividualSchemaTypes,
-} from "@omenai/shared-types";
+import { ArtworkResultTypes } from "@omenai/shared-types";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { fetchSingleArtworkOnPurchase } from "@omenai/shared-services/artworks/fetchSingleArtworkOnPurchase";
 import { useQuery } from "@tanstack/react-query";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
+  console.log(user);
   const { set_address_on_order, address } = orderStore();
 
   const { data: artwork, isLoading: loading } = useQuery({
     queryKey: ["fetch_artwork_on purchase"],
     queryFn: async () => {
-      const user = await fetchUserData(
-        (session as IndividualSchemaTypes)?.user_id
-      );
+      const userData = await fetchUserData(user.id);
       const artwork = await fetchSingleArtworkOnPurchase(slug);
-      if (!user?.isOk || !artwork?.isOk) {
+      if (!userData?.isOk || !artwork?.isOk) {
         toast.error("Error notification", {
-          description: user?.message,
+          description: userData?.message,
           style: {
             background: "red",
             color: "white",
@@ -39,7 +33,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
         });
         throw new Error("Something went wrong");
       } else {
-        set_address_on_order(user.data.address);
+        set_address_on_order(userData.data.address);
         return artwork.data;
       }
     },

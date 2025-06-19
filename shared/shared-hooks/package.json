@@ -4,9 +4,9 @@
   "description": "",
   "type": "module",
   "devDependencies": {
-    "@omenai/shared-state-store": "*",
-    "@omenai/typescript-config": "*",
+    "@omenai/shared-auth": "*",
     "@omenai/shared-services": "*",
-    "@omenai/shared-auth": "*"
+    "@omenai/shared-state-store": "*",
+    "@omenai/typescript-config": "*"
   }
 }

@@ -1,7 +1,5 @@
 "use client";
 import { Loader, Paper, PinInput } from "@mantine/core";
-import { useSession } from "@omenai/package-provider/SessionProvider";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { RefreshCcwDot } from "lucide-react";
 import Link from "next/link";
 import React, { ChangeEvent, useState } from "react";
@@ -12,6 +10,7 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import WithdrawalSuccessScreen from "./WithdrawalSuccessScreen";
 import { useQueryClient } from "@tanstack/react-query";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function WithdrawalModalForm() {
   const [amount_data, set_amount_data] = useState<{
     amount: number;
@@ -21,7 +20,7 @@ export default function WithdrawalModalForm() {
 
   const { toggleWithdrawalFormPopup } = artistActionStore();
   const queryClient = useQueryClient();
-  const session = useSession() as ArtistSchemaTypes;
+  const { user } = useAuth({ requiredRole: "artist" });
   const [wallet_pin, set_wallet_pin] = useState("");
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -37,7 +36,7 @@ export default function WithdrawalModalForm() {
     try {
       setTransferRateLoading(true);
       const rate_response = await getTransferRate(
-        session.base_currency,
+        user.base_currency,
         "USD",
         amount_data.amount
       );
@@ -85,7 +84,7 @@ export default function WithdrawalModalForm() {
       setWithdrawalLoading(true);
       const withdrawal_response = await createTransfer({
         amount: amount_data.amount,
-        wallet_id: session.wallet_id as string,
+        wallet_id: user.wallet_id as string,
         wallet_pin,
       });
 
@@ -171,14 +170,11 @@ export default function WithdrawalModalForm() {
               className="p-5 flex flex-col space-y-2"
             >
               <p className="text-fluid-xxs font-medium">
-                You Get ({session.base_currency})
+                You Get ({user.base_currency})
               </p>
               <Paper className="p-5" radius="lg" withBorder>
                 <span className="text-fluid-xs font-medium">
-                  {formatPrice(
-                    amount_data.currency_amount,
-                    session.base_currency
-                  )}
+                  {formatPrice(amount_data.currency_amount, user.base_currency)}
                 </span>
               </Paper>
             </Paper>

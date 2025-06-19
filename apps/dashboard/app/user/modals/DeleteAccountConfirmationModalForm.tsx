@@ -1,45 +1,36 @@
 "use client";
 
-import { SessionContext } from "@omenai/package-provider/SessionProvider";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { deleteAccount } from "@omenai/shared-services/requests/deleteGalleryAccount";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { IoWarning } from "react-icons/io5";
 import { toast } from "sonner";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function DeleteAccountConfirmationModalForm() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { session } = useContext(SessionContext);
+  const { user } = useAuth({ requiredRole: "user" });
+
   const router = useRouter();
-  const auth_url = auth_uri();
 
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+      style: {
+        background: "blue",
+        color: "white",
+      },
+      className: "class",
+    });
 
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+    router.replace(`${auth_uri}/login`);
   }
 
   async function handleDeleteGalleryAccount() {
     setLoading(true);
-    const response = await deleteAccount(
-      "individual",
-      (session as IndividualSchemaTypes).user_id
-    );
+    const response = await deleteAccount("individual", user.id);
 
     if (response?.isOk) {
       toast.success("Operation successful", {
@@ -50,7 +41,7 @@ export default function DeleteAccountConfirmationModalForm() {
         },
         className: "class",
       });
-      await handleSignout();
+      await handleSignOut();
     } else {
       toast.error("Error notification", {
         description: response?.message,

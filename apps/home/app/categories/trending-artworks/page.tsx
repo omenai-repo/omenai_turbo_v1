@@ -1,12 +1,11 @@
+"use client";
 import { ArtworkListing } from "./components/ArtworksListing";
 import Filter from "../components/filters/Filter";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
-import { getServerSession } from "@omenai/shared-utils/src/checkSessionValidity";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
-// import Filter from "./components/Filter";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
-export default async function TrendingArtworks() {
-  const session = await getServerSession();
+export default function TrendingArtworks() {
+  const { user } = useAuth({ requiredRole: "user" });
 
   return (
     <main className="relative">
@@ -24,11 +23,7 @@ export default async function TrendingArtworks() {
         <Filter page_type="trending" />
 
         <ArtworkListing
-          sessionId={
-            (session as IndividualSchemaTypes)?.role === "user"
-              ? (session as IndividualSchemaTypes)?.user_id
-              : undefined
-          }
+          sessionId={user && user.role === "user" ? user.id : undefined}
         />
       </div>
     </main>

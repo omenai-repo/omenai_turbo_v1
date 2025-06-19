@@ -5,18 +5,19 @@ import OrderDetails from "./OrderDetails";
 import { checkLockStatus } from "@omenai/shared-services/orders/checkLockStatus";
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useQuery } from "@tanstack/react-query";
-import { IndividualSchemaTypes, UserType } from "@omenai/shared-types";
+import { IndividualSchemaTypes } from "@omenai/shared-types";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function ComponentWrapper({
   order_id,
-  session,
   isLoggedIn,
 }: {
   order_id: string;
-  session: UserType | undefined;
   isLoggedIn: boolean;
 }) {
+  const { user } = useAuth({ requiredRole: "gallery" });
+
   const searchParams = useSearchParams();
   const user_id_key = searchParams.get("id_key");
 
@@ -28,7 +29,7 @@ export default function ComponentWrapper({
       if (data?.isOk) {
         const lock_status = await checkLockStatus(
           data.data.artwork_data.art_id,
-          (session as IndividualSchemaTypes)?.user_id
+          user.id
         );
 
         return { order: data.data, locked: lock_status?.data.locked };

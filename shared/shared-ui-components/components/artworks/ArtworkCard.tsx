@@ -42,7 +42,6 @@ export default function ArtworkCard({
   trending?: boolean;
 }) {
   const image_href = getImageFileView(image, 500);
-  console.log(image_href);
   const base_uri = base_url();
 
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");

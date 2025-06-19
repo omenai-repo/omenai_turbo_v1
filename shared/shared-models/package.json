@@ -5,8 +5,8 @@
   "type": "module",
   "devDependencies": {
     "@omenai/shared-types": "*",
-    "@omenai/typescript-config": "*",
-    "@omenai/shared-utils": "*"
+    "@omenai/shared-utils": "*",
+    "@omenai/typescript-config": "*"
   },
   "dependencies": {
     "mongoose": "^8.8.2",

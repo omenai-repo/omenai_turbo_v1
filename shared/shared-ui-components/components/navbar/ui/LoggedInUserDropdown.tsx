@@ -2,14 +2,10 @@
 import { FiChevronDown } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useState } from "react";
-import { IconType } from "react-icons";
-import { CgLogOut, CgProfile } from "react-icons/cg";
-import { RiAuctionLine } from "react-icons/ri";
-import { CiSettings } from "react-icons/ci";
+
 import Link from "next/link";
 import { UserDashboardNavigationStore } from "@omenai/shared-state-store/src/user/navigation/NavigationStore";
 import { toast } from "sonner";
-import { signOut } from "@omenai/shared-services/auth/session/deleteSession";
 import { useRouter } from "next/navigation";
 import { dashboard_url, auth_uri } from "@omenai/url-config/src/config";
 import {
@@ -20,6 +16,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 const LoggedInUserDropDown = ({
   user,
@@ -30,6 +27,7 @@ const LoggedInUserDropDown = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { setSelected } = UserDashboardNavigationStore();
+
   return (
     <div className=" flex items-center justify-center bg-white">
       <motion.div animate={open ? "open" : "closed"} className="relative">
@@ -148,30 +146,23 @@ const Option = ({
   const router = useRouter();
   const auth_url = auth_uri();
   const xs_dashboard_url = dashboard_url();
+  const { signOut } = useAuth({ requiredRole: "user" });
 
-  async function handleSignout() {
-    toast.info("Signing you out...");
-    const res = await signOut();
-
-    if (res.isOk) {
-      toast.info("Operation successful", {
-        description: "Successfully signed out...redirecting",
-      });
-      router.replace(`${auth_url}/login`);
-    } else {
-      toast.error("Operation successful", {
-        description:
-          "Something went wrong, please try again or contact support",
-      });
-    }
+  async function handleSignOut() {
+    toast.info("Signing out...", {
+      description: "You will be redirected to the login page",
+    });
+    await signOut();
+    // router.replace(`${auth_uri}/login`);
   }
+
   return (
     <>
       {text === "Logout" ? (
         <>
           <motion.li
             variants={itemVariants}
-            onClick={handleSignout}
+            onClick={async () => await handleSignOut()}
             className="flex items-center gap-2 w-full p-3 text-fluid-xs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
           >
             <motion.span variants={actionIconVariants}>{Icon}</motion.span>
