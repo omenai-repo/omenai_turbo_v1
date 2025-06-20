@@ -34,10 +34,6 @@ export default function FormInput() {
 
   const { signOut } = useAuth({ requiredRole: "user" });
 
-  if (!signInHook?.isLoaded || !signInHook.signIn) {
-    throw new Error("Sign-in not ready");
-  }
-
   useEffect(() => {
     // Ensure signIn is ready before using it
     if (signInHook.isLoaded && signInHook.signIn) {
@@ -55,6 +51,18 @@ export default function FormInput() {
   ) => {
     e.preventDefault();
 
+    if (!signInHook?.isLoaded || !signInHook.signIn) {
+      toast.error("Error notification", {
+        description:
+          "Something went wrong, please try again or contact support",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
     const { signIn, setActive } = signInHook;
     setIsLoading();
 
