@@ -1,7 +1,7 @@
 "use client";
 import { individualLoginStore } from "@omenai/shared-state-store/src/auth/login/IndividualLoginStore";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
@@ -34,16 +34,26 @@ export default function FormInput() {
 
   const { signOut } = useAuth({ requiredRole: "user" });
 
+  if (!signInHook?.isLoaded || !signInHook.signIn) {
+    throw new Error("Sign-in not ready");
+  }
+
+  useEffect(() => {
+    // Ensure signIn is ready before using it
+    if (signInHook.isLoaded && signInHook.signIn) {
+      // You can perform any additional setup here if needed
+      console.log("Sign-in is ready");
+    } else {
+      console.error("Sign-in is not ready yet");
+    }
+  }, [signInHook.signIn]);
+
   // CLIENT SIDE - Using session token approach
   // CLIENT SIDE - Using signIn.create() with token
   const handleSubmit = async (
     e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-
-    if (!signInHook?.isLoaded || !signInHook.signIn) {
-      throw new Error("Sign-in not ready");
-    }
 
     const { signIn, setActive } = signInHook;
     setIsLoading();

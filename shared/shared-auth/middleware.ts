@@ -1,6 +1,6 @@
 // src/middleware.ts (or middleware.ts at the root of your UI/Pages app)
 
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 // Assuming these are configured for the UI app (localhost:3000)
@@ -12,10 +12,6 @@ import {
 } from "@omenai/url-config/src/config";
 import { shouldSkipMiddleware } from "@omenai/shared-auth/middleware_skip";
 // You likely have this type defined somewhere in your monorepo, e.g., in a shared types package
-interface SessionDataType {
-  role: "user" | "artist" | "gallery" | "admin";
-  // Add other properties you expect in publicMetadata
-}
 
 // Define matchers for your protected routes (relative to THIS UI app)
 
@@ -57,6 +53,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     "/search",
     "/artwork",
     "/categories",
+    "/collections",
     // Add any other public routes here (e.g., /about, /contact)
   ];
 
