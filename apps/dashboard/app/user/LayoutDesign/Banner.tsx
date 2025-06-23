@@ -3,9 +3,13 @@
 import { CiUser } from "react-icons/ci";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast } from "sonner";
+import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function Banner() {
-  const { user, signOut } = useAuth({ requiredRole: "user" });
+  const { user, signOut } = useAuth({
+    requiredRole: "user",
+    redirectUrl: `${auth_uri()}/login`,
+  });
   async function handleSignOut() {
     toast.info("Signing out...", {
       description: "You will be redirected to the login page",

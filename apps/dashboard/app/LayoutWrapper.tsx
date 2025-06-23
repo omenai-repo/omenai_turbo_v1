@@ -24,17 +24,7 @@ export default function LayoutWrapper({
           duration={7000}
         />
         <div className=" w-full h-screen">
-          <ClerkProvider
-            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-            appearance={{
-              baseTheme: undefined, // Since you're using custom pages
-            }}
-            // This enables cross-subdomain session sharing
-            domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN as string}
-            isSatellite={true}
-            signInUrl={`${auth_uri()}/login`}
-            signUpUrl={`${auth_uri()}/register`}
-          >
+          <ClerkProvider>
             <QueryProvider>{children}</QueryProvider>
           </ClerkProvider>
         </div>

@@ -9,7 +9,10 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function PageLayout() {
   const router = useRouter();
-  const { signOut } = useAuth({ requiredRole: "artist" });
+  const { signOut } = useAuth({
+    requiredRole: "artist",
+    redirectUrl: `${auth_uri()}/login`,
+  });
 
   async function handleSignOut() {
     toast.info("Signing out...", {

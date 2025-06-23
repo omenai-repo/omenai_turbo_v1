@@ -34,17 +34,7 @@ export default function LayoutWrapper({
           />
           <div className=" w-full h-screen">
             <NextTopLoader color="#6246EA" height={6} />
-            <ClerkProvider
-              publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-              appearance={{
-                baseTheme: undefined, // Since you're using custom pages
-              }}
-              // This enables cross-subdomain session sharing
-              domain={process.env.NEXT_PUBLIC_CLERK_DOMAIN as string}
-              isSatellite={true}
-              signInUrl={`${auth_uri()}/login`}
-              signUpUrl={`${auth_uri()}/register`}
-            >
+            <ClerkProvider>
               <QueryProvider>
                 <main className="flex h-full">
                   <div className="hidden md:block">
