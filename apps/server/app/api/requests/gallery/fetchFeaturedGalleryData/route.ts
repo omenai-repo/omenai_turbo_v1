@@ -21,7 +21,7 @@ export const GET = withRateLimitAndHighlight(lenientRateLimit)(
 
       const gallery_data = await AccountGallery.find(
         { gallery_id },
-        "logo name bio"
+        "logo name description"
       );
 
       if (!gallery_data || gallery_data.length === 0) {
