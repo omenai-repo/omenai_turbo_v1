@@ -4,8 +4,6 @@ import NextTopLoader from "nextjs-toploader";
 import { QueryProvider } from "@omenai/package-provider";
 
 import { Toaster } from "sonner";
-import { ClerkProvider } from "@clerk/nextjs";
-import { auth_uri } from "@omenai/url-config/src/config";
 
 export default function LayoutWrapper({
   children,
@@ -24,9 +22,7 @@ export default function LayoutWrapper({
           duration={7000}
         />
         <div className=" w-full h-screen">
-          <ClerkProvider>
-            <QueryProvider>{children}</QueryProvider>
-          </ClerkProvider>
+          <QueryProvider>{children}</QueryProvider>
         </div>
       </>
     </div>

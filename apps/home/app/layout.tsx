@@ -15,8 +15,9 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import { ClerkProvider } from "@clerk/nextjs";
-import { auth_uri } from "@omenai/url-config/src/config";
+
+import { SessionProvider } from "@omenai/package-provider";
+import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -39,6 +40,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const initialSessionData = await getServerSession();
+
   return (
     <>
       <HighlightInit
@@ -64,7 +67,7 @@ export default async function RootLayout({
             closeButton
             duration={7000}
           />
-          <ClerkProvider>
+          <SessionProvider initialSessionData={initialSessionData}>
             <QueryProvider>
               <MantineProvider>
                 <LoginModal />
@@ -74,7 +77,7 @@ export default async function RootLayout({
                 <Analytics />
               </MantineProvider>
             </QueryProvider>
-          </ClerkProvider>
+          </SessionProvider>
         </body>
       </html>
     </>

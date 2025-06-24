@@ -3,7 +3,7 @@ import { useWindowSize } from "usehooks-ts";
 import { OnboardingRequestCompleted } from "./modals/OnboardingRequestCompletedModal";
 import NoMobileView from "../components/NoMobileView";
 
-export default function UserLayout({
+export default function ArtistLayout({
   children,
 }: {
   children: React.ReactNode;

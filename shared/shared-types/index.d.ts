@@ -1,13 +1,28 @@
 // Create discriminated union with role as discriminator
 export type SessionDataType = (
-  | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password">)
-  | ({ role: "user" } & Omit<IndividualSchemaTypes, "password">)
-  | ({ role: "admin" } & Omit<AccountAdminSchemaTypes, "password">)
+  | ({ role: "gallery" } & Omit<
+      GallerySchemaTypes,
+      "password" | "phone" | "clerkuserId"
+    >)
+  | ({ role: "user" } & Omit<
+      IndividualSchemaTypes,
+      "password" | "phone" | "clerkuserId"
+    >)
+  | ({ role: "admin" } & Omit<
+      AccountAdminSchemaTypes,
+      "password" | "phone" | "clerkuserId"
+    >)
   | ({ role: "artist" } & Omit<
       ArtistSchemaTypes,
-      "password" | "art_style" | "documentation"
+      "password" | "art_style" | "documentation" | "phone" | "clerkuserId"
     >)
 ) & { id: string };
+
+type ClientSessionData = {
+  isLoggedIn: boolean;
+  user: SessionDataType | null;
+  csrfToken: string;
+};
 
 export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
 export type ArtistSchemaTypes = {

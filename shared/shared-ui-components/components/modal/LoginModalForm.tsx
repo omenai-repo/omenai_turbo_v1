@@ -10,9 +10,8 @@ import { useRouter } from "next/navigation";
 import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 
-import { auth_uri, base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { useSignIn } from "@clerk/nextjs";
 import { H } from "@highlight-run/next/client";
 
 export default function LoginModalForm() {
@@ -25,10 +24,6 @@ export default function LoginModalForm() {
   const [form, setForm] = useState<Form>({ email: "", password: "" });
   const router = useRouter();
 
-  const signInHook = useSignIn();
-
-  const auth_url = auth_uri();
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -38,12 +33,6 @@ export default function LoginModalForm() {
     e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-
-    if (!signInHook?.isLoaded || !signInHook.signIn) {
-      throw new Error("Sign-in not ready");
-    }
-
-    const { signIn, setActive } = signInHook;
     setIsLoading(true);
 
     try {
@@ -59,42 +48,29 @@ export default function LoginModalForm() {
           className: "class",
         });
       } else {
-        const { data, signInToken } = response;
+        const { data } = response;
 
         if (response.isOk && data.role === "user") {
           if (data.verified) {
             try {
-              // Use the sign-in token to create a session
-              const signInAttempt = await signIn.create({
-                strategy: "ticket",
-                ticket: signInToken,
+              toast.success("Operation successful", {
+                description: "Login successful... redirecting!",
+                style: {
+                  background: "green",
+                  color: "white",
+                },
+                className: "class",
+              });
+              // Your redirect logic
+              H.identify(data.email, {
+                id: data.user_id as string,
+                name: data.name,
+                role: data.role,
               });
 
-              if (signInAttempt.status === "complete") {
-                // Set the active session
-                await setActive({ session: signInAttempt.createdSessionId });
-
-                toast.success("Operation successful", {
-                  description: "Login successful... redirecting!",
-                  style: {
-                    background: "green",
-                    color: "white",
-                  },
-                  className: "class",
-                });
-                // Your redirect logic
-                H.identify(data.email, {
-                  id: data.id as string,
-                  name: data.name,
-                  role: data.role,
-                });
-
-                await queryClient.invalidateQueries();
-                router.refresh();
-                toggleLoginModal(false);
-              } else {
-                throw new Error("Sign-in not complete");
-              }
+              await queryClient.invalidateQueries();
+              router.refresh();
+              toggleLoginModal(false);
             } catch (clerkError) {
               console.error("Clerk sign-in error:", clerkError);
               throw clerkError;

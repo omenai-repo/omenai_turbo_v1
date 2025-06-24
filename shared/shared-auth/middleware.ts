@@ -1,6 +1,3 @@
-// src/middleware.ts (or middleware.ts at the root of your UI/Pages app)
-
-import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 // Assuming these are configured for the UI app (localhost:3000)
@@ -9,12 +6,12 @@ import {
   base_url,
   auth_uri, // This should internally resolve to 'http://localhost:3000/sign-in' or similar
   dashboard_url,
+  getApiUrl,
 } from "@omenai/url-config/src/config";
 import { shouldSkipMiddleware } from "@omenai/shared-auth/middleware_skip";
-// You likely have this type defined somewhere in your monorepo, e.g., in a shared types package
-
-// Define matchers for your protected routes (relative to THIS UI app)
-
+import { getIronSession } from "iron-session";
+import { sessionOptions } from "@omenai/shared-lib/auth/configs/session-config";
+import { cookies } from "next/headers";
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const artistDashboardRegex = /\/artist\/.*/;
@@ -31,13 +28,9 @@ function redirectToClerkSignIn(req: NextRequest): NextResponse {
   return NextResponse.redirect(signInUrl);
 }
 
-export default clerkMiddleware(async (auth, req: NextRequest) => {
+export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname; // Get the current path
 
-  // Ensure these URLs correctly resolve to the UI app's domain (localhost:3000)
-  // `base_url` should be 'http://localhost:3000'
-  // `auth_uri` should point to where Clerk sign-in/up is mounted in this UI app, e.g., 'http://localhost:3000/sign-in'
-  // `dashboard_url` should be a general dashboard base for this app, e.g., 'http://localhost:3000/dashboard'
   const app_base_url = base_url();
   const app_auth_uri = auth_uri(); // Assuming this is like 'http://localhost:3000/login' or similar for the UI app
 
@@ -53,40 +46,52 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     "/search",
     "/artwork",
     "/categories",
-    "/collections",
-    // Add any other public routes here (e.g., /about, /contact)
   ];
-
-  const isPublicRoute = publicRoutes.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
-  );
-
-  if (isPublicRoute) {
+  if (shouldSkipMiddleware(pathname, req) || publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
-  if (shouldSkipMiddleware(pathname, req)) {
-    return NextResponse.next();
-  }
-  // --- 2. If the user is not authenticated for a protected page, protect the route ---
-  const { userId, sessionClaims } = await auth();
-  console.log(userId, sessionClaims);
-
-  if (!userId) {
-    console.log(
-      `[UI Middleware] Unauthenticated access to protected route: ${pathname}. Redirecting to sign-in.`
-    );
-    return redirectToClerkSignIn(req); // Redirect to the Clerk sign-in page of this UI app
-  }
-
-  // --- 3. Role-based Authorization Logic ---
-  // Safely get the user's role from publicMetadata (Corrected access)
-  const role = sessionClaims.role;
-
-  // Console log for debugging roles and paths
-  console.log(
-    `[UI Middleware] User ${userId} with role '${role}' attempting to access: ${pathname}`
+  const res = NextResponse.next();
+  // For middleware, getIronSession needs the request and response objects.
+  const session = await getIronSession<{ sessionId: string }>(
+    req,
+    res,
+    sessionOptions
   );
+
+  const { sessionId } = session;
+  // Redirect to login if no session cookie is found
+  if (!sessionId) {
+    const loginUrl = new URL("/login", auth_uri());
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const cookieHeader = req.headers.get("cookie") as string;
+  // Verify the session ID is still valid in Redis by calling our own API.
+  // This is the recommended pattern since middleware (especially on the edge)
+  // cannot directly connect to a database like Redis.
+  const response = await fetch(`${getApiUrl()}/api/auth/session/user`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Origin: base_url(),
+      Cookie: cookieHeader, // Include the cookie for session verification
+      "X-From-Middleware": "true", // Ensure cookies are sent with the request
+    },
+    credentials: "include",
+  });
+
+  const userSessionData = await response.json();
+
+  // If the /api/user route returns an unauthorized status, the session is invalid.
+  if (!response.ok) {
+    session.destroy();
+    const loginUrl = new URL("/login", auth_uri());
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const { userData } = userSessionData.user; // Assuming user data includes a 'role
+  const role = userData.role;
 
   const isUserDashboard = userDashboardRegex.test(pathname);
   const isGalleryDashboard = galleryDashboardRegex.test(pathname);
@@ -154,7 +159,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
   // If no specific rule blocks access, allow the req to proceed
   return NextResponse.next();
-});
+}
 
 // --- **THE CRUCIAL `config.matcher` for your UI/Pages App (localhost:3000)** ---
 export const config = {

@@ -28,7 +28,6 @@ export default function Saves() {
     set_current_page,
   } = userDashboardActionStore();
   const { user } = useAuth({ requiredRole: "user" });
-  console.log(user);
   const { width } = useWindowSize();
 
   const { data: artworksArray, isLoading: loading } = useQuery({
@@ -41,6 +40,8 @@ export default function Saves() {
         set_artwork_total(response?.total);
         setPageCount(response?.count);
       }
+
+      console.log(response);
       return response.data;
     },
     refetchOnWindowFocus: false,
@@ -50,6 +51,7 @@ export default function Saves() {
   if (loading || isLoading) {
     return <ArtworksListingSkeletonLoader />;
   }
+  console.log(artworksArray);
 
   if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
     return (

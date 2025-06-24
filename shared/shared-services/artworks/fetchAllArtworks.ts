@@ -5,7 +5,6 @@ export async function fetchAllArtworks(page: number) {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/artworks/getAllArtworks`, {
       method: "POST",
-
       body: JSON.stringify({ page }),
     });
 

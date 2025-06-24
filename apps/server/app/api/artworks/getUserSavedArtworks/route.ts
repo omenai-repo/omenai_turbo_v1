@@ -4,8 +4,6 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-export const revalidate = 0;
-export const dynamic = "force-dynamic";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -48,6 +46,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const allArtworks = await Artworkuploads.aggregate([
       {
         $match: {
+          like_IDs: { $in: [id] },
           $or: [
             // Condition for artworks by artists
             { "role_access.role": "artist" },
@@ -58,7 +57,6 @@ export const POST = withAppRouterHighlight(async function POST(
               author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
             },
           ],
-          like_IDs: { $in: [id] },
         },
       },
       { $sort: { createdAt: -1 } }, // Sort by impression count, most liked first

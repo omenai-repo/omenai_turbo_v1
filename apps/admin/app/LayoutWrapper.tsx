@@ -10,8 +10,6 @@ import { UpdatePromotionalModal } from "./admin/dashboard/modal/UpdatePromotiona
 import NoMobileView from "./admin/dashboard/NoMobileView";
 import PageLayout from "./admin/dashboard/PageLayout";
 import { Toaster } from "sonner";
-import { ClerkProvider } from "@clerk/nextjs";
-import { auth_uri } from "@omenai/url-config/src/config";
 export default function LayoutWrapper({
   children,
 }: {
@@ -34,28 +32,26 @@ export default function LayoutWrapper({
           />
           <div className=" w-full h-screen">
             <NextTopLoader color="#6246EA" height={6} />
-            <ClerkProvider>
-              <QueryProvider>
-                <main className="flex h-full">
-                  <div className="hidden md:block">
-                    <PageLayout />
-                  </div>
+            <QueryProvider>
+              <main className="flex h-full">
+                <div className="hidden md:block">
+                  <PageLayout />
+                </div>
 
-                  <div
-                    className={`w-full ${
-                      open ? "xl:ml-[19rem] md:ml-[15rem]" : "md:ml-[7rem] ml-0"
-                    } relative duration-200`}
-                  >
-                    <Appbar />
-                    <div className="h-auto rounded-lg relative my-5 px-5">
-                      <UpdatePromotionalModal />
-                      <DeleteEditorialModal />
-                      {children}
-                    </div>
+                <div
+                  className={`w-full ${
+                    open ? "xl:ml-[19rem] md:ml-[15rem]" : "md:ml-[7rem] ml-0"
+                  } relative duration-200`}
+                >
+                  <Appbar />
+                  <div className="h-auto rounded-lg relative my-5 px-5">
+                    <UpdatePromotionalModal />
+                    <DeleteEditorialModal />
+                    {children}
                   </div>
-                </main>
-              </QueryProvider>
-            </ClerkProvider>
+                </div>
+              </main>
+            </QueryProvider>
           </div>
         </>
       )}

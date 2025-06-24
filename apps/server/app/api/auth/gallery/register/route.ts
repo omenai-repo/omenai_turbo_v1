@@ -11,10 +11,8 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendGalleryMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryMail";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { clerkClient } from "@clerk/nextjs/server";
 
 export const POST = withRateLimitAndHighlight(strictRateLimit)(
   async function POST(request: Request) {
@@ -43,34 +41,8 @@ export const POST = withRateLimitAndHighlight(strictRateLimit)(
 
       const email_token = generateDigit(7);
 
-      const client = await clerkClient();
-      const users = await client.users.getUserList({
-        emailAddress: [parsedData.email],
-      });
-
-      let clerkUserId;
-
-      if (users && users.data.length > 0) {
-        // Email exists in Clerk
-        clerkUserId = users.data[0].id;
-      } else {
-        const clerkUser = await client.users.createUser({
-          emailAddress: [parsedData.email],
-          publicMetadata: { role: "user" },
-          skipPasswordRequirement: true,
-        });
-
-        if (!clerkUser)
-          throw new ServerError(
-            "Authentication service is currently down, please try again later or contact support"
-          );
-
-        clerkUserId = clerkUser.id;
-      }
-
       const saveData = await AccountGallery.create({
         ...parsedData,
-        clerkUserId,
       });
 
       const { gallery_id, email, name } = saveData;

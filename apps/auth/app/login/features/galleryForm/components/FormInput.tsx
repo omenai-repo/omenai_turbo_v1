@@ -8,22 +8,15 @@ import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import { loginGallery } from "@omenai/shared-services/auth/gallery/loginGallery";
 import { galleryLoginStore } from "@omenai/shared-state-store/src/auth/login/GalleryLoginStore";
 import { Form } from "@omenai/shared-types";
-import { useSignIn } from "@clerk/nextjs";
 
-import {
-  auth_uri,
-  base_url,
-  dashboard_url,
-  getApiUrl,
-} from "@omenai/url-config/src/config";
+import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
+
 import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
-  const auth_url = auth_uri();
   const dashboard_base_url = dashboard_url();
-  const signInHook = useSignIn();
 
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
     "redirect_uri_on_login",
@@ -47,11 +40,6 @@ export default function FormInput() {
   ) => {
     e.preventDefault();
 
-    if (!signInHook?.isLoaded || !signInHook.signIn) {
-      throw new Error("Sign-in not ready");
-    }
-
-    const { signIn, setActive } = signInHook;
     setIsLoading();
 
     try {
@@ -67,45 +55,32 @@ export default function FormInput() {
           className: "class",
         });
       } else {
-        const { data, signInToken } = response;
+        const { data } = response;
 
         if (response.isOk && data.role === "gallery") {
           if (data.verified) {
             try {
-              // Use the sign-in token to create a session
-              const signInAttempt = await signIn.create({
-                strategy: "ticket",
-                ticket: signInToken,
+              toast.success("Operation successful", {
+                description: "Login successful... redirecting!",
+                style: {
+                  background: "green",
+                  color: "white",
+                },
+                className: "class",
               });
-
-              if (signInAttempt.status === "complete") {
-                // Set the active session
-                await setActive({ session: signInAttempt.createdSessionId });
-
-                toast.success("Operation successful", {
-                  description: "Login successful... redirecting!",
-                  style: {
-                    background: "green",
-                    color: "white",
-                  },
-                  className: "class",
+              // Your redirect logic
+              if (url === "" || url === null) {
+                set_redirect_uri("");
+                H.identify(data.email, {
+                  id: data.gallery_id as string,
+                  name: data.name,
+                  role: data.role,
                 });
-                // Your redirect logic
-                if (url === "" || url === null) {
-                  set_redirect_uri("");
-                  H.identify(data.email, {
-                    id: data.id as string,
-                    name: data.name,
-                    role: data.role,
-                  });
-                  router.refresh();
-                  router.replace(`${dashboard_base_url}/gallery/overview`);
-                } else {
-                  router.replace(url);
-                  set_redirect_uri("");
-                }
+                router.refresh();
+                router.replace(`${dashboard_base_url}/gallery/overview`);
               } else {
-                throw new Error("Sign-in not complete");
+                router.replace(url);
+                set_redirect_uri("");
               }
             } catch (clerkError) {
               console.error("Clerk sign-in error:", clerkError);

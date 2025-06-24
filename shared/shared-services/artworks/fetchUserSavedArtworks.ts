@@ -10,7 +10,7 @@ export async function fetchUserSaveArtworks(
     const url = getApiUrl();
     const response = await fetch(`${url}/api/artworks/getUserSavedArtworks`, {
       method: "POST",
-      body: JSON.stringify({ id: user_id as string, page, filters }),
+      body: JSON.stringify({ id: user_id, page, filters }),
     });
 
     const result = await response.json();

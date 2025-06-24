@@ -1,22 +1,19 @@
 "use client";
 import { individualLoginStore } from "@omenai/shared-state-store/src/auth/login/IndividualLoginStore";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
-import { useSignIn } from "@clerk/nextjs";
 import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 
 import { auth_uri, base_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function FormInput() {
   const router = useRouter();
 
   const [show, setShow] = useState(false);
-  const signInHook = useSignIn();
   const base_uri = base_url();
   //simple state to show password visibility
   // const [hidePassword, setHidePassword] = useState(true);
@@ -32,18 +29,6 @@ export default function FormInput() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const { signOut } = useAuth({ requiredRole: "user" });
-
-  useEffect(() => {
-    // Ensure signIn is ready before using it
-    if (signInHook.isLoaded && signInHook.signIn) {
-      // You can perform any additional setup here if needed
-      console.log("Sign-in is ready");
-    } else {
-      console.error("Sign-in is not ready yet");
-    }
-  }, [signInHook.signIn]);
-
   // CLIENT SIDE - Using session token approach
   // CLIENT SIDE - Using signIn.create() with token
   const handleSubmit = async (
@@ -51,19 +36,6 @@ export default function FormInput() {
   ) => {
     e.preventDefault();
 
-    if (!signInHook?.isLoaded || !signInHook.signIn) {
-      toast.error("Error notification", {
-        description:
-          "Something went wrong, please try again or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-      return;
-    }
-    const { signIn, setActive } = signInHook;
     setIsLoading();
 
     try {
@@ -79,52 +51,38 @@ export default function FormInput() {
           className: "class",
         });
       } else {
-        const { data, signInToken } = response;
+        const { data } = response;
 
         if (response.isOk && data.role === "user") {
           if (data.verified) {
             try {
-              // Use the sign-in token to create a session
-              const signInAttempt = await signIn.create({
-                strategy: "ticket",
-                ticket: signInToken,
+              toast.success("Operation successful", {
+                description: "Login successful... redirecting!",
+                style: {
+                  background: "green",
+                  color: "white",
+                },
+                className: "class",
               });
-
-              if (signInAttempt.status === "complete") {
-                // Set the active session
-                await setActive({ session: signInAttempt.createdSessionId });
-
-                toast.success("Operation successful", {
-                  description: "Login successful... redirecting!",
-                  style: {
-                    background: "green",
-                    color: "white",
-                  },
-                  className: "class",
+              // Your redirect logic
+              if (url === "" || url === null) {
+                set_redirect_uri("");
+                H.identify(data.email, {
+                  id: data.user_id as string,
+                  name: data.name,
+                  role: data.role,
                 });
-                // Your redirect logic
-                if (url === "" || url === null) {
-                  set_redirect_uri("");
-                  H.identify(data.email, {
-                    id: data.user_id as string,
-                    name: data.name,
-                    role: data.role,
-                  });
-                  router.refresh();
-                  router.replace(base_uri);
-                } else {
-                  router.replace(url);
-                  set_redirect_uri("");
-                }
+                router.refresh();
+                router.replace(base_uri);
               } else {
-                throw new Error("Sign-in not complete");
+                router.replace(url);
+                set_redirect_uri("");
               }
-            } catch (clerkError) {
-              console.error("Clerk sign-in error:", clerkError);
-              throw clerkError;
+            } catch (error) {
+              console.error("Sign-in error:", error);
+              throw error;
             }
           } else {
-            await signOut();
             router.replace(`${auth_uri()}/verify/individual/${data.user_id}`);
           }
         }

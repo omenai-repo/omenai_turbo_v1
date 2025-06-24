@@ -15,11 +15,14 @@ const dm_sans = Poppins({
   variable: "--font-sans_serif",
   weight: ["300", "400", "500", "600", "700", "800"],
 });
+import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
+import { SessionProvider } from "@omenai/package-provider";
 export default async function DashboardRootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialSessionData = await getServerSession();
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -28,9 +31,11 @@ export default async function DashboardRootLayout({
       <body
         className={`${dm_sans.className} flex flex-col px-4 justify-center`}
       >
-        <MantineProvider>
-          <LayoutWrapper children={children} />
-        </MantineProvider>
+        <SessionProvider initialSessionData={initialSessionData}>
+          <MantineProvider>
+            <LayoutWrapper children={children} />
+          </MantineProvider>
+        </SessionProvider>
         <Analytics />
       </body>
     </html>

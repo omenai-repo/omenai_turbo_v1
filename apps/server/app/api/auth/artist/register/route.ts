@@ -11,7 +11,6 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { clerkClient } from "@clerk/nextjs/server";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -32,34 +31,9 @@ export const POST = withAppRouterHighlight(async function POST(
     const parsedData = await parseRegisterData(data);
 
     const email_token = generateDigit(7);
-    const client = await clerkClient();
-    const users = await client.users.getUserList({
-      emailAddress: [parsedData.email],
-    });
-
-    let clerkUserId;
-
-    if (users && users.data.length > 0) {
-      // Email exists in Clerk
-      clerkUserId = users.data[0].id;
-    } else {
-      const clerkUser = await client.users.createUser({
-        emailAddress: [parsedData.email],
-        publicMetadata: { role: "user" },
-        skipPasswordRequirement: true,
-      });
-
-      if (!clerkUser)
-        throw new ServerError(
-          "Authentication service is currently down, please try again later or contact support"
-        );
-
-      clerkUserId = clerkUser.id;
-    }
 
     const saveData = await AccountArtist.create({
       ...parsedData,
-      clerkUserId,
     });
 
     const { artist_id } = saveData;

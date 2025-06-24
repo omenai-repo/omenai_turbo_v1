@@ -1,3 +1,3 @@
-import clerkMiddleware from "@omenai/shared-auth/middleware";
+import middleware from "@omenai/shared-auth/middleware";
 
-export default clerkMiddleware;
+export default middleware;

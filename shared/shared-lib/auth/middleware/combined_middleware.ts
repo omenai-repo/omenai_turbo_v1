@@ -1,6 +1,7 @@
 // Purpose: Combine rate limiting with Highlight.io
 // ============================================================================
 
+import { NextRequest, NextResponse } from "next/server";
 import { withAppRouterHighlight } from "../../highlight/app_router_highlight";
 import { withRateLimit } from "./rate_limit_middleware";
 
@@ -17,7 +18,10 @@ interface CombinedConfig {
  */
 export function withRateLimitAndHighlight(config: CombinedConfig) {
   return function combinedWrapper(
-    handler: (request: Request) => Promise<Response>
+    handler: (
+      request: Request | NextRequest,
+      response?: Response | NextResponse
+    ) => Promise<Response | NextResponse>
   ) {
     // Apply rate limiting first, then Highlight
     return withAppRouterHighlight(withRateLimit(config)(handler));
