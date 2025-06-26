@@ -6,9 +6,9 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export const GET = withRateLimitAndHighlight(strictRateLimit)(
+export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;

@@ -3,7 +3,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const declineOrderRequest = async (
   data: OrderAcceptedStatusTypes,
-  order_id: string
+  order_id: string,
+  token: string
 ) => {
   const url = getApiUrl();
   try {
@@ -13,6 +14,8 @@ export const declineOrderRequest = async (
         data,
         order_id,
       }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
     const result = await res.json();
     return { isOk: res.ok, message: result.message };

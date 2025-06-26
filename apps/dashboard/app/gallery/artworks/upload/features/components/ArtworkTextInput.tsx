@@ -1,10 +1,8 @@
 "use client";
 import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_validator/validator";
-import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useState } from "react";
-import { toast } from "sonner";
 
 type ArtworkTextInputProps = {
   label: string;

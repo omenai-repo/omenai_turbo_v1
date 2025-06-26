@@ -9,56 +9,62 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPasswordConfirmationCodeMail } from "@omenai/shared-emails/src/models/gallery/sendPasswordChangeConfirmationCode";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const { id } = await request.json();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-      const account = await AccountGallery.findOne({
-        gallery_id: id,
-      });
-      if (!account) throw new ServerError("Something went wrong");
-      const token = generateDigit(7);
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["gallery"],
+};
 
-      const check_code_existence = await VerificationCodes.findOne({
-        author: account.gallery_id,
-      });
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+    const { id } = await request.json();
 
-      if (check_code_existence)
-        throw new ConflictError("Token active, check your email or try later");
+    const account = await AccountGallery.findOne({
+      gallery_id: id,
+    });
+    if (!account) throw new ServerError("Something went wrong");
+    const token = generateDigit(7);
 
-      const create_code = await VerificationCodes.create({
-        code: token,
-        author: account.gallery_id,
-      });
+    const check_code_existence = await VerificationCodes.findOne({
+      author: account.gallery_id,
+    });
 
-      if (!create_code)
-        throw new Error(
-          "Something went wrong with this request, Please contact support."
-        );
+    if (check_code_existence)
+      throw new ConflictError("Token active, check your email or try later");
 
-      await sendPasswordConfirmationCodeMail({
-        username: account.admin,
-        token: token,
-        email: account.email,
-      });
+    const create_code = await VerificationCodes.create({
+      code: token,
+      author: account.gallery_id,
+    });
 
-      return NextResponse.json(
-        { message: "Confirmation code sent to email address" },
-        { status: 200 }
+    if (!create_code)
+      throw new Error(
+        "Something went wrong with this request, Please contact support."
       );
-    } catch (error) {
-      console.log(error);
-      const error_response = handleErrorEdgeCases(error);
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    await sendPasswordConfirmationCodeMail({
+      username: account.admin,
+      token: token,
+      email: account.email,
+    });
+
+    return NextResponse.json(
+      { message: "Confirmation code sent to email address" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

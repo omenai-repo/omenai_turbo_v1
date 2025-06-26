@@ -1,17 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-// Assuming these are configured for the UI app (localhost:3000)
-// For `auth_uri`, it should typically point to your Clerk sign-in route within THIS app.
 import {
   base_url,
-  auth_uri, // This should internally resolve to 'http://localhost:3000/sign-in' or similar
-  dashboard_url,
+  auth_uri,
   getApiUrl,
+  dashboard_url,
 } from "@omenai/url-config/src/config";
-import { shouldSkipMiddleware } from "@omenai/shared-auth/middleware_skip";
+import { shouldSkipMiddleware } from "./middleware_skip";
 import { getIronSession } from "iron-session";
 import { sessionOptions } from "@omenai/shared-lib/auth/configs/session-config";
-import { cookies } from "next/headers";
+import { destroySession } from "@omenai/shared-lib/auth/session";
+
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const artistDashboardRegex = /\/artist\/.*/;
@@ -31,27 +30,23 @@ function redirectToClerkSignIn(req: NextRequest): NextResponse {
 export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname; // Get the current path
 
-  const app_base_url = base_url();
-  const app_auth_uri = auth_uri(); // Assuming this is like 'http://localhost:3000/login' or similar for the UI app
+  const app_auth_uri = auth_uri();
 
-  // --- 1. Define public routes that don't require authentication in THIS UI app ---
-  // Use direct string paths for clarity and to avoid URL object complexities for simple routes.
   const publicRoutes = [
     "/", // Homepage
-    // These should be the paths where Clerk sign-in/sign-up components are mounted in THIS app
-    // e.g., if you have a page at /sign-in and /sign-up
-    new URL("/login", app_auth_uri).pathname, // e.g., /login (if this path is handled by Clerk on 3000)
-    new URL("/register", app_auth_uri).pathname, // e.g., /register (if this path is handled by Clerk on 3000)
-    "/catalog",
-    "/search",
-    "/artwork",
-    "/categories",
+    new URL("/login", app_auth_uri).pathname,
+    new URL("/register", app_auth_uri).pathname,
+    "/catalog/*",
+    "/search/*",
+    "/artwork/*",
+    "/categories/*",
   ];
   if (shouldSkipMiddleware(pathname, req) || publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
   const res = NextResponse.next();
+
   // For middleware, getIronSession needs the request and response objects.
   const session = await getIronSession<{ sessionId: string }>(
     req,
@@ -60,37 +55,41 @@ export default async function middleware(req: NextRequest) {
   );
 
   const { sessionId } = session;
+
   // Redirect to login if no session cookie is found
+
   if (!sessionId) {
     const loginUrl = new URL("/login", auth_uri());
     return NextResponse.redirect(loginUrl);
   }
 
   const cookieHeader = req.headers.get("cookie") as string;
+
   // Verify the session ID is still valid in Redis by calling our own API.
   // This is the recommended pattern since middleware (especially on the edge)
   // cannot directly connect to a database like Redis.
+
   const response = await fetch(`${getApiUrl()}/api/auth/session/user`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Origin: base_url(),
       Cookie: cookieHeader, // Include the cookie for session verification
-      "X-From-Middleware": "true", // Ensure cookies are sent with the request
+      "X-From-Middleware": "true",
     },
-    credentials: "include",
+    credentials: "include", // Ensure cookies are sent with the request
   });
 
   const userSessionData = await response.json();
 
   // If the /api/user route returns an unauthorized status, the session is invalid.
-  if (!response.ok) {
-    session.destroy();
+  if (!response.ok || response.status === 401) {
+    destroySession(sessionId, cookieHeader);
     const loginUrl = new URL("/login", auth_uri());
     return NextResponse.redirect(loginUrl);
   }
 
-  const { userData } = userSessionData.user; // Assuming user data includes a 'role
+  const { userData } = userSessionData.user;
   const role = userData.role;
 
   const isUserDashboard = userDashboardRegex.test(pathname);
@@ -108,7 +107,7 @@ export default async function middleware(req: NextRequest) {
     console.log(
       `[UI Middleware] User role '${role}' forbidden from ${pathname}. Redirecting to user's dashboard.`
     );
-    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual user dashboard
+    return NextResponse.redirect(new URL("/user/saves", dashboard_url())); // Redirect to their actual user dashboard
   }
 
   // Gallery role restrictions
@@ -123,7 +122,7 @@ export default async function middleware(req: NextRequest) {
     console.log(
       `[UI Middleware] Gallery role '${role}' forbidden from ${pathname}. Redirecting to gallery's dashboard.`
     );
-    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual gallery dashboard
+    return NextResponse.redirect(new URL("/gallery/overview", dashboard_url())); // Redirect to their actual gallery dashboard
   }
 
   // Artist role restrictions
@@ -138,7 +137,9 @@ export default async function middleware(req: NextRequest) {
     console.log(
       `[UI Middleware] Artist role '${role}' forbidden from ${pathname}. Redirecting to artist's dashboard.`
     );
-    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual artist dashboard
+    return NextResponse.redirect(
+      new URL("/artist/app/overview", dashboard_url())
+    ); // Redirect to their actual artist dashboard
   }
 
   // Admin role restrictions (adjust if admins should have full access)
@@ -152,7 +153,7 @@ export default async function middleware(req: NextRequest) {
       isPaymentPage)
   ) {
     console.log(
-      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to admin dashboard.`
+      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to login`
     );
     return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual admin dashboard
   }
@@ -161,7 +162,6 @@ export default async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// --- **THE CRUCIAL `config.matcher` for your UI/Pages App (localhost:3000)** ---
 export const config = {
   matcher: [
     // Only run middleware on these specific paths
@@ -171,6 +171,5 @@ export const config = {
     "/user/:path*",
     "/gallery/:path*",
     "/artist/:path*",
-    // Add other protected routes as needed
   ],
 };

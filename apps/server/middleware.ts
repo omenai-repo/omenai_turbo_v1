@@ -7,12 +7,10 @@ const allowed_origins = [
   "https://dashboard.omenai.app",
   "https://admin.omenai.app",
   "https://omenai.app",
-  "http://localhost:3000", // <-- IMPORTANT: Be explicit about your frontend port
-  "http://localhost:3001", // <-- IMPORTANT: Be explicit about your frontend port
-  "http://localhost:4000", // <-- IMPORTANT: Be explicit about your frontend port
-  "http://localhost:5000", // <-- IMPORTANT: Be explicit about your frontend port
-  // If you also access API from root localhost (without port), keep "http://localhost"
-  // For precise matching, list each port/origin explicitly.
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:4000",
+  "http://localhost:5000",
   "https://api.omenai.app",
 ];
 
@@ -57,7 +55,7 @@ export default async function middleware(req: NextRequest) {
     return preflightResponse;
   }
 
-  // Get the response (either from Clerk or NextResponse.next())
+  // Get the response
   let response: NextResponse;
 
   // For auth routes, let them pass through without additional processing
@@ -79,10 +77,12 @@ export default async function middleware(req: NextRequest) {
   // CRITICAL NOTE FOR LOCAL DEVELOPMENT: SameSite=None requires Secure.
   // If your localhost:8001 is HTTP, this will cause cookies to be ignored by browsers.
   // For local HTTP development, you often need to use SameSite=Lax.
+
   if (origin.includes("omenai.app") || origin.includes("localhost")) {
     response.headers.set("Access-Control-Allow-Credentials", "true");
     // Check if Set-Cookie header exists before trying to append
     const setCookieHeader = response.headers.get("Set-Cookie");
+
     if (setCookieHeader) {
       // Be careful modifying Set-Cookie. It might be better to let iron-session
       // handle its own cookie options directly.
@@ -113,7 +113,7 @@ function setCorsHeaders(response: NextResponse, origin: string) {
   response.headers.set(
     // *** THE CRITICAL FIX: ADD 'credentials' to this list! ***
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Content-Length, x-highlight-request, traceparent, X-Clerk-Session-ID, credentials" // <-- ADDED 'credentials' here
+    "Content-Type, Authorization, Content-Length, x-highlight-request, traceparent, x-csrf-token, X-Csrf-Token, credentials"
   );
 }
 

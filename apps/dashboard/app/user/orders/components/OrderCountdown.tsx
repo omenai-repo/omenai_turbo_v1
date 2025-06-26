@@ -1,9 +1,6 @@
 "use client";
 
-import { useRef } from "react";
 import { useTimer } from "react-timer-hook";
-import { declineOrderRequest } from "@omenai/shared-services/orders/declineOrderRequest";
-import { OrderAcceptedStatusTypes } from "@omenai/shared-types";
 import Link from "next/link";
 import { base_url } from "@omenai/url-config/src/config";
 

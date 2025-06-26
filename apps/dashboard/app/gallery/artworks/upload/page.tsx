@@ -17,7 +17,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function UploadArtwork() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const url = auth_uri();
   const router = useRouter();
@@ -27,13 +27,13 @@ export default function UploadArtwork() {
     queryFn: async () => {
       try {
         // Fetch account ID first, as it's required for the next call
-        const acc = await getAccountId(user.email as string);
+        const acc = await getAccountId(user.email as string, csrf || "");
         if (!acc?.isOk)
           throw new Error("Something went wrong, Please refresh the page");
 
         // Start retrieving subscription data while fetching Stripe onboarding status
         const [response, sub_check] = await Promise.all([
-          checkIsStripeOnboarded(acc.data.connected_account_id), // Dependent on account ID
+          checkIsStripeOnboarded(acc.data.connected_account_id, csrf || ""), // Dependent on account ID
           retrieveSubscriptionData(user.gallery_id as string), // Independent
         ]);
 

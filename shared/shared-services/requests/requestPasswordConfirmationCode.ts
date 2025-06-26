@@ -3,7 +3,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function requestPasswordConfirmationCode(
   route: RouteIdentifier,
-  session_id: string
+  session_id: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
@@ -12,6 +13,8 @@ export async function requestPasswordConfirmationCode(
       {
         method: "POST",
         body: JSON.stringify({ id: session_id }),
+        headers: { "x-csrf-token": token },
+        credentials: "include",
       }
     );
 

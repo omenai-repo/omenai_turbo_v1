@@ -5,13 +5,16 @@ export async function updatePassword(
   password: string,
   code: string,
   route: RouteIdentifier,
-  session_id: string
+  session_id: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/requests/${route}/updatePassword`, {
       method: "POST",
       body: JSON.stringify({ id: session_id, password, code }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

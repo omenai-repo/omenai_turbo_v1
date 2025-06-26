@@ -3,13 +3,16 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function deleteAccount(
   route: RouteIdentifier,
-  session_id: string
+  session_id: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/requests/${route}/deleteAccount`, {
       method: "POST",
       body: JSON.stringify({ id: session_id }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

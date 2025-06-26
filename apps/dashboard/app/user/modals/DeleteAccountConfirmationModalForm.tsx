@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteAccount } from "@omenai/shared-services/requests/deleteGalleryAccount";
+import { deleteAccount } from "@omenai/shared-services/requests/deleteAccount";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function DeleteAccountConfirmationModalForm() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { user } = useAuth({ requiredRole: "user" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
 
   const router = useRouter();
 
@@ -30,7 +30,7 @@ export default function DeleteAccountConfirmationModalForm() {
 
   async function handleDeleteGalleryAccount() {
     setLoading(true);
-    const response = await deleteAccount("individual", user.id);
+    const response = await deleteAccount("individual", user.id, csrf || "");
 
     if (response?.isOk) {
       toast.success("Operation successful", {

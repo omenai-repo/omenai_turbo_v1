@@ -1,11 +1,13 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function getAccountId(email: string) {
+export async function getAccountId(email: string, token: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/stripe/getAccountId`, {
       method: "POST",
       body: JSON.stringify({ email }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

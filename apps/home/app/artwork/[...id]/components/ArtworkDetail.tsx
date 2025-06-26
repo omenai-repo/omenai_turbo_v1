@@ -33,7 +33,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   const { toggleLoginModal } = actionStore();
 
   const router = useRouter();
-  const { user } = useAuth({ requiredRole: "user" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
+  console.log(csrf);
 
   async function handleBuyButtonClick() {
     if (sessionId === undefined) toggleLoginModal(true);
@@ -50,7 +51,12 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           medium: data.medium,
           pricing: data.pricing,
         };
-        const res = await requestPrice(artwork_data, user.email, user.name);
+        const res = await requestPrice(
+          artwork_data,
+          user.email,
+          user.name,
+          csrf || ""
+        );
 
         if (res?.isOk) {
           toast.success("Operation successful", {
@@ -63,8 +69,10 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           });
           setLoading(false);
         } else {
+          console.log(res);
           toast.error("Error notification", {
             description:
+              res?.message ||
               "Something went wrong, please try again or contact us for assistance.",
             style: {
               background: "red",

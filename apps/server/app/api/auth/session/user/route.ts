@@ -27,7 +27,8 @@ export async function GET(request: Request) {
     const userSessionData = await getSession(
       sessionId,
       userAgent,
-      header_is_middleware
+      header_is_middleware,
+      cookieStore
     );
 
     if (!userSessionData) {
@@ -45,6 +46,7 @@ export async function GET(request: Request) {
     // The frontend will use this token for subsequent mutation requests.
     return NextResponse.json({ user, csrfToken }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

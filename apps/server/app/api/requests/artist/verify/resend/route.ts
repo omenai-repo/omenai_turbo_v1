@@ -1,22 +1,19 @@
 import { sendArtistVerifiedMail } from "@omenai/shared-emails/src/models/artist/sendArtistVerifiedMail";
-
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
 import {
-  RateLimitExceededError,
   NotFoundError,
   ForbiddenError,
   ServerError,
 } from "../../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
+export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();

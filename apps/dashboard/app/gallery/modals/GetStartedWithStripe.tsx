@@ -19,7 +19,7 @@ export default function GetStartedWithStripe() {
 
   const [connectedAccountId, setConnectedAccountId] = useState();
 
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const router = useRouter();
 
@@ -32,7 +32,7 @@ export default function GetStartedWithStripe() {
       customer_id: user.gallery_id as string,
       country: countrySelect,
     };
-    const response = await createConnectedAccount(customer);
+    const response = await createConnectedAccount(customer, csrf || "");
 
     if (response?.isOk) {
       setConnectedAccountId(response.account_id);
@@ -61,7 +61,7 @@ export default function GetStartedWithStripe() {
 
   async function handleAccountLink() {
     setAccountLinkCreatePending(true);
-    const response = await createAccountLink(connectedAccountId!);
+    const response = await createAccountLink(connectedAccountId!, csrf || "");
 
     if (response?.isOk) {
       toast.success("Operation successful", {

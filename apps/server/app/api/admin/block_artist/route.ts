@@ -4,35 +4,41 @@ import { ServerError } from "../../../../custom/errors/dictionary/errorDictionar
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const { artist_id, status } = await request.json();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["admin"],
+};
 
-      const block_artist = await AccountArtist.updateOne(
-        { artist_id },
-        { $set: { status } }
-      );
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+    const { artist_id, status } = await request.json();
 
-      if (block_artist.modifiedCount === 0)
-        throw new ServerError("Something went wrong");
+    const block_artist = await AccountArtist.updateOne(
+      { artist_id },
+      { $set: { status } }
+    );
 
-      // TODO: Send mail to gallery
+    if (block_artist.modifiedCount === 0)
+      throw new ServerError("Something went wrong");
 
-      return NextResponse.json(
-        { message: "Artist status updated" },
-        { status: 200 }
-      );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
+    // TODO: Send mail to gallery
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    return NextResponse.json(
+      { message: "Artist status updated" },
+      { status: 200 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

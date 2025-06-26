@@ -3,7 +3,7 @@
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { updatePassword } from "@omenai/shared-services/requests/updateGalleryPassword";
+import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
@@ -21,7 +21,7 @@ export default function UpdatePasswordModalForm() {
     confirmPassword: "",
     code: "",
   });
-  const { user } = useAuth({ requiredRole: "user" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
 
   const [errorList, setErrorList] = useState<string[]>([]);
 
@@ -42,7 +42,8 @@ export default function UpdatePasswordModalForm() {
     setCodeLoading(true);
     const response = await requestPasswordConfirmationCode(
       "individual",
-      user.id
+      user.id,
+      csrf || ""
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -87,7 +88,8 @@ export default function UpdatePasswordModalForm() {
       info.password,
       info.code,
       "individual",
-      user.id
+      user.id,
+      csrf || ""
     );
 
     if (response?.isOk) {

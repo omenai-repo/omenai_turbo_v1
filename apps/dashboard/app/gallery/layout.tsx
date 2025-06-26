@@ -21,12 +21,12 @@ export default function GalleryDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const { width } = useWindowSize();
   const { data: account, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
-      const acc = await getAccountId(user.email as string);
+      const acc = await getAccountId(user.email as string, csrf || "");
       if (!acc?.isOk) {
         toast.error("Error notification", {
           description: "Something went wrong, Please refresh the page",

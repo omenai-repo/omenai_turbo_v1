@@ -45,7 +45,7 @@ export default function AddressForm({
   const [save_shipping_address, setSaveShippingAddress] =
     useState<boolean>(false);
 
-  const { user } = useAuth({ requiredRole: "user" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
 
   useEffect(() => {
     const address = user.address;
@@ -100,7 +100,8 @@ export default function AddressForm({
         save_shipping_address,
         address,
         null,
-        role_access.role
+        role_access.role,
+        csrf || ""
       );
 
       if (!createdShippingOrder!.isOk) {

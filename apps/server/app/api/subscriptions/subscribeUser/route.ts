@@ -4,8 +4,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
 export const POST = withAppRouterHighlight(async function POST(
-  request: Request,
-  context: { params: Promise<Record<string, string>> }
+  request: Request
 ): Promise<Response> {
   try {
     const { email, name } = await request.json();

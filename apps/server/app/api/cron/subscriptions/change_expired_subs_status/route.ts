@@ -2,7 +2,7 @@ import {
   lenientRateLimit,
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
@@ -11,7 +11,7 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 // NOTE: Run every hour
-export const GET = withRateLimitAndHighlight(lenientRateLimit)(
+export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     await connectMongoDB();
     // Calculate the date that is three days ago

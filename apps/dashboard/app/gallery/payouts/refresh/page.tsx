@@ -13,7 +13,7 @@ import Load, {
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function RefreshStripe() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const searchParams = useSearchParams();
   const account_Id = searchParams.get("id");
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function RefreshStripe() {
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["check_stripe_onboarded"],
     queryFn: async () => {
-      const response = await checkIsStripeOnboarded(account_Id!);
+      const response = await checkIsStripeOnboarded(account_Id!, csrf || "");
 
       if (response?.isOk) {
         return {
@@ -48,7 +48,7 @@ export default function RefreshStripe() {
 
   async function handleAccountLink() {
     setAccountLinkCreatePending(true);
-    const response = await createAccountLink(account_Id!);
+    const response = await createAccountLink(account_Id!, csrf || "");
 
     if (response?.isOk) {
       toast.success("Operation successful", {

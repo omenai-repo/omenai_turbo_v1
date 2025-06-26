@@ -16,20 +16,20 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function SubscriptionBase() {
   const router = useRouter();
   const url = auth_uri();
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["subscription_precheck"],
     queryFn: async () => {
       try {
         // Fetch account ID first, as it's required for the next call
-        const acc = await getAccountId(user.email);
+        const acc = await getAccountId(user.email, csrf || "");
         if (!acc?.isOk)
           throw new Error("Something went wrong, Please refresh the page");
 
         // Start retrieving subscription data while fetching Stripe onboarding status
         const [response, sub_check] = await Promise.all([
-          checkIsStripeOnboarded(acc.data.connected_account_id), // Dependent on account ID
+          checkIsStripeOnboarded(acc.data.connected_account_id, csrf || ""), // Dependent on account ID
           retrieveSubscriptionData(user.gallery_id as string), // Independent
         ]);
 

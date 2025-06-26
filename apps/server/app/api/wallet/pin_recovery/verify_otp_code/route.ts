@@ -6,44 +6,50 @@ import {
   BadRequestError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const { artist_id, otp } = await request.json();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-      const isOtpActive = await VerificationCodes.findOne({
-        author: artist_id,
-        code: otp,
-      });
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["artist"],
+};
 
-      if (!isOtpActive) throw new BadRequestError("Invalid OTP code");
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+    const { artist_id, otp } = await request.json();
 
-      const delete_code = await VerificationCodes.deleteOne({
-        author: artist_id,
-        code: otp,
-      });
+    const isOtpActive = await VerificationCodes.findOne({
+      author: artist_id,
+      code: otp,
+    });
 
-      if (delete_code.deletedCount === 0)
-        throw new ServerError("An error has occured. Please contact support");
+    if (!isOtpActive) throw new BadRequestError("Invalid OTP code");
 
-      return NextResponse.json(
-        {
-          message: "OTP code validated successfully",
-        },
-        { status: 201 }
-      );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
-      console.log(error);
+    const delete_code = await VerificationCodes.deleteOne({
+      author: artist_id,
+      code: otp,
+    });
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    if (delete_code.deletedCount === 0)
+      throw new ServerError("An error has occured. Please contact support");
+
+    return NextResponse.json(
+      {
+        message: "OTP code validated successfully",
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    console.log(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

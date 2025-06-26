@@ -109,7 +109,7 @@ async function convertToUSD(
   amount: number,
   fromCurrency: string
 ): Promise<number> {
-  const conversion = await getCurrencyConversion(fromCurrency, amount);
+  const conversion = await getCurrencyConversion(fromCurrency, amount, "");
   if (!conversion?.isOk) {
     throw new Error("Failed to convert currency");
   }

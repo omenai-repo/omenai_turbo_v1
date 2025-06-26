@@ -4,7 +4,7 @@ import Orders from "./features/orders/Orders";
 import PopularArtworks from "./features/popular_artworks/PopularArtworks";
 import ActivityWrapper from "./features/sales_activity/ActivityWrapper";
 import PageTitle from "../components/PageTitle";
-
+export const dynamic = "force-dynamic";
 export default function OverviewPage() {
   return (
     <div className="w-full">

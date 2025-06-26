@@ -1,29 +1,34 @@
 import { lenientRateLimit } from "./../../../../../node_modules/@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(lenientRateLimit)(
-  async function POST(request: Request) {
-    try {
-      const { currency, amount } = await request.json();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
+const config: CombinedConfig = {
+  ...lenientRateLimit,
+  allowedRoles: ["artist", "gallery"],
+};
 
-      const data = await fetch(
-        `https://v6.exchangerate-api.com/v6/${process.env
-          .EXCHANGE_RATE_API_KEY!}/pair/${currency}/USD/${amount}`,
-        { method: "GET" }
-      );
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    const { currency, amount } = await request.json();
 
-      const result = await data.json();
+    const data = await fetch(
+      `https://v6.exchangerate-api.com/v6/${process.env
+        .EXCHANGE_RATE_API_KEY!}/pair/${currency}/USD/${amount}`,
+      { method: "GET" }
+    );
 
-      return NextResponse.json({ data: result.conversion_result });
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
+    const result = await data.json();
 
-      console.log(error);
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    return NextResponse.json({ data: result.conversion_result });
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

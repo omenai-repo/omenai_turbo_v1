@@ -9,75 +9,80 @@ import {
   ConflictError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      const client = await connectMongoDB();
-      const session = await client.startSession();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["gallery"],
+};
 
-      const { id, password, code } = await request.json();
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    const client = await connectMongoDB();
+    const session = await client.startSession();
 
-      const account = await AccountGallery.findOne(
-        {
-          gallery_id: id,
-        },
-        "password"
+    const { id, password, code } = await request.json();
+
+    const account = await AccountGallery.findOne(
+      {
+        gallery_id: id,
+      },
+      "password"
+    );
+
+    if (!account) throw new ServerError("Something went wrong");
+
+    const check_code_existence = await VerificationCodes.findOne({
+      code,
+    });
+
+    if (!check_code_existence)
+      throw new ConflictError("Code invalid, please try again");
+
+    const isPasswordMatch = bcrypt.compareSync(password, account.password);
+
+    if (isPasswordMatch)
+      throw new ConflictError(
+        "Your password cannot be identical to your previous password"
       );
 
-      if (!account) throw new ServerError("Something went wrong");
+    const hashedPassword = await hashPassword(password);
 
-      const check_code_existence = await VerificationCodes.findOne({
+    try {
+      session.startTransaction();
+      const updatePassword = await AccountGallery.updateOne(
+        { gallery_id: id },
+        { $set: { password: hashedPassword } }
+      );
+
+      const delete_code = await VerificationCodes.deleteOne({
         code,
       });
 
-      if (!check_code_existence)
-        throw new ConflictError("Code invalid, please try again");
+      await Promise.all([updatePassword, delete_code]);
 
-      const isPasswordMatch = bcrypt.compareSync(password, account.password);
-
-      if (isPasswordMatch)
-        throw new ConflictError(
-          "Your password cannot be identical to your previous password"
-        );
-
-      const hashedPassword = await hashPassword(password);
-
-      try {
-        session.startTransaction();
-        const updatePassword = await AccountGallery.updateOne(
-          { gallery_id: id },
-          { $set: { password: hashedPassword } }
-        );
-
-        const delete_code = await VerificationCodes.deleteOne({
-          code,
-        });
-
-        await Promise.all([updatePassword, delete_code]);
-
-        await session.commitTransaction();
-      } catch (error) {
-        await session.abortTransaction();
-      } finally {
-        await session.endSession();
-      }
-
-      return NextResponse.json(
-        { message: "Password updated successfully" },
-        { status: 200 }
-      );
+      await session.commitTransaction();
     } catch (error) {
-      console.log(error);
-      const error_response = handleErrorEdgeCases(error);
-
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
+      await session.abortTransaction();
+    } finally {
+      await session.endSession();
     }
+
+    return NextResponse.json(
+      { message: "Password updated successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

@@ -1,12 +1,12 @@
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-export const GET = withRateLimitAndHighlight(lenientRateLimit)(
+export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;

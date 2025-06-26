@@ -4,35 +4,41 @@ import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const { gallery_id, status } = await request.json();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["admin"],
+};
 
-      const block_gallery = await AccountGallery.updateOne(
-        { gallery_id },
-        { $set: { status } }
-      );
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+    const { gallery_id, status } = await request.json();
 
-      if (block_gallery.modifiedCount === 0)
-        throw new ServerError("Something went wrong");
+    const block_gallery = await AccountGallery.updateOne(
+      { gallery_id },
+      { $set: { status } }
+    );
 
-      // TODO: Send mail to gallery
+    if (block_gallery.modifiedCount === 0)
+      throw new ServerError("Something went wrong");
 
-      return NextResponse.json(
-        { message: "Gallery status updated" },
-        { status: 200 }
-      );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
+    // TODO: Send mail to gallery
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    return NextResponse.json(
+      { message: "Gallery status updated" },
+      { status: 200 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

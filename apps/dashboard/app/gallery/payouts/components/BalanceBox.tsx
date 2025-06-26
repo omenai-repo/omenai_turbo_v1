@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { generateStripeLoginLink } from "@omenai/shared-services/stripe/generateStripeLoginLink";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
@@ -18,9 +19,10 @@ export default function BalanceBox({
   const [generatingLoginLink, setGeneratingLoginLink] = useState(false);
 
   const router = useRouter();
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   async function generateLoginLink() {
     setGeneratingLoginLink(true);
-    const loginLink = await generateStripeLoginLink(account);
+    const loginLink = await generateStripeLoginLink(account, csrf || "");
     if (!loginLink?.isOk) {
       toast.error("Error notification", {
         description: "Something went wrong, Please try again.",

@@ -17,6 +17,7 @@ import {
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function EditArtworkWrapper({
   artwork,
@@ -32,6 +33,8 @@ export default function EditArtworkWrapper({
     usd_price: "",
     shouldShowPrice: "",
   });
+
+  const { csrf } = useAuth({ requiredRole: "artist" });
 
   const handleChange = async (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -53,7 +56,8 @@ export default function EditArtworkWrapper({
     if (name === "price") {
       const conversion_value = await getCurrencyConversion(
         data.currency.toUpperCase(),
-        +value
+        +value,
+        csrf || ""
       );
 
       if (!conversion_value?.isOk)
@@ -97,7 +101,11 @@ export default function EditArtworkWrapper({
         "pricing.currency": data.currency,
       };
 
-      const update = await updateArtworkPrice(filter, artwork.art_id);
+      const update = await updateArtworkPrice(
+        filter,
+        artwork.art_id,
+        csrf || ""
+      );
 
       if (!update?.isOk)
         toast.error("Error notification", {
@@ -126,7 +134,7 @@ export default function EditArtworkWrapper({
 
   async function deleteUploadArtwork() {
     setDeleteLoading(true);
-    const deleteArtworkData = await deleteArtwork(artwork.art_id);
+    const deleteArtworkData = await deleteArtwork(artwork.art_id, csrf || "");
 
     if (!deleteArtworkData?.isOk)
       toast.error("Error notification", {

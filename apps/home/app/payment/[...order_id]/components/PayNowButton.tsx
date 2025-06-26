@@ -3,15 +3,14 @@
 import { createOrderLock } from "@omenai/shared-services/orders/createOrderLock";
 import { Tooltip } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { CiLock } from "react-icons/ci";
 import { toast } from "sonner";
 
 import { createStripeCheckoutSession } from "@omenai/shared-services/stripe/createCheckoutSession";
 import { createFlwCheckoutSession } from "@omenai/shared-services/flw/createCheckout";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { base_url, getApiUrl } from "@omenai/url-config/src/config";
-import { IndividualSchemaTypes, RoleAccess } from "@omenai/shared-types";
+import { base_url } from "@omenai/url-config/src/config";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function PayNowButton({
@@ -43,10 +42,15 @@ export default function PayNowButton({
   const { user } = useAuth({ requiredRole: "user" });
   const [loading, setLoading] = useState(false);
   const url = base_url();
+  const { csrf } = useAuth({ requiredRole: "user" });
 
   async function handleClickPayNow() {
     setLoading(true);
-    const get_purchase_lock = await createOrderLock(art_id, user.id);
+    const get_purchase_lock = await createOrderLock(
+      art_id,
+      user.id,
+      csrf || ""
+    );
 
     if (get_purchase_lock?.isOk) {
       if (get_purchase_lock.data.lock_data.user_id === user.id) {
@@ -70,7 +74,8 @@ export default function PayNowButton({
               unit_price,
               tax_fees,
             },
-            `${url}/verifyTransaction`
+            `${url}/verifyTransaction`,
+            csrf || ""
           );
           checkout_session_response = checkout_session;
         } else {
@@ -91,7 +96,8 @@ export default function PayNowButton({
               tax_fees,
             },
             `${url}/payment/success`,
-            `${url}/payment/cancel?a_id=${art_id}&u_id=${user.id}`
+            `${url}/payment/cancel?a_id=${art_id}&u_id=${user.id}`,
+            csrf || ""
           );
           checkout_session_response = checkout_session;
         }

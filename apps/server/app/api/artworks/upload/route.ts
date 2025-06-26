@@ -8,60 +8,63 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["artist", "gallery"],
+};
 
-      const data = await request.json();
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
 
-      const doc_count = await Artworkuploads.countDocuments({
-        author_id: data.author_id,
-      });
+    const data = await request.json();
 
-      if (data.role_access.role === "gallery") {
-        const active_subscription = await Subscriptions.findOne(
-          { "customer.gallery_id": data.author_id },
-          "plan_details status"
+    const doc_count = await Artworkuploads.countDocuments({
+      author_id: data.author_id,
+    });
+
+    if (data.role_access.role === "gallery") {
+      const active_subscription = await Subscriptions.findOne(
+        { "customer.gallery_id": data.author_id },
+        "plan_details status"
+      );
+
+      if (!active_subscription || active_subscription.status !== "active")
+        throw new ForbiddenError("No active subscription for this user");
+
+      if (active_subscription.plan_details.type === "Basic" && doc_count >= 25)
+        throw new ForbiddenError(
+          "Plan usage limit exceeded, please upgrade plan"
         );
-
-        if (!active_subscription || active_subscription.status !== "active")
-          throw new ForbiddenError("No active subscription for this user");
-
-        if (
-          active_subscription.plan_details.type === "Basic" &&
-          doc_count >= 25
-        )
-          throw new ForbiddenError(
-            "Plan usage limit exceeded, please upgrade plan"
-          );
-      }
-
-      const new_title = trimWhiteSpace(data.title);
-      const payload = { ...data, title: new_title };
-
-      const uploadArt = await Artworkuploads.create({ ...payload });
-
-      if (!uploadArt)
-        throw new ServerError("A server error has occured, please try again");
-
-      return NextResponse.json(
-        {
-          message: "Artwork uploaded",
-          data: doc_count,
-        },
-        { status: 200 }
-      );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
-
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
     }
+
+    const new_title = trimWhiteSpace(data.title);
+    const payload = { ...data, title: new_title };
+
+    const uploadArt = await Artworkuploads.create({ ...payload });
+
+    if (!uploadArt)
+      throw new ServerError("A server error has occured, please try again");
+
+    return NextResponse.json(
+      {
+        message: "Artwork uploaded",
+        data: doc_count,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

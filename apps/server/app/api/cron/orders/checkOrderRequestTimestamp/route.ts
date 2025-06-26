@@ -12,10 +12,10 @@ import {
   lenientRateLimit,
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const GET = withRateLimitAndHighlight(lenientRateLimit)(
+export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     try {
       await connectMongoDB();

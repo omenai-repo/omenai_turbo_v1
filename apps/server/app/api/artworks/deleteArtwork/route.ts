@@ -4,33 +4,40 @@ import { ServerError } from "../../../../custom/errors/dictionary/errorDictionar
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-      const { art_id } = await request.json();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["artist", "gallery"],
+};
 
-      const artwork = await Artworkuploads.deleteOne({ art_id }).exec();
-      if (!artwork)
-        throw new ServerError(
-          "Error processing request. Please try again later."
-        );
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
 
-      return NextResponse.json(
-        {
-          message: "Artwork successfully deleted",
-        },
-        { status: 200 }
+    const { art_id } = await request.json();
+
+    const artwork = await Artworkuploads.deleteOne({ art_id }).exec();
+    if (!artwork)
+      throw new ServerError(
+        "Error processing request. Please try again later."
       );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
 
-      return NextResponse.json(
-        { message: error_response!.message },
-        { status: error_response!.status }
-      );
-    }
+    return NextResponse.json(
+      {
+        message: "Artwork successfully deleted",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response!.message },
+      { status: error_response!.status }
+    );
   }
-);
+});

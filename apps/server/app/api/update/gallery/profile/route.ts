@@ -8,37 +8,42 @@ import {
   standardRateLimit,
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withRateLimitAndHighlight(standardRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
+const config: CombinedConfig = {
+  ...standardRateLimit,
+  allowedRoles: ["gallery"],
+};
 
-      const data = await request.json();
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
 
-      const updatedData = await AccountGallery.findOneAndUpdate(
-        { gallery_id: data.id },
-        { $set: { ...data } }
-      );
+    const data = await request.json();
 
-      if (!updatedData)
-        throw new ServerError("An unexpected error has occured.");
+    const updatedData = await AccountGallery.findOneAndUpdate(
+      { gallery_id: data.id },
+      { $set: { ...data } }
+    );
 
-      return NextResponse.json(
-        {
-          message: "Profile data updated",
-          data: updatedData,
-        },
-        { status: 200 }
-      );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
+    if (!updatedData) throw new ServerError("An unexpected error has occured.");
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    return NextResponse.json(
+      {
+        message: "Profile data updated",
+        data: updatedData,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

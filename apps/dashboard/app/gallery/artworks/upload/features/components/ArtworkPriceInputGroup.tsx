@@ -13,7 +13,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function ArtworkPriceInputGroup() {
   const { artworkUploadData, updateArtworkUploadData } =
     galleryArtworkUploadStore();
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const [conversionLoading, setConversionLoading] = useState(false);
 
@@ -24,7 +24,8 @@ export default function ArtworkPriceInputGroup() {
     try {
       const conversion_value = await getCurrencyConversion(
         artworkUploadData.currency.toUpperCase(),
-        +value
+        +value,
+        csrf || ""
       );
 
       if (!conversion_value?.isOk)

@@ -17,7 +17,8 @@ export async function createFlwCheckoutSession(
     unit_price: number;
     tax_fees: number;
   },
-  redirect: string
+  redirect: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
@@ -31,6 +32,8 @@ export async function createFlwCheckoutSession(
         meta,
         redirect,
       }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

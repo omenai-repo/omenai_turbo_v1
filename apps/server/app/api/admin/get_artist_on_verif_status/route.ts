@@ -1,18 +1,28 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  BadRequestError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
+export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
+  async function GET(request: Request) {
+    const urlParam = new URL(request.url);
+    const searchParam = urlParam.searchParams;
     try {
+      const status = searchParam.get("status");
+
+      if (!status) throw new BadRequestError("Invalid parameter - status");
+
+      const status_bool: boolean = status === "true" ? true : false;
+
       await connectMongoDB();
-      const { status } = await request.json();
       const artists = await AccountArtist.find(
-        { artist_verified: status, verified: true },
+        { artist_verified: status_bool, verified: true },
         "name address logo email artist_verified artist_id status"
       );
 

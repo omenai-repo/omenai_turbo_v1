@@ -6,14 +6,14 @@ import { ConflictError } from "../../../../../custom/errors/dictionary/errorDict
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   getSessionFromCookie,
   createSession,
 } from "@omenai/shared-lib/auth/session";
 import { cookies } from "next/headers";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
+export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       const data = await request.json();

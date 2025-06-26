@@ -9,7 +9,6 @@
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
-    "@omenai/shared-auth": "*",
     "@omenai/shared-json": "*",
     "crypto-random-string": "^5.0.0"
   }

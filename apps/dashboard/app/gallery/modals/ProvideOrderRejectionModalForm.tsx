@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { declineOrderRequest } from "@omenai/shared-services/orders/declineOrderRequest";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { OrderAcceptedStatusTypes } from "@omenai/shared-types";
@@ -11,6 +12,7 @@ import { toast } from "sonner";
 
 export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id } = actionStore();
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const queryClient = useQueryClient();
   const [accepted_status, setAcceptedStatus] =
     useState<OrderAcceptedStatusTypes>({
@@ -36,7 +38,8 @@ export default function ProvideOrderRejectionModalForm() {
     setLoading(true);
     const response = await declineOrderRequest(
       accepted_status,
-      current_order_id
+      current_order_id,
+      csrf || ""
     );
     if (!response?.isOk) {
       toast.error("Error notification", {

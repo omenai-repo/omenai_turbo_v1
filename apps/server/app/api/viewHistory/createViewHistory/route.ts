@@ -3,9 +3,15 @@ import { RecentView } from "@omenai/shared-models/models/artworks/RecentlyViewed
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withAppRouterHighlight(async function POST(
+const config: CombinedConfig = {
+  ...lenientRateLimit,
+  allowedRoles: ["user"],
+};
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {

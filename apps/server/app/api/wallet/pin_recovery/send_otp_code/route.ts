@@ -6,55 +6,60 @@ import { NotFoundError } from "../../../../../custom/errors/dictionary/errorDict
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPinUpdateCode } from "@omenai/shared-emails/src/models/wallet/sendPinUpdateCode";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const { artist_id } = await request.json();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-      const account = await AccountArtist.findOne({
-        artist_id,
-      });
-      if (!account) throw new NotFoundError("Artist not found for given ID");
-      const token = generateDigit(4);
-      const isCodeActive = await VerificationCodes.findOne({
-        author: artist_id,
-      });
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["artist"],
+};
 
-      if (isCodeActive)
-        await VerificationCodes.deleteOne({ author: artist_id });
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+    const { artist_id } = await request.json();
 
-      const create_code = await VerificationCodes.create({
-        code: token,
-        author: account.artist_id,
-      });
+    const account = await AccountArtist.findOne({
+      artist_id,
+    });
+    if (!account) throw new NotFoundError("Artist not found for given ID");
+    const token = generateDigit(4);
+    const isCodeActive = await VerificationCodes.findOne({
+      author: artist_id,
+    });
 
-      if (!create_code)
-        throw new Error(
-          "Something went wrong with this request, Please contact support."
-        );
+    if (isCodeActive) await VerificationCodes.deleteOne({ author: artist_id });
 
-      await sendPinUpdateCode({
-        username: account.name,
-        token: token,
-        email: account.email,
-      });
+    const create_code = await VerificationCodes.create({
+      code: token,
+      author: account.artist_id,
+    });
 
-      return NextResponse.json(
-        { message: "Pin reset otp code sent to email address" },
-        { status: 200 }
+    if (!create_code)
+      throw new Error(
+        "Something went wrong with this request, Please contact support."
       );
-    } catch (error) {
-      console.log(error);
-      const error_response = handleErrorEdgeCases(error);
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    await sendPinUpdateCode({
+      username: account.name,
+      token: token,
+      email: account.email,
+    });
+
+    return NextResponse.json(
+      { message: "Pin reset otp code sent to email address" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

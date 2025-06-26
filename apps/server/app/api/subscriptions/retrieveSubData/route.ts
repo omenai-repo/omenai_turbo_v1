@@ -3,9 +3,16 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { CombinedConfig } from "@omenai/shared-types";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export const POST = withAppRouterHighlight(async function POST(
+const config: CombinedConfig = {
+  ...standardRateLimit,
+  allowedRoles: ["gallery"],
+};
+
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {

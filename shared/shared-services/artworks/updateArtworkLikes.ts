@@ -3,7 +3,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export const updateArtworkLikes = async (
   id: string,
   like_id: string,
-  value: boolean
+  value: boolean,
+  token: string
 ) => {
   try {
     const url = getApiUrl();
@@ -12,6 +13,8 @@ export const updateArtworkLikes = async (
       {
         method: "POST",
         body: JSON.stringify({ id, value, like_id }),
+        headers: { "x-csrf-token": token },
+        credentials: "include",
       }
     ).then(async (res) => {
       const response: { isOk: boolean } = {

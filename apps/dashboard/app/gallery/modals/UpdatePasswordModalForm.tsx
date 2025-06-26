@@ -3,11 +3,10 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
-import { updatePassword } from "@omenai/shared-services/requests/updateGalleryPassword";
+import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { GallerySchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
 
@@ -22,13 +21,14 @@ export default function UpdatePasswordModalForm() {
   });
 
   const [errorList, setErrorList] = useState<string[]>([]);
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   async function requestConfirmationCode() {
     setCodeLoading(true);
     const response = await requestPasswordConfirmationCode(
       "gallery",
-      user.gallery_id
+      user.gallery_id,
+      csrf || ""
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -72,7 +72,8 @@ export default function UpdatePasswordModalForm() {
       info.password,
       info.code,
       "gallery",
-      user.gallery_id
+      user.gallery_id,
+      csrf || ""
     );
 
     if (response?.isOk) {

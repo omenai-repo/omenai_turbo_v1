@@ -24,6 +24,20 @@ type ClientSessionData = {
   csrfToken: string;
 };
 
+export type SessionData = {
+  userId: string;
+  userData: SessionDataType;
+  userAgent?: string | null;
+};
+
+export type CombinedConfig = {
+  limit: number;
+  window: number;
+  keyPrefix?: string;
+  keyGenerator?: (request: Request) => string;
+  allowedRoles?: AccessRoleTypes[];
+};
+
 export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
 export type ArtistSchemaTypes = {
   name: string;

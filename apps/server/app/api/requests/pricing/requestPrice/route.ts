@@ -3,34 +3,41 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPriceEmail } from "@omenai/shared-emails/src/models/orders/requestPriceEmail";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(standardRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-      const { data, email, name } = await request.json();
+const config: CombinedConfig = {
+  ...standardRateLimit,
+  allowedRoles: ["user"],
+};
 
-      await sendPriceEmail({
-        name,
-        email,
-        artwork_data: data,
-      });
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
 
-      return NextResponse.json(
-        {
-          message: "Successful",
-        },
-        { status: 200 }
-      );
-    } catch (error) {
-      console.log(error);
-      const error_response = handleErrorEdgeCases(error);
+    const { data, email, name } = await request.json();
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    await sendPriceEmail({
+      name,
+      email,
+      artwork_data: data,
+    });
+
+    return NextResponse.json(
+      {
+        message: "Successful",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

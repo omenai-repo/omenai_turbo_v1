@@ -12,7 +12,7 @@ import {
   lenientRateLimit,
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -65,7 +65,7 @@ function chunkArray<T>(array: T[], size: number): T[][] {
   return result;
 }
 
-export const GET = withRateLimitAndHighlight(lenientRateLimit)(
+export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     try {
       await connectMongoDB();

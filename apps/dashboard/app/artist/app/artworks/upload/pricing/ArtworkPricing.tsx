@@ -25,7 +25,7 @@ function extractNumberString(str: string) {
   return cleaned;
 }
 export default function ArtworkPricing() {
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
   const { image, setImage, artworkUploadData, clearData } =
     artistArtworkUploadStore();
 
@@ -99,7 +99,7 @@ export default function ArtworkPricing() {
         }
       );
 
-      const uploadResponse = await uploadArtworkData(data);
+      const uploadResponse = await uploadArtworkData(data, csrf || "");
 
       if (!uploadResponse?.isOk) {
         await storage.deleteFile(

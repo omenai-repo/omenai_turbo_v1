@@ -4,49 +4,54 @@ import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendOrderDeclinedMail } from "@omenai/shared-emails/src/models/orders/orderDeclinedMail";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-      const { data, order_id } = await request.json();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["artist", "gallery"],
+};
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
 
-      const declineOrder = await CreateOrder.findOneAndUpdate(
-        { order_id },
-        {
-          $set: {
-            order_accepted: { status: data.status, reason: data.reason },
-            status: "completed",
-          },
+    const { data, order_id } = await request.json();
+
+    const declineOrder = await CreateOrder.findOneAndUpdate(
+      { order_id },
+      {
+        $set: {
+          order_accepted: { status: data.status, reason: data.reason },
+          status: "completed",
         },
-        { new: true }
-      );
+      },
+      { new: true }
+    );
 
-      if (!declineOrder) throw new ServerError("An error occured");
+    if (!declineOrder) throw new ServerError("An error occured");
 
-      await sendOrderDeclinedMail({
-        name: declineOrder.buyer_details.name,
-        email: declineOrder.buyer_details.email,
-        reason: declineOrder.order_accepted.reason,
-        artwork_data: declineOrder.artwork_data,
-      });
+    await sendOrderDeclinedMail({
+      name: declineOrder.buyer_details.name,
+      email: declineOrder.buyer_details.email,
+      reason: declineOrder.order_accepted.reason,
+      artwork_data: declineOrder.artwork_data,
+    });
 
-      return NextResponse.json(
-        {
-          message: "Successfully declined order",
-        },
-        { status: 200 }
-      );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
+    return NextResponse.json(
+      {
+        message: "Successfully declined order",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

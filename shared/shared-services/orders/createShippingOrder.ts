@@ -8,7 +8,8 @@ export const createShippingOrder = async (
   save_shipping_address: boolean,
   shipping_address: AddressTypes,
   origin_address: AddressTypes | null,
-  designation: "gallery" | "artist"
+  designation: "gallery" | "artist",
+  token: string
 ) => {
   const url = getApiUrl();
   try {
@@ -23,6 +24,8 @@ export const createShippingOrder = async (
         origin_address,
         designation,
       }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
     const result = await res.json();
     return { isOk: res.ok, message: result.message };

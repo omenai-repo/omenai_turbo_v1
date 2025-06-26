@@ -10,14 +10,15 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function NoSubscriptionTheme() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const url = auth_uri();
   const { data, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
       const response = await checkIsStripeOnboarded(
-        user.connected_account_id as string
+        user.connected_account_id as string,
+        csrf || ""
       );
 
       if (!response?.isOk) {

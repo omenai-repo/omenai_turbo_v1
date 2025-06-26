@@ -21,8 +21,10 @@ import {
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import WarningAlert from "./WarningAlert";
 import { Checkbox } from "@mantine/core";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function QuoteForm({ order_id }: { order_id: string }) {
+  const { csrf } = useAuth({ requiredRole: "artist" });
   const { data: order_data, isLoading } = useQuery({
     queryKey: ["get_single_order"],
     queryFn: async () => {
@@ -121,6 +123,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       numerical_dimensions,
       null,
       null,
+      csrf || "",
       specialInstructions
     );
     // Accept order request call

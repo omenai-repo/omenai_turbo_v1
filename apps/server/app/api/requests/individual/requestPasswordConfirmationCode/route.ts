@@ -9,57 +9,62 @@ import {
   ConflictError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { CombinedConfig } from "@omenai/shared-types";
 
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const { id } = await request.json();
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["user"],
+};
 
-      const account = await AccountIndividual.findOne({
-        user_id: id,
-      });
-      if (!account) throw new ServerError("Something went wrong");
-      const token = generateDigit(7);
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+    const { id } = await request.json();
 
-      const check_code_existence = await VerificationCodes.findOne({
-        author: account.user_id,
-      });
+    const account = await AccountIndividual.findOne({
+      user_id: id,
+    });
+    if (!account) throw new ServerError("Something went wrong");
+    const token = generateDigit(7);
 
-      if (check_code_existence)
-        throw new ConflictError("Token active, check your email or try later");
+    const check_code_existence = await VerificationCodes.findOne({
+      author: account.user_id,
+    });
 
-      const create_code = await VerificationCodes.create({
-        code: token,
-        author: account.user_id,
-      });
+    if (check_code_existence)
+      throw new ConflictError("Token active, check your email or try later");
 
-      if (!create_code)
-        throw new Error(
-          "Something went wrong with this request, Please contact support."
-        );
+    const create_code = await VerificationCodes.create({
+      code: token,
+      author: account.user_id,
+    });
 
-      await sendPasswordConfirmationCodeMail({
-        username: account.name,
-        token: token,
-        email: account.email,
-      });
-
-      return NextResponse.json(
-        { message: "Confirmation code sent to email address" },
-        { status: 200 }
+    if (!create_code)
+      throw new Error(
+        "Something went wrong with this request, Please contact support."
       );
-    } catch (error) {
-      console.log(error);
-      const error_response = handleErrorEdgeCases(error);
 
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    await sendPasswordConfirmationCodeMail({
+      username: account.name,
+      token: token,
+      email: account.email,
+    });
+
+    return NextResponse.json(
+      { message: "Confirmation code sent to email address" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status }
+    );
   }
-);
+});

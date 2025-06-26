@@ -9,7 +9,7 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitAndHighlight } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   createSession,
   getSessionFromCookie,
@@ -17,7 +17,7 @@ import {
 
 import { cookies } from "next/headers";
 // SERVER SIDE - Generate a sign-in token/ticket
-export const POST = withRateLimitAndHighlight(strictRateLimit)(
+export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request, response?: Response) {
     const cookieStore = await cookies();
     try {

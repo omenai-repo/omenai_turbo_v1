@@ -17,7 +17,8 @@ export async function createStripeCheckoutSession(
     tax_fees: number;
   },
   success_url: string,
-  cancel_url: string
+  cancel_url: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
@@ -31,6 +32,8 @@ export async function createStripeCheckoutSession(
         cancel_url,
         success_url,
       }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

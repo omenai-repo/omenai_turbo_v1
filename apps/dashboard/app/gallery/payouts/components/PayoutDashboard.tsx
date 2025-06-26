@@ -12,7 +12,7 @@ import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
 import PayoutSkeleton from "@omenai/shared-ui-components/components/skeletons/PayoutSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function PayoutDashboard() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["fetch_payout_dataset"],
@@ -20,16 +20,16 @@ export default function PayoutDashboard() {
       try {
         // Ensure user data exists
 
-        const acc = await getAccountId(user.email);
+        const acc = await getAccountId(user.email, csrf || "");
         if (!acc?.isOk) throw new Error("Failed to fetch account ID");
 
         const connectedAccountId = acc.data.connected_account_id;
 
         // Run independent async calls concurrently
         const [balance, table, response] = await Promise.all([
-          retrieveBalance(connectedAccountId),
+          retrieveBalance(connectedAccountId, csrf || ""),
           fetchTransactions(user.gallery_id as string),
-          checkIsStripeOnboarded(connectedAccountId),
+          checkIsStripeOnboarded(connectedAccountId, csrf || ""),
         ]);
 
         // Check if all results are okay

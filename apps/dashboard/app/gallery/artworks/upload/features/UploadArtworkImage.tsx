@@ -19,7 +19,7 @@ export default function UploadArtworkImage() {
   const { image, setImage, artworkUploadData, clearData } =
     galleryArtworkUploadStore();
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const queryClient = useQueryClient();
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
@@ -109,7 +109,7 @@ export default function UploadArtworkImage() {
         }
       );
 
-      const uploadResponse = await uploadArtworkData(data);
+      const uploadResponse = await uploadArtworkData(data, csrf || "");
 
       if (!uploadResponse?.isOk) {
         await storage.deleteFile(

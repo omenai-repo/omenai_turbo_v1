@@ -3,7 +3,7 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
-import { updatePassword } from "@omenai/shared-services/requests/updateGalleryPassword";
+import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
@@ -22,13 +22,14 @@ export default function UpdatePasswordModalForm() {
   });
 
   const [errorList, setErrorList] = useState<string[]>([]);
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
 
   async function requestConfirmationCode() {
     setCodeLoading(true);
     const response = await requestPasswordConfirmationCode(
       "artist",
-      user.artist_id
+      user.artist_id,
+      csrf || ""
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -72,7 +73,8 @@ export default function UpdatePasswordModalForm() {
       info.password,
       info.code,
       "artist",
-      user.artist_id
+      user.artist_id,
+      csrf || ""
     );
 
     if (response?.isOk) {

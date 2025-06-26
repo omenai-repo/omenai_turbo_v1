@@ -10,6 +10,7 @@ export const acceptOrderRequest = async (
   dimensions: ShipmentDimensions,
   exhibition_status: OrderArtworkExhibitionStatus | null,
   hold_status: HoldStatus | null,
+  token: string,
   specialInstructions?: string
 ) => {
   const url = getApiUrl();
@@ -23,6 +24,8 @@ export const acceptOrderRequest = async (
         hold_status,
         specialInstructions,
       }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
     const result = await res.json();
     return { isOk: res.ok, message: result.message };

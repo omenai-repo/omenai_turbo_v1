@@ -6,6 +6,7 @@
     "@omenai/shared-types": "*",
     "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
+    "@omenai/shared-lib": "*",
     "@types/react": "18.3.12"
   },
   "dependencies": {

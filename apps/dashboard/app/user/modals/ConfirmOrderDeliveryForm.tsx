@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { confirmOrderDelivery } from "@omenai/shared-services/orders/confirmOrderDelivery";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
@@ -11,6 +12,7 @@ import { toast } from "sonner";
 
 export default function ConfirmOrderDeliveryForm() {
   const [loading, setLoading] = useState<boolean>(false);
+  const { csrf } = useAuth({ requiredRole: "user" });
   const { confirmOrderDeliveryPopup, updateConfirmOrderDeliveryPopup } =
     actionStore();
   const router = useRouter();
@@ -21,7 +23,8 @@ export default function ConfirmOrderDeliveryForm() {
     setLoading(true);
     const response = await confirmOrderDelivery(
       true,
-      confirmOrderDeliveryPopup.order_id
+      confirmOrderDeliveryPopup.order_id,
+      csrf || ""
     );
     try {
       if (!response?.isOk)

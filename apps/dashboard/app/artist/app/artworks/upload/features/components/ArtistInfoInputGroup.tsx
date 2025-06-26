@@ -1,9 +1,10 @@
+"use client";
 import { uploadArtistDetailsInputMocks } from "../mocks";
 import ArtworkSelectInput from "./ArtworkSelectInput";
 import ArtworkTextInput from "./ArtworkTextInput";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
-export default async function ArtistInfoInputGroup() {
+export default function ArtistInfoInputGroup() {
   const { user } = useAuth({ requiredRole: "artist" });
   return (
     <div className="my-10">
