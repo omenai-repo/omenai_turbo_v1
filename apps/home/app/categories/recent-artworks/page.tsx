@@ -21,7 +21,7 @@ export default function RecentArtworks() {
             Fresh Off the Easel: Explore the Newest Masterpieces, Just for You
           </p>
         </div>
-        <Filter page_type="recent" />
+        {/* <Filter page_type="recent" /> */}
         <ArtworkListing
           sessionId={user && user.role === "user" ? user.id : undefined}
         />

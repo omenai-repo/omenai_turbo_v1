@@ -73,7 +73,7 @@ export default function Collections({
                 Art collections
               </p>
               <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
-                Art collections.
+                Curated Visions: Explore Omenai's Art Collections
               </p>
             </div>
 

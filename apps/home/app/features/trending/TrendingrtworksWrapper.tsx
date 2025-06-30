@@ -35,7 +35,7 @@ export default function TrendingArtworkWrapper({
               Trending artworks
             </p>
             <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
-              Trending artworks.
+              Hot on the Canvas: Trending Artworks You Need to See
             </p>
           </div>
 

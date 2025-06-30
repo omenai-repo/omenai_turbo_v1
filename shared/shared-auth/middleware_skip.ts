@@ -65,10 +65,11 @@ export function shouldSkipMiddleware(
     pathname.startsWith("/images/") ||
     pathname.startsWith("/img/") ||
     pathname.startsWith("/media/") ||
-    pathname.startsWith("/catalog/") ||
+    pathname.startsWith("/catalog") ||
     pathname.startsWith("/artwork/") ||
     pathname.startsWith("/search/") ||
     pathname.startsWith("/categories/") ||
+    pathname.startsWith("/artist") ||
     pathname.startsWith("/collections/")
   ) {
     return true;

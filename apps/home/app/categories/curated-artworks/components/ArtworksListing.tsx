@@ -101,19 +101,8 @@ export function ArtworkListing({
 
       <Pagination
         total={pageCount}
-        filterOptions={filterOptions}
-        fn={(
-          page: number,
-          user_id: string,
-          filterOptions: any,
-          medium?: string
-        ) =>
-          fetchCuratedArtworks(
-            page,
-            [user_id], // convert user_id to string[] as expected by fetchCuratedArtworks
-            filterOptions
-          )
-        }
+        fn={fetchCuratedArtworks}
+        fnArgs={[user.preferences, filterOptions]}
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}

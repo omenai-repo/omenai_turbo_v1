@@ -25,6 +25,10 @@ export async function fetchWalletTransactions(
       pageCount: result.pageCount,
     };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

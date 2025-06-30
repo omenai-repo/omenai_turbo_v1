@@ -11,9 +11,12 @@ export default function ArtCollectionCard({
   url,
   isCatalog,
 }: ArtCollectionCardTypes) {
+  const safeSlug = encodeURIComponent(title)
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29");
   return (
     <div className="py-4 min-w-[300px] rounded-[10px] relative">
-      <Link href={"/collections/" + title}>
+      <Link href={`/collections/${safeSlug}`}>
         <div className="flex flex-col ">
           <Image
             width={300}

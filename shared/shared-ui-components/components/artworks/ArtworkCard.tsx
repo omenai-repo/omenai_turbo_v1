@@ -83,7 +83,7 @@ export default function ArtworkCard({
                 </button>
               </Link>
             ) : (
-              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] text-fluid-xs ring ring-[#e0e0e0]/50">
+              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] font-medium text-fluid-xs ring ring-[#e0e0e0]/50">
                 {medium}
               </div>
             )}
@@ -110,15 +110,15 @@ export default function ArtworkCard({
           <div className="flex items-center justify-center">
             <div className="p-3 flex flex-col gap-y-1 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
               {/* Title */}
-              <div className="text-gray-400 text-fluid-xs xs:text-fluid-base font-light">
+              <div className="text-gray-400 text-fluid-xs xs:text-fluid-base font-medium">
                 {name}
               </div>
-              <div className="text-gray-400 text-fluid-xs font-light">
+              <div className="text-gray-400 text-fluid-xs font-normal">
                 {artist.substring(0, 20)}
                 {artist.length > 20 && "..."}
               </div>
               {isDashboard ? (
-                <div className="text-white text-fluid-xs xs:text-fluid-xs font-bold">
+                <div className="text-white text-fluid-xs xs:text-fluid-xs font-medium">
                   {pricing?.price && pricing.shouldShowPrice === "Yes"
                     ? !availability
                       ? "Sold"
@@ -131,7 +131,7 @@ export default function ArtworkCard({
                 !trending && (
                   <div className="flex justify-between mt-1.5">
                     {/* Price */}
-                    <div className="text-white text-fluid-xs xs:text-fluid-xs font-bold">
+                    <div className="text-white text-fluid-xs xs:text-fluid-xs font-medium">
                       {pricing?.price && pricing.shouldShowPrice === "Yes"
                         ? !availability
                           ? "Sold"

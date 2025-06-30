@@ -19,7 +19,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       const skip = (Number(page) - 1) * 20;
 
-      const artist_data = await AccountArtist.find(
+      const artist_data = await AccountArtist.findOne(
         { artist_id },
         "logo name bio"
       );
@@ -30,13 +30,12 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           { status: 404 }
         );
       }
-      const artworksForArtist = await Artworkuploads.find(
-        { author_id: artist_id },
-        "art_id title url artist"
-      )
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(20)
+      const artworksForArtist = await Artworkuploads.find({
+        author_id: artist_id,
+      })
+        // .sort({ createdAt: -1 })
+        // .skip(skip)
+        // .limit(20)
         .exec();
 
       return NextResponse.json({

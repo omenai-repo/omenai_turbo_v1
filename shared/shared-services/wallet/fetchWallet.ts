@@ -11,6 +11,10 @@ export async function fetchWallet(id: string) {
 
     return { isOk: res.ok, message: result.message, data: result.wallet };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

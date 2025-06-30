@@ -14,6 +14,10 @@ export async function getBanks(countryCode: string) {
 
     return { isOk: res.ok, message: result.message, data: result.banks };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

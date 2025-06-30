@@ -34,7 +34,6 @@ export function ArtworksListing({
   } = collectionsStore();
   const { filterOptions } = collectionsFilterStore();
   const { width } = useWindowSize();
-  console.log(medium);
 
   const { data: artworksArray, isLoading: loading } = useQuery({
     queryKey: ["get_artworks_by_collection"],
@@ -53,11 +52,9 @@ export function ArtworksListing({
       } else throw new Error("Failed to fetch artworks");
     },
     refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0,
   });
-
-  if (loading || isLoading) {
-    return <ArtworksListingSkeletonLoader />;
-  }
 
   if (
     !artworksArray ||
@@ -70,7 +67,9 @@ export function ArtworksListing({
       </div>
     );
   }
-
+  if (loading || isLoading) {
+    return <ArtworksListingSkeletonLoader />;
+  }
   const arts = catalogChunk(
     artworks,
     width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
@@ -109,21 +108,12 @@ export function ArtworksListing({
 
       <Pagination
         total={pageCount}
-        filterOptions={filterOptions}
-        fn={async (
-          page: number,
-          user_id: string,
-          filterOptionsParam: typeof filterOptions,
-          mediumParam?: string
-        ) => {
-          // Ignore user_id, as fetchArtworksByCriteria does not use it
-          return fetchArtworksByCriteria(page, filterOptionsParam, mediumParam);
-        }}
+        fn={fetchArtworksByCriteria}
+        fnArgs={[filterOptions, medium]}
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}
         currentPage={currentPage}
-        medium={medium}
       />
     </div>
   );

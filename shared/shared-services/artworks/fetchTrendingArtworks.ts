@@ -19,6 +19,10 @@ export async function fetchTrendingArtworks(page: number, filters?: any) {
       total: result.total,
     };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

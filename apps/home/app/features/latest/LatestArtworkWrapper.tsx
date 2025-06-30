@@ -33,7 +33,7 @@ export default function LatestArtworkWrapper({
               Latest Artworks
             </p>
             <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
-              Latest Artworks.
+              Newly Arrived: Explore Our Latest Artworks
             </p>
           </div>
 

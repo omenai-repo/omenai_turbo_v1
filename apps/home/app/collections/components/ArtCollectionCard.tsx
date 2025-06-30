@@ -8,9 +8,12 @@ export default function ArtCollectionCard({
   title: string;
   url: string;
 }) {
+  const safeSlug = encodeURIComponent(title)
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29");
   return (
     <div className="py-4 min-w-[300px]">
-      <Link href={"/collections/" + title}>
+      <Link href={`/collections/${safeSlug}`}>
         <div className="flex flex-col ">
           <Image
             width={300}
@@ -21,9 +24,6 @@ export default function ArtCollectionCard({
           />
           <div className="bg-[#FAFAFA] flex flex-col p-4">
             <p className="text-fluid-xs font-light">{title}</p>
-            {/* <span className="w-fit text-fluid-xs font-light text-[#858585] border-none">
-                    Omenai&apos;s best picks
-                    </span> */}
           </div>
         </div>
       </Link>

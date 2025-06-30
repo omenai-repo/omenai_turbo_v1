@@ -19,6 +19,10 @@ export async function initiateDirectCharge(data: FLWDirectChargeDataTypes) {
       data: result.data,
     };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

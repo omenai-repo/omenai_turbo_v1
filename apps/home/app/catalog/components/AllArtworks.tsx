@@ -99,13 +99,8 @@ export default function AllArtworks() {
 
       <Pagination
         total={pageCount}
-        filterOptions={filterOptions}
-        fn={(
-          page: number,
-          user_id: string,
-          filterOptionsParam: typeof filterOptions,
-          medium?: string
-        ) => fetchPaginatedArtworks(page, filterOptionsParam)}
+        fn={fetchPaginatedArtworks}
+        fnArgs={[filterOptions]}
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}

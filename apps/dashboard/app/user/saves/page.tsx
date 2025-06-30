@@ -13,6 +13,7 @@ import Pagination from "@omenai/shared-ui-components/components/pagination/Pagin
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { FilterOptions } from "@omenai/shared-types";
 
 export default function Saves() {
   const {
@@ -65,6 +66,13 @@ export default function Saves() {
     width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
   );
 
+  const filterOptions: FilterOptions = {
+    price: [],
+    year: [],
+    medium: [],
+    rarity: [],
+  };
+
   return (
     <div className="pb-5">
       <>
@@ -102,8 +110,8 @@ export default function Saves() {
 
       <Pagination
         total={pageCount}
-        filterOptions={{ price: [], year: [], medium: [], rarity: [] }}
         fn={fetchUserSaveArtworks}
+        fnArgs={[user.id, filterOptions]}
         setArtworks={setArtworks}
         setCurrentPage={set_current_page}
         setIsLoading={setIsLoading}

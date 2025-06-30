@@ -94,8 +94,8 @@ export function ArtworkListing({
 
       <Pagination
         total={pageCount}
-        filterOptions={filterOptions}
         fn={fetchTrendingArtworks}
+        fnArgs={[filterOptions]}
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}

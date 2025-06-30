@@ -15,7 +15,8 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import { SessionProvider } from "@omenai/package-provider";
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 export const viewport: Viewport = {

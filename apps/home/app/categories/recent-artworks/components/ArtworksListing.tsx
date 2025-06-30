@@ -94,16 +94,8 @@ export function ArtworkListing({
 
       <Pagination
         total={pageCount}
-        filterOptions={filterOptions}
-        fn={async (
-          page: number,
-          user_id: string,
-          filterOptions: any,
-          medium?: string
-        ) => {
-          // Call your original fetchPaginatedArtworks with the expected arguments
-          return fetchPaginatedArtworks(page, filterOptions);
-        }}
+        fn={fetchPaginatedArtworks}
+        fnArgs={[filterOptions]}
         setArtworks={setArtworks}
         setCurrentPage={setCurrentPage}
         setIsLoading={setIsLoading}

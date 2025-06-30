@@ -19,7 +19,7 @@ export default function CuratedArtworks() {
           <p className=" font-medium">Discover Captivating Pieces </p>
           <p className=" font-medium">that truly resonates with You</p>
         </div>
-        <Filter page_type="curated" />
+        {/* <Filter page_type="curated" /> */}
         <ArtworkListing
           sessionId={user && user.role === "user" ? user.id : undefined}
         />

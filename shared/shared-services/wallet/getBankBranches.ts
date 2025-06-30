@@ -18,6 +18,10 @@ export async function getBankBranches(bankCode: string) {
       data: result.bank_branches,
     };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

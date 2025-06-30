@@ -17,6 +17,10 @@ export async function retrieveSubscriptionData(gallery_id: string) {
       plan: result.plan,
     };
   } catch (error) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

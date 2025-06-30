@@ -12,6 +12,10 @@ export async function fetchViewHistory(user_id: string) {
     const result = await res.json();
     return { isOk: res.ok, data: result.data, message: result.message };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

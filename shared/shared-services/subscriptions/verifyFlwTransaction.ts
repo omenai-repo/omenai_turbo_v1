@@ -16,6 +16,10 @@ export async function verifyFlwTransaction(transaction_id: string) {
       data: result.data,
     };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }

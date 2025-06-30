@@ -20,7 +20,7 @@ export default function TrendingArtworks() {
           </p>
           {/* <p className=" font-medium"></p> */}
         </div>
-        <Filter page_type="trending" />
+        {/* <Filter page_type="trending" /> */}
 
         <ArtworkListing
           sessionId={user && user.role === "user" ? user.id : undefined}

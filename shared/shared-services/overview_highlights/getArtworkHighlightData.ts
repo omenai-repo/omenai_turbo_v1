@@ -13,6 +13,10 @@ export async function getArtworkHighlightData(session_id: string) {
     const result = await response.json();
     return { isOk: response.ok, data: result.data, count: result.count };
   } catch (error: any) {
-    console.log(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
   }
 }
