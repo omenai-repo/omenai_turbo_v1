@@ -70,6 +70,7 @@ export function shouldSkipMiddleware(
     pathname.startsWith("/search/") ||
     pathname.startsWith("/categories/") ||
     pathname.startsWith("/artist") ||
+    pathname.startsWith("/auth/") ||
     pathname.startsWith("/collections/")
   ) {
     return true;

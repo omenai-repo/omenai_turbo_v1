@@ -7,9 +7,16 @@ import { ConflictError } from "../../../../../custom/errors/dictionary/errorDict
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import {
+  getSessionFromCookie,
+  createSession,
+} from "@omenai/shared-lib/auth/session";
+import { cookies } from "next/headers";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const cookieStore = await cookies();
+
       const data = await request.json();
 
       const { email, password } = data;
@@ -29,9 +36,22 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         name: user.name,
         email: user.email,
         id: user.admin_id,
-        role: user.role,
+        role: user.role as "admin",
         admin_id: user.admin_id,
       };
+      const userAgent: string | null =
+        request.headers.get("User-Agent") || null;
+      const session = await getSessionFromCookie(cookieStore);
+
+      const sessionId = await createSession({
+        userId: user.admin_id,
+        userData: session_payload,
+        userAgent,
+      });
+
+      session.sessionId = sessionId;
+
+      await session.save();
 
       return res.json(
         {

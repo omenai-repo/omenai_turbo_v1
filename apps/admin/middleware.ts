@@ -1,5 +1,3 @@
-import { NextResponse } from "next/server";
+import middleware from "@omenai/shared-auth/middleware";
 
-export async function middleware(request: Request) {
-  return NextResponse.next();
-}
+export default middleware;

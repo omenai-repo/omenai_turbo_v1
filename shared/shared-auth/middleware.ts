@@ -5,6 +5,7 @@ import {
   auth_uri,
   getApiUrl,
   dashboard_url,
+  admin_url,
 } from "@omenai/url-config/src/config";
 import { shouldSkipMiddleware } from "./middleware_skip";
 import { getIronSession } from "iron-session";
@@ -13,19 +14,10 @@ import { destroySession } from "@omenai/shared-lib/auth/session";
 
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
-const artistDashboardRegex = /\/artist\/.*/;
+const artistDashboardRegex = /\/artist\/app\/.*/;
 const adminDashboardRegex = /\/admin\/.*/;
 const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
-
-// Helper for redirecting unauthenticated users to the Clerk sign-in page of THIS UI app
-function redirectToClerkSignIn(req: NextRequest): NextResponse {
-  // Use Clerk's default sign-in URL or a custom one defined in your Clerk environment variables
-  // (e.g., NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in)
-  const signInUrl = new URL("/login", auth_uri());
-  signInUrl.searchParams.set("redirect_url", req.url); // Preserve intended destination
-  return NextResponse.redirect(signInUrl);
-}
 
 export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname; // Get the current path
@@ -146,7 +138,6 @@ export default async function middleware(req: NextRequest) {
   if (
     role === "admin" &&
     (isUserDashboard ||
-      isAdminDashboard ||
       isGalleryDashboard ||
       isArtistDashboard ||
       isPurchasePage ||
@@ -155,7 +146,9 @@ export default async function middleware(req: NextRequest) {
     console.log(
       `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to login`
     );
-    return NextResponse.redirect(new URL("/login", auth_uri())); // Redirect to their actual admin dashboard
+    return NextResponse.redirect(
+      new URL("/admin/requests/gallery", admin_url())
+    ); // Redirect to their actual admin dashboard
   }
 
   // If no specific rule blocks access, allow the req to proceed
