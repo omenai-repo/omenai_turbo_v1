@@ -35,7 +35,9 @@ export default function AdminDashboardRootLayout({
         />
         <NextTopLoader color="#6246EA" height={6} />
 
-        <QueryProvider>{children}</QueryProvider>
+        <MantineProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </MantineProvider>
       </body>
     </html>
   );

@@ -6,7 +6,7 @@ import { SessionDataType } from "@omenai/shared-types";
 import { v4 as uuidv4 } from "uuid";
 
 const id = uuidv4(); // e.g. "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-export const SESSION_TTL = 60 * 5; // 1 hour in seconds
+export const SESSION_TTL = 60 * 60; // 1 hour in seconds
 
 interface SessionData {
   userId: string;

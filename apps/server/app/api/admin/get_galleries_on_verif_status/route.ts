@@ -6,32 +6,27 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  lenientRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
-export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
-  async function POST(request: Request) {
-    const urlParam = new URL(request.url);
-    const searchParam = urlParam.searchParams;
+export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
+  async function GET(request: Request) {
     try {
-      const status = searchParam.get("status");
-
-      if (!status) throw new BadRequestError("Invalid parameter - status");
-
-      const status_bool: boolean = status === "true" ? true : false;
-
       await connectMongoDB();
 
-      const galleries = await AccountGallery.find(
-        { gallery_verified: status_bool, verified: true },
+      const gallery_data = await AccountGallery.find(
+        {},
         "name address admin logo description email gallery_verified gallery_id status"
       );
 
-      if (!galleries)
+      if (!gallery_data)
         throw new ServerError("Something went wrong, contact tech team");
 
       return NextResponse.json(
-        { message: "Data retrieved", data: galleries },
+        { message: "Data retrieved", data: gallery_data },
         { status: 200 }
       );
     } catch (error) {

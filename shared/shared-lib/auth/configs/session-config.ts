@@ -7,6 +7,6 @@ export const sessionOptions = {
     secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
     httpOnly: true, // Prevents client-side JS from accessing the cookie
     sameSite: "lax" as "lax", // CSRF protection
-    maxAge: 60 * 5 * 1000,
+    maxAge: 60 * 60 * 1000,
   },
 };

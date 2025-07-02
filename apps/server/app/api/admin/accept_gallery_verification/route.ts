@@ -16,7 +16,7 @@ const config: CombinedConfig = {
   allowedRoles: ["admin"],
 };
 
-export const GET = withRateLimitHighlightAndCsrf(config)(async function POST(
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
