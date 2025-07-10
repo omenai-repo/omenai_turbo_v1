@@ -1,6 +1,9 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function validateCharge(data: { otp: string; flw_ref: string }) {
+export async function validateCharge(
+  data: { otp: string; flw_ref: string },
+  token: string
+) {
   try {
     const url = getApiUrl();
     const res = await fetch(
@@ -8,6 +11,8 @@ export async function validateCharge(data: { otp: string; flw_ref: string }) {
       {
         method: "POST",
         body: JSON.stringify({ ...data }),
+        headers: { "x-csrf-token": token },
+        credentials: "include",
       }
     );
 

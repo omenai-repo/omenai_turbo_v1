@@ -1,13 +1,8 @@
-"use client";
-
 import PageTitle from "../../components/PageTitle";
 import CardChangeCheckoutItem from "../plans/checkout/components/CardChangeCheckoutItem";
 import { CheckoutStepper } from "../plans/checkout/components/CheckoutStepper";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SubscriptionCheckout() {
-  const { user } = useAuth({ requiredRole: "gallery" });
-
   return (
     <div>
       <PageTitle title="Change card" />

@@ -10,9 +10,6 @@ export async function verifyEmail(
   const result = await fetch(`${url}/api/requests/${route}/verifyMail`, {
     method: "POST",
     body: JSON.stringify({ params: payload.params, token: payload.token }),
-    headers: {
-      "Content-type": "application/json",
-    },
   }).then(async (res) => {
     const response = {
       isOk: res.ok,

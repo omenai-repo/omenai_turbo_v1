@@ -30,7 +30,7 @@ export default function SubscriptionBase() {
         // Start retrieving subscription data while fetching Stripe onboarding status
         const [response, sub_check] = await Promise.all([
           checkIsStripeOnboarded(acc.data.connected_account_id, csrf || ""), // Dependent on account ID
-          retrieveSubscriptionData(user.gallery_id as string), // Independent
+          retrieveSubscriptionData(user.gallery_id as string, csrf || ""), // Independent
         ]);
 
         if (!response?.isOk || !sub_check?.isOk) {

@@ -37,6 +37,9 @@ type AdminModalsStore = {
   showDeleteEditorialModal: boolean;
   showDeleteEditorialId: string;
   setShowDeleteEditorialModal: (val: boolean, id: string) => void;
+
+  showEditPromotionalModal: boolean;
+  updateShowEditPromotionalModal: () => void;
 };
 
 type RejectConfirmationPopupOptions = {
@@ -115,5 +118,10 @@ export const adminModals = create<AdminModalsStore>((set, get) => ({
   showDeleteEditorialId: "",
   setShowDeleteEditorialModal: (value: boolean, id: string) => {
     set({ showDeleteEditorialModal: value, showDeleteEditorialId: id });
+  },
+  showEditPromotionalModal: false,
+  updateShowEditPromotionalModal: () => {
+    const state = get().showEditPromotionalModal;
+    set({ showEditPromotionalModal: !state });
   },
 }));

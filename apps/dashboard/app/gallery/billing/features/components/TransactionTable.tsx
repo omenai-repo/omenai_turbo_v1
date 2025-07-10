@@ -11,12 +11,13 @@ import Image from "next/image";
 import { useContext } from "react";
 
 export default function TransactionTable() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const { data: transactions, isLoading } = useQuery({
     queryKey: ["fetch_sub_trans"],
     queryFn: async () => {
       const trans = await fetchSubscriptionTransactions(
-        user.gallery_id as string
+        user.gallery_id as string,
+        csrf || ""
       );
       if (trans?.isOk) return trans.data;
       else throw new Error("Something went wrong");

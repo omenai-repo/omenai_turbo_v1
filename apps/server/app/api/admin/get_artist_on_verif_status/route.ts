@@ -10,20 +10,12 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
 export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
-  async function GET(request: Request) {
-    const urlParam = new URL(request.url);
-    const searchParam = urlParam.searchParams;
+  async function GET() {
     try {
-      const status = searchParam.get("status");
-
-      if (!status) throw new BadRequestError("Invalid parameter - status");
-
-      const status_bool: boolean = status === "true" ? true : false;
-
       await connectMongoDB();
       const artists = await AccountArtist.find(
-        { artist_verified: status_bool, verified: true },
-        "name address logo email artist_verified artist_id status"
+        { isOnboardingCompleted: true },
+        "name logo email artist_verified artist_id"
       );
 
       if (!artists)

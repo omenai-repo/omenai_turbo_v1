@@ -5,7 +5,8 @@ export async function createViewHistory(
   artist: string,
   art_id: string,
   user_id: string,
-  url: string
+  url: string,
+  token: string
 ) {
   try {
     const baseUrl = getApiUrl();
@@ -13,6 +14,8 @@ export async function createViewHistory(
       method: "POST",
 
       body: JSON.stringify({ artwork, artist, art_id, user_id, url }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     return { isOk: res.ok };

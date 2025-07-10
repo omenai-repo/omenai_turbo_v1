@@ -12,7 +12,6 @@ import { ArtistCategorization } from "@omenai/shared-models/models/artist/Artist
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { validateCsrf } from "@omenai/shared-lib/auth/validateCsrf";
 import { CombinedConfig } from "@omenai/shared-types";
 
 const config: CombinedConfig = {
@@ -26,15 +25,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   const client = await connectMongoDB();
   const session = await client.startSession();
   try {
-    const { valid, message, sessionData } = await validateCsrf({
-      req: request,
-      allowedRoles: ["artist"],
-    });
-
-    if (!valid) {
-      return NextResponse.json({ error: message }, { status: 403 });
-    }
-    const { artist_id } = await request.json();
+    const { artist_id, recommendation } = await request.json();
 
     if (!artist_id)
       throw new BadRequestError("Invalid Parameters - Artist ID is required");
@@ -56,10 +47,28 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         : get_artist_categorization.history;
 
     const categorizationRequestUpdate = {
-      history: [...request_history, get_artist_categorization.request],
+      history: [
+        ...request_history,
+        {
+          ...get_artist_categorization.request,
+          categorization: {
+            ...get_artist_categorization.request.categorization,
+            artist_categorization:
+              recommendation ||
+              get_artist_categorization.request.categorization
+                .artist_categorization,
+          },
+        },
+      ],
       current: {
         date: new Date(),
-        categorization: get_artist_categorization.request.categorization,
+        categorization: {
+          ...get_artist_categorization.request.categorization,
+          artist_categorization:
+            recommendation ||
+            get_artist_categorization.request.categorization
+              .artist_categorization,
+        },
       },
       request: null,
     };

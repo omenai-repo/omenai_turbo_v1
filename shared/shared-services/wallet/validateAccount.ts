@@ -2,13 +2,16 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function validateBankAccount(
   bankCode: string,
-  accountNumber: string
+  accountNumber: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/wallet/accounts/validate_account`, {
       method: "POST",
       body: JSON.stringify({ bankCode, accountNumber }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

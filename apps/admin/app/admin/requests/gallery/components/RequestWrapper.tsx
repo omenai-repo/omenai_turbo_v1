@@ -42,18 +42,18 @@ export function GalleryRequestWrapper() {
     (gallery: GalleryType) => gallery.gallery_verified
   );
   return (
-    <Tabs defaultValue="gallery">
+    <Tabs defaultValue="Pending">
       <Tabs.List>
-        <Tabs.Tab value="gallery">Pending Requests</Tabs.Tab>
-        <Tabs.Tab value="messages">Approved Galleries</Tabs.Tab>
+        <Tabs.Tab value="Pending">Pending Requests</Tabs.Tab>
+        <Tabs.Tab value="Approved">Approved Galleries</Tabs.Tab>
         {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
       </Tabs.List>
 
-      <Tabs.Panel value="gallery">
+      <Tabs.Panel value="Pending">
         <PendingGalleryRequests galleries={pending} />
       </Tabs.Panel>
 
-      <Tabs.Panel value="messages">
+      <Tabs.Panel value="Approved">
         <ApprovedGalleryRequests galleries={approved} />
       </Tabs.Panel>
 

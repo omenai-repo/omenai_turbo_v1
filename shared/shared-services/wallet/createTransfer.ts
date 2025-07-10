@@ -5,10 +5,12 @@ export async function createTransfer({
   amount,
   wallet_id,
   wallet_pin,
+  token,
 }: {
   amount: number;
   wallet_id: string;
   wallet_pin: string;
+  token: string;
 }) {
   try {
     const url = getApiUrl();
@@ -19,6 +21,8 @@ export async function createTransfer({
         wallet_id,
         wallet_pin,
       }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

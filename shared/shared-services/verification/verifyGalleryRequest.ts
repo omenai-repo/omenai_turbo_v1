@@ -1,11 +1,13 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function verifyGalleryRequest(name: string) {
+export async function verifyGalleryRequest(name: string, token: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/verification/verifyGallery`, {
       method: "POST",
       body: JSON.stringify({ name }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

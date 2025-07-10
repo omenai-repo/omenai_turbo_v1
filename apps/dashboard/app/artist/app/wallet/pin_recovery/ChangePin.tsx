@@ -14,7 +14,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function WalletPinResetForm() {
   const queryClient = useQueryClient();
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +62,11 @@ export default function WalletPinResetForm() {
 
     try {
       setLoading(true);
-      const response = await setWalletPin(user.wallet_id as string, pin);
+      const response = await setWalletPin(
+        user.wallet_id as string,
+        pin,
+        csrf || ""
+      );
 
       if (!response?.isOk) {
         handleError(

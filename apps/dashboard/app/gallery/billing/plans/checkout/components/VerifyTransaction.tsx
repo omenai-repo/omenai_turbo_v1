@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { verifyFlwTransaction } from "@omenai/shared-services/subscriptions/verifyFlwTransaction";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -13,10 +14,11 @@ export default function VerifyTransaction({
   transaction_id: string;
 }) {
   const queryClient = useQueryClient();
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const { data: verified, isLoading } = useQuery({
     queryKey: ["verify_subscription_payment"],
     queryFn: async () => {
-      const response = await verifyFlwTransaction(transaction_id);
+      const response = await verifyFlwTransaction(transaction_id, csrf || "");
       if (!response?.isOk) {
         return {
           message: `${response?.message}. Please contact support`,

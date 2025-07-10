@@ -13,6 +13,7 @@ import VerificationBlockerModal from "./modals/VerificationModalBlocker";
 
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function ArtistDashboardLayout({
   children,
@@ -22,10 +23,11 @@ export default function ArtistDashboardLayout({
   const { user } = useAuth({
     requiredRole: "artist",
   });
-  // if (!hasRequiredRole) router.replace(`${auth_uri()}/login`);
+  const router = useRouter();
 
   const { width } = useWindowSize();
 
+  if (!user.isOnboardingCompleted) router.replace("/artist/onboarding");
   return (
     <>
       {width <= 1280 ? (

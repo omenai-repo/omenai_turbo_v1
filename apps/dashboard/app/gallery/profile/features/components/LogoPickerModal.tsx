@@ -18,7 +18,7 @@ export default function LogoPickerModal() {
   const { modal, updateModal } = galleryLogoUpdate();
   const logoPickerRef = useRef<HTMLInputElement>(null);
 
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const router = useRouter();
 
@@ -89,11 +89,14 @@ export default function LogoPickerModal() {
             fileId: logoUpdated.$id,
           };
 
-          const { isOk, body } = await updateLogo({
-            id: user.gallery_id as string,
-            url: file.fileId,
-            route: "gallery",
-          });
+          const { isOk, body } = await updateLogo(
+            {
+              id: user.gallery_id as string,
+              url: file.fileId,
+              route: "gallery",
+            },
+            csrf || ""
+          );
 
           if (!isOk)
             toast.error("Error notification", {

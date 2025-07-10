@@ -1,3 +1,5 @@
+"use client";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { validateChargeAuthorization } from "@omenai/shared-services/subscriptions/subscribeUser/validateChargeAuthorization";
 import { stepperStore } from "@omenai/shared-state-store/src/stepper/stepperStore";
 import {
@@ -27,6 +29,7 @@ export default function AuthPinInput({
     SetStateAction<"" | "redirect" | "pin" | "avs_noauth" | "otp">
   >;
 }) {
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { flw_charge_payload, update_flw_charge_payload_data, set_flw_ref } =
@@ -80,7 +83,7 @@ export default function AuthPinInput({
 
     setIsLoading(true);
 
-    const response = await validateChargeAuthorization(data);
+    const response = await validateChargeAuthorization(data, csrf || "");
     if (response?.isOk) {
       if (response.data.status === "error") {
         toast.error("Error notification", {

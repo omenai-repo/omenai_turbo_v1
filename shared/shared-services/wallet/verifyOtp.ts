@@ -1,11 +1,13 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function verifyOtp(artist_id: string, otp: string) {
+export async function verifyOtp(artist_id: string, otp: string, token: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/wallet/pin_recovery/verify_otp_code`, {
       method: "POST",
       body: JSON.stringify({ artist_id, otp }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

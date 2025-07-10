@@ -1,3 +1,4 @@
+"use client";
 import { stepperStore } from "@omenai/shared-state-store/src/stepper/stepperStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { validateCharge } from "@omenai/shared-services/subscriptions/subscribeUser/validateCharge";
@@ -10,6 +11,7 @@ import {
 } from "react";
 import { IoIosLock } from "react-icons/io";
 import { toast } from "sonner";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Oput({
   handleClick,
@@ -21,7 +23,7 @@ export default function Oput({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
   const { flw_ref } = stepperStore();
-
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const handleOtpChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setOtp(value);
@@ -44,7 +46,7 @@ export default function Oput({
 
     const data = { otp, flw_ref };
 
-    const response = await validateCharge(data);
+    const response = await validateCharge(data, csrf || "");
     if (response?.isOk) {
       if (response.data.status === "error") {
         toast.error("Error notification", {

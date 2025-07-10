@@ -8,7 +8,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function updateProfile(
   route: RouteIdentifier,
   payload: GalleryProfileUpdateData | IndividualProfileUpdateData,
-  id: string
+  id: string,
+  token: string
 ) {
   const url = getApiUrl();
 
@@ -17,7 +18,9 @@ export async function updateProfile(
     body: JSON.stringify({ ...payload, id }),
     headers: {
       "Content-type": "application/json",
+      "x-csrf-token": token,
     },
+    credentials: "include",
   }).then(async (res) => {
     const data: { message: string } = await res.json();
     const response = {

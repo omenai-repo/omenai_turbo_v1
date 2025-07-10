@@ -1,6 +1,5 @@
 "use client";
 
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 
 export default function SettingsActions() {

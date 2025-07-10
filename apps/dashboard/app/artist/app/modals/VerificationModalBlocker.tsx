@@ -1,23 +1,20 @@
 "use client";
 import { Modal } from "@mantine/core";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function VerificationBlockerModal({ open }: { open: boolean }) {
   const router = useRouter();
+  const { signOut } = useAuth({ requiredRole: "artist" });
 
   async function handleSignOut() {
     toast.info("Signing out...", {
       description: "You will be redirected to the login page",
-      style: {
-        background: "blue",
-        color: "white",
-      },
-      className: "class",
     });
 
-    router.replace(`${auth_uri}/login`);
+    await signOut();
   }
   return (
     <>

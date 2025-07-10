@@ -1,11 +1,17 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function setWalletPin(wallet_id: string, pin: string) {
+export async function setWalletPin(
+  wallet_id: string,
+  pin: string,
+  token: string
+) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/wallet/update_wallet_pin`, {
       method: "POST",
       body: JSON.stringify({ wallet_id, pin }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

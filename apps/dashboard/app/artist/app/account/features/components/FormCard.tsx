@@ -10,7 +10,7 @@ import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export const FormCard = () => {
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
 
   const router = useRouter();
 
@@ -24,7 +24,8 @@ export const FormCard = () => {
     const { isOk, body } = await updateProfile(
       "artist",
       updateData,
-      user?.artist_id as string
+      user?.artist_id as string,
+      csrf || ""
     );
     if (!isOk)
       toast.error("Error notification", {

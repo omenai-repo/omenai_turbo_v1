@@ -25,7 +25,7 @@ export function TrendingArtistCard({
   return (
     <div>
       <Link
-        href={`${base_uri}/artist/?id=${artist_id}&url=${url}&artist=${artist}`}
+        href={`${base_uri}/artists/?id=${artist_id}&url=${url}&artist=${artist}`}
         className="relative block min-w-[280px] w-[350px]"
       >
         {/* Reserved space for the image using aspect ratio */}

@@ -7,6 +7,7 @@ import { createViewHistory } from "@omenai/shared-services/viewHistory/createVie
 import { ArtworkResultTypes } from "@omenai/shared-types";
 
 import LegalComponents from "./LegalComponents";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 type ProductBoxTypes = {
   data: ArtworkResultTypes;
@@ -14,6 +15,8 @@ type ProductBoxTypes = {
 };
 
 export default function ProductBox({ data, sessionId }: ProductBoxTypes) {
+  const { csrf } = useAuth();
+
   const queryClient = useQueryClient();
   // Make async call to update liked state in db
   useEffect(() => {
@@ -23,7 +26,8 @@ export default function ProductBox({ data, sessionId }: ProductBoxTypes) {
         data.artist,
         data.art_id,
         sessionId!,
-        data.url
+        data.url,
+        csrf || ""
       );
       if (res?.isOk) {
         queryClient.invalidateQueries({ queryKey: ["recent_views"] });

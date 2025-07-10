@@ -28,7 +28,7 @@ export default function PayoutDashboard() {
         // Run independent async calls concurrently
         const [balance, table, response] = await Promise.all([
           retrieveBalance(connectedAccountId, csrf || ""),
-          fetchTransactions(user.gallery_id as string),
+          fetchTransactions(user.gallery_id as string, csrf || ""),
           checkIsStripeOnboarded(connectedAccountId, csrf || ""),
         ]);
 

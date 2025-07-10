@@ -4,12 +4,12 @@ import NavigationItem from "./NavigationItem";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast } from "sonner";
-import { auth_uri } from "@omenai/url-config/src/config";
+import { admin_url, auth_uri } from "@omenai/url-config/src/config";
 
 export default function PageLayout() {
   const { signOut } = useAuth({
     requiredRole: "gallery",
-    redirectUrl: `${auth_uri()}/login`,
+    redirectUrl: `${admin_url()}/auth/login`,
   });
   async function handleSignOut() {
     toast.info("Signing out...", {

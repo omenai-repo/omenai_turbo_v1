@@ -1,5 +1,6 @@
 import PageTitle from "../components/PageTitle";
 import ArtCatalog from "./components/ArtCatalog";
+export const dynamic = "force-dynamic";
 
 export default async function MyArtworks() {
   // const artworks = await getAllArtworksById();

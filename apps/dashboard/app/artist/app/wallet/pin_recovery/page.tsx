@@ -1,19 +1,8 @@
-"use client";
-import React, { useState } from "react";
-import PageTitle from "../../components/PageTitle";
-import VerifyOTP from "./VerifyOtp";
-import WalletPinResetForm from "./ChangePin";
+import React from "react";
+import ChangeWalletPin from "./PinRecoveryWrapper";
 
-export default function ChangeWalletPin() {
-  const [isVerified, setIsVerified] = useState<boolean>(false);
-  return (
-    <div>
-      <PageTitle title={isVerified ? "Update wallet pin" : "Verify OTP"} />
-      {!isVerified ? (
-        <VerifyOTP setVerification={setIsVerified} />
-      ) : (
-        <WalletPinResetForm />
-      )}
-    </div>
-  );
+export const dynamic = "force-dynamic";
+
+export default function page() {
+  return <ChangeWalletPin />;
 }

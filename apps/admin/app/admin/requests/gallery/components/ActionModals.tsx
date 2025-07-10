@@ -48,6 +48,7 @@ export function ActionModals({
           },
           className: "class",
         });
+        return;
       }
 
       toast.success("Operation successful ", {

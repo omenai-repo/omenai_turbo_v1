@@ -11,7 +11,7 @@ import { GallerySchemaTypes } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export const FormCard = () => {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const router = useRouter();
 
@@ -25,7 +25,8 @@ export const FormCard = () => {
     const { isOk, body } = await updateProfile(
       "gallery",
       updateData,
-      user?.id as string
+      user?.id as string,
+      csrf || ""
     );
     if (!isOk)
       toast.error("Error notification", {

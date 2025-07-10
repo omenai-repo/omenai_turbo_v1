@@ -69,19 +69,18 @@ export default function FormInput() {
                 },
                 className: "class",
               });
+              H.identify(data.email, {
+                id: data.artist_id as string,
+                name: data.name,
+                role: data.role,
+              });
               // Your redirect logic
-              if (url === "" || url === null) {
-                set_redirect_uri("");
-                H.identify(data.email, {
-                  id: data.artist_id as string,
-                  name: data.name,
-                  role: data.role,
-                });
+              if (data.isOnboardingCompleted) {
                 router.refresh();
                 router.replace(`${dashboard_base_url}/artist/app/overview`);
               } else {
-                router.replace(url);
-                set_redirect_uri("");
+                router.refresh();
+                router.replace(`${dashboard_base_url}/artist/onboarding`);
               }
             } catch (clerkError) {
               console.error("Clerk sign-in error:", clerkError);

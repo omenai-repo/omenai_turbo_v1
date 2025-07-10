@@ -13,7 +13,6 @@ import {
 import {
   BadRequestError,
   NotFoundError,
-  ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { getApiUrl } from "@omenai/url-config/src/config";

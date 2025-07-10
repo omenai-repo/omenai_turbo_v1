@@ -9,38 +9,13 @@ export async function resendCode(
   try {
     const url = getApiUrl();
 
-    await fetch(`${url}/api/requests/${route}/verify/resend`, {
+    const res = await fetch(`${url}/api/requests/${route}/verify/resend`, {
       method: "POST",
       body: JSON.stringify({ author: payload.author }),
-      headers: {
-        "Content-type": "application/json",
-      },
-    }).then(async (res) => {
-      const response: { isOk: boolean; body: { message: string } } = {
-        isOk: res.ok,
-        body: await res.json(),
-      };
-
-      if (!res.ok) {
-        toast.error("Error notification", {
-          description: response.body.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      } else {
-        toast.success("Operation successful", {
-          description: response.body.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
-      }
     });
+    const result = await res.json();
+
+    return { isOk: res.ok, message: result.message };
   } catch (error: any) {
     return {
       isOk: false,

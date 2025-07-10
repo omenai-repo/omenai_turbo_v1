@@ -1,6 +1,6 @@
 import PageTitle from "../../../components/PageTitle";
 import ArtworkPricing from "./ArtworkPricing";
-
+export const dynamic = "force-dynamic";
 export default function page() {
   return (
     <>

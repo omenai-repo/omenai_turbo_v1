@@ -13,7 +13,7 @@ export default function VerifyOTP({
 }: {
   setVerification: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
 
   // State variables
   const [otp, setOtp] = useState("");
@@ -41,7 +41,7 @@ export default function VerifyOTP({
   } = useQuery({
     queryKey: ["send_otp"],
     queryFn: async () => {
-      const response = await sendOtp(user.artist_id);
+      const response = await sendOtp(user.artist_id, csrf || "");
 
       if (!response?.isOk) {
         handleError(
@@ -86,7 +86,7 @@ export default function VerifyOTP({
       const timeout = setTimeout(() => {
         setVerificationLoading(true);
 
-        verifyOtp(user.artist_id, otp)
+        verifyOtp(user.artist_id, otp, csrf || "")
           .then((response: { isOk: boolean; message: string } | undefined) => {
             if (!response?.isOk) {
               handleError(

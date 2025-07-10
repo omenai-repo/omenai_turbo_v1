@@ -4,19 +4,24 @@ import { sendPasswordResetLink } from "@omenai/shared-services/password/sendPass
 import { useState, FormEvent } from "react";
 import { toast } from "sonner";
 import { LoadSmall } from "../loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function RecoveryModalEmailInputField() {
   const [loading, setIsloading] = useState(false);
   const [email, setEmail] = useState("");
-
+  const { csrf } = useAuth();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsloading(true);
 
     try {
-      const data = await sendPasswordResetLink("individual", {
-        email,
-      });
+      const data = await sendPasswordResetLink(
+        "individual",
+        {
+          email,
+        },
+        csrf || ""
+      );
       if (data.isOk) {
         toast.success("Operation successful", {
           description: data.body.message,

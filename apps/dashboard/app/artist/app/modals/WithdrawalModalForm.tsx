@@ -20,7 +20,7 @@ export default function WithdrawalModalForm() {
 
   const { toggleWithdrawalFormPopup } = artistActionStore();
   const queryClient = useQueryClient();
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
   const [wallet_pin, set_wallet_pin] = useState("");
   const [wallet_pin_error, set_wallet_pin_error] = useState<boolean>(false);
 
@@ -107,6 +107,7 @@ export default function WithdrawalModalForm() {
         amount: amount_data.amount,
         wallet_id: user.wallet_id as string,
         wallet_pin,
+        token: csrf || "",
       });
 
       if (withdrawal_response === undefined || !withdrawal_response.isOk) {

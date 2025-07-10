@@ -1,20 +1,22 @@
 "use client";
 import { getPromotionalFileView } from "@omenai/shared-lib/storage/getPromotionalsFileView";
 import { PromotionalSchemaTypes } from "@omenai/shared-types";
+import { Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosArrowRoundForward } from "react-icons/io";
-
-export default function SingleSlide({
+import { adminModals } from "@omenai/shared-state-store/src/admin/AdminModalsStore";
+export default function PromotionalCard({
   headline,
   subheadline,
   cta,
   image,
-}: PromotionalSchemaTypes) {
+  isAdmin,
+}: PromotionalSchemaTypes & { isAdmin: boolean }) {
   const image_url = getPromotionalFileView(image, 250, 200, "webp");
-
+  const { updateShowEditPromotionalModal } = adminModals();
   return (
-    <section className="min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] bg-dark flex h-[200px] items-center p-2 xs:p-4 rounded-lg">
+    <section className="relative min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] bg-dark flex h-[200px] items-center p-2 xs:p-4 rounded-lg">
       <div className="text-white p-2 flex col-span-1 w-full flex-col gap-y-3">
         <p className="text-fluid-xs font-semibold">{headline}</p>
         <p className="text-fluid-xxs font-medium">{subheadline}</p>
@@ -34,6 +36,19 @@ export default function SingleSlide({
           alt={`hero image ${headline}`}
         />
       </div>
+      {/* {isAdmin && (
+        <div
+          onClick={updateShowEditPromotionalModal}
+          className="cursor-pointer rounded-full h-10 w-10 bg-white absolute right-[-10] top-[-10] ring-2 ring-dark grid place-items-center"
+        >
+          <Pencil
+            color="#1a1a1a"
+            size={20}
+            strokeWidth={1.75}
+            absoluteStrokeWidth
+          />
+        </div>
+      )} */}
     </section>
   );
 }

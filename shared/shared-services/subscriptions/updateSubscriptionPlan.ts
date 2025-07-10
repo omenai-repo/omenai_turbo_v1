@@ -4,13 +4,16 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function updateSubscriptionPlan(
   data: NextChargeParams,
   gallery_id: string,
-  action: string
+  action: string,
+  token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/subscriptions/updateSubscriptionPlan`, {
       method: "POST",
       body: JSON.stringify({ data, gallery_id, action }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

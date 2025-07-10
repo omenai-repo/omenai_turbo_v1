@@ -1,0 +1,45 @@
+"use client";
+import { getPromotionalData } from "@omenai/shared-services/promotionals/getPromotionalContent";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { useQuery } from "@tanstack/react-query";
+
+import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
+
+export default function PromotionalList() {
+  const { data: promotionals, isLoading: loading } = useQuery({
+    queryKey: ["fetch_promotional_data"],
+    queryFn: async () => {
+      const response = await getPromotionalData();
+      if (!response.isOk)
+        throw new Error(
+          "Something went wrong. Please try again later or contact suppport"
+        );
+      return response.data;
+    },
+  });
+
+  if (loading) return <Load />;
+
+  return (
+    <div className="my-10">
+      <div className="flex flex-auto flex-wrap grow shrink gap-5">
+        {promotionals.map((promotional: any, index: number) => {
+          return (
+            <div
+              className="embla__slide"
+              key={promotional.id || promotional.heading || index}
+            >
+              <PromotionalCard
+                headline={promotional.headline}
+                subheadline={promotional.subheadline}
+                cta={promotional.cta}
+                image={promotional.image}
+                isAdmin={true}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

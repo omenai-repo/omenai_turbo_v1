@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { validateChargeAuthorization } from "@omenai/shared-services/subscriptions/subscribeUser/validateChargeAuthorization";
 import { stepperStore } from "@omenai/shared-state-store/src/stepper/stepperStore";
@@ -59,6 +60,7 @@ export default function AvsNoauthInput({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -126,7 +128,7 @@ export default function AvsNoauthInput({
 
     setIsLoading(true);
 
-    const response = await validateChargeAuthorization(data);
+    const response = await validateChargeAuthorization(data, csrf || "");
     if (response?.isOk) {
       if (response.data.status === "error") {
         toast.error("Error notification", {

@@ -2,13 +2,16 @@ import { SubscriptionTokenizationTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createTokenizedCharge(
-  data: SubscriptionTokenizationTypes
+  data: SubscriptionTokenizationTypes,
+  token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/subscriptions/createTokenizedCharge`, {
       method: "POST",
       body: JSON.stringify({ ...data }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

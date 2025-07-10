@@ -47,7 +47,7 @@ export default function CheckoutBillingCard({
   const [error, setError] = useState<string>("");
   const searchParams = useSearchParams();
   const plan_action = searchParams.get("plan_action");
-
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const [loading, setLoading] = useState<boolean>(false);
   const [migrationLoading, setMigrationLoading] = useState<boolean>(false);
 
@@ -67,7 +67,10 @@ export default function CheckoutBillingCard({
       plan_interval: interval,
     };
     setLoading(true);
-    const tokenize_card = await createTokenizedCharge(tokenized_data);
+    const tokenize_card = await createTokenizedCharge(
+      tokenized_data,
+      csrf || ""
+    );
 
     if (!tokenize_card?.isOk)
       toast.error("Error notification", {
@@ -107,7 +110,8 @@ export default function CheckoutBillingCard({
     const migrate = await updateSubscriptionPlan(
       data,
       user.gallery_id as string,
-      typeof plan_action === "string" ? plan_action : ""
+      typeof plan_action === "string" ? plan_action : "",
+      csrf || ""
     );
 
     if (!migrate?.isOk)

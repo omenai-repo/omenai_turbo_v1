@@ -1,5 +1,6 @@
 import PageTitle from "../../../components/PageTitle";
 import UploadArtworkImage from "../features/UploadArtworkImage";
+export const dynamic = "force-dynamic";
 
 export default function page() {
   return (

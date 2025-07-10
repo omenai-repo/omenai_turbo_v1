@@ -3,11 +3,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import useEmblaCarousel from "embla-carousel-react";
-import SingleSlide from "./components/SingleSlide";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import HomeBG from "./HomeBG";
-
+import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
 export default function Hero({ promotionals }: any) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -62,11 +61,12 @@ export default function Hero({ promotionals }: any) {
                 className="embla__slide"
                 key={promotional.id || promotional.heading || index}
               >
-                <SingleSlide
+                <PromotionalCard
                   headline={promotional.headline}
                   subheadline={promotional.subheadline}
                   cta={promotional.cta}
                   image={promotional.image}
+                  isAdmin={false}
                 />
               </div>
             );

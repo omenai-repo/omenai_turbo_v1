@@ -1,9 +1,8 @@
-import { Inter } from "next/font/google";
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import { SessionProvider } from "@omenai/package-provider";
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
-
+import { ModalsProvider } from "@mantine/modals";
 export default async function AdminDashboardLayout({
   children,
 }: {
@@ -14,7 +13,9 @@ export default async function AdminDashboardLayout({
   return (
     <div className={`flex flex-col justify-center`}>
       <SessionProvider initialSessionData={initialSessionData}>
-        <LayoutWrapper children={children} />
+        <ModalsProvider>
+          <LayoutWrapper children={children} />
+        </ModalsProvider>
       </SessionProvider>
       <Analytics />
     </div>

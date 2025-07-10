@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { sendPasswordResetLink } from "@omenai/shared-services/password/sendPasswordResetLink";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { RouteIdentifier } from "@omenai/shared-types";
@@ -10,7 +11,7 @@ export default function RecoveryEmailInputField() {
   const [isLoading, setIsloading] = useState(false);
   const [email, setEmail] = useState("");
   const { recoveryModal, updateRecoveryModal } = actionStore();
-
+  const { csrf } = useAuth();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsloading(true);
@@ -20,7 +21,8 @@ export default function RecoveryEmailInputField() {
         recoveryModal.type as RouteIdentifier,
         {
           email,
-        }
+        },
+        csrf || ""
       );
       if (data.isOk) {
         toast.success("Operation successful", {

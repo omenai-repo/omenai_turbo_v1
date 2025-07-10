@@ -16,7 +16,7 @@ import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function AccountForm() {
   const queryClient = useQueryClient();
-  const { user } = useAuth({ requiredRole: "artist" });
+  const { user, csrf } = useAuth({ requiredRole: "artist" });
   const [selectedBank, setSelectedBank] = useState<BankType | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<BankBranchType | null>(
     null
@@ -82,7 +82,8 @@ export default function AccountForm() {
       const validateBankAccountResponse = await validateBankAccount(
         // TODO: Change this to selectedBank.code
         "044",
-        account_number
+        account_number,
+        csrf || ""
       );
 
       if (
@@ -153,6 +154,7 @@ export default function AccountForm() {
         owner_id: user.artist_id,
         account_details,
         base_currency: user.base_currency,
+        token: csrf || "",
       });
 
       if (

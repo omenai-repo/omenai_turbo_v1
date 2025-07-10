@@ -4,16 +4,19 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { BsShieldLock } from "react-icons/bs";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function NoVerificationBlock({
   gallery_name,
 }: {
   gallery_name: string;
 }) {
+  const { csrf } = useAuth();
+
   const [loading, setLoading] = useState(false);
   async function handleRequestGalleryVerification() {
     setLoading(true);
     try {
-      const response = await verifyGalleryRequest(gallery_name!);
+      const response = await verifyGalleryRequest(gallery_name!, csrf || "");
       if (!response?.isOk)
         toast.error("Error notification", {
           description: response?.message,

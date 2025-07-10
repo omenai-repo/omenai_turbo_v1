@@ -1,4 +1,3 @@
-import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import { toast } from "sonner";
 
 const toastError = (desc: string) => {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import {
   base_url,
   auth_uri,
@@ -51,8 +51,13 @@ export default async function middleware(req: NextRequest) {
   // Redirect to login if no session cookie is found
 
   if (!sessionId) {
-    const loginUrl = new URL("/login", auth_uri());
-    return NextResponse.redirect(loginUrl);
+    if (pathname.startsWith("/admin/")) {
+      const redirect_url = new URL("/auth/login", admin_url());
+      return NextResponse.redirect(redirect_url);
+    } else {
+      const loginUrl = new URL("/login", auth_uri());
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   const cookieHeader = req.headers.get("cookie") as string;
@@ -77,8 +82,13 @@ export default async function middleware(req: NextRequest) {
   // If the /api/user route returns an unauthorized status, the session is invalid.
   if (!response.ok || response.status === 401) {
     destroySession(sessionId, cookieHeader);
-    const loginUrl = new URL("/login", auth_uri());
-    return NextResponse.redirect(loginUrl);
+    if (pathname.startsWith("/admin/")) {
+      const redirect_url = new URL("/auth/login", admin_url());
+      return NextResponse.redirect(redirect_url);
+    } else {
+      const loginUrl = new URL("/login", auth_uri());
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   const { userData } = userSessionData.user;

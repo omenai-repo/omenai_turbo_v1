@@ -1,11 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { RiAdminLine } from "react-icons/ri";
 import { verifyGalleryRequest } from "@omenai/shared-services/verification/verifyGalleryRequest";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 type AppbarTypes = {
   admin_name?: string;
   gallery_name?: string;
@@ -16,11 +16,12 @@ export default function DashboardIndicator({
   gallery_name,
   gallery_verified,
 }: AppbarTypes) {
+  const { csrf } = useAuth();
   const [loading, setLoading] = useState(false);
   async function handleRequestGalleryVerification() {
     setLoading(true);
     try {
-      const response = await verifyGalleryRequest(gallery_name!);
+      const response = await verifyGalleryRequest(gallery_name!, csrf || "");
       if (!response?.isOk)
         toast.error("Error notification", {
           description: response?.message,

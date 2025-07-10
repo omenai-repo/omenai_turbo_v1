@@ -8,7 +8,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function validateChargeAuthorization(
   data: FLWDirectChargeDataTypes & {
     authorization: PinAuthorizationData | AvsAuthorizationData;
-  }
+  },
+  token: string
 ) {
   try {
     const url = getApiUrl();
@@ -17,6 +18,8 @@ export async function validateChargeAuthorization(
       {
         method: "POST",
         body: JSON.stringify({ ...data }),
+        headers: { "x-csrf-token": token },
+        credentials: "include",
       }
     );
 

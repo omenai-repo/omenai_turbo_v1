@@ -1,11 +1,16 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function fetchTransactions(trans_recipient_id: string) {
+export async function fetchTransactions(
+  trans_recipient_id: string,
+  token: string
+) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/transactions/fetchTransaction`, {
       method: "POST",
       body: JSON.stringify({ trans_recipient_id }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

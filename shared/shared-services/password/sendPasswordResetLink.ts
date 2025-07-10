@@ -3,7 +3,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function sendPasswordResetLink(
   route: RouteIdentifier,
-  payload: { email: string }
+  payload: { email: string },
+  token: string
 ) {
   const url = getApiUrl();
 

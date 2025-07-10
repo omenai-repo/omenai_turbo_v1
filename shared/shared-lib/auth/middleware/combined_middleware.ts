@@ -19,6 +19,16 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
   ) {
     const wrapped = async (req: Request | NextRequest) => {
       const method = req.method.toUpperCase();
+      const userAgent = req.headers.get("User-Agent");
+      const authorization: string = req.headers.get("Authorization") ?? "";
+
+      if (userAgent === "__X-Omenai-App") {
+        if (authorization === process.env.APP_AUTHORIZATION_SECRET) {
+          return handler(req);
+        } else {
+          throw new ForbiddenError("Unauthorized access detected");
+        }
+      }
 
       // Only validate CSRF + role for mutative methods
       const isMutative = ["POST", "PUT", "PATCH", "DELETE"].includes(method);

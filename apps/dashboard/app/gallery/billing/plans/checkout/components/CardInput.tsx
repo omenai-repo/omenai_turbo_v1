@@ -40,7 +40,7 @@ export default function CardInput({
   plan: SubscriptionPlanDataTypes & { createdAt: string; updatedAt: string };
 }) {
   const { update_flw_charge_payload_data } = stepperStore();
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const url = getApiUrl();
   const router = useRouter();
 
@@ -113,7 +113,7 @@ export default function CardInput({
         charge_type,
       };
 
-      const response = await initiateDirectCharge(data);
+      const response = await initiateDirectCharge(data, csrf || "");
       if (response?.data) {
         if (response.data.status === "error") {
           toast.error("Error notification", {

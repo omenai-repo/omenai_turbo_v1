@@ -1,7 +1,10 @@
 import { FLWDirectChargeDataTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function initiateDirectCharge(data: FLWDirectChargeDataTypes) {
+export async function initiateDirectCharge(
+  data: FLWDirectChargeDataTypes,
+  token: string
+) {
   try {
     const url = getApiUrl();
     const res = await fetch(
@@ -9,6 +12,8 @@ export async function initiateDirectCharge(data: FLWDirectChargeDataTypes) {
       {
         method: "POST",
         body: JSON.stringify({ ...data }),
+        headers: { "x-csrf-token": token },
+        credentials: "include",
       }
     );
 

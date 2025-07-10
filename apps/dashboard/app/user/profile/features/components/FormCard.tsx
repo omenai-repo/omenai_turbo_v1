@@ -10,7 +10,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export const FormCard = () => {
-  const { user } = useAuth({ requiredRole: "user" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
 
   const router = useRouter();
 
@@ -52,7 +52,8 @@ export const FormCard = () => {
       const { isOk, body } = await updateProfile(
         "individual",
         newUpdateData,
-        user.id as string
+        user.id as string,
+        csrf || ""
       );
       if (!isOk)
         toast.error("Error notification", {

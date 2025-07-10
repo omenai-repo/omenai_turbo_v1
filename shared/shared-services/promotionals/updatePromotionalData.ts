@@ -4,13 +4,16 @@ import { ObjectId } from "mongoose";
 
 export async function updatePromotionalData(
   id: ObjectId,
-  data: PromotionalDataUpdateTypes
+  data: PromotionalDataUpdateTypes,
+  token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/promotionals/updatePromotionalData`, {
       method: "POST",
       body: JSON.stringify({ id, updates: data }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
     });
 
     const result = await res.json();

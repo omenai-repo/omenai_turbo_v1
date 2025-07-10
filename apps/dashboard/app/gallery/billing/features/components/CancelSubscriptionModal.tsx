@@ -1,12 +1,11 @@
 "use client";
 
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { cancelSubscription } from "@omenai/shared-services/subscriptions/cancelSubscription";
 import { galleryModalStore } from "@omenai/shared-state-store/src/gallery/gallery_modals/GalleryModals";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
-
 import { useQueryClient } from "@tanstack/react-query";
-import { Modal } from "flowbite-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,11 +23,12 @@ export default function CancelSubscriptionModal({
 
   const query_client = useQueryClient();
 
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const [loading, setLoading] = useState(false);
 
   const cancel_subscription = async () => {
     setLoading(true);
-    const response = await cancelSubscription(id);
+    const response = await cancelSubscription(id, csrf || "");
 
     if (response?.isOk) {
       setLoading(false);
