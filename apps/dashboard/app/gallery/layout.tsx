@@ -4,7 +4,6 @@ import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
 import NoMobileView from "../components/NoMobileView";
-
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
@@ -13,8 +12,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { toast } from "sonner";
 import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
-import { GallerySchemaTypes } from "@omenai/shared-types";
-import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function GalleryDashboardLayout({
   children,
@@ -23,6 +20,7 @@ export default function GalleryDashboardLayout({
 }) {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const { width } = useWindowSize();
+
   const { data: account, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {

@@ -4,7 +4,7 @@ export async function getSinglePlanData(plan_id: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(
-      `${url}/api/subscriptions/retrieveSinglePlan&plan_id=${plan_id}`
+      `${url}/api/subscriptions/retrieveSinglePlan?plan_id=${plan_id}`
     );
 
     const result = await res.json();

@@ -49,7 +49,7 @@ export default function BillingCard({
         />
       </div>
       <Link
-        href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan_id}&plan_interval=${plan_interval}`}
+        href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan_id}&interval=${plan_interval}`}
         className="w-full flex justify-start absolute bottom-5 left-4"
       >
         <button className="flex gap-2 items-center disabled:cursor-not-allowed hover:ring hover:ring-white disabled:bg-dark/20 place-items-center rounded-full text-[13px] bg-white h-[35px] px-4 text-dark hover:text-white hover:bg-dark duration-300">

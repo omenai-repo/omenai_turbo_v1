@@ -175,7 +175,7 @@ export default function CheckoutBillingCard({
         </div>
         <div className="w-full flex justify-start mb-2 mt-5">
           <Link
-            href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan.plan_id}&plan_interval=${interval}`}
+            href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan.plan_id}&interval=${interval}`}
             className="w-full flex justify-start mt-5 mb-2"
           >
             <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">

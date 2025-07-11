@@ -2,10 +2,11 @@ import { Proration } from "@omenai/shared-models/models/prorations/ProrationSche
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -26,6 +27,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       "value"
     );
 
+    const gallery = await AccountGallery.findOne(
+      { gallery_id: data.gallery_id },
+      "address"
+    );
+
     const amount = prorationValue
       ? +data.amount - prorationValue.value
       : data.amount;
@@ -37,9 +43,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       tx_ref: `${data.tx_ref}&${data.gallery_id}&${data.plan_id}&${
         data.plan_interval
       }&${null}`,
+      country: gallery.address.countryCode,
       token: data.token,
       narration: `Payment for Omenai Inc. ${data.plan_interval} subscription`,
-      redirect_url: `${getApiUrl()}/gallery/billing/plans/checkout/verification`,
+      redirect_url: `${dashboard_url()}/gallery/billing/plans/checkout/verification`,
       meta: {
         gallery_id: data.gallery_id,
         type: "subscription",
@@ -56,16 +63,17 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...payload }),
+        body: JSON.stringify(payload),
       }
     );
 
     const result = await response.json();
 
+    console.log(result);
     if (!response.ok) return NextResponse.json(result, { status: 401 });
 
     await Proration.updateOne(
-      { gallery_id: data.gaallery_id },
+      { gallery_id: data.gallery_id },
       { $set: { value: 0 } }
     );
 
