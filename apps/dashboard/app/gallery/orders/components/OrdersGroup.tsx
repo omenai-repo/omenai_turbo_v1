@@ -7,30 +7,77 @@ import { getOverviewOrders } from "@omenai/shared-services/orders/getOverviewOrd
 import { OrdersTab } from "./OrdersTab";
 import { OrderSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrdersSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
+import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
+import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
+import { useRouter } from "next/navigation";
+import UploadArtworkDetails from "../../artworks/upload/features/UploadArtworkDetails";
+import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
+import NoVerificationBlock from "../../components/NoVerificationBlock";
+import { handleError } from "@omenai/shared-utils/src/handleQueryError";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 export default function OrdersGroup() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const [tab, setTab] = useState("pending");
-  const { data: orders, isLoading } = useQuery({
+  const router = useRouter();
+
+  const { data, isLoading } = useQuery({
     queryKey: ["fetch_orders_by_category"],
     queryFn: async () => {
-      const result = await getOverviewOrders(user.gallery_id);
+      try {
+        // Fetch account ID first, as it's required for the next call
+        const acc = await getAccountId(user.email as string, csrf || "");
 
-      // Handle potential undefined result
-      if (!result) {
-        return []; // Return an empty array if the result is undefined
+        if (!acc?.isOk)
+          throw new Error("Something went wrong, Please refresh the page");
+
+        // Start retrieving subscription data while fetching Stripe onboarding status
+        const [response, sub_check] = await Promise.all([
+          checkIsStripeOnboarded(acc.data.connected_account_id, csrf || ""), // Dependent on account ID
+          retrieveSubscriptionData(user.gallery_id as string, csrf || ""), // Independent
+        ]);
+
+        if (!response?.isOk || !sub_check?.isOk) {
+          throw new Error("Something went wrong, Please refresh the page");
+        }
+
+        const result = await getOverviewOrders(user.gallery_id);
+
+        return {
+          isSubmitted: response.details_submitted,
+          id: acc.data.connected_account_id,
+          isSubActive: sub_check?.data?.status === "active",
+          orders: !result ? [] : result.isOk ? result.data : [],
+        };
+      } catch (error) {
+        console.error(error);
+        handleError();
       }
-
-      const { isOk, data } = result;
-
-      // Return the data if isOk, else return an empty array
-      return isOk ? data : [];
     },
+    refetchOnWindowFocus: false,
   });
+  if (isLoading) {
+    return <OrderSkeleton />;
+  }
+  console.log(data);
+  if (!data?.isSubmitted)
+    router.replace(`/gallery/payouts/refresh?id=${data!.id}`);
 
   return (
     <>
       <div className="w-full mt-12">
-        {isLoading ? <OrderSkeleton /> : <OrdersTab orders={orders} />}
+        {!user.gallery_verified && !data?.isSubActive && (
+          <NoVerificationBlock gallery_name={user.name as string} />
+        )}
+        {(user.gallery_verified as boolean) && !data?.isSubActive && (
+          <NoSubscriptionBlock />
+        )}
+        {!user.gallery_verified && data?.isSubActive && (
+          <NoVerificationBlock gallery_name={user.name as string} />
+        )}
+        {(user.gallery_verified as boolean) && data?.isSubActive && (
+          <OrdersTab orders={data?.orders} />
+        )}
       </div>
     </>
   );

@@ -8,7 +8,7 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function Plans() {
-  const { user } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const url = getApiUrl();
 
   const { data, isLoading } = useQuery({
@@ -18,6 +18,8 @@ export default function Plans() {
       const res = await fetch(`${url}/api/subscriptions/retrieveSubData`, {
         method: "POST",
         body: JSON.stringify({ gallery_id: user.gallery_id }),
+        headers: { "x-csrf-token": csrf || "" },
+        credentials: "include",
       });
 
       const result = await res.json();

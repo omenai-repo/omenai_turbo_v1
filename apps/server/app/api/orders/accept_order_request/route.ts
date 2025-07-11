@@ -12,6 +12,7 @@ import {
 } from "@omenai/shared-types";
 import {
   BadRequestError,
+  ForbiddenError,
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
@@ -23,6 +24,7 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -104,6 +106,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     // Check if order exists in DB
     if (!order) throw new NotFoundError("Order data not found. Try again");
+
+    if (order.seller_designation === "gallery") {
+      const active_subscription = await Subscriptions.findOne(
+        { "customer.gallery_id": order.seller_details.id },
+        "plan_details status"
+      );
+
+      if (!active_subscription || active_subscription.status !== "active")
+        throw new ForbiddenError(
+          "Please activate a subscription to access this feature"
+        );
+    }
 
     // Calculate order shipping rate
     const rate_payload: ShipmentRateRequestTypes = {

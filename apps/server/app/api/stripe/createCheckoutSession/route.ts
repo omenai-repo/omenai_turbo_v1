@@ -38,7 +38,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
 
     if (!active_subscription || active_subscription.status !== "active")
-      throw new ForbiddenError("No active subscription for this user");
+      throw new ForbiddenError(
+        "Cannot proceed with this purchase at the moment"
+      );
 
     const commision_rate =
       active_subscription.plan_details.type.toLowerCase() === "premium"
