@@ -1,13 +1,12 @@
 "use client";
-
+import { listEditorials } from "@omenai/shared-lib/editorials/getEditorials";
 import { useQuery } from "@tanstack/react-query";
-import { listEditorials } from "../lib/getEditorials";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { EditorialSchemaTypes } from "@omenai/shared-types";
+import ArticleCard from "./components/ArticleCard";
 import EditorialItemCard from "@omenai/shared-ui-components/components/editorials/EditorialItemCard";
-export default function Editorials() {
-  const { data: editorials, isLoading: loading } = useQuery({
+export default function ArticleWrapper() {
+  const { data = [], isLoading } = useQuery({
     queryKey: ["fetch_admin_editorials"],
     queryFn: async () => {
       const response = await listEditorials();
@@ -23,8 +22,15 @@ export default function Editorials() {
 
       return response.data;
     },
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always", // Always refetch when component mounts
+    refetchOnReconnect: "always", // Always refetch when reconnecting
   });
-  if (loading) return <Load />;
+  if (isLoading) return <Load />;
+
+  const editorials = Array.isArray(data) ? data : [];
   if (editorials && editorials.length === 0)
     return (
       <div>
@@ -33,10 +39,10 @@ export default function Editorials() {
     );
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8 p-4">
-      {(editorials as any[])?.map((editorial) => (
-        <EditorialItemCard key={editorial.slug} editorial={editorial} />
-      ))}
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4 p-4">
+      {editorials?.map((editorial: any) => {
+        return <EditorialItemCard key={editorial.slug} editorial={editorial} />;
+      })}
     </div>
   );
 }

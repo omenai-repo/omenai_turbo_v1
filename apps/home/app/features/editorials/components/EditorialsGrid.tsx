@@ -1,6 +1,11 @@
+import { EditorialSchemaTypes } from "@omenai/shared-types";
 import EditorialGridItemsList from "./EditorialGridItemsList";
 
-export default function EditorialsGrid({ editorials }: { editorials: any }) {
+export default function EditorialsGrid({
+  editorials,
+}: {
+  editorials: EditorialSchemaTypes[];
+}) {
   if (
     editorials === null ||
     editorials === undefined ||

@@ -4,10 +4,13 @@ import EditorialsGrid from "./components/EditorialsGrid";
 import { useQuery } from "@tanstack/react-query";
 import { MdArrowRightAlt } from "react-icons/md";
 import { editorial_database } from "@omenai/appwrite-config/appwrite";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
+import React from "react";
+import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
 
 export default function Editorials() {
-  const { data: editorials } = useQuery({
-    queryKey: ["editorials"],
+  const { data: editorials, isLoading } = useQuery({
+    queryKey: ["fetch_editorials"],
     queryFn: async () => {
       const response = await editorial_database.listDocuments(
         process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
@@ -21,12 +24,7 @@ export default function Editorials() {
     refetchOnWindowFocus: false,
   });
 
-  // if (isLoading)
-  //   return (
-  //     <div className="h-[500px] w-full place-items-center grid">
-  //       <Load />
-  //     </div>
-  //   );
+  if (isLoading) return <SectionLoaderContainers title="Latest artworks" />;
 
   return (
     <>
@@ -56,7 +54,7 @@ export default function Editorials() {
               </div>
             </div>
           </div>
-          <EditorialsGrid editorials={editorials} />
+          <EditorialsGrid editorials={editorials as any} />
         </>
       )}
     </>

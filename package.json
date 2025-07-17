@@ -55,6 +55,7 @@
     "framer-motion": "^11.11.17",
     "fs-extra": "^11.3.0",
     "iron-session": "^8.0.4",
+    "isomorphic-dompurify": "^2.26.0",
     "leaflet": "^1.9.4",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.487.0",

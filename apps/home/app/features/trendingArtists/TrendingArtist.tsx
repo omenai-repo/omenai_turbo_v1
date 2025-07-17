@@ -53,6 +53,7 @@ export default function TrendingArtist({ artists }: { artists: any }) {
           {artists.map((artist: any) => {
             return (
               <TrendingArtistCard
+                key={artist.author_id}
                 artist={artist.artist}
                 likes={artist.totalLikes}
                 url={artist.mostLikedArtwork.url}

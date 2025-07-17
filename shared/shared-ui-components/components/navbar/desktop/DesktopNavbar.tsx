@@ -11,7 +11,7 @@ import { IndividualLogo } from "../../logo/Logo";
 const navbarlinks = [
   { text: "Buy artworks", link: "/catalog" },
   { text: "Shop", link: "https://omenai.shop" },
-  { text: "Editorials", link: "/" },
+  { text: "Editorials", link: "/articles" },
 ];
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();

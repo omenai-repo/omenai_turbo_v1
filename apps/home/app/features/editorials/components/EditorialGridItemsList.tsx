@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import EditorialItem, { EditorialItemProps } from "./EditorialItem";
+import EditorialItemCard from "@omenai/shared-ui-components/components/editorials/EditorialItemCard";
 import useEmblaCarousel from "embla-carousel-react";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
+import { EditorialSchemaTypes } from "@omenai/shared-types";
 
 export default function EditorialGridItemsList({
   editorials,
 }: {
-  editorials: EditorialItemProps[];
+  editorials: EditorialSchemaTypes[];
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -54,19 +55,11 @@ export default function EditorialGridItemsList({
   return (
     <div>
       <div className="embla" ref={emblaRef}>
-        <div className="embla__container">
+        <div className="embla__container gap-x-5">
           {editorials.map((editorial, index) => {
             return (
-              <div className="embla__slide" key={editorial.$id}>
-                <EditorialItem
-                  title={editorial.title}
-                  date={editorial.date}
-                  minutes={editorial.minutes}
-                  cover={editorial.cover}
-                  summary={editorial.summary}
-                  $id={editorial.$id}
-                  link={editorial.link}
-                />
+              <div className="embla__slide" key={editorial.slug}>
+                <EditorialItemCard editorial={editorial} />
               </div>
             );
           })}
