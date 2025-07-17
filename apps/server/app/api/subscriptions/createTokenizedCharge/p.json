@@ -1,0 +1,45 @@
+{
+  "data": {
+    "account_id": 2459946,
+    "amount": 166.13,
+    "amount_settled": 0,
+    "app_fee": 6.32,
+    "auth_model": "VBVSECURECODE",
+    "card": {
+      "country": "NIGERIA NG",
+      "expiry": "09/29",
+      "first_6digits": "553188",
+      "issuer": " CREDIT",
+      "last_4digits": "2950",
+      "type": "MASTERCARD"
+    },
+    "charged_amount": 166.13,
+    "created_at": "2025-07-14T11:59:03.000Z",
+    "currency": "USD",
+    "customer": {
+      "created_at": "2025-04-21T18:45:23.000Z",
+      "email": "dantereus1@gmail.com",
+      "id": 2920092,
+      "name": "Visage of",
+      "phone_number": "N/A"
+    },
+    "device_fingerprint": "N/A",
+    "flw_ref": "FLW-MOCK-b2bfb2d97a8addacc9a26adae10e3d7f",
+    "id": 9487034,
+    "ip": "52.209.154.143",
+    "merchant_fee": 0,
+    "meta": {
+      "gallery_id": "d0a5bff5-cca6-4e82-873d-f9865b6aacb5",
+      "plan_id": "6783fcf39ad2051516d26802",
+      "plan_interval": "monthly",
+      "type": "subscription"
+    },
+    "narration": "Payment for Omenai Inc. monthly subscription",
+    "payment_type": "card",
+    "processor_response": "Approved",
+    "status": "pending",
+    "tx_ref": "8d86c80a-b4be-4a0e-bc3f-67204ea88065&d0a5bff5-cca6-4e82-873d-f9865b6aacb5&6783fcf39ad2051516d26802&monthly&null"
+  },
+  "isOk": true,
+  "message": "Transaction failed"
+}

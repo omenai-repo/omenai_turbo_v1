@@ -460,16 +460,15 @@ export type Input = {
   disabled?: boolean;
 };
 
-interface Image {
+export type AppwriteImageObject = {
   bucketId: string;
-  fileId: string;
-}
+  $id: string;
+};
 
 export type EditorialFormData = {
   title: string;
   summary?: string;
-  slug?: string;
-  minutes?: string;
+  slug: string;
   content: string;
 };
 
@@ -622,11 +621,12 @@ export type PromotionalSchemaTypes = {
 };
 
 export type EditorialSchemaTypes = {
-  title: string;
-  link: string;
+  headline: string;
+  summary?: string;
   cover: string;
   date: Date | null;
-  minutes: string;
+  content: string;
+  slug: string;
 };
 
 export type PromotionalDataUpdateTypes = {

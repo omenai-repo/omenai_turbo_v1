@@ -69,7 +69,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const result = await response.json();
 
-    console.log(result);
     if (!response.ok) return NextResponse.json(result, { status: 401 });
 
     await Proration.updateOne(

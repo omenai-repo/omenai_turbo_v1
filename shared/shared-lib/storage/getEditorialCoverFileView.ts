@@ -4,7 +4,7 @@ import {
   editorial_storage,
 } from "@omenai/appwrite-config/appwrite";
 
-export const getEditorialCoverFileView = (
+export const getEditorialFileView = (
   fileId: string,
   width?: number,
   height?: number

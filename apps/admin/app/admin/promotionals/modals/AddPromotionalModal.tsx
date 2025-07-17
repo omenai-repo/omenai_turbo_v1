@@ -13,16 +13,7 @@ import { upload_promotional_image } from "../lib/createPromotional";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { createPromotionalData } from "@omenai/shared-services/promotionals/createPromotionalData";
 import { useQueryClient } from "@tanstack/react-query";
-const toast_notif = (message: string, type: "success" | "error" | "info") => {
-  return toast.error("Error notification", {
-    description: message,
-    style: {
-      background: type === "success" ? "green" : type === "info" ? "" : "red",
-      color: "white",
-    },
-    className: "class",
-  });
-};
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 export function AddPromotionalModal() {
   const [opened, { open, close }] = useDisclosure(false);
   return (
@@ -200,7 +191,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
               <img
                 src={URL.createObjectURL(cover as File)}
                 alt="uploaded image"
-                width={3500}
+                width={350}
                 height={250}
                 className="w-full h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
                 onClick={() => {

@@ -40,11 +40,15 @@ export const POST = withAppRouterHighlight(async function POST(
 
     // Handle unsuccessful verification
     if (transactionData.status !== "success") {
-      return createResponse(transactionData.message, transactionData, 404);
+      return createResponse(transactionData.message, transactionData, 400);
     }
 
+    // Handle pending transactions
+    if (transactionData.data.status === "pending") {
+      return createResponse("Transaction pending", transactionData.data, 200);
+    }
     // Handle failed transactions
-    if (transactionData.data.status !== "successful") {
+    if (transactionData.data.status !== "failed") {
       return createResponse("Transaction failed", transactionData.data, 200);
     }
 
@@ -52,7 +56,7 @@ export const POST = withAppRouterHighlight(async function POST(
     if (transactionData.data.meta?.type === "subscription") {
       const isValidSubscription = validateSubscription(transactionData.data);
       if (!isValidSubscription) {
-        throw new ConflictError("Invalid transaction");
+        throw new ConflictError("Invalid transaction summary");
       }
 
       return createResponse(

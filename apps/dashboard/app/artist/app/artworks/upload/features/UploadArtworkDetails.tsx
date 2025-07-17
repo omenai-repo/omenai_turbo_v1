@@ -24,8 +24,6 @@ export default function UploadArtworkDetails() {
         className: "class",
       });
     else {
-      console.log(artworkUploadData);
-
       toast.info("Operation in progress", {
         description: "Processing, please wait",
       });

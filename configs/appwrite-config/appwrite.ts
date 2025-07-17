@@ -5,6 +5,7 @@ import {
   ImageFormat,
   ImageGravity,
   ID,
+  Query,
 } from "appwrite";
 
 const client = new Client();

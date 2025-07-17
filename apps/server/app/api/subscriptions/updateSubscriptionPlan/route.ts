@@ -40,7 +40,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServerError("Something went wrong, contact tech team");
 
     return NextResponse.json(
-      { message: "Successfull", data: updateFuturePlan },
+      { message: "Successful", data: updateFuturePlan },
       { status: 200 }
     );
   } catch (error) {
