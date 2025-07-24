@@ -132,7 +132,7 @@ export default function Filter({
             showFilterBlock
               ? "bg-dark text-white"
               : "border-dark/10 border bg-white text-dark"
-          } duration-200 border px-3 py-1 border-dark/10 rounded-full  flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
+          } duration-200 border px-3 py-1 border-dark/10 rounded-xl  flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
           onClick={() => setShowFilterBlock((prev) => !prev)}
         >
           <span className="text-[13px] font-normal">Filters</span>
@@ -152,7 +152,7 @@ export default function Filter({
             })}
             <div
               onClick={handleClearAll}
-              className="px-3 py-1 border border-dark/10 rounded-full hover:bg-dark duration-200 hover:text-white flex gap-x-2 items-center text-[13px] font-normal"
+              className="px-3 py-1 border border-dark/10 rounded-xl hover:bg-dark duration-200 hover:text-white flex gap-x-2 items-center text-[13px] font-normal"
             >
               <span>Clear all selections</span>
               <ImBin2 />
@@ -160,7 +160,7 @@ export default function Filter({
             <button
               onClick={handleSubmitFilter}
               disabled={isEmptyFilter(filterOptions)}
-              className="px-3 py-1 bg-dark hover:bg-dark duration-200 text-white rounded-full flex gap-x-2 items-center text-[13px] font-normal"
+              className="px-3 py-1 bg-dark hover:bg-dark duration-200 text-white rounded-xl flex gap-x-2 items-center text-[13px] font-normal"
             >
               <span>Apply filters </span>
               <FaCheckCircle />

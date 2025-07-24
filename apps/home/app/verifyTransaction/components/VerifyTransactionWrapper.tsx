@@ -81,12 +81,12 @@ export default function VerifyTransactionWrapper() {
               </p>
               <div className="flex gap-x-4 justify-center w-full mt-10">
                 <Link href={"/"}>
-                  <button className="h-[35px] w-[250px] p-5 rounded-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
+                  <button className="h-[35px] w-[250px] p-5 rounded-xl flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
                     Go Home
                   </button>
                 </Link>
                 <Link href={`${dashboard_url()}/user/orders`}>
-                  <button className="h-[35px] p-5 rounded-full  w-[250px] flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
+                  <button className="h-[35px] p-5 rounded-xl  w-[250px] flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
                     Return to Dashboard
                   </button>
                 </Link>
@@ -100,12 +100,12 @@ export default function VerifyTransactionWrapper() {
             </div>
             <div className="flex gap-x-4 justify-center w-full mt-10">
               <Link href={"/"}>
-                <button className="h-[35px] p-5 rounded-full  w-[250px] flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
+                <button className="h-[35px] p-5 rounded-xl  w-[250px] flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
                   Go Home
                 </button>
               </Link>
               <Link href={`${dashboard_url()}/user/orders`}>
-                <button className="h-[35px] p-5 rounded-full  w-[250px] flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
+                <button className="h-[35px] p-5 rounded-xl  w-[250px] flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
                   Return to Dashboard
                 </button>
               </Link>

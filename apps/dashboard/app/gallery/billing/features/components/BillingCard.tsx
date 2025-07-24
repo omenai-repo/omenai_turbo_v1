@@ -17,45 +17,64 @@ export default function BillingCard({
   plan_interval: string;
 }) {
   return (
-    <div
-      className="rounded-2xl ring-1 bg-billing-card ring-[#e0e0e0] bg-no-repeat text-white bg-blend-overlay p-4 relative w-full h-[250px]"
-      style={{ backgroundImage: "url('/curve.png')" }}
-    >
-      <div className="absolute inset-0 bg-dark/50 rounded-2xl" />
-      <div className="w-full flex justify-start relative z-10 my-2">
-        <p className="text-white text-fluid-xs font-semibold">
-          Billing card details
-        </p>
+    <div className=" bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+        <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+          <svg
+            className="w-5 h-5 text-slate-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+            />
+          </svg>
+          Billing Card Details
+        </h3>
       </div>
-      {/* Icon */}
-      <div className="flex flex-col 2xl:flex-row justify-between 2xl:items-center relative z-10">
-        <div>
-          <div className="flex space-x-3 items-center">
-            <p className="text-fluid-sm  text-white font-semibold whitespace-nowrap tracking-[0.15rem]">
-              {first_6digits} ** **** {last_4digits}
-            </p>
+
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-6">
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                Card Number
+              </p>
+              <p className="text-lg font-semibold text-slate-900 font-mono">
+                {first_6digits} •• •••• {last_4digits}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                Expires
+              </p>
+              <p className="text-base font-medium text-slate-700">{expiry}</p>
+            </div>
           </div>
-          <p className="text-normal text-fluid-base font-semibold text-white ">
-            {expiry}
-          </p>
+
+          <div className="bg-slate-100 p-3 rounded-lg">
+            <Image
+              src={`/icons/${type.toLowerCase()}.png`}
+              alt={`${type} card`}
+              height={32}
+              width={48}
+              className="h-8 w-auto object-contain"
+            />
+          </div>
         </div>
 
-        <Image
-          src={`/icons/${type.toLowerCase()}.png`}
-          alt={`${type.toLowerCase()} logo`}
-          height={20}
-          width={40}
-          className="w-fit h-fit mt-5 2xl:mt-0"
-        />
+        <Link
+          href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan_id}&interval=${plan_interval}`}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-dark text-white text-fluid-xs font-medium rounded-lg shadow-sm transition-all transform active:scale-95 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+        >
+          Update Payment Method
+        </Link>
       </div>
-      <Link
-        href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan_id}&interval=${plan_interval}`}
-        className="w-full flex justify-start absolute bottom-5 left-4"
-      >
-        <button className="flex gap-2 items-center disabled:cursor-not-allowed hover:ring hover:ring-white disabled:bg-dark/20 place-items-center rounded-full text-[13px] bg-white h-[35px] px-4 text-dark hover:text-white hover:bg-dark duration-300">
-          <span>Change card</span>
-        </button>
-      </Link>
     </div>
   );
 }

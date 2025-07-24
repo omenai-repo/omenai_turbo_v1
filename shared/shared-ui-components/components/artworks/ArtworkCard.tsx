@@ -48,116 +48,133 @@ export default function ArtworkCard({
 
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
   return (
-    <div className="my-2 max-w-full p-0 max-h-full">
-      <div className="flex flex-col w-full h-full justify-end">
-        <div className="relative w-full artContainer">
-          <Link
-            href={`${base_uri}/artwork/${encoded_url}`}
-            className="relative block"
-          >
-            {/* Reserved space for the image using aspect ratio */}
-            <div className="w-full aspect-w-1 aspect-h-1">
-              <Image
-                src={image_href}
-                alt={name + " image"}
-                height={500}
-                width={500}
-                loading="lazy"
-                quality={100}
-                placeholder="blur"
-                blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
-                className="rounded w-full h-full object-cover object-center cursor-pointer"
-              />
+    <div className="group relative bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <div className="relative">
+        <Link
+          href={`${base_uri}/artwork/${encoded_url}`}
+          className="block relative"
+        >
+          {/* Image Container - Natural Aspect Ratio */}
+          <div className="relative overflow-hidden">
+            <Image
+              src={image_href}
+              alt={name + " image"}
+              height={500}
+              width={500}
+              loading="lazy"
+              quality={100}
+              placeholder="blur"
+              blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
+              className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+
+            {/* Subtle overlay for better text contrast */}
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300" />
+          </div>
+        </Link>
+
+        {/* Top Left Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          {isDashboard && dashboard_type === "gallery" ? (
+            <Link href={`/artist/app/artworks/edit?id=${name}`}>
+              <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-2 text-fluid-xs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white">
+                Edit artwork
+              </button>
+            </Link>
+          ) : (
+            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-fluid-xs font-normal shadow-sm border border-gray-200">
+              {medium}
             </div>
-          </Link>
+          )}
+        </div>
 
-          {/* Medium/Category Label */}
+        {/* Top Right Actions */}
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          {trending && (
+            <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
+              {impressions} {impressions > 1 ? "likes" : "like"}
+            </div>
+          )}
+          {isDashboard ? null : (
+            <LikeComponent
+              impressions={impressions}
+              likeIds={likeIds}
+              sessionId={sessionId}
+              art_id={art_id}
+            />
+          )}
+        </div>
+      </div>
 
-          <div className="absolute px-[14px] top-[1.5rem] left-[1rem]">
-            {isDashboard && dashboard_type === "gallery" ? (
-              <Link href={`/artist/app/artworks/edit?id=${name}`}>
-                <button
-                  className={`bg-white text-dark rounded-full px-3 py-2 hover:bg-dark hover:text-white duration-300 disabled:cursor-not-allowed disabled:text-dark/20 text-fluid-xs font-normal cursor-pointer ring ring-[#e0e0e0]/50`}
-                >
-                  Edit artwork
-                </button>
-              </Link>
-            ) : (
-              <div className="bg-[#FFFFFF] py-[5px] px-4 rounded-[24px] font-medium text-fluid-xs ring ring-[#e0e0e0]/50">
-                {medium}
-              </div>
-            )}
-          </div>
+      {/* Content Section */}
+      <div className="p-4">
+        {/* Artwork Details */}
+        <div className="space-y-2 mb-3">
+          <h3 className="font-medium text-dark text-fluid-base leading-tight line-clamp-2">
+            {name}
+          </h3>
+          <p className="text-dark/60 text-fluid-xs">
+            by {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
+          </p>
+        </div>
 
-          {/* Impressions and Like Component */}
-          <div className="absolute top-[20px] right-[12px] flex items-center gap-1">
-            {trending && (
-              <p className="text-white text-fluid-xs">
-                Liked by {impressions} {impressions > 1 ? "people" : "person"}
-              </p>
-            )}
-            {isDashboard && dashboard_type === "artist" ? null : (
-              <LikeComponent
-                impressions={impressions}
-                likeIds={likeIds}
-                sessionId={sessionId}
-                art_id={art_id}
-              />
-            )}
-          </div>
-
-          {/* Glass Card */}
-          <div className="flex items-center justify-center">
-            <div className="p-3 flex flex-col gap-y-1 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
-              {/* Title */}
-              <div className="text-gray-400 text-fluid-xs xs:text-fluid-base font-medium">
-                {name}
-              </div>
-              <div className="text-gray-400 text-fluid-xs font-normal">
-                {artist.substring(0, 20)}
-                {artist.length > 20 && "..."}
-              </div>
-              {isDashboard ? (
-                <div className="text-white text-fluid-xs xs:text-fluid-xs font-medium">
-                  {pricing?.price && pricing.shouldShowPrice === "Yes"
-                    ? !availability
-                      ? "Sold"
-                      : `${formatPrice(pricing.usd_price)}`
-                    : !availability
-                      ? "Sold"
-                      : "Price on request"}
-                </div>
+        {/* Price and Actions */}
+        {!trending && (
+          <div className="flex items-center justify-between">
+            {/* Price */}
+            <div className="flex flex-col">
+              {!availability ? (
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-fluid-xs font-medium bg-red-50 text-red-700 border border-red-200">
+                  Sold
+                </span>
               ) : (
-                !trending && (
-                  <div className="flex justify-between mt-1.5">
-                    {/* Price */}
-                    <div className="text-white text-fluid-xs xs:text-fluid-xs font-medium">
-                      {pricing?.price && pricing.shouldShowPrice === "Yes"
-                        ? !availability
-                          ? "Sold"
-                          : `${formatPrice(pricing.usd_price)}`
-                        : !availability
-                          ? "Sold"
-                          : "Price on request"}
-                    </div>
-
-                    {/* Purchase Button */}
-                    {!availability ? null : (
-                      <Link
-                        href={`${base_uri}/artwork/${name}`}
-                        className="px-4 py-[5px] duration-300 ring ring-[#e0e0e0]/50 hover:bg-dark hover:text-white rounded-full bg-white text-black text-fluid-xs font-medium shadow"
-                      >
-                        {pricing?.price && pricing.shouldShowPrice === "Yes"
-                          ? "Purchase"
-                          : "Request"}
-                      </Link>
-                    )}
-                  </div>
-                )
+                <div className="text-[#1a1a1a] font-semibold text-fluid-base">
+                  {pricing?.price && pricing.shouldShowPrice === "Yes"
+                    ? formatPrice(pricing.usd_price)
+                    : "Price on request"}
+                </div>
               )}
             </div>
+
+            {/* Action Button */}
+            {availability && !isDashboard && (
+              <Link
+                href={`${base_uri}/artwork/${encoded_url}`}
+                className="inline-flex items-center px-4 py-2 rounded-lg bg-dark text-white text-fluid-xs font-medium transition-colors duration-200 hover:bg-dark/80"
+              >
+                {pricing?.price && pricing.shouldShowPrice === "Yes"
+                  ? "Purchase"
+                  : "Inquire"}
+              </Link>
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Dashboard-specific price display */}
+        {isDashboard && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-between text-fluid-xs">
+              <span className="text-gray-600">Status:</span>
+              {!availability ? (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
+                  Sold
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                  Available
+                </span>
+              )}
+            </div>
+            {pricing?.price && pricing.shouldShowPrice === "Yes" && (
+              <div className="flex items-center justify-between text-fluid-xs mt-2">
+                <span className="text-gray-600">Price:</span>
+                <span className="font-medium text-dark">
+                  {formatPrice(pricing.usd_price)}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

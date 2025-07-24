@@ -34,7 +34,7 @@ export default function ArtistDashboardLayout({
         <NoMobileView />
       ) : (
         <div className=" w-full h-full">
-          <NextTopLoader color="#1A1A1A" height={6} />
+          <NextTopLoader color="#1a1a1a" height={6} />
           <VerificationBlockerModal
             open={user && user.role === "artist" && !user.artist_verified}
           />

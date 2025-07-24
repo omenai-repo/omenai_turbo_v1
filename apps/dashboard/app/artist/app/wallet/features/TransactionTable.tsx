@@ -10,9 +10,97 @@ import Link from "next/link";
 import { fetchWalletTransactions } from "@omenai/shared-services/wallet/fetchWalletTransactions";
 import { walletTransactionStore } from "@omenai/shared-state-store/src/artist/wallet/WalletTransactionStateStore";
 import TransactionHistorySkeleton from "@omenai/shared-ui-components/components/skeletons/TransactionHistorySkeleton";
+import TransactionPagination from "./TransactionPagination";
+
 export default function TransactionTable() {
   const { setTransactions, transactions, transactionLoading } =
     walletTransactionStore();
+
+  const getStatusConfig = (status: string) => {
+    switch (status) {
+      case "PENDING":
+        return {
+          color: "text-amber-600",
+          bgColor: "bg-amber-50",
+          borderColor: "border-amber-200",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          ),
+          label: "Processing",
+          message:
+            "Your funds are on their way to your bank account. This may take a little time—thank you for your patience.",
+        };
+      case "SUCCESSFUL":
+        return {
+          color: "text-green-600",
+          bgColor: "bg-green-50",
+          borderColor: "border-green-200",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          ),
+          label: "Completed",
+          message:
+            "Your funds have been successfully deposited into your bank account",
+        };
+      case "FAILED":
+        return {
+          color: "text-red-600",
+          bgColor: "bg-red-50",
+          borderColor: "border-red-200",
+          icon: (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          ),
+          label: "Failed",
+          message:
+            "Your funds transfer was unsuccessful. Please check your bank details or contact support for assistance",
+        };
+      default:
+        return {
+          color: "text-slate-600",
+          bgColor: "bg-slate-50",
+          borderColor: "border-slate-200",
+          icon: null,
+          label: status,
+          message: "",
+        };
+    }
+  };
 
   const items = transactions.map(
     (
@@ -20,130 +108,227 @@ export default function TransactionTable() {
         createdAt: string;
         updatedAt: string;
       }
-    ) => (
-      <Accordion.Item
-        key={transaction.trans_id}
-        value={transaction.trans_id}
-        className="px-5 py-2"
-      >
-        <Accordion.Control>
-          <div className="flex gap-x-2 items-start">
-            <Image
-              src={"/omenai_logo_cut.png"}
-              width={30}
-              height={30}
-              alt="Omenai logo cut"
-              className="w-fit h-fit"
-            />
-            <div
-              className="flex justify-between items-start cursor-pointer"
-              key={transaction.trans_id}
-            >
-              <div className="flex flex-col space-y-1">
-                <div>
-                  <h2
-                    className={`font-bold text-fluid-xxs ${transaction.trans_status === "PENDING" ? "text-blue-600" : transaction.trans_status === "FAILED" ? "text-red-600" : " text-green-600"}`}
-                  >
-                    Withdrawal{" "}
-                    {transaction.trans_status === "PENDING"
-                      ? "processing"
-                      : transaction.trans_status.toLowerCase()}
-                  </h2>
-                  <p className="text-fluid-xxs">
+    ) => {
+      const statusConfig = getStatusConfig(transaction.trans_status);
+
+      return (
+        <Accordion.Item
+          key={transaction.trans_id}
+          value={transaction.trans_id}
+          className="border border-slate-200 rounded-xl mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
+        >
+          <Accordion.Control className="hover:bg-slate-50 transition-colors">
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-4">
+                {/* Status Icon */}
+                <div
+                  className={`p-3 rounded-full ${statusConfig.bgColor} ${statusConfig.color}`}
+                >
+                  {statusConfig.icon || (
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M7 11l5-5m0 0l5 5m-5-5v12"
+                      />
+                    </svg>
+                  )}
+                </div>
+
+                {/* Transaction Info */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-dark">Withdrawal</h3>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full ${statusConfig.bgColor} ${statusConfig.color} font-medium`}
+                    >
+                      {statusConfig.label}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-500">
                     {formatISODate(transaction.createdAt)}
                   </p>
                 </div>
-                <h1 className="font-semibold text-[14px]">
-                  {formatPrice(transaction.trans_amount, "USD")}
-                </h1>
               </div>
-            </div>
-          </div>
-        </Accordion.Control>
-        <Accordion.Panel>
-          <Paper radius={"md"} withBorder className="p-6 text-fluid-xxs">
-            <div className="flex flex-col space-y-3">
-              <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs font-medium">
-                  Transaction ID
-                </span>
-                <p className="font-medium">{transaction.trans_id}</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs font-medium">
-                  Transaction Reference
-                </span>
-                <p className="font-medium">{transaction.trans_flw_ref_id}</p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs font-medium">
-                  Amount
-                </span>
-                <p className="font-medium">
-                  {formatPrice(transaction.trans_amount)}
-                </p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs font-medium">
-                  Date
-                </span>
-                <p className="font-medium">
-                  {formatISODate(transaction.createdAt)}
-                </p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs font-medium">
-                  Status
-                </span>
-                <p
-                  className={`font-semibold ${transaction.trans_status === "PENDING" ? "text-blue-600" : transaction.trans_status === "SUCCESSFUL" ? "text-green-600" : "text-red-600"}`}
-                >
-                  {transaction.trans_status}
-                </p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <span className="text-dark/70 text-fluid-xxs font-medium">
-                  Message
-                </span>
 
-                <p className={`font-medium `}>
-                  {transaction.trans_status === "PENDING" &&
-                    "Your funds are on their way to your bank account. This may take a little time—thank you for your patience."}
-                  {transaction.trans_status === "SUCCESSFUL" &&
-                    "Your funds have been successfully deposited into your bank account"}
-                  {transaction.trans_status === "FAILED" &&
-                    "Your funds transfer was unsuccessful. Please check your bank details or contact support for assistance"}
+              {/* Amount */}
+              <div className="text-right">
+                <p className="text-lg font-semibold text-dark">
+                  {formatPrice(transaction.trans_amount, "USD")}
                 </p>
               </div>
             </div>
-          </Paper>
-        </Accordion.Panel>
-      </Accordion.Item>
-    )
+          </Accordion.Control>
+
+          <Accordion.Panel className="border-t border-slate-200 bg-slate-50">
+            <div className="p-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Left Column */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                      Transaction ID
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <p className="font-mono text-sm text-dark">
+                        {transaction.trans_id}
+                      </p>
+                      <button
+                        onClick={() =>
+                          navigator.clipboard.writeText(transaction.trans_id)
+                        }
+                        className="p-1 rounded hover:bg-slate-200 transition-colors"
+                        title="Copy ID"
+                      >
+                        <svg
+                          className="w-4 h-4 text-slate-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                      Reference
+                    </label>
+                    <p className="font-mono text-sm text-dark">
+                      {transaction.trans_flw_ref_id}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                      Amount
+                    </label>
+                    <p className="text-lg font-semibold text-dark">
+                      {formatPrice(transaction.trans_amount)}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                      Date
+                    </label>
+                    <p className="text-sm text-dark">
+                      {formatISODate(transaction.createdAt)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Message */}
+              <div
+                className={`mt-6 p-4 rounded-lg ${statusConfig.bgColor} border ${statusConfig.borderColor}`}
+              >
+                <div className="flex gap-3">
+                  <div className={`flex-shrink-0 ${statusConfig.color}`}>
+                    {statusConfig.icon}
+                  </div>
+                  <div className="space-y-1">
+                    <p className={`font-medium ${statusConfig.color}`}>
+                      {transaction.trans_status}
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      {statusConfig.message}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Accordion.Panel>
+        </Accordion.Item>
+      );
+    }
   );
 
   return (
-    <>
+    <div className="w-full">
       {transactionLoading ? (
         <TransactionHistorySkeleton />
       ) : (
-        <Accordion
-          transitionDuration={500}
-          variant="separated"
-          radius="md"
-          className="w-full"
-        >
+        <>
           {transactions.length === 0 ? (
-            <div className="h-[400px] flex items-center justify-center ring-1 ring-[#e0e0e0] rounded-xl">
-              <NotFoundData />
+            <div className="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 p-12">
+              <div className="text-center max-w-sm mx-auto">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-8 h-8 text-slate-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-dark mb-2">
+                  No Transactions Yet
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Your withdrawal history will appear here once you make your
+                  first transaction.
+                </p>
+              </div>
             </div>
           ) : (
-            <>
-              <ScrollArea h={450}>{items}</ScrollArea>
-            </>
+            <div>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-dark">
+                  Transaction History
+                </h2>
+                <span className="text-sm text-slate-500">
+                  <Link
+                    href=""
+                    className="text-fluid-xxs underline font-medium"
+                  >
+                    See all
+                  </Link>
+                </span>
+              </div>
+              <ScrollArea h={600} className="pr-4">
+                <Accordion
+                  variant="filled"
+                  radius="md"
+                  className="space-y-0"
+                  styles={{
+                    content: { padding: 0 },
+                    control: { padding: 0 },
+                    item: {
+                      backgroundColor: "transparent",
+                      border: "none",
+                    },
+                  }}
+                >
+                  {items}
+                </Accordion>
+              </ScrollArea>
+            </div>
           )}
-        </Accordion>
+        </>
       )}
-    </>
+    </div>
   );
 }

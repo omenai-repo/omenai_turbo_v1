@@ -119,7 +119,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               required
               placeholder="Enter a new password"
-              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-full placeholder:text-[#606060] placeholder:text-fluid-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-xl placeholder:text-[#606060] placeholder:text-fluid-xs"
             />
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function UpdatePasswordModalForm() {
               type="password"
               placeholder="Confirm your password"
               required
-              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-full placeholder:text-[#606060] placeholder:text-fluid-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-xl placeholder:text-[#606060] placeholder:text-fluid-xs"
             />
           </div>
         </div>
@@ -156,7 +156,7 @@ export default function UpdatePasswordModalForm() {
               type="text"
               placeholder="Enter confirmation code"
               required
-              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-full placeholder:text-[#606060] placeholder:text-fluid-xs"
+              className="w-full focus:ring ring-1 border-0 ring-[#c8c8c8] outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xxs p-6 rounded-xl placeholder:text-[#606060] placeholder:text-fluid-xs"
             />
           </div>
 
@@ -171,7 +171,7 @@ export default function UpdatePasswordModalForm() {
                 info.password === "" ||
                 codeLoading
               }
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
             >
               {codeLoading ? <LoadSmall /> : "Get code"}
             </button>
@@ -199,7 +199,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+            className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
           >
             {loading ? <LoadSmall /> : "Update Password"}
           </button>

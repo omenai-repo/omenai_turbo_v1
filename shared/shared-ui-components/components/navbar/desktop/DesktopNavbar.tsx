@@ -7,11 +7,12 @@ import LoggedInUser from "../ui/LoggedInUser";
 import { SlMenu } from "react-icons/sl";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { IndividualLogo } from "../../logo/Logo";
+import { base_url } from "@omenai/url-config/src/config";
 
 const navbarlinks = [
-  { text: "Buy artworks", link: "/catalog" },
+  { text: "Buy artworks", link: `${base_url()}/catalog` },
   { text: "Shop", link: "https://omenai.shop" },
-  { text: "Editorials", link: "/articles" },
+  { text: "Editorials", link: `${base_url()}/articles` },
 ];
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();

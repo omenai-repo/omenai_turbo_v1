@@ -37,7 +37,7 @@ export default function OverviewOrdersCard({
         <span className="text-dark font-medium text-fluid-xs">
           {order_date}
         </span>
-        <span className="text-amber-600 font-medium px-2 py-1 text-[12px] rounded-full bg-amber-200/50">
+        <span className="text-amber-600 font-medium px-2 py-1 text-[12px] rounded-xl bg-amber-200/50">
           PENDING
         </span>
       </div>

@@ -27,6 +27,7 @@ import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { hasEmptyString } from "@omenai/shared-utils/src/hasEmptyString";
 import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { LockKeyhole, Shield } from "lucide-react";
 
 export default function CardInput({
   updateAuthorization,
@@ -158,45 +159,96 @@ export default function CardInput({
     // should be moved to the success response
   }
   return (
-    <form className="space-y-4" onSubmit={handleCardInputSubmit}>
-      <div className="flex justify-between items-center">
-        <h1 className="text-fluid-xs font-bold">Payment Method</h1>
-        <p className="text-[13px] flex items-center gap-x-1 font-bold">
-          <IoIosLock />
-          <span className="text-[13px]">Secure form</span>
-        </p>
-      </div>
+    <form className="max-w-full" onSubmit={handleCardInputSubmit}>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+          <h1 className="text-fluid-sm font-bold text-gray-900">
+            Payment Method
+          </h1>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full">
+            <LockKeyhole size={20} strokeWidth={1.5} absoluteStrokeWidth />
+            <span className="text-fluid-xs font-medium text-green-700">
+              Secure form
+            </span>
+          </div>
+        </div>
 
-      <div className="relative w-full ">
-        <label className="text-[#858585] text-[13px]" htmlFor="card_name">
-          Card name
-        </label>
-        <input
-          name="name"
-          type="text"
-          required
-          placeholder="Enter the name on your card"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleCardDetailInputChange(e.target.name, e.target.value)
-          }
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
-        />
-      </div>
-      <CardNumber onChange={handleCardDetailInputChange} />
+        {/* Card Name */}
+        <div className="relative w-full">
+          <label
+            className="block text-sm font-medium text-gray-600 mb-2"
+            htmlFor="card_name"
+          >
+            Cardholder name
+          </label>
+          <input
+            name="name"
+            type="text"
+            required
+            placeholder="Enter the name on your card"
+            onChange={(e) =>
+              handleCardDetailInputChange(e.target.name, e.target.value)
+            }
+            className="w-full h-12 px-4 text-sm font-medium bg-white border border-gray-200 rounded-xl focus:border-gray-900 focus:ring-4 focus:ring-gray-100 transition-all duration-200 placeholder:text-dark/30 outline-none disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+          />
+        </div>
 
-      <div className="grid grid-cols-3 gap-x-2 justify-center">
-        <ExpiryMonth onChange={handleCardDetailInputChange} />
-        <ExpiryYear onChange={handleCardDetailInputChange} />
-        <CVV onChange={handleCardDetailInputChange} />
-      </div>
-      <div className="w-full mt-10">
-        <button
-          type="submit"
-          disabled={cardInputLoading}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
-        >
-          {cardInputLoading ? <LoadSmall /> : "Submit"}
-        </button>
+        {/* Card Number */}
+        <CardNumber onChange={handleCardDetailInputChange} />
+
+        {/* Expiry and CVV */}
+        <div className="grid grid-cols-3 gap-4">
+          <ExpiryMonth onChange={handleCardDetailInputChange} />
+          <ExpiryYear onChange={handleCardDetailInputChange} />
+          <CVV onChange={handleCardDetailInputChange} />
+        </div>
+
+        {/* Security Notice */}
+        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+          <Shield className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">
+              Your payment is secured
+            </p>
+            <p className="text-xs text-blue-700 mt-1">
+              We use industry-standard encryption to protect your information
+            </p>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={cardInputLoading}
+            className="w-full h-12 bg-dark text-white text-fluid-xs font-semibold rounded-xl transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
+          >
+            {cardInputLoading ? <LoadSmall /> : "Complete Payment"}
+          </button>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="flex justify-center items-center gap-6 pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="w-8 h-5 bg-blue-600 rounded-sm flex items-center justify-center text-white font-bold text-[10px]">
+              VISA
+            </div>
+            <span>Visa</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="w-8 h-5 bg-red-600 rounded-sm flex items-center justify-center text-white font-bold text-[10px]">
+              MC
+            </div>
+            <span>Mastercard</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="w-8 h-5 bg-blue-500 rounded-sm flex items-center justify-center text-white font-bold text-[10px]">
+              AMEX
+            </div>
+            <span>Amex</span>
+          </div>
+        </div>
       </div>
     </form>
   );

@@ -4,26 +4,57 @@ import HighlightCardIcon from "./components/HighlightCardIcon";
 
 export default function Highlight() {
   return (
-    <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
       {highlightCardEl.map((item, index) => {
         return (
           <div
-            key={item.title}
-            className="flex flex-col rounded-[10px] shadow p-4 bg-dark text-white"
+            key={`dark-${item.title}`}
+            className="relative bg-slate-900 rounded-2xl shadow-lg overflow-hidden group"
           >
-            <div className="flex justify-between items-center w-full">
-              <div>
-                <p className="text-[#909090] text-fluid-xxs font-normal">
-                  {item.title}
-                </p>
-                <HighlightCard
-                  title={item.title}
-                  icon={item.icon}
-                  tag={item.tag}
-                />
-              </div>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `radial-gradient(circle at 1px 1px, ${item.color} 1px, transparent 1px)`,
+                  backgroundSize: "24px 24px",
+                }}
+              />
+            </div>
 
-              <HighlightCardIcon icon={item.icon} color={item.color} />
+            {/* Content */}
+            <div className="relative px-6 py-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 space-y-3">
+                  <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+                    {item.title}
+                  </p>
+                  <div className="text-white">
+                    <HighlightCard
+                      title={item.title}
+                      icon={item.icon}
+                      tag={item.tag}
+                    />
+                  </div>
+                  {/* {item.tag && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                      {item.tag.toUpperCase()}
+                    </span>
+                  )} */}
+                </div>
+
+                <div className="flex-shrink-0">
+                  <div className="relative">
+                    <div
+                      className="absolute inset-0 blur-xl opacity-40"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <div className="relative p-3 bg-slate-800 rounded-xl border border-slate-700">
+                      <HighlightCardIcon icon={item.icon} color={item.color} />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );

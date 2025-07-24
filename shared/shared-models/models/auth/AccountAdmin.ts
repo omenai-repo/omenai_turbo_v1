@@ -6,9 +6,9 @@ const adminAccountSchema = new Schema<AccountAdminSchemaTypes>(
   {
     name: {
       type: String,
-      required: true,
       min: 3,
       max: 50,
+      default: "",
     },
 
     email: {
@@ -19,7 +19,7 @@ const adminAccountSchema = new Schema<AccountAdminSchemaTypes>(
 
     password: {
       type: String,
-      required: true,
+      default: "",
     },
 
     admin_id: {
@@ -27,15 +27,19 @@ const adminAccountSchema = new Schema<AccountAdminSchemaTypes>(
       default: () => uuidv4(),
     },
 
-    // verified: {
-    //   type: Boolean,
-    //   required: true,
-    //   default: () => false,
-    // },
+    verified: {
+      type: Boolean,
+      default: () => false,
+    },
 
     role: {
       type: String,
       default: "admin",
+    },
+    access_role: {
+      type: String,
+      enum: ["admin", "owner", "editor", "viewer"],
+      required: true,
     },
   },
   { timestamps: true }

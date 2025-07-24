@@ -18,7 +18,7 @@ export default function ApprovedArtistRequests({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 my-5">
           {artists.map((artist) => {
             return (
               <ArtistRequest

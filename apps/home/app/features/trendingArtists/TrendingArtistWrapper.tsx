@@ -25,7 +25,7 @@ export default function TrendingArtistWrapper() {
       <div className="flex md:flex-row flex-col gap-4 mb-4">
         <div className="flex justify-between items-center w-full my-4">
           <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-3">
+            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-xl ring-dark font-medium text-[#000000] my-3">
               Trending Artists
             </p>
             <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">

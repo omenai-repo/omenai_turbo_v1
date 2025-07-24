@@ -18,7 +18,7 @@ export default function PromotionalCard({
   const { updateShowEditPromotionalModal } = adminModals();
 
   return (
-    <section className="group relative min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] h-[200px] rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-3xl">
+    <section className="group relative min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] h-[200px] rounded-md overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-3xl">
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent z-10" />
 
@@ -49,26 +49,26 @@ export default function PromotionalCard({
 
           {/* CTA Button */}
           <Link href={cta} className="inline-block">
-            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-2 xs:py-2.5 text-fluid-xxs rounded-full border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-2 xs:py-2.5 text-fluid-xxs rounded-md border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
               <span className="font-semibold">Explore</span>
               <IoIosArrowRoundForward className="transition-transform duration-300 group-hover/btn:translate-x-1" />
 
               {/* Button glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
+              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
             </button>
           </Link>
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm opacity-20 transition-all duration-500 group-hover:opacity-40 group-hover:scale-110" />
-        <div className="absolute bottom-4 right-8 w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm opacity-30 transition-all duration-700 group-hover:opacity-60" />
+        <div className="absolute top-4 right-4 w-16 h-16 rounded-md bg-white/10 backdrop-blur-sm opacity-20 transition-all duration-500 group-hover:opacity-40 group-hover:scale-110" />
+        <div className="absolute bottom-4 right-8 w-8 h-8 rounded-md bg-white/5 backdrop-blur-sm opacity-30 transition-all duration-700 group-hover:opacity-60" />
       </div>
 
       {/* Admin edit button */}
       {isAdmin && (
         <div
           onClick={updateShowEditPromotionalModal}
-          className="absolute -top-1 -right-1 z-30 cursor-pointer rounded-full h-10 w-10 bg-white shadow-lg ring-2 ring-gray-200 grid place-items-center transition-all duration-300 hover:scale-110 hover:shadow-xl hover:ring-blue-400 active:scale-95"
+          className="absolute -top-1 -right-1 z-30 cursor-pointer rounded-md h-10 w-10 bg-white shadow-lg ring-2 ring-gray-200 grid place-items-center transition-all duration-300 hover:scale-110 hover:shadow-xl hover:ring-blue-400 active:scale-95"
         >
           <Pencil
             color="#1a1a1a"

@@ -83,7 +83,7 @@ export default function Input({
         <div className="w-full relative">
           <input
             type={type === "password" ? (show ? "text" : type) : type}
-            className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] py-5 rounded-full w-full text-fluid-xxs placeholder:text-fluid-xs placeholder:text-dark/40 placeholder:font-medium font-medium"
+            className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] py-5 rounded-xl w-full text-fluid-xxs placeholder:text-fluid-xs placeholder:text-dark/40 placeholder:font-medium font-medium"
             placeholder={`${placeholder}`}
             disabled={disabled}
             onChange={handleChange}

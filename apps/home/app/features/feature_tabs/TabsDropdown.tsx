@@ -25,7 +25,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
     <div className="flex justify-between items-center md:hidden w-full relative">
       <div
         onClick={() => setDropDown(!dropdown)}
-        className="py-3 px-4 flex items-center gap-x-4 border-dark/30 border rounded-full text-fluid-xs bg-dark text-white"
+        className="py-3 px-4 flex items-center gap-x-4 border-dark/30 border rounded-xl text-fluid-xs bg-dark text-white"
       >
         <span>{selectedTab.title}</span>
         <MdOutlineKeyboardArrowDown />

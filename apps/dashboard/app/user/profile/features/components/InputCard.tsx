@@ -27,7 +27,7 @@ export const InputCard = ({ label, labelText, value }: Props) => {
             setProfileUpdateData(labelText, e.target.value)
           }
           disabled={labelText === "email"}
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full text-fluid-xs placeholder:text-dark/40 w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl text-fluid-xs placeholder:text-dark/40 w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
         />
       </div>
     </div>

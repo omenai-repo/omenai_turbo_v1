@@ -138,84 +138,54 @@ export default function CheckoutBillingCard({
 
   return (
     <>
-      <div className="flex justify-between items-center my-5">
-        <h1 className="text-fluid-xs font-bold">Payment Method</h1>
-        <p className="text-[13px] flex items-center gap-x-1 font-bold">
-          <IoIosLock />
-          <span className="text-[13px]">Secure form</span>
-        </p>
-      </div>
-      <div className="rounded-[10px] ring-1 ring-[#e0e0e0] bg-no-repeat text-dark bg-blend-overlay p-5 relative w-full h-fit">
-        <div className="w-full flex justify-start relative z-10 my-2">
-          <p className="text-dark text-fluid-xs font-semibold">
-            Billing card details
-          </p>
-        </div>
-        {/* Icon */}
-        <div className="flex justify-between items-center relative z-10">
-          <div>
-            <div className="flex space-x-3 items-center">
-              <p className="text-fluid-xs text-dark font-bold dark whitespace-nowrap tracking-widest">
-                {sub_data.card.first_6digits} ** ****{" "}
-                {sub_data.card.last_4digits}
-              </p>
-            </div>
-            <p className="text-normal text-fluid-xs font-normal text-dark ">
-              {sub_data.card.expiry}
-            </p>
+      <div className="mt-12 space-y-4">
+        <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-200">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-semibold text-slate-900">Payment Details</h2>
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+              <IoIosLock className="w-3 h-3" />
+              Encrypted
+            </span>
           </div>
 
-          <Image
-            src={`/icons/${sub_data.card.type.toLowerCase()}.png`}
-            alt={`${sub_data.card.type.toLowerCase()} logo`}
-            height={20}
-            width={40}
-            className="w-fit h-fit"
-          />
-        </div>
-        <div className="w-full flex justify-start mb-2 mt-5">
+          <div className="bg-white rounded-lg border border-slate-200 p-4 mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-8 bg-slate-900 rounded flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">CARD</span>
+                </div>
+                <div>
+                  <p className="font-mono text-sm font-medium text-slate-900">
+                    •••• {sub_data.card.last_4digits}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {sub_data.card.expiry}
+                  </p>
+                </div>
+              </div>
+              <Image
+                src={`/icons/${sub_data.card.type.toLowerCase()}.png`}
+                alt={sub_data.card.type}
+                height={24}
+                width={36}
+                className="h-6 w-auto"
+              />
+            </div>
+          </div>
+
           <Link
             href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan.plan_id}&interval=${interval}`}
-            className="w-full flex justify-start mt-5 mb-2"
           >
-            <button className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
-              <span>Change card</span>
+            <button className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
+              Use a different card →
             </button>
           </Link>
         </div>
+
+        <button className="w-full py-3 bg-dark text-white text-fluid-xs font-medium rounded-xl hover:bg-dark/90 transition-colors">
+          {loading ? "Processing..." : "Confirm Payment"}
+        </button>
       </div>
-      {error && (
-        <p className="text-[13px] text-red-600 font-bold py-2">{error}</p>
-      )}
-      {!shouldCharge ? (
-        <button
-          disabled={migrationLoading}
-          onClick={handleMigrateToPlan}
-          className="h-[35px] p-5 mt-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal my-5"
-        >
-          {migrationLoading ? (
-            <LoadSmall />
-          ) : (
-            <span className="flex items-center gap-x-2">
-              <IoIosLock /> <span>Activate Plan</span>
-            </span>
-          )}
-        </button>
-      ) : (
-        <button
-          onClick={handlePayNow}
-          disabled={loading}
-          className="h-[35px] p-5 mt-6 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
-        >
-          {loading ? (
-            <LoadSmall />
-          ) : (
-            <span className="flex items-center gap-x-2">
-              <IoIosLock /> <span>Pay now</span>
-            </span>
-          )}
-        </button>
-      )}
     </>
   );
 }

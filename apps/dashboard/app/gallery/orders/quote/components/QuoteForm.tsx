@@ -188,97 +188,153 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
   // session.data?.user.
   return (
-    <div className="mb-5 pb-5">
-      <div className="w-full py-3 bg-white">
-        <h1 className="text-fluid-base text-dark font-semibold">
-          Artpiece Dimension (Including packaging)
-        </h1>
-        <span className="text-fluid-xxs font-medium">
-          Kindly provide the dimensions of the piece after packaging so we can
-          calculate an accurate shipping cost for it.
-        </span>
+    <div className="max-w-7xl mt-4">
+      {/* Header Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-blue-100 rounded-xl">
+            <svg
+              className="w-6 h-6 text-dark"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-fluid-sm font-semibold text-dark">
+              Package Details
+            </h1>
+            <p className="text-slate-600 text-fluid-xs">
+              Please provide accurate dimensions including packaging to
+              calculate shipping costs
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-5 justify-center">
-        <ScrollArea>
-          <form
-            className="w-full flex flex-col gap-y-4 p-1"
-            onSubmit={handleSubmitQuoteFees}
-          >
-            <div className=" flex flex-col space-y-5 w-full">
-              <div className="grid grid-cols-2 gap-4 items-center justify-center">
-                <div className="relative w-full flex flex-col space-y-2">
-                  <label
-                    className="text-dark font-normal text-fluid-xxs"
-                    htmlFor="shipping"
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Form Section */}
+        <div className="order-2 lg:order-1">
+          <form onSubmit={handleSubmitQuoteFees} className="space-y-6">
+            {/* Dimensions Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h2 className="font-semibold text-dark flex items-center gap-2">
+                  <svg
+                    className="w-5 h-5 text-slate-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
                   >
-                    Length (in cm)
-                  </label>
-                  <input
-                    onChange={handleInputChange}
-                    name="length"
-                    type="number"
-                    step="any"
-                    placeholder="Length after packaging  in cm"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
-                  />
-                </div>
-                <div className="relative w-full flex flex-col space-y-2">
-                  <label
-                    className="text-dark font-normal text-fluid-xxs"
-                    htmlFor="shipping"
-                  >
-                    Height (in cm)
-                  </label>
-                  <input
-                    onChange={handleInputChange}
-                    name="height"
-                    type="number"
-                    step="any"
-                    placeholder="Height after packaging in cm"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4 items-center justify-center">
-                <div className="relative w-full flex flex-col space-y-2">
-                  <label
-                    className="text-dark font-normal text-fluid-xxs"
-                    htmlFor="shipping"
-                  >
-                    Width (in cm)
-                  </label>
-                  <input
-                    onChange={handleInputChange}
-                    name="width"
-                    type="number"
-                    step="any"
-                    placeholder="Width after packaging in cm"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
-                  />
-                </div>
-                <div className="relative w-full flex flex-col space-y-2">
-                  <label
-                    className="text-dark font-normal text-fluid-xxs"
-                    htmlFor="shipping"
-                  >
-                    Weight (in kg)
-                  </label>
-                  <input
-                    onChange={handleInputChange}
-                    name="weight"
-                    type="number"
-                    step="any"
-                    placeholder="Weight after packaging in kg"
-                    className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] text-fluid-xs font-medium p-5 rounded-full placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs"
-                  />
-                </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                    />
+                  </svg>
+                  Measurements
+                </h2>
               </div>
 
-              <div className="relative w-full flex flex-col space-y-2">
+              <div className="p-6">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Length */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Length
+                    </label>
+                    <div className="relative">
+                      <input
+                        onChange={handleInputChange}
+                        name="length"
+                        type="number"
+                        step="any"
+                        placeholder="0.00"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
+                        cm
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Height */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Height
+                    </label>
+                    <div className="relative">
+                      <input
+                        onChange={handleInputChange}
+                        name="height"
+                        type="number"
+                        step="any"
+                        placeholder="0.00"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
+                        cm
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Width */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Width
+                    </label>
+                    <div className="relative">
+                      <input
+                        onChange={handleInputChange}
+                        name="width"
+                        type="number"
+                        step="any"
+                        placeholder="0.00"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
+                        cm
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Weight */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Weight
+                    </label>
+                    <div className="relative">
+                      <input
+                        onChange={handleInputChange}
+                        name="weight"
+                        type="number"
+                        step="any"
+                        placeholder="0.00"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
+                        kg
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Exhibition Status */}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="space-y-4">
                 <NativeSelect
                   size="md"
-                  radius={"md"}
+                  radius="md"
                   label="Is this piece currently on exhibition?"
                   withAsterisk
                   data={["No", "Yes"]}
@@ -286,117 +342,220 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                   required
                   styles={{
                     label: {
-                      fontSize: 13,
-                      color: "#1a1a1a",
+                      fontSize: "14px",
+                      color: "#334155",
                       marginBottom: "8px",
-                      fontWeight: 400,
-                    },
-                    root: { fontSize: 13 },
-                    input: {
-                      border: "1px solid rgb(3 3 3 / 0.2)",
-                      fontSize: 13,
                       fontWeight: 500,
+                    },
+                    input: {
+                      border: "1px solid #e2e8f0",
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      padding: "",
                     },
                   }}
                   onChange={(e) => handleChangeExhibitionStatus(e.target.value)}
                 />
+
+                {exhibition_status?.is_on_exhibition && (
+                  <div className="pt-2">
+                    <DateTimePickerComponent
+                      handleDateTimeChange={set_exhibition_status}
+                    />
+                  </div>
+                )}
               </div>
-              {exhibition_status === null
-                ? null
-                : exhibition_status.is_on_exhibition && (
-                    <div className="relative w-full flex flex-col space-y-2">
-                      <DateTimePickerComponent
-                        handleDateTimeChange={set_exhibition_status}
-                      />
-                    </div>
-                  )}
             </div>
 
-            <div className=" flex flex-col space-y-2 mt-5 w-full">
-              <label
-                className="text-dark font-normal text-fluid-xxs"
-                htmlFor="shipping"
-              >
-                Special instructions (optional)
+            {/* Special Instructions */}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <label className="block text-sm font-medium text-slate-700 mb-3">
+                Special Instructions
+                <span className="text-slate-400 font-normal ml-1">
+                  (optional)
+                </span>
               </label>
-              <div className="relative w-full flex flex-col space-y-2">
-                <textarea
-                  onChange={handleInputChange}
-                  name="specialInstructions"
-                  placeholder="any special instructions for picking up the piece (e.g., Ring the doorbell)."
-                  rows={5}
-                  className="p-3 border border-[#E0E0E0] text-fluid-xs font-normal placeholder:text-dark/40 placeholder:font-normal placeholder:text-fluid-xxs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[10px]"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <WarningAlert />
-              <Checkbox
-                checked={terms_checked}
-                onChange={() => set_terms_checked(!terms_checked)}
-                label="I confirm that I have read and understand the terms associated with accepting this order"
-                color="#1a1a1a"
-                size="sm"
+              <textarea
+                onChange={handleInputChange}
+                name="specialInstructions"
+                placeholder="Add any special pickup instructions, handling requirements, or access details..."
+                rows={2}
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none"
               />
             </div>
-            <div className="w-full mt-5">
+
+            {/* Terms & Submit */}
+            <div className="space-y-2">
+              <WarningAlert />
+
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <div className="relative flex-shrink-0 mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={terms_checked}
+                    onChange={() => set_terms_checked(!terms_checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-5 h-5 border-2 border-slate-300 rounded peer-checked:border-dark peer-checked:bg-dark transition-colors">
+                    <svg
+                      className="w-full h-full text-white scale-0 peer-checked:scale-100 transition-transform"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <span className="text-sm text-slate-700 leading-relaxed">
+                  I confirm that I have read and understand the terms associated
+                  with accepting this order
+                </span>
+              </label>
+
               <button
-                disabled={loading || !terms_checked}
                 type="submit"
-                className="h-[35px] text-fluid-xxs font-normal p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white"
+                disabled={loading || !terms_checked}
+                className="w-full sm:w-auto px-4 py-2 bg-dark mb-4 text-white font-normal text-fluid-xs rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
               >
-                {loading ? <LoadSmall /> : " Accept order request"}
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <LoadSmall />
+                    Processing...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Accept Order Request
+                  </span>
+                )}
               </button>
             </div>
           </form>
-        </ScrollArea>
+        </div>
 
-        {/* Details */}
-        <div className="p-3 border h-fit border-[#E0E0E0] text-fluid-xxs rounded-lg">
-          <div className="flex flex-col gap-y-4 text-fluid-xs">
-            <div className="flex flex-col">
-              <Image
-                src={image_url}
-                alt={order_data!.data.artwork_data.title}
-                height={100}
-                width={100}
-                className="object-center h-[100px] w-[100px] object-cover rounded-[10px]"
-              />
+        {/* Order Details Card */}
+        <div className="order-1 lg:order-2">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-6">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-slate-200">
+              <h3 className="font-semibold text-dark flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-slate-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Order Summary
+              </h3>
             </div>
-            <div className="flex flex-col">
-              <p className="text-dark font-normal">Artwork name</p>
-              <p className="font-semibold">
-                {order_data?.data.artwork_data.title}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-dark font-normal">Artist name</p>
-              <p className="font-semibold">
-                {order_data?.data.artwork_data.artist}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-dark font-normal">Price</p>
-              <p className="font-semibold">
-                {formatPrice(order_data!.data.artwork_data.pricing.usd_price)}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-dark font-normal">Buyer name</p>
-              <p className="font-semibold">
-                {order_data?.data.buyer_details.name}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-dark font-normal">Buyer address</p>
-              <p className="font-semibold">
-                {order_data?.data.shipping_details.addresses.destination.state},{" "}
-                {
-                  order_data?.data.shipping_details.addresses.destination
-                    .country
-                }
-              </p>
+
+            {/* Content */}
+            <div className="p-6">
+              {/* Artwork Image */}
+              <div className="mb-6">
+                <div className="relative rounded-xl overflow-hidden shadow-md">
+                  <Image
+                    src={image_url}
+                    alt={order_data!.data.artwork_data.title}
+                    height={200}
+                    width={300}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                    <p className="text-white font-semibold">
+                      {order_data?.data.artwork_data.title}
+                    </p>
+                    <p className="text-white/80 text-sm">
+                      by {order_data?.data.artwork_data.artist}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Details List */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-slate-100">
+                  <span className="text-sm text-slate-600">Price</span>
+                  <span className="font-semibold text-dark">
+                    {formatPrice(
+                      order_data!.data.artwork_data.pricing.usd_price
+                    )}
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                      Buyer
+                    </p>
+                    <p className="font-medium text-dark">
+                      {order_data?.data.buyer_details.name}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                      Shipping To
+                    </p>
+                    <p className="text-sm text-slate-700">
+                      {
+                        order_data?.data.shipping_details.addresses.destination
+                          .state
+                      }
+                      ,{" "}
+                      {
+                        order_data?.data.shipping_details.addresses.destination
+                          .country
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                {/* Status Badge */}
+                <div className="pt-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 rounded-lg text-sm font-medium">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Awaiting Dimensions
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

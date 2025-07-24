@@ -24,7 +24,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
       const artwork = await fetchSingleArtworkOnPurchase(slug);
       if (!userData?.isOk || !artwork?.isOk) {
         toast.error("Error notification", {
-          description: userData?.message,
+          description: "Something went wrong, please try again later",
           style: {
             background: "red",
             color: "white",
@@ -55,8 +55,6 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
         <div className="relative h-full p-5 max-w-screen-xl">
           <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 md:gap-x-8 lg:gap-x-16 gap-y-8">
             <div className="col-span-1 xl:col-span-2 border-1 border-dark/10 pt-6">
-              <DeliveryMethod />
-              <hr className="border-1 border-dark/10 my-12" />
               <AddressForm
                 availability={(artwork as ArtworkResultTypes).availability}
                 userAddress={address}

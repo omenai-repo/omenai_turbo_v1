@@ -22,7 +22,7 @@ module.exports = {
     extend: {
       colors: {
         primary: "#2A9EDF",
-        dark: "#030303",
+        dark: "#1a1a1a",
         gray: {
           200: "#47748E",
           300: "#F6F6F6",
@@ -35,7 +35,7 @@ module.exports = {
         sliderThumbHover: "#e64a19",
 
         line: "#DEDEDE",
-        authSideDark: "#1A1A1A",
+        authSideDark: "#1a1a1a",
       },
       fontSize: {
         "fluid-xxs": "clamp(0.625rem, 0.25vw + 0.5rem, 0.75rem)", // 10 > 12px

@@ -48,75 +48,77 @@ export function TransactionTable({
     }
   );
   return (
-    <div className="h-full w-full overflow-scroll">
-      <table className=" w-full table-auto border-separate border-spacing-y-2 overflow-scroll text-left md:overflow-auto">
-        <thead className="w-full rounded-full h-[35px] bg-[#EFEFEF] text-fluid-base font-semibold text-white">
-          <tr className="px-1 rounded-full">
-            {TABLE_HEAD.map((head) => (
-              <th
-                key={head}
-                className="whitespace-nowrap  py-3 pl-3 text-fluid-xxs font-medium text-dark"
-              >
-                <p className="font-bold text-fluid-xxs">{head}</p>
-              </th>
-            ))}
-          </tr>
-        </thead>
+    <div className="h-full w-full overflow-auto">
+      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+        <table className="w-full">
+          <thead className="bg-gray-50 border-b border-gray-100">
+            <tr>
+              {TABLE_HEAD.map((head) => (
+                <th
+                  key={head}
+                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 whitespace-nowrap"
+                >
+                  {head}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-        <tbody>
-          {transaction_table_data.map((data: any, index: number) => {
-            const isLast = index === transaction_table_data.length - 1;
-            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
-            return (
+          <tbody className="divide-y divide-gray-100">
+            {transaction_table_data.map((data, index) => (
               <tr
                 key={data.id}
-                className="cursor-pointer bg-white ring-1 ring-[#EFEFEF] duration-200 my-2"
+                className="hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
               >
-                <td
-                  className={`py-4 pl-3 text-fluid-xxs font-medium text-dark`}
-                >
-                  <p className="font-medium text-fluid-xxs">{data.id}</p>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  {data.id}
                 </td>
-                <td
-                  className={`py-4 pl-3 text-fluid-xxs font-medium text-dark`}
-                >
-                  <p className="font-medium text-fluid-xxs">{data.date}</p>
+                <td className="px-6 py-4 text-sm text-gray-600">{data.date}</td>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  {data.gross}
                 </td>
-                <td
-                  className={`py-4 pl-3 text-fluid-xxs font-medium text-dark`}
-                >
-                  <p className="font-medium text-fluid-xxs">{data.gross}</p>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  {data.net}
                 </td>
-                <td
-                  className={`py-4 pl-3 text-fluid-xxs font-medium text-dark`}
-                >
-                  <p className="font-medium text-fluid-xxs">{data.net}</p>
+                <td className="px-6 py-4 text-sm text-gray-600">
+                  {data.commission}
                 </td>
-                <td
-                  className={`py-4 pl-3 text-fluid-xxs font-medium text-dark flex items-center space-x-2`}
-                >
-                  <p className="font-medium text-fluid-xxs">
-                    {data.commission}
-                  </p>
-                </td>
-                <td
-                  className={`py-4 pl-3 text-fluid-xxs font-medium text-dark`}
-                >
-                  <p className="font-medium text-[12px] px-4 py-1 rounded-full text-white bg-green-600 w-fit">
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     {data.status}
-                  </p>
+                  </span>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      {transaction_table_data.length === 0 && (
-        <div className="h-[35vh] w-full grid place-items-center">
-          <NotFoundData />
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+
+        {transaction_table_data.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg
+                className="w-8 h-8 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No transactions found
+            </h3>
+            <p className="text-sm text-gray-500">
+              Your transaction history will appear here
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -151,7 +151,7 @@ export default function AuthPinInput({
           maxLength={4}
           minLength={4}
           value={auth_data.pin}
-          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-dark/40 placeholder:text-fluid-xs"
+          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40 placeholder:text-fluid-xs"
         />
       </div>
 
@@ -159,7 +159,7 @@ export default function AuthPinInput({
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

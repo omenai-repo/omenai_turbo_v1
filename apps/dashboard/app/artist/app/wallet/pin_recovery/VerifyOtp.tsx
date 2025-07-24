@@ -153,7 +153,7 @@ export default function VerifyOTP({
             </p>
             <button
               onClick={() => setVerification(otpVerified)}
-              className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded-xl w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
             >
               Proceed
             </button>

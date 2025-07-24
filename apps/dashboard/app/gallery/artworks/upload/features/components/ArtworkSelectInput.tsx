@@ -39,7 +39,7 @@ export default function ArtworkSelectInput({
         onChange={handleChange}
         required={required}
         disabled={disabled}
-        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-fluid-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-full "
+        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-fluid-xs focus:ring-dark px-6 py-2 sm:py-3 rounded-xl "
       >
         <option value={disabled ? "Yes" : ""}>
           {disabled ? "Yes" : "Select"}

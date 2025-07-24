@@ -25,62 +25,65 @@ export default function TransactionTable() {
     refetchOnWindowFocus: false,
   });
   return (
-    <div className="flex flex-col gap-y-4 w-full rounded-[10px] overflow-y-scroll overflow-x-hidden text-fluid-xs p-4 ring-1 ring-[#e0e0e0]">
-      <div className="flex justify-center">
-        <h2 className="text-fluid-base font-semibold">Transaction History</h2>
-      </div>
-      {isLoading ? (
-        <div className="w-full h-full grid place-items-center">
-          <LoadIcon />
-        </div>
-      ) : transactions.length > 0 ? (
-        <div className="flex flex-col gap-y-5 mt-5">
-          {transactions?.map((transaction: any) => {
-            return (
-              <div
-                className="flex justify-between items-start"
-                key={transaction.trans_id}
-              >
-                <div className="flex gap-x-2">
-                  <Image
-                    src={"/omenai_logo_cut.png"}
-                    width={30}
-                    height={30}
-                    alt="Omenai logo cut"
-                    className="w-fit h-fit"
-                  />
+    <div className=" bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h2 className="text-base font-semibold text-slate-900 mb-6">
+        Recent Transaction Activity
+      </h2>
 
-                  <div>
-                    <h2 className="font-semibold text-fluid-xs">
-                      {transaction.trans_id}
-                    </h2>
-                    <p className="text-fluid-xxs font-medium">
-                      {formatISODate(transaction.date)}
+      <div className="max-h-[350px] overflow-y-auto pr-2 space-y-3">
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <LoadIcon />
+          </div>
+        ) : transactions.length > 0 ? (
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-200"></div>
+
+            {/* Transaction Items */}
+            {transactions.map((transaction: any, index: number) => (
+              <div
+                key={transaction.trans_id}
+                className="relative flex items-start gap-4 pb-6 last:pb-0"
+              >
+                {/* Timeline Dot */}
+                <div className="relative z-10 flex-shrink-0">
+                  <div className="w-10 h-10 bg-white border-2 border-slate-300 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-slate-600">
+                      {index + 1}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 bg-slate-50 rounded-lg p-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-slate-900">
+                        Payment Processed Successfully
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {transaction.trans_id}
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1">
+                        {formatISODate(transaction.date)}
+                      </p>
+                    </div>
+                    <p className="font-semibold text-slate-900">
+                      {formatPrice(transaction.amount)}
                     </p>
                   </div>
                 </div>
-                <div>
-                  <h1 className="font-semibold">
-                    {formatPrice(transaction.amount)}
-                  </h1>
-                </div>
               </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div
-          className="w-full h-full grid place-items-center justify-center
-        "
-        >
-          <div>
-            <NotFoundData />
-            <p className="text-fluid-xs font-semisemibold">
-              No transactions found
-            </p>
+            ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-12">
+            <NotFoundData />
+            <p className="text-sm text-slate-500 mt-2">No transactions found</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

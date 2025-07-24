@@ -1,6 +1,7 @@
 "use client";
 
 import { getCardType } from "@omenai/shared-utils/src/cardTypeDetection";
+import { CreditCard } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -42,42 +43,40 @@ export default function CardNumber({ onChange }: CardNumberProps) {
   // ... card type detection logic (getCardType function)
 
   return (
-    <div>
-      <div className="relative w-full ">
-        <label className="text-[#858585] text-[13px]" htmlFor="card_number">
-          Card number
-        </label>
-        <div className="w-auto relative">
-          <input
-            onChange={handleInputChange}
-            name="card_number"
-            type="text"
-            required
-            value={formattedCardNumber}
-            maxLength={24} // Limit input length to 19 characters
-            placeholder="1234 1234 1234 1234"
-            className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
-          />
+    <div className="relative w-full">
+      <label
+        className="block text-sm font-medium text-gray-600 mb-2"
+        htmlFor="card_number"
+      >
+        Card number
+      </label>
+      <div className="relative">
+        <input
+          name="card_number"
+          type="text"
+          required
+          placeholder="1234 5678 9012 3456"
+          onChange={handleInputChange}
+          className="w-full h-12 px-4 pr-12 text-sm font-medium bg-white border rounded-xl focus:border-gray-900 focus:ring-4 focus:ring-gray-100 transition-all duration-200 placeholder:text-dark/30 outline-none"
+        />
+        <CreditCard className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-dark" />
 
-          {cardType !== null && (
-            <div className="h-[35px] w-fit absolute top-0 right-3 grid place-items-center">
-              <Image
-                src={`/icons/${cardType.toLowerCase()}.png`}
-                alt={`${cardType} logo`}
-                width={36}
-                height={12}
-                className=""
-              />
-            </div>
-          )}
-        </div>
-
-        {error && (
-          <span className="error-message text-[13px] text-red-600">
-            {error}
-          </span>
+        {cardType !== null && (
+          <div className="h-[35px] w-fit absolute top-0 right-3 grid place-items-center">
+            <Image
+              src={`/icons/${cardType.toLowerCase()}.png`}
+              alt={`${cardType} logo`}
+              width={36}
+              height={12}
+              className=""
+            />
+          </div>
         )}
       </div>
+
+      {error && (
+        <span className="error-message text-[13px] text-red-600">{error}</span>
+      )}
     </div>
   );
 }

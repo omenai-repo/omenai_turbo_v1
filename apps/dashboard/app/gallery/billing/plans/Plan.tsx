@@ -63,82 +63,133 @@ export default function Plan({
 
   return (
     <>
-      <div className="relative z-10 w-fit my-12">
-        <div className="mx-auto w-fit">
-          <div className="flex flex-col rounded-3xl bg-white shadow-xl ring-1 ring-[#E0E0E0]">
-            <div className="p-8">
-              <h3
-                className="text-fluid-sm font-semibold leading-4 tracking-tight text-dark"
-                id="tier-hobby"
-              >
-                {name}
-              </h3>
-              <div className="mt-4 flex items-baseline text-fluid-xl font-bold tracking-tight text-gray-900">
-                {tab === "monthly"
-                  ? `$${pricing.monthly_price}`
-                  : `$${pricing.annual_price}`}
-
-                <span className="text-fluid-lg font-semibold leading-8 tracking-normal text-gray-500">
-                  {tab === "monthly" ? `/mo` : `/yr`}
-                </span>
-              </div>
-              <p className="mt-6 text-fluid-xs text-gray-600">
-                {name === "Basic" && "All basic features included."}
-                {name === "Pro" && "Best deal for you"}
-                {name === "Premium" && "For those who expect more"}
-              </p>
+      <div className="relative w-full max-w-sm mx-auto my-12">
+        {/* Design 1: Premium Card with Badge */}
+        <div className="relative">
+          {/* Popular Badge */}
+          {name === "Pro" && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+              <span className="inline-flex items-center px-4 py-1 rounded-full text-xs font-semibold bg-blue-600 text-white shadow-lg">
+                Most Popular
+              </span>
             </div>
-            <div className="flex flex-1 flex-col p-2">
-              <div className="flex flex-1 flex-col justify-between rounded-2xl bg-gray-50 p-4">
-                <ul role="list" className="space-y-4">
-                  {benefits.map((benefit) => {
-                    return (
-                      <li key={benefit} className="flex items-start">
-                        <span className="flex-shrink-0">
-                          <svg
-                            className="h-4 w-4 text-dark"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M4.5 12.75l6 6 9-13.5"
-                            ></path>
-                          </svg>
-                        </span>
-                        <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
-                          {benefit}
-                        </p>
-                      </li>
-                    );
-                  })}
-                </ul>
-                <div className="mt-8">
-                  <Link
-                    href={`/gallery/billing/plans/checkout?plan_id=${plan_id}&interval=${tab}&id=${id}&action=${
-                      sub_data === null ? null : plan_change_params.action
-                    }&plan_action=${plan_action}`}
-                    aria-describedby="tier-plan"
-                  >
-                    <button
-                      disabled={
-                        sub_data !== null &&
-                        sub_data.status === "active" &&
-                        sub_data.plan_details.type === name &&
-                        sub_data.plan_details.interval === tab &&
-                        plan_action === null
-                      }
-                      className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
-                    >
-                      {buttonText}
-                    </button>
-                  </Link>
+          )}
+
+          <div
+            className={`bg-white rounded-2xl shadow-lg overflow-hidden ${
+              name === "Pro"
+                ? "ring-2 ring-blue-600"
+                : "border border-slate-200"
+            }`}
+          >
+            {/* Header Section */}
+            <div className="p-8 pb-6">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">{name}</h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {name === "Basic" && "Essential features to get started"}
+                    {name === "Pro" && "Perfect for growing businesses"}
+                    {name === "Premium" && "Advanced features for scale"}
+                  </p>
                 </div>
+                {name === "Premium" && (
+                  <div className="p-2 bg-purple-100 rounded-lg">
+                    <svg
+                      className="w-5 h-5 text-purple-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+
+              {/* Pricing */}
+              <div className="mt-6">
+                <div className="flex items-baseline">
+                  <span className="text-4xl font-bold text-slate-900">
+                    $
+                    {tab === "monthly"
+                      ? pricing.monthly_price
+                      : pricing.annual_price}
+                  </span>
+                  <span className="ml-2 text-lg text-slate-500">
+                    /{tab === "monthly" ? "month" : "year"}
+                  </span>
+                </div>
+                {tab === "yearly" && (
+                  <p className="mt-1 text-sm text-green-600 font-medium">
+                    Save $
+                    {(
+                      Number(pricing.monthly_price) * 12 -
+                      Number(pricing.annual_price)
+                    ).toFixed(0)}{" "}
+                    per year
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Features Section */}
+            <div className="px-8 pb-8">
+              <div className="border-t border-slate-200 pt-6">
+                <h4 className="text-sm font-semibold text-slate-900 mb-4">
+                  What's included
+                </h4>
+                <ul className="space-y-3">
+                  {benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <svg
+                        className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span className="text-sm text-slate-700">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* CTA Button */}
+              <div className="mt-8">
+                <Link
+                  href={`/gallery/billing/plans/checkout?plan_id=${plan_id}&interval=${tab}&id=${id}&action=${
+                    sub_data === null ? null : plan_change_params.action
+                  }&plan_action=${plan_action}`}
+                >
+                  <button
+                    disabled={
+                      sub_data !== null &&
+                      sub_data.status === "active" &&
+                      sub_data.plan_details.type === name &&
+                      sub_data.plan_details.interval === tab &&
+                      plan_action === null
+                    }
+                    className={`w-full py-3 px-6 rounded-xl font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                      name === "Pro"
+                        ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600"
+                        : "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900"
+                    } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                  >
+                    {buttonText}
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

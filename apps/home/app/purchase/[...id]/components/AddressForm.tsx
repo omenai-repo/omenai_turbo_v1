@@ -123,84 +123,167 @@ export default function AddressForm({
 
   return (
     <>
-      <div className="w-full my-[1rem]">
-        <h1 className="my-6 text-fluid-xs font-medium">Address Information</h1>
-        <form onSubmit={handleOrderSubmission}>
-          <div className="grid xl:grid-cols-2 gap-y-2 gap-x-4">
-            {userDetails.map((detail, index) => {
-              return (
-                <AddressTextInput
-                  key={detail.name}
-                  placeholder={detail.placeholder}
-                  label={detail.label}
-                  name={detail.name}
-                  type={detail.type}
-                  required={detail.required}
-                  disabled={true}
-                  defaultValue={
-                    detail.name === "name" ? user.name || "" : user.email || ""
-                  }
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          {/* Header */}
+          <div className="bg-slate-50 px-8 py-6 border-b border-slate-200">
+            <h1 className="text-xl font-semibold text-dark flex items-center gap-3">
+              <svg
+                className="w-5 h-5 text-slate-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                 />
-              );
-            })}
-          </div>
-          <div className="grid xl:grid-cols-2 gap-y-2 gap-x-4">
-            {userLocation.map((location: any, index: number) => {
-              return location.type === "select" ? (
-                <AddressSelectInput
-                  key={index}
-                  label={location.label}
-                  name={location.name}
-                  items={location.items}
-                  labelText={location.labelText}
-                  defaultValue={
-                    user.address?.[location.labelText as keyof AddressTypes] ??
-                    ""
-                  }
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
-              ) : (
-                <AddressTextInput
-                  key={location.labelText}
-                  placeholder={location.placeholder}
-                  label={location.label}
-                  name={location.labelText}
-                  type={location.type}
-                  required={true}
-                  disabled={false}
-                  defaultValue={
-                    user?.address?.[location.labelText as keyof AddressTypes] ||
-                    ""
-                  }
-                />
-              );
-            })}
+              </svg>
+              Shipping Address
+            </h1>
+            <p className="text-sm text-slate-600 mt-1">
+              Please confirm your delivery details
+            </p>
           </div>
 
-          <div className="flex lg:flex-row flex-col sm:justify-between sm:items-center mt-2">
-            <div className="my-5">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="save address"
-                  id="save_address"
-                  onChange={(e) => setSaveShippingAddress(e.target.checked)}
-                />
-                <label htmlFor="age" className="text-fluid-xs">
-                  Save my address
-                </label>
+          {/* Form Content */}
+          <form onSubmit={handleOrderSubmission} className="p-8">
+            {/* Personal Information Section */}
+            <div className="mb-8">
+              <h2 className="text-sm font-medium text-slate-700 mb-4 uppercase tracking-wide">
+                Personal Information
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {userDetails.map((detail, index) => (
+                  <div key={detail.name} className="space-y-2">
+                    <AddressTextInput
+                      placeholder={detail.placeholder}
+                      label={detail.label}
+                      name={detail.name}
+                      type={detail.type}
+                      required={detail.required}
+                      disabled={true}
+                      defaultValue={
+                        detail.name === "name"
+                          ? user.name || ""
+                          : user.email || ""
+                      }
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="w-fit my-4">
+
+            {/* Delivery Address Section */}
+            <div className="mb-8">
+              <h2 className="text-sm font-medium text-slate-700 mb-4 uppercase tracking-wide">
+                Delivery Address
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {userLocation.map((location: any, index: number) => (
+                  <div key={index} className="space-y-2">
+                    {location.type === "select" ? (
+                      <AddressSelectInput
+                        label={location.label}
+                        name={location.name}
+                        items={location.items}
+                        labelText={location.labelText}
+                        defaultValue={
+                          user.address?.[
+                            location.labelText as keyof AddressTypes
+                          ] ?? ""
+                        }
+                      />
+                    ) : (
+                      <AddressTextInput
+                        placeholder={location.placeholder}
+                        label={location.label}
+                        name={location.labelText}
+                        type={location.type}
+                        required={true}
+                        disabled={false}
+                        defaultValue={
+                          user?.address?.[
+                            location.labelText as keyof AddressTypes
+                          ] || ""
+                        }
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions Section */}
+            <div className="border-t border-slate-200 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              {/* Save Address Checkbox */}
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    name="save_address"
+                    id="save_address"
+                    onChange={(e) => setSaveShippingAddress(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-5 h-5 border-2 border-slate-300 rounded peer-checked:border-dark peer-checked:bg-dark transition-colors">
+                    <svg
+                      className="w-full h-full text-white scale-0 peer-checked:scale-100 transition-transform"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <span className="text-sm text-slate-700 select-none">
+                  Save this address for future orders
+                </span>
+              </label>
+
+              {/* Submit Button */}
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full rounded-full h-[35px] p-5 text-fluid-xs disabled:cursor-not-allowed disabled:bg-white disabled:border disabled:border-dark bg-dark text-white duration-300 hover:underline flex items-center justify-center"
+                className="px-4 py-2 bg-dark text-white font-medium rounded-xl shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 min-w-[180px] text-fluid-xs"
               >
-                {!loading ? "Place this order" : <LoadSmall />}
+                {!loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    Place Order request
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
+                  </span>
+                ) : (
+                  <LoadSmall />
+                )}
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </>
   );

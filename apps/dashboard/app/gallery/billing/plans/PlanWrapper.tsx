@@ -21,7 +21,7 @@ export default function PlanWrapper({
   const [tab, setTab] = useState<"monthly" | "yearly">("monthly");
 
   return (
-    <div>
+    <div className="">
       <PlanDurationTab tab={tab} setTab={setTab} />
       <div className="flex lg:flex-wrap xl:flex-nowrap justify-center items-center gap-x-4">
         {plans.map((plan: SubscriptionPlanDataTypes & any) => {

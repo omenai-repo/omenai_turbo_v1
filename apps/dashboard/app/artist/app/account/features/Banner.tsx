@@ -28,7 +28,7 @@ export const ProfileBanner = () => {
               alt="user avatar"
               width={45}
               height={45}
-              className="rounded-full overflow-hidden"
+              className="rounded-xl overflow-hidden"
             />
           ) : (
             <RxAvatar />

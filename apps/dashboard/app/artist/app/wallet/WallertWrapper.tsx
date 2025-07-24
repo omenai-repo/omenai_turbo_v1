@@ -92,12 +92,6 @@ export default function Wallet() {
           </div>
 
           <div className="col-span-1 relative">
-            <div className="flex justify-between items-center">
-              <h1 className="font-semibold mb-4">Transaction history</h1>
-              <Link href="" className="text-fluid-xxs underline font-medium">
-                See all
-              </Link>
-            </div>
             <TransactionTable />
             <div className="absolute bottom-0 flex w-full justify-center mb-4">
               <TransactionPagination

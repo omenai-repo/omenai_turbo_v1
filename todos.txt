@@ -72,3 +72,21 @@ export const calculatePrice = (
 
   return Math.round(price);
 };
+
+
+  const code = useSearchParams().get("code");
+
+  const { data: nexus, isLoading: loading } = useQuery({
+    queryKey: ["nexus_performance", code],
+    queryFn: async () => {
+      const response = await fetchNexusData(code || "");
+      if (!response.isOk || response.data === undefined) {
+        throw new Error(response.message);
+      }
+      return response.data as NexusDocument;
+    },
+  });
+
+  if (loading) return <Load />;
+
+  console.log(nexus);

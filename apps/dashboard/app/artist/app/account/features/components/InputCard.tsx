@@ -40,7 +40,7 @@ export const InputCard = (props: Props) => {
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleChange(labelText, e.target.value)
           }
-          className={`w-full text-fluid-xxs text-dark focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40 disabled:cursor-not-allowed disabled:text-dark/10`}
+          className={`w-full text-fluid-xxs text-dark focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-fluid-xs placeholder:text-dark/40 disabled:cursor-not-allowed disabled:text-dark/10`}
           {...rest}
         />
       </div>

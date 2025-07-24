@@ -11,57 +11,177 @@ export default function PrimaryWithdrawalAccount({
   return (
     <>
       {withdrawal_account === null ? (
-        <div className="my-5">
-          <Link
-            className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
-            href="/artist/app/wallet/add_primary_account"
-          >
-            Add primary account
-          </Link>
+        // Empty State - No Account
+        <div className="my-8">
+          <div className="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 p-8 text-center">
+            <div className="max-w-sm mx-auto space-y-4">
+              {/* Icon */}
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
+                <svg
+                  className="w-8 h-8 text-slate-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+
+              {/* Text */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-slate-900">
+                  No Withdrawal Account
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Add a primary account to withdraw your earnings
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <Link
+                href="/artist/app/wallet/add_primary_account"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-medium rounded-xl shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add Primary Account
+              </Link>
+            </div>
+          </div>
         </div>
       ) : (
-        <>
-          <div className="flex flex-col space-y-2">
-            <Paper
-              radius="md"
-              className="flex flex-col space-y-6 p-5 my-6"
-              withBorder
-            >
-              <p className=" font-semibold">Primary withdrawal account</p>
-              <div className=" text-fluid-xs font-medium">
-                <div className="flex justify-between items-center">
-                  <p className="text-fluid-xs">Bank name</p>
-                  <p className="text-fluid-xs">
-                    {withdrawal_account.bank_name.toUpperCase()}
-                  </p>
+        // Account Details Card
+        <div className="my-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-slate-900">
+                      Primary Withdrawal Account
+                    </h3>
+                    <p className="text-xs text-slate-600">
+                      Active and verified
+                    </p>
+                  </div>
                 </div>
-                <Divider my="sm" />
-                <div className="flex justify-between items-center">
-                  <p className="text-fluid-xs">Account number</p>
-                  <p className="text-fluid-xs">
+              </div>
+            </div>
+
+            {/* Account Details */}
+            <div className="p-6 space-y-1">
+              {/* Bank Name */}
+              <div className="flex items-center justify-between py-3 group">
+                <span className="text-sm text-slate-600">Bank Name</span>
+                <span className="text-sm font-medium text-slate-900">
+                  {withdrawal_account.bank_name.toUpperCase()}
+                </span>
+              </div>
+
+              <div className="border-b border-slate-100"></div>
+
+              {/* Account Number */}
+              <div className="flex items-center justify-between py-3 group">
+                <span className="text-sm text-slate-600">Account Number</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-900 font-mono">
                     {withdrawal_account.account_number}
-                  </p>
-                </div>
-                <Divider my="sm" />
-                <div className="flex justify-between items-center">
-                  <p className="text-fluid-xs">Account name</p>
-                  <p className="text-fluid-xs">
-                    {withdrawal_account.account_name}
-                  </p>
+                  </span>
+                  <button
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        String(withdrawal_account.account_number)
+                      )
+                    }
+                    className=" p-1 rounded hover:bg-slate-100 transition-all"
+                    title="Copy account number"
+                  >
+                    <svg
+                      className="w-4 h-4 text-slate-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
-              <div className="">
+              <div className="border-b border-slate-100"></div>
+
+              {/* Account Name */}
+              <div className="flex items-center justify-between py-3">
+                <span className="text-sm text-slate-600">Account Name</span>
+                <span className="text-sm font-medium text-slate-900">
+                  {withdrawal_account.account_name}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Footer */}
+            <div className="bg-slate-50 px-6 py-4 border-t border-slate-200">
+              <div className="flex items-center justify-between">
                 <Link
-                  className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                   href="/artist/app/wallet/add_primary_account"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium text-sm rounded-lg shadow-sm transition-all transform active:scale-95 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
                 >
-                  Change primary account
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                    />
+                  </svg>
+                  Change Account
                 </Link>
               </div>
-            </Paper>
+            </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

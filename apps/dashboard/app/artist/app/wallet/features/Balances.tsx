@@ -38,44 +38,79 @@ export default function Balances({
     toggleWithdrawalFormPopup(true);
   };
   return (
-    <div className="bg-gradient-to-r from-dark to-dark/80 text-white p-8 rounded-[10px] space-y-6">
-      <div className="flex justify-between items-center">
-        <h4>Wallet balance</h4>
-        <CurrencyDropdown />
+    <div className="bg-dark text-white rounded-2xl shadow-xl overflow-hidden">
+      {/* Header Section */}
+      <div className="px-8 py-6 border-b border-slate-800">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-slate-800 rounded-lg">
+              <svg
+                className="w-5 h-5 text-slate-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
+                />
+              </svg>
+            </div>
+            <h4 className="text-lg font-semibold">Wallet Balance</h4>
+          </div>
+          <CurrencyDropdown />
+        </div>
       </div>
 
-      <div className="flex flex-col space-y-4">
-        <div className="flex flex-col space-y-1">
-          <div className="flex items-center gap-x-3">
-            <p className="text-fluid-xs">Available balance</p>
-            {showBalance ? (
-              <Eye
-                onClick={() => setShowBalance(!showBalance)}
-                size={24}
-                strokeWidth={1.5}
-                absoluteStrokeWidth
-                className="cursor-pointer"
-              />
-            ) : (
-              <EyeOff
-                onClick={() => setShowBalance(!showBalance)}
-                size={24}
-                strokeWidth={1.5}
-                absoluteStrokeWidth
-                className="cursor-pointer"
-              />
-            )}
+      {/* Balance Section */}
+      <div className="p-8 space-y-6">
+        {/* Available Balance */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-slate-400">Available Balance</p>
+            <button
+              onClick={() => setShowBalance(!showBalance)}
+              className="p-1 rounded-md transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600"
+              aria-label={showBalance ? "Hide balance" : "Show balance"}
+            >
+              {showBalance ? (
+                <Eye size={18} strokeWidth={1.5} className="text-slate-400" />
+              ) : (
+                <EyeOff
+                  size={18}
+                  strokeWidth={1.5}
+                  className="text-slate-400"
+                />
+              )}
+            </button>
           </div>
 
-          <h1 className="text-fluid-lg font-normal">
-            {showBalance ? formatPrice(available, "USD") : "********"}
-          </h1>
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-4xl font-bold tracking-tight">
+              {showBalance ? formatPrice(available, "USD") : "••••••"}
+            </h1>
+            {showBalance && available > 0 && (
+              <span className="text-sm text-green-400 font-medium">
+                +{((available / (available + pending)) * 100).toFixed(0)}%
+              </span>
+            )}
+          </div>
         </div>
-        <Divider my="lg" variant="dashed" />
-        <div className="flex justify-between items-center space-y-1">
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-x-3">
-              <p className="text-fluid-xxs">Pending balance</p>
+
+        {/* Divider */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-800"></div>
+          </div>
+        </div>
+
+        {/* Pending Balance & Withdraw */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div className="space-y-3 flex-1">
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-slate-400">Pending Balance</p>
               <Tooltip
                 multiline
                 w={220}
@@ -83,27 +118,73 @@ export default function Balances({
                 transitionProps={{ duration: 200 }}
                 label="Once the piece is delivered, these funds will be ready for withdrawal."
               >
-                <Info
-                  className="cursor-pointer"
-                  size={20}
-                  strokeWidth={1.5}
-                  absoluteStrokeWidth
-                />
+                <button className="p-1 rounded-md transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600">
+                  <Info
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-slate-500"
+                  />
+                </button>
               </Tooltip>
             </div>
 
-            <h1 className="text-fluid-sm font-normal">
-              {" "}
-              {showBalance ? formatPrice(pending, "USD") : "********"}
-            </h1>
+            <h2 className="text-2xl font-semibold">
+              {showBalance ? formatPrice(pending, "USD") : "••••••"}
+            </h2>
           </div>
-          <div>
-            <button
-              onClick={toggleForm}
-              className="h-[35px] p-5 rounded-full w-full flex items-center border-0 ring-1 ring-[#fafafa] hover:bg-[#fafafa] hover:text-dark duration-200 justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
-            >
-              Withdraw funds
-            </button>
+
+          <button
+            onClick={toggleForm}
+            className="px-4 py-2 bg-white text-dark font-normal rounded-xl shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-fluid-xs"
+          >
+            <span className="flex items-center gap-2">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M7 11l5-5m0 0l5 5m-5-5v12"
+                />
+              </svg>
+              Withdraw Funds
+            </span>
+          </button>
+        </div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+          <div className="text-center">
+            <p className="text-xs text-slate-500 uppercase tracking-wide">
+              Total
+            </p>
+            <p className="text-sm font-semibold mt-1">
+              {showBalance ? formatPrice(available + pending, "USD") : "••••"}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-slate-500 uppercase tracking-wide">
+              Available
+            </p>
+            <p className="text-sm font-semibold mt-1 text-green-400">
+              {showBalance
+                ? `${((available / (available + pending)) * 100).toFixed(0)}%`
+                : "••"}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-slate-500 uppercase tracking-wide">
+              Pending
+            </p>
+            <p className="text-sm font-semibold mt-1 text-amber-400">
+              {showBalance
+                ? `${((pending / (available + pending)) * 100).toFixed(0)}%`
+                : "••"}
+            </p>
           </div>
         </div>
       </div>

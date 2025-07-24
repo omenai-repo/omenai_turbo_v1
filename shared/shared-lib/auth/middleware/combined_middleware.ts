@@ -38,6 +38,7 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
           const { valid, message, sessionData } = await validateCsrf({
             req,
             allowedRoles: config.allowedRoles,
+            allowedAdminAccessRoles: config.allowedAdminAccessRoles,
           });
 
           if (!valid) {

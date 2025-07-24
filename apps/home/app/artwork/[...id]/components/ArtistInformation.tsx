@@ -3,54 +3,63 @@ type ArtistInformationTypes = {
   year: string;
   location: string;
 };
+
 export default function ArtistInformation({
   name,
   year,
   location,
 }: ArtistInformationTypes) {
   return (
-    <div className=" my-5 w-full text-dark">
-      <div className="py-4 px-6 bg-dark/10 w-full rounded-full">
-        <h3 className="text-dark font-semibold text-fluid-xs">
+    <div className="my-8 w-full">
+      {/* Header Section */}
+      <div className="py-5 px-8 bg-slate-50 w-full rounded-2xl border border-slate-100">
+        <h3 className="text-slate-800 font-medium text-fluid-xs tracking-wide">
           Artist Information
         </h3>
       </div>
 
-      <div className="w-full border rounded-[10px] mt-4 border-dark/10 text-dark justify-center gap-y-3 py-4 font-normal text-fluid-xs">
-        <div className="grid grid-cols-12 p-4">
-          <p className="font-medium col-span-6">Artist name:</p>
-          <p className="col-span-6">{name}</p>
-        </div>
-        <div className="grid grid-cols-12 p-4 ">
-          <p className="font-medium col-span-6 md:col-span-6">
-            Artist birth year:
-          </p>
-          <p className="col-span-6">{year}</p>
-        </div>
-        <div className="grid grid-cols-12 p-4">
-          <p className="font-medium col-span-6 md:col-span-6">
-            Artist country of origin:
-          </p>
-          <p className="col-span-6">{location}</p>
+      {/* Artist Details Grid */}
+      <div className="w-full mt-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="divide-y divide-slate-100">
+          {/* Artist Name */}
+          <div className="grid grid-cols-12 px-8 py-6 hover:bg-slate-25 transition-colors duration-200">
+            <div className="col-span-5 md:col-span-4">
+              <p className="font-medium text-slate-700 text-fluid-xs">
+                Artist Name
+              </p>
+            </div>
+            <div className="col-span-7 md:col-span-8">
+              <p className="text-slate-900 text-fluid-xs font-normal">{name}</p>
+            </div>
+          </div>
+
+          {/* Birth Year */}
+          <div className="grid grid-cols-12 px-8 py-6 hover:bg-slate-25 transition-colors duration-200">
+            <div className="col-span-5 md:col-span-4">
+              <p className="font-medium text-slate-700 text-fluid-xs">
+                Birth Year
+              </p>
+            </div>
+            <div className="col-span-7 md:col-span-8">
+              <p className="text-slate-900 text-fluid-xs font-normal">{year}</p>
+            </div>
+          </div>
+
+          {/* Country of Origin */}
+          <div className="grid grid-cols-12 px-8 py-6 hover:bg-slate-25 transition-colors duration-200">
+            <div className="col-span-5 md:col-span-4">
+              <p className="font-medium text-slate-700 text-fluid-xs">
+                Country of Origin
+              </p>
+            </div>
+            <div className="col-span-7 md:col-span-8">
+              <p className="text-slate-900 text-fluid-xs font-normal">
+                {location}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* <div className="w-full grid grid-cols-12 p-4 gap-x-8">
-        <div className="col-span-6 md:col-span-6 text-fluid-xs">
-          <ul className="w-full flex flex-col text-dark justify-center gap-y-3 py-4 font-normal">
-            <p className="font-medium">Artist name</p>
-            <p className="font-medium">Artist birth year</p>
-            <p className="font-medium">Artist country of origin</p>
-          </ul>
-        </div>
-        <div className="col-span-6 text-fluid-xs">
-          <ul className=" flex flex-col text-dark/70 justify-center gap-y-3 py-4">
-            <p>{name}</p>
-            <p>{year}</p>
-            <p>{location}</p>
-          </ul>
-        </div>
-      </div> */}
     </div>
   );
 }

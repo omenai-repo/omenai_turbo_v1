@@ -69,62 +69,89 @@ export default function AddressSelectInput({
   };
 
   return (
-    <div className="flex flex-col gap-x-4 gap-y-2 w-full">
-      <label htmlFor={name} className="text-dark font-normal text-fluid-xs">
+    // Beautiful Select Component
+    <div className="w-full space-y-2">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-slate-700"
+      >
         {label}
       </label>
-      <select
-        required={true}
-        onChange={handleChange}
-        value={selectValue()}
-        className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xs font-normal disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xxs placeholder:text-dark/40"
-      >
-        <option value="" className="text-dark/40">
-          Select {labelText}
-        </option>
-        <>
+
+      <div className="relative">
+        <select
+          id={name}
+          name={name}
+          required={true}
+          onChange={handleChange}
+          value={selectValue()}
+          className="
+        appearance-none
+        w-full
+        px-4
+        py-3
+        pr-10
+        bg-white
+        border
+        border-slate-300
+        rounded-lg
+        text-slate-900
+        text-sm
+        font-normal
+        transition-all
+        duration-200
+        focus:border-slate-900
+        focus:ring-2
+        focus:ring-slate-900
+        focus:ring-offset-0
+        focus:outline-none
+        disabled:bg-slate-50
+        disabled:text-slate-500
+        disabled:cursor-not-allowed
+        cursor-pointer
+      "
+        >
+          <option value="" className="text-slate-400">
+            Select {labelText}
+          </option>
+
           {labelText === "country" &&
-            items.map((item: ICountry) => {
-              return (
-                <option
-                  key={item.isoCode}
-                  value={item.name}
-                  data-code={item.isoCode}
-                  className="px-3 py-5 my-5 text-fluid-xs font-normal text-dark/40"
-                >
-                  {item.name}
-                </option>
-              );
-            })}
+            items.map((item: ICountry) => (
+              <option
+                key={item.isoCode}
+                value={item.name}
+                data-code={item.isoCode}
+                className="text-slate-900 py-2"
+              >
+                {item.name}
+              </option>
+            ))}
+
           {labelText === "state" &&
-            selectedStateList.map((state: IState) => {
-              return (
-                <option
-                  key={state.isoCode}
-                  value={state.name}
-                  data-code={state.isoCode}
-                  className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark/40"
-                >
-                  {state.name}
-                </option>
-              );
-            })}
+            selectedStateList.map((state: IState) => (
+              <option
+                key={state.isoCode}
+                value={state.name}
+                data-code={state.isoCode}
+                className="text-slate-900 py-2"
+              >
+                {state.name}
+              </option>
+            ))}
 
           {labelText === "city" &&
-            selectedCityList.map((city: ICity) => {
-              return (
-                <option
-                  key={city.name}
-                  defaultValue={city.name}
-                  data-code={city.name}
-                  className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark/40"
-                >
-                  {city.name}
-                </option>
-              );
-            })}
-        </>
-      </select>
+            selectedCityList.map((city: ICity) => (
+              <option
+                key={city.name}
+                value={city.name}
+                data-code={city.name}
+                className="text-slate-900 py-2"
+              >
+                {city.name}
+              </option>
+            ))}
+        </select>
+      </div>
     </div>
   );
 }

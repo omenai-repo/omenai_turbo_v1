@@ -19,7 +19,7 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
       <Body
         style={{
           backgroundColor: "#ffffff",
-          color: "#1A1A1A",
+          color: "#1a1a1a",
           fontFamily: "Helvetica, Arial, sans-serif",
           padding: "40px 20px",
         }}
@@ -35,7 +35,7 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
             <Heading
               as="h2"
               style={{
-                color: "#1A1A1A",
+                color: "#1a1a1a",
                 fontSize: "24px",
                 marginBottom: "20px",
               }}
@@ -75,7 +75,7 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
                 href={"https://dashboard.omenai.app/user/orders"}
                 style={{
                   display: "inline-block",
-                  backgroundColor: "#1A1A1A",
+                  backgroundColor: "#1a1a1a",
                   color: "#ffffff",
                   padding: "12px 24px",
                   borderRadius: "8px",

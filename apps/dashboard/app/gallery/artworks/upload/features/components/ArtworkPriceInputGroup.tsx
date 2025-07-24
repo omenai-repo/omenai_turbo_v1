@@ -102,7 +102,7 @@ export default function ArtworkPriceInputGroup() {
                   onClick={handleCurrencyConversion}
                   type="button"
                   disabled={artworkUploadData.price === 0 || conversionLoading}
-                  className="p-2 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/40 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                  className="p-2 rounded-xl w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/40 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
                 >
                   {conversionLoading ? (
                     <Loader color="rgba(255, 255, 255, 1)" size={20} />

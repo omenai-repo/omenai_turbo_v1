@@ -10,8 +10,11 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
+
+import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/tiptap/styles.css";
+
 const nunito_sans = Inter({
   subsets: ["latin"],
   variable: "--font-nunito_sans",

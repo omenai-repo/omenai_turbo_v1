@@ -37,7 +37,7 @@ export const ArtworkImage = ({
     <Link href={`/artwork/${title}`} className="w-[250px]">
       <div className="relative flex items-end max-w-[250px] w-fit rounded-md mb-4">
         {pricing?.price && (
-          <div className="absolute top-4 right-4 z-10 p-1 rounded-full bg-white border-dark/10 grid place-items-center">
+          <div className="absolute top-4 right-4 z-10 p-1 rounded-xl bg-white border-dark/10 grid place-items-center">
             <LikeComponent
               impressions={impressions}
               likeIds={likeIds}

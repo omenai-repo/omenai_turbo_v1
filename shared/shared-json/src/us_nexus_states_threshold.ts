@@ -9,6 +9,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -16,9 +17,11 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
     stateCode: "AK",
     nexus_rule: {
       sales_threshold: 100000,
-      transactions_threshold: 200,
-      threshold_type: "SALES_OR_TRANSACTIONS",
+      transactions_threshold: null,
+      threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2020-01-01",
+      note: "Transaction threshold removed as of January 1, 2025. No statewide sales tax; applies to participating local jurisdictions only",
     },
   },
   {
@@ -29,6 +32,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-10-01",
     },
   },
   {
@@ -39,6 +43,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-07-01",
     },
   },
   {
@@ -49,6 +54,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-04-01",
     },
   },
   {
@@ -59,6 +65,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-06-01",
     },
   },
   {
@@ -68,7 +75,30 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       sales_threshold: 100000,
       transactions_threshold: 200,
       threshold_type: "SALES_AND_TRANSACTIONS",
-      evaluation_period_type: "TWELVE_MONTHS_ENDING_SEPTEMBER_30",
+      evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2018-12-01",
+    },
+  },
+  {
+    state: "Delaware",
+    stateCode: "DE",
+    nexus_rule: {
+      sales_threshold: null,
+      transactions_threshold: null,
+      threshold_type: "NO_SALES_TAX",
+      evaluation_period_type: null,
+      effective_date: null,
+    },
+  },
+  {
+    state: "District of Columbia",
+    stateCode: "DC",
+    nexus_rule: {
+      sales_threshold: 100000,
+      transactions_threshold: 200,
+      threshold_type: "SALES_OR_TRANSACTIONS",
+      evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-01-01",
     },
   },
   {
@@ -79,6 +109,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      effective_date: "2021-07-01",
     },
   },
   {
@@ -89,6 +120,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-01-01",
     },
   },
   {
@@ -99,6 +131,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-07-01",
     },
   },
   {
@@ -109,6 +142,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-06-01",
     },
   },
   {
@@ -119,6 +153,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2018-10-01",
+      note: "Transaction threshold will be removed January 1, 2026",
     },
   },
   {
@@ -129,6 +165,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
+      note: "Transaction threshold removed as of January 1, 2024",
     },
   },
   {
@@ -139,6 +177,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-01-01",
     },
   },
   {
@@ -149,6 +188,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-10-01",
     },
   },
   {
@@ -159,6 +199,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -169,6 +210,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-07-01",
     },
   },
   {
@@ -179,6 +221,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-07-01",
     },
   },
   {
@@ -189,6 +232,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -199,6 +243,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-10-01",
     },
   },
   {
@@ -209,6 +254,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -219,6 +265,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -229,6 +276,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2018-09-01",
     },
   },
   {
@@ -239,9 +287,20 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2023-01-01",
     },
   },
-
+  {
+    state: "Montana",
+    stateCode: "MT",
+    nexus_rule: {
+      sales_threshold: null,
+      transactions_threshold: null,
+      threshold_type: "NO_SALES_TAX",
+      evaluation_period_type: null,
+      effective_date: null,
+    },
+  },
   {
     state: "Nebraska",
     stateCode: "NE",
@@ -250,6 +309,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-01-01",
     },
   },
   {
@@ -260,6 +320,18 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
+    },
+  },
+  {
+    state: "New Hampshire",
+    stateCode: "NH",
+    nexus_rule: {
+      sales_threshold: null,
+      transactions_threshold: null,
+      threshold_type: "NO_SALES_TAX",
+      evaluation_period_type: null,
+      effective_date: null,
     },
   },
   {
@@ -268,8 +340,9 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
     nexus_rule: {
       sales_threshold: 100000,
       transactions_threshold: 200,
-      threshold_type: "SALES_AND_TRANSACTIONS",
+      threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -280,6 +353,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      effective_date: "2019-07-01",
     },
   },
   {
@@ -289,7 +363,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       sales_threshold: 500000,
       transactions_threshold: 100,
       threshold_type: "SALES_AND_TRANSACTIONS",
-      evaluation_period_type: "PREVIOUS_12_MONTHS",
+      evaluation_period_type: "PREVIOUS_4_QUARTERS",
+      effective_date: "2019-06-24",
     },
   },
   {
@@ -297,9 +372,10 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
     stateCode: "NC",
     nexus_rule: {
       sales_threshold: 100000,
-      transactions_threshold: null,
-      threshold_type: "SALES_ONLY",
+      transactions_threshold: 200,
+      threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-11-01",
     },
   },
   {
@@ -310,6 +386,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
+      note: "Transaction threshold removed July 1, 2019",
     },
   },
   {
@@ -320,6 +398,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-08-01",
     },
   },
   {
@@ -329,10 +408,21 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       sales_threshold: 100000,
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
-      evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2018-11-01",
     },
   },
-
+  {
+    state: "Oregon",
+    stateCode: "OR",
+    nexus_rule: {
+      sales_threshold: null,
+      transactions_threshold: null,
+      threshold_type: "NO_SALES_TAX",
+      evaluation_period_type: null,
+      effective_date: null,
+    },
+  },
   {
     state: "Pennsylvania",
     stateCode: "PA",
@@ -340,7 +430,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       sales_threshold: 100000,
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
-      evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2019-07-01",
     },
   },
   {
@@ -350,7 +441,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       sales_threshold: 100000,
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
-      evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-07-01",
     },
   },
   {
@@ -361,6 +453,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-11-01",
     },
   },
   {
@@ -371,6 +464,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-11-01",
     },
   },
   {
@@ -381,6 +475,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2019-10-01",
     },
   },
   {
@@ -391,6 +486,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2019-10-01",
     },
   },
   {
@@ -398,19 +494,11 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
     stateCode: "UT",
     nexus_rule: {
       sales_threshold: 100000,
-      transactions_threshold: 200,
-      threshold_type: "SALES_OR_TRANSACTIONS",
+      transactions_threshold: null,
+      threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
-    },
-  },
-  {
-    state: "Puerto Rico",
-    stateCode: "PR",
-    nexus_rule: {
-      sales_threshold: 100000,
-      transactions_threshold: 200,
-      threshold_type: "SALES_OR_TRANSACTIONS",
-      evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      effective_date: "2019-01-01",
+      note: "Transaction threshold removed July 1, 2025",
     },
   },
   {
@@ -420,7 +508,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       sales_threshold: 100000,
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
-      evaluation_period_type: "PREVIOUS_CALENDAR_YEAR",
+      evaluation_period_type: "PREVIOUS_12_MONTHS",
+      effective_date: "2018-07-01",
     },
   },
   {
@@ -431,6 +520,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-07-01",
     },
   },
   {
@@ -441,6 +531,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -451,6 +542,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: 200,
       threshold_type: "SALES_OR_TRANSACTIONS",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-01-01",
     },
   },
   {
@@ -461,6 +553,7 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2018-10-01",
     },
   },
   {
@@ -471,6 +564,8 @@ export const nexus_thresholds: US_NEXUS_THRESHOLD_LIST[] = [
       transactions_threshold: null,
       threshold_type: "SALES_ONLY",
       evaluation_period_type: "PREVIOUS_OR_CURRENT_CALENDAR_YEAR",
+      effective_date: "2019-02-01",
+      note: "Transaction threshold removed July 1, 2024",
     },
   },
 ];

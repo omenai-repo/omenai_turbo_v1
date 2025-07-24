@@ -1,5 +1,8 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { AccountAdminSchemaTypes } from "@omenai/shared-types";
+import {
+  AccountAdminSchemaTypes,
+  AdminAccessRoleTypes,
+} from "@omenai/shared-types";
 import bcrypt from "bcrypt";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { NextResponse, NextResponse as res } from "next/server";
@@ -12,6 +15,7 @@ import {
   createSession,
 } from "@omenai/shared-lib/auth/session";
 import { cookies } from "next/headers";
+import { access } from "fs-extra";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -38,6 +42,8 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         id: user.admin_id,
         role: user.role as "admin",
         admin_id: user.admin_id,
+        access_role: user.access_role,
+        verified: user.verified,
       };
       const userAgent: string | null =
         request.headers.get("User-Agent") || null;

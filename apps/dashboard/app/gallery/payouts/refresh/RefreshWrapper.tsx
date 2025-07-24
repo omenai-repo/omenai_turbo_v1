@@ -106,7 +106,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={user.name}
-                  className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+                  className="h-[35px] p-5 rounded-xl my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 />
               </div>
               <div className="relative w-full">
@@ -120,7 +120,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={user.email}
-                  className="h-[35px] p-5 rounded-full my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+                  className="h-[35px] p-5 rounded-xl my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function RefreshStripe() {
             </>
             <button
               disabled={accountLinkCreatePending}
-              className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+              className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
               onClick={handleAccountLink}
             >
               {accountLinkCreatePending ? (

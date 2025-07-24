@@ -190,7 +190,7 @@ export default function AvsNoauthInput({
           onChange={handleInputChange}
           required={true}
           name="country"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-xl placeholder:text-fluid-xs placeholder:text-dark/40"
         >
           <option value="">Select Country</option>
           <>
@@ -219,7 +219,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === ""}
           required={true}
           name="state"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-xl placeholder:text-fluid-xs placeholder:text-dark/40"
         >
           <option value="">Select State</option>
           <>
@@ -248,7 +248,7 @@ export default function AvsNoauthInput({
           disabled={address_info.country === "" || address_info.state === ""}
           required={true}
           name="city"
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-full placeholder:text-fluid-xs placeholder:text-dark/40"
+          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-xl placeholder:text-fluid-xs placeholder:text-dark/40"
         >
           <option value="">Select City</option>
           <>
@@ -280,7 +280,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="e.g 7, example street"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-xl w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
         />
       </div>
       <div className="relative w-fullS flex flex-col gap-y-1">
@@ -296,7 +296,7 @@ export default function AvsNoauthInput({
           required
           onChange={handleInputChange}
           placeholder="ZIP"
-          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
+          className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-xl w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
         />
       </div>
 
@@ -304,7 +304,7 @@ export default function AvsNoauthInput({
         <button
           type="submit"
           disabled={isLoading || hasEmptyString(address_info)}
-          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>

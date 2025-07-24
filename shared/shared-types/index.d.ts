@@ -36,6 +36,7 @@ export type CombinedConfig = {
   keyPrefix?: string;
   keyGenerator?: (request: Request) => string;
   allowedRoles?: AccessRoleTypes[];
+  allowedAdminAccessRoles?: AdminAccessRoleTypes[];
 };
 
 export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
@@ -641,7 +642,11 @@ export type AccountAdminSchemaTypes = {
   password: string;
   admin_id: string;
   role: AccessRoleTypes;
+  verified: boolean;
+  access_role: AdminAccessRoleTypes;
 };
+
+export type AdminAccessRoleTypes = "admin" | "owner" | "editor" | "viewer";
 
 export type FLWDirectChargeDataTypes = CardInputTypes & {
   card: string;
@@ -856,18 +861,20 @@ export type ShipmentRequestDataTypes = {
 export type ThresholdTypeDef =
   | "SALES_ONLY"
   | "SALES_OR_TRANSACTIONS"
-  | "SALES_AND_TRANSACTIONS";
+  | "SALES_AND_TRANSACTIONS"
+  | "NO_SALES_TAX";
 
 export type EvaluationPeriodTypeDef =
   | "PREVIOUS_CALENDAR_YEAR"
   | "PREVIOUS_OR_CURRENT_CALENDAR_YEAR"
   | "ROLLING_12_MONTHS"
   | "TWELVE_MONTHS_ENDING_SEPTEMBER_30"
-  | "PREVIOUS_12_MONTHS";
+  | "PREVIOUS_12_MONTHS"
+  | "PREVIOUS_4_QUARTERS";
 
 // Nexus Rule Interface
 export type NexusRule = {
-  sales_threshold: number;
+  sales_threshold: number | null;
   transactions_threshold: number | null;
   threshold_type: ThresholdType;
   evaluation_period_type: EvaluationPeriodType;
@@ -898,7 +905,9 @@ export type US_NEXUS_THRESHOLD_LIST = {
   stateCode: string;
   nexus_rule: Pick<NexusRule, "sales_threshold" | "transactions_threshold"> & {
     threshold_type: ThresholdTypeDef;
-    evaluation_period_type: EvaluationPeriodTypeDef;
+    evaluation_period_type: EvaluationPeriodTypeDef | null;
+    effective_date: Date | string | null;
+    note?: string;
   };
 };
 // CRONS
@@ -921,3 +930,14 @@ export type BankBranchType = {
   bic: string;
   bank_id: number;
 };
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  email: string;
+  role: MemberRole;
+  avatar?: string;
+  joinedAt: Date;
+};
+
+export type MemberRole = "Admin" | "Editor" | "Viewer";

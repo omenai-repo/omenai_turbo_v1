@@ -56,7 +56,7 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
       <div className="flex md:flex-row flex-col gap-4 mt-16">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-full ring-dark font-medium text-[#000000] my-5">
+            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-xl ring-dark font-medium text-[#000000] my-5">
               View history
             </p>
             <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
@@ -103,13 +103,13 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
         <div className="flex items-center justify-center w-fit space-x-2">
           <button
             onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded-xl border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowLeft />
           </button>
           <button
             onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded-xl border border-[#e0e0e0] bg-transparent hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowRight />
           </button>

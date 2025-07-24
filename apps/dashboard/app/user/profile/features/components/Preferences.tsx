@@ -18,31 +18,50 @@ let artTypes = [
 ];
 export default function Preferences() {
   return (
-    <AnimatePresence>
-      <label
-        htmlFor="artType-preferences"
-        className="text-fluid-xs font-medium text-dark"
-      >
-        Preferences
-      </label>
-      <div className="my-4">
-        <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ y: -100 }}
-          transition={{ duration: 0.33 }}
-        >
-          <div className="flex flex-wrap  gap-y-[1rem] gap-x-[0.5rem] text-fluid-xs">
-            {artTypes.map((art, index) => {
-              return (
-                <div key={art + index}>
-                  <Pill text={art} />
-                </div>
-              );
-            })}
+    <div className="w-full max-w-4xl">
+      <AnimatePresence>
+        <div className="space-y-4">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="artType-preferences"
+              className="text-lg font-semibold text-slate-900"
+            >
+              Art Preferences
+            </label>
           </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+
+          {/* Pills Container */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <div className="flex flex-wrap gap-2">
+              {artTypes.map((art, index) => (
+                <motion.div
+                  key={art + index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.2,
+                    delay: index * 0.03,
+                    ease: "easeOut",
+                  }}
+                >
+                  <Pill text={art} />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Optional Helper Text */}
+          <p className="text-sm text-slate-600 mt-3">
+            Select your preferred art styles to personalize your experience
+          </p>
+        </div>
+      </AnimatePresence>
+    </div>
   );
 }

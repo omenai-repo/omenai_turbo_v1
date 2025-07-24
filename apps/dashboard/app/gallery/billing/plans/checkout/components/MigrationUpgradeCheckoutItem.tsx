@@ -92,51 +92,83 @@ export default function MigrationUpgradeCheckoutItem({
 
   return (
     <>
-      <div className="bg-white shadow-md rounded-sm">
-        <div className="w-full p-5 bg-dark text-white rounded-[10px]">
-          <p className="text-[13px] font-normal">
-            Subscription {plan_change_params.action}
-          </p>
-          <h1 className="text-14px font-semibold">
-            Omenai {plan.name} subscription
-          </h1>
-          <p className="mt-1 flex items-baseline text-fluid-xs font-semibold tracking-tight">
-            Billed {interval}
-          </p>
-        </div>
-
-        <div className="p-5 flex flex-col space-y-3 my-4 rounded-[10px]">
-          <div className="flex justify-between items-center text-fluid-xs font-semibold">
-            <p>Current plan usage</p>
-            <p>{days_left} day(s) left</p>
+      <div className="max-w-lg space-y-6 p-4">
+        {/* Main Subscription Card */}
+        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+          {/* Header Section */}
+          <div className="bg-gray-900 p-6 text-white">
+            <p className="text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">
+              Subscription {plan_change_params.action}
+            </p>
+            <h1 className="text-xl font-bold mb-2">
+              Omenai {plan.name} subscription
+            </h1>
+            <p className="text-sm text-gray-300 font-medium">
+              Billed {interval}
+            </p>
           </div>
 
-          <PriceDisplay label="Plan cost" value={upgradeCost} />
-          <PriceDisplay
-            label="Prorated cost"
-            value={plan_change_params.shouldCharge ? proratedPrice : 0}
-            showMinus={plan_change_params.shouldCharge}
-          />
-          <PriceDisplay
-            label="Due today"
-            value={plan_change_params.shouldCharge ? grandTotal : 0}
-          />
+          {/* Content Section */}
+          <div className="p-6">
+            <div className="space-y-4">
+              {/* Current Plan Usage */}
+              <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+                <span className="text-sm font-medium text-gray-600">
+                  Current plan usage
+                </span>
+                <span className="text-sm font-semibold text-gray-900">
+                  {days_left} day(s) left
+                </span>
+              </div>
 
-          {!plan_change_params.shouldCharge && (
-            <p className="text-[13px] font-bold text-red-600 mt-5">
-              NOTE: Your plan change will take effect at the end of your current
-              billing cycle.
-            </p>
-          )}
+              {/* Price Breakdown */}
+              <div className="space-y-3">
+                <PriceDisplay label="Plan cost" value={upgradeCost} />
+                <PriceDisplay
+                  label="Prorated cost"
+                  value={plan_change_params.shouldCharge ? proratedPrice : 0}
+                  showMinus={plan_change_params.shouldCharge}
+                />
+
+                {/* Total Amount - Highlighted */}
+                <div className="pt-3 border-t border-gray-100">
+                  <div className="flex justify-between items-center">
+                    <span className="text-base font-semibold text-gray-900">
+                      Due today
+                    </span>
+                    <span className="text-lg font-bold text-gray-900">
+                      $
+                      {plan_change_params.shouldCharge
+                        ? grandTotal.toFixed(2)
+                        : "0.00"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notice */}
+              {!plan_change_params.shouldCharge && (
+                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                  <p className="text-sm font-medium text-amber-800">
+                    <span className="font-semibold">Note:</span> Your plan
+                    change will take effect at the end of your current billing
+                    cycle.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Billing Card */}
+        <CheckoutBillingCard
+          sub_data={sub_data}
+          interval={interval}
+          plan={plan}
+          amount={grandTotal}
+          shouldCharge={plan_change_params.shouldCharge}
+        />
       </div>
-      <CheckoutBillingCard
-        sub_data={sub_data}
-        interval={interval}
-        plan={plan}
-        amount={grandTotal}
-        shouldCharge={plan_change_params.shouldCharge}
-      />
     </>
   );
 }

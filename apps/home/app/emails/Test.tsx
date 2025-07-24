@@ -49,7 +49,7 @@ export const PaymentFailedEmail = (buyerName: string, artwork: string) => {
             reach out to us at{" "}
             <Link
               href="mailto:contact@omenani.net"
-              style={{ textDecoration: "underline", color: "#1A1A1A" }}
+              style={{ textDecoration: "underline", color: "#1a1a1a" }}
             >
               contact@omenani.net
             </Link>
@@ -66,7 +66,7 @@ export default PaymentFailedEmail;
 
 const main = {
   backgroundColor: "#ffffff",
-  color: "#1A1A1A",
+  color: "#1a1a1a",
   fontFamily: "Helvetica, Arial, sans-serif",
   padding: "40px 0",
 } as const;
@@ -105,7 +105,7 @@ const receiptSection = {
   borderRadius: "12px",
   fontSize: "15px",
   lineHeight: "1.6",
-  color: "#1A1A1A",
+  color: "#1a1a1a",
 } as const;
 
 const receiptRow = {

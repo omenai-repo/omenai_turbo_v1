@@ -23,42 +23,41 @@ export function TrendingArtistCard({
   const encoded_url = decodeURIComponent(artist);
   const base_uri = base_url();
   return (
-    <div>
+    <div className="group relative mt-8">
       <Link
         href={`${base_uri}/artists/?id=${artist_id}&url=${url}&artist=${artist}`}
-        className="relative block min-w-[280px] w-[350px]"
+        className="block"
       >
-        {/* Reserved space for the image using aspect ratio */}
-        <div className="w-full h-[250px]">
-          <Image
-            src={image_href}
-            alt={artist + " image"}
-            height={250}
-            width={350}
-            loading="lazy"
-            quality={100}
-            placeholder="blur"
-            blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
-            className="rounded w-full h-full object-cover object-center cursor-pointer"
-          />
-        </div>
-      </Link>
-      <div className="flex justify-between items-center my-3">
-        <div className="flex flex-col">
-          <p className="text-fluid-xs font-medium">{artist}</p>
-          <div className="flex gap-x-1 items-center">
-            <p className="text-fluid-xxs">{country}</p>{" "}
-            <span className="text-fluid-xxs">b.</span>
-            {""}
-            <p className="text-fluid-xxs">{birthyear}</p>
+        <article className="relative">
+          {/* Image with Aspect Ratio */}
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-slate-100">
+            <Image
+              src={image_href}
+              alt={artist + " image"}
+              height={250}
+              width={350}
+              loading="lazy"
+              quality={100}
+              placeholder="blur"
+              blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
+              className="rounded w-full h-full object-cover object-center cursor-pointer"
+            />
           </div>
-        </div>
-        <div>
-          <button className="text-fluid-xxs border-0 ring-dark ring-1 px-6 py-2 rounded-full cursor-default">
-            {likes} likes
-          </button>
-        </div>
-      </div>
+
+          {/* Info Below Image */}
+          <div className="mt-4 space-y-2">
+            <h3 className="text-base font-semibold text-slate-900 leading-tight">
+              {artist}
+            </h3>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-dark">
+                {country} • Born {birthyear}
+              </p>
+              <span className="text-sm text-dark">{likes} likes</span>
+            </div>
+          </div>
+        </article>
+      </Link>
     </div>
   );
 }

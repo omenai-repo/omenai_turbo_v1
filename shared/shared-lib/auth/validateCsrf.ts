@@ -1,17 +1,24 @@
 // Enhanced validateCsrf with proper cleanup
 import { cookies } from "next/headers";
 import { getSessionFromCookie, getSession } from "./session";
+import {
+  AccountAdminSchemaTypes,
+  AdminAccessRoleTypes,
+} from "@omenai/shared-types";
+import { ForbiddenError } from "../../../apps/server/custom/errors/dictionary/errorDictionary";
 
 type Role = "user" | "artist" | "gallery" | "admin";
 
 interface ValidateCsrfOptions {
   allowedRoles: Role[];
   req: Request;
+  allowedAdminAccessRoles?: AdminAccessRoleTypes[];
 }
 
 export async function validateCsrf({
   req,
   allowedRoles,
+  allowedAdminAccessRoles,
 }: ValidateCsrfOptions): Promise<{
   valid: boolean;
   message: string;
@@ -60,6 +67,23 @@ export async function validateCsrf({
         valid: false,
         message: "Forbidden: Not authorized to access this resource",
       };
+    }
+
+    if ((allowedAdminAccessRoles?.length ?? 0) > 0) {
+      const adminAccessRole = (
+        sessionData.userData as unknown as AccountAdminSchemaTypes
+      ).access_role as AdminAccessRoleTypes;
+
+      if (
+        !(allowedAdminAccessRoles as AdminAccessRoleTypes[]).includes(
+          adminAccessRole
+        )
+      ) {
+        return {
+          valid: false,
+          message: "Forbidden: Not authorized to access this resource",
+        };
+      }
     }
 
     return { valid: true, sessionData, message: "Session validated" };

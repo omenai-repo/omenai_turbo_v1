@@ -23,20 +23,52 @@ export default function AddressTextInput({
     setAddress(name, e.target.value);
   };
   return (
-    <div className="flex flex-col gap-1 my-4 w-full">
-      <label htmlFor={name} className="text-dark font-normal text-fluid-xs">
+    <div className="w-full space-y-2">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-slate-700"
+      >
         {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
-      <input
-        disabled={disabled}
-        type="text"
-        placeholder={placeholder}
-        required={required}
-        onChange={handleInputChange}
-        name={name}
-        defaultValue={defaultValue !== undefined ? defaultValue : ""}
-        className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xs font-normal h-[35px] p-5 rounded-full w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
-      />
+
+      <div className="relative">
+        <input
+          id={name}
+          name={name}
+          type={type || "text"}
+          disabled={disabled}
+          required={required}
+          placeholder={placeholder}
+          onChange={handleInputChange}
+          defaultValue={defaultValue !== undefined ? defaultValue : ""}
+          className="
+        w-full
+        px-4
+        py-3
+        bg-white
+        border
+        border-slate-300
+        rounded-lg
+        text-slate-900
+        text-sm
+        font-normal
+        placeholder:text-slate-400
+        placeholder:text-sm
+        transition-all
+        duration-200
+        focus:border-slate-900
+        focus:ring-2
+        focus:ring-slate-900
+        focus:ring-offset-0
+        focus:outline-none
+        disabled:bg-slate-50
+        disabled:text-slate-500
+        disabled:cursor-not-allowed
+        disabled:border-slate-200
+      "
+        />
+      </div>
     </div>
   );
 }
