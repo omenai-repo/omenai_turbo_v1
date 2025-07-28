@@ -46,10 +46,10 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       const buyer_email_payload = orders96.map((order) => {
         return {
           from: "Orders <omenai@omenai.app>",
-          to: [order.buyer.email],
+          to: [order.buyer_details.email],
           subject: "Your order has been declined",
           react: OrderDeclinedEmail(
-            order.buyer.name,
+            order.buyer_details.name,
             "Seller did not respond within the designated timeframe",
             order.artwork_data
           ),
@@ -57,19 +57,19 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       });
       await resend.batch.send(buyer_email_payload);
 
-      const gallery_email_payload = orders96.map((gallery) => {
+      const email_payload = orders96.map((gallery) => {
         return {
           from: "Orders <omenai@omenai.app>",
-          to: [gallery.gallery_details.email],
+          to: [gallery.seller_details.email],
           subject: "Order has been auto declined",
           react: OrderAutoDeclined(
-            gallery.gallery_details.name,
+            gallery.seller_details.name,
             gallery.artwork_data
           ),
         };
       });
 
-      await resend.batch.send(gallery_email_payload);
+      await resend.batch.send(email_payload);
     }
 
     // Check for orders older than 72 hours with empty order_accepted.status
@@ -81,13 +81,13 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       "order_accepted.status": "", // Ensure status is empty
     });
     if (orders72.length > 0) {
-      // Send warning emails to galleries
+      // Send warning emails to seller
       const email_payload = orders72.map((order) => {
         return {
           from: "Orders <omenai@omenai.app>",
-          to: [order.gallery_details.email],
+          to: [order.seller_details.email],
           subject: "Notice: Potential Order Request Decline",
-          react: OrderDeclinedWarning(order.gallery_details.name),
+          react: OrderDeclinedWarning(order.seller_details.name),
         };
       });
 
@@ -107,9 +107,9 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       const email_payload = orders24.map((order) => {
         return {
           from: "Orders <omenai@omenai.app>",
-          to: [order.gallery_details.email],
+          to: [order.seller_details.email],
           subject: "Order Request reminder",
-          react: OrderRequestReminder(order.gallery_details.name),
+          react: OrderRequestReminder(order.seller_details.name),
         };
       });
 

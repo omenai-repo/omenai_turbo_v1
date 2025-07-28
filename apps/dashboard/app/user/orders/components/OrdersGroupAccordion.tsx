@@ -42,12 +42,14 @@ export function OrdersGroupAccordion({
     tracking_status,
     order_accepted,
     delivered,
+    order_decline_reason,
   }: {
     status: string;
     payment_status: string;
     tracking_status: string;
     order_accepted: string;
     delivered: boolean;
+    order_decline_reason?: string;
   }) {
     if (
       status === "processing" &&
@@ -56,8 +58,8 @@ export function OrdersGroupAccordion({
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
-          <Info strokeWidth={1.5} absoluteStrokeWidth size={20} />
+        <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+          <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Awaiting payment
         </span>
       );
@@ -69,8 +71,8 @@ export function OrdersGroupAccordion({
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
-          <Banknote strokeWidth={1.5} absoluteStrokeWidth size={20} />
+        <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+          <Banknote strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Payment completed
         </span>
       );
@@ -82,8 +84,8 @@ export function OrdersGroupAccordion({
       tracking_status !== ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
-          <Truck strokeWidth={1.5} absoluteStrokeWidth size={20} />
+        <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+          <Truck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Delivery in progress
         </span>
       );
@@ -95,25 +97,30 @@ export function OrdersGroupAccordion({
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
-          <Info strokeWidth={1.5} absoluteStrokeWidth size={20} />
+        <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+          <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order in review
         </span>
       );
     }
-    if (status === "completed" && order_accepted === "declined") {
+    if (order_accepted === "declined") {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xs font-medium bg-red-200 flex gap-x-1 items-center w-fit">
-          <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={20} />
-          Order declined
-        </span>
+        <div className="flex flex-col gap-y-2">
+          <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
+            <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
+            Order declined
+          </span>
+          <span className=" rounded-md text-fluid-xs font-normal text-red-600 flex items-center w-fit">
+            Reason: {order_decline_reason}
+          </span>
+        </div>
       );
     }
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
-          <CheckCheck strokeWidth={1.5} absoluteStrokeWidth size={20} />
+        <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+          <CheckCheck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order has been fulfilled
         </span>
       );
@@ -157,12 +164,12 @@ export function OrdersGroupAccordion({
 
           <div className="flex gap-x-6 items-center">
             <span className="text-fluid-xs font-normal">Order date</span>
-            <span className="text-fluid-xs font-medium text-dark">
+            <span className="text-fluid-xs font-normal text-dark">
               {formatISODate(order.createdAt)}
             </span>
           </div>
-          <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Status</span>
+          <div className="flex space-2 items-start gap-x-6">
+            {/* <span className="text-fluid-xs font-normal">Status:</span> */}
             {construct_status({
               status: order.status,
               payment_status: order.payment_information.status,
@@ -170,10 +177,11 @@ export function OrdersGroupAccordion({
                 order.shipping_details.shipment_information.tracking.id,
               order_accepted: order.order_accepted.status,
               delivered: order.shipping_details.delivery_confirmed,
+              order_decline_reason: order.order_accepted.reason,
             })}
           </div>
           {/* {order.status === "completed" && (
-            <p className="px-1 py-4 text-fluid-xs font-medium text-dark">
+            <p className="px-1 py-4 text-fluid-xs font-normal text-dark">
               {formatIntlDateTime(order.updatedAt)}
             </p>
           )} */}
@@ -195,7 +203,7 @@ export function OrdersGroupAccordion({
         }) === "track" && (
           <div className="mt-6">
             <Link href={`/user/orders/tracking/${order.order_id}`}>
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-xl h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-md h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
             </Link>
