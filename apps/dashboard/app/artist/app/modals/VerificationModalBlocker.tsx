@@ -30,7 +30,7 @@ export default function VerificationBlockerModal({ open }: { open: boolean }) {
           <h2 className="text-fluid-sm md:text-fluid-md font-semibold mb-4">
             Verification in Progress
           </h2>
-          <p className="text-fluid-base text-gray-700 dark:text-gray-300 mb-6">
+          <p className="text-fluid-xs text-gray-700 dark:text-gray-300 mb-6">
             Your profile is currently under review. You&apos;ll be notified once
             your verification status is updated. In the meantime, access to
             dashboard features is currently restricted. Please check back later.

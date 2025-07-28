@@ -10,7 +10,7 @@ Clerk: https://claude.ai/public/artifacts/39a24cbd-78cf-45a0-a5ad-b9a27596b21d
 
 Go-to market stratgies: https://claude.ai/public/artifacts/cdbc9619-02ee-4843-8636-a2fa45880a48
 
-
+// "schedule": "*/5 * * * *"
 
 import { ArtistCategory } from "@omenai/shared-types";
 

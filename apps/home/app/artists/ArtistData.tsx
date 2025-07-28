@@ -29,9 +29,9 @@ export default function ArtistData() {
 
   if (loading) return <Load />;
   return (
-    <>
+    <div className="flex flex-col space-y-12">
       <ArtistInfo loading={loading} info={artist_data?.artist} url={url} />
       <ArtistWorks loading={loading} artworks={artist_data?.artworks} />
-    </>
+    </div>
   );
 }

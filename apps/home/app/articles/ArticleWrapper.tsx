@@ -39,10 +39,15 @@ export default function ArticleWrapper() {
     );
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4 p-4">
-      {editorials?.map((editorial: any) => {
-        return <EditorialItemCard key={editorial.slug} editorial={editorial} />;
-      })}
+    <div className="flex flex-col space-y-6">
+      <h1 className="text-fluid-xl font-semibold">Editorials</h1>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
+        {editorials?.map((editorial: any) => {
+          return (
+            <EditorialItemCard key={editorial.slug} editorial={editorial} />
+          );
+        })}
+      </div>
     </div>
   );
 }

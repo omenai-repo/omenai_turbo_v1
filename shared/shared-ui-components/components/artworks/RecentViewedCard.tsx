@@ -35,13 +35,13 @@ export default function RecentViewedCard({
             {/* Glass Card */}
             <div className="p-3 rounded-2xl bg-dark/40 backdrop-blur-sm shadow-lg absolute bottom-[20px] left-[20px] right-[20px]">
               {/* Title */}
-              <div className="text-gray-400 text-fluid-xs xs:text-fluid-base font-light">
+              <h3 className="font-normal text-white text-fluid-xs leading-tight line-clamp-2">
                 {name}
-              </div>
-              <div className="text-gray-400 text-fluid-xs font-light italic">
-                {artist.substring(0, 20)}
-                {artist.length > 20 && "..."}
-              </div>
+              </h3>
+              <p className="text-white text-fluid-xxs">
+                by{" "}
+                {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
+              </p>
             </div>
           </div>
         </div>

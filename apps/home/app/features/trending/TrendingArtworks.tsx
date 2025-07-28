@@ -27,7 +27,7 @@ export default function TrendingArtworks({
     width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
   );
   return (
-    <div className="h-[180vh] sm:h-[130vh] overflow-hidden relative">
+    <div className="max-h-[130vh] h-auto overflow-hidden relative">
       {artworks.length > 0 && (
         <div className="flex flex-wrap gap-x-4 justify-center">
           {arts.map((artworks: any[], index) => {

@@ -8,56 +8,82 @@ import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmati
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
 import { WithdrawalModal } from "./modals/WithdrawalModal";
 import { WalletPinModal } from "./modals/WalletPinModal";
-import NoMobileView from "../../components/NoMobileView";
 import VerificationBlockerModal from "./modals/VerificationModalBlocker";
 
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ClientSessionData } from "@omenai/shared-types";
+import {
+  getApiUrl,
+  base_url,
+  auth_uri,
+  dashboard_url,
+} from "@omenai/url-config/src/config";
 import { useRouter } from "next/navigation";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 
 export default function ArtistDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useAuth({
-    requiredRole: "artist",
-  });
   const router = useRouter();
+  const { user } = useAuth({ requiredRole: "artist" });
+  const { data: isOnboardingCompleted, isLoading: loading } = useQuery({
+    queryKey: ["check_user_session"],
+    queryFn: async () => {
+      const res = await fetch(`${getApiUrl()}/api/auth/session/user`, {
+        headers: {
+          "Content-Type": "application/json",
+          Origin: base_url(),
+        },
+        credentials: "include",
+      });
+      if (!res.ok) {
+        console.error(
+          "Failed to fetch session data:",
+          res.status,
+          res.statusText
+        );
+        return null;
+      }
+      const { user } = await res.json();
+      return user.userData.isOnboardingCompleted;
+    },
+  });
 
-  const { width } = useWindowSize();
+  if (loading) return <Load />;
 
-  if (!user.isOnboardingCompleted) router.replace("/artist/onboarding");
+  if (isOnboardingCompleted === null) router.replace(`${auth_uri()}/login`);
+
+  if (!isOnboardingCompleted) router.replace(`${dashboard_url()}/onboarding`);
   return (
     <>
-      {width <= 1280 ? (
-        <NoMobileView />
-      ) : (
-        <div className=" w-full h-full">
-          <NextTopLoader color="#1a1a1a" height={6} />
-          <VerificationBlockerModal
-            open={user && user.role === "artist" && !user.artist_verified}
-          />
-          <main className="flex h-full">
-            <PageLayout />
+      <div className=" w-full h-full">
+        <NextTopLoader color="#1a1a1a" height={6} />
+        <VerificationBlockerModal
+          open={user && user.role === "artist" && !user.artist_verified}
+        />
+        <main className="flex h-full">
+          <PageLayout />
 
-            <div
-              className={`w-full xl:ml-[19rem] md:ml-[15rem]  rounded-xl relative duration-200`}
-            >
-              <Appbar />
-              <div className="h-auto rounded-lg relative my-5">
-                <UploadOrderRejectionReason />
-                <UpdatePasswordModal />
-                <DeleteAccountConfirmationModal />
-                <WithdrawalModal />
-                <WalletPinModal />
+          <div
+            className={`w-full xl:ml-[19rem] md:ml-[15rem]  rounded-xl relative duration-200`}
+          >
+            <Appbar />
+            <div className="h-auto rounded-lg relative my-5">
+              <UploadOrderRejectionReason />
+              <UpdatePasswordModal />
+              <DeleteAccountConfirmationModal />
+              <WithdrawalModal />
+              <WalletPinModal />
 
-                {children}
-              </div>
+              {children}
             </div>
-          </main>
-        </div>
-      )}
+          </div>
+        </main>
+      </div>
     </>
   );
 }

@@ -38,7 +38,7 @@ export default function CuratedArtworksLayout({
         preferences={user.preferences}
       />
       <div
-        className={`h-[180vh] sm:h-[130vh] overflow-hidden relative transition-opacity duration-300 ${
+        className={`max-h-[130vh] h-auto overflow-hidden relative transition-opacity duration-300 ${
           isFading ? "opacity-10" : "opacity-100"
         }`}
       >
