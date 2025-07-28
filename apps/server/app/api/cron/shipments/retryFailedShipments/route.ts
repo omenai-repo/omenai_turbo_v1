@@ -1,44 +1,43 @@
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 
 // Run every hour
-export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
-  async function GET() {
-    await connectMongoDB();
-    const jobs = await FailedJob.find({
-      jobType: "createShipment",
-      status: "pending",
-    });
+export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+  await connectMongoDB();
+  const jobs = await FailedJob.find({
+    jobType: "createShipment",
+    status: "pending",
+  });
 
-    for (const job of jobs) {
-      const { payload } = job;
+  for (const job of jobs) {
+    const { payload } = job;
 
-      const res = await fetch(
-        `${getApiUrl()}/api/workflows/shipment/createShipment`,
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      if (res.ok) {
-        await FailedJob.updateOne(
-          { _id: job._id },
-          { $set: { status: "reprocessed" } }
-        );
-      } else {
-        await FailedJob.updateOne(
-          { _id: job._id },
-          { $inc: { retryCount: 1 }, $set: { reason: "Retry failed" } }
-        );
+    const res = await fetch(
+      `${getApiUrl()}/api/workflows/shipment/createShipment`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
       }
-    }
+    );
 
-    return NextResponse.json({ success: true });
+    if (res.ok) {
+      await FailedJob.updateOne(
+        { _id: job._id },
+        { $set: { status: "reprocessed" } }
+      );
+    } else {
+      await FailedJob.updateOne(
+        { _id: job._id },
+        { $inc: { retryCount: 1 }, $set: { reason: "Retry failed" } }
+      );
+    }
   }
-);
+
+  return NextResponse.json({ success: true });
+});

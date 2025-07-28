@@ -9,6 +9,7 @@ import { ServerError } from "../../../../../custom/errors/dictionary/errorDictio
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -60,64 +61,60 @@ function chunkArray<T>(array: T[], size: number): T[][] {
   return result;
 }
 
-export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
-  async function GET() {
-    try {
-      await connectMongoDB();
-      const nowUTC = toUTCDate(new Date());
-      const shipments = await ScheduledShipment.find({ status: "scheduled" });
-      if (!shipments.length) {
-        console.log("No scheduled shipments to process.");
-        return NextResponse.json(
-          { message: "No scheduled shipments." },
-          { status: 200 }
-        );
-      }
-
-      const BATCH_SIZE = 10;
-      const shipmentBatches = chunkArray(shipments, BATCH_SIZE);
-
-      for (const batch of shipmentBatches) {
-        await Promise.allSettled(
-          batch.map(async (shipment) => {
-            const executeAtUTC = toUTCDate(new Date(shipment.executeAt));
-            const twoDaysBeforeExecuteUTC = toUTCDate(
-              addDays(executeAtUTC, -2)
-            );
-
-            // Check if it's time to send a reminder email
-            if (
-              isWithinInterval(nowUTC, {
-                start: twoDaysBeforeExecuteUTC,
-                end: executeAtUTC,
-              })
-            ) {
-              await sendReminderEmail(shipment.order_id, shipment.reminderSent);
-              return;
-            }
-
-            // Check if it's time to trigger the shipment workflow
-            if (nowUTC >= executeAtUTC) {
-              await updateShipmentStatus(shipment.order_id, "resolved");
-              await triggerShipmentWorkflow(shipment.order_id);
-              // Optionally delete from scheduled collection if it's a one-time operation
-              // await ScheduledShipment.deleteOne({ order_id: shipment.order_id });
-            }
-          })
-        );
-      }
-
-      console.log("✅ Scheduled shipment batch check completed.");
+export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+  try {
+    await connectMongoDB();
+    const nowUTC = toUTCDate(new Date());
+    const shipments = await ScheduledShipment.find({ status: "scheduled" });
+    if (!shipments.length) {
+      console.log("No scheduled shipments to process.");
       return NextResponse.json(
-        { message: "Scheduled shipment batch check completed." },
+        { message: "No scheduled shipments." },
         { status: 200 }
       );
-    } catch (error) {
-      const errorResponse = handleErrorEdgeCases(error);
-      return NextResponse.json(
-        { message: errorResponse?.message },
-        { status: errorResponse?.status }
+    }
+
+    const BATCH_SIZE = 10;
+    const shipmentBatches = chunkArray(shipments, BATCH_SIZE);
+
+    for (const batch of shipmentBatches) {
+      await Promise.allSettled(
+        batch.map(async (shipment) => {
+          const executeAtUTC = toUTCDate(new Date(shipment.executeAt));
+          const twoDaysBeforeExecuteUTC = toUTCDate(addDays(executeAtUTC, -2));
+
+          // Check if it's time to send a reminder email
+          if (
+            isWithinInterval(nowUTC, {
+              start: twoDaysBeforeExecuteUTC,
+              end: executeAtUTC,
+            })
+          ) {
+            await sendReminderEmail(shipment.order_id, shipment.reminderSent);
+            return;
+          }
+
+          // Check if it's time to trigger the shipment workflow
+          if (nowUTC >= executeAtUTC) {
+            await updateShipmentStatus(shipment.order_id, "resolved");
+            await triggerShipmentWorkflow(shipment.order_id);
+            // Optionally delete from scheduled collection if it's a one-time operation
+            // await ScheduledShipment.deleteOne({ order_id: shipment.order_id });
+          }
+        })
       );
     }
+
+    console.log("✅ Scheduled shipment batch check completed.");
+    return NextResponse.json(
+      { message: "Scheduled shipment batch check completed." },
+      { status: 200 }
+    );
+  } catch (error) {
+    const errorResponse = handleErrorEdgeCases(error);
+    return NextResponse.json(
+      { message: errorResponse?.message },
+      { status: errorResponse?.status }
+    );
   }
-);
+});
