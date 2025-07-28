@@ -19,7 +19,7 @@ export function TrendingArtistCard({
   country: string;
   artist_id: string;
 }) {
-  const image_href = getImageFileView(url, 300);
+  const image_href = getImageFileView(url, 350);
   const encoded_url = decodeURIComponent(artist);
   const base_uri = base_url();
   return (
@@ -30,7 +30,7 @@ export function TrendingArtistCard({
       >
         <article className="relative">
           {/* Image with Aspect Ratio */}
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-slate-100">
+          <div className="relative aspect-[4/3] w-[350px] w-full overflow-hidden rounded-md bg-slate-100">
             <Image
               src={image_href}
               alt={artist + " image"}

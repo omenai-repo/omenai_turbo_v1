@@ -1,14 +1,11 @@
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 
+// Run every hour
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     await connectMongoDB();

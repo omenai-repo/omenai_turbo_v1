@@ -9,7 +9,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
     : null;
 
   return (
-    <div className="group relative bg-white rounded-3xl ring-1 ring-dark/10 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 h-[420px] max-w-[320px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px] border border-gray-100">
+    <div className="group relative bg-white rounded-3xl overflow-hidden transition-all duration-500 transform hover:-translate-y-1 h-[420px] max-w-[320px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px] border border-dark/30">
       {/* Image Section */}
       <div className="relative h-[220px] overflow-hidden">
         {url ? (
@@ -21,7 +21,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+          <div className="h-full w-full bg-gradient-to-br from-dark/30 to-gray-200 flex items-center justify-center">
             <div className="text-gray-400 text-center">
               <svg
                 className="w-16 h-16 mx-auto mb-2"
@@ -63,12 +63,12 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
           </Link>
 
           {/* Decorative line */}
-          <div className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent" />
+          <div className="flex-1 h-px bg-gradient-to-r from-dark/30 via-dark/20 to-transparent" />
         </div>
       </div>
 
       {/* Subtle border accent */}
-      <div className="absolute inset-0 rounded-3xl border border-transparent group-hover:border-gray-200 transition-colors duration-300 pointer-events-none" />
+      <div className="absolute inset-0 rounded-3xl border border-transparent transition-colors duration-300 pointer-events-none" />
     </div>
   );
 }

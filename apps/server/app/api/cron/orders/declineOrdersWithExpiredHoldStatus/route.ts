@@ -5,13 +5,10 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { sendOrderDeclinedMail } from "@omenai/shared-emails/src/models/orders/orderDeclinedMail";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 
+// NOTE: Run every 5 minutes
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     try {
@@ -77,6 +74,8 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         order_id: { $in: updatedOrderIds },
         "order_accepted.status": "declined",
       });
+
+      // TODO: Send batch emails for declined orders
 
       await Promise.allSettled(
         updatedOrders.map(async (order) => {

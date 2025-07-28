@@ -7,13 +7,9 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-
+// Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
   orderId: string,
@@ -45,7 +41,6 @@ async function updateShipmentStatus(
   }
 }
 
-// Utility function to trigger shipment workflow
 async function triggerShipmentWorkflow(orderId: string): Promise<void> {
   console.log(`🚀 Triggering workflow for order_id: ${orderId}`);
   const workflowID = await createWorkflow(

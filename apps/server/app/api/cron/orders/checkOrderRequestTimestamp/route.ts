@@ -7,14 +7,11 @@ import OrderAutoDeclined from "@omenai/shared-emails/src/views/order/OrderAutoDe
 import OrderRequestReminder from "@omenai/shared-emails/src/views/order/OrderRequessstReminder";
 import OrderDeclinedWarning from "@omenai/shared-emails/src/views/order/OrderDeclinedWarning";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-const resend = new Resend(process.env.RESEND_API_KEY);
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+// NOTE: Run every day at 00:00 UTC
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     try {

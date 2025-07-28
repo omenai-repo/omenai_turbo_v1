@@ -14,11 +14,11 @@ export default function PromotionalCard({
   image,
   isAdmin,
 }: PromotionalSchemaTypes & { isAdmin: boolean }) {
-  const image_url = getPromotionalFileView(image, 250, 200, "webp");
+  const image_url = getPromotionalFileView(image, 400, 200);
   const { updateShowEditPromotionalModal } = adminModals();
 
   return (
-    <section className="group relative min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] h-[200px] rounded-md overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-3xl">
+    <section className="group relative min-w-[200px] w-[300px] sm:w-[400px] sm:max-w-[400px] h-[200px] rounded-md overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-101 hover:shadow-3xl">
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent z-10" />
 

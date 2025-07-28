@@ -5,6 +5,7 @@ import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema"
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
+
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 

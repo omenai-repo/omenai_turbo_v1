@@ -9,6 +9,7 @@ import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 export default function ArtworkCard({
   image,
@@ -82,9 +83,12 @@ export default function ArtworkCard({
               </button>
             </Link>
           ) : (
-            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-fluid-xs font-normal shadow-sm border border-gray-200">
-              {medium}
-            </div>
+            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-1 xs:py-2 text-fluid-xxs rounded-md border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
+              <span className="font-semibold">{medium}</span>
+
+              {/* Button glow effect */}
+              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
+            </button>
           )}
         </div>
 
