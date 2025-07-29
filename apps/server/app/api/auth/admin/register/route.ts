@@ -11,13 +11,15 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { AdminAccessRoleTypes } from "@omenai/shared-types";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const data = await request.json();
+      const data: { email: string; access_role: AdminAccessRoleTypes } =
+        await request.json();
 
       const isAccountRegistered = await AccountAdmin.findOne(
         { email: data.email },
@@ -27,12 +29,10 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       if (isAccountRegistered)
         throw new ConflictError("Account already exists, please login");
 
-      const parsedData = await parseRegisterData(data);
-
       const email_token = generateDigit(7);
 
       const saveData = await AccountAdmin.create({
-        ...parsedData,
+        ...data,
       });
 
       const { admin_id } = saveData;

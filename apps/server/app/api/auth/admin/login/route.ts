@@ -44,6 +44,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         admin_id: user.admin_id,
         access_role: user.access_role,
         verified: user.verified,
+        admin_active: user.admin_active,
       };
       const userAgent: string | null =
         request.headers.get("User-Agent") || null;

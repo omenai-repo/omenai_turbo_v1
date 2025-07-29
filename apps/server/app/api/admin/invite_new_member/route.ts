@@ -1,3 +1,4 @@
+import { sendMemberInviteEmail } from "@omenai/shared-emails/src/models/admin/sendMemberInviteEmail";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -9,7 +10,8 @@ import {
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-
+import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
+import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -38,9 +40,17 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
     }
 
-    const { admin_id } = create_new_member;
+    const token = generateAlphaDigit(32);
 
-    //   todo: Send email
+    await AdminInviteToken.create({
+      author: email,
+      token,
+    });
+
+    // TODO: Convert this into a transaction
+
+    sendMemberInviteEmail({ email, token });
+
     return NextResponse.json(
       { message: "New member invited successfully" },
       { status: 201 }

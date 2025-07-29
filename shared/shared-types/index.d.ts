@@ -644,6 +644,7 @@ export type AccountAdminSchemaTypes = {
   role: AccessRoleTypes;
   verified: boolean;
   access_role: AdminAccessRoleTypes;
+  admin_active: boolean;
 };
 
 export type AdminAccessRoleTypes = "admin" | "owner" | "editor" | "viewer";

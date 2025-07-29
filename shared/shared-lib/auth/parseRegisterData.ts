@@ -12,7 +12,6 @@ type data =
       preferences: string[];
     })
   | Omit<GallerySignupData, "confirmPassword">
-  | Omit<AdminSignupData, "confirmPassword">
   | Omit<ArtistSignupData, "confirmPassword>">;
 
 export async function parseRegisterData(data: data) {
