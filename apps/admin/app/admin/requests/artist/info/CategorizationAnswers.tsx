@@ -106,7 +106,7 @@ export default function CategorizationAnswers({
           <Palette size={24} />
         </ThemeIcon>
         <div>
-          <Text size="xl" fw={700} c="dark.7">
+          <Text size="lg" fw={700} c="dark.7">
             Artist Categorization Profile
           </Text>
           <Text size="sm" c="dimmed">
@@ -171,7 +171,7 @@ export default function CategorizationAnswers({
                   marginTop: "4px",
                 }}
               >
-                <Text size="sm" c="dimmed" mb="xs" fs="italic">
+                <Text size="sm" mb="xs" fs="italic">
                   {item.question}
                 </Text>
                 <Group gap="xs" align="center">
@@ -183,7 +183,7 @@ export default function CategorizationAnswers({
                     color={item.color}
                     size="md"
                     style={{
-                      textTransform: "none",
+                      textTransform: "capitalize",
                       fontWeight: 500,
                     }}
                   >

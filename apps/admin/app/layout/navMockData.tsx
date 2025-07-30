@@ -1,3 +1,4 @@
+import { TeamMember } from "@omenai/shared-types";
 import {
   CircleDollarSign,
   Cog,
@@ -8,8 +9,9 @@ import {
   Proportions,
   UserRoundPen,
 } from "lucide-react";
+import { KeyList } from "../utils/canAccessRoute";
 
-const gallery = (
+export const gallery = (
   <Landmark
     size={20}
     strokeWidth={1.5}
@@ -17,7 +19,7 @@ const gallery = (
     className="text-dark group-hover:text-white"
   />
 );
-const artist = (
+export const artist = (
   <Palette
     size={20}
     strokeWidth={1.5}
@@ -67,7 +69,7 @@ const taxes = (
     className="text-dark group-hover:text-white"
   />
 );
-const promotionals = (
+export const promotionals = (
   <Proportions
     size={20}
     strokeWidth={1.5}
@@ -82,41 +84,56 @@ export const navMockData: NavMockData = {
       title: "Gallery requests",
       icon: gallery,
       url: "/admin/requests/gallery",
+      key: "requests",
     },
-    { title: "Artist requests", icon: artist, url: "/admin/requests/artist" },
+    {
+      title: "Artist requests",
+      icon: artist,
+      url: "/admin/requests/artist",
+      key: "requests",
+    },
   ],
   activity: [
     {
       title: "Upload promotionals",
       icon: promotionals,
       url: "/admin/promotionals",
+      key: "promotionals",
     },
     {
       title: "Upload editorials",
       icon: editorials,
       url: "/admin/editorials",
+      key: "editorials",
     },
     {
       title: "Revenue and tax activity",
       icon: taxes,
       url: "/admin/taxes",
+      key: "taxes",
     },
   ],
   management: [
     {
-      title: "Manage team members",
+      title: "Team members",
       icon: profile,
       url: "/admin/members",
+      key: "team",
     },
   ],
   account: [
-    { title: "Settings", icon: settings, url: "/admin/settings" },
+    {
+      title: "Settings",
+      icon: settings,
+      url: "/admin/settings",
+      key: "settings",
+    },
 
-    { title: "Sign out", icon: logout, url: "/" },
+    { title: "Sign out", icon: logout, url: "/", key: "logout" },
   ],
 };
 
-type NavMockData = {
+export type NavMockData = {
   actions: NavMockDataItem[];
   activity: NavMockDataItem[];
   management: NavMockDataItem[];
@@ -127,4 +144,5 @@ type NavMockDataItem = {
   title: string;
   icon: React.ReactNode;
   url: string;
+  key: KeyList;
 };

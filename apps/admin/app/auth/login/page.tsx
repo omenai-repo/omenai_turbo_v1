@@ -18,7 +18,7 @@ function Page() {
         </div>
 
         {/* Form section */}
-        <div className="w-fit h-full container overflow-x-hidden">
+        <div className="w-full max-w-sm h-full container overflow-x-hidden">
           <AdminLoginForm />
         </div>
       </div>

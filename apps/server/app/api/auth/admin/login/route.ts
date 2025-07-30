@@ -6,7 +6,10 @@ import {
 import bcrypt from "bcrypt";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { NextResponse, NextResponse as res } from "next/server";
-import { ConflictError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ConflictError,
+  ForbiddenError,
+} from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
@@ -33,6 +36,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (!user) throw new ConflictError("Invalid credentials");
 
+      if (!user.verified)
+        throw new ForbiddenError(
+          "Please activate your admin account to proceed."
+        );
+
       const isPasswordMatch = bcrypt.compareSync(password, user.password);
 
       if (!isPasswordMatch) throw new ConflictError("Invalid credentials");
@@ -45,6 +53,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         access_role: user.access_role,
         verified: user.verified,
         admin_active: user.admin_active,
+        joinedAt: user.joinedAt,
       };
       const userAgent: string | null =
         request.headers.get("User-Agent") || null;

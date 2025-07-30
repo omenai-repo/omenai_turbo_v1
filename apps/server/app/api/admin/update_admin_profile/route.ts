@@ -12,7 +12,7 @@ import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
-  allowedAdminAccessRoles: ["admin", "editor", "owner", "viewer"],
+  allowedAdminAccessRoles: ["Admin", "Editor", "Owner", "Viewer"],
 };
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
   request: Request
@@ -44,7 +44,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
       );
 
     return NextResponse.json(
-      { message: "Admin credentials updated successfully" },
+      { message: "Admin credentials updated successfully, please log back in" },
       { status: 200 }
     );
   } catch (error) {

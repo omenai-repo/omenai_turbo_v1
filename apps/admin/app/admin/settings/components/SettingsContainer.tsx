@@ -3,17 +3,11 @@ import { Loader } from "@mantine/core";
 import ProfileSection from "./ProfileSection";
 import DangerZone from "./DangerZone";
 import SecuritySection from "./SecuritySection";
-import { TeamMember } from "@omenai/shared-types";
+import { SessionData, SessionDataType, TeamMember } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SettingsContainer() {
-  const user: TeamMember = {
-    id: "1",
-    name: "Sarah Johnson",
-    email: "sarah.johnson@company.com",
-    role: "Admin", // Change this to test different roles
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-    joinedAt: new Date("2024-01-15"),
-  };
+  const { user } = useAuth({ requiredRole: "admin" });
 
   if (!user) {
     return (
@@ -35,13 +29,13 @@ export default function SettingsContainer() {
 
       <div className="space-y-6">
         {/* Profile Section */}
-        <ProfileSection user={user} />
+        <ProfileSection />
 
         {/* Security Section */}
-        <SecuritySection user={user} />
+        <SecuritySection />
 
         {/* Danger Zone - Only for Admins */}
-        {user.role === "Admin" && <DangerZone user={user} />}
+        {/* {user.access_role === "Owner" && <DangerZone />} */}
       </div>
     </div>
   );

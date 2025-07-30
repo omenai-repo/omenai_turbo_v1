@@ -14,7 +14,7 @@ import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
-  allowedAdminAccessRoles: ["admin", "editor", "owner", "viewer"],
+  allowedAdminAccessRoles: ["Admin", "Editor", "Owner", "Viewer"],
 };
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
   request: Request

@@ -126,7 +126,7 @@ export default function GalleryRequest({
               variant="gradient"
               gradient={{ from: "#1a1a1a", to: "#1a1a1a", deg: 45 }}
               size="sm"
-              radius="xl"
+              radius="md"
               className="
                 font-medium text-sm px-4 py-2.5 shadow-lg hover:shadow-xl
                 transition-all duration-300 hover:scale-105 active:scale-95

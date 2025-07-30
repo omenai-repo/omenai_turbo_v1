@@ -6,7 +6,8 @@ export const toast_notif = (
   return toast.error("Error notification", {
     description: message,
     style: {
-      background: type === "success" ? "green" : type === "info" ? "" : "red",
+      background:
+        type === "success" ? "green" : type === "info" ? "#1a1a1a" : "red",
       color: "white",
     },
     className: "class",

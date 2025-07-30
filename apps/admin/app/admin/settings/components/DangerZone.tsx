@@ -5,13 +5,11 @@ import { Button } from "@mantine/core";
 import { Trash, TriangleAlert } from "lucide-react";
 import DeleteAccountModal from "./DeleteAccountModal";
 import { TeamMember } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
-interface DangerZoneProps {
-  user: TeamMember;
-}
-
-export default function DangerZone({ user }: DangerZoneProps) {
+export default function DangerZone() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const { user } = useAuth({ requiredRole: "admin" });
 
   return (
     <>

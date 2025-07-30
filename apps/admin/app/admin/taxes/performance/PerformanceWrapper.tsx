@@ -1,43 +1,24 @@
 "use client";
-import {
-  RingProgress,
-  Progress,
-  ThemeIcon,
-  Paper,
-  Badge,
-  Tooltip,
-  SegmentedControl,
-} from "@mantine/core";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { RingProgress, Paper, Badge, Tooltip } from "@mantine/core";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+
 import {
   BanknoteArrowUp,
   Calendar,
-  Check,
   CircleAlert,
-  Info,
   ShoppingCart,
-  TrendingUp,
 } from "lucide-react";
+import { canAccessRoute } from "../../../utils/canAccessRoute";
+import ForbiddenPage from "../../components/ForbiddenPage";
 
 // Beautiful US Nexus Tracking Dashboard
 export const PerformanceWrapper = () => {
-  // Sample data for the trend chart
-  const trendData = [
-    { month: "Jan", sales: 12000, transactions: 145 },
-    { month: "Feb", sales: 15000, transactions: 189 },
-    { month: "Mar", sales: 18500, transactions: 223 },
-    { month: "Apr", sales: 22000, transactions: 267 },
-    { month: "May", sales: 25500, transactions: 298 },
-    { month: "Jun", sales: 28700, transactions: 334 },
-  ];
+  const { user } = useAuth({ requiredRole: "admin" });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "taxes")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
 
   const currentSales = 28700;
   const salesThreshold = 32455;

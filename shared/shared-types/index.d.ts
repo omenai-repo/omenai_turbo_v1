@@ -645,9 +645,10 @@ export type AccountAdminSchemaTypes = {
   verified: boolean;
   access_role: AdminAccessRoleTypes;
   admin_active: boolean;
+  joinedAt: string | Date;
 };
 
-export type AdminAccessRoleTypes = "admin" | "owner" | "editor" | "viewer";
+export type AdminAccessRoleTypes = "Admin" | "Owner" | "Editor" | "Viewer";
 
 export type FLWDirectChargeDataTypes = CardInputTypes & {
   card: string;
@@ -933,12 +934,10 @@ export type BankBranchType = {
 };
 
 export type TeamMember = {
-  id: string;
+  admin_id: string;
   name: string;
   email: string;
-  role: MemberRole;
-  avatar?: string;
-  joinedAt: Date;
+  access_role: AdminAccessRoleTypes;
+  joinedAt: string;
+  verified: boolean;
 };
-
-export type MemberRole = "Admin" | "Editor" | "Viewer";

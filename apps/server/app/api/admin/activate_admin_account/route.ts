@@ -38,6 +38,7 @@ export const POST = withRateLimit(config)(async function POST(
 
     const hashedPassword = await hashPassword(password);
 
+    const date = new Date();
     const activate_admin_user = await AccountAdmin.updateOne(
       { email },
       {
@@ -46,6 +47,7 @@ export const POST = withRateLimit(config)(async function POST(
           name,
           verified: true,
           admin_active: true,
+          joinedAt: date,
         },
       }
     );

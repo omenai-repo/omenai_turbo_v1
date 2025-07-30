@@ -3,15 +3,9 @@ import TeamMemberRow from "./TeamMemberRole";
 
 interface TeamMembersListProps {
   members: TeamMember[];
-  onRoleUpdate: (memberId: string, role: TeamMember["role"]) => void;
-  onDeleteMember: (memberId: string) => void;
 }
 
-export default function TeamMembersList({
-  members,
-  onRoleUpdate,
-  onDeleteMember,
-}: TeamMembersListProps) {
+export default function TeamMembersList({ members }: TeamMembersListProps) {
   return (
     <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a]">
       <div className="p-6 border-b border-[#2a2a2a]">
@@ -24,12 +18,7 @@ export default function TeamMembersList({
       </div>
       <div className="divide-y divide-[#2a2a2a]">
         {members.map((member) => (
-          <TeamMemberRow
-            key={member.id}
-            member={member}
-            onRoleUpdate={onRoleUpdate}
-            onDeleteMember={onDeleteMember}
-          />
+          <TeamMemberRow key={member.admin_id} member={member} />
         ))}
       </div>
     </div>

@@ -7,12 +7,21 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
 import PendingArtistRequest from "./PendingArtistRequest";
 import ApprovedArtistRequest from "./ApprovedArtistRequest";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { canAccessRoute } from "../../../../utils/canAccessRoute";
+import ForbiddenPage from "../../../components/ForbiddenPage";
 
 export type ArtistType = Pick<
   ArtistSchemaTypes,
   "name" | "logo" | "email" | "artist_verified" | "artist_id"
 >;
 export function ArtistRequestWrapper() {
+  const { user } = useAuth({ requiredRole: "admin" });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "requests")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
   const { data: artists, isLoading: loading } = useQuery({
     queryKey: ["fetch_artists_on_verif_status"],
     queryFn: async () => {

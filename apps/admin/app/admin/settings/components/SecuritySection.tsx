@@ -4,14 +4,11 @@ import { useState } from "react";
 import { Button } from "@mantine/core";
 import { Lock, Shield } from "lucide-react";
 import ChangePasswordModal from "./ChangePasswordModal";
-import { TeamMember } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
-interface SecuritySectionProps {
-  user: TeamMember;
-}
-
-export default function SecuritySection({ user }: SecuritySectionProps) {
+export default function SecuritySection() {
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const { user } = useAuth({ requiredRole: "admin" });
 
   return (
     <>
@@ -25,7 +22,7 @@ export default function SecuritySection({ user }: SecuritySectionProps) {
           <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-lg border border-[#2a2a2a]">
             <div>
               <p className="text-white font-medium">Password</p>
-              <p className="text-gray-400 text-sm">Last changed 3 months ago</p>
+              {/* <p className="text-gray-400 text-sm">Last changed 3 months ago</p> */}
             </div>
             <Button
               onClick={() => setPasswordModalOpen(true)}

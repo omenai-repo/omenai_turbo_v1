@@ -4,8 +4,18 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useQuery } from "@tanstack/react-query";
 
 import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import router from "next/navigation";
+import { canAccessRoute } from "../../../utils/canAccessRoute";
+import ForbiddenPage from "../../components/ForbiddenPage";
 
 export default function PromotionalList() {
+  const { user } = useAuth({ requiredRole: "admin" });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "editorials")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
   const { data: promotionals, isLoading: loading } = useQuery({
     queryKey: ["fetch_promotional_data"],
     queryFn: async () => {

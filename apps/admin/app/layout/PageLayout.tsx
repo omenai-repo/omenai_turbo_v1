@@ -1,14 +1,22 @@
 "use client";
-import { navMockData } from "./navMockData";
+import {
+  artist,
+  gallery,
+  NavMockData,
+  navMockData,
+  promotionals,
+} from "./navMockData";
 import NavigationItem from "./NavigationItem";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast } from "sonner";
 import { admin_url, auth_uri } from "@omenai/url-config/src/config";
+import { TeamMember } from "@omenai/shared-types";
+import { canAccessRoute } from "../utils/canAccessRoute";
 
 export default function PageLayout() {
-  const { signOut } = useAuth({
-    requiredRole: "gallery",
+  const { signOut, user } = useAuth({
+    requiredRole: "admin",
     redirectUrl: `${admin_url()}/auth/login`,
   });
   async function handleSignOut() {
@@ -42,6 +50,7 @@ export default function PageLayout() {
                     key={item.title}
                     url={item.url}
                     mobile={false}
+                    disabled={canAccessRoute(user.access_role, item.key)}
                   />
                 );
               })}
@@ -58,6 +67,7 @@ export default function PageLayout() {
                     key={item.title}
                     url={item.url}
                     mobile={false}
+                    disabled={canAccessRoute(user.access_role, item.key)}
                   />
                 );
               })}
@@ -74,6 +84,7 @@ export default function PageLayout() {
                     key={item.title}
                     url={item.url}
                     mobile={false}
+                    disabled={canAccessRoute(user.access_role, item.key)}
                   />
                 );
               })}
@@ -91,6 +102,7 @@ export default function PageLayout() {
                     key={item.title}
                     url={item.url}
                     mobile={false}
+                    disabled={canAccessRoute(user.access_role, item.key)}
                     onClick={async () =>
                       item.title === "Sign out" && (await handleSignOut())
                     }

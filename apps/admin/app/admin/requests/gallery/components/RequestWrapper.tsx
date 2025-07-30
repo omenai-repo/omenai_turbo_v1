@@ -1,12 +1,14 @@
 "use client";
 import { Tabs } from "@mantine/core";
 import PendingGalleryRequests from "./PendingGalleryRequests";
-import RejectedGalleryRequests from "./RejectedGalleryRequests";
 import ApprovedGalleryRequests from "./ApprovedGalleryRequests";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGalleriesOnVerifStatus } from "@omenai/shared-services/admin/fetch_galleries_on_verif_status";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { GallerySchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { canAccessRoute } from "../../../../utils/canAccessRoute";
+import ForbiddenPage from "../../../components/ForbiddenPage";
 
 export type GalleryType = Pick<
   GallerySchemaTypes,
@@ -21,6 +23,12 @@ export type GalleryType = Pick<
   | "gallery_verified"
 >;
 export function GalleryRequestWrapper() {
+  const { user } = useAuth({ requiredRole: "admin" });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "requests")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
   const { data: galleries, isLoading: loading } = useQuery({
     queryKey: ["fetch_galleries_on_verif_status"],
     queryFn: async () => {

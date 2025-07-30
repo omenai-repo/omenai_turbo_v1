@@ -1,11 +1,16 @@
-import { Button } from "@mantine/core";
-import Link from "next/link";
-import React from "react";
-import Editorials from "../../components/Editorials";
+"use client";
 import EditorialForm from "./EditorialForm";
-import { EditorialSchemaTypes } from "@omenai/shared-types";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { canAccessRoute } from "../../../../utils/canAccessRoute";
+import ForbiddenPage from "../../../components/ForbiddenPage";
 
 export default function AddEditorialWrapper() {
+  const { user } = useAuth({ requiredRole: "admin" });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "editorials")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
   return (
     <div>
       <div className="flex justify-between items-center">

@@ -12,7 +12,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
-  allowedAdminAccessRoles: ["admin", "owner"],
+  allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(

@@ -9,22 +9,27 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
-  allowedAdminAccessRoles: ["admin", "owner"],
+  allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
   request: Request
 ) {
   try {
-    const { admin_id } = await request.json();
+    const { admin_id, email } = await request.json();
     if (!admin_id) {
       throw new BadRequestError("Admin ID is required");
     }
     await connectMongoDB();
+
+    await AdminInviteToken.deleteOne({ author: email });
+
     const user_delete = await AccountAdmin.deleteOne({ admin_id });
+
     if (user_delete.deletedCount === 0)
       throw new ServerError(
         "Deletion could not be completed, please try again or contact support."

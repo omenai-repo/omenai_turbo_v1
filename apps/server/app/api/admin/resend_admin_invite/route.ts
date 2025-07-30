@@ -1,4 +1,3 @@
-import { sendMemberInviteEmail } from "@omenai/shared-emails/src/models/admin/sendMemberInviteEmail";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -13,6 +12,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
+import { sendMemberInviteEmail } from "@omenai/shared-emails/src/models/admin/sendMemberInviteEmail";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -21,47 +21,43 @@ const config: CombinedConfig = {
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
-  const { email, access_role } = await request.json();
+  const { admin_id } = await request.json();
   try {
-    if (!email) throw new BadRequestError("Email is required");
+    if (!admin_id) throw new BadRequestError("ID is required");
 
-    if (typeof email !== "string" || !email.includes("@")) {
-      throw new BadRequestError("Invalid email format");
+    if (typeof admin_id !== "string") {
+      throw new BadRequestError("Invalid admin_id format");
     }
 
     await connectMongoDB();
 
-    const is_member_exist = await AccountAdmin.findOne({ email });
+    const is_member_exist = await AccountAdmin.findOne({ admin_id }, "email");
 
-    if (is_member_exist)
-      throw new ForbiddenError(
-        "This email is already associated to a team member"
-      );
-    // Here you would typically handle the logic to invite a new member
-    const create_new_member = await AccountAdmin.create({
-      email,
-      access_role,
+    if (!is_member_exist || is_member_exist.verified)
+      throw new ForbiddenError("Invalid operation, cannot process.");
+
+    const is_token_exist = await AdminInviteToken.findOne({
+      author: is_member_exist.email,
     });
 
-    if (!create_new_member) {
-      throw new ServerError(
-        "Failed to create new member, please try again or contact support."
+    if (is_token_exist)
+      throw new BadRequestError(
+        "Invitation link still active for this member."
       );
-    }
 
     const token = generateAlphaDigit(32);
 
     await AdminInviteToken.create({
-      author: email,
+      author: is_member_exist.email,
       token,
     });
 
     // TODO: Convert this into a transaction
 
-    sendMemberInviteEmail({ email, token });
+    sendMemberInviteEmail({ email: is_member_exist.email, token });
 
     return NextResponse.json(
-      { message: "Invite sent successfully" },
+      { message: "Invite resent successfully" },
       { status: 201 }
     );
   } catch (error) {

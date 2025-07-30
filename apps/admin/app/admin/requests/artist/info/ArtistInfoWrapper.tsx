@@ -6,6 +6,9 @@ import { notFound, useSearchParams } from "next/navigation";
 import { ArtistAlgorithmData, ArtistSchemaTypes } from "@omenai/shared-types";
 import ArtistInfo from "./ArtistInfo";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { canAccessRoute } from "../../../../utils/canAccessRoute";
+import ForbiddenPage from "../../../components/ForbiddenPage";
 
 export type VerificationInfoType = {
   artist: Pick<
@@ -25,6 +28,13 @@ export default function ArtistInfoWrapper() {
   const id = searchParams.get("id");
 
   if (!id) return notFound();
+
+  const { user } = useAuth({ requiredRole: "admin" });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "requests")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
 
   const { data: verif_info, isLoading: loading } = useQuery({
     queryKey: ["fetch_artist_verif_info"],

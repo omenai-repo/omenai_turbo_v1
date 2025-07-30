@@ -4,11 +4,13 @@ import { useState } from "react";
 import { Modal, TextInput, Select, Button } from "@mantine/core";
 import { TeamMember } from "@omenai/shared-types";
 import { Shield, UserRoundPen, Eye, Send } from "lucide-react";
-
+import { inviteNewMember } from "@omenai/shared-services/admin/invite_new_member";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useQueryClient } from "@tanstack/react-query";
 interface InviteTeamMemberModalProps {
   opened: boolean;
   onClose: () => void;
-  onInvite: (email: string, role: TeamMember["role"]) => void;
 }
 
 const roleOptions = [
@@ -32,16 +34,44 @@ const roleOptions = [
 export default function InviteTeamMemberModal({
   opened,
   onClose,
-  onInvite,
 }: InviteTeamMemberModalProps) {
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<TeamMember["role"]>("Viewer");
-
-  const handleSubmit = () => {
+  const [role, setRole] = useState<TeamMember["access_role"]>("Viewer");
+  const { csrf } = useAuth({ requiredRole: "admin" });
+  const [loading, setLoading] = useState<boolean>(false);
+  const handleSubmit = async () => {
+    setLoading(true);
     if (email) {
-      onInvite(email, role);
-      setEmail("");
-      setRole("Viewer");
+      try {
+        if (!email.includes("omenai.net")) {
+          toast_notif(
+            "You can only invite members of your organization to this team",
+            "error"
+          );
+
+          return;
+        }
+        const response = await inviteNewMember(email, role, csrf || "");
+
+        if (!response.isOk) {
+          toast_notif(response.message, "error");
+          return;
+        } else {
+          toast_notif(response.message, "success");
+          await queryClient.invalidateQueries({
+            queryKey: ["fetch_all_teamMembers"],
+          });
+          setEmail("");
+          setRole("Viewer");
+          onClose();
+        }
+      } catch (error) {
+        toast_notif("Something went wrong, please contact support", "error");
+        return;
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -51,55 +81,80 @@ export default function InviteTeamMemberModal({
       onClose={onClose}
       title="Invite Team Member"
       centered
-      radius={"lg"}
+      size="md"
+      radius="sm"
+      overlayProps={{
+        backgroundOpacity: 0.55,
+        blur: 3,
+      }}
       styles={{
         root: {
-          ".mantine-Modal-content": {
-            backgroundColor: "#1a1a1a",
-            border: "1px solid #2a2a2a",
+          ".mantineModalContent": {
+            backgroundColor: "#ffffff",
+            border: "1px solid rgba(0, 0, 0, 0.08)",
+            boxShadow:
+              "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
           },
-          ".mantine-Modal-header": {
-            backgroundColor: "#1a1a1a",
-            borderBottom: "1px solid #2a2a2a",
+          ".mantineModalHeader": {
+            backgroundColor: "#ffffff",
+            borderBottom: "1px solid #f3f4f6",
+            padding: "1.5rem 2rem",
           },
-          ".mantine-Modal-title": {
-            color: "white",
-            fontSize: "1.55rem",
-            fontWeight: 600,
+          ".mantineModalTitle": {
+            color: "#111827",
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            letterSpacing: "-0.025em",
           },
-          ".mantine-Modal-close": {
-            color: "#1a1a1a",
+          ".mantineModalClose": {
+            color: "#6b7280",
+            backgroundColor: "#f9fafb",
+            borderRadius: "0.5rem",
             "&:hover": {
-              backgroundColor: "#2a2a2a",
+              backgroundColor: "#f3f4f6",
+              color: "#111827",
             },
+          },
+          ".mantineModalBody": {
+            padding: "2rem",
           },
         },
       }}
     >
-      <div className="space-y-4 p-4">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <p className="text-sm text-gray-600">
+            Invite a new member to collaborate with your team
+          </p>
+        </div>
+
         <TextInput
           label="Email Address"
-          placeholder="colleague@company.com"
+          placeholder="colleague@omenai.net"
           value={email}
-          radius={"sm"}
-          size="md"
-          variant="default"
+          radius="md"
+          variant="filled"
           onChange={(e) => setEmail(e.currentTarget.value)}
-          //   leftSection={<Send size={20} absoluteStrokeWidth />}
           styles={{
             label: {
-              color: "#1a1a1a",
+              color: "#374151",
               marginBottom: "0.5rem",
               fontSize: "0.875rem",
+              fontWeight: 600,
             },
             input: {
-              border: "1px solid #3a3a3a",
-              color: "#1a1a1a",
+              backgroundColor: "#f9fafb",
+              border: "1px solid #e0e0e0",
+              color: "#111827",
+              fontSize: "1rem",
+              height: "3rem",
+              transition: "all 0.2s ease",
               "&:focus": {
-                borderColor: "#4a4a4a",
+                borderColor: "#3b82f6",
+                backgroundColor: "#ffffff",
               },
               "&::placeholder": {
-                color: "#1a1a1a/60",
+                color: "#9ca3af",
               },
             },
           }}
@@ -108,43 +163,77 @@ export default function InviteTeamMemberModal({
         <Select
           label="Role"
           value={role}
-          onChange={(val) => setRole(val as TeamMember["role"])}
+          onChange={(val) => setRole(val as TeamMember["access_role"])}
           data={roleOptions}
-          variant="default"
-          leftSection={roleOptions.find((r) => r.value === role)?.icon ?? null}
+          variant="filled"
+          radius="md"
+          leftSection={
+            <div className="text-gray-600">
+              {roleOptions.find((r) => r.value === role)?.icon ?? null}
+            </div>
+          }
           styles={{
             label: {
-              color: "#1a1a1a",
+              color: "#374151",
               marginBottom: "0.5rem",
+              fontSize: "0.875rem",
+              fontWeight: 600,
             },
             input: {
-              border: "1px solid #3a3a3a",
+              backgroundColor: "#f9fafb",
+              border: "1px solid #e0e0e0",
+              height: "3rem",
+              fontSize: "1rem",
+              transition: "all 0.2s ease",
               "&:focus": {
-                borderColor: "#4a4a4a",
+                borderColor: "#3b82f6",
+                backgroundColor: "#ffffff",
               },
             },
             dropdown: {
               backgroundColor: "white",
-              border: "1px solid #3a3a3a",
+              border: "1px solid #e5e7eb",
+              borderRadius: "0.75rem",
+              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
             },
             option: {
-              "&[data-hovered]": {
-                backgroundColor: "#3a3a3a",
+              fontSize: "0.95rem",
+              padding: "0.75rem 1rem",
+              "&[dataHovered]": {
+                backgroundColor: "#f3f4f6",
+              },
+              "&[dataSelected]": {
+                backgroundColor: "#3b82f6",
+                color: "white",
               },
             },
           }}
         />
 
-        <div className="flex gap-3 pt-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <p className="text-sm text-blue-800">
+            The invited member will receive an email with instructions to join
+            your team.
+          </p>
+        </div>
+
+        <div className="flex gap-3 pt-2">
           <Button
             onClick={onClose}
-            variant="default"
+            disabled={loading}
+            variant="subtle"
             fullWidth
+            size="sm"
+            radius="md"
             styles={{
               root: {
-                color: "#1a1a1a",
+                color: "#6b7280",
+                backgroundColor: "#f9fafb",
+                fontWeight: 600,
+                transition: "all 0.2s ease",
                 "&:hover": {
-                  backgroundColor: "#2a2a2a",
+                  backgroundColor: "#f3f4f6",
+                  color: "#111827",
                 },
               },
             }}
@@ -154,16 +243,24 @@ export default function InviteTeamMemberModal({
           <Button
             onClick={handleSubmit}
             fullWidth
-            disabled={!email}
+            size="sm"
+            radius="md"
+            disabled={!email || loading}
+            loading={loading}
+            leftSection={<Send size={16} absoluteStrokeWidth />}
             styles={{
               root: {
                 backgroundColor: "#1a1a1a",
+                fontWeight: 600,
+                transition: "all 0.2s ease",
                 "&:hover": {
-                  backgroundColor: "#4a4a4a",
+                  backgroundColor: "#2563eb",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 4px 12px rgba(59, 130, 246, 0.4)",
                 },
                 "&:disabled": {
-                  backgroundColor: "#2a2a2a",
-                  color: "#666",
+                  backgroundColor: "#e5e7eb",
+                  color: "#9ca3af",
                 },
               },
             }}

@@ -1,4 +1,4 @@
-import { AccountAdminSchemaTypes } from "@omenai/shared-types";
+import { AccountAdminSchemaTypes, TeamMember } from "@omenai/shared-types";
 import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
@@ -38,12 +38,16 @@ const adminAccountSchema = new Schema<AccountAdminSchemaTypes>(
     },
     access_role: {
       type: String,
-      enum: ["admin", "owner", "editor", "viewer"],
+      enum: ["Admin", "Owner", "Editor", "Viewer"],
       required: true,
     },
     admin_active: {
       type: Boolean,
       default: false,
+    },
+    joinedAt: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }

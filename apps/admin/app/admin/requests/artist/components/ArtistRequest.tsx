@@ -135,7 +135,7 @@ export default function ArtistRequest({
                   variant="gradient"
                   gradient={{ from: "#1a1a1a", to: "#1a1a1a", deg: 45 }}
                   size="sm"
-                  radius="xl"
+                  radius="md"
                   leftSection={<Eye size={16} />}
                   className="
                     font-medium text-sm px-6 py-2.5 shadow-lg

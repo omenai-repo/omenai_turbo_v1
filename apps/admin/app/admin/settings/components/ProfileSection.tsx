@@ -3,30 +3,52 @@
 import { useState } from "react";
 import { TextInput, Button, Avatar } from "@mantine/core";
 import { Mail, Save, User } from "lucide-react";
-import { TeamMember } from "@omenai/shared-types";
-
-interface ProfileSectionProps {
-  user: TeamMember;
-}
-
-export default function ProfileSection({ user }: ProfileSectionProps) {
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { resendAdminInvite } from "@omenai/shared-services/admin/resend_admin_invite";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateAdminProfile } from "@omenai/shared-services/admin/update_admin_profile";
+import { admin_url } from "@omenai/url-config/src/config";
+export default function ProfileSection() {
+  const { user, csrf, signOut } = useAuth({
+    requiredRole: "admin",
+    redirectUrl: `${admin_url()}/auth/login`,
+  });
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
   const [isEditing, setIsEditing] = useState(false);
+  const handleSave = async () => {
+    if (user) {
+      setLoading(true);
+      try {
+        const response = await updateAdminProfile(
+          user.admin_id,
+          name,
+          csrf || ""
+        );
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // todo: toast
-    // notifications.show({
-    //   title: "Profile updated",
-    //   message: "Your profile information has been saved successfully",
-    //   color: "green",
-    // });
+        if (!response.isOk) {
+          toast_notif(response.message, "error");
+          return;
+        } else {
+          toast_notif(response.message, "success");
+          setIsEditing(false);
+          toast_notif("Logging you out, please wait", "info");
+          await signOut();
+        }
+      } catch (error) {
+        toast_notif("Something went wrong, please contact support", "error");
+        return;
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      return;
+    }
   };
 
   const handleCancel = () => {
     setName(user.name);
-    setEmail(user.email);
     setIsEditing(false);
   };
 
@@ -40,8 +62,6 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
         {/* Avatar Section */}
         <div className="flex items-center gap-6">
           <Avatar
-            src={user.avatar}
-            alt={user.name}
             size={80}
             radius="xl"
             styles={{
@@ -52,7 +72,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
           />
           <div>
             <p className="text-white font-medium">{user.name}</p>
-            <p className="text-gray-400 text-sm">{user.role}</p>
+            <p className="text-gray-400 text-sm">{user.access_role}</p>
           </div>
         </div>
 
@@ -87,9 +107,8 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
 
           <TextInput
             label="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            disabled={!isEditing}
+            disabled
+            value={user.email}
             leftSection={<Mail size={16} />}
             styles={{
               label: {
@@ -117,6 +136,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
         <div className="flex gap-3">
           {!isEditing ? (
             <Button
+              disabled={loading}
               onClick={() => setIsEditing(true)}
               variant="subtle"
               styles={{
@@ -136,6 +156,7 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
               <Button
                 onClick={handleCancel}
                 variant="subtle"
+                disabled={loading}
                 styles={{
                   root: {
                     color: "#999",
@@ -149,6 +170,8 @@ export default function ProfileSection({ user }: ProfileSectionProps) {
               </Button>
               <Button
                 onClick={handleSave}
+                loading={loading}
+                disabled={loading || name === user.name}
                 leftSection={<Save size={16} />}
                 styles={{
                   root: {

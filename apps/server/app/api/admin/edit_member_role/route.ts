@@ -9,7 +9,7 @@ import { BadRequestError } from "../../../../custom/errors/dictionary/errorDicti
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
-  allowedAdminAccessRoles: ["admin", "owner"],
+  allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
@@ -20,6 +20,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     if (!admin_id) throw new BadRequestError('"Admin ID is required"');
 
     await connectMongoDB();
+
     const role_update = await AccountAdmin.updateOne(
       { admin_id },
       { $set: { access_role: role } }
@@ -33,7 +34,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     }
     // todo: Send email notification about role change
     return NextResponse.json({
-      message: "This endpoint is not implemented yet",
+      message: "Team member role updated successfully",
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);

@@ -9,6 +9,7 @@ type ItemProps = {
   url: string;
   mobile: boolean;
   onClick?: () => void;
+  disabled: boolean;
 };
 export default function NavigationItem({
   title,
@@ -16,6 +17,7 @@ export default function NavigationItem({
   url,
   mobile,
   onClick,
+  disabled,
 }: ItemProps) {
   const pathname = usePathname();
   return (
@@ -30,7 +32,7 @@ export default function NavigationItem({
           </IconWrapper>
           <p className={`text-fluid-xs p-2 font-normal`}>{title}</p>
         </li>
-      ) : (
+      ) : disabled ? (
         <Link
           onClick={onClick}
           href={url}
@@ -49,6 +51,15 @@ export default function NavigationItem({
             {title}
           </p>
         </Link>
+      ) : (
+        <>
+          <div className="opacity-50 flex items-center bg-white p-2 text-dark cursor-not-allowed">
+            <IconWrapper className="hover:bg-white hover:text-dark group">
+              {icon}
+            </IconWrapper>
+            {title}
+          </div>
+        </>
       )}
     </>
   );
