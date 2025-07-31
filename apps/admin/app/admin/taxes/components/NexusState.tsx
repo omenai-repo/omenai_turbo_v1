@@ -1,18 +1,15 @@
-import { Button } from "@mantine/core";
-import { ArrowRight, MapPin } from "lucide-react";
+import { MapPin, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { Button } from "@mantine/core"; // Adjust based on your setup
 
-export default function NexusState({
-  state,
-  code,
-  flag_url,
-}: {
+type StateFlagCardProps = {
+  flag_url: string;
   state: string;
   code: string;
-  flag_url: string;
-}) {
+};
+
+export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-xl border border-gray-200/50 bg-white/50 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/50">
       {/* Animated background gradient */}
@@ -35,12 +32,11 @@ export default function NexusState({
                 className="object-cover"
                 priority
               />
-              {/* Shine effect */}
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent translate-x-[-100%] transition-transform duration-700 group-hover:translate-x-[100%]" />
             </div>
           </div>
 
-          {/* State information with icon */}
+          {/* State information */}
           <div className="flex flex-col space-y-1">
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-dark transition-colors duration-200 group-hover:text-dark" />
@@ -48,15 +44,13 @@ export default function NexusState({
                 {state}
               </h2>
             </div>
-            <div className="flex items-center gap-3">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                {code}
-              </p>
-            </div>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              {code}
+            </p>
           </div>
         </div>
 
-        {/* Enhanced action button */}
+        {/* Button */}
         <Link
           href={`/admin/taxes/performance?code=${code}`}
           className="group/button"
@@ -68,9 +62,7 @@ export default function NexusState({
           >
             <span className="relative z-10 flex items-center gap-2">
               View performance
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/button:translate-x-1" />
             </span>
-            {/* Button hover effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 transition-opacity duration-300 group-hover/button:opacity-100" />
           </Button>
         </Link>

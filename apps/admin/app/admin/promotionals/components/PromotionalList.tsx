@@ -3,11 +3,11 @@ import { getPromotionalData } from "@omenai/shared-services/promotionals/getProm
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useQuery } from "@tanstack/react-query";
 
-import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import router from "next/navigation";
 import { canAccessRoute } from "../../../utils/canAccessRoute";
 import ForbiddenPage from "../../components/ForbiddenPage";
+import PromotionalCard from "./PromotionalCard";
 
 export default function PromotionalList() {
   const { user } = useAuth({ requiredRole: "admin" });
@@ -35,16 +35,14 @@ export default function PromotionalList() {
       <div className="flex flex-auto flex-wrap grow shrink gap-5">
         {promotionals.map((promotional: any, index: number) => {
           return (
-            <div
-              className="embla__slide"
-              key={promotional.id || promotional.heading || index}
-            >
+            <div key={promotional.id || promotional.heading || index}>
               <PromotionalCard
                 headline={promotional.headline}
                 subheadline={promotional.subheadline}
                 cta={promotional.cta}
                 image={promotional.image}
                 isAdmin={true}
+                id={promotional._id}
               />
             </div>
           );

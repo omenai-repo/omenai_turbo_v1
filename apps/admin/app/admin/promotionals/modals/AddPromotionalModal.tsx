@@ -9,7 +9,7 @@ import {
   PromotionalSchemaTypes,
 } from "@omenai/shared-types";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
-import { upload_promotional_image } from "../lib/createPromotional";
+import { upload_promotional_image } from "../../lib/createPromotional";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { createPromotionalData } from "@omenai/shared-services/promotionals/createPromotionalData";
 import { useQueryClient } from "@tanstack/react-query";

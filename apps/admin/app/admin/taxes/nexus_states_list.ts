@@ -45,13 +45,13 @@ export const nexus_states = [
     state: "District of Columbia",
     code: "DC",
     flag_url:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d4/Flag_of_the_District_of_Columbia.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Washington%2C_D.C.svg",
   },
   {
     state: "Georgia",
     code: "GA",
     flag_url:
-      "https://upload.wikimedia.org/wikipedia/commons/5/54/Flag_of_Georgia_%28U.S._state%29.svg",
+      "https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_the_State_of_Georgia.svg",
   },
   {
     state: "Hawaii",

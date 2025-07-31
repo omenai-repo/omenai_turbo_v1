@@ -1,10 +1,14 @@
 "use client";
 import { getPromotionalFileView } from "@omenai/shared-lib/storage/getPromotionalsFileView";
 import { PromotionalSchemaTypes } from "@omenai/shared-types";
+import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosArrowRoundForward } from "react-icons/io";
-
+import { adminModals } from "@omenai/shared-state-store/src/admin/AdminModalsStore";
+import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
+import DeletePromotionalModal from "../modals/DeletePromotionalModal";
 import { ObjectId } from "mongoose";
 
 export default function PromotionalCard({
@@ -12,7 +16,9 @@ export default function PromotionalCard({
   subheadline,
   cta,
   image,
-}: PromotionalSchemaTypes) {
+  isAdmin,
+  id,
+}: PromotionalSchemaTypes & { isAdmin: boolean; id: ObjectId }) {
   const image_url = getPromotionalFileView(image, 400, 200);
 
   return (
@@ -61,6 +67,9 @@ export default function PromotionalCard({
         <div className="absolute top-4 right-4 w-16 h-16 rounded-md bg-white/10 backdrop-blur-sm opacity-20 transition-all duration-500 group-hover:opacity-40 group-hover:scale-110" />
         <div className="absolute bottom-4 right-8 w-8 h-8 rounded-md bg-white/5 backdrop-blur-sm opacity-30 transition-all duration-700 group-hover:opacity-60" />
       </div>
+
+      {/* Admin edit button */}
+      {isAdmin && <DeletePromotionalModal advertTitle={headline} id={id} />}
 
       {/* Subtle border glow */}
       <div className="absolute inset-0 rounded-2xl ring-1 ring-white/10 pointer-events-none transition-all duration-300 group-hover:ring-white/20" />

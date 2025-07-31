@@ -5,10 +5,12 @@ import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery"
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-export const POST = withAppRouterHighlight(async function POST(
+export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request
 ) {
   const PAGE_SIZE = 30;
@@ -72,6 +74,8 @@ export const POST = withAppRouterHighlight(async function POST(
 
     // Fetch all artworks, no initial limit applied
 
+    console.log(allArtworks);
+
     // Calculate how many basic artworks have already been returned in previous pages
     const basicArtworksAlreadyReturned = (page - 1) * PAGE_SIZE - skip;
     const remainingBasicLimit = Math.max(
@@ -123,6 +127,12 @@ export const POST = withAppRouterHighlight(async function POST(
       ...artworksByArtist,
     ].slice(0, PAGE_SIZE);
 
+    console.log({
+      seleceted_basic_artowkrs: selectedBasicArtworks,
+      selectedProPremiumArtworks,
+      artworksByArtist,
+    });
+
     // Calculate total adhering to restrictions
     const total = await Artworkuploads.countDocuments({
       ...builtFilters,
@@ -139,6 +149,7 @@ export const POST = withAppRouterHighlight(async function POST(
       medium: { $in: preferences },
     });
 
+    console.log(allCuratedPaginatedArtworks);
     return NextResponse.json(
       {
         message: "Successful",

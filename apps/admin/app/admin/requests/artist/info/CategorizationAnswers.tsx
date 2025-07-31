@@ -19,62 +19,94 @@ import {
   Globe,
 } from "lucide-react";
 
-const timelineItems = [
+const categoryItems = [
   {
     key: "graduate",
     title: "Educational Background",
     question: "Are you a graduate?",
     icon: GraduationCap,
     color: "blue",
+    bgGradient: "from-blue-50 to-indigo-50",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
+    borderColor: "border-blue-200",
   },
   {
     key: "mfa",
     title: "Advanced Degree",
-    question: "Do you have an MFA (Masters in Fine Arts)?",
+    question: "Do you have an MFA?",
     icon: Palette,
     color: "violet",
+    bgGradient: "from-violet-50 to-purple-50",
+    iconBg: "bg-violet-100",
+    iconColor: "text-violet-600",
+    borderColor: "border-violet-200",
   },
   {
     key: "solo",
     title: "Solo Exhibitions",
-    question: "How many solo exhibitions have you done?",
+    question: "How many solo exhibitions?",
     icon: User,
     color: "green",
+    bgGradient: "from-green-50 to-emerald-50",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+    borderColor: "border-green-200",
   },
   {
     key: "group",
     title: "Group Exhibitions",
-    question: "How many group exhibitions have you done?",
+    question: "How many group exhibitions?",
     icon: Users,
     color: "orange",
+    bgGradient: "from-orange-50 to-amber-50",
+    iconBg: "bg-orange-100",
+    iconColor: "text-orange-600",
+    borderColor: "border-orange-200",
   },
   {
     key: "museum_collection",
     title: "Museum Collections",
-    question: "Has your piece been in a museum collection?",
-    icon: Palette,
+    question: "In museum collections?",
+    icon: Building2,
     color: "red",
+    bgGradient: "from-red-50 to-rose-50",
+    iconBg: "bg-red-100",
+    iconColor: "text-red-600",
+    borderColor: "border-red-200",
   },
   {
     key: "museum_exhibition",
     title: "Museum Exhibitions",
-    question: "Has your piece been featured in a museum exhibition?",
+    question: "Featured in museums?",
     icon: Building2,
     color: "teal",
+    bgGradient: "from-teal-50 to-cyan-50",
+    iconBg: "bg-teal-100",
+    iconColor: "text-teal-600",
+    borderColor: "border-teal-200",
   },
   {
     key: "art_fair",
     title: "Art Fair Participation",
-    question: "Have you been featured in an art fair?",
+    question: "Featured in art fairs?",
     icon: Sparkles,
     color: "pink",
+    bgGradient: "from-pink-50 to-rose-50",
+    iconBg: "bg-pink-100",
+    iconColor: "text-pink-600",
+    borderColor: "border-pink-200",
   },
   {
     key: "biennale",
     title: "International Recognition",
-    question: "Which Biennale have you been a part of?",
+    question: "Biennale participation?",
     icon: Globe,
     color: "indigo",
+    bgGradient: "from-indigo-50 to-blue-50",
+    iconBg: "bg-indigo-100",
+    iconColor: "text-indigo-600",
+    borderColor: "border-indigo-200",
   },
 ];
 
@@ -84,117 +116,100 @@ export default function CategorizationAnswers({
   answers: ArtistCategorizationAnswerTypes;
 }) {
   return (
-    <Paper
-      p="xl"
-      radius="lg"
-      withBorder
-      style={{
-        background:
-          "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%)",
-        backdropFilter: "blur(10px)",
-        borderColor: "rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <Group mb="xl" align="center">
-        <ThemeIcon
-          size={48}
-          radius="xl"
-          variant="gradient"
-          gradient={{ from: "blue", to: "purple" }}
-        >
-          <Palette size={24} />
-        </ThemeIcon>
-        <div>
-          <Text size="lg" fw={700} c="dark.7">
-            Artist Categorization Profile
-          </Text>
-          <Text size="sm" c="dimmed">
-            Professional background and exhibition history
-          </Text>
-        </div>
-      </Group>
-
-      <Timeline
-        active={timelineItems.length - 1}
-        bulletSize={32}
-        lineWidth={3}
-        style={{
-          "--timeline-color":
-            "linear-gradient(45deg, #667eea 0%, #764ba2 100%)",
-        }}
-      >
-        {timelineItems.map((item, index) => {
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+      {/* Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {categoryItems.map((item) => {
           const IconComponent = item.icon;
           const answer =
             answers[item.key as keyof ArtistCategorizationAnswerTypes];
 
           return (
-            <Timeline.Item
+            <div
               key={item.key}
-              title={
-                <Group gap="sm" mb="xs">
-                  <Text fw={600} size="md" c="dark.7">
-                    {item.title}
-                  </Text>
-                  <Badge
-                    variant="light"
-                    color={item.color}
-                    size="sm"
-                    style={{ textTransform: "none" }}
-                  >
-                    Step {index + 1}
-                  </Badge>
-                </Group>
-              }
-              bullet={
-                <ThemeIcon
-                  size={32}
-                  radius="xl"
-                  variant="gradient"
-                  gradient={{ from: item.color, to: `${item.color}.7` }}
-                  style={{
-                    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15)`,
-                    border: "2px solid white",
-                  }}
-                >
-                  <IconComponent size={16} strokeWidth={2} />
-                </ThemeIcon>
-              }
+              className={`relative overflow-hidden rounded-xl border ${item.borderColor} bg-gradient-to-br ${item.bgGradient} p-6 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5`}
             >
-              <Paper
-                p="md"
-                radius="md"
-                style={{
-                  background: "rgba(255, 255, 255, 0.7)",
-                  borderLeft: `4px solid var(--mantine-color-${item.color}-5)`,
-                  marginTop: "4px",
-                }}
-              >
-                <Text size="sm" mb="xs" fs="italic">
-                  {item.question}
-                </Text>
-                <Group gap="xs" align="center">
-                  <Text fw={500} c="dark.6">
-                    Answer:
-                  </Text>
-                  <Badge
-                    variant="filled"
-                    color={item.color}
-                    size="md"
-                    style={{
-                      textTransform: "capitalize",
-                      fontWeight: 500,
-                    }}
+              {/* Background Pattern */}
+              <div className="absolute top-0 right-0 -mt-4 -mr-4 opacity-5">
+                <IconComponent size={120} strokeWidth={0.5} />
+              </div>
+
+              {/* Content */}
+              <div className="relative">
+                <div className="flex items-start gap-4">
+                  {/* Icon */}
+                  <div
+                    className={`flex-shrink-0 w-12 h-12 ${item.iconBg} rounded-xl flex items-center justify-center`}
                   >
-                    {String(answer)}
-                  </Badge>
-                </Group>
-              </Paper>
-            </Timeline.Item>
+                    <IconComponent className={`w-6 h-6 ${item.iconColor}`} />
+                  </div>
+
+                  {/* Text Content */}
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {item.question}
+                    </p>
+
+                    {/* Answer */}
+                    <div className="inline-flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-500">
+                        Response:
+                      </span>
+                      <Badge
+                        variant="filled"
+                        color={item.color}
+                        size="lg"
+                        radius="md"
+                        styles={{
+                          root: {
+                            textTransform: "capitalize",
+                            fontWeight: 600,
+                            letterSpacing: "0.025em",
+                          },
+                        }}
+                      >
+                        {String(answer)}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           );
         })}
-      </Timeline>
-    </Paper>
+      </div>
+
+      {/* Summary Stats */}
+      <div className="mt-8 pt-8 border-t border-gray-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            {
+              label: "Education",
+              value: answers.graduate ? "Graduate" : "Non-Graduate",
+            },
+            { label: "MFA", value: answers.mfa ? "Yes" : "No" },
+            {
+              label: "Exhibitions",
+              value: `${answers.solo} Solo, ${answers.group} Group`,
+            },
+            {
+              label: "Museum Features",
+              value:
+                answers.museum_collection || answers.museum_exhibition
+                  ? "Yes"
+                  : "No",
+            },
+          ].map((stat, index) => (
+            <div key={index} className="text-center">
+              <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
+              <p className="font-semibold text-gray-900">{stat.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

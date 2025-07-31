@@ -66,7 +66,6 @@ export default function Hero({ promotionals }: any) {
                   subheadline={promotional.subheadline}
                   cta={promotional.cta}
                   image={promotional.image}
-                  isAdmin={false}
                 />
               </div>
             );

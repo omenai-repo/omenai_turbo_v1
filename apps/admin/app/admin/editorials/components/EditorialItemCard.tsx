@@ -2,11 +2,16 @@ import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCov
 import { base_url } from "@omenai/url-config/src/config";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteEditorialModal from "../modal/DeleteEditorialModal";
+import { useState } from "react";
 
 export default function EditorialItemCard({ editorial }: { editorial: any }) {
   const url = editorial.cover
     ? getEditorialFileView(editorial.cover, 300)
     : null;
+
+  const document_id = editorial.$id;
+  const image_id = editorial.cover;
 
   return (
     <div className="group relative bg-white rounded-lg overflow-hidden transition-all duration-500 transform hover:-translate-y-1 h-[420px] max-w-[320px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px] border border-dark/30">
@@ -38,6 +43,8 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
             </div>
           </div>
         )}
+
+        <DeleteEditorialModal document_id={document_id} image_id={image_id} />
 
         {/* Subtle overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
