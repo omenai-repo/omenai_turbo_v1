@@ -43,10 +43,10 @@ export const POST = withAppRouterHighlight(async function POST(
     if (userAgent === "__X-Omenai-App") {
       if (
         authorization === process.env.APP_AUTHORIZATION_SECRET &&
-        data.device_id
+        data.device_push_token
       ) {
         await DeviceManagement.create({
-          device_id: data.device_id,
+          device_push_token: data.device_push_token,
           auth_id: artist_id,
         });
       }

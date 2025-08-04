@@ -18,7 +18,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     try {
       const data = await request.json();
 
-      const { email, password, device_id } = data;
+      const { email, password, device_push_token } = data;
 
       await connectMongoDB();
 
@@ -73,17 +73,17 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           authorization &&
           authorization === process.env.APP_AUTHORIZATION_SECRET
         ) {
-          if (device_id)
+          if (device_push_token)
             await DeviceManagement.updateOne(
               { auth_id: sessionPayload.gallery_id },
-              { $set: { device_id } },
+              { $set: { device_push_token } },
               { upsert: true }
             );
           return NextResponse.json(
             {
               success: true,
               message: "Login successful",
-              data: { ...sessionPayload, device_id },
+              data: { ...sessionPayload, device_push_token },
             },
             { status: 200 }
           );

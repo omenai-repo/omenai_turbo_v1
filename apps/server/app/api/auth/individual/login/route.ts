@@ -22,7 +22,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request, response?: Response) {
     const cookieStore = await cookies();
     try {
-      const { email, password, device_id } = await request.json();
+      const { email, password, device_push_token } = await request.json();
       await connectMongoDB();
 
       // 1. Your existing authentication logic
@@ -55,17 +55,17 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           authorization &&
           authorization === process.env.APP_AUTHORIZATION_SECRET
         ) {
-          if (device_id)
+          if (device_push_token)
             await DeviceManagement.updateOne(
               { auth_id: sessionPayload.user_id },
-              { $set: { device_id } },
+              { $set: { device_push_token } },
               { upsert: true }
             );
           return NextResponse.json(
             {
               success: true,
               message: "Login successful",
-              data: { ...sessionPayload, device_id },
+              data: { ...sessionPayload, device_push_token },
             },
             { status: 200 }
           );

@@ -2,11 +2,11 @@
 import mongoose from "mongoose";
 
 const deviceManagementSchema = new mongoose.Schema<{
-  device_id: string;
+  device_push_token: string;
   auth_id: string;
 }>(
   {
-    device_id: { type: String, required: true },
+    device_push_token: { type: String, required: true },
     auth_id: { type: String, required: true },
   },
   { timestamps: true }
