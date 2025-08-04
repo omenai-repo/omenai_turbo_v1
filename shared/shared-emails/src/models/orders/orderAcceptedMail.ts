@@ -20,6 +20,11 @@ export const sendOrderAcceptedMail = async ({
     from: "transactions",
     to: email,
     subject: "Your Order has been Accepted!",
-    react: OrderAcceptedEmail(name, order_id, user_id, artwork_data),
+    react: OrderAcceptedEmail({
+      name,
+      orderId: order_id,
+      userId: user_id,
+      artwork: artwork_data,
+    }),
   });
 };

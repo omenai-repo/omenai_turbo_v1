@@ -11,7 +11,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-
+import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
@@ -19,6 +19,9 @@ export const POST = withAppRouterHighlight(async function POST(
     await connectMongoDB();
 
     const data = await request.json();
+
+    const userAgent: string = request.headers.get("User-Agent") ?? "";
+    const authorization: string = request.headers.get("Authorization") ?? "";
 
     const isAccountRegistered = await AccountArtist.findOne(
       { email: data.email },
@@ -35,8 +38,19 @@ export const POST = withAppRouterHighlight(async function POST(
     const saveData = await AccountArtist.create({
       ...parsedData,
     });
-
     const { artist_id } = saveData;
+
+    if (userAgent === "__X-Omenai-App") {
+      if (
+        authorization === process.env.APP_AUTHORIZATION_SECRET &&
+        data.device_id
+      ) {
+        await DeviceManagement.create({
+          device_id: data.device_id,
+          auth_id: artist_id,
+        });
+      }
+    }
 
     if (!saveData)
       throw new ServerError("A server error has occured, please try again");

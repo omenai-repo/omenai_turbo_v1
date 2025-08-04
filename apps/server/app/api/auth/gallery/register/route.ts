@@ -13,6 +13,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { sendGalleryMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryMail";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -50,6 +51,20 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       if (!saveData)
         throw new ServerError("A server error has occured, please try again");
 
+      const userAgent: string = request.headers.get("User-Agent") ?? "";
+      const authorization: string = request.headers.get("Authorization") ?? "";
+
+      if (userAgent === "__X-Omenai-App") {
+        if (
+          authorization === process.env.APP_AUTHORIZATION_SECRET &&
+          data.device_id
+        ) {
+          await DeviceManagement.create({
+            device_id: data.device_id,
+            auth_id: gallery_id,
+          });
+        }
+      }
       const storeVerificationCode = await VerificationCodes.create({
         code: email_token,
         author: saveData.gallery_id,

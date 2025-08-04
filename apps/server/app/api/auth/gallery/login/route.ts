@@ -12,12 +12,13 @@ import {
   createSession,
 } from "@omenai/shared-lib/auth/session";
 import { cookies } from "next/headers";
+import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       const data = await request.json();
 
-      const { email, password } = data;
+      const { email, password, device_id } = data;
 
       await connectMongoDB();
 
@@ -72,11 +73,17 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           authorization &&
           authorization === process.env.APP_AUTHORIZATION_SECRET
         ) {
+          if (device_id)
+            await DeviceManagement.updateOne(
+              { auth_id: sessionPayload.gallery_id },
+              { $set: { device_id } },
+              { upsert: true }
+            );
           return NextResponse.json(
             {
               success: true,
               message: "Login successful",
-              data: sessionPayload,
+              data: { ...sessionPayload, device_id },
             },
             { status: 200 }
           );

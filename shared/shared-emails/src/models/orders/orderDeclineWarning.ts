@@ -11,6 +11,6 @@ export const sendOrderDeclineWarning = async ({ name, email }: EmailData) => {
     from: "orders",
     to: [...email],
     subject: "Notice: Potential Order Request Decline",
-    react: OrderDeclinedWarning(name),
+    react: OrderDeclinedWarning({ name }),
   });
 };

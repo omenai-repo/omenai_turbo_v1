@@ -38,35 +38,20 @@ export function OrdersGroupAccordion({
     toggleDeclineOrderModal(true);
   };
 
-  function updateOrderDataInState(
-    buyer: string,
-    shipping_address: Pick<AddressTypes, "country" | "state">,
-    order_id: string,
-    status: "completed" | "processing",
-    artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
-  ) {
-    updateGalleryOrderActionModalData(
-      buyer,
-      shipping_address,
-      order_id,
-      status,
-      artwork
-    );
-    router.push("/gallery/orders/quote");
-  }
-
   function construct_status({
     status,
     payment_status,
     tracking_status,
     order_accepted,
     delivered,
+    order_decline_reason,
   }: {
     status: string;
     payment_status: string;
     tracking_status: string;
     order_accepted: string;
     delivered: boolean;
+    order_decline_reason: string;
   }) {
     if (
       status === "processing" &&
@@ -120,12 +105,17 @@ export function OrdersGroupAccordion({
         </span>
       );
     }
-    if (status === "completed" && order_accepted === "declined") {
+    if (order_accepted === "declined") {
       return (
-        <span className="px-3 py-1 rounded-xl text-fluid-xxs font-medium bg-red-200 flex gap-x-1 items-center w-fit">
-          <BanknoteX strokeWidth={1.5} absoluteStrokeWidth />
-          Order declined
-        </span>
+        <div className="flex flex-col gap-y-2">
+          <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
+            <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
+            Order declined
+          </span>
+          <span className=" rounded-md text-fluid-xs font-normal text-red-600 flex items-center w-fit">
+            Reason: {order_decline_reason}
+          </span>
+        </div>
       );
     }
 
@@ -201,6 +191,8 @@ export function OrdersGroupAccordion({
                 order.shipping_details.shipment_information.tracking.id,
               order_accepted: order.order_accepted.status,
               delivered: order.shipping_details.delivery_confirmed,
+              order_decline_reason:
+                order.order_accepted.reason || "Order declined",
             })}
           </div>
           {/* {order.status === "completed" && (

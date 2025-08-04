@@ -48,23 +48,24 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
           from: "Orders <omenai@omenai.app>",
           to: [order.buyer_details.email],
           subject: "Your order has been declined",
-          react: OrderDeclinedEmail(
-            order.buyer_details.name,
-            "Seller did not respond within the designated timeframe",
-            order.artwork_data
-          ),
+          react: OrderDeclinedEmail({
+            recipientName: order.buyer_details.name,
+            declineReason:
+              "Seller did not respond within the designated timeframe",
+            artwork: order.artwork_data,
+          }),
         };
       });
       await resend.batch.send(buyer_email_payload);
 
-      const email_payload = orders96.map((gallery) => {
+      const email_payload = orders96.map((order) => {
         return {
           from: "Orders <omenai@omenai.app>",
-          to: [gallery.seller_details.email],
+          to: [order.seller_details.email],
           subject: "Order has been auto declined",
           react: OrderAutoDeclined(
-            gallery.seller_details.name,
-            gallery.artwork_data
+            order.seller_details.name,
+            order.artwork_data
           ),
         };
       });

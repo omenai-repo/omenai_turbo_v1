@@ -9,9 +9,12 @@ import {
   Html,
   Img,
   Link,
+  Preview,
+  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
+import EmailFooter from "../../components/Footer";
 
 const OrderRequestReminder = (name: string) => {
   const url = dashboard_url();
@@ -19,106 +22,171 @@ const OrderRequestReminder = (name: string) => {
   return (
     <Html>
       <Head />
+      <Preview>New order request awaiting your review</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
-            />
+        <Body className="bg-gray-50 font-sans">
+          <Container className="mx-auto my-10 bg-white rounded-lg shadow-sm max-w-[600px]">
+            {/* Header Section */}
+            <Section className="px-8 py-6 text-center border-b border-gray-200">
+              <Img
+                src={
+                  "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
+                }
+                width="140"
+                height="24"
+                alt="Omenai logo"
+                className="mx-auto"
+              />
+            </Section>
 
-            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
-              You have an order request
-            </Heading>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              I hope this email finds you well. <br />
-              This is a friendly reminder that there are pending order requests
-              awaiting your attention on your dashboard. To ensure a positive
-              experience for your customers, we encourage you to review and
-              respond to these requests at your earliest convenience.
-            </Text>
-
-            <div className="w-full grid place-items-center text-center">
-              <Link
-                className="w-fit bg-dark text-white text-center px-5 cursor-pointer py-3"
-                href={`${url}/gallery/orders`}
+            {/* Notification Banner */}
+            <Section className="bg-blue-50 px-8 py-4 border-b-4 border-blue-500">
+              <Text
+                className="text-center font-semibold m-0"
+                style={{ color: "#1e40af", fontSize: "18px" }}
               >
-                View orders on your dashboard
-              </Link>
-            </div>
+                🔔 New Order Request
+              </Text>
+            </Section>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Upon logging into your dashboard, you will be able to:
-            </Text>
-            <div className="my-0">
-              <ul>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Review the order details.
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Accept or decline the order request.
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Provide a quote for the artwork, including shipping fees and
-                    any applicable taxes.
-                  </Text>
-                </li>
-              </ul>
-            </div>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Please note that timely responses to order requests are crucial in
-              ensuring a positive user experience and facilitating successful
-              transactions.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Should you encounter any difficulties or have any questions
-              regarding this order request, please do not hesitate to reach out
-              to our support team for assistance at{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
+            {/* Main Content */}
+            <Section className="px-8 py-8">
+              <Text
+                className="text-base mb-4"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
               >
-                contact@omeani.net
-              </Link>
-              .
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for your continued partnership with our platform. We
-              appreciate your dedication to showcasing your artworks and serving
-              our community of art enthusiasts.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+                Dear <strong>{name}</strong>,
+              </Text>
+
+              <Text
+                className="text-base mb-6"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+              >
+                Great news! You have a new order request waiting for your
+                review. A potential customer is interested in purchasing your
+                artwork.
+              </Text>
+
+              {/* CTA Button */}
+              <Section className="text-center my-8">
+                <Link
+                  className="px-8 py-4 rounded-lg font-medium text-white inline-block"
+                  style={{
+                    backgroundColor: "#1a1a1a",
+                    color: "#ffffff",
+                    textDecoration: "none",
+                  }}
+                  href={`${url}/gallery/orders`}
+                >
+                  Review Order Request
+                </Link>
+              </Section>
+
+              {/* Action Items Box */}
+              <Section className="my-6 p-6 bg-gray-50 rounded-lg">
+                <Text
+                  className="text-base mb-4 font-semibold"
+                  style={{ color: "#1a1a1a" }}
+                >
+                  Quick actions available:
+                </Text>
+                <table style={{ width: "100%" }}>
+                  <tr>
+                    <td
+                      style={{
+                        paddingBottom: "8px",
+                        verticalAlign: "top",
+                        width: "24px",
+                      }}
+                    >
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#1e40af" }}
+                      >
+                        •
+                      </Text>
+                    </td>
+                    <td style={{ paddingBottom: "8px" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#4b5563", lineHeight: "1.5" }}
+                      >
+                        Review complete order details and customer information
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ paddingBottom: "8px", verticalAlign: "top" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#1e40af" }}
+                      >
+                        •
+                      </Text>
+                    </td>
+                    <td style={{ paddingBottom: "8px" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#4b5563", lineHeight: "1.5" }}
+                      >
+                        Accept or decline the request with a custom message
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ verticalAlign: "top" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#1e40af" }}
+                      >
+                        •
+                      </Text>
+                    </td>
+                    <td>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#4b5563", lineHeight: "1.5" }}
+                      >
+                        Provide shipping quotes and applicable taxes
+                      </Text>
+                    </td>
+                  </tr>
+                </table>
+              </Section>
+
+              {/* Reminder Box */}
+              <Section className="my-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+                <Text
+                  className="text-sm m-0"
+                  style={{ color: "#92400e", lineHeight: "1.5" }}
+                >
+                  <strong>Remember:</strong> Quick responses lead to higher
+                  conversion rates and better customer satisfaction. Orders
+                  expire automatically after 48 hours.
+                </Text>
+              </Section>
+
+              <Text
+                className="text-base mb-4"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+              >
+                Thank you for being a valued partner. Your dedication to
+                providing exceptional art and service helps make our platform a
+                trusted destination for art collectors worldwide.
+              </Text>
+
+              <Text
+                className="text-base"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+              >
+                Best regards,
+                <br />
+                <strong>Moses from Omenai</strong>
+              </Text>
+            </Section>
+
+            {/* Support Section */}
+            <EmailFooter recipientName={name} />
           </Container>
         </Body>
       </Tailwind>

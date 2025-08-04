@@ -16,6 +16,6 @@ export const sendOrderAutoDeclinedMail = async ({
     from: "transactions",
     to: email,
     subject: "Order auto declined",
-    react: OrderAutoDeclined(name, artwork_data),
+    react: OrderAutoDeclined({ name, artwork: artwork_data }),
   });
 };

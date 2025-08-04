@@ -209,6 +209,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         name: buyerData.name,
         email: buyerData.email,
         artwork_data: artwork,
+        orderId: createOrder.order_id,
       });
 
       return NextResponse.json(

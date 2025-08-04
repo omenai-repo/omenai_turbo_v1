@@ -3,83 +3,140 @@ import {
   Button,
   Container,
   Head,
-  Heading,
-  Hr,
   Html,
   Img,
   Link,
+  Preview,
+  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
+import * as React from "react";
+import EmailFooter from "../../components/Footer";
+import {
+  EMAIL_STYLES,
+  COMPANY_INFO,
+  EMAIL_COLORS,
+  EMAIL_SIGNATURES,
+} from "../../constants/constants";
 
-const OrderDeclinedWarning = (name: string) => {
+interface OrderDeclinedWarningEmailProps {
+  name: string;
+}
+
+export const OrderDeclinedWarningEmail: React.FC<
+  OrderDeclinedWarningEmailProps
+> = ({ name }) => {
   return (
     <Html>
       <Head />
+      <Preview>Action required: Pending orders will expire in 24 hours</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
-            />
+        <Body className="bg-gray-50 font-sans">
+          <Container
+            style={EMAIL_STYLES.container}
+            className="my-10 rounded-lg shadow-sm"
+          >
+            {/* Header Section */}
+            <Section className="px-8 py-6 text-center border-b border-gray-200">
+              <Img
+                src={COMPANY_INFO.logo}
+                width="140"
+                height="24"
+                alt={`${COMPANY_INFO.name} logo`}
+                className="mx-auto"
+              />
+            </Section>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              I hope this email finds you well. <br />
-              We wanted to bring to your attention that there are pending order
-              requests associated with your gallery that have not yet received a
-              response. If these orders remain unacknowledged, they will be
-              subject to automatic decline within the next 24 hours.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              To avoid any inconvenience and ensure a smooth experience for your
-              customers, we encourage you to review and respond to the pending
-              requests at your earliest convenience.
-            </Text>
-
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              If you have any questions or require further assistance, please
-              don't hesitate to reach out to us at{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
+            {/* Urgent Notice Banner */}
+            <Section className="bg-amber-50 px-8 py-4 border-b-4 border-amber-400">
+              <Text
+                className="text-center font-semibold m-0"
+                style={{ color: EMAIL_COLORS.warning, fontSize: "18px" }}
               >
-                contact@omeani.net
-              </Link>
-              . We value your partnership and appreciate your prompt attention
-              to this matter.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for your understanding and continued support of our
-              platform
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+                ⚠️ Action Required: Orders Expiring Soon
+              </Text>
+            </Section>
+
+            {/* Main Content */}
+            <Section className="px-8 py-8">
+              <Text style={EMAIL_STYLES.text.base}>
+                Dear <strong>{name}</strong>,
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                You have pending order requests that require your immediate
+                attention. These orders will be automatically declined if not
+                addressed within the next <strong>24 hours</strong>.
+              </Text>
+
+              {/* Key Information Box */}
+              <Section className="my-6 p-6 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+                <Text
+                  style={{
+                    ...EMAIL_STYLES.text.base,
+                    marginBottom: "8px",
+                    fontWeight: "600",
+                  }}
+                >
+                  What happens next:
+                </Text>
+                <Text
+                  style={{ ...EMAIL_STYLES.text.small, marginBottom: "4px" }}
+                >
+                  • Orders will automatically expire after 24 hours
+                </Text>
+                <Text
+                  style={{ ...EMAIL_STYLES.text.small, marginBottom: "4px" }}
+                >
+                  • Customers will be notified of the cancellation
+                </Text>
+                <Text style={{ ...EMAIL_STYLES.text.small, marginBottom: "0" }}>
+                  • You may lose potential sales opportunities
+                </Text>
+              </Section>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                To ensure a positive experience for your customers and avoid
+                missed opportunities, please review and respond to these
+                requests promptly.
+              </Text>
+
+              {/* CTA Button */}
+              {/* <Section className="text-center my-8">
+                <Button
+                  href={`${dashboard_url()}`}
+                  style={{
+                    ...EMAIL_STYLES.button.primary,
+                    backgroundColor: EMAIL_COLORS.warning,
+                  }}
+                >
+                  Review Pending Orders
+                </Button>
+              </Section> */}
+
+              <Text style={EMAIL_STYLES.text.base}>
+                We're here to support you. If you need assistance managing your
+                orders or have any questions, please don't hesitate to reach
+                out.
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                Best regards,
+                <br />
+                <strong>
+                  {EMAIL_SIGNATURES.default.name} from{" "}
+                  {EMAIL_SIGNATURES.default.company}
+                </strong>
+              </Text>
+            </Section>
+
+            {/* Reusable Footer */}
+            <EmailFooter
+              recipientName={name}
+              supportTitle="Need help managing orders?"
+              supportMessage="Our team can assist you with order management and best practices. Contact us at"
+            />
           </Container>
         </Body>
       </Tailwind>
@@ -87,4 +144,4 @@ const OrderDeclinedWarning = (name: string) => {
   );
 };
 
-export default OrderDeclinedWarning;
+export default OrderDeclinedWarningEmail;

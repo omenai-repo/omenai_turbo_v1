@@ -1,117 +1,118 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import { base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { base_url } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
   Container,
   Head,
-  Heading,
-  Hr,
   Html,
   Img,
   Link,
+  Preview,
+  Section,
   Tailwind,
   Text,
+  Row,
+  Column,
 } from "@react-email/components";
+import {
+  EMAIL_STYLES,
+  COMPANY_INFO,
+  EMAIL_SIGNATURES,
+} from "../../constants/constants";
+import * as React from "react";
+import EmailFooter from "../../components/Footer";
 
-const OrderDeclinedEmail = (
-  name: string,
-  reason: string,
-  artwork_data: Pick<
+interface OrderDeclinedEmailProps {
+  recipientName: string;
+  declineReason: string;
+  artwork: Pick<
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
-  >
-) => {
-  const url = base_url();
+  >;
+}
+
+export const OrderDeclinedEmail: React.FC<OrderDeclinedEmailProps> = ({
+  recipientName,
+  declineReason,
+  artwork,
+}) => {
+  const baseUrl = base_url();
+  const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
+  const catalogUrl = `${baseUrl}/catalog`;
+
   return (
     <Html>
       <Head />
+      <Preview>Order request for {artwork.title} has been declined</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
-            />
+        <Body className="bg-gray-50 font-sans">
+          <Container
+            style={EMAIL_STYLES.container}
+            className="my-10 rounded-lg shadow-sm"
+          >
+            {/* Header Section */}
+            <Section className="px-8 pt-6 text-center border-b border-gray-200">
+              <Img
+                src={COMPANY_INFO.logo}
+                width="140"
+                height="24"
+                alt={`${COMPANY_INFO.name} logo`}
+                className="mx-auto"
+              />
+            </Section>
 
-            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
-              Unfortunately, your order request has been declined
-            </Heading>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              I hope this email finds you well. <br />
-              We regret to inform you that the order request for{" "}
-              <Link
-                href={`${url}/artwork/${artwork_data.title}`}
-                className="underline text-blue-800 italic font-normal"
-              >
-                {artwork_data.title}
-              </Link>{" "}
-              has been declined by the gallery. After careful consideration,
-              they have decided not to proceed with the sale of this artwork at
-              this time.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              <strong>
-                Reason: <span className="italic">{reason}</span>
-              </strong>
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              We understand that this may come as disappointing news, and we
-              sincerely apologize for any inconvenience this may cause you. We
-              encourage you to{" "}
-              <Link
-                href={`${url}/catalog`}
-                className="underline text-blue-800 italic font-normal"
-              >
-                explore
-              </Link>{" "}
-              other artworks available on our platform, as we have a diverse
-              selection of pieces from talented artists.{" "}
-            </Text>
+            {/* Main Content */}
+            <Section className="px-8 pb-8">
+              <Text style={EMAIL_STYLES.heading.h1}>Order Request Update</Text>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              If you have any questions or require further assistance, please
-              don't hesitate to reach out to us. Our team is here to support you
-              and help you find the perfect artwork for your collection.{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
-              >
-                contact@omeani.net
-              </Link>
-              .
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for your understanding and continued support of our
-              platform
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+              <Text style={EMAIL_STYLES.text.base}>
+                Dear <strong>{recipientName}</strong>,
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                Thank you for your interest in{" "}
+                <Link href={artworkUrl} style={EMAIL_STYLES.link}>
+                  {artwork.title}
+                </Link>
+                .Unfortunately, your order request for this artwork has been
+                declined.
+              </Text>
+
+              {/* Reason Section */}
+              <Section className="my-6 p-6 bg-gray-50 rounded-lg border-l-4 border-gray-400">
+                <Text
+                  style={{ ...EMAIL_STYLES.text.small, marginBottom: "8px" }}
+                >
+                  <strong>Reason for decline:</strong>
+                </Text>
+                <Text
+                  style={{
+                    ...EMAIL_STYLES.text.base,
+                    marginBottom: "0",
+                    fontStyle: "italic",
+                  }}
+                >
+                  "{declineReason}"
+                </Text>
+              </Section>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                We understand this may be disappointing news. However, we'd love
+                to help you discover other exceptional pieces that might
+                interest you or you can go ahead and place a new order for this
+                piece.
+              </Text>
+
+              {/* CTA Section */}
+              <Section className="text-center my-8">
+                <Button href={catalogUrl} style={EMAIL_STYLES.button.primary}>
+                  Explore More Artworks
+                </Button>
+              </Section>
+            </Section>
+
+            <EmailFooter recipientName={recipientName} />
           </Container>
         </Body>
       </Tailwind>

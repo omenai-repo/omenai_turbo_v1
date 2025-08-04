@@ -1,5 +1,5 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import { base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { base_url } from "@omenai/url-config/src/config";
 import {
   Body,
   Container,
@@ -12,123 +12,153 @@ import {
   Img,
   Text,
   Link,
+  Preview,
+  Column,
+  Row,
+  Button,
 } from "@react-email/components";
+import * as React from "react";
+import { EMAIL_COLORS, COMPANY_INFO } from "../../constants/constants";
+import EmailFooter from "../../components/Footer";
 
-const OrderAcceptedEmail = (
-  name: string,
-  order_id: string,
-  user_id: string,
-  artwork_data: Pick<
+interface OrderAcceptedEmailProps {
+  name: string;
+  orderId: string;
+  userId: string;
+  artwork: Pick<
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
-  >
-) => {
-  const url = base_url();
+  >;
+}
+
+export const OrderAcceptedEmail: React.FC<OrderAcceptedEmailProps> = ({
+  name,
+  orderId,
+  userId,
+  artwork,
+}) => {
+  const baseUrl = base_url();
+  const paymentUrl = `${baseUrl}/payment/${orderId}?id_key=${userId}`;
+  const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
+
   return (
     <Html>
       <Head />
+      <Preview>
+        Your order request for {artwork.title} has been accepted
+      </Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className=" rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto my-5"
-            />
-            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
-              Your order request has been accepted
-            </Heading>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              I hope this email finds you well. <br />
-              We are thrilled to inform you that your order request for{" "}
-              <Link
-                href={`${url}/artwork/${artwork_data.title}`}
-                className="underline text-blue-800 italic font-normal"
-              >
-                {artwork_data.title}
-              </Link>{" "}
-              has been accepted by the gallery. They have provided all the
-              necessary information, including shipping quotes and applicable
-              taxes, to facilitate the purchase of this exquisite artwork.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              You can now proceed with the payment for your artwork. To complete
-              your purchase, please click on the following link to visit the
-              artwork payment page:
-            </Text>
-            <div className="w-full grid place-items-left text-left">
-              <Link
-                className="w-fit bg-dark text-white text-fluid-xs text-left px-5 rounded-xl border-2 border-white cursor-pointer py-3"
-                href={`${url}/payment/${order_id}?id_key=${user_id}`}
-              >
-                Pay for this artwork
-              </Link>
-            </div>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              If you have any questions or need further assistance regarding the
-              payment process or your order, please feel free to reach out to
-              us. We are here to help ensure a smooth and enjoyable experience
-              for you.{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
-              >
-                contact@omeani.net
-              </Link>
-              .
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for choosing to support artists on our platform. We
-              greatly appreciate your patronage and look forward to seeing this
-              stunning artwork find its new home with you.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-
-            <Section className="text-left">
-              <table className="w-full">
-                <tr className="w-full">
-                  <td align="left">
-                    <Img
-                      src={
-                        "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-                      }
-                      width="120"
-                      height="20"
-                      alt="Omenai logo"
-                      className=""
-                    />
-                  </td>
-                </tr>
-
-                <tr>
-                  <td align="left">
-                    <Text className="font-normal text-fluid-xs text-dark leading-[24px]">
-                      123 Main Street Anytown, CA 12345
-                    </Text>
-                    <Text className="mb-0 font-normal text-fluid-xs text-dark leading-[24px]">
-                      mail@example.com +123456789
-                    </Text>
-                  </td>
-                </tr>
-              </table>
+        <Body className="bg-gray-50 font-sans">
+          <Container className="mx-auto my-10 bg-white rounded-lg shadow-sm max-w-[600px]">
+            {/* Header Section */}
+            <Section className="px-8 py-6 text-center border-b border-gray-200">
+              <Img
+                src={COMPANY_INFO.logo}
+                width="140"
+                height="24"
+                alt={`${COMPANY_INFO.name} logo`}
+                className="mx-auto"
+              />
             </Section>
-            <Hr className="my-8 border border-gray-200 " />
-            <Text className="text-[12px] leading-5 text-gray-600">
-              This message is intended only for <strong>{name}</strong>. If you
-              received it by mistake, please delete it and notify us
-              immediately. It may contain confidential and legally privileged
-              information.
-            </Text>
+
+            {/* Main Content */}
+            <Section className="px-8 py-8">
+              <Heading
+                className="text-2xl font-semibold text-center mb-8"
+                style={{ color: EMAIL_COLORS.primary }}
+              >
+                Your order request has been accepted
+              </Heading>
+
+              <Text
+                className="text-base mb-4"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                Hello <strong>{name}</strong>,
+              </Text>
+
+              <Text
+                className="text-base mb-4"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                We are thrilled to inform you that your order request for{" "}
+                <Link
+                  href={artworkUrl}
+                  style={{
+                    color: EMAIL_COLORS.link,
+                    textDecoration: "underline",
+                  }}
+                >
+                  {artwork.title}
+                </Link>{" "}
+                has been accepted. All the necessary information, including
+                shipping quotes and applicable taxes, has been provided to
+                facilitate the purchase of this exquisite artwork.
+              </Text>
+
+              <Text
+                className="text-base mb-6"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                You can now proceed with the payment for your artwork. To
+                complete your purchase, please click the button below:
+              </Text>
+
+              {/* CTA Button */}
+              <Section className="text-center my-8">
+                <Button
+                  href={paymentUrl}
+                  className="px-8 py-4 rounded-lg font-medium text-white"
+                  style={{
+                    backgroundColor: EMAIL_COLORS.primary,
+                    color: EMAIL_COLORS.background,
+                    textDecoration: "none",
+                    display: "inline-block",
+                  }}
+                >
+                  Pay for this artwork
+                </Button>
+              </Section>
+
+              <Text
+                className="text-base mb-4"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                If you have any questions or need further assistance regarding
+                the payment process or your order, please feel free to reach out
+                to us at{" "}
+                <Link
+                  href={`mailto:${COMPANY_INFO.email}`}
+                  style={{
+                    color: EMAIL_COLORS.link,
+                    textDecoration: "underline",
+                  }}
+                >
+                  {COMPANY_INFO.email}
+                </Link>
+                . We are here to help ensure a smooth and enjoyable experience.
+              </Text>
+
+              <Text
+                className="text-base mb-4"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                Thank you for choosing to support artists on our platform. We
+                greatly appreciate your patronage and look forward to seeing
+                this stunning artwork find its new home with you.
+              </Text>
+
+              <Text
+                className="text-base"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                Best regards,
+                <br />
+                <strong>Moses from {COMPANY_INFO.name}</strong>
+              </Text>
+            </Section>
+
+            <EmailFooter recipientName={name} />
           </Container>
         </Body>
       </Tailwind>

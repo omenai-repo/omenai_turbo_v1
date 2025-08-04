@@ -3,16 +3,26 @@ import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Body,
+  Button,
   Container,
   Head,
   Hr,
   Html,
   Img,
   Link,
+  Preview,
+  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
+import EmailFooter from "../../components/Footer";
+import {
+  EMAIL_STYLES,
+  COMPANY_INFO,
+  EMAIL_COLORS,
+  EMAIL_SIGNATURES,
+} from "../../constants/constants";
 
 const RequestPriceEmail = (
   name: string,
@@ -29,125 +39,241 @@ const RequestPriceEmail = (
   return (
     <Html>
       <Head />
+      <Preview>Price information for {artwork_data.title}</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
+        <Body className="bg-gray-50 font-sans">
+          <Container
+            style={EMAIL_STYLES.container}
+            className="my-10 rounded-lg shadow-sm"
+          >
+            {/* Header Section */}
+            <Section className="px-8 py-6 text-center border-b border-gray-200">
+              <Img
+                src={COMPANY_INFO.logo}
+                width="140"
+                height="24"
+                alt={`${COMPANY_INFO.name} logo`}
+                className="mx-auto"
+              />
+            </Section>
+
+            {/* Main Content */}
+            <Section className="px-8 py-8">
+              <Text style={EMAIL_STYLES.heading.h1}>
+                Artwork Price Information
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                Dear <strong>{name}</strong>,
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                Thank you for your interest in{" "}
+                <Link
+                  href={`${base_url()}/artwork/${artwork_data.title}`}
+                  style={EMAIL_STYLES.link}
+                >
+                  {artwork_data.title}
+                </Link>
+                . We're delighted to provide you with the pricing information
+                you requested.
+              </Text>
+
+              {/* Artwork Card */}
+              <Section className="my-8 p-6 bg-gray-50 rounded-lg">
+                <div className="text-center mb-6">
+                  <Img
+                    src={image}
+                    alt={artwork_data.title}
+                    className="mx-auto rounded-lg shadow-md"
+                    style={{
+                      maxWidth: "300px",
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: "350px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                {/* Artwork Details */}
+                <table
+                  className="w-full"
+                  style={{
+                    borderCollapse: "separate",
+                    borderSpacing: "0 12px",
+                  }}
+                >
+                  <tr>
+                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.small,
+                          margin: "0",
+                          fontWeight: "600",
+                          color: EMAIL_COLORS.gray[600],
+                        }}
+                      >
+                        Artwork:
+                      </Text>
+                    </td>
+                    <td>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.small,
+                          margin: "0",
+                          color: EMAIL_COLORS.primary,
+                        }}
+                      >
+                        <strong>{artwork_data.title}</strong>
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.small,
+                          margin: "0",
+                          fontWeight: "600",
+                          color: EMAIL_COLORS.gray[600],
+                        }}
+                      >
+                        Artist:
+                      </Text>
+                    </td>
+                    <td>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.small,
+                          margin: "0",
+                          color: EMAIL_COLORS.primary,
+                        }}
+                      >
+                        <strong>{artwork_data.artist}</strong>
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.small,
+                          margin: "0",
+                          fontWeight: "600",
+                          color: EMAIL_COLORS.gray[600],
+                        }}
+                      >
+                        Medium:
+                      </Text>
+                    </td>
+                    <td>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.small,
+                          margin: "0",
+                          color: EMAIL_COLORS.primary,
+                        }}
+                      >
+                        <strong>{artwork_data.medium}</strong>
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        paddingRight: "16px",
+                        paddingTop: "8px",
+                        verticalAlign: "top",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.base,
+                          margin: "0",
+                          fontWeight: "600",
+                          color: EMAIL_COLORS.gray[600],
+                        }}
+                      >
+                        Base Price:
+                      </Text>
+                    </td>
+                    <td style={{ paddingTop: "8px" }}>
+                      <Text
+                        style={{
+                          ...EMAIL_STYLES.text.base,
+                          margin: "0",
+                          fontSize: "20px",
+                          fontWeight: "700",
+                          color: EMAIL_COLORS.primary,
+                        }}
+                      >
+                        {formatPrice(artwork_data.pricing.usd_price)}
+                      </Text>
+                    </td>
+                  </tr>
+                </table>
+              </Section>
+
+              {/* CTA Button */}
+              <Section className="text-center my-8">
+                <Button
+                  href={`${base_url()}/purchase/${artwork_data.title}`}
+                  style={EMAIL_STYLES.button.primary}
+                >
+                  Purchase This Artwork
+                </Button>
+              </Section>
+
+              {/* Additional Information */}
+              <Section className="my-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+                <Text
+                  style={{
+                    ...EMAIL_STYLES.text.small,
+                    marginBottom: "0",
+                    color: EMAIL_COLORS.warning,
+                  }}
+                >
+                  <strong>Please note:</strong> The base price shown does not
+                  include shipping, taxes, or other applicable fees. These will
+                  be calculated during checkout based on your location.
+                </Text>
+              </Section>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                If you have any questions about this artwork or would like to
+                learn more about the artist, please don't hesitate to reach out.
+                We're here to help you make an informed decision.
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                Thank you for considering{" "}
+                <Link
+                  href={`${base_url()}/artwork/${artwork_data.title}`}
+                  style={EMAIL_STYLES.link}
+                >
+                  {artwork_data.title}
+                </Link>
+                . We look forward to helping you add this beautiful piece to
+                your collection.
+              </Text>
+
+              <Text style={EMAIL_STYLES.text.base}>
+                Best regards,
+                <br />
+                <strong>
+                  {EMAIL_SIGNATURES.default.name} from{" "}
+                  {EMAIL_SIGNATURES.default.company}
+                </strong>
+              </Text>
+            </Section>
+
+            {/* Reusable Footer */}
+            <EmailFooter
+              recipientName={name}
+              supportTitle="Questions about this artwork?"
+              supportMessage="Our art consultants can provide additional details about the piece, artist, or shipping options. Contact us at"
             />
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for your interest in{" "}
-              <Link
-                href={`${url}/artwork/${artwork_data.title}`}
-                className="underline text-blue-800 italic font-normal"
-              >
-                {artwork_data.title}
-              </Link>{" "}
-              on our platform. We have received your request for the base price
-              of this artwork, and we're delighted to provide you with the
-              requested information.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Here are the details of the artwork:
-            </Text>
-
-            <Img
-              src={image}
-              alt="artwork_image"
-              className="mx-auto mt-10 max-w-[200px] w-auto aspect-auto max-h-[250px] h-auto"
-            />
-
-            <div className="my-0">
-              <ul>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Artwork: <strong> {artwork_data.title}</strong>
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Artist name: <strong>{artwork_data.artist}</strong>
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Medium: <strong>{artwork_data.medium}</strong>
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Base price:{" "}
-                    <strong>
-                      {formatPrice(artwork_data.pricing.usd_price)}
-                    </strong>
-                  </Text>
-                </li>
-              </ul>
-            </div>
-            <div className="w-full grid place-items-center text-center">
-              <Link
-                className="w-fit bg-dark text-white text-center px-5 cursor-pointer py-3"
-                href={`${url}/purchase/${artwork_data.title}`}
-              >
-                Purchase this artwork
-              </Link>
-            </div>
-
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Please note that the base price provided is for the artwork itself
-              and does not include any additional fees such as shipping or
-              taxes.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              If you have any further questions about the artwork please don't
-              hesitate to contact us. We're here to assist you in any way we
-              can.{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
-              >
-                contact@omeani.net
-              </Link>
-              .
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you again for your interest in{" "}
-              <Link
-                href={`${url}/artwork/${artwork_data.title}`}
-                className="underline text-blue-800 italic font-normal"
-              >
-                {artwork_data.title}
-              </Link>
-              . We look forward to the possibility of serving you further.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
           </Container>
         </Body>
       </Tailwind>

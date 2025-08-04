@@ -18,6 +18,10 @@ export const sendOrderDeclinedMail = async ({
     from: "transactions",
     to: email,
     subject: "Your Order has been Declined!",
-    react: OrderDeclinedEmail(name, reason, artwork_data),
+    react: OrderDeclinedEmail({
+      recipientName: name,
+      declineReason: reason,
+      artwork: artwork_data,
+    }),
   });
 };

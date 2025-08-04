@@ -15,6 +15,8 @@ import {
   Html,
   Img,
   Link,
+  Preview,
+  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
@@ -34,145 +36,310 @@ const OrderRequestToGalleryMail = (
   return (
     <Html>
       <Head />
+      <Preview>New order request for {artwork_data.title}</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
-            />
+        <Body className="bg-gray-50 font-sans">
+          <Container className="mx-auto my-10 bg-white rounded-lg shadow-sm max-w-[600px]">
+            {/* Header Section */}
+            <Section className="px-8 py-6 text-center border-b border-gray-200">
+              <Img
+                src={
+                  "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
+                }
+                width="140"
+                height="24"
+                alt="Omenai logo"
+                className="mx-auto"
+              />
+            </Section>
 
-            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
-              You have an order request
-            </Heading>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Hello <strong>{name}</strong>,
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              I hope this email finds you well. <br />
-              This is to inform you that a user has recently expressed interest
-              in purchasing one of the artworks you have uploaded to our
-              platform. Specifically, there has been an order request for the{" "}
-              <Link
-                href={`${url}/artwork/${artwork_data.title}`}
-                className="underline text-blue-800 italic font-normal"
+            {/* Notification Banner */}
+            <Section className="bg-blue-50 px-8 py-4 border-b-4 border-blue-500">
+              <Text
+                className="text-center font-semibold m-0"
+                style={{ color: "#1e40af", fontSize: "18px" }}
               >
-                {artwork_data.title}
-              </Link>{" "}
-              artwork.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              As a valued member of our platform, we want to ensure that you are
-              promptly informed of any potential sales opportunities. Therefore,
-              we kindly request that you log in to your dashboard to review and
-              take necessary actions on this order request.
-            </Text>
-            <div className="w-full grid place-items-center text-center">
-              <Link
-                className="w-fit bg-dark text-white text-center px-5 cursor-pointer py-3"
-                href={`${dashboard_uri}/gallery/orders`}
-              >
-                View order on your dashboard
-              </Link>
-            </div>
+                🎨 New Artwork Order Request
+              </Text>
+            </Section>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Here are the details of the order request:
-            </Text>
-
-            <Img
-              src={image}
-              alt="artwork_image"
-              className="mx-auto mt-10 max-w-[200px] w-auto aspect-auto max-h-[250px] h-auto"
-            />
-            <div className="my-0">
-              <ul>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Artwork: {artwork_data.title}
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Requested by: {buyer}
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Requested date: {date}
-                  </Text>
-                </li>
-              </ul>
-            </div>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Upon logging into your dashboard, you will be able to:
-            </Text>
-            <div className="my-0">
-              <ul>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Review the order details.
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Accept or decline the order request.
-                  </Text>
-                </li>
-                <li>
-                  <Text className="text-black text-fluid-xs leading-[24px]">
-                    Provide a quote for the artwork, including shipping fees and
-                    any applicable taxes.
-                  </Text>
-                </li>
-              </ul>
-            </div>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Please note that timely responses to order requests are crucial in
-              ensuring a positive user experience and facilitating successful
-              transactions.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Should you encounter any difficulties or have any questions
-              regarding this order request, please do not hesitate to reach out
-              to our support team for assistance at{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
+            {/* Main Content */}
+            <Section className="px-8 py-8">
+              <Text
+                className="text-base mb-4"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
               >
-                contact@omeani.net
-              </Link>
-              .
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for your continued partnership with our platform. We
-              appreciate your dedication to showcasing your artworks and serving
-              our community of art enthusiasts.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+                Dear <strong>{name}</strong>,
+              </Text>
+
+              <Text
+                className="text-base mb-6"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+              >
+                Exciting news! A collector has expressed interest in purchasing{" "}
+                <Link
+                  href={`${url}/artwork/${artwork_data.title}`}
+                  style={{ color: "#1e40af", textDecoration: "underline" }}
+                >
+                  {artwork_data.title}
+                </Link>
+                . This is a great opportunity to connect with a potential buyer.
+              </Text>
+
+              {/* Artwork Preview Card */}
+              <Section className="my-8 p-6 bg-gray-50 rounded-lg">
+                <div className="text-center">
+                  <Img
+                    src={image}
+                    alt={artwork_data.title}
+                    className="mx-auto rounded-lg shadow-md"
+                    style={{
+                      maxWidth: "280px",
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: "320px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+
+                {/* Order Details */}
+                <table
+                  className="w-full mt-6"
+                  style={{ borderCollapse: "separate", borderSpacing: "0 8px" }}
+                >
+                  <tr>
+                    <td style={{ padding: "8px 0", width: "120px" }}>
+                      <Text
+                        className="text-sm font-semibold m-0"
+                        style={{ color: "#4b5563" }}
+                      >
+                        Artwork:
+                      </Text>
+                    </td>
+                    <td style={{ padding: "8px 0" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#1a1a1a" }}
+                      >
+                        {artwork_data.title}
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "8px 0" }}>
+                      <Text
+                        className="text-sm font-semibold m-0"
+                        style={{ color: "#4b5563" }}
+                      >
+                        Buyer:
+                      </Text>
+                    </td>
+                    <td style={{ padding: "8px 0" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#1a1a1a" }}
+                      >
+                        {buyer}
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ padding: "8px 0" }}>
+                      <Text
+                        className="text-sm font-semibold m-0"
+                        style={{ color: "#4b5563" }}
+                      >
+                        Request Date:
+                      </Text>
+                    </td>
+                    <td style={{ padding: "8px 0" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#1a1a1a" }}
+                      >
+                        {date}
+                      </Text>
+                    </td>
+                  </tr>
+                </table>
+              </Section>
+
+              {/* CTA Button */}
+              <Section className="text-center my-8">
+                <Link
+                  className="px-8 py-4 rounded-lg font-medium text-white inline-block"
+                  style={{
+                    backgroundColor: "#1a1a1a",
+                    color: "#ffffff",
+                    textDecoration: "none",
+                  }}
+                  href={`${dashboard_uri}/gallery/orders`}
+                >
+                  Review Order Details
+                </Link>
+              </Section>
+
+              {/* Action Items */}
+              <Section className="my-6 p-6 bg-blue-50 rounded-lg">
+                <Text
+                  className="text-base mb-4 font-semibold"
+                  style={{ color: "#1a1a1a" }}
+                >
+                  Next steps:
+                </Text>
+                <table style={{ width: "100%" }}>
+                  <tr>
+                    <td
+                      style={{
+                        paddingBottom: "8px",
+                        verticalAlign: "top",
+                        width: "30px",
+                      }}
+                    >
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#059669" }}
+                      >
+                        ✓
+                      </Text>
+                    </td>
+                    <td style={{ paddingBottom: "8px" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#4b5563", lineHeight: "1.5" }}
+                      >
+                        Review complete order details and buyer information
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ paddingBottom: "8px", verticalAlign: "top" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#059669" }}
+                      >
+                        ✓
+                      </Text>
+                    </td>
+                    <td style={{ paddingBottom: "8px" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#4b5563", lineHeight: "1.5" }}
+                      >
+                        Accept or decline with a personalized response
+                      </Text>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ verticalAlign: "top" }}>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#059669" }}
+                      >
+                        ✓
+                      </Text>
+                    </td>
+                    <td>
+                      <Text
+                        className="text-sm m-0"
+                        style={{ color: "#4b5563", lineHeight: "1.5" }}
+                      >
+                        Provide shipping quote and applicable taxes
+                      </Text>
+                    </td>
+                  </tr>
+                </table>
+              </Section>
+
+              {/* Time Reminder */}
+              <Section className="my-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+                <Text
+                  className="text-sm m-0"
+                  style={{ color: "#92400e", lineHeight: "1.5" }}
+                >
+                  <strong>⏰ Time-sensitive:</strong> Please respond within 48
+                  hours to maintain buyer interest and ensure a positive
+                  experience.
+                </Text>
+              </Section>
+
+              <Text
+                className="text-base mb-4"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+              >
+                Your prompt response helps build trust with collectors and
+                increases the likelihood of successful sales. We're here to
+                support you throughout the transaction process.
+              </Text>
+
+              <Text
+                className="text-base"
+                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+              >
+                Best regards,
+                <br />
+                <strong>Moses from Omenai</strong>
+              </Text>
+            </Section>
+
+            {/* Support Section */}
+            <Section className="my-8 mx-8 p-6 bg-gray-50 rounded-lg">
+              <Text className="text-base mb-2" style={{ color: "#1a1a1a" }}>
+                <strong>Need help?</strong>
+              </Text>
+              <Text
+                className="text-sm m-0"
+                style={{ color: "#4b5563", lineHeight: "1.5" }}
+              >
+                Our gallery support team is ready to assist. Contact us at{" "}
+                <Link
+                  href="mailto:contact@omenai.net"
+                  style={{ color: "#1e40af", textDecoration: "underline" }}
+                >
+                  contact@omenai.net
+                </Link>
+              </Text>
+            </Section>
+
+            {/* Footer Section */}
+            <Section className="px-8 py-6 bg-gray-50 border-t border-gray-200">
+              <Img
+                src={
+                  "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
+                }
+                width="100"
+                height="20"
+                alt="Omenai logo"
+                className="mb-4"
+              />
+              <Text
+                className="text-sm m-0"
+                style={{ color: "#4b5563", lineHeight: "1.5" }}
+              >
+                123 Main Street Anytown, CA 12345
+              </Text>
+              <Text
+                className="text-sm m-0"
+                style={{ color: "#4b5563", lineHeight: "1.5" }}
+              >
+                contact@omenai.net • +123456789
+              </Text>
+            </Section>
+
+            {/* Legal Notice */}
+            <Section className="px-8 py-4 bg-gray-100">
+              <Text
+                className="text-xs text-center m-0"
+                style={{ color: "#4b5563", lineHeight: "1.5" }}
+              >
+                This email is intended solely for <strong>{name}</strong> and
+                may contain confidential information. If you received this
+                message in error, please notify us immediately and delete it
+                from your system. Unauthorized use or distribution is
+                prohibited.
+              </Text>
+            </Section>
           </Container>
         </Body>
       </Tailwind>
