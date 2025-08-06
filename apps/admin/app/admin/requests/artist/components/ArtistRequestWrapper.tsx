@@ -49,11 +49,11 @@ export function ArtistRequestWrapper() {
         {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
       </Tabs.List>
 
-      <Tabs.Panel value="Pending">
+      <Tabs.Panel value="Pending" className="mt-4">
         <PendingArtistRequest artists={pending} />
       </Tabs.Panel>
 
-      <Tabs.Panel value="Approved">
+      <Tabs.Panel value="Approved" className="mt-4">
         <ApprovedArtistRequest artists={approved} />
       </Tabs.Panel>
 

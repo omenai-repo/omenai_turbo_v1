@@ -43,7 +43,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (verify_gallery.modifiedCount === 0)
       throw new ServerError("Something went wrong");
 
-    // TODO: Send mail to gallery
+    // DONE: Send mail to gallery
     sendGalleryAcceptedMail({
       name,
       email,

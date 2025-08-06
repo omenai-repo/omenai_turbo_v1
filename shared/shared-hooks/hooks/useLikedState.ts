@@ -46,7 +46,7 @@ function useLikedState(
   // handle onClick like button
   const handleLike = async (state: boolean) => {
     // Pop up login modal
-    // TODO: Create login modal
+    // DONE: Create login modal
 
     if (sessionId === undefined) {
       toggleLoginModal(true);

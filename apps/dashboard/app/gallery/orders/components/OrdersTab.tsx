@@ -129,13 +129,13 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
                     </span>
                   </div>
 
-                  {/* todo: comment this out */}
-                  <div className="flex justify-between items-center">
+                  {/* DONE: comment this out */}
+                  {/* <div className="flex justify-between items-center">
                     <span className="text-sm text-slate-600">This Month</span>
                     <span className="text-sm font-semibold text-green-600">
                       +12%
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

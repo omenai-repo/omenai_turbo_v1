@@ -176,7 +176,7 @@ export default function InviteTeamMemberModal({
             label: {
               color: "#374151",
               marginBottom: "0.5rem",
-              fontSize: "0.875rem",
+              fontSize: "0.8rem",
               fontWeight: 600,
             },
             input: {

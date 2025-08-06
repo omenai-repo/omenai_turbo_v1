@@ -8,7 +8,10 @@ export default function Appbar() {
   return (
     <>
       <div className="flex justify-between items-center w-full pt-5 sticky top-0 z-10 bg-white ">
-        <DashboardIndicator admin_name={user.name} />
+        <DashboardIndicator
+          admin_name={user.name}
+          access_role={user.access_role}
+        />
       </div>
     </>
   );

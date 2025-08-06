@@ -44,7 +44,7 @@ export default function ArtistRequest({
         className={`
         group relative rounded-xl ${currentStyle.bgColor} 
         backdrop-blur-sm transition-all duration-500
-        transform-gpu
+        transform-gpu 2xl:py-3 py-2
       `}
       >
         {/* Main content */}
@@ -52,50 +52,42 @@ export default function ArtistRequest({
           {/* Left section - Avatar and Info */}
           <div className="flex gap-x-4 items-center">
             <div className="relative">
-              <Indicator
-                inline
-                disabled={tab === "approved"}
-                processing={tab === "pending"}
-                color={currentStyle.indicatorColor}
-                size={12}
-                className="transition-transform duration-300 group-hover:scale-105"
-              >
-                <div className="relative">
-                  <Avatar
-                    size="lg"
-                    radius="lg"
-                    src={image_href}
-                    className="transition-all duration-300 group-hover:shadow-lg ring-2 ring-white group-hover:ring-4"
-                  />
-                </div>
-              </Indicator>
+              <div className="relative">
+                <Avatar
+                  size="md"
+                  radius="md"
+                  src={image_href}
+                  className="transition-all duration-300 group-hover:shadow-lg ring-2 ring-white group-hover:ring-4"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col">
-              <h4 className="text-fluid-base font-semibold text-gray-900 transition-colors duration-300flex items-center gap-x-2">
-                {artist.name}
-              </h4>
-
-              <div className="flex items-center gap-x-1.5 text-sm text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
-                <Mail size={14} />
-                <span className="font-medium text-fluid-xs">
-                  {artist.email}
-                </span>
-              </div>
-
-              {/* Status badge */}
-              <div className="flex items-center mt-2">
-                <span
-                  className={`
-                  inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-medium capitalize
+              <div className="flex gap-x-2 items-center">
+                <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300flex items-center gap-x-2">
+                  {artist.name}
+                </h4>
+                {/* Status badge */}
+                <div className="flex items-center">
+                  <span
+                    className={`
+                  inline-flex items-center rounded-md px-2 text-fluid-xxs font-medium capitalize
                   ${currentStyle.badgeStyle}
                   transition-all duration-300 group-hover:shadow-sm
                 `}
-                >
-                  <div
-                    className={`w-1.5 h-1.5 rounded-xl mr-1.5 ${currentStyle.dotStyle}`}
-                  />
-                  {tab}
+                  >
+                    <div
+                      className={`w-1.5 h-1.5 rounded-xl mr-1.5 ${currentStyle.dotStyle}`}
+                    />
+                    {tab}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+                <Mail size={14} />
+                <span className="font-medium text-fluid-xxs">
+                  {artist.email}
                 </span>
               </div>
             </div>
@@ -107,11 +99,11 @@ export default function ArtistRequest({
               <Button
                 variant="gradient"
                 gradient={{ from: "red", to: "pink", deg: 45 }}
-                size="sm"
-                radius="xl"
+                size="xs"
+                radius="sm"
                 leftSection={<Shield size={16} />}
                 className="
-                  font-medium text-sm px-6 py-2.5 shadow-lg
+                  font-medium text-fluid-xs px-6 py-2.5 shadow-lg
                   transition-all duration-300 
                   ring-1 ring-red-200/50 hover:ring-red-300/70
                   transform-gpu
@@ -134,11 +126,11 @@ export default function ArtistRequest({
                 <Button
                   variant="gradient"
                   gradient={{ from: "#1a1a1a", to: "#1a1a1a", deg: 45 }}
-                  size="sm"
-                  radius="md"
+                  size="xs"
+                  radius="sm"
                   leftSection={<Eye size={16} />}
                   className="
-                    font-medium text-sm px-6 py-2.5 shadow-lg
+                    font-medium text-fluid-xs px-6 py-2.5 shadow-lg
                     transition-all duration-300 
                     ring-1 ring-blue-200/50 hover:ring-blue-300/70
                     transform-gpu

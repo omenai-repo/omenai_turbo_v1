@@ -5,6 +5,7 @@ import { getGalleryLogoFileView } from "@omenai/shared-lib/storage/getGalleryLog
 import { MenuDropdown } from "./MenuOptions";
 import { useDisclosure } from "@mantine/hooks";
 import { GalleryInfoModal } from "./GalleryInfoModal";
+import { Mail } from "lucide-react";
 
 interface SingleGalleryRequestType {
   gallery: GalleryType;
@@ -49,7 +50,7 @@ export default function GalleryRequest({
     <div className="w-full p-1">
       <div
         className={`
-        group relative rounded-xl border ${currentStyle.borderColor} ${currentStyle.bgColor} 
+        group relative rounded-xl border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
         backdrop-blur-sm transition-all duration-500 ${currentStyle.shadowColor}
         ${currentStyle.glowColor}
         transform-gpu
@@ -63,55 +64,51 @@ export default function GalleryRequest({
           {/* Left section - Avatar and Info */}
           <div className="flex gap-x-4 items-center">
             <div className="relative">
-              <Indicator
-                inline
-                disabled={tab === "approved" || tab === "rejected"}
-                processing={tab === "pending"}
-                color={currentStyle.indicatorColor}
-                size={14}
-                className="transition-transform duration-300 group-hover:scale-105"
-              >
-                <div className="relative">
-                  <Avatar
-                    size="lg"
-                    radius="lg"
-                    src={image_href}
-                    className="transition-all duration-300 group-hover:shadow-lg ring-2 ring-white group-hover:ring-4"
-                  />
-                  {/* Avatar glow effect */}
-                  <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-              </Indicator>
+              <div className="relative">
+                <Avatar
+                  size="md"
+                  radius="md"
+                  src={image_href}
+                  className="transition-all duration-300 group-hover:shadow-lg ring-2 ring-white group-hover:ring-4"
+                />
+                {/* Avatar glow effect */}
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
             </div>
 
-            <div className="flex flex-col space-y-1">
-              <h4 className="text-fluid-base font-semibold text-gray-900 transition-colors duration-300 ">
-                {gallery.name}
-              </h4>
-              <p className="text-sm text-gray-600 font-medium transition-colors duration-300 group-hover:text-gray-500">
-                {gallery.email}
-              </p>
+            <div className="flex flex-col">
+              <div className="flex gap-x-2 items-center">
+                <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300 ">
+                  {gallery.name}
+                </h4>
 
-              {/* Status badge */}
-              <div className="flex items-center mt-2">
-                <span
-                  className={`
-                  inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-medium capitalize
-                  ${tab === "approved" ? "bg-emerald-100 text-emerald-800" : ""}
-                  ${tab === "pending" ? "bg-amber-100 text-amber-800" : ""}
-                  ${tab === "rejected" ? "bg-red-100 text-red-800" : ""}
+                {/* Status badge */}
+                <div className="flex items-center">
+                  <span
+                    className={`
+                  inline-flex items-center rounded-xl text-fluid-xxs font-medium capitalize
+                  ${tab === "approved" ? " text-emerald-800" : ""}
+                  ${tab === "pending" ? " text-amber-800" : ""}
+                  ${tab === "rejected" ? " text-red-800" : ""}
                   transition-all duration-300 group-hover:shadow-sm
                 `}
-                >
-                  <div
-                    className={`
+                  >
+                    <div
+                      className={`
                     w-1.5 h-1.5 rounded-xl mr-1.5
                     ${tab === "approved" ? "bg-emerald-500" : ""}
                     ${tab === "pending" ? "bg-amber-500 animate-pulse" : ""}
                     ${tab === "rejected" ? "bg-red-500" : ""}
                   `}
-                  />
-                  {tab}
+                    />
+                    {tab}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+                <Mail size={14} />
+                <span className="font-medium text-fluid-xxs">
+                  {gallery.email}
                 </span>
               </div>
             </div>
@@ -125,10 +122,10 @@ export default function GalleryRequest({
             <Button
               variant="gradient"
               gradient={{ from: "#1a1a1a", to: "#1a1a1a", deg: 45 }}
-              size="sm"
-              radius="md"
+              size="xs"
+              radius="sm"
               className="
-                font-medium text-sm px-4 py-2.5 shadow-lg hover:shadow-xl
+                font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
                 transition-all duration-300 hover:scale-105 active:scale-95
                 ring-1 ring-blue-200/50 hover:ring-blue-300/70
                 transform-gpu

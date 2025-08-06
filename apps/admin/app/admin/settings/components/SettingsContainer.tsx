@@ -21,8 +21,10 @@ export default function SettingsContainer() {
     <div className="max-w-4xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-dark mb-2">Settings</h1>
-        <p className="text-dark">
+        <h1 className="text-fluid-lg 2xl:text-fluid-xl font-semibold text-dark mb-2">
+          Settings
+        </h1>
+        <p className="text-dark text-fluid-xs">
           Manage your account settings and preferences
         </p>
       </div>

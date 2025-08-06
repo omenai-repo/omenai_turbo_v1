@@ -14,8 +14,8 @@ export default function TaxWrapper() {
   }
   return (
     <div className="my-5 flex flex-col space-y-5 py-4">
-      <h4 className="text-fluid-xl font-bold">Nexus states in the USA</h4>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <h4 className="text-fluid-md font-semibold">Nexus states in the USA</h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         {nexus_states.map((state) => (
           <NexusState
             key={state.code}

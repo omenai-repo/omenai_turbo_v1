@@ -46,9 +46,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           "Data not found for update, please try again or contact support"
         );
 
-      // TODO: Check if they are eligible for update and return appropriate result if not
-
-      // Calculate new algorithm
       const algorithm_result: ArtistCategorizationAlgorithmResult =
         calculateArtistRating(data.answers);
 
@@ -85,7 +82,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       await session.commitTransaction();
 
-      // TODO: Send mail to admin
+      // TODO: Replace email with actual admin email
       await sendVerifyArtistMail({
         name: artist.name,
         email: "moses@omenai.net",

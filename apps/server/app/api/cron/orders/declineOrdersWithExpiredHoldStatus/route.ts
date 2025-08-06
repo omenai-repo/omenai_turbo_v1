@@ -74,8 +74,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       "order_accepted.status": "declined",
     });
 
-    // TODO: Send batch emails for declined orders
-
     await Promise.allSettled(
       updatedOrders.map(async (order) => {
         try {

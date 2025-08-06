@@ -57,11 +57,11 @@ export function GalleryRequestWrapper() {
         {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
       </Tabs.List>
 
-      <Tabs.Panel value="Pending">
+      <Tabs.Panel value="Pending" className="mt-4">
         <PendingGalleryRequests galleries={pending} />
       </Tabs.Panel>
 
-      <Tabs.Panel value="Approved">
+      <Tabs.Panel value="Approved" className="mt-4">
         <ApprovedGalleryRequests galleries={approved} />
       </Tabs.Panel>
 

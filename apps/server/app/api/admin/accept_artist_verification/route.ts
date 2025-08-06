@@ -111,7 +111,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
       session.commitTransaction();
 
-      // TODO: Send mail to Artist
+      // DONE: Send mail to Artist
       sendArtistAcceptedMail({
         name: get_artist.name,
         email: get_artist.email,

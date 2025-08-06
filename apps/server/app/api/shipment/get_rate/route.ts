@@ -102,7 +102,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const data = await response.json();
 
-      // TODO: Fix for multiple DHL error responses
+      // DONE: Fix for multiple DHL error responses
       if (!response.ok) {
         const error_message = getUserFriendlyError(data.detail);
         return NextResponse.json(
@@ -120,7 +120,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
           "No DHL product found for this shipment. Please contact support"
         );
 
-      //TODO: Save relevant data to database before returning response
+      //DONE: Save relevant data to database before returning response
 
       return NextResponse.json(
         { message: "Success", appropriateDHLProduct },

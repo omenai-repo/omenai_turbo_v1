@@ -83,7 +83,7 @@ async function checkAndHandleTransferStatus(
       }
 
       if (transferStatusInDB === "SUCCESSFUL" && status === "FAILED") {
-        // TODO: Log suspicious activity
+        // TODO: Log suspicious activity using robust logging systems to scale
         return { isOk: true };
       } else {
         return await handleStatusUtility(status, verified_transaction, session);
@@ -158,7 +158,6 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
     ]);
 
     await session.commitTransaction();
-    // TODO: Send a mail, defer to job queue
     return { isOk: true };
   } catch (error) {
     await session.abortTransaction();
@@ -195,7 +194,6 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
     ]);
 
     await session.commitTransaction();
-    // TODO: Send a mail, defer to job queue
     return { isOk: true };
   } catch (error) {
     await session.abortTransaction();

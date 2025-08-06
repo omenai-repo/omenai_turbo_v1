@@ -15,7 +15,7 @@ export default function SecuritySection() {
       <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6">
         <div className="flex items-center gap-3 mb-6">
           <Shield size={24} className="text-green-500" />
-          <h2 className="text-xl font-semibold text-white">Security</h2>
+          <h2 className="text-fluid-sm font-semibold text-white">Security</h2>
         </div>
 
         <div className="space-y-4">

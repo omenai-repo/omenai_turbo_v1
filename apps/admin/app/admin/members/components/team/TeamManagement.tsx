@@ -47,10 +47,10 @@ export default function TeamManagement() {
 
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              <h1 className="text-fluid-md 2xl:text-fluid-lg font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                 Team Members
               </h1>
-              <p className="text-gray-600 mt-2 text-lg">
+              <p className="text-gray-600 mt-2 text-fluid-base 2xl:text-fluid-sm">
                 Manage your team members and their permissions
               </p>
             </div>

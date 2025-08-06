@@ -30,13 +30,13 @@ export default function NavigationItem({
           <IconWrapper className="hover:bg-white hover:text-dark group">
             {icon}
           </IconWrapper>
-          <p className={`text-fluid-xs p-2 font-normal`}>{title}</p>
+          <p className={`text-fluid-xs font-normal`}>{title}</p>
         </li>
       ) : disabled ? (
         <Link
           onClick={onClick}
           href={url}
-          className={`p-2 ${
+          className={`px-3 py-1 ${
             pathname.startsWith(url)
               ? "bg-dark text-white"
               : "bg-white text-dark"

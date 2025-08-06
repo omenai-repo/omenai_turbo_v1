@@ -32,7 +32,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!delete_gallery_info) throw new ServerError("Something went wrong");
 
-    // TODO: Send mail to gallery
     await sendGalleryRejectedMail({
       name,
       email,

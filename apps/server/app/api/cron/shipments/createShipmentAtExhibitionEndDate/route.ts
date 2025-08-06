@@ -5,27 +5,57 @@ import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShi
 import { isWithinInterval, addDays } from "date-fns";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import {
+  BadRequestError,
+  ServerError,
+} from "../../../../../custom/errors/dictionary/errorDictionary";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import {
+  AddressTypes,
+  ArtworkSchemaTypes,
+  CreateOrderModelTypes,
+} from "@omenai/shared-types";
+import { sendShipmentPickupReminderMail } from "@omenai/shared-emails/src/models/shipment/sendShipmentPickupReminderMail";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
+  email: string,
   orderId: string,
-  isReminded: boolean
+  isReminded: boolean,
+  days: number,
+  name: string,
+  artwork: Pick<ArtworkSchemaTypes, "title" | "artist" | "art_id">,
+  buyerName: string,
+  pickupAddress: AddressTypes,
+  estimatedPickupDate?: string
 ): Promise<void> {
   if (isReminded) {
     console.log(`🔁 Reminder already sent for order_id: ${orderId}, skipping.`);
     return;
   }
   console.log(`🟡 Sending reminder email for order_id: ${orderId}`);
-  // TODO: Implement actual email sending logic here
+  // DONE: Implement actual email sending logic here
+
   await ScheduledShipment.updateOne(
     { order_id: orderId },
     { $set: { reminderSent: true } }
   );
+
+  const daysLeft = days.toFixed(1);
+  await sendShipmentPickupReminderMail({
+    name,
+    email,
+    artwork,
+    orderId,
+    buyerName,
+    pickupAddress,
+    daysLeft,
+    estimatedPickupDate,
+  });
 }
 
 // Utility function to update shipment status
@@ -90,7 +120,31 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
               end: executeAtUTC,
             })
           ) {
-            await sendReminderEmail(shipment.order_id, shipment.reminderSent);
+            const order: CreateOrderModelTypes | null =
+              await CreateOrder.findOne({
+                order_id: shipment.order_id,
+              });
+
+            // TODO: Implement proper error logging to scale
+            if (!order) throw new BadRequestError("Order not found");
+            const nowUTC = toUTCDate(new Date()); // Current date in UTC
+            const timeDiff = executeAtUTC.getTime() - nowUTC.getTime(); // difference in milliseconds
+            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // convert to days, round up
+            await sendReminderEmail(
+              order.seller_details.email,
+              shipment.order_id,
+              shipment.reminderSent,
+              daysLeft,
+              order.seller_details.name,
+              {
+                title: order.artwork_data.title,
+                artist: order.artwork_data.artist,
+                art_id: order.artwork_data.art_id,
+              },
+              order.buyer_details.name,
+              order.shipping_details.addresses.origin,
+              order.shipping_details.shipment_information.planned_shipping_date
+            );
             return;
           }
 

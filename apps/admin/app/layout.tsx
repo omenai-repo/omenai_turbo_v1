@@ -38,7 +38,7 @@ export default function AdminDashboardRootLayout({
           closeButton
           duration={7000}
         />
-        <NextTopLoader color="#6246EA" height={6} />
+        <NextTopLoader color="#030303" height={6} />
 
         <MantineProvider>
           <QueryProvider>{children}</QueryProvider>

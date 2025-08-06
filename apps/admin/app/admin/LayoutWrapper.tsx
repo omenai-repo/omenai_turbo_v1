@@ -1,11 +1,9 @@
 "use client";
-import NextTopLoader from "nextjs-toploader";
 import { useWindowSize } from "usehooks-ts";
 
-import { QueryProvider } from "@omenai/package-provider";
-import { Toaster } from "sonner";
 import PageLayout from "../layout/PageLayout";
 import Appbar from "../layout/Appbar";
+import MobileBlockScreen from "../layout/NoMobileView";
 export default function LayoutWrapper({
   children,
 }: {
@@ -15,7 +13,9 @@ export default function LayoutWrapper({
   return (
     <div>
       <>
-        {width < 1280 ? null : (
+        {width < 1280 ? (
+          <MobileBlockScreen />
+        ) : (
           <div className=" w-full h-screen">
             <main className="flex h-full">
               <PageLayout />

@@ -28,7 +28,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (block_artist.modifiedCount === 0)
       throw new ServerError("Something went wrong");
 
-    // TODO: Send mail to gallery
+    // TODO: Send mail to artist
 
     return NextResponse.json(
       { message: "Artist status updated" },

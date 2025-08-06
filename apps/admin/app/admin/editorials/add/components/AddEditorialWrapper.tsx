@@ -14,7 +14,7 @@ export default function AddEditorialWrapper() {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <h1 className="text-fluid-lg font-semibold">Upload an Editorial</h1>
+        <h1 className="text-fluid-md font-semibold">Upload an Editorial</h1>
       </div>
       <div className="">
         <EditorialForm />

@@ -80,8 +80,8 @@ export default function AccountForm() {
         return;
       }
       const validateBankAccountResponse = await validateBankAccount(
-        // TODO: Change this to selectedBank.code
-        "044",
+        // DONE: Change this to selectedBank.code
+        selectedBank.code,
         account_number,
         csrf || ""
       );
@@ -146,7 +146,7 @@ export default function AccountForm() {
         bank_name: selectedBank.name,
         account_name: validatedAccount.account_name,
         bank_id: selectedBank.id,
-        bank_code: "044", // TODO: Change to appropriate bank code
+        bank_code: selectedBank.code, // DONE: Change to appropriate bank code
         branch: selectedBranch,
         bank_country: user.address.countryCode,
       };

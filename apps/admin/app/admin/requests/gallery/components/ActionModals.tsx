@@ -84,8 +84,8 @@ export function ActionModals({
         onClose={close}
         withCloseButton={false}
         centered
-        size="md"
-        radius="xl"
+        size="sm"
+        radius="md"
         overlayProps={{
           backgroundOpacity: 0.4,
           blur: 8,
@@ -105,12 +105,12 @@ export function ActionModals({
           },
         }}
       >
-        <div className="relative p-6">
+        <div className="relative p-3">
           {/* Icon section */}
           <div className="flex justify-center mb-6">
             <div
               className={`
-          w-20 h-20 rounded-xl flex items-center justify-center shadow-lg
+          w-16 h-16 rounded-md flex items-center justify-center shadow-lg
           ${
             type === "accept"
               ? "bg-gradient-to-br from-green-400 to-emerald-600"
@@ -121,11 +121,11 @@ export function ActionModals({
         `}
             >
               {type === "accept" ? (
-                <Check size={32} color="white" strokeWidth={2.5} />
+                <Check size={24} color="white" strokeWidth={2.5} />
               ) : type === "reject" ? (
-                <X size={32} color="white" strokeWidth={2.5} />
+                <X size={24} color="white" strokeWidth={2.5} />
               ) : (
-                <Unlock size={32} color="white" strokeWidth={2.5} />
+                <Unlock size={24} color="white" strokeWidth={2.5} />
               )}
             </div>
           </div>
@@ -152,7 +152,7 @@ export function ActionModals({
 
           {/* Message */}
           <div className="text-center mb-8">
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-fluid-base leading-relaxed">
               {type === "accept"
                 ? "Are you sure you want to accept this gallery request? This will establish a partnership."
                 : type === "reject"
@@ -166,8 +166,9 @@ export function ActionModals({
             <Button
               loading={loading}
               disabled={loading}
-              size="md"
-              radius="xl"
+              size="sm"
+              radius="md"
+              color={`${type === "accept" ? "green" : type === "unblock" ? "#1a1a1a" : "red"}`}
               onClick={handleRequestAction}
               className={`
             px-4 py-2 text-fluid-xs font-semibold transition-all duration-300 transform hover:scale-105
@@ -199,10 +200,11 @@ export function ActionModals({
             <Button
               loading={loading}
               disabled={loading}
-              size="md"
-              radius="xl"
+              size="sm"
+              radius="md"
               variant="outline"
               onClick={close}
+              color="#1a1a1a"
               className="px-4 py-2 text-fluid-xs font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 transform hover:scale-105"
               leftSection={<X size={18} strokeWidth={2} />}
             >

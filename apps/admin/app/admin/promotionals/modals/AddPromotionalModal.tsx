@@ -1,7 +1,7 @@
 "use client";
 import { Button, Input, Text, Modal } from "@mantine/core";
 import React, { ChangeEvent, useRef, useState } from "react";
-import { Plus, Image, Ban } from "lucide-react";
+import { Plus, Image, Ban, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -23,14 +23,26 @@ export function AddPromotionalModal() {
       </Modal>
 
       <Button
-        onClick={open}
-        rightSection={<Plus size={20} strokeWidth={1.5} absoluteStrokeWidth />}
-        radius={"sm"}
         color="#1a1a1a"
+        onClick={open}
+        size="xs"
+        radius="sm"
+        leftSection={<Plus size={16} />}
+        className="
+                  font-medium text-fluid-xs px-6 py-2.5 shadow-lg
+                  transition-all duration-300 
+                  ring-1 ring-red-200/50 hover:ring-red-300/70
+                  transform-gpu
+                "
+        styles={{
+          root: {
+            "&:hover": {
+              transform: "translateY(-2px)",
+            },
+          },
+        }}
       >
-        <Text className="text-fluid-xxs font-normal">
-          Add a new promotional
-        </Text>
+        Add new promotional
       </Button>
     </>
   );

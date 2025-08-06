@@ -27,15 +27,15 @@ export function GalleryInfoModal({
     iconColor: string;
     bgColor: string;
   }) => (
-    <div className="flex items-center space-x-4 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+    <div className="flex items-center space-x-4 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
       <div
         className={`w-12 h-12 ${bgColor} rounded-xl flex items-center justify-center flex-shrink-0`}
       >
         {icon}
       </div>
       <div className="flex-1 text-left">
-        <p className="text-sm text-gray-500 font-medium">{label}</p>
-        <p className="text-base text-gray-900 font-semibold">{value}</p>
+        <p className="text-fluid-xxs text-gray-500 font-medium">{label}</p>
+        <p className="text-fluid-xs text-gray-900 font-semibold">{value}</p>
       </div>
     </div>
   );
@@ -45,8 +45,8 @@ export function GalleryInfoModal({
       opened={opened}
       onClose={close}
       centered
-      size="lg"
-      radius="xl"
+      size="md"
+      radius="lg"
       overlayProps={{
         backgroundOpacity: 0.55,
         blur: 3,
@@ -67,7 +67,7 @@ export function GalleryInfoModal({
     >
       <div className="relative">
         {/* Main modal content */}
-        <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
+        <div className="relative bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
           {/* Header section with logo */}
           <div className="relative bg-gray-50 border-b border-gray-100">
             {/* Close button */}
@@ -79,9 +79,9 @@ export function GalleryInfoModal({
             </button>
 
             {/* Content */}
-            <div className="px-8 pt-12 pb-8 text-center">
+            <div className="p-6 text-center">
               {/* Logo container */}
-              <div className="relative mx-auto w-24 h-24 mb-6">
+              <div className="relative mx-auto w-16 h-16 mb-3">
                 <div className="absolute inset-0 bg-white rounded-2xl shadow-lg" />
                 <div className="relative w-full h-full p-2">
                   <Image
@@ -94,17 +94,19 @@ export function GalleryInfoModal({
               </div>
 
               {/* Title */}
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-fluid-sm font-semibold text-gray-900 mb-2">
                 Gallery Information
               </h2>
 
               {/* Subtitle */}
-              <p className="text-gray-600">Details for {gallery.name}</p>
+              <p className="text-gray-600 text-fluid-xs">
+                Details for {gallery.name}
+              </p>
             </div>
           </div>
 
           {/* Content section */}
-          <div className="px-8 py-8 space-y-5">
+          <div className="p-8 space-y-5">
             <InfoRow
               icon={<Building2 className="text-blue-600" />}
               label="Gallery Name"
@@ -141,8 +143,8 @@ export function GalleryInfoModal({
             <div className="pt-6 flex justify-center">
               <Button
                 onClick={close}
-                size="lg"
-                radius="lg"
+                size="sm"
+                radius="md"
                 className="px-8"
                 styles={{
                   root: {

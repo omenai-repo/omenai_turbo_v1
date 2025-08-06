@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 export default function SettingsPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-4">
       <SettingsContainer />
     </div>
   );

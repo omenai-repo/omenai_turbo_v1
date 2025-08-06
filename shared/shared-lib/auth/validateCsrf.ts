@@ -5,7 +5,6 @@ import {
   AccountAdminSchemaTypes,
   AdminAccessRoleTypes,
 } from "@omenai/shared-types";
-import { ForbiddenError } from "../../../apps/server/custom/errors/dictionary/errorDictionary";
 
 type Role = "user" | "artist" | "gallery" | "admin";
 

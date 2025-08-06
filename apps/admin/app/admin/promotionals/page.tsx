@@ -6,10 +6,12 @@ export default function page() {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <h1 className="text-fluid-lg font-semibold">Your Promotionals</h1>
+        <h1 className="text-fluid-md font-semibold">Your Promotionals</h1>
         <AddPromotionalModal />
       </div>
-      <PromotionalList />
+      <div className="pb-3">
+        <PromotionalList />
+      </div>
     </div>
   );
 }

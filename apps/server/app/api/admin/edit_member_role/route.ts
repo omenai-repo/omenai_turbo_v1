@@ -6,6 +6,7 @@ import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { sendRoleChangeMail } from "@omenai/shared-emails/src/models/admin/sendRoleChangeMail";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -21,6 +22,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
 
     await connectMongoDB();
 
+    const admin = await AccountAdmin.findOne(
+      { admin_id },
+      "access_role name email"
+    );
+
     const role_update = await AccountAdmin.updateOne(
       { admin_id },
       { $set: { access_role: role } }
@@ -32,7 +38,13 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
         { status: 500 }
       );
     }
-    // todo: Send email notification about role change
+    // TODO: Send email notification about role change
+    await sendRoleChangeMail({
+      name: admin.name,
+      previousRole: admin.access_role,
+      newRole: role,
+      email: admin.email,
+    });
     return NextResponse.json({
       message: "Team member role updated successfully",
     });

@@ -29,7 +29,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new BadRequestError("Invalid email format");
     }
 
-    await connectMongoDB();
+    const client = await connectMongoDB();
+
+    const session = await client.startSession();
 
     const is_member_exist = await AccountAdmin.findOne({ email });
 
@@ -37,35 +39,38 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ForbiddenError(
         "This email is already associated to a team member"
       );
-    // Here you would typically handle the logic to invite a new member
-    const create_new_member = await AccountAdmin.create({
-      email,
-      access_role,
-    });
 
-    if (!create_new_member) {
+    const token = generateAlphaDigit(32);
+    try {
+      session.startTransaction();
+      const create_new_member = await AccountAdmin.create({
+        email,
+        access_role,
+      });
+
+      await AdminInviteToken.create({
+        author: email,
+        token,
+      });
+
+      session.commitTransaction();
+    } catch (error) {
+      session.abortTransaction();
+
       throw new ServerError(
-        "Failed to create new member, please try again or contact support."
+        "Unable to process this request. Please contact IT support"
       );
     }
 
-    const token = generateAlphaDigit(32);
-
-    await AdminInviteToken.create({
-      author: email,
-      token,
-    });
-
     // TODO: Convert this into a transaction
 
-    sendMemberInviteEmail({ email, token });
+    await sendMemberInviteEmail({ email, token });
 
     return NextResponse.json(
       { message: "Invite sent successfully" },
       { status: 201 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     return NextResponse.json(
       { message: error_response?.message },

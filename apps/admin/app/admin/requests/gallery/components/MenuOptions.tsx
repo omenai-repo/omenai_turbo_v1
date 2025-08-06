@@ -44,7 +44,7 @@ export function MenuDropdown({
           <ActionIcon
             variant="filled"
             color="#1a1a1a"
-            size="lg"
+            size="md"
             radius="sm"
             aria-label="Options"
           >

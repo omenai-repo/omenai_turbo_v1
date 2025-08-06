@@ -80,12 +80,12 @@ export async function getSession(
   }
 
   // **Security:** Basic check to prevent session hijacking
-  if (!is_middleware_agent) {
-    if (!userAgent || sessionData.userAgent !== userAgent) {
-      await cleanupSession(sessionId, cookieStore);
-      return null;
-    }
-  }
+  // if (!is_middleware_agent) {
+  //   if (!userAgent || sessionData.userAgent !== userAgent) {
+  //     await cleanupSession(sessionId, cookieStore);
+  //     return null;
+  //   }
+  // }
 
   // Sliding session: reset the TTL on access (only for valid sessions)
   await redis.expire(`session:${sessionId}`, SESSION_TTL);

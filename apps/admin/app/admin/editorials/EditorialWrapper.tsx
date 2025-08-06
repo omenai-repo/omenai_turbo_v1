@@ -14,13 +14,14 @@ export default function EditorialWrapper() {
     return <ForbiddenPage userRole={user.access_role} />;
   }
   return (
-    <div className="flex flex-col space-y-10">
+    <div className="flex flex-col space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-fluid-lg font-semibold">Your Editorials</h1>
+        <h1 className="text-fluid-md font-semibold">Your Editorials</h1>
         <Link href={"/admin/editorials/add"}>
           <Button
             variant="filled"
             color="#1a1a1a"
+            size="sm"
             className="ring-1 ring-dark border-0"
           >
             Add an editorial piece

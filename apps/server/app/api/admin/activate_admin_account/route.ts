@@ -57,7 +57,7 @@ export const POST = withRateLimit(config)(async function POST(
 
     await AdminInviteToken.deleteOne({ token });
 
-    //TODO: Send email notification about account activation
+    //TODO - SCOPE CREEP: Send email notification about account activation
 
     return NextResponse.json({
       message:

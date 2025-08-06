@@ -236,7 +236,7 @@ async function handlePurchaseTransaction(
     "artwork_data order_id createdAt buyer_details"
   );
   if (verified_transaction.data.status === "failed") {
-    //TODO: Send email to user about failed payment
+    //DONE: Send email to user about failed payment
     await sendPaymentFailedMail({
       email: meta.buyer_email,
       name: order_info.buyer_details.name,
