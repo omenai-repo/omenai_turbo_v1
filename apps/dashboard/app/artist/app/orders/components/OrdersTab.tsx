@@ -30,45 +30,154 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
     }
   });
   return (
-    <Tabs
-      color="#1a1a1a"
-      variant="pills"
-      radius={"md"}
-      orientation="vertical"
-      defaultValue="pending"
-    >
-      <Tabs.List className="space-y-5 text-fluid-xs">
-        <Tabs.Tab
-          value="pending"
-          leftSection={<PackageMinus strokeWidth={1.5} absoluteStrokeWidth />}
+    <div className="w-full">
+      {/* Design 1: Modern Card-based Tabs */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <Tabs
+          color="#3b82f6"
+          variant="default"
+          radius="md"
+          orientation="vertical"
+          defaultValue="pending"
+          className="flex min-h-[600px]"
         >
-          Pending orders
-        </Tabs.Tab>
-        <Tabs.Tab
-          value="processing"
-          leftSection={<PackageSearch strokeWidth={1.5} absoluteStrokeWidth />}
-        >
-          Orders in progress
-        </Tabs.Tab>
-        <Tabs.Tab
-          value="completed"
-          leftSection={<PackageCheck strokeWidth={1.5} absoluteStrokeWidth />}
-        >
-          Completed orders
-        </Tabs.Tab>
-      </Tabs.List>
+          {/* Sidebar */}
+          <div className="w-72 bg-slate-50 border-r border-slate-200">
+            <div className="p-6">
+              <h2 className="text-lg font-semibold text-slate-900 mb-1">
+                Order Management
+              </h2>
+              <p className="text-sm text-slate-600 mb-6">
+                Track and manage your orders
+              </p>
 
-      <Tabs.Panel value="pending" className="container px-5">
-        <PendingOrders orders={pending_orders} />
-      </Tabs.Panel>
+              <Tabs.List className="space-y-2">
+                <Tabs.Tab
+                  value="pending"
+                  className="w-full px-4 py-3 rounded-lg flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
+                >
+                  <div className="p-2 rounded-lg bg-amber-100 flex gap-x-2 items-center data-[active]:bg-amber-500">
+                    <PackageMinus
+                      size={20}
+                      className="text-amber-600 data-[active]:text-white"
+                      strokeWidth={1.5}
+                    />
+                    <p className="font-normal text-dark text-fluid-xs flex items-center gap-x-2">
+                      <span>Pending Orders </span>
+                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
+                        {pending_orders.length}
+                      </span>
+                    </p>
+                  </div>
+                </Tabs.Tab>
 
-      <Tabs.Panel value="processing" className="container px-5">
-        <ProcessingOrders orders={processing_orders} />
-      </Tabs.Panel>
+                <Tabs.Tab
+                  value="processing"
+                  className="w-full px-4 py-3 rounded-lg flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
+                >
+                  <div className="p-2 rounded-lg bg-blue-100 flex gap-x-1 items-center data-[active]:bg-blue-500">
+                    <PackageSearch
+                      size={20}
+                      className="text-blue-600 data-[active]:text-white"
+                      strokeWidth={1.5}
+                    />
+                    <p className="font-normal text-dark text-fluid-xs flex items-center gap-x-2">
+                      <span>In progress </span>
+                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
+                        {processing_orders.length}
+                      </span>
+                    </p>
+                  </div>
+                </Tabs.Tab>
 
-      <Tabs.Panel value="completed" className="container px-5">
-        <CompletedOrders orders={completed_orders} />
-      </Tabs.Panel>
-    </Tabs>
+                <Tabs.Tab
+                  value="completed"
+                  className="w-full px-4 py-3 rounded-lg flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-green-600 hover:bg-white/50"
+                >
+                  <div className="p-2 rounded-lg bg-green-100 flex items-center gap-x-1 data-[active]:bg-green-500">
+                    <PackageCheck
+                      size={20}
+                      className="text-green-600 data-[active]:text-white"
+                      strokeWidth={1.5}
+                    />
+                    <p className="font-normal text-dark text-fluid-xs flex items-center gap-x-2">
+                      <span>Completed Orders </span>
+                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
+                        {completed_orders.length}
+                      </span>
+                    </p>
+                  </div>
+                </Tabs.Tab>
+              </Tabs.List>
+            </div>
+
+            {/* Summary Stats */}
+            <div className="px-6 pb-6">
+              <div className="bg-white rounded-lg p-4 border border-slate-200">
+                <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">
+                  Overview
+                </p>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-fluid-xs font-medium text-slate-600">
+                      Total Orders
+                    </span>
+                    <span className="text-sm font-semibold text-slate-900">
+                      {pending_orders.length +
+                        processing_orders.length +
+                        completed_orders.length}
+                    </span>
+                  </div>
+
+                  {/* DONE: comment this out */}
+                  {/* <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-600">This Month</span>
+                    <span className="text-sm font-semibold text-green-600">
+                      +12%
+                    </span>
+                  </div> */}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Area */}
+          <div className="flex-1 p-8">
+            <Tabs.Panel value="pending">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    Pending Orders
+                  </h3>
+                </div>
+                <PendingOrders orders={pending_orders} />
+              </div>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="processing">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    Orders in Progress
+                  </h3>
+                </div>
+                <ProcessingOrders orders={processing_orders} />
+              </div>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="completed">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-slate-900">
+                    Completed Orders
+                  </h3>
+                </div>
+                <CompletedOrders orders={completed_orders} />
+              </div>
+            </Tabs.Panel>
+          </div>
+        </Tabs>
+      </div>
+    </div>
   );
 }

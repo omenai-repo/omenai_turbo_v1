@@ -38,9 +38,9 @@ export const POST = withAppRouterHighlight(async function POST(
     // Log the response (replace with a proper logging mechanism in production)
     console.log(transactionData);
 
-    // Handle unsuccessful verification
-    if (transactionData.status !== "success") {
-      return createResponse(transactionData.message, transactionData, 400);
+    // Handle successful verification
+    if (transactionData.data.status !== "successful") {
+      return createResponse("Transaction successful", transactionData, 200);
     }
 
     // Handle pending transactions
@@ -48,7 +48,7 @@ export const POST = withAppRouterHighlight(async function POST(
       return createResponse("Transaction pending", transactionData.data, 200);
     }
     // Handle failed transactions
-    if (transactionData.data.status !== "failed") {
+    if (transactionData.data.status === "failed") {
       return createResponse("Transaction failed", transactionData.data, 200);
     }
 
