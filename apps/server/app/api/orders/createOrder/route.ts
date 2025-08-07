@@ -18,11 +18,16 @@ import {
   AddressTypes,
   CombinedConfig,
   CreateOrderModelTypes,
+  NotificationPayload,
 } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -160,7 +165,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
               fees: "",
               taxes: "",
             },
-            waybill_document: "",
+            waybillument: "",
           },
         },
         hold_status: null,
@@ -196,21 +201,88 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         );
       }
 
-      const date = getCurrentDate();
-      await sendOrderRequestToGalleryMail({
-        name: seller_data.name,
-        email: seller_data.email,
-        buyer: buyerData.name,
-        date,
-        artwork_data: artwork,
-      });
+      const buyer_push_token = await DeviceManagement.findOne(
+        { auth_id: createOrder.buyer_details.id },
+        "device_push_token"
+      );
+      const seller_push_token = await DeviceManagement.findOne(
+        { auth_id: createOrder.seller_details.id },
+        "device_push_token"
+      );
 
-      await sendOrderRequestReceivedMail({
-        name: buyerData.name,
-        email: buyerData.email,
-        artwork_data: artwork,
-        orderId: createOrder.order_id,
-      });
+      const notificationPromises = [];
+
+      // Check for actual token value, not just document existence
+      if (buyer_push_token?.device_push_token) {
+        const buyer_notif_payload: NotificationPayload = {
+          to: buyer_push_token.device_push_token, // Extract the actual token
+          title: "Order confirmed",
+          body: "Your order request has been confirmed",
+          data: {
+            type: "orders",
+            access_type: "collector",
+            metadata: {
+              orderId: createOrder.order_id,
+              date: toUTCDate(new Date()),
+            },
+            userId: createOrder.buyer_details.id,
+          },
+        };
+
+        notificationPromises.push(
+          createWorkflow(
+            "/api/workflows/notification/pushNotification",
+            `notification_workflow_buyer_${createOrder.order_id}_${generateDigit(2)}`,
+            JSON.stringify(buyer_notif_payload)
+          ).catch((error) => {
+            console.error("Failed to send buyer notification:", error);
+          })
+        );
+      }
+
+      if (seller_push_token?.device_push_token) {
+        const seller_notif_payload: NotificationPayload = {
+          to: seller_push_token.device_push_token, // Extract the actual token
+          title: "New Order request",
+          body: "You have a new order request for your artwork", // Fixed typo
+          data: {
+            type: "orders",
+            access_type: createOrder.seller_designation as "gallery" | "artist",
+            metadata: {
+              orderId: createOrder.order_id,
+              date: toUTCDate(new Date()),
+            },
+            userId: createOrder.seller_details.id,
+          },
+        };
+
+        notificationPromises.push(
+          createWorkflow(
+            "/api/workflows/notification/pushNotification",
+            `notification_workflow_seller_${createOrder.order_id}_${generateDigit(2)}`,
+            JSON.stringify(seller_notif_payload)
+          ).catch((error) => {
+            console.error("Failed to send seller notification:", error);
+          })
+        );
+      }
+      const date = getCurrentDate();
+      await Promise.all([
+        sendOrderRequestToGalleryMail({
+          name: seller_data.name,
+          email: seller_data.email,
+          buyer: buyerData.name,
+          date,
+          artwork_data: artwork,
+        }),
+        sendOrderRequestReceivedMail({
+          name: buyerData.name,
+          email: buyerData.email,
+          artwork_data: artwork,
+          orderId: createOrder.order_id,
+        }),
+        ...notificationPromises,
+      ]);
 
       return NextResponse.json(
         {

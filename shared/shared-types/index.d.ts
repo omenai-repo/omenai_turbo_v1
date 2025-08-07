@@ -941,3 +941,28 @@ export type TeamMember = {
   joinedAt: string;
   verified: boolean;
 };
+
+export type NotificationData = {
+  id: string;
+  title: string;
+  body: string;
+  data: NotificationDataType;
+  sent: boolean;
+  sentAt: Date;
+  read: boolean;
+  readAt: Date;
+};
+
+export type NotificationDataType = {
+  type: "wallet" | "orders" | "subscriptions" | "updates";
+  access_type: "collector" | "gallery" | "artist";
+  metadata: T;
+  userId: string;
+};
+
+export type NotificationPayload = {
+  title: NotificationData["title"];
+  body: NotificationData["body"];
+  data: NotificationData["data"];
+  to: string;
+};

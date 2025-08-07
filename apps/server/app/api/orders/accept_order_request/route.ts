@@ -6,6 +6,7 @@ import {
   CombinedConfig,
   CreateOrderModelTypes,
   HoldStatus,
+  NotificationPayload,
   OrderArtworkExhibitionStatus,
   ShipmentDimensions,
   ShipmentRateRequestTypes,
@@ -25,6 +26,9 @@ import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
+import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -219,6 +223,36 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
 
     await session.commitTransaction();
+
+    const buyer_push_token = await DeviceManagement.findOne(
+      { auth_id: order.buyer_details.id },
+      "device_push_token"
+    );
+
+    if (buyer_push_token?.device_push_token) {
+      const buyer_notif_payload: NotificationPayload = {
+        to: buyer_push_token.device_push_token,
+        title: "Order request accepted",
+        body: "Your order request has been accepted for purchase",
+        data: {
+          type: "orders",
+          access_type: "collector",
+          metadata: {
+            orderId: order.order_id,
+            date: toUTCDate(new Date()),
+          },
+          userId: order.buyer_details.id,
+        },
+      };
+
+      await createWorkflow(
+        "/api/workflows/notification/pushNotification",
+        `notification_workflow_buyer_${order.order_id}_${generateDigit(2)}`,
+        JSON.stringify(buyer_notif_payload)
+      ).catch((error) => {
+        console.error("Failed to send buyer notification:", error);
+      });
+    }
 
     //TODO: Update mail to indicate the user has 24 hrs to pay
     await sendOrderAcceptedMail({

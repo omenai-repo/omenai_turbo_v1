@@ -68,7 +68,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const authorization: string | null =
         request.headers.get("Authorization") || null;
 
-      if (userAgent && userAgent === "__X-Omenai-App") {
+      if (userAgent && userAgent === process.env.MOBILE_USER_AGENT) {
         if (
           authorization &&
           authorization === process.env.APP_AUTHORIZATION_SECRET

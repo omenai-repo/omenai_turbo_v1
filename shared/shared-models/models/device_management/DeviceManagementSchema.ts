@@ -6,8 +6,8 @@ const deviceManagementSchema = new mongoose.Schema<{
   auth_id: string;
 }>(
   {
-    device_push_token: { type: String, required: true },
-    auth_id: { type: String, required: true },
+    device_push_token: { type: String, index: true, required: true },
+    auth_id: { type: String, index: true, required: true },
   },
   { timestamps: true }
 );

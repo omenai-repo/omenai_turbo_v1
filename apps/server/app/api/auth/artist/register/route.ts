@@ -40,7 +40,7 @@ export const POST = withAppRouterHighlight(async function POST(
     });
     const { artist_id } = saveData;
 
-    if (userAgent === "__X-Omenai-App") {
+    if (userAgent === process.env.MOBILE_USER_AGENT) {
       if (
         authorization === process.env.APP_AUTHORIZATION_SECRET &&
         data.device_push_token

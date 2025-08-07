@@ -22,7 +22,7 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
       const userAgent = req.headers.get("User-Agent");
       const authorization: string = req.headers.get("Authorization") ?? "";
 
-      if (userAgent === "__X-Omenai-App") {
+      if (userAgent === process.env.MOBILE_USER_AGENT) {
         if (authorization === process.env.APP_AUTHORIZATION_SECRET) {
           return handler(req);
         } else {

@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/api/webhook")) return response;
 
   // Handling specific user agent request for app authorization
-  if (userAgent === "__X-Omenai-App") {
+  if (userAgent === process.env.MOBILE_USER_AGENT) {
     if (authorization === process.env.APP_AUTHORIZATION_SECRET) {
       return response;
     } else {

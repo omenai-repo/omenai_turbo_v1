@@ -29,7 +29,7 @@ export default async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/api/cron")) return NextResponse.next();
 
   // Handle app-specific authorization
-  if (userAgent === "__X-Omenai-App") {
+  if (userAgent === process.env.MOBILE_USER_AGENT) {
     if (authorization === process.env.APP_AUTHORIZATION_SECRET) {
       return NextResponse.next();
     } else {
