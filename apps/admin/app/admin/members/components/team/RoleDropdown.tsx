@@ -195,7 +195,7 @@ export default function RoleDropdown({
               border: "1px solid #3a3a3a",
             },
             option: {
-              color: "#1a1a1a",
+              color: "#0f172a",
               "&[dataHovered]": {
                 backgroundColor: "#f5f5f5",
               },

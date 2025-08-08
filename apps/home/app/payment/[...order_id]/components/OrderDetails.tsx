@@ -1,5 +1,8 @@
 "use client";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Image from "next/image";
@@ -13,7 +16,7 @@ export default function OrderDetails({
   order: CreateOrderModelTypes;
   lock_status: boolean;
 }) {
-  const image_href = getImageFileView(order.artwork_data.url, 200);
+  const image_href = getOptimizedImage(order.artwork_data.url, "thumbnail", 40);
 
   const total_price_number = calculatePurchaseGrandTotalNumber(
     order.artwork_data.pricing.usd_price,

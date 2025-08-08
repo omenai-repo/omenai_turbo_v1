@@ -117,7 +117,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       "artwork_data.art_id": artwork.art_id,
     });
 
-    if (isOrderPresent)
+    if (isOrderPresent && isOrderPresent.order_accepted.status !== "declined")
       throw new ForbiddenError(
         "Order already exists and is being processed, Please be patient."
       );

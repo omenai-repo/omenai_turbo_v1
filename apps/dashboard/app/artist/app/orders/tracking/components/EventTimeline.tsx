@@ -1,6 +1,9 @@
 "use client";
 import { Timeline, Text, ScrollArea, Divider, Paper } from "@mantine/core";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import { MapPinCheckInside, PlaneTakeoff } from "lucide-react";
 import Image from "next/image";
 
@@ -31,7 +34,7 @@ export default function EventTimeline({
   artwork_data: any;
   tracking_number: string;
 }) {
-  const image_url = getImageFileView(artwork_data.url, 100);
+  const image_url = getOptimizedImage(artwork_data.url, "thumbnail", 20);
 
   return (
     <ScrollArea
@@ -65,7 +68,7 @@ export default function EventTimeline({
       </div>
 
       {/* <Divider my={"md"} /> */}
-      <Timeline color="#1a1a1a" active={1} lineWidth={2} bulletSize={30}>
+      <Timeline color="#0f172a" active={1} lineWidth={2} bulletSize={30}>
         <Timeline.Item
           className="text-fluid-xs"
           bullet={

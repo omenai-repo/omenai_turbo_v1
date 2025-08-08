@@ -53,7 +53,7 @@ export default function Hero({ promotionals }: any) {
   return (
     <>
       {/* <HomeBG /> */}
-      <div className="embla my-5" ref={emblaRef}>
+      <div className="embla mb-6" ref={emblaRef}>
         <div className="embla__container space-x-3">
           {promotionals.map((promotional: any, index: number) => {
             return (

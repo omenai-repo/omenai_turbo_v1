@@ -44,7 +44,7 @@ export default function DateTimePickerComponent({
       styles={{
         label: {
           fontSize: 13,
-          color: "#1a1a1a",
+          color: "#0f172a",
           marginBottom: "8px",
           fontWeight: 400,
         },
@@ -53,11 +53,11 @@ export default function DateTimePickerComponent({
           border: "1px solid rgb(3 3 3 / 0.2)",
           fontSize: 13,
           fontWeight: 500,
-          color: "#1a1a1a",
+          color: "#0f172a",
         },
         description: {
           fontSize: 13,
-          color: "#1a1a1a",
+          color: "#0f172a",
           marginBottom: "8px",
           fontWeight: 400,
         },

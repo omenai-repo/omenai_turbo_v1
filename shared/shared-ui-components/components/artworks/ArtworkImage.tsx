@@ -3,7 +3,10 @@
 
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import LikeComponent from "../likes/LikeComponent";
 import Image from "next/image";
 type ArtworkImageProps = {
@@ -31,7 +34,7 @@ export const ArtworkImage = ({
   art_id,
   pricing,
 }: ArtworkImageProps) => {
-  const image_href = getImageFileView(url, 400);
+  const image_href = getOptimizedImage(url, "thumbnail", 40);
 
   return (
     <Link href={`/artwork/${title}`} className="w-[250px]">

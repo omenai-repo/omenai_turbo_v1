@@ -168,7 +168,7 @@ export function ActionModals({
               disabled={loading}
               size="sm"
               radius="md"
-              color={`${type === "accept" ? "green" : type === "unblock" ? "#1a1a1a" : "red"}`}
+              color={`${type === "accept" ? "green" : type === "unblock" ? "#0f172a" : "red"}`}
               onClick={handleRequestAction}
               className={`
             px-4 py-2 text-fluid-xs font-semibold transition-all duration-300 transform hover:scale-105
@@ -204,7 +204,7 @@ export function ActionModals({
               radius="md"
               variant="outline"
               onClick={close}
-              color="#1a1a1a"
+              color="#0f172a"
               className="px-4 py-2 text-fluid-xs font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 transform hover:scale-105"
               leftSection={<X size={18} strokeWidth={2} />}
             >

@@ -88,7 +88,7 @@ export const PurchaseConfirmationEmail = ({
               href="https://omenai.net/dashboard/user/orders"
               style={{
                 textDecoration: "underline",
-                color: "#1a1a1a",
+                color: "#0f172a",
                 fontWeight: "bold",
               }}
             >
@@ -101,7 +101,7 @@ export const PurchaseConfirmationEmail = ({
             If you have any questions, please reach out to us at{" "}
             <Link
               href="mailto:contact@omenani.net"
-              style={{ textDecoration: "underline", color: "#1a1a1a" }}
+              style={{ textDecoration: "underline", color: "#0f172a" }}
             >
               contact@omenani.net
             </Link>
@@ -118,7 +118,7 @@ export default PurchaseConfirmationEmail;
 
 const main = {
   backgroundColor: "#ffffff",
-  color: "#1a1a1a",
+  color: "#0f172a",
   fontFamily: "Helvetica, Arial, sans-serif",
   padding: "40px 0",
 } as const;
@@ -161,7 +161,7 @@ const receiptSection = {
   borderRadius: "12px",
   fontSize: "15px",
   lineHeight: "1.6",
-  color: "#1a1a1a",
+  color: "#0f172a",
 } as const;
 
 const receiptRow = {

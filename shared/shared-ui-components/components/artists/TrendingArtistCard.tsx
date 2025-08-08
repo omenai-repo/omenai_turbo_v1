@@ -1,7 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import { base_url } from "@omenai/url-config/src/config";
 
 export function TrendingArtistCard({
@@ -19,7 +22,7 @@ export function TrendingArtistCard({
   country: string;
   artist_id: string;
 }) {
-  const image_href = getImageFileView(url, 350);
+  const image_href = getOptimizedImage(url, "thumbnail", 40);
   const encoded_url = decodeURIComponent(artist);
   const base_uri = base_url();
   return (

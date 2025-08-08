@@ -9,7 +9,7 @@ export const COMPANY_INFO = {
 } as const;
 
 export const EMAIL_COLORS = {
-  primary: "#1a1a1a",
+  primary: "#0f172a",
   background: "#ffffff",
   gray: {
     50: "#f9fafb",

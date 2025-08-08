@@ -13,7 +13,7 @@ export default function DangerZone() {
 
   return (
     <>
-      <div className="bg-[#1a1a1a] rounded-lg border border-red-900/50 p-6">
+      <div className="bg-[#0f172a] rounded-lg border border-red-900/50 p-6">
         <div className="flex items-center gap-3 mb-6">
           <TriangleAlert size={24} className="text-red-500" />
           <h2 className="text-xl font-semibold text-white">Danger Zone</h2>

@@ -7,7 +7,7 @@ export const toast_notif = (
     description: message,
     style: {
       background:
-        type === "success" ? "green" : type === "info" ? "#1a1a1a" : "red",
+        type === "success" ? "green" : type === "info" ? "#0f172a" : "red",
       color: "white",
     },
     className: "class",

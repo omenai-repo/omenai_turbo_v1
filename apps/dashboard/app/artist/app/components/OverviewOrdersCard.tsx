@@ -1,5 +1,8 @@
 "use client";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 
 type OverviewOrdersCardProps = {
@@ -16,7 +19,7 @@ export default function OverviewOrdersCard({
   url,
   status,
 }: OverviewOrdersCardProps) {
-  const image_url = getImageFileView(url, 200);
+  const image_url = getOptimizedImage(url, "thumbnail", 40);
 
   return (
     <div className="flex justify-between items-center px-5 py-3 rounded-lg shadow w-full">

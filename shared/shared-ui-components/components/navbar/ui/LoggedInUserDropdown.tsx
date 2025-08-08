@@ -44,7 +44,7 @@ const LoggedInUserDropDown = ({
             </span>
           </div>
           <UserRound
-            color="#1a1a1a"
+            color="#0f172a"
             size={20}
             strokeWidth={1}
             absoluteStrokeWidth
@@ -66,7 +66,7 @@ const LoggedInUserDropDown = ({
             setOpen={setOpen}
             Icon={
               <HeartPulse
-                color="#1a1a1a"
+                color="#0f172a"
                 size={20}
                 strokeWidth={1}
                 absoluteStrokeWidth
@@ -79,7 +79,7 @@ const LoggedInUserDropDown = ({
             setOpen={setOpen}
             Icon={
               <Package
-                color="#1a1a1a"
+                color="#0f172a"
                 size={20}
                 strokeWidth={1}
                 absoluteStrokeWidth
@@ -92,7 +92,7 @@ const LoggedInUserDropDown = ({
             setOpen={setOpen}
             Icon={
               <UserRoundPen
-                color="#1a1a1a"
+                color="#0f172a"
                 size={20}
                 strokeWidth={1}
                 absoluteStrokeWidth
@@ -105,7 +105,7 @@ const LoggedInUserDropDown = ({
             setOpen={setOpen}
             Icon={
               <Settings
-                color="#1a1a1a"
+                color="#0f172a"
                 size={20}
                 strokeWidth={1}
                 absoluteStrokeWidth
@@ -118,7 +118,7 @@ const LoggedInUserDropDown = ({
             setOpen={setOpen}
             Icon={
               <LogOut
-                color="#1a1a1a"
+                color="#0f172a"
                 size={20}
                 strokeWidth={1}
                 absoluteStrokeWidth

@@ -3,6 +3,7 @@ import { updateArtworkImpressions } from "@omenai/shared-services/artworks/updat
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useAuth } from "./useAuth";
 
 function useLikedState(
   initialImpressions: number,
@@ -17,6 +18,7 @@ function useLikedState(
     count: initialImpressions,
     ids: initialLikeIds,
   });
+  const { csrf } = useAuth({ requiredRole: "user" });
 
   // Import login toggle store
   const { toggleLoginModal } = actionStore();
@@ -28,15 +30,16 @@ function useLikedState(
   // Make async call to update liked state in db
   const { mutateAsync: updateLikesMutation } = useMutation({
     mutationFn: (options: { state: boolean; sessionId: string }) =>
-      updateArtworkImpressions(art_id, options.state, options.sessionId),
+      updateArtworkImpressions(
+        art_id,
+        options.state,
+        options.sessionId,
+        csrf || ""
+      ),
 
     onSuccess: async (data) => {
       if (data?.isOk) {
-        queryClient.invalidateQueries({ queryKey: ["latest"] });
-        queryClient.invalidateQueries({ queryKey: ["trending"] });
-        queryClient.invalidateQueries({ queryKey: ["curated"] });
-        queryClient.invalidateQueries({ queryKey: ["fetch_saved_artworks"] });
-        queryClient.invalidateQueries({ queryKey: ["get_paginated_artworks"] });
+        queryClient.invalidateQueries();
       } else {
         setLikedState({ count: initialImpressions, ids: initialLikeIds });
       }
@@ -46,7 +49,6 @@ function useLikedState(
   // handle onClick like button
   const handleLike = async (state: boolean) => {
     // Pop up login modal
-    // DONE: Create login modal
 
     if (sessionId === undefined) {
       toggleLoginModal(true);

@@ -4,7 +4,10 @@ import {
   dashboard_url,
   getApiUrl,
 } from "@omenai/url-config/src/config";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import {
   Body,
   Button,
@@ -32,7 +35,7 @@ const OrderRequestToGalleryMail = (
 ) => {
   const url = base_url();
   const dashboard_uri = dashboard_url();
-  const image = getImageFileView(artwork_data.url, 200);
+  const image = getOptimizedImage(artwork_data.url, "thumbnail", 40);
   return (
     <Html>
       <Head />
@@ -67,14 +70,14 @@ const OrderRequestToGalleryMail = (
             <Section className="px-8 py-8">
               <Text
                 className="text-base mb-4"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Dear <strong>{name}</strong>,
               </Text>
 
               <Text
                 className="text-base mb-6"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Exciting news! A collector has expressed interest in purchasing{" "}
                 <Link
@@ -120,7 +123,7 @@ const OrderRequestToGalleryMail = (
                     <td style={{ padding: "8px 0" }}>
                       <Text
                         className="text-sm m-0"
-                        style={{ color: "#1a1a1a" }}
+                        style={{ color: "#0f172a" }}
                       >
                         {artwork_data.title}
                       </Text>
@@ -138,7 +141,7 @@ const OrderRequestToGalleryMail = (
                     <td style={{ padding: "8px 0" }}>
                       <Text
                         className="text-sm m-0"
-                        style={{ color: "#1a1a1a" }}
+                        style={{ color: "#0f172a" }}
                       >
                         {buyer}
                       </Text>
@@ -156,7 +159,7 @@ const OrderRequestToGalleryMail = (
                     <td style={{ padding: "8px 0" }}>
                       <Text
                         className="text-sm m-0"
-                        style={{ color: "#1a1a1a" }}
+                        style={{ color: "#0f172a" }}
                       >
                         {date}
                       </Text>
@@ -170,7 +173,7 @@ const OrderRequestToGalleryMail = (
                 <Link
                   className="px-8 py-4 rounded-lg font-medium text-white inline-block"
                   style={{
-                    backgroundColor: "#1a1a1a",
+                    backgroundColor: "#0f172a",
                     color: "#ffffff",
                     textDecoration: "none",
                   }}
@@ -184,7 +187,7 @@ const OrderRequestToGalleryMail = (
               <Section className="my-6 p-6 bg-blue-50 rounded-lg">
                 <Text
                   className="text-base mb-4 font-semibold"
-                  style={{ color: "#1a1a1a" }}
+                  style={{ color: "#0f172a" }}
                 >
                   Next steps:
                 </Text>
@@ -266,7 +269,7 @@ const OrderRequestToGalleryMail = (
 
               <Text
                 className="text-base mb-4"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Your prompt response helps build trust with collectors and
                 increases the likelihood of successful sales. We're here to
@@ -275,7 +278,7 @@ const OrderRequestToGalleryMail = (
 
               <Text
                 className="text-base"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Best regards,
                 <br />
@@ -285,7 +288,7 @@ const OrderRequestToGalleryMail = (
 
             {/* Support Section */}
             <Section className="my-8 mx-8 p-6 bg-gray-50 rounded-lg">
-              <Text className="text-base mb-2" style={{ color: "#1a1a1a" }}>
+              <Text className="text-base mb-2" style={{ color: "#0f172a" }}>
                 <strong>Need help?</strong>
               </Text>
               <Text

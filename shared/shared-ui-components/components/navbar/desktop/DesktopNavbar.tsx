@@ -21,7 +21,7 @@ export default function DesktopNavbar() {
   return (
     <>
       <MobileNavbar />
-      <div className="flex justify-between items-center sticky top-0 z-30 bg-white pb-5 pt-8">
+      <div className="flex justify-between items-center sticky top-0 z-30 bg-white py-6">
         <div>
           <IndividualLogo />
         </div>

@@ -41,7 +41,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
 
             {/* Welcome Badge */}
             <Section className="text-center mb-8">
-              <div className="dark:text-white text-[#1a1a1a] text-sm font-semibold px-4 py-2 rounded-full">
+              <div className="dark:text-white text-[#0f172a] text-sm font-semibold px-4 py-2 rounded-full">
                 🎉 Admin Invitation
               </div>
             </Section>
@@ -70,7 +70,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
             <Section className="text-center my-8">
               <Link
                 href={`https://admin.omenai.app/activate?token=${token}`}
-                className="bg-[#1a1a1a] border border-white text-white font-semibold py-3 px-8 rounded-lg inline-block no-underline transition-all duration-200 shadow-md hover:shadow-lg"
+                className="bg-[#0f172a] border border-white text-white font-semibold py-3 px-8 rounded-lg inline-block no-underline transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Activate Admin Account
               </Link>

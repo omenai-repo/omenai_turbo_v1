@@ -14,6 +14,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const recentlyViewed = await RecentView.find({ user: user_id })
       .sort({ createdAt: -1 })
+      .limit(20)
       .exec();
 
     return NextResponse.json(

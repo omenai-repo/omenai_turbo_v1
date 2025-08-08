@@ -7,7 +7,7 @@ interface TeamMembersListProps {
 
 export default function TeamMembersList({ members }: TeamMembersListProps) {
   return (
-    <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a]">
+    <div className="bg-[#0f172a] rounded-lg border border-[#2a2a2a]">
       <div className="p-6 border-b border-[#2a2a2a]">
         <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-400">
           <div className="col-span-5">Member</div>

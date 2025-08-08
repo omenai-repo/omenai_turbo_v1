@@ -43,7 +43,7 @@ export function MenuDropdown({
         <Menu.Target>
           <ActionIcon
             variant="filled"
-            color="#1a1a1a"
+            color="#0f172a"
             size="md"
             radius="sm"
             aria-label="Options"

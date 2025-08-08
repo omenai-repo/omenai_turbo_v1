@@ -3,7 +3,10 @@
 
 import Link from "next/link";
 
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 
 export default function RecentViewedCard({
@@ -15,7 +18,7 @@ export default function RecentViewedCard({
   artist: string;
   name: string;
 }) {
-  const image_href = getImageFileView(image, 500);
+  const image_href = getOptimizedImage(image, "thumbnail");
   return (
     <div className="my-2 max-w-full p-0 max-h-full min-w-[300px] w-[400px] rounded-[10px]">
       <div className="flex flex-col w-full h-full justify-end">

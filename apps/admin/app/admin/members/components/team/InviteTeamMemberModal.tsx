@@ -250,7 +250,7 @@ export default function InviteTeamMemberModal({
             leftSection={<Send size={16} absoluteStrokeWidth />}
             styles={{
               root: {
-                backgroundColor: "#1a1a1a",
+                backgroundColor: "#0f172a",
                 fontWeight: 600,
                 transition: "all 0.2s ease",
                 "&:hover": {

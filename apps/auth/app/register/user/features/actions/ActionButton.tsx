@@ -151,7 +151,7 @@ export default function ({
           ) : currentSignupFormIndex === 1 ? (
             "Verify Address"
           ) : (
-            "Next"
+            "Continue"
           )}
         </span>
       </button>

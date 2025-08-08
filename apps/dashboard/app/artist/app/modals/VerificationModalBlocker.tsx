@@ -26,7 +26,7 @@ export default function VerificationBlockerModal({ open }: { open: boolean }) {
         p={16}
         size={"lg"}
       >
-        <div className="bg-white text-black dark:bg-[#1a1a1a] dark:text-white w-full text-center p-8">
+        <div className="bg-white text-black dark:bg-[#0f172a] dark:text-white w-full text-center p-8">
           <h2 className="text-fluid-sm md:text-fluid-md font-semibold mb-4">
             Verification in Progress
           </h2>

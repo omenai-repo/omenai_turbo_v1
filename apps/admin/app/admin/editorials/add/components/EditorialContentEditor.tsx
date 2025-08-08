@@ -52,7 +52,7 @@ export function EditorialContentEditor({
             }
           }}
           variant="filled"
-          color="#1a1a1a"
+          color="#0f172a"
           className="ring-1 ring-dark border-0"
         >
           Save and upload this Editorial

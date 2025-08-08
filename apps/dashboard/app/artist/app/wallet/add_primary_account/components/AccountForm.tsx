@@ -242,7 +242,7 @@ export default function AccountForm() {
           <Button
             onClick={handleValidateAccount}
             variant="filled"
-            color="#1a1a1a"
+            color="#0f172a"
             fullWidth
             loading={loading}
             disabled={!account_number || selectedBank === null}
@@ -256,7 +256,7 @@ export default function AccountForm() {
           <Button
             onClick={handleAddPrimaryAccount}
             variant="filled"
-            color="#1a1a1a"
+            color="#0f172a"
             fullWidth
             loading={loading}
             className="font-light"

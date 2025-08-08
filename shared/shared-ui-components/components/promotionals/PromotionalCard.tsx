@@ -33,14 +33,14 @@ export default function PromotionalCard({
       </div>
 
       {/* Content overlay */}
-      <div className="relative z-20 flex h-full items-center justify-between p-4 xs:p-6">
+      <div className="relative z-20 flex h-full items-center justify-between p-4">
         {/* Text content */}
-        <div className="flex flex-col justify-center space-y-4 text-white max-w-[60%]">
+        <div className="flex flex-col justify-center space-y-2 text-white max-w-[80%]">
           <div className="space-y-2">
-            <h3 className="text-fluid-xs font-bold leading-tight tracking-wide transform transition-all duration-300 group-hover:translate-x-1">
+            <h3 className="text-fluid-xs font-semibold leading-tight tracking-wide transform transition-all duration-300 group-hover:translate-x-1">
               {headline}
             </h3>
-            <p className="text-fluid-xxs font-medium text-white leading-relaxed opacity-90 transform transition-all duration-300 group-hover:translate-x-1">
+            <p className="text-[0.75rem] font-normal text-white leading-relaxed opacity-90 transform transition-all duration-300 group-hover:translate-x-1">
               {subheadline}
             </p>
           </div>

@@ -1,5 +1,8 @@
 "use client";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import Image from "next/image";
 import { useState, useRef } from "react";
@@ -17,8 +20,8 @@ export default function ImageBox({ url, title }: ImageBoxProps) {
   const { setOpenSeaDragonImageViewer, setSeaDragonZoomableImageViewerUrl } =
     actionStore();
 
-  const initialImageRender = getImageFileView(url, 800);
-  const highestQualityImage = getImageFileView(url, 1500);
+  const initialImageRender = getOptimizedImage(url, "medium", 40);
+  const highestQualityImage = getOptimizedImage(url, "large", 40);
 
   const handleClick = () => {
     setSeaDragonZoomableImageViewerUrl(highestQualityImage);

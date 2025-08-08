@@ -1,6 +1,9 @@
 "use client";
 
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
@@ -11,7 +14,7 @@ export default function ProductItem({
 }: {
   artwork: ArtworkSchemaTypes & { createdAt: string; updatedAt: string };
 }) {
-  const image_href = getImageFileView(artwork.url, 200);
+  const image_href = getOptimizedImage(artwork.url, "thumbnail", 40);
   return (
     // Artwork Checkout Component
     <div className="w-full max-w-md mx-auto mb-5">
@@ -31,10 +34,10 @@ export default function ProductItem({
 
             {/* Artwork Details */}
             <div className="text-center space-y-2 w-full">
-              <h1 className="font-bold text-fluid-lg text-dark tracking-tight">
+              <h1 className="font-bold text-fluid-md text-dark tracking-tight">
                 {artwork.title}
               </h1>
-              <p className="font-medium text-fluid-base text-dark/60 italic">
+              <p className="font-normal  text-fluid-xs text-dark/60 italic">
                 {artwork.artist}
               </p>
             </div>
@@ -46,15 +49,19 @@ export default function ProductItem({
           <div className="space-y-4">
             {/* Price Row */}
             <div className="flex justify-between items-center py-3 border-b border-slate-200">
-              <span className="text-dark/60 font-medium">Price</span>
-              <span className="text-dark font-bold text-fluid-sm">
+              <span className="text-dark/60 font-normaltext-fluid-xs ">
+                Price
+              </span>
+              <span className="text-dark font-bold text-fluid-base">
                 {formatPrice(artwork.pricing.usd_price)}
               </span>
             </div>
 
             {/* Shipping Row */}
             <div className="flex justify-between items-center py-3 border-b border-slate-200">
-              <span className="text-dark/60 font-medium">Shipping</span>
+              <span className="text-dark/60 font-normal text-fluid-xs">
+                Shipping
+              </span>
               <span className="text-slate-500 italic text-fluid-xs">
                 To be calculated
               </span>

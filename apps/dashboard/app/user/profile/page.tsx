@@ -1,5 +1,5 @@
 import { UserBanner } from "./features/UserBanner";
-import GalleryInfo from "./features/UserInfo";
+import UserInfo from "./features/UserInfo";
 
 export default async function page() {
   return (
@@ -7,7 +7,7 @@ export default async function page() {
       <UserBanner />
 
       <div className="grid place-items-center">
-        <GalleryInfo />
+        <UserInfo />
       </div>
     </div>
   );

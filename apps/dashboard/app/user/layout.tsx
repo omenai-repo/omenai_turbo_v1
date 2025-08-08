@@ -13,7 +13,7 @@ export default function UserLayout({
 }) {
   return (
     <div className="2xl:px-12 xl:px-8">
-      <NextTopLoader color="#1a1a1a" height={6} />
+      <NextTopLoader color="#0f172a" height={6} />
 
       <DesktopNavbar />
 

@@ -147,7 +147,6 @@ export default function () {
             "Continue"
           )}
         </span>
-        {currentGallerySignupFormIndex !== 1 && <MdOutlineArrowForward />}
       </button>
     </div>
   );

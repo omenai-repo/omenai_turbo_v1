@@ -50,7 +50,7 @@ export const SubscriptionPaymentSuccessfulEmail = (name: string) => {
               href="mailto:contact@omenani.net"
               style={{
                 textDecoration: "underline",
-                color: "#1a1a1a",
+                color: "#0f172a",
                 fontWeight: "bold",
               }}
             >
@@ -86,7 +86,7 @@ export default SubscriptionPaymentSuccessfulEmail;
 
 const main = {
   backgroundColor: "#ffffff",
-  color: "#1a1a1a",
+  color: "#0f172a",
   fontFamily: "Helvetica, Arial, sans-serif",
   padding: "40px 0",
 } as const;

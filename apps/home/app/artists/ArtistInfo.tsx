@@ -1,5 +1,8 @@
 "use client";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -12,7 +15,7 @@ export default function ArtistInfo({
   info: any;
   url: string;
 }) {
-  const image_href = getImageFileView(url, 300);
+  const image_href = getOptimizedImage(url, "thumbnail");
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
@@ -55,11 +58,11 @@ export default function ArtistInfo({
             <div className="space-y-6">
               {/* Artist name */}
               <div>
-                <h1 className="text-fluid-md md:text-fluid-xl font-bold text-[#1a1a1a] mb-2">
+                <h1 className="text-fluid-md md:text-fluid-xl font-bold text-[#0f172a] mb-2">
                   {info.name}
                 </h1>
                 <div className="flex items-center gap-3">
-                  <div className="h-[2px] w-16 bg-[#1a1a1a]"></div>
+                  <div className="h-[2px] w-16 bg-[#0f172a]"></div>
                   <span className="text-sm uppercase tracking-widest text-gray-500">
                     Artist
                   </span>
@@ -68,14 +71,14 @@ export default function ArtistInfo({
 
               {/* Bio */}
               <div className="space-y-4">
-                <p className="text-[#1a1a1a] leading-relaxed text-fluid-xs">
+                <p className="text-[#0f172a] leading-relaxed text-fluid-xs">
                   {displayText}
                   {isTruncated && (
                     <button
                       onClick={toggleExpanded}
                       className="inline-flex items-center ml-2 group"
                     >
-                      <span className="text-[#1a1a1a] font-medium underline underline-offset-4 hover:no-underline transition-all duration-200">
+                      <span className="text-[#0f172a] font-medium underline underline-offset-4 hover:no-underline transition-all duration-200">
                         {expanded ? "Show less" : "Read more"}
                       </span>
                     </button>
@@ -85,10 +88,10 @@ export default function ArtistInfo({
 
               {/* Additional info or actions */}
               {/* <div className="pt-6 flex flex-wrap gap-4">
-                <button className="px-6 py-3 bg-[#1a1a1a] text-white font-medium rounded-lg hover:bg-[#2a2a2a] transition-colors duration-200">
+                <button className="px-6 py-3 bg-[#0f172a] text-white font-medium rounded-lg hover:bg-[#2a2a2a] transition-colors duration-200">
                   View Portfolio
                 </button>
-                <button className="px-6 py-3 border-2 border-[#1a1a1a] text-[#1a1a1a] font-medium rounded-lg hover:bg-[#1a1a1a] hover:text-white transition-all duration-200">
+                <button className="px-6 py-3 border-2 border-[#0f172a] text-[#0f172a] font-medium rounded-lg hover:bg-[#0f172a] hover:text-white transition-all duration-200">
                   Contact Artist
                 </button>
               </div> */}
@@ -97,7 +100,7 @@ export default function ArtistInfo({
               <div className="pt-6 flex items-center gap-4">
                 <a
                   href="#"
-                  className="text-[#1a1a1a] hover:text-gray-600 transition-colors"
+                  className="text-[#0f172a] hover:text-gray-600 transition-colors"
                 >
                   <svg
                     className="w-5 h-5"
@@ -109,7 +112,7 @@ export default function ArtistInfo({
                 </a>
                 <a
                   href="#"
-                  className="text-[#1a1a1a] hover:text-gray-600 transition-colors"
+                  className="text-[#0f172a] hover:text-gray-600 transition-colors"
                 >
                   <svg
                     className="w-5 h-5"
@@ -125,7 +128,7 @@ export default function ArtistInfo({
                 </a>
                 <a
                   href="#"
-                  className="text-[#1a1a1a] hover:text-gray-600 transition-colors"
+                  className="text-[#0f172a] hover:text-gray-600 transition-colors"
                 >
                   <svg
                     className="w-5 h-5"

@@ -349,7 +349,7 @@ export default function ChangePasswordModal({
             leftSection={!loading && <Lock size={18} />}
             styles={{
               root: {
-                backgroundColor: "#1a1a1a",
+                backgroundColor: "#0f172a",
 
                 fontWeight: 400,
                 transition: "all 0.2s ease",

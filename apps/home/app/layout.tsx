@@ -60,7 +60,7 @@ export default async function RootLayout({
           <ColorSchemeScript />
         </head>
         <body className={`${dm_sans.className} flex flex-col justify-center`}>
-          <NextTopLoader color="#1a1a1a" height={6} />
+          <NextTopLoader color="#0f172a" height={6} />
           <Toaster
             position="top-right"
             expand

@@ -63,7 +63,7 @@ export default function TeamManagement() {
                 radius={"md"}
                 styles={{
                   root: {
-                    backgroundColor: "#1a1a1a",
+                    backgroundColor: "#0f172a",
                     border: "none",
                     fontWeight: 600,
                     padding: "12px 24px",

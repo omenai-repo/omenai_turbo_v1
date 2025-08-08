@@ -23,7 +23,7 @@ export function AddPromotionalModal() {
       </Modal>
 
       <Button
-        color="#1a1a1a"
+        color="#0f172a"
         onClick={open}
         size="xs"
         radius="sm"
@@ -261,7 +261,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
         <Button
           loading={loading}
           radius={"sm"}
-          color="#1a1a1a"
+          color="#0f172a"
           onClick={handlePromotionalUpload}
         >
           <Text className="text-fluid-xxs font-normal">Add promotional</Text>

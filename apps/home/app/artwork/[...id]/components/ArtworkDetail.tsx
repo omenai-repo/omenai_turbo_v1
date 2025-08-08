@@ -28,6 +28,9 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
     data.art_id
   );
 
+  console.log(likedState);
+  console.log(sessionId);
+
   const [loading, setLoading] = useState(false);
 
   const { toggleLoginModal } = actionStore();
@@ -175,7 +178,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
             <IoHeartOutline />
           </button>
         )}
-        {sessionId !== undefined && likedState.ids.includes(sessionId) && (
+        {sessionId && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
             className="w-full h-[50px] px-4 rounded-xl ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-fluid-xs group"

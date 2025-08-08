@@ -6,7 +6,10 @@ import {
   CreateOrderModelTypes,
 } from "@omenai/shared-types";
 import Image from "next/image";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Banknote, BanknoteX, CheckCheck, Info, Truck } from "lucide-react";
 import { renderButtonAction } from "./construct_response";
@@ -28,7 +31,7 @@ export function OrdersGroupAccordion({
   // See groceries data above
   const router = useRouter();
   const get_image_url = (url: string) => {
-    const image_url = getImageFileView(url, 200);
+    const image_url = getOptimizedImage(url, "thumbnail", 40);
     return image_url;
   };
 

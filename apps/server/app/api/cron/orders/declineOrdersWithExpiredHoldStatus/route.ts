@@ -48,6 +48,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
                 "order_accepted.status": "declined",
                 "order_accepted.reason":
                   "The payment period for this artwork has expired.",
+                status: "completed",
               },
             },
           },

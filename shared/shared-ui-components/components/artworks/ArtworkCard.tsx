@@ -5,7 +5,10 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
 import LikeComponent from "../likes/LikeComponent";
 
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
@@ -44,7 +47,7 @@ export default function ArtworkCard({
   medium: string;
   trending?: boolean;
 }) {
-  const image_href = getImageFileView(image, 500);
+  const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
 
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
@@ -132,7 +135,7 @@ export default function ArtworkCard({
                   Sold
                 </span>
               ) : (
-                <div className="text-[#1a1a1a] font-semibold text-fluid-base">
+                <div className="text-[#0f172a] font-semibold text-fluid-base">
                   {pricing?.price && pricing.shouldShowPrice === "Yes"
                     ? formatPrice(pricing.usd_price)
                     : "Price on request"}

@@ -18,7 +18,7 @@ export default function SellerShipmentEmail(name: string) {
       <Body
         style={{
           backgroundColor: "#ffffff",
-          color: "#1a1a1a",
+          color: "#0f172a",
           fontFamily: "Helvetica, Arial, sans-serif",
           padding: "40px 20px",
         }}
@@ -34,7 +34,7 @@ export default function SellerShipmentEmail(name: string) {
             <Heading
               as="h2"
               style={{
-                color: "#1a1a1a",
+                color: "#0f172a",
                 fontSize: "24px",
                 marginBottom: "20px",
               }}

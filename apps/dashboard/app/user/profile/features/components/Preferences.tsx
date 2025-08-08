@@ -4,21 +4,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import Pill from "./Pill";
 
 let artTypes = [
-  "Acyllic",
-  "Oil",
-  "Fabric",
-  "Mixed media",
-  "Ink",
-  "Ankara",
   "Photography",
-  "Collage or other works on paper",
-  "Charcoal",
-  "Canvas",
-  "Paper",
+  "Works on paper",
+  "Acrylic on canvas/linen/panel",
+  "Mixed media on paper/canvas",
+  "Sculpture (Resin/plaster/clay)",
+  "Oil on canvas/panel",
+  "Sculpture (Bronze/stone/metal)",
 ];
 export default function Preferences() {
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full w-full">
       <AnimatePresence>
         <div className="space-y-4">
           {/* Header */}

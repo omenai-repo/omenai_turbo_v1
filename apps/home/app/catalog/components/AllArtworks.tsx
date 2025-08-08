@@ -41,8 +41,10 @@ export default function AllArtworks() {
         return { data: response.data, pages: response.count };
       } else throw new Error("Failed to fetch artworks");
     },
+    staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
     refetchOnWindowFocus: false,
-    gcTime: 0,
+    refetchOnMount: false, // Don't refetch if we have cached data
   });
 
   if (loading || isLoading) {

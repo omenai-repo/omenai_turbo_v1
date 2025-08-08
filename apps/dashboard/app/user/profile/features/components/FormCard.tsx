@@ -2,17 +2,13 @@
 import { FormEvent, useContext, useState } from "react";
 import { InputCard } from "./InputCard";
 import { updateProfile } from "@omenai/shared-services/update/updateProfile";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { individualProfileUdateStore } from "@omenai/shared-state-store/src/individual/individual_profile_update/IndividualProfileUpdateStore";
 import Preferences from "./Preferences";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 export const FormCard = () => {
   const { user, csrf } = useAuth({ requiredRole: "user" });
-
-  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,33 +17,22 @@ export const FormCard = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let newUpdateData;
-
-    if (updateData!.preferences!.length === 0)
-      toast.error("Error notification", {
-        description: "Invalid inputs",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    else if (
-      updateData!.preferences!.length < 5 &&
-      updateData!.preferences!.length > 0
-    ) {
-      toast.error("Error notification", {
-        description: "Please select up to 5 art interests",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    } else if (updateData.name === "") {
-      newUpdateData = { preferences: updateData.preferences };
-    } else {
-      newUpdateData = { ...updateData };
-      setIsLoading(true);
+    setIsLoading(true);
+    try {
+      if (updateData.preferences?.length === 0) {
+        toast_notif("Invalid inputs", "error");
+        return;
+      }
+      if (
+        (updateData?.preferences?.length ?? 0) < 5 &&
+        (updateData?.preferences?.length ?? 0) > 0
+      ) {
+        toast_notif("Please select up to 5 art preferences", "error");
+        return;
+      }
+      if (updateData.name === "") {
+        newUpdateData = { preferences: updateData.preferences };
+      } else newUpdateData = { ...updateData };
 
       const { isOk, body } = await updateProfile(
         "individual",
@@ -55,30 +40,20 @@ export const FormCard = () => {
         user.id as string,
         csrf || ""
       );
-      if (!isOk)
-        toast.error("Error notification", {
-          description: body.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+      if (!isOk) toast_notif(body.message, "error");
       else {
         // todo: add update session function
-        toast.success("Operation successfull", {
-          description: `${body.message}... Please log back in`,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          `${body.message}... Please log back in to view update`,
+          "success"
+        );
         clearData();
-        router.refresh();
       }
+    } catch (error) {
+      toast_notif("Something went wrong, please contact support", "error");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (

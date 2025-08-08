@@ -5,7 +5,10 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
 import LikeComponent from "../likes/LikeComponent";
 
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { base_url } from "@omenai/url-config/src/config";
@@ -40,12 +43,12 @@ export default function ArtworkCanvas({
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [zoomScale, setZoomScale] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [imageSrc, setImageSrc] = useState(getImageFileView(image, 500)); // Default to low-res
+  const [imageSrc, setImageSrc] = useState(getOptimizedImage(image, "small")); // Default to low-res
   const url = base_url();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setZoomScale(2.2);
-    setImageSrc(getImageFileView(image, 1500)); // Replace with higher resolution (e.g., 1500px)
+    setImageSrc(getOptimizedImage(image, "large")); // Replace with higher resolution (e.g., 1500px)
     if (!containerRef.current) return;
     else {
       requestAnimationFrame(() => {
@@ -77,7 +80,7 @@ export default function ArtworkCanvas({
     // Reset to center when not hovering
 
     setPosition({ x: 50, y: 50 });
-    setImageSrc(getImageFileView(image, 500)); // Replace with higher resolution (e.g., 1000px)
+    setImageSrc(getOptimizedImage(image, "medium")); // Replace with higher resolution (e.g., 1000px)
 
     setZoomScale(1);
   };

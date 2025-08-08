@@ -20,7 +20,7 @@ export default function EditorialWrapper() {
         <Link href={"/admin/editorials/add"}>
           <Button
             variant="filled"
-            color="#1a1a1a"
+            color="#0f172a"
             size="sm"
             className="ring-1 ring-dark border-0"
           >

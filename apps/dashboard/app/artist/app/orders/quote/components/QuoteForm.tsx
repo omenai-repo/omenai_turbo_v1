@@ -7,7 +7,10 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 
 import Load, {
   LoadSmall,
@@ -154,7 +157,11 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
     }
   };
   if (isLoading) return <Load />;
-  const image_url = getImageFileView(order_data!.data.artwork_data.url, 200);
+  const image_url = getOptimizedImage(
+    order_data?.data.artwork_data.url as string,
+    "thumbnail",
+    40
+  );
 
   // session.data?.user.
   return (

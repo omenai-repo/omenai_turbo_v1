@@ -3,7 +3,10 @@
 import Link from "next/link";
 import LikeComponent from "@omenai/shared-ui-components/components/likes/LikeComponent";
 import Image from "next/image";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 export default function TrendingArtworkCard({
   image,
   artist,
@@ -27,7 +30,7 @@ export default function TrendingArtworkCard({
   art_id: string;
   availability: boolean;
 }) {
-  const image_href = getImageFileView(image, 250);
+  const image_href = getOptimizedImage(image, "thumbnail", 40);
 
   return (
     <div className="m-2">

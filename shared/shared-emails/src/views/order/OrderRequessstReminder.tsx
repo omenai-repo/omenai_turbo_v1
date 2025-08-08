@@ -53,14 +53,14 @@ const OrderRequestReminder = (name: string) => {
             <Section className="px-8 py-8">
               <Text
                 className="text-base mb-4"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Dear <strong>{name}</strong>,
               </Text>
 
               <Text
                 className="text-base mb-6"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Great news! You have a new order request waiting for your
                 review. A potential customer is interested in purchasing your
@@ -72,7 +72,7 @@ const OrderRequestReminder = (name: string) => {
                 <Link
                   className="px-8 py-4 rounded-lg font-medium text-white inline-block"
                   style={{
-                    backgroundColor: "#1a1a1a",
+                    backgroundColor: "#0f172a",
                     color: "#ffffff",
                     textDecoration: "none",
                   }}
@@ -86,7 +86,7 @@ const OrderRequestReminder = (name: string) => {
               <Section className="my-6 p-6 bg-gray-50 rounded-lg">
                 <Text
                   className="text-base mb-4 font-semibold"
-                  style={{ color: "#1a1a1a" }}
+                  style={{ color: "#0f172a" }}
                 >
                   Quick actions available:
                 </Text>
@@ -168,7 +168,7 @@ const OrderRequestReminder = (name: string) => {
 
               <Text
                 className="text-base mb-4"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Thank you for being a valued partner. Your dedication to
                 providing exceptional art and service helps make our platform a
@@ -177,7 +177,7 @@ const OrderRequestReminder = (name: string) => {
 
               <Text
                 className="text-base"
-                style={{ color: "#1a1a1a", lineHeight: "1.6" }}
+                style={{ color: "#0f172a", lineHeight: "1.6" }}
               >
                 Best regards,
                 <br />

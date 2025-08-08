@@ -44,7 +44,7 @@ export default function TransactionPagination({
   return (
     <div className="w-full flex justify-center">
       <Pagination
-        color="#1a1a1a"
+        color="#0f172a"
         size="md"
         withEdges
         total={pageCount}

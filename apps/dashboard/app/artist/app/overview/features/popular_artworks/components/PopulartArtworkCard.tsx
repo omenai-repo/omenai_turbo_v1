@@ -1,4 +1,7 @@
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 
 /* eslint-disable @next/next/no-img-element */
@@ -14,7 +17,7 @@ export default function PopulartArtworkCard({
   artist,
   impression_count,
 }: PopularArtworkCardProps) {
-  const image_url = getImageFileView(url, 100);
+  const image_url = getOptimizedImage(url, "thumbnail", 20);
   return (
     <div className="flex justify-between items-center px-5 py-3 rounded ring-1 ring-dark/10 shadow-sm">
       <div className=" w-auto flex items-center gap-x-3">

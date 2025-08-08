@@ -105,7 +105,7 @@ export default PaymentSuccessMailArtist;
 
 const main = {
   backgroundColor: "#ffffff",
-  color: "#1a1a1a",
+  color: "#0f172a",
   fontFamily: "Helvetica, Arial, sans-serif",
   padding: "40px 0",
 } as const;
@@ -147,7 +147,7 @@ const receiptSection = {
   borderRadius: "12px",
   fontSize: "15px",
   lineHeight: "1.6",
-  color: "#1a1a1a",
+  color: "#0f172a",
 } as const;
 
 const receiptRow = {

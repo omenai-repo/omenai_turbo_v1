@@ -20,7 +20,7 @@ export default function LayoutWrapper({
           duration={7000}
         />
         <div className=" w-full h-screen">
-          <NextTopLoader color="#1a1a1a" height={6} />
+          <NextTopLoader color="#0f172a" height={6} />
           <QueryProvider>{children}</QueryProvider>
         </div>
       </>

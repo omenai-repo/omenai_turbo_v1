@@ -125,7 +125,7 @@ export default function ArtistRequest({
               >
                 <Button
                   variant="gradient"
-                  gradient={{ from: "#1a1a1a", to: "#1a1a1a", deg: 45 }}
+                  gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
                   size="xs"
                   radius="sm"
                   leftSection={<Eye size={16} />}

@@ -24,7 +24,11 @@ export default function ArtworkPageWrapper({ param }: { param: string }) {
         return artworkDetails.data;
       }
     },
-    gcTime: 0,
+    staleTime: 10 * 60 * 1000, // Individual artworks can be cached longer
+    gcTime: 60 * 60 * 1000, // Keep for 1 hour
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: !!param, // Only fetch if we have a param id
   });
 
   if (isLoading) {

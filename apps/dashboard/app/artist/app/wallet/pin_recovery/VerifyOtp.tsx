@@ -140,7 +140,7 @@ export default function VerifyOTP({
             value={otp}
             onChange={setOtp}
           />
-          {verificationLoading && <Loader color="#1a1a1a" size="sm" />}
+          {verificationLoading && <Loader color="#0f172a" size="sm" />}
         </div>
 
         {otpVerified && (
@@ -177,7 +177,7 @@ export default function VerifyOTP({
               onClick={handleResendOtp}
             >
               {isFetching ? (
-                <Loader color="#1a1a1a" size="xs" type="dots" />
+                <Loader color="#0f172a" size="xs" type="dots" />
               ) : canResend ? (
                 "Resend OTP"
               ) : (

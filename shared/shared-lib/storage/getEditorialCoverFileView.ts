@@ -15,7 +15,7 @@ export const getEditorialFileView = (
     width, // width, will be resized using this value.
     height ? height : 0, // height, ignored when 0
     appwrite_image_gravity.Center, // crop center
-    100, // slight compression
+    90, // slight compression
     0, // border width
     "FFFFFF", // border color
     0, // border radius

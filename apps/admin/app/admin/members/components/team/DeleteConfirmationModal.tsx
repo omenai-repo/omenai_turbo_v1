@@ -61,11 +61,11 @@ export default function DeleteConfirmationModal({
       styles={{
         root: {
           ".mantineModalContent": {
-            backgroundColor: "#1a1a1a",
+            backgroundColor: "#0f172a",
             border: "1px solid #2a2a2a",
           },
           ".mantineModalHeader": {
-            backgroundColor: "#1a1a1a",
+            backgroundColor: "#0f172a",
             borderBottom: "1px solid #2a2a2a",
           },
           ".mantineModalTitle": {

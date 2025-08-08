@@ -11,7 +11,7 @@ export default function AccountPage() {
       <PageTitle title="Profile Information" />
       <p>Coming soon</p>
       {/* <Tabs
-        color="#1a1a1a"
+        color="#0f172a"
         variant="outline"
         radius="md"
         defaultValue="account"

@@ -47,11 +47,11 @@ export default function DeleteAccountModal({
       styles={{
         root: {
           ".mantine-Modal-content": {
-            backgroundColor: "#1a1a1a",
+            backgroundColor: "#0f172a",
             border: "1px solid #dc2626",
           },
           ".mantine-Modal-header": {
-            backgroundColor: "#1a1a1a",
+            backgroundColor: "#0f172a",
             borderBottom: "1px solid #2a2a2a",
           },
           ".mantine-Modal-title": {
@@ -60,7 +60,7 @@ export default function DeleteAccountModal({
             fontWeight: 600,
           },
           ".mantine-Modal-close": {
-            color: "#1a1a1a",
+            color: "#0f172a",
             "&:hover": {
               backgroundColor: "#2a2a2a",
             },
@@ -109,7 +109,7 @@ export default function DeleteAccountModal({
             disabled={loading}
             styles={{
               root: {
-                color: "#1a1a1a",
+                color: "#0f172a",
                 "&:hover": {
                   backgroundColor: "#2a2a2a",
                 },
