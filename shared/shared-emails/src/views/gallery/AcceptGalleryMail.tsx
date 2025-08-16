@@ -51,8 +51,8 @@ const AcceptGalleryMail = (gallery_name?: string) => {
             <ul>
               <li>
                 <Text className="m-0 text-fluid-xs leading-[28px] text-gray-900">
-                  <Link href={`${url}/login`}>Login</Link> to your gallery
-                  account.
+                  <Link href={`${url}/login/gallery`}>Login</Link> to your
+                  gallery account.
                 </Text>
               </li>
               <li>

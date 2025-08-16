@@ -9,6 +9,7 @@ import {
   Html,
   Img,
   Link,
+  Preview,
   Section,
   Tailwind,
   Text,
@@ -24,6 +25,7 @@ const PasswordRecoveryEmail = (
     <Html>
       <Head />
       <Tailwind>
+        <Preview>Password Reset verification</Preview>
         <Body className="bg-white my-auto mx-auto font-sans">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
@@ -35,9 +37,6 @@ const PasswordRecoveryEmail = (
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
-              Password Reset verification
-            </Heading>
             <Text className="text-black text-fluid-xs leading-[24px]">
               Dear {username},
             </Text>

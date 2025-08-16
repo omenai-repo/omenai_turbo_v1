@@ -55,11 +55,7 @@ const AcceptArtistMail = (artist_name?: string) => {
                   account.
                 </Text>
               </li>
-              <li>
-                <Text className="m-0 text-fluid-xs leading-[28px] text-gray-900">
-                  Complete your onboarding process via your dashboard
-                </Text>
-              </li>
+
               <li>
                 <Text className="m-0 text-fluid-xs leading-[28px] text-gray-900">
                   Upload your latest artworks and manage your gallery.

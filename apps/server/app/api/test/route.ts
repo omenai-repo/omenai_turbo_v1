@@ -12,13 +12,14 @@ import {
   NotificationDataType,
   NotificationPayload,
 } from "@omenai/shared-types";
-export const POST = withAppRouterHighlight(async function POST() {
-  // const data = await sendRoleChangeMail({
-  //   name: "Moses Chukwunekwu",
-  //   previousRole: "Editor",
-  //   newRole: "Admin",
-  //   email: "dantereus1@gmail.com",
-  // });, {
+import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+export const GET = withAppRouterHighlight(async function GET() {
+  const data = await sendSubscriptionPaymentSuccessfulMail({
+    name: "Moses Chukwunekwu",
+    email: "dantereus1@gmail.com",
+  });
+
+  return NextResponse.json({ message: "Successful" });
 
   // const res = await fetch("https://exp.host/--/api/v2/push/send", {
   //   method: "POST",
@@ -36,33 +37,6 @@ export const POST = withAppRouterHighlight(async function POST() {
   //     },
   //   }),
   // });
-
-  const payload: NotificationPayload = {
-    to: "ExponentPushToken[uWP6MPMoP2iBBY1DuIQB3P]",
-    title: "New order request",
-    body: "You have a new order requst!",
-    data: {
-      type: "orders",
-      access_type: "artist",
-      metadata: {
-        orderId: "53053us5850",
-      },
-      userId: "6112636c-ec83-48f2-a7a8-d9f1c9e44b4c",
-    },
-  };
-
-  const workflowID = await createWorkflow(
-    "/api/workflows/notification/pushNotification",
-    `notification_workflow${generateDigit(2)}`,
-    JSON.stringify(payload)
-  );
-
-  if (!workflowID) throw new ServerError("Workflow failed");
-
-  return NextResponse.json(
-    { message: "Notification Workflow started", workflowID },
-    { status: 200 }
-  );
 
   // console.log(data);
 });

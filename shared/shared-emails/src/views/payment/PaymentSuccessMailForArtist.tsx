@@ -63,12 +63,6 @@ export const PaymentSuccessMailArtist = ({
 
           <Heading style={subHeading}>🧾 Payment Receipt</Heading>
           <Section style={receiptSection}>
-            <Img
-              src="https://yourdomain.com/logo.png"
-              alt="Platform Logo"
-              width="120"
-              style={{ marginBottom: "20px" }}
-            />
             <div style={receiptRow}>
               <span style={label}>Artwork:</span> <span>{artwork}</span>
             </div>

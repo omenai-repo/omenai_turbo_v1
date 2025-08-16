@@ -4,6 +4,7 @@ import { Paper } from "@mantine/core";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import Link from "next/link";
 import Image from "next/image";
+import { dashboard_url } from "@omenai/url-config/src/config";
 export default function OnboardingRequestModalForm() {
   const { setOpenOnboardingCompletedModal } = actionStore();
 
@@ -27,7 +28,7 @@ export default function OnboardingRequestModalForm() {
           details. This process typically takes between 24 to 48 hours. We
           appreciate your patience.
         </p>
-        <Link href={"/artist/app/overview"}>
+        <Link href={`${dashboard_url()}/artist/app/overview`}>
           <button
             onClick={() => setOpenOnboardingCompletedModal(false)}
             className="text-fluid-xxs h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white font-normal"

@@ -13,6 +13,7 @@ import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
 
 import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -46,28 +47,17 @@ export default function FormInput() {
       const response = await loginGallery({ ...form });
 
       if (!response.isOk) {
-        toast.error("Error notification ", {
-          description: response.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message, "error");
       } else {
         const { data } = response;
 
         if (response.isOk && data.role === "gallery") {
           if (data.verified) {
             try {
-              toast.success("Operation successful", {
-                description: "Login successful... redirecting!",
-                style: {
-                  background: "green",
-                  color: "white",
-                },
-                className: "class",
-              });
+              toast_notif(
+                "Login successful... We'll redirect you in a moment",
+                "success"
+              );
               // Your redirect logic
               if (url === "" || url === null) {
                 set_redirect_uri("");

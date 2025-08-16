@@ -4,6 +4,7 @@ import { sendPasswordResetLink } from "@omenai/shared-services/password/sendPass
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { RouteIdentifier } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -25,24 +26,9 @@ export default function RecoveryEmailInputField() {
         csrf || ""
       );
       if (data.isOk) {
-        toast.success("Operation successful", {
-          description: data.body.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(data.body.message, "success");
         updateRecoveryModal(recoveryModal.type);
-      } else
-        toast.error("Error notification", {
-          description: data.body.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+      } else toast_notif(data.body.message, "error");
     } catch (error) {
       toast.error("Error notification", {
         description:

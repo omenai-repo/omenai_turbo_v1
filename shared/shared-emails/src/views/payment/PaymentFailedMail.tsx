@@ -22,7 +22,7 @@ export const PaymentFailedEmail = (buyerName: string, artwork: string) => {
   return (
     <Html>
       <Head />
-      <Preview>Payment unsuccessful for your artwork purchase</Preview>
+      <Preview>Unsuccessful payment for your artwork purchase</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img

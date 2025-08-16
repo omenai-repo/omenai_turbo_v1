@@ -18,7 +18,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const data = await request.json();
 
-      const updatedData = await AccountArtist.findOneAndUpdate(
+      const updatedData = await AccountArtist.updateOne(
         { artist_id: data.id },
         { $set: { ...data } }
       );

@@ -54,7 +54,8 @@ export const PurchaseConfirmationEmail = ({
             <Text style={text}>We’re preparing your order for shipment.</Text>
             <Text style={text}>
               A shipment order will be created shortly and you’ll receive
-              updates with tracking information and expected delivery.
+              updates with tracking information and expected delivery
+              information.
             </Text>
             <Text style={text}>
               Please keep an eye on your inbox for further instructions.

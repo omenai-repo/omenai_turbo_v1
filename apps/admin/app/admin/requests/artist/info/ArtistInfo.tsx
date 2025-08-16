@@ -21,6 +21,7 @@ import {
   Palette,
   AlertCircle,
 } from "lucide-react";
+import error from "../../../../error";
 
 export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   const { artist, request } = data;
@@ -70,39 +71,20 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
           : await rejectArtistVerification(artist_id, name, email, csrf || "");
 
       if (!response.isOk) {
-        toast.error("Error notification ", {
-          description: response.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message, "error");
         return;
       }
 
-      toast.success("Operation successful ", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(response.message, "success");
       await queryClient.invalidateQueries({
         queryKey: ["fetch_artists_on_verif_status"],
       });
       router.replace("/admin/requests/artist");
     } catch (error) {
-      toast.error("Error notification ", {
-        description:
-          "An error was encountered, please try later or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "An error was encountered, please try again later or contact support",
+        "error"
+      );
     } finally {
       setLoading(false);
     }

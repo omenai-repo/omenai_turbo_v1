@@ -15,6 +15,8 @@ import {
 import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import React from "react";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -47,27 +49,13 @@ export default function FormInput() {
       const response = await loginAdmin({ ...form });
 
       if (!response.isOk) {
-        toast.error("Error notification ", {
-          description: response.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message, "error");
       } else {
         const { data } = response;
 
         if (response.isOk && data.role === "admin") {
           try {
-            toast.success("Operation successful", {
-              description: "Logged in as Admin... redirecting!",
-              style: {
-                background: "green",
-                color: "white",
-              },
-              className: "class",
-            });
+            toast_notif(response.message, "success");
             // Your redirect logic
             if (url === "" || url === null) {
               set_redirect_uri("");

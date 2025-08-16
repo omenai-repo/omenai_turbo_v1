@@ -4,15 +4,39 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { NotificationPayload } from "@omenai/shared-types";
 
 export async function POST() {
   try {
-    const workflowID = await createWorkflow(
+    const workflowID1 = await createWorkflow(
       "/api/workflows/shipment/create_shipment",
       `test_workflow${generateDigit(2)}`,
       JSON.stringify({ order_id: "9528458" })
     );
+    if (!workflowID1) throw new ServerError("Workflow failed");
+
+    const payload: NotificationPayload = {
+      to: "ExponentPushToken[uWP6MPMoP2iBBY1DuIQB3P]",
+      title: "New order request",
+      body: "You have a new order requst!",
+      data: {
+        type: "orders",
+        access_type: "artist",
+        metadata: {
+          orderId: "53053us5850",
+        },
+        userId: "6112636c-ec83-48f2-a7a8-d9f1c9e44b4c",
+      },
+    };
+
+    const workflowID = await createWorkflow(
+      "/api/workflows/notification/pushNotification",
+      `notification_workflow${generateDigit(2)}`,
+      JSON.stringify(payload)
+    );
+
     if (!workflowID) throw new ServerError("Workflow failed");
+
     return NextResponse.json(
       { message: "Workflow started", workflowID },
       { status: 200 }

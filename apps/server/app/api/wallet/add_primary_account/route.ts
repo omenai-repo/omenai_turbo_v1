@@ -31,8 +31,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     } = await request.json();
 
     const payload = {
-      account_bank: account_details.bank_code,
-      account_number: Number(account_details.account_number),
+      // account_bank: account_details.bank_code,
+      account_bank: "044",
+      // account_number: Number(account_details.account_number),
+      account_number: "0690000032",
       beneficiary_name: account_details.account_name,
       currency: base_currency,
       bank_name: account_details.bank_name,

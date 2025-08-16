@@ -6,6 +6,7 @@ import { validateAddress } from "@omenai/shared-services/address_validation/vali
 import { toast } from "sonner";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 const steps = {
   0: ["name", "email"],
   1: ["country", "address_line", "state", "city", "zip"],
@@ -27,14 +28,10 @@ export default function () {
 
   const validateAddressCapability = async () => {
     if (artistSignupData.phone === "") {
-      toast.error("Error notification", {
-        description: "Invalid input. Please enter a valid phone number",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Invalid input, please provide a valid phone number",
+        "error"
+      );
 
       return;
     }
@@ -51,25 +48,12 @@ export default function () {
     try {
       const response = await validateAddress(payload);
 
-      if (!response.isOk)
-        toast.error("Error notification", {
-          description: response.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+      if (!response.isOk) toast_notif(response.message, "error");
       else {
-        toast.success("Verification successful", {
-          description:
-            "Address verification for pickup capability was successful",
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          "Address verifcation for pickup capability was successful",
+          "error"
+        );
         handleClickNext();
       }
     } catch (error) {
@@ -92,39 +76,18 @@ export default function () {
   const handleClickNext = () => {
     if (currentArtistSignupFormIndex === 2) {
       if (artistSignupData.password !== artistSignupData.confirmPassword) {
-        toast.error("Error notification", {
-          description: "Passwords do not match",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif("Passwords do not match", "error");
         return;
       }
     }
     if (currentArtistSignupFormIndex === 4) {
       if (artistSignupData.art_style === "") {
-        toast.error("Error notification", {
-          description: "Please select an art style",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif("Please select an art style", "error");
         return;
       }
     }
     if (shouldDisableNext(isFieldDirty, currentArtistSignupFormIndex, steps)) {
-      toast.error("Error notification", {
-        description: "Invalid field values",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif("Invalid field values", "error");
 
       return;
     }

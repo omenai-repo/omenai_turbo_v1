@@ -48,44 +48,70 @@ const PaymentSuccessfulGalleryMail = (
               processed, and the funds have been deposited into your Stripe
               Connect account.{" "}
             </Text>
-            <div className="w-fit p-5 bg-dark text-white border border-t-8 border-t-white flex">
-              <div className="">
-                <div className="w-full">
-                  <Text className="uppercase text-center font-semibold">
-                    TRANSACTION DETAILS
-                  </Text>
+            {/* Transaction Card */}
+            <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-8">
+              <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4 text-center">
+                Transaction Summary
+              </Text>
 
-                  <div className="py-2 w-full">
-                    <div className="flex gap-x-1 items-center">
-                      <Text>Artwork Name:</Text>
-                      <Text className="font-bold">{artwork}</Text>
-                    </div>
-                    <div className="flex gap-x-1 items-center">
-                      <Text>Amount Paid:</Text>
-                      <Text className="font-bold">{price}</Text>
-                    </div>
-                    <div className="flex gap-x-1 items-center">
-                      <Text>Transaction ID:</Text>
-                      <Text className="font-bold">{transaction_Id}</Text>
-                    </div>
-                    <div className="flex gap-x-1 items-center">
-                      <Text>Date:</Text>
-                      <Text className="font-bold">{order_date}</Text>
-                    </div>
-                  </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2">
+                  <Text className="text-gray-600 text-sm">Artwork</Text>
+                  <Text className="text-gray-900 font-medium text-sm">
+                    {artwork}
+                  </Text>
                 </div>
-                <Hr className="border-[#FAFAFA] my-5" />
+
+                <div className="flex justify-between items-center py-2">
+                  <Text className="text-gray-600 text-sm">Sale Amount</Text>
+                  <Text className="text-gray-900 font-semibold text-sm">
+                    {price}
+                  </Text>
+                </div>
+
+                <div className="flex justify-between items-center py-2">
+                  <Text className="text-gray-600 text-sm">Order ID</Text>
+                  <Text className="text-gray-900 font-mono text-sm">
+                    #{order_id}
+                  </Text>
+                </div>
+
+                <div className="flex justify-between items-center py-2">
+                  <Text className="text-gray-600 text-sm">Transaction ID</Text>
+                  <Text className="text-gray-900 font-mono text-sm">
+                    {transaction_Id}
+                  </Text>
+                </div>
+
+                <div className="flex justify-between items-center py-2">
+                  <Text className="text-gray-600 text-sm">Date</Text>
+                  <Text className="text-gray-900 font-medium text-sm">
+                    {order_date}
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+              <Text className="text-blue-900 font-semibold text-base mb-3">
+                Next Steps
+              </Text>
+              <Text className="text-blue-800 text-sm leading-relaxed mb-4">
+                • Prepare your artwork for shipment pickup
+                <br />• Monitor your payment status in your Stripe dashboard
+              </Text>
+
+              <div className="text-center mt-4">
+                <Link
+                  href={`${url}/gallery/payouts`}
+                  className="inline-block bg-[#1a1a1a] hover:bg-[#1a1a1a/80] text-white font-medium px-6 py-2 rounded-lg text-sm transition-colors"
+                >
+                  View Payment Details
+                </Link>
               </div>
             </div>
 
             <Text className="text-black text-fluid-xs leading-[24px]">
-              You can view the details of this payment and manage your funds
-              through your{" "}
-              <Link href={`${url}/gallery/payouts`}>Stripe dashboard</Link>.
-            </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
-              Please ensure the artwork is prepared for delivery based on the
-              agreed terms with the buyer. <br />
               As always, if you have any questions, feedback, or concerns
               regarding your Order or any other aspect of our service, please
               feel free to reach out to us at{" "}

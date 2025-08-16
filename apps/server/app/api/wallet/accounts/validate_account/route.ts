@@ -33,12 +33,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
         },
         body: JSON.stringify({
-          account_number: accountNumber,
-          account_bank: bankCode,
+          account_number: "0690000032",
+          account_bank: "044",
         }),
       }
     );
     const result = await response.json();
+
+    console.log(result, bankCode, accountNumber);
     if (!response.ok) {
       return NextResponse.json(
         { message: result.message },

@@ -8,6 +8,7 @@ import {
   Html,
   Img,
   Link,
+  Preview,
   Tailwind,
   Text,
 } from "@react-email/components";
@@ -17,6 +18,8 @@ const PaymentPendingMail = (name: string, artwork: string) => {
     <Html>
       <Head />
       <Tailwind>
+        <Preview>Payment Transaction Pending</Preview>
+
         <Body className="bg-white my-auto mx-auto font-sans">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
@@ -29,9 +32,6 @@ const PaymentPendingMail = (name: string, artwork: string) => {
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
-              PURCHASE PAYMENT PROCESSING
-            </Heading>
             <Text className="text-black text-fluid-xs leading-[24px]">
               <strong>Dear {name},</strong>
             </Text>

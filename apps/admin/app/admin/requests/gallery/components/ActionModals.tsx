@@ -1,4 +1,3 @@
-import { useDisclosure } from "@mantine/hooks";
 import { Modal, Button, Group, ActionIcon, Menu } from "@mantine/core";
 import { Check, Trash, Unlock, X } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +7,8 @@ import { GalleryType } from "./RequestWrapper";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import React from "react";
 
 export function ActionModals({
   opened,
@@ -40,25 +41,11 @@ export function ActionModals({
             );
 
       if (!response.isOk) {
-        toast.error("Error notification ", {
-          description: response.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message, "error");
         return;
       }
 
-      toast.success("Operation successful ", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(response.message, "success");
       await queryClient.invalidateQueries({
         queryKey: ["fetch_galleries_on_verif_status"],
       });
