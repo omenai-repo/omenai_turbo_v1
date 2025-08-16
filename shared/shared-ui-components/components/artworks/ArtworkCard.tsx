@@ -80,7 +80,7 @@ export default function ArtworkCard({
         {/* Top Left Badge */}
         <div className="absolute top-4 left-4 z-10">
           {isDashboard && dashboard_type === "gallery" ? (
-            <Link href={`/artist/app/artworks/edit?id=${name}`}>
+            <Link href={`/gallery/artworks/edit?id=${name}`}>
               <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-2 text-fluid-xs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white">
                 Edit artwork
               </button>

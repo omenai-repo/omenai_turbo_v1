@@ -39,7 +39,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       currency: base_currency,
       bank_name: account_details.bank_name,
     };
-    console.log(payload);
     // Check if wallet exists
     const wallet_exists = await Wallet.findOne({ owner_id });
 

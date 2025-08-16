@@ -4,6 +4,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -15,7 +16,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 ) {
   try {
     const { email } = await request.json();
-
+    await connectMongoDB();
     const account = await AccountGallery.findOne(
       { email },
       "connected_account_id gallery_verified"

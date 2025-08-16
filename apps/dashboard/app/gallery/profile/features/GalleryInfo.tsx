@@ -27,9 +27,9 @@ export default function GalleryInfo() {
                 <Image
                   src={logo}
                   alt="Gallery logo"
-                  width={80}
-                  height={80}
-                  className="w-full h-full object-cover"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover object-center"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">

@@ -71,9 +71,6 @@ export default function UpcomingSub({
                 <p className="text-base font-semibold text-red-600 capitalize">
                   Subscription {sub_data.status}
                 </p>
-                <p className="text-sm text-slate-600 mt-1">
-                  Reactivate to continue using premium features
-                </p>
               </div>
               <Link href="/gallery/billing/plans?plan_action=reactivation">
                 <button className="px-6 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg shadow-sm transition-all transform active:scale-95 hover:bg-slate-800">
