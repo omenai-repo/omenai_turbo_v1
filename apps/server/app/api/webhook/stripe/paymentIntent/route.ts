@@ -53,13 +53,10 @@ export const POST = withAppRouterHighlight(async function POST(
   const meta = paymentIntent.metadata;
 
   const client = await connectMongoDB();
-  const order_info = await CreateOrder.findOne(
-    {
-      "buyer_details.email": meta.buyer_email,
-      "artwork_data.art_id": meta.art_id,
-    },
-    "artwork_data order_id createdAt buyer_details"
-  );
+  const order_info = await CreateOrder.findOne({
+    "buyer_details.email": meta.buyer_email,
+    "artwork_data.art_id": meta.art_id,
+  });
 
   if (event.type === "payment_intent.processing") {
     await sendPaymentPendingMail({
@@ -184,6 +181,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
       // Once all operations are run with no errors, commit the transaction
       await session.commitTransaction();
+
       const price = formatPrice(paymentIntent.amount_received / 100, currency);
 
       const buyer_push_token = await DeviceManagement.findOne(

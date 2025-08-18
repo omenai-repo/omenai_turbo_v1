@@ -2,7 +2,7 @@ import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/deskto
 import { Footer } from "flowbite-react";
 import SearchResultWrapper from "./components/SearchResultWrapper";
 import { Suspense } from "react";
-
+export const dynamic = "force-dynamic";
 export default function page() {
   return (
     <div>

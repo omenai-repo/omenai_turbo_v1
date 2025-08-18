@@ -36,9 +36,9 @@ const RejectGalleryMail = (gallery_name?: string) => {
               Dear {gallery_name},
             </Text>
             <Text className="text-dark text-fluid-xs leading-[24px]">
-              Thank you for registering your gallery with OMENAI Inc. After
-              reviewing your account, we regret to inform you that your
-              verification request has not been approved.
+              Thank you for registering your gallery with Omenai After reviewing
+              your account, we regret to inform you that your verification
+              request has not been approved.
             </Text>
             <Text className="text-dark text-fluid-xs leading-[24px]">
               Due to this, you will no longer be able to register for an account

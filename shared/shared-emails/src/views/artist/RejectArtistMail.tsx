@@ -31,7 +31,7 @@ const RejectArtistMail = (artist_name?: string) => {
               Dear {artist_name},
             </Text>
             <Text className="text-dark text-fluid-xs leading-[24px]">
-              Thank you for registering with OMENAI Inc. After reviewing your
+              Thank you for registering with Omenai After reviewing your
               account, we regret to inform you that your verification request
               has not been approved.
             </Text>

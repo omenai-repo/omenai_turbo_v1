@@ -128,9 +128,8 @@ const PaymentSuccessfulGalleryMail = (
             </Text>
 
             <Text className="text-black text-fluid-xs leading-[24px]">
-              Thank you for being a valued member of{" "}
-              <strong>Omenai Inc.</strong>, and we look forward to seeing more
-              of your incredible work!
+              Thank you for being a valued member of <strong>Omenai</strong>,
+              and we look forward to seeing more of your incredible work!
             </Text>
             <Text className="text-black text-fluid-xs leading-[24px]">
               Best regards, <br />

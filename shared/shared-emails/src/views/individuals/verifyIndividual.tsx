@@ -36,8 +36,8 @@ const UserVerificationEmail = (username: string, token: string) => {
               Hello {username},
             </Text>
             <Text className="text-black text-fluid-xs leading-[24px]">
-              We, at <strong>Omenai Inc.</strong>, are thrilled to have you on
-              board and eagerly await the beginning of your journey with us
+              We, at <strong>Omenai</strong>, are thrilled to have you on board
+              and eagerly await the beginning of your journey with us
             </Text>
             <Text className="text-black text-fluid-xs leading-[24px]">
               Your email verification token is located below. Enter this code

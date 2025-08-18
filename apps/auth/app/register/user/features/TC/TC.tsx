@@ -44,7 +44,7 @@ export default function TC() {
             <Link href={"/"} className="underline font-bold">
               Privacy Policy
             </Link>{" "}
-            of creating an account with Omenai Inc.
+            of creating an account with Omenai
           </Label>
         </div>
       </div>

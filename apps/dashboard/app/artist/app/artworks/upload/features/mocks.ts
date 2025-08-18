@@ -6,7 +6,7 @@ export const uploadArtworkDetailInputMocks = [
     type: "text",
     label: "Title",
     required: true,
-    placeholder: "Add artwork title or 'unknown'",
+    placeholder: "Add artwork title here",
   },
   {
     name: "year",

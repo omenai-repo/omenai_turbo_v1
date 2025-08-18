@@ -15,7 +15,7 @@ export const sendRoleChangeMail = async ({
   previousRole,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Your admin access role has been updated",

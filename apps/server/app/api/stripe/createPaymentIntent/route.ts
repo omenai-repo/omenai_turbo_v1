@@ -41,10 +41,12 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           : active_subscription.plan_details.type.toLowerCase() === "pro"
             ? 0.2
             : 0.25;
+
+      console.log(meta);
       const commission = Math.round(
-        meta.unit_price * commision_rate * 100 +
-          meta.shipping_cost * 100 +
-          meta.tax_fees * 100
+        +meta.unit_price * commision_rate * 100 +
+          +meta.shipping_cost * 100 +
+          +meta.tax_fees * 100
       );
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100),

@@ -54,20 +54,17 @@ export default function BalanceBox({
         {/* Available Balance */}
         <div>
           <p className="text-fluid-xs font-medium text-gray-600 mb-2">
-            Available Balance
+            Balance on Stripe
           </p>
           <h1 className="text-3xl font-bold text-gray-900">
-            {formatPrice(balance.available[0].amount / 100, currency)}
+            {formatPrice(balance.pending[0].amount / 100, currency)}
           </h1>
         </div>
 
         {/* Pending Balance */}
         <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded-xl">
           <p className="text-fluid-xs text-amber-800">
-            Pending on Stripe:{" "}
-            <span className="font-semibold">
-              {formatPrice(balance.pending[0].amount / 100, currency)}
-            </span>
+            Balance on stripe is automatically credited to your bank account.
           </p>
         </div>
 

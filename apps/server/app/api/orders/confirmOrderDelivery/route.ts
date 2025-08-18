@@ -20,7 +20,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const { confirm_delivery, order_id } = await request.json();
 
-    const updateOrders = await CreateOrder.findOneAndUpdate(
+    const updateOrders = await CreateOrder.updateOne(
       { order_id },
       { $set: { "shipping_details.delivery_confirmed": confirm_delivery } }
     );

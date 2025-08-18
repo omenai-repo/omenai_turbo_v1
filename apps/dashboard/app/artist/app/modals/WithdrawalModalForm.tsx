@@ -11,6 +11,7 @@ import WithdrawalSuccessScreen from "./WithdrawalSuccessScreen";
 import { useQueryClient } from "@tanstack/react-query";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 export default function WithdrawalModalForm() {
   const [amount_data, set_amount_data] = useState<{
     amount: number;
@@ -52,20 +53,13 @@ export default function WithdrawalModalForm() {
       );
 
       if (rate_response === undefined || !rate_response.isOk) {
-        toast.error("Error Notification", {
-          description:
-            rate_response?.message ||
-            "Something went wrong. Please try again or contact support",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          "Something went wrong while fetching the transfer rate. Please try again later.",
+          "error"
+        );
 
         return;
       }
-      console.log(rate_response);
 
       set_amount_data((prev) => {
         return {
@@ -75,15 +69,10 @@ export default function WithdrawalModalForm() {
         };
       });
     } catch (error) {
-      toast.error("Error Notification", {
-        description:
-          "Something went wrong. It's probably from us, please contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Something went wrong while fetching the transfer rate. Please try again later.",
+        "error"
+      );
     } finally {
       setTransferRateLoading(false);
     }
@@ -92,14 +81,7 @@ export default function WithdrawalModalForm() {
   const handleWithdrawal = async () => {
     try {
       if (wallet_pin.length < 4) {
-        toast.error("Error Notification", {
-          description: "Please enter a valid wallet pin",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif("Please enter a valid 4-digit wallet PIN", "error");
         return;
       }
       setWithdrawalLoading(true);
@@ -111,16 +93,11 @@ export default function WithdrawalModalForm() {
       });
 
       if (withdrawal_response === undefined || !withdrawal_response.isOk) {
-        toast.error("Error Notification", {
-          description:
-            withdrawal_response?.message ||
-            "Something went wrong. Please try again or contact support",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          withdrawal_response.message ||
+            "Something went wrong while processing your withdrawal. Please try again later.",
+          "error"
+        );
 
         return;
       }
@@ -129,15 +106,10 @@ export default function WithdrawalModalForm() {
       });
       setIsWithdrawalSuccessful(withdrawal_response.isOk);
     } catch (error) {
-      toast.error("Error Notification", {
-        description:
-          "Something went wrong. It's probably from us, please contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Something went wrong while processing your withdrawal. Please try again later.",
+        "error"
+      );
     } finally {
       setWithdrawalLoading(false);
     }
@@ -148,12 +120,12 @@ export default function WithdrawalModalForm() {
       {isWithdrawalSuccessful ? (
         <WithdrawalSuccessScreen />
       ) : (
-        <div className="max-w-lg w-full mx-auto">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="max-w-lg w-full max-h-[95vh] mx-auto">
+          <div className="bg-white rounded-md shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-dark text-white px-6 py-5">
+            <div className="bg-dark text-white px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
+                <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
                   <svg
                     className="w-6 h-6"
                     fill="none"
@@ -169,10 +141,10 @@ export default function WithdrawalModalForm() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-fluid-sm font-semibold">
+                  <h2 className="text-fluid-base font-semibold">
                     Withdraw Funds
                   </h2>
-                  <p className="text-fluid-xs text-slate-300 mt-0.5">
+                  <p className="text-fluid-xxs text-slate-300 mt-0.5">
                     Transfer to your bank account
                   </p>
                 </div>
@@ -180,19 +152,21 @@ export default function WithdrawalModalForm() {
             </div>
 
             {/* Form Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-4 space-y-4">
               {/* Amount Input Section */}
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-slate-700">
+              <div className="space-y-3">
+                <label className="block text-fluid-xs font-normal text-slate-700">
                   Withdrawal Amount
                 </label>
 
                 {/* Send Amount */}
-                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-                  <div className="space-y-3">
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-600">You Send</span>
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="text-fluid-xs text-slate-600">
+                        You Send
+                      </span>
+                      <span className="text-fluid-xs font-normal text-slate-700">
                         USD
                       </span>
                     </div>
@@ -204,18 +178,18 @@ export default function WithdrawalModalForm() {
                         type="number"
                         placeholder="0.00"
                         onChange={handleAmountChange}
-                        className="w-full pl-8 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-lg font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-fluid-xs font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Convert Button */}
-                <div className="flex justify-center py-2">
+                <div className="flex justify-center">
                   <button
                     disabled={transferRateLoading || amount_data.amount === 0}
                     onClick={handleAmountConvert}
-                    className="group relative p-4 bg-slate-100 rounded-full transition-all transform active:scale-95 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 grid place-items-center"
+                    className="group relative p-2 bg-slate-100 rounded-full transition-all transform active:scale-95 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 grid place-items-center"
                     aria-label="Convert currency"
                   >
                     {transferRateLoading ? (
@@ -231,18 +205,18 @@ export default function WithdrawalModalForm() {
                 </div>
 
                 {/* Receive Amount */}
-                <div className="bg-green-50 rounded-xl p-4 border border-green-200 mt-8">
-                  <div className="space-y-3">
+                <div className="bg-green-50 rounded-xl p-3 border border-green-200">
+                  <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-green-700">
+                      <span className="text-fluid-xs text-green-700">
                         You Receive
                       </span>
-                      <span className="text-sm font-medium text-green-800">
+                      <span className="text-fluid-xxs font-normal text-green-800">
                         {user.base_currency}
                       </span>
                     </div>
                     <div className="bg-white rounded-lg px-4 py-3 border border-green-300">
-                      <p className="text-lg font-bold text-green-800">
+                      <p className="text-fluid-xs font-semibold text-green-800">
                         {formatPrice(
                           amount_data.currency_amount,
                           user.base_currency
@@ -254,18 +228,18 @@ export default function WithdrawalModalForm() {
               </div>
 
               {/* PIN Section */}
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-slate-700">
+              <div className="space-y-2">
+                <label className="block text-fluid-xs font-normal text-slate-700">
                   Security PIN
                 </label>
-                <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                  <div className="space-y-4">
-                    <p className="text-center text-sm text-slate-600 mb-4">
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <div className="space-y-2">
+                    <p className="text-center text-fluid-xs text-slate-600 mb-2">
                       Enter your 4-digit wallet PIN
                     </p>
                     <div className="flex justify-center">
                       <PinInput
-                        size="lg"
+                        size="sm"
                         mask
                         placeholder="○"
                         onChange={(e) => handlePinChange(e)}
@@ -275,10 +249,10 @@ export default function WithdrawalModalForm() {
                           input: {
                             borderColor: wallet_pin_error
                               ? "#ef4444"
-                              : "#e2e8f0",
+                              : "#94a3b8",
                             backgroundColor: "#ffffff",
-                            fontSize: "20px",
-                            fontWeight: "bold",
+                            fontSize: "16px",
+                            fontWeight: "semibold",
                             "&:focus": {
                               borderColor: "#1e293b",
                               boxShadow: "0 0 0 2px rgba(30, 41, 59, 0.1)",
@@ -291,7 +265,7 @@ export default function WithdrawalModalForm() {
                       <Link
                         onClick={() => toggleWithdrawalFormPopup(false)}
                         href="/artist/app/wallet/pin_recovery"
-                        className="text-sm text-slate-600 hover:text-dark transition-colors"
+                        className="text-fluid-xxs text-slate-600 underline hover:text-dark transition-colors"
                       >
                         Forgot your PIN?
                       </Link>
@@ -302,7 +276,7 @@ export default function WithdrawalModalForm() {
 
               {/* Exchange Rate Info */}
               {amount_data.amount > 0 && amount_data.currency_amount > 0 && (
-                <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                <div className="bg-blue-50 rounded-lg p-2 border border-blue-200">
                   <div className="flex items-center gap-2">
                     <svg
                       className="w-4 h-4 text-blue-600"
@@ -317,7 +291,7 @@ export default function WithdrawalModalForm() {
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <p className="text-xs text-blue-700">
+                    <p className="text-fluid-xxs font-semibold text-blue-700">
                       Exchange rate: 1 USD ={" "}
                       {(
                         amount_data.currency_amount / amount_data.amount
@@ -332,7 +306,7 @@ export default function WithdrawalModalForm() {
               <button
                 onClick={handleWithdrawal}
                 disabled={withdrawalLoading || amount_data.amount === 0}
-                className="w-full py-3 bg-dark text-white font-medium rounded-xl shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xs"
+                className="w-full py-2 bg-dark text-white font-medium rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
               >
                 {withdrawalLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -361,7 +335,7 @@ export default function WithdrawalModalForm() {
 
               {/* Security Notice */}
               <div className="text-center">
-                <p className="text-xs text-slate-500 flex items-center justify-center gap-1">
+                <p className="text-fluid-xxs text-slate-500 flex items-center justify-center">
                   <svg
                     className="w-3 h-3"
                     fill="none"

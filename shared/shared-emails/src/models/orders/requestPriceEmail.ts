@@ -16,7 +16,7 @@ export const sendPriceEmail = async ({
   artwork_data,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Orders",
+    prefix: "Omenai orders",
     from: "transactions",
     to: email,
     subject: `Requested Information: Base Price of artwork`,

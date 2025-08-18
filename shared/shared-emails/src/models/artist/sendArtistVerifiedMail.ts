@@ -6,9 +6,13 @@ type EmailData = {
   email: string;
   token: string;
 };
-export const sendArtistVerifiedMail = async ({ name, email, token }: EmailData) => {
+export const sendArtistVerifiedMail = async ({
+  name,
+  email,
+  token,
+}: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Verify your Omenai Artist account.",

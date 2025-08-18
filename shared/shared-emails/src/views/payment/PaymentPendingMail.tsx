@@ -55,7 +55,7 @@ const PaymentPendingMail = (name: string, artwork: string) => {
               and ensure your experience remains exceptional.{" "}
             </Text>
             <Text className="text-black text-fluid-xs leading-[24px]">
-              Once again, thank you for choosing <strong>Omenai Inc.</strong> We
+              Once again, thank you for choosing <strong>Omenai</strong> We
               appreciate your business and look forward to serving you.
             </Text>
             <Text className="text-black text-fluid-xs leading-[24px]">

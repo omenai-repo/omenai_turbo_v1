@@ -17,10 +17,6 @@ const omenai_guarantee = [
     icon: <HiBadgeCheck />,
     content: "Authenticity Guarantee",
   },
-  {
-    icon: <RiExchangeDollarLine />,
-    content: "Easy Returns",
-  },
 ];
 export default function LegalComponents() {
   return (

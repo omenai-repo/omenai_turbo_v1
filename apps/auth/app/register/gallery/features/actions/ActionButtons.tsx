@@ -5,6 +5,7 @@ import { shouldDisableNext } from "@omenai/shared-utils/src/should_disable_next_
 import { validateAddress } from "@omenai/shared-services/address_validation/validateAddress";
 import { toast } from "sonner";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 const steps = {
   0: ["name", "email", "admin"],
   1: ["country", "address_line", "state", "city", "zip"],
@@ -58,27 +59,17 @@ export default function () {
           className: "class",
         });
       else {
-        toast.success("Verification successful", {
-          description:
-            "Address verification for pickup capability was successful",
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          "Address verification for pickup capability was successful",
+          "success"
+        );
         handleClickNext();
       }
     } catch (error) {
-      toast.error("Error notification", {
-        description:
-          "Something went wrong. Could be us, please contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Something went wrong. Could be us, please contact support",
+        "error"
+      );
     } finally {
       setLoading(false);
     }

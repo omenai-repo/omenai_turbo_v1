@@ -7,7 +7,7 @@ type EmailData = {
 };
 export const sendOrderRequestReminder = async ({ name, email }: EmailData) => {
   await sendMailVerification({
-    prefix: "Orders",
+    prefix: "Omenai orders",
     from: "orders",
     to: "omenai@omenai.app",
     bcc: [...email],

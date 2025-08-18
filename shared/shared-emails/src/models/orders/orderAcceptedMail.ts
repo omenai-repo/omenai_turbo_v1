@@ -16,7 +16,7 @@ export const sendOrderAcceptedMail = async ({
   artwork_data,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Orders",
+    prefix: "Omenai orders",
     from: "transactions",
     to: email,
     subject: "Your Order has been Accepted!",

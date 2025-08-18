@@ -7,7 +7,7 @@ type EmailData = {
 };
 export const sendVerifyGalleryMail = async ({ name, email }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Gallery account verification request.",

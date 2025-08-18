@@ -118,7 +118,7 @@ export default function TransactionTable() {
           className="border border-slate-200 rounded-xl mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
         >
           <Accordion.Control className="hover:bg-slate-50 transition-colors">
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between px-4 py-2">
               <div className="flex items-center gap-4">
                 {/* Status Icon */}
                 <div
@@ -144,14 +144,16 @@ export default function TransactionTable() {
                 {/* Transaction Info */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-dark">Withdrawal</h3>
+                    <h3 className="font-medium text-fluid-xs text-dark">
+                      Withdrawal
+                    </h3>
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full ${statusConfig.bgColor} ${statusConfig.color} font-medium`}
                     >
                       {statusConfig.label}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-fluid-xxs text-slate-500">
                     {formatISODate(transaction.createdAt)}
                   </p>
                 </div>
@@ -159,7 +161,7 @@ export default function TransactionTable() {
 
               {/* Amount */}
               <div className="text-right">
-                <p className="text-lg font-semibold text-dark">
+                <p className="text-fluid-base font-semibold text-dark">
                   {formatPrice(transaction.trans_amount, "USD")}
                 </p>
               </div>

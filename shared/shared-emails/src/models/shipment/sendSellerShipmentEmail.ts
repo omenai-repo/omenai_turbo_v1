@@ -11,7 +11,7 @@ export const sendSellerShipmentEmail = async ({
   fileContent,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Orders",
+    prefix: "Omenai orders",
     from: "orders",
     to: email,
     subject: "Your shipment has been created and is ready for pickup",

@@ -293,8 +293,7 @@ const Footer = () => {
         <div className="mt-8 border-t border-gray-100 pt-8">
           <div className="sm:flex sm:justify-between">
             <p className="text-fluid-base text-gray-500">
-              &copy; {new Date().getFullYear()}. Omenai Inc. All rights
-              reserved.
+              &copy; {new Date().getFullYear()}. Omenai All rights reserved.
             </p>
 
             <ul className="mt-8 flex flex-wrap justify-start gap-4 text-fluid-base sm:mt-0 lg:justify-end">

@@ -8,7 +8,7 @@ type EmailData = {
 };
 export const sendIndividualMail = async ({ name, email, token }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Verify your Omenai account.",

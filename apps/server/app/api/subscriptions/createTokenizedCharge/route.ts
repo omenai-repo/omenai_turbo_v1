@@ -45,7 +45,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       }&${null}`,
       country: gallery.address.countryCode,
       token: data.token,
-      narration: `Payment for Omenai Inc. ${data.plan_interval} subscription`,
+      narration: `Payment for Omenai ${data.plan_interval} subscription`,
       redirect_url: `${dashboard_url()}/gallery/billing/plans/checkout/verification`,
       meta: {
         gallery_id: data.gallery_id,

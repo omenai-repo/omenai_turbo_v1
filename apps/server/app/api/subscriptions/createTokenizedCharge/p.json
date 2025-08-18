@@ -34,7 +34,7 @@
       "plan_interval": "monthly",
       "type": "subscription"
     },
-    "narration": "Payment for Omenai Inc. monthly subscription",
+    "narration": "Payment for Omenai monthly subscription",
     "payment_type": "card",
     "processor_response": "Approved",
     "status": "pending",

@@ -3,25 +3,18 @@ import EmblaCarousel from "./Carousel";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { auth_uri } from "@omenai/url-config/src/config";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 export default function OnboardingFlow() {
-  const router = useRouter();
+  const { signOut } = useAuth({ requiredRole: "artist" });
 
-  async function handleSignOut() {
-    toast.info("Signing out...", {
-      description: "You will be redirected to the login page",
-      style: {
-        background: "blue",
-        color: "white",
-      },
-      className: "class",
-    });
-    await handleSignOut();
-    router.replace(`${auth_uri}/login`);
-  }
+  const handleSignOut = async () => {
+    await signOut();
+    toast_notif("Signing you out... please wait", "info");
+  };
+
   return (
     <div className=" px-5">
       <div className="flex justify-between items-center">
@@ -35,7 +28,7 @@ export default function OnboardingFlow() {
         </div>
         {/* Logout button */}
         <button
-          onClick={async () => await handleSignOut()}
+          onClick={handleSignOut}
           className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-xl h-[35px] p-5 w-fit text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           Logout

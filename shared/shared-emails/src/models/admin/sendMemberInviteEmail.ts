@@ -8,7 +8,7 @@ type EmailData = {
 };
 export const sendMemberInviteEmail = async ({ email, token }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "You've been invited to the Omenai admin team",

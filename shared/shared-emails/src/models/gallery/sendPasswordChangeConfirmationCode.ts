@@ -9,9 +9,10 @@ type EmailData = {
 export const sendPasswordConfirmationCodeMail = async ({
   username,
   email,
-  token}: EmailData) => {
+  token,
+}: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Password Confirmation Code request",

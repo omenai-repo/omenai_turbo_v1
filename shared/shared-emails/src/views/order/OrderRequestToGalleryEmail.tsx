@@ -86,7 +86,7 @@ const OrderRequestToGalleryMail = (
                 >
                   {artwork_data.title}
                 </Link>
-                . This is a great opportunity to connect with a potential buyer.
+                .
               </Text>
 
               {/* Artwork Preview Card */}

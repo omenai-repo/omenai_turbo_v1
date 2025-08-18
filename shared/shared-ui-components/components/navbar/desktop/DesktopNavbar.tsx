@@ -7,17 +7,30 @@ import LoggedInUser from "../ui/LoggedInUser";
 import { SlMenu } from "react-icons/sl";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { IndividualLogo } from "../../logo/Logo";
-import { base_url } from "@omenai/url-config/src/config";
+import { base_url, dashboard_url } from "@omenai/url-config/src/config";
 
 const navbarlinks = [
-  { text: "Buy artworks", link: `${base_url()}/catalog` },
-  { text: "Shop", link: "https://omenai.shop" },
+  { text: "Collect", link: `${base_url()}/catalog` },
+  // { text: "Shop", link: "https://omenai.shop" },
   { text: "Editorials", link: `${base_url()}/articles` },
 ];
 export default function DesktopNavbar() {
   const { updateOpenSideNav } = actionStore();
-
   const { user } = useAuth({ requiredRole: "user" });
+
+  const navbarlinks = [
+    { text: "Collect", link: `${base_url()}/catalog` },
+    // { text: "Shop", link: "https://omenai.shop" },
+    { text: "Editorials", link: `${base_url()}/articles` },
+    ...(user.role !== "user"
+      ? [
+          {
+            text: "Go to dashboard",
+            link: `${dashboard_url()}/${user.role === "artist" ? "artist/app/" : "gallery/"}overview`,
+          },
+        ]
+      : []),
+  ];
   return (
     <>
       <MobileNavbar />

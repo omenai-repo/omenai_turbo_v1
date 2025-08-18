@@ -305,6 +305,8 @@ async function handlePurchaseTransaction(
           Number(meta.shipping_cost) +
           Number(meta.tax_fees || 0)
       );
+
+      console.log(meta);
       const transaction_pricing: PurchaseTransactionPricing = {
         amount_total: Math.round(verified_transaction.data.amount),
         unit_price: Math.round(+meta.unit_price),

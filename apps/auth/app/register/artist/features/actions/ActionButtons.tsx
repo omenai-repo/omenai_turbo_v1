@@ -52,7 +52,7 @@ export default function () {
       else {
         toast_notif(
           "Address verifcation for pickup capability was successful",
-          "error"
+          "success"
         );
         handleClickNext();
       }

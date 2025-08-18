@@ -114,9 +114,6 @@ export default function ArtworkPriceInputGroup() {
                     />
                   )}
                 </button>
-                <span className="text-[11px] font-medium">
-                  Click to convert
-                </span>
               </div>
             </div>
             <div className="relative w-full col-span-5">

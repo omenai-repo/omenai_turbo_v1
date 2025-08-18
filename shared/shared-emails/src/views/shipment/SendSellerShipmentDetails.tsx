@@ -71,7 +71,12 @@ export default function SellerShipmentEmail(name: string) {
               Please make sure the artwork is securely packaged and ready for
               pickup. We’ve attached a <strong>waybill document</strong> to this
               email — kindly print it and attach it to the package before
-              pickup.
+              pickup.{" "}
+              <strong>
+                Also kindly attach the certificate of authenticity to the
+                package or hand this over to the courier to ensure smooth
+              </strong>
+              delivery.
             </Text>
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
               If you have any questions or concerns, feel free to contact our
@@ -80,7 +85,7 @@ export default function SellerShipmentEmail(name: string) {
             <Text style={{ marginTop: "40px", fontSize: "16px" }}>
               Best regards,
               <br />
-              OMENAI Inc.
+              Omenai
             </Text>
           </Section>
         </Container>

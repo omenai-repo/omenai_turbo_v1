@@ -13,7 +13,6 @@ const TABLE_HEAD = [
   "Date",
   "Gross earning",
   "Net earning",
-  "Platform Commission",
   "Status",
 ];
 
@@ -80,9 +79,9 @@ export function TransactionTable({
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">
                   {data.net}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
+                {/* <td className="px-6 py-4 text-sm text-gray-600">
                   {data.commission}
-                </td>
+                </td> */}
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     {data.status}

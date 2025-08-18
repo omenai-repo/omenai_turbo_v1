@@ -79,7 +79,7 @@ export default function VerifyTransactionWrapper() {
   }
 
   return (
-    <div className="w-full h-[80vh] grid place-items-center">
+    <div className="w-full max-w-xl min-w-auto h-[80vh] grid place-items-center">
       {verify_data?.isOk && verify_data.message === "Transaction successful" ? (
         <div className="px-8 py-16 rounded-2xl border border-dark/20">
           <div className="flex flex-col items-center gap-1 text-center">

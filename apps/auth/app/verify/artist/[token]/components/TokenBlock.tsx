@@ -92,8 +92,8 @@ export default function TokenBlock({ token }: TokenProps) {
         <div className="flex flex-col gap-4 my-[2rem]">
           <p className="leading-32 font-medium text-fluid-xs">
             Thank you for choosing to join{" "}
-            <span className="text-dark font-[900]">Omenai Inc.</span> We extend
-            our warmest welcome and look forward to providing you an enjoyable
+            <span className="text-dark font-[900]">Omenai</span> We extend our
+            warmest welcome and look forward to providing you an enjoyable
             journey with us
           </p>
           <p className="leading-32 text-fluid-xs">

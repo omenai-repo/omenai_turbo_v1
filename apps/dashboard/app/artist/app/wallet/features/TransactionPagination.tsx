@@ -55,7 +55,7 @@ export default function TransactionPagination({
         }}
         onNextPage={() => setPage(page + 1)}
         onPreviousPage={() => setPage(page - 1)}
-        mt="xl"
+        mt="md"
       />
     </div>
   );

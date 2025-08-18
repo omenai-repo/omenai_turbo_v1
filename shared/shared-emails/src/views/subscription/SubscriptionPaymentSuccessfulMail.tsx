@@ -60,7 +60,7 @@ export const SubscriptionPaymentSuccessfulEmail = (name: string) => {
           </Text>
 
           <Text style={text}>
-            Thank you again for choosing <strong>Omenai Inc.</strong>.
+            Thank you again for choosing <strong>Omenai</strong>.
           </Text>
 
           <Text style={text}>

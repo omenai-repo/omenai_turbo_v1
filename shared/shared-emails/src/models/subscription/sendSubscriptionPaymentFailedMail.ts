@@ -11,7 +11,7 @@ export const sendSubscriptionPaymentFailedMail = async ({
 }: EmailData) => {
   // Set up resend here instead
   await sendMailVerification({
-    prefix: "Subscriptions",
+    prefix: "Omenai subscriptions",
     from: "transactions",
     to: email,
     subject: " Notification: Failed Subscription Payment Attempt",

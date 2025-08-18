@@ -12,7 +12,7 @@ export const sendArtistSignupMail = async ({
   token,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Verify your Artist account on Omenai",

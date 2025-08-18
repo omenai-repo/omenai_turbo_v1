@@ -47,7 +47,7 @@ export default function FormConfirm() {
             <Link href={"/"} className="underline font-bold">
               Privacy Policy
             </Link>{" "}
-            of creating an account with Omenai Inc.
+            of creating an account with Omenai
           </Label>
         </div>
       </div>

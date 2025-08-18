@@ -37,7 +37,6 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
 
   const router = useRouter();
   const { user, csrf } = useAuth({ requiredRole: "user" });
-  console.log(csrf);
 
   async function handleBuyButtonClick() {
     if (sessionId === undefined) toggleLoginModal(true);

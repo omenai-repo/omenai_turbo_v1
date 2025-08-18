@@ -134,7 +134,7 @@ export default function VerifyOTP({
         <div className="flex gap-x-4 items-center">
           <PinInput
             disabled={verificationLoading || otpVerified}
-            size="lg"
+            size="md"
             mask
             type="number"
             value={otp}

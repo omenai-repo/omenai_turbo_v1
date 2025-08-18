@@ -137,7 +137,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           contactInformation: {
             email: "gbenro@omenai.net",
             phone: " +7733521307",
-            companyName: "OMENAI INC.",
+            companyName: "Omenai",
             fullName: "OMENAI Incorporated",
           },
         },

@@ -39,9 +39,9 @@ const AcceptGalleryMail = (gallery_name?: string) => {
             </Text>
             <Text className="text-dark text-fluid-xs leading-[24px]">
               We are excited to inform you that your gallery account has been
-              successfully verified on <strong>OMENAI INC.</strong> You can now
-              fully access all the features of our platform and start showcasing
-              your artwork to our community of art enthusiasts.
+              successfully verified on <strong>Omenai</strong> You can now fully
+              access all the features of our platform and start showcasing your
+              artwork to our community of art enthusiasts.
             </Text>
 
             <Text className="m-0 text-fluid-xs font-semibold leading-[32px] text-gray-900">

@@ -63,13 +63,10 @@ export const POST = withAppRouterHighlight(async function POST(
     const date = toUTCDate(new Date());
     const meta = paymentIntent.metadata;
 
-    const order_info = await CreateOrder.findOne(
-      {
-        "buyer_details.email": meta.buyer_email,
-        "artwork_data.art_id": meta.art_id,
-      },
-      "artwork_data order_id createdAt buyer_details"
-    );
+    const order_info = await CreateOrder.findOne({
+      "buyer_details.email": meta.buyer_email,
+      "artwork_data.art_id": meta.art_id,
+    });
     try {
       await CreateOrder.updateOne(
         { order_id: order_info.order_id },
@@ -111,6 +108,8 @@ export const POST = withAppRouterHighlight(async function POST(
         }
       ).session(session);
 
+      console.log(paymentIntent);
+      console.log(meta);
       const transaction_pricing: PurchaseTransactionPricing = {
         amount_total: Math.round(paymentIntent.amount_total / 100),
         unit_price: Math.round(+meta.unit_price),
@@ -169,6 +168,7 @@ export const POST = withAppRouterHighlight(async function POST(
       transaction_id = createTransactionResult[0].trans_id;
 
       await session.commitTransaction();
+
       const price = formatPrice(paymentIntent.amount_total / 100, currency);
 
       const buyer_push_token = await DeviceManagement.findOne(
@@ -203,9 +203,7 @@ export const POST = withAppRouterHighlight(async function POST(
             "/api/workflows/notification/pushNotification",
             `notification_workflow_buyer_${order_info.order_id}_${generateDigit(2)}`,
             JSON.stringify(buyer_notif_payload)
-          ).catch((error) => {
-            console.error("Failed to send buyer notification:", error);
-          })
+          )
         );
       }
 
@@ -230,9 +228,7 @@ export const POST = withAppRouterHighlight(async function POST(
             "/api/workflows/notification/pushNotification",
             `notification_workflow_seller_${order_info.order_id}_${generateDigit(2)}`,
             JSON.stringify(seller_notif_payload)
-          ).catch((error) => {
-            console.error("Failed to send seller notification:", error);
-          })
+          )
         );
       }
 

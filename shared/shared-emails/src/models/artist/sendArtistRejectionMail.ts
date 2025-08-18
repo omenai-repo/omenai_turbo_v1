@@ -7,7 +7,7 @@ type EmailData = {
 };
 export const sendArtistRejectedMail = async ({ name, email }: EmailData) => {
   await sendMailVerification({
-    prefix: "Onboarding",
+    prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Update on Your Gallery Account Verification",

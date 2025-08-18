@@ -13,7 +13,7 @@ export const sendPaymentFailedMail = async ({
 }: EmailData) => {
   // Set up resend here instead
   await sendMailVerification({
-    prefix: "Orders",
+    prefix: "Omenai orders",
     from: "transactions",
     to: email,
     subject: "We encountered an issue processing your payment",

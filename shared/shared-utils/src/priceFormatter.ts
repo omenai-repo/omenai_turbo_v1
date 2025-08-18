@@ -23,9 +23,15 @@ export function formatPrice(
       maximumFractionDigits: 1,
     }).format(cleaned);
   } catch (e) {
-    // Fallback for unsupported or custom currencies
+    // Fallback for unsupported or custom currencies with comma formatting
     const symbol = match?.symbol ?? (currency || "$"); // Default to $ if no match found
-    // Ensure we always show one decimal place
-    return `${symbol}${cleaned.toFixed(1)}`;
+
+    // Format number with commas and ensure we always show two decimal places
+    const formattedNumber = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(cleaned);
+
+    return `${symbol}${formattedNumber}`;
   }
 }
