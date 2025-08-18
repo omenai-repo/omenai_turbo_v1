@@ -29,8 +29,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             pending_balance: -data.amount, // Deduct from pending
             available_balance: data.amount, // Add to available
           },
-        },
-        { new: true } // Return updated document
+        }
       );
 
       if (move_funds_to_available_balance.modifiedCount === 0)
