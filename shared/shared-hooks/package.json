@@ -4,10 +4,10 @@
   "description": "",
   "type": "module",
   "devDependencies": {
+    "@omenai/package-provider": "*",
     "@omenai/shared-auth": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-state-store": "*",
-    "@omenai/typescript-config": "*",
-    "@omenai/package-provider": "*"
+    "@omenai/typescript-config": "*"
   }
 }
