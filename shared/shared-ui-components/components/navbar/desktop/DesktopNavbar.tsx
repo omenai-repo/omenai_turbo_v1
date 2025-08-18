@@ -22,7 +22,7 @@ export default function DesktopNavbar() {
     { text: "Collect", link: `${base_url()}/catalog` },
     // { text: "Shop", link: "https://omenai.shop" },
     { text: "Editorials", link: `${base_url()}/articles` },
-    ...(user.role !== "user"
+    ...(user && user.role !== "user"
       ? [
           {
             text: "Go to dashboard",
