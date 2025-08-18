@@ -1,7 +1,7 @@
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { collections } from "../collectionConstants";
 import ArtCollectionCard from "./components/ArtCollectionCard";
-
+export const dynamic = "force-dynamic";
 export default function page() {
   return (
     <main>

@@ -1,4 +1,3 @@
-"use client";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { Suspense } from "react";
 import VerifyTransactionWrapper from "./components/VerifyTransactionWrapper";

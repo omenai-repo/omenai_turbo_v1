@@ -1,6 +1,5 @@
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import ArticleViewWrapper from "./ArticleViewWrapper";
-
 export default async function page({
   params,
 }: {
