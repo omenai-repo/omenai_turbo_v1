@@ -13,21 +13,21 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
-      const data = await request.json();
+      const { owner_id, amount } = await request.json();
 
       // Check if wallet exists
-      const wallet_exists = await Wallet.findOne({ owner_id: data.owner_id });
+      const wallet_exists = await Wallet.findOne({ owner_id });
 
       if (!wallet_exists)
         throw new NotFoundError(
           "Wallet doesn't exists for this user, please escalate to IT support"
         );
       const move_funds_to_available_balance = await Wallet.updateOne(
-        { owner_id: data.owner_id, pending_balance: { $gte: data.amount } }, // Ensure enough pending balance
+        { owner_id, pending_balance: { $gte: amount } }, // Ensure enough pending balance
         {
           $inc: {
-            pending_balance: -data.amount, // Deduct from pending
-            available_balance: data.amount, // Add to available
+            pending_balance: -amount, // Deduct from pending
+            available_balance: amount, // Add to available
           },
         }
       );
