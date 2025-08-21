@@ -60,12 +60,14 @@ export default function ArtworkTextInput({
         <input
           name={name}
           required={required}
-          type="text"
+          type={
+            ["price", "year", "birth_year"].includes(name) ? "number" : "text"
+          }
           disabled={disabled}
           placeholder={placeholder}
           value={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl disabled:cursor-not-allowed disabled:bg-dark/10 text-fluid-xs placeholder:text-dark/40 placeholder:text-fluid-xxs"
+          className={`w-full focus:ring-1 ring-1 border-0 outline-none focus:outline-none  ${errorList.length > 0 ? "ring-red-600 focus:ring-red-600" : " focus:ring-dark ring-dark/20"} transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md disabled:cursor-not-allowed disabled:bg-dark/10 text-fluid-xs placeholder:text-dark/40 placeholder:text-fluid-xxs`}
         />
       )}
       {type === "textarea" && (
@@ -83,7 +85,7 @@ export default function ArtworkTextInput({
           return (
             <p
               key={`${error}-error_list`}
-              className="text-red-600 text-fluid-xs"
+              className="text-red-600 text-fluid-xxs"
             >
               {error}
             </p>

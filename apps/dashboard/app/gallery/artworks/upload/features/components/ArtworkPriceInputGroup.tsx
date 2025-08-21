@@ -3,12 +3,12 @@ import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/galler
 import { uploadArtworkPriceInputMocks } from "../mocks";
 import ArtworkSelectInput from "./ArtworkSelectInput";
 import ArtworkTextInput from "./ArtworkTextInput";
-import { useContext, useState } from "react";
-import { GallerySchemaTypes } from "@omenai/shared-types";
+import { useState } from "react";
 import { Loader, RefreshCcwDot } from "lucide-react";
 import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
 import { toast } from "sonner";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 export default function ArtworkPriceInputGroup() {
   const { artworkUploadData, updateArtworkUploadData } =
@@ -29,15 +29,10 @@ export default function ArtworkPriceInputGroup() {
       );
 
       if (!conversion_value?.isOk)
-        toast.error("Error notification", {
-          description:
-            "Issue encountered while retrieving exchange rate value. Please try again.",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          "Issue encountered while retrieving exchange rate value. Please try again.",
+          "error"
+        );
       else {
         const rounded_conversion_value =
           Math.round(+conversion_value.data * 10) / 10;
@@ -47,16 +42,10 @@ export default function ArtworkPriceInputGroup() {
         );
       }
     } catch (error) {
-      console.error("Error during currency conversion:", error);
-      toast.error("Error notification", {
-        description:
-          "An error occurred while converting the currency. Please try again.",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "An error occurred while converting the currency. Please try again.",
+        "error"
+      );
       return;
     } finally {
       setConversionLoading(false);
@@ -69,7 +58,7 @@ export default function ArtworkPriceInputGroup() {
         Artwork Pricing
       </h2>
 
-      <div className="grid grid-cols-2 2xl:grid-cols-3  w-full gap-4">
+      <div className="grid grid-cols-2 2xl:grid-cols-3 w-full gap-4">
         <div className="grid grid-cols-4 col-span-2 space-x-2 items-center w-full">
           <div className="col-span-1">
             <ArtworkSelectInput
@@ -77,6 +66,7 @@ export default function ArtworkPriceInputGroup() {
               name={uploadArtworkPriceInputMocks[0].name}
               required={uploadArtworkPriceInputMocks[0].required}
               currency_items={uploadArtworkPriceInputMocks[0].currencies}
+              disabled={false}
             />
           </div>
 
@@ -101,14 +91,18 @@ export default function ArtworkPriceInputGroup() {
                 <button
                   onClick={handleCurrencyConversion}
                   type="button"
-                  disabled={artworkUploadData.price === 0 || conversionLoading}
-                  className="p-2 rounded-xl w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/40 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                  disabled={
+                    artworkUploadData.price.toString() === "0" ||
+                    artworkUploadData.price.toString() === "" ||
+                    conversionLoading
+                  }
+                  className="p-2 rounded-xl w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/20 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
                 >
                   {conversionLoading ? (
-                    <Loader color="rgba(255, 255, 255, 1)" size={20} />
+                    <Loader color="rgba(255, 255, 255, 1)" size={16} />
                   ) : (
                     <RefreshCcwDot
-                      size={20}
+                      size={16}
                       strokeWidth={1.5}
                       absoluteStrokeWidth
                     />
@@ -139,7 +133,9 @@ export default function ArtworkPriceInputGroup() {
             items={uploadArtworkPriceInputMocks[2].options}
             disabled={
               user.subscription_status.type === null ||
-              user.subscription_status.type?.toLowerCase() === "basic"
+              ["basic", "pro"].includes(
+                user.subscription_status.type.toLowerCase()
+              )
             }
           />
         </div>

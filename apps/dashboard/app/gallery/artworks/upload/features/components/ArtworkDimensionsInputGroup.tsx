@@ -7,7 +7,7 @@ export default function ArtworkDimensionsInputGroup() {
       <h2 className="text-dark font-normal text-fluid-base my-4">
         Artwork Dimensions
       </h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 ">
+      <div className="grid grid-cols-2 gap-4">
         {uploadArtworkDimensionInputMocks.map((input, index) => {
           return (
             <ArtworkTextInput

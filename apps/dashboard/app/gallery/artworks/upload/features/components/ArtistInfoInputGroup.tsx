@@ -28,6 +28,7 @@ export default function ArtistInfoInputGroup() {
                 items={input.options}
                 name={input.name}
                 required={input.required}
+                disabled={false}
               />
             );
           }

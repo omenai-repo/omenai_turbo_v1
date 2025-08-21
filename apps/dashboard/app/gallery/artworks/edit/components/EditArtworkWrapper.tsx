@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 
 import { currencies } from "@omenai/shared-json/src/currency_select";
 
@@ -34,8 +34,9 @@ export default function EditArtworkWrapper({
     shouldShowPrice: "",
   });
 
-  const { csrf } = useAuth({ requiredRole: "gallery" });
+  const { csrf, user } = useAuth({ requiredRole: "gallery" });
 
+  console.log(user.subscription_status);
   const handleChange = async (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -168,7 +169,7 @@ export default function EditArtworkWrapper({
   return (
     <div className="mt-5">
       <div className="w-full py-3 bg-white">
-        <h1 className="text-fluid-base text-dark font-normal">
+        <h1 className="text-fluid-base font-semibold text-dark">
           Update artwork pricing
         </h1>
       </div>
@@ -210,9 +211,9 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col w-full">
               <label
                 htmlFor={"price"}
-                className="text-[#858585] font-normal text-fluid-xs"
+                className="text-dark font-normal text-fluid-xs"
               >
-                Price (Enter price in your preferred currency)
+                Price
               </label>
               <input
                 name="price"
@@ -257,9 +258,31 @@ export default function EditArtworkWrapper({
               onChange={handleChange}
               name="shouldShowPrice"
               required={true}
-              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-xl "
+              disabled={
+                user.subscription_status.type === null ||
+                ["basic", "pro"].includes(
+                  user.subscription_status.type.toLowerCase()
+                )
+              }
+              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs disabled:cursor-not-allowed focus:ring-dark px-6 py-2 sm:py-3 rounded-xl "
             >
-              <option value="">Select</option>
+              <option
+                value={
+                  user.subscription_status.type !== null &&
+                  ["basic", "pro"].includes(
+                    user.subscription_status.type.toLowerCase()
+                  )
+                    ? "Yes"
+                    : ""
+                }
+              >
+                {user.subscription_status.type !== null &&
+                ["basic", "pro"].includes(
+                  user.subscription_status.type.toLowerCase()
+                )
+                  ? "Yes"
+                  : "Select"}
+              </option>
               <option
                 value="Yes"
                 className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"

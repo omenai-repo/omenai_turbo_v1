@@ -29,6 +29,7 @@ export default function ArtworkInfoInputGroup() {
                 items={input.options}
                 name={input.name}
                 required={input.required}
+                disabled={false}
               />
             );
           }
