@@ -243,7 +243,7 @@ async function handleSubscriptionPayment(
             type: verified_transaction.data.payment_type,
             flw_ref: verified_transaction.data.flw_ref,
             status: verified_transaction.data.status,
-            trans_ref: update_transaction[0].trans_id,
+            trans_ref: update_transaction.trans_id,
           },
           customer: {
             ...verified_transaction.data.customer,
