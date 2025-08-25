@@ -46,7 +46,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       country: gallery.address.countryCode,
       token: data.token,
       narration: `Payment for Omenai ${data.plan_interval} subscription`,
-      redirect_url: `${dashboard_url()}/gallery/billing/plans/checkout/verification`,
+      redirect_url: `https://dashboard.omenai.app/gallery/billing/plans/checkout/verification`,
       meta: {
         gallery_id: data.gallery_id,
         type: "subscription",

@@ -143,6 +143,8 @@ export default function CheckoutBillingCard({
     router.replace("/gallery/billing");
   }
 
+  console.log(shouldCharge);
+
   return (
     <>
       <div className="mt-12 space-y-4">

@@ -533,6 +533,7 @@ export type SubscriptionTransactionModelSchemaTypes = {
   amount: string;
   gallery_id: string;
   date: Date;
+  status: "pending" | "successful";
 };
 
 export type SubscriptionModelSchemaTypes = {

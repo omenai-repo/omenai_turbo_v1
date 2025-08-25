@@ -1,11 +1,11 @@
 import { sendMailVerification } from "../../controller/emailController";
-import SubscriptionPaymentFailedMail from "../../views/subscription/SubscriptionPaymentFailedMail";
+import SubscriptionPaymentPendingEmail from "../../views/subscription/SubscriptionPaymentPendingMail";
 
 type EmailData = {
   name: string;
   email: string;
 };
-export const sendSubscriptionPaymentFailedMail = async ({
+export const sendSubscriptionPaymentPendingMail = async ({
   name,
   email,
 }: EmailData) => {
@@ -14,7 +14,7 @@ export const sendSubscriptionPaymentFailedMail = async ({
     prefix: "Omenai subscriptions",
     from: "transactions",
     to: email,
-    subject: "Notification: Failed Subscription Payment Attempt",
-    react: SubscriptionPaymentFailedMail(name),
+    subject: "Notfication: Pending Subscription Payment",
+    react: SubscriptionPaymentPendingEmail(name),
   });
 };

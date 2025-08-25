@@ -10,6 +10,7 @@ const subscription_transaction =
       amount: { type: String, required: true },
       date: { type: Date, required: true },
       gallery_id: { type: String, required: true },
+      status: { type: String, enum: ["pending", "successful"], required: true },
     },
     { timestamps: true }
   );

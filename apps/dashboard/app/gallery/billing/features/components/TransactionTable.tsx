@@ -62,8 +62,20 @@ export default function TransactionTable() {
                       <p className="text-fluid-xxs font-semibold text-slate-500 mt-0.5">
                         #{transaction.trans_id}
                       </p>
-                      <p className="text-fluid-xxs font-medium text-dark">
-                        Payment Processed Successfully
+                      <p
+                        className={`text-fluid-xxs font-medium ${
+                          transaction.status === "successful"
+                            ? "text-green-600"
+                            : transaction.status === "failed"
+                              ? "text-red-600"
+                              : "text-amber-600"
+                        }`}
+                      >
+                        {transaction.status === "successful"
+                          ? "Payment processed successfully"
+                          : transaction.status === "failed"
+                            ? "Payment failed"
+                            : "Payment pending"}
                       </p>
                       <p className="text-fluid-xxs text-slate-600 mt-1">
                         {formatISODate(transaction.date)}

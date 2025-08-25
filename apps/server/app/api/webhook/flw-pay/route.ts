@@ -18,6 +18,7 @@ import {
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 import { getSubscriptionExpiryDate } from "@omenai/shared-utils/src/getSubscriptionExpiryDate";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
@@ -71,6 +72,22 @@ async function verifyFlutterwaveTransaction(
   return await response.json();
 }
 
+const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
+  Basic: { monthly: 5, yearly: 75 },
+  Pro: { monthly: 15, yearly: 225 },
+  Premium: {
+    monthly: Number.MAX_SAFE_INTEGER,
+    yearly: Number.MAX_SAFE_INTEGER,
+  },
+};
+
+function getUploadLimitLookup(
+  planName: PlanName,
+  planInterval: PlanInterval
+): number {
+  return uploadLimits[planName][planInterval];
+}
+
 async function handleSubscriptionPayment(
   verified_transaction: any,
   req: any,
@@ -83,18 +100,89 @@ async function handleSubscriptionPayment(
   if (existingTransaction) {
     return NextResponse.json({ status: 200 });
   }
+  const currency = getCurrencySymbol("USD");
+  const date = toUTCDate(new Date());
+
+  const parts = verified_transaction.data.tx_ref.split("&");
+
+  const [ref, gallery_id, plan_id, plan_interval, charge_type] = parts;
+
+  if (parts.length !== 5) {
+    console.error("Unexpected tx_ref format");
+    return NextResponse.json({ status: 401 });
+  }
+  const data: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
+    amount: formatPrice(verified_transaction.data.amount, currency),
+    date,
+    gallery_id,
+    reference: verified_transaction.data.id,
+    status: verified_transaction.data.status,
+  };
+
   if (verified_transaction.data.status === "failed") {
-    sendSubscriptionPaymentFailedMail({
-      name: req.data.customer.name,
-      email: req.data.customer.email,
-    }).catch((err) =>
-      console.error("Failed to send subscription payment failed email:", err)
+    const update_transaction = await SubscriptionTransactions.findOneAndUpdate(
+      { reference: verified_transaction.data.id },
+      { $set: data },
+      { session, upsert: true, new: true }
     );
+
+    if (
+      update_transaction.modifiedCount === 0 &&
+      !update_transaction.upsertedId
+    ) {
+      return NextResponse.json({ status: 401 });
+    }
+    if (charge_type !== "card_change")
+      sendSubscriptionPaymentFailedMail({
+        name: req.data.customer.name,
+        email: req.data.customer.email,
+      }).catch((err) =>
+        console.error("Failed to send subscription payment failed email:", err)
+      );
 
     return NextResponse.json({ status: 200 });
   }
-  if (verified_transaction.data.status === "pending") {
-    return NextResponse.json({ status: 401 });
+
+  if (
+    verified_transaction.data.status === "pending" &&
+    verified_transaction.data.tx_ref === req.data.tx_ref &&
+    verified_transaction.data.amount === req.data.amount &&
+    verified_transaction.data.currency === req.data.currency
+  ) {
+    try {
+      //TODO: Handle pending status if necessary
+      if (charge_type === "card_change") {
+        // TODO: Handle card change pending status if necessary
+        // TODO: Send card change pending email if necessary
+        return NextResponse.json({ status: 200 });
+      }
+
+      const data: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
+        amount: formatPrice(verified_transaction.data.amount, currency),
+        date,
+        gallery_id,
+        reference: verified_transaction.data.id,
+        status: verified_transaction.data.status,
+      };
+      const update_transaction = await SubscriptionTransactions.create([data], {
+        session,
+      });
+
+      if (!update_transaction) {
+        console.error("Failed to create subscription transaction");
+        return NextResponse.json({ status: 401 });
+      }
+    } catch (error) {
+      console.error("An error occurred during the transaction:", error);
+      return NextResponse.json({ status: 401 });
+    }
+
+    await sendSubscriptionPaymentPendingMail({
+      name: req.data.customer.name,
+      email: req.data.customer.email,
+    });
+
+    return NextResponse.json({ status: 200 });
   }
   if (
     verified_transaction.data.status === "successful" &&
@@ -102,19 +190,8 @@ async function handleSubscriptionPayment(
     verified_transaction.data.amount === req.data.amount &&
     verified_transaction.data.currency === req.data.currency
   ) {
-    const currency = getCurrencySymbol("USD");
     try {
-      const date = toUTCDate(new Date());
       session.startTransaction();
-
-      const parts = verified_transaction.data.tx_ref.split("&");
-
-      if (parts.length !== 5) {
-        console.error("Unexpected tx_ref format");
-        return NextResponse.json({ status: 401 });
-      }
-
-      const [ref, gallery_id, plan_id, plan_interval, charge_type] = parts;
 
       if (charge_type === "card_change") {
         await Subscriptions.updateOne(
@@ -133,42 +210,26 @@ async function handleSubscriptionPayment(
         ).session(session);
         //TODO: Send a mail after card change
         await session.commitTransaction();
+
         return NextResponse.json({ status: 200 });
       } else {
-        const data: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> =
-          {
-            amount: formatPrice(verified_transaction.data.amount, currency),
-            date,
-            gallery_id,
-            reference: verified_transaction.data.id,
-          };
-        const create_transaction = await SubscriptionTransactions.create(
-          [data],
-          { session }
-        );
+        const update_transaction =
+          await SubscriptionTransactions.findOneAndUpdate(
+            { reference: verified_transaction.data.id },
+            { $set: data },
+            { session, upsert: true, new: true }
+          );
+
         const found_customer = await Subscriptions.findOne({
           "customer.gallery_id": gallery_id,
         }).session(session);
+
         const expiry_date = getSubscriptionExpiryDate(plan_interval);
+
         const plan = await SubscriptionPlan.findOne({ plan_id }).session(
           session
         );
 
-        const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
-          Basic: { monthly: 5, yearly: 75 },
-          Pro: { monthly: 15, yearly: 225 },
-          Premium: {
-            monthly: Number.MAX_SAFE_INTEGER,
-            yearly: Number.MAX_SAFE_INTEGER,
-          },
-        };
-
-        function getUploadLimitLookup(
-          planName: PlanName,
-          planInterval: PlanInterval
-        ): number {
-          return uploadLimits[planName][planInterval];
-        }
         const subscription_data = {
           card: verified_transaction.data.card,
           start_date: date.toISOString(),
@@ -180,7 +241,7 @@ async function handleSubscriptionPayment(
             type: verified_transaction.data.payment_type,
             flw_ref: verified_transaction.data.flw_ref,
             status: verified_transaction.data.status,
-            trans_ref: create_transaction[0].trans_id,
+            trans_ref: update_transaction[0].trans_id,
           },
           customer: {
             ...verified_transaction.data.customer,
