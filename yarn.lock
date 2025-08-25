@@ -9370,6 +9370,7 @@ __metadata:
     sonner: "npm:^1.7.0"
     tailwindcss: "npm:^3.4.16"
     turbo: "npm:^2.5.6"
+    turbo-ignore: "npm:^2.5.6"
     typescript: "npm:5.5.4"
     usehooks-ts: "npm:^3.1.0"
     uuid: "npm:^11.0.5"
@@ -11757,6 +11758,17 @@ __metadata:
   version: 2.5.6
   resolution: "turbo-darwin-arm64@npm:2.5.6"
   conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"turbo-ignore@npm:^2.5.6":
+  version: 2.5.6
+  resolution: "turbo-ignore@npm:2.5.6"
+  dependencies:
+    json5: "npm:^2.2.3"
+  bin:
+    turbo-ignore: dist/cli.js
+  checksum: 10c0/550780ad9e179fe0ca2a08c403f47238a355b7cf1438c2d727bdef8f92f513d3e60bb46da0cbe2686a268572fc05cbab28edbcb2f060c1d685df763793411d19
   languageName: node
   linkType: hard
 

@@ -52,8 +52,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         type: "subscription",
         plan_id: data.plan_id,
         plan_interval: data.plan_interval,
+        email: data.email,
       },
+      preauthorize: false,
     };
+
+    console.log(payload);
 
     const response = await fetch(
       "https://api.flutterwave.com/v3/tokenized-charges",
@@ -62,6 +66,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         headers: {
           Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           "Content-Type": "application/json",
+          accept: "application/json",
         },
         body: JSON.stringify(payload),
       }

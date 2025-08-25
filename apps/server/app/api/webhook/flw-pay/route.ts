@@ -230,6 +230,8 @@ async function handleSubscriptionPayment(
           session
         );
 
+        console.log(verified_transaction.data.card);
+
         const subscription_data = {
           card: verified_transaction.data.card,
           start_date: date.toISOString(),
@@ -245,7 +247,8 @@ async function handleSubscriptionPayment(
           },
           customer: {
             ...verified_transaction.data.customer,
-            gallery_id,
+            email: verified_transaction.data.meta.email,
+            gallery_id: verified_transaction.data.meta.gallery_id,
           },
           plan_details: {
             type: plan.name,

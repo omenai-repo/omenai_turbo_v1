@@ -11,7 +11,6 @@ import MigrationUpgradeCheckoutItem from "./components/MigrationUpgradeCheckoutI
 import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SubscriptionCheckout() {
@@ -59,12 +58,6 @@ export default function SubscriptionCheckout() {
         </div>
       ) : (
         <>
-          <div className="my-8 space-y-1">
-            {/* <p className="text-[#858585] text-fluid-xs">
-              Please fill in all information below to fully activate your
-              subscription
-            </p> */}
-          </div>
           <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-3 items-baseline">
             {action === "null" ? (
               <div className="col-span-1">

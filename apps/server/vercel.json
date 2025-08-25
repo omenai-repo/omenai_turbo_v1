@@ -28,5 +28,7 @@
       "path": "/api/cron/orders/declineOrdersWithExpiredHoldStatus",
       "schedule": "0 * * * *"
     }
-  ]
+  ],
+
+  "ignoreCommand": "npx turbo-ignore"
 }

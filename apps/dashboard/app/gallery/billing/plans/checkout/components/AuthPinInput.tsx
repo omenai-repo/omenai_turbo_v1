@@ -8,6 +8,7 @@ import {
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRouter } from "next/navigation";
 import {
   ChangeEvent,
@@ -81,46 +82,39 @@ export default function AuthPinInput({
       tx_ref: ref,
     };
 
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    const response = await validateChargeAuthorization(data, csrf || "");
-    if (response?.isOk) {
-      if (response.data.status === "error") {
-        toast.error("Error notification", {
-          description: response.data.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      } else {
-        update_flw_charge_payload_data(
-          {} as FLWDirectChargeDataTypes & { name: string }
-        );
-        if (response.data.meta.authorization.mode === "redirect") {
-          // redirect user
-          toast.info("Operation in progress", {
-            description: "Redirecting to authentication portal, Please wait",
-          });
-          set_transaction_id(response.data.data.id);
-          router.replace(response.data.meta.authorization.redirect);
+      const response = await validateChargeAuthorization(data, csrf || "");
+      if (response?.isOk) {
+        if (response.data.status === "error") {
+          toast_notif(response.data.message, "error");
         } else {
-          set_flw_ref(response.data.data.flw_ref);
-          updateFinalAuthorization(response.data.meta.authorization.mode);
+          update_flw_charge_payload_data(
+            {} as FLWDirectChargeDataTypes & { name: string }
+          );
+          if (response.data.meta.authorization.mode === "redirect") {
+            // redirect user
+            toast.info("Operation in progress", {
+              description: "Redirecting to authentication portal, Please wait",
+            });
+            set_transaction_id(response.data.data.id);
+            router.replace(response.data.meta.authorization.redirect);
+          } else {
+            set_flw_ref(response.data.data.flw_ref);
+            updateFinalAuthorization(response.data.meta.authorization.mode);
+          }
+          handleClick();
         }
-        handleClick();
+      } else {
+        toast_notif("Something went wrong, please try again", "error");
       }
-    } else {
-      toast.error("Error notification", {
-        description: "Something went wrong, please try again",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+    } catch (error) {
+      toast_notif("Something went wrong, please try again", "error");
+    } finally {
+      setIsLoading(false);
     }
+
     setIsLoading(false);
   }
   return (
