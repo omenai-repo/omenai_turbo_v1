@@ -55,7 +55,7 @@ export default function CheckoutBillingCard({
 
   const router = useRouter();
 
-  const url = getApiUrl();
+  const url = dashboard_url();
 
   async function handlePayNow() {
     setError("");
@@ -67,7 +67,6 @@ export default function CheckoutBillingCard({
       gallery_id: sub_data.customer.gallery_id,
       plan_id: plan._id.toString(),
       plan_interval: interval,
-      redirect: `${dashboard_url()}/gallery/billing/plans/checkout/verification`,
     };
     setLoading(true);
     const tokenize_card = await createTokenizedCharge(
