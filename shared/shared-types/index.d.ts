@@ -676,7 +676,10 @@ export type SubscriptionPlanDataTypes = {
   };
   plan_id: string;
   currency: string;
-  benefits: string[];
+  benefits: {
+    annual: string[];
+    monthly: string[];
+  };
 };
 
 export type PinAuthorizationData = {

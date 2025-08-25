@@ -6,13 +6,14 @@ import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions/Pla
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
-  allowedRoles: ["gallery"],
+  allowedRoles: ["admin"],
 };
 
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+export const POST = withRateLimit(config)(async function POST(
   request: Request
 ) {
   try {

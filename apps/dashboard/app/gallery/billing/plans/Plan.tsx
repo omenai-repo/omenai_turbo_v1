@@ -145,24 +145,59 @@ export default function Plan({
                   What's included
                 </h4>
                 <ul className="space-y-3">
-                  {benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <svg
-                        className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span className="text-sm text-slate-700">{benefit}</span>
-                    </li>
-                  ))}
+                  {tab === "monthly"
+                    ? benefits.monthly.map((benefit) => {
+                        return (
+                          <li key={benefit} className="flex items-start">
+                            <span className="flex-shrink-0">
+                              <svg
+                                className="h-4 w-4 text-dark"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M4.5 12.75l6 6 9-13.5"
+                                ></path>
+                              </svg>
+                            </span>
+                            <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
+                              {benefit}
+                            </p>
+                          </li>
+                        );
+                      })
+                    : benefits.annual.map((benefit) => {
+                        return (
+                          <li key={benefit} className="flex items-start">
+                            <span className="flex-shrink-0">
+                              <svg
+                                className="h-4 w-4 text-dark"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M4.5 12.75l6 6 9-13.5"
+                                ></path>
+                              </svg>
+                            </span>
+                            <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
+                              {benefit}
+                            </p>
+                          </li>
+                        );
+                      })}
                 </ul>
               </div>
 
