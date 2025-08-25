@@ -247,8 +247,7 @@ async function handleSubscriptionPayment(
           },
           customer: {
             ...verified_transaction.data.customer,
-            email: verified_transaction.data.meta.email,
-            gallery_id: verified_transaction.data.meta.gallery_id,
+            gallery_id,
           },
           plan_details: {
             type: plan.name,

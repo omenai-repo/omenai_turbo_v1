@@ -28,7 +28,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       tx_ref: `${data.tx_ref}&${data.customer.gallery_id}&${data.customer.plan_id}&${data.customer.plan_interval}&${data.charge_type}`,
       redirect_url: data.redirect,
     };
-    console.log(payload);
 
     const encrypted_payload = encryptPayload(
       process.env.FLW_TEST_ENCRYPTION_KEY!,
