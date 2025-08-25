@@ -25,11 +25,12 @@ const ExpiryYear: React.FC<YearProps> = ({ onChange }) => {
       <div className="relative">
         <input
           name="year"
-          type="text"
+          type="number"
           required
           maxLength={4}
           placeholder="YYYY"
           onChange={handleInputChange}
+          value={year}
           className="w-full h-12 px-4 pr-10 text-sm font-medium bg-white border rounded-xl focus:border-gray-900 focus:ring-4 focus:ring-gray-100 transition-all duration-200 placeholder:text-dark/30 outline-none"
         />
         <Shield className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-dark" />

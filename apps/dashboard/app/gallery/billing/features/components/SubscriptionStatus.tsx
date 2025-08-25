@@ -78,13 +78,13 @@ export default function SubDetail({
 
   const currency_symbol = getCurrencySymbol(sub_data.plan_details.currency);
   return (
-    <div className=" bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-h-[300px]">
+    <div className=" bg-white rounded-xl shadow-sm border border-slate-200 p-5 max-h-[300px]">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-fluid-xs font-semibold text-slate-900">
           Your Subscription
         </h3>
         <div
-          className={`px-3 py-1 rounded-lg text-xs font-semibold ${
+          className={`px-3 py-1 rounded-lg text-fluid-xxs font-semibold ${
             sub_data.status === "active"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
@@ -122,13 +122,9 @@ export default function SubDetail({
           {sub_data.status === "active" && (
             <>
               <div className="mt-3">
-                <div className="flex justify-between text-xs text-slate-600 mb-1">
+                <div className="flex justify-between text-fluid-xxs text-slate-600 mb-1">
                   <span>Period progress</span>
-                  <span>
-                    {sub_data.upload_tracker.limit -
-                      sub_data.upload_tracker.upload_count}{" "}
-                    uploads left
-                  </span>
+                  <span>{daysLeft(sub_data.expiry_date)} days left</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
@@ -140,24 +136,36 @@ export default function SubDetail({
                 </div>
               </div>
               <div className="mt-3">
-                <div className="flex justify-between text-xs text-slate-600 mb-1">
-                  <span>Upload usage</span>
-                  <span>{daysLeft(sub_data.expiry_date)} days left</span>
-                </div>
-
                 {/* Usage stats */}
-                <div className="flex justify-between text-xs text-slate-500 mb-2">
+                <div className="flex justify-between text-fluid-xxs text-slate-500 mb-2">
                   <span>
                     {getUsageDisplayText(
                       sub_data.upload_tracker.upload_count,
                       sub_data.upload_tracker.limit
                     )}
                   </span>
-                  <span>
-                    {sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER
-                      ? "Unlimited"
-                      : `${remainingUploads} remaining`}
-                  </span>
+
+                  <div className="flex items-center gap-x-1">
+                    <span>
+                      {sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER
+                        ? "Unlimited"
+                        : `${remainingUploads} remaining`}
+                    </span>
+
+                    {/* Optional: Usage percentage display */}
+                    {sub_data.upload_tracker.limit !==
+                      Number.MAX_SAFE_INTEGER && (
+                      <div className="text-right text-fluid-xxs text-slate-600">
+                        (
+                        {Math.round(
+                          (sub_data.upload_tracker.upload_count /
+                            sub_data.upload_tracker.limit) *
+                            100
+                        )}
+                        % used)
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Progress bar */}
@@ -169,39 +177,9 @@ export default function SubDetail({
                     }}
                   />
                 </div>
-
-                {/* Optional: Usage percentage display */}
-                {/* {sub_data.upload_tracker.limit !== Number.MAX_SAFE_INTEGER && (
-                  <div className="text-right text-xs text-slate-400 mt-1">
-                    {Math.round(
-                      (sub_data.upload_tracker.upload_count /
-                        sub_data.upload_tracker.limit) *
-                        100
-                    )}
-                    % used
-                  </div>
-                )} */}
               </div>
             </>
           )}
-        </div>
-
-        {/* Due Date */}
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-          <span>Next billing: {formatIntlDateTime(sub_data.expiry_date)}</span>
         </div>
 
         {/* Actions */}

@@ -222,7 +222,7 @@ export default function CardInput({
           <button
             type="submit"
             disabled={cardInputLoading}
-            className="w-full h-12 bg-dark text-white text-fluid-xs font-semibold rounded-xl transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
+            className="w-full h-12 bg-dark text-white text-fluid-xs font-semibold rounded-xl transition-all duration-200 disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/80 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
           >
             {cardInputLoading ? <LoadSmall /> : "Complete Payment"}
           </button>

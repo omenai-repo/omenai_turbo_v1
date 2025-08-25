@@ -22,38 +22,64 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 ) {
   try {
     await connectMongoDB();
-
     const data = await request.json();
 
-    const doc_count = await Artworkuploads.countDocuments({
-      author_id: data.author_id,
-    });
+    // Validate required fields
+    if (!data.author_id || !data.title || !data.role_access?.role) {
+      throw new ServerError("Missing required fields");
+    }
 
+    // Always trim title
+    const new_title = trimWhiteSpace(data.title);
+    const payload = { ...data, title: new_title };
+
+    // For galleries, check subscription before upload
     if (data.role_access.role === "gallery") {
       const active_subscription = await Subscriptions.findOne(
         { "customer.gallery_id": data.author_id },
         "plan_details status upload_tracker"
       );
 
-      if (!active_subscription || active_subscription.status !== "active")
+      if (!active_subscription || active_subscription.status !== "active") {
         throw new ForbiddenError("No active subscription for this user");
+      }
 
       if (
         active_subscription.upload_tracker.upload_count >=
         active_subscription.upload_tracker.limit
-      )
+      ) {
         throw new ForbiddenError(
           "Plan usage limit exceeded, please upgrade plan"
         );
+      }
     }
 
-    const new_title = trimWhiteSpace(data.title);
-    const payload = { ...data, title: new_title };
+    // Upload artwork
+    const uploadArt = await Artworkuploads.create(payload);
+    if (!uploadArt) {
+      throw new ServerError("A server error has occurred, please try again");
+    }
 
-    const uploadArt = await Artworkuploads.create({ ...payload });
+    // For galleries, increment upload count after successful upload
+    if (data.role_access.role === "gallery") {
+      const update_tracker = await Subscriptions.updateOne(
+        { "customer.gallery_id": data.author_id },
+        { $inc: { "upload_tracker.upload_count": 1 } }
+      );
 
-    if (!uploadArt)
-      throw new ServerError("A server error has occured, please try again");
+      if (update_tracker.modifiedCount === 0) {
+        // Rollback the artwork upload if tracker update fails
+        await Artworkuploads.deleteOne({ _id: uploadArt._id });
+        throw new ServerError(
+          "A server error has occurred, please try again or contact support"
+        );
+      }
+    }
+
+    // Get updated document count after upload
+    const doc_count = await Artworkuploads.countDocuments({
+      author_id: data.author_id,
+    });
 
     return NextResponse.json(
       {
@@ -64,7 +90,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -15,9 +15,10 @@ import {
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { createTokenizedCharge } from "@omenai/shared-services/subscriptions/createTokenizedCharge";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CheckoutBillingCard({
   plan,
@@ -39,6 +40,7 @@ export default function CheckoutBillingCard({
   amount: number;
   shouldCharge: boolean;
 }) {
+  const queryClient = useQueryClient();
   const { user } = useAuth({ requiredRole: "gallery" });
   const [transaction_id, set_transaction_id] = useLocalStorage(
     "flw_trans_id",
@@ -65,6 +67,7 @@ export default function CheckoutBillingCard({
       gallery_id: sub_data.customer.gallery_id,
       plan_id: plan._id.toString(),
       plan_interval: interval,
+      redirect: `${dashboard_url()}/gallery/billing/plans/checkout/verification`,
     };
     setLoading(true);
     const tokenize_card = await createTokenizedCharge(
@@ -133,6 +136,11 @@ export default function CheckoutBillingCard({
         className: "class",
       });
     setMigrationLoading(false);
+
+    await queryClient.invalidateQueries({
+      queryKey: ["subscription_precheck"],
+    });
+
     router.replace("/gallery/billing");
   }
 
@@ -182,8 +190,12 @@ export default function CheckoutBillingCard({
           </Link>
         </div>
 
-        <button className="w-full py-3 bg-dark text-white text-fluid-xs font-medium rounded-xl hover:bg-dark/90 transition-colors">
-          {loading ? "Processing..." : "Confirm Payment"}
+        <button
+          onClick={shouldCharge ? handlePayNow : handleMigrateToPlan}
+          disabled={migrationLoading || loading || !shouldCharge}
+          className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xs font-medium rounded-xl disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
+        >
+          {loading || migrationLoading ? <LoadSmall /> : "Confirm Payment"}
         </button>
       </div>
     </>

@@ -25,10 +25,11 @@ const CVV: React.FC<CVVProps> = ({ onChange }) => {
       <div className="relative">
         <input
           name="cvv"
-          type="text"
+          type="number"
           required
           maxLength={4}
           placeholder="123"
+          value={cvv}
           onChange={handleInputChange}
           className="w-full h-12 px-4 pr-10 text-sm font-medium bg-white border rounded-xl focus:border-gray-900 focus:ring-4 focus:ring-gray-100 transition-all duration-200 placeholder:text-dark/30 outline-none"
         />

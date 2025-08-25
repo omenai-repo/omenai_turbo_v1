@@ -67,7 +67,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       }
     );
 
+    console.log(
+      "Payload being sent to Flutterwave:",
+      JSON.stringify(payload, null, 2)
+    );
+
     const result = await response.json();
+
+    console.log(result);
 
     if (!response.ok) return NextResponse.json(result, { status: 401 });
 
