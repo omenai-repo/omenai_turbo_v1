@@ -75,12 +75,19 @@ export const POST = withAppRouterHighlight(async function POST(
       if (artwork.role_access.role === "artist") {
         artworksByArtist.push(artwork);
       } else if (basicGalleryIds.includes(artwork.author_id)) {
-        if (selectedBasicArtworks.length < BASIC_LIMIT) {
-          selectedBasicArtworks.push(artwork);
-        }
+        selectedBasicArtworks.push(artwork);
       } else {
         selectedProPremiumArtworks.push(artwork);
       }
+
+      // Stop if we have filled the page
+      if (
+        selectedBasicArtworks.length +
+          selectedProPremiumArtworks.length +
+          artworksByArtist.length >=
+        PAGE_SIZE
+      )
+        break;
     }
 
     // Combine and slice the artworks for pagination

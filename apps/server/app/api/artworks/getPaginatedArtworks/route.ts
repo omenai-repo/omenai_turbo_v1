@@ -14,7 +14,6 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
     const PAGE_SIZE = 30;
-    const BASIC_LIMIT = 25;
 
     try {
       await connectMongoDB();
@@ -83,12 +82,19 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           artworksByArtist.push(artwork);
         } else if (basicGalleryIds.includes(artwork.author_id)) {
           // TODO: Remove limit
-          if (selectedBasicArtworks.length < BASIC_LIMIT) {
-            selectedBasicArtworks.push(artwork);
-          }
+          selectedBasicArtworks.push(artwork);
         } else {
           selectedProPremiumArtworks.push(artwork);
         }
+
+        // Stop if we have filled the page
+        if (
+          selectedBasicArtworks.length +
+            selectedProPremiumArtworks.length +
+            artworksByArtist.length >=
+          PAGE_SIZE
+        )
+          break;
       }
 
       // Combine and slice the artworks for pagination

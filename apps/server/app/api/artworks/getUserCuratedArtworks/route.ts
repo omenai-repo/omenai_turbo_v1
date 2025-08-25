@@ -14,7 +14,6 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request
 ) {
   const PAGE_SIZE = 30;
-  const BASIC_LIMIT = 25;
   try {
     await connectMongoDB();
 
@@ -72,40 +71,20 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
       .sort({ createdAt: -1 })
       .exec();
 
-    // Fetch all artworks, no initial limit applied
-
-    console.log(allArtworks);
-
     // Calculate how many basic artworks have already been returned in previous pages
-    const basicArtworksAlreadyReturned = (page - 1) * PAGE_SIZE - skip;
-    const remainingBasicLimit = Math.max(
-      BASIC_LIMIT - basicArtworksAlreadyReturned,
-      0
-    );
 
     // Separate artworks into basic and pro/premium
     let selectedBasicArtworks = [];
     let selectedProPremiumArtworks = [];
     let artworksByArtist = [];
-    let skippedBasicArtworks = 0;
 
     for (let artwork of allArtworks) {
       if (artwork.role_access.role === "artist") {
         artworksByArtist.push(artwork);
       } else {
         if (basicGalleryIds.includes(artwork.author_id)) {
-          if (skippedBasicArtworks < skip) {
-            skippedBasicArtworks++;
-            continue;
-          }
-          if (selectedBasicArtworks.length < remainingBasicLimit) {
-            selectedBasicArtworks.push(artwork);
-          }
+          selectedBasicArtworks.push(artwork);
         } else {
-          if (skippedBasicArtworks + selectedProPremiumArtworks.length < skip) {
-            skippedBasicArtworks++;
-            continue;
-          }
           selectedProPremiumArtworks.push(artwork);
         }
       }
@@ -127,12 +106,6 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
       ...artworksByArtist,
     ].slice(0, PAGE_SIZE);
 
-    console.log({
-      seleceted_basic_artowkrs: selectedBasicArtworks,
-      selectedProPremiumArtworks,
-      artworksByArtist,
-    });
-
     // Calculate total adhering to restrictions
     const total = await Artworkuploads.countDocuments({
       ...builtFilters,
@@ -149,7 +122,6 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
       medium: { $in: preferences },
     });
 
-    console.log(allCuratedPaginatedArtworks);
     return NextResponse.json(
       {
         message: "Successful",

@@ -34,6 +34,8 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 
+type PlanName = "Basic" | "Pro" | "Premium";
+type PlanInterval = "monthly" | "yearly";
 async function verifyWebhookSignature(
   signature: string | null,
   secretHash: string
@@ -151,6 +153,22 @@ async function handleSubscriptionPayment(
         const plan = await SubscriptionPlan.findOne({ plan_id }).session(
           session
         );
+
+        const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
+          Basic: { monthly: 5, yearly: 75 },
+          Pro: { monthly: 15, yearly: 225 },
+          Premium: {
+            monthly: Number.MAX_SAFE_INTEGER,
+            yearly: Number.MAX_SAFE_INTEGER,
+          },
+        };
+
+        function getUploadLimitLookup(
+          planName: PlanName,
+          planInterval: PlanInterval
+        ): number {
+          return uploadLimits[planName][planInterval];
+        }
         const subscription_data = {
           card: verified_transaction.data.card,
           start_date: date.toISOString(),
@@ -184,14 +202,36 @@ async function handleSubscriptionPayment(
             interval: plan_interval,
             id: plan._id,
           },
+          upload_tracker: {
+            limit: getUploadLimitLookup(plan.name, plan_interval),
+            next_reset_date: expiry_date.toISOString(),
+            upload_count: 0,
+          },
         };
+
         if (!found_customer) {
           await Subscriptions.create([subscription_data], { session });
         } else {
-          await Subscriptions.updateOne(
-            { "customer.gallery_id": gallery_id },
-            { $set: subscription_data }
-          ).session(session);
+          const date = toUTCDate(new Date());
+          if (
+            found_customer.status === "active" &&
+            new Date(toUTCDate(found_customer.expiry_date)) > date
+          ) {
+            const upload_tracker = {
+              limit: getUploadLimitLookup(plan.name, plan_interval),
+              next_reset_date: expiry_date.toISOString(),
+              upload_count: found_customer.upload_tracker.upload_count,
+            };
+
+            await Subscriptions.updateOne(
+              { "customer.gallery_id": gallery_id },
+              { $set: { ...subscription_data, upload_tracker } }
+            ).session(session);
+          } else
+            await Subscriptions.updateOne(
+              { "customer.gallery_id": gallery_id },
+              { $set: subscription_data }
+            ).session(session);
         }
 
         await AccountGallery.updateOne(
@@ -306,7 +346,6 @@ async function handlePurchaseTransaction(
           Number(meta.tax_fees || 0)
       );
 
-      console.log(meta);
       const transaction_pricing: PurchaseTransactionPricing = {
         amount_total: Math.round(verified_transaction.data.amount),
         unit_price: Math.round(+meta.unit_price),

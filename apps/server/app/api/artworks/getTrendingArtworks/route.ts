@@ -16,7 +16,6 @@ export const dynamic = "force-dynamic";
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
     const PAGE_SIZE = 30;
-    const BASIC_LIMIT = 25;
     try {
       await connectMongoDB();
       const { page = 1, filters } = await request.json();
@@ -77,10 +76,6 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       // Calculate how many basic artworks have already been returned in previous pages
       const basicArtworksAlreadyReturned = (page - 1) * PAGE_SIZE - skip;
-      const remainingBasicLimit = Math.max(
-        BASIC_LIMIT - basicArtworksAlreadyReturned,
-        0
-      );
 
       // Separate artworks into basic and pro/premium
       let selectedBasicArtworks = [];
@@ -91,12 +86,19 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         if (artwork.role_access.role === "artist") {
           artworksByArtist.push(artwork);
         } else if (basicGalleryIds.includes(artwork.author_id)) {
-          if (selectedBasicArtworks.length < BASIC_LIMIT) {
-            selectedBasicArtworks.push(artwork);
-          }
+          selectedBasicArtworks.push(artwork);
         } else {
           selectedProPremiumArtworks.push(artwork);
         }
+
+        // Stop if we have filled the page
+        if (
+          selectedBasicArtworks.length +
+            selectedProPremiumArtworks.length +
+            artworksByArtist.length >=
+          PAGE_SIZE
+        )
+          break;
       }
 
       // Combine and slice the artworks for pagination

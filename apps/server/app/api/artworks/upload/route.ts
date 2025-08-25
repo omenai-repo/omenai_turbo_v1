@@ -32,13 +32,16 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (data.role_access.role === "gallery") {
       const active_subscription = await Subscriptions.findOne(
         { "customer.gallery_id": data.author_id },
-        "plan_details status"
+        "plan_details status upload_tracker"
       );
 
       if (!active_subscription || active_subscription.status !== "active")
         throw new ForbiddenError("No active subscription for this user");
 
-      if (active_subscription.plan_details.type === "Basic" && doc_count >= 25)
+      if (
+        active_subscription.upload_tracker.upload_count >=
+        active_subscription.upload_tracker.limit
+      )
         throw new ForbiddenError(
           "Plan usage limit exceeded, please upgrade plan"
         );

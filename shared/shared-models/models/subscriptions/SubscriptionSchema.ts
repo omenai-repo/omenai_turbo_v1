@@ -14,6 +14,7 @@ const subscriptions = new Schema<SubscriptionModelSchemaTypes>(
       required: true,
     },
     next_charge_params: { type: Schema.Types.Mixed, required: true },
+    upload_tracker: { type: Schema.Types.Mixed, required: true },
   },
 
   { timestamps: true }

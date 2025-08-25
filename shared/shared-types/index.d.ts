@@ -556,6 +556,13 @@ export type SubscriptionModelSchemaTypes = {
     interval: "monthly" | "yearly";
   };
   next_charge_params: NextChargeParams;
+  upload_tracker: UploadTrackingTypes;
+};
+
+export type UploadTrackingTypes = {
+  limit: number;
+  next_reset_date: Date | string;
+  upload_count: number;
 };
 
 export type NextChargeParams = {

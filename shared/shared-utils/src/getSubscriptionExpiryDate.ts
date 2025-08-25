@@ -1,4 +1,5 @@
 import { addDays } from "date-fns";
+import { toUTCDate } from "./toUtcDate";
 
 export function getSubscriptionExpiryDate(
   interval: "monthly" | "yearly",
@@ -10,5 +11,5 @@ export function getSubscriptionExpiryDate(
 
   const futureDate = addDays(baseDate, daysToAdd);
 
-  return futureDate;
+  return toUTCDate(futureDate);
 }

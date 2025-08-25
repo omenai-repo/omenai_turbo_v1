@@ -19,6 +19,63 @@ export default function SubDetail({
 }) {
   const { updateOpenModal } = galleryModalStore();
 
+  function calculateUploadUsagePercentage(
+    uploadCount: number,
+    uploadLimit: number
+  ): number {
+    // Handle unlimited plans (MAX_SAFE_INTEGER)
+    if (uploadLimit === Number.MAX_SAFE_INTEGER) {
+      return 0; // Always show empty for unlimited plans
+    }
+
+    // Calculate percentage used
+    const percentageUsed = (uploadCount / uploadLimit) * 100;
+
+    // Ensure minimum 5% visibility when there's any usage, max 100%
+    return uploadCount > 0 ? Math.max(5, Math.min(100, percentageUsed)) : 0;
+  }
+
+  function getUsageDisplayText(
+    uploadCount: number,
+    uploadLimit: number
+  ): string {
+    if (uploadLimit === Number.MAX_SAFE_INTEGER) {
+      return `${uploadCount} uploads used`;
+    }
+    return `${uploadCount} / ${uploadLimit} uploads used`;
+  }
+
+  // Utility function to determine progress bar color based on usage
+  function getProgressBarColor(
+    uploadCount: number,
+    uploadLimit: number
+  ): string {
+    if (uploadLimit === Number.MAX_SAFE_INTEGER) {
+      return "bg-green-500"; // Green for unlimited
+    }
+
+    const percentageUsed = (uploadCount / uploadLimit) * 100;
+
+    if (percentageUsed >= 90) return "bg-red-500"; // Red when almost full
+    if (percentageUsed >= 70) return "bg-orange-500"; // Orange when getting full
+    if (percentageUsed >= 50) return "bg-yellow-500"; // Yellow when half full
+    return "bg-green-500"; // Green when plenty left
+  }
+
+  const usagePercentage = calculateUploadUsagePercentage(
+    sub_data.upload_tracker.upload_count,
+    sub_data.upload_tracker.limit
+  );
+  const remainingUploads =
+    sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER
+      ? "Unlimited"
+      : sub_data.upload_tracker.limit - sub_data.upload_tracker.upload_count;
+
+  const progressBarColor = getProgressBarColor(
+    sub_data.upload_tracker.upload_count,
+    sub_data.upload_tracker.limit
+  );
+
   const currency_symbol = getCurrencySymbol(sub_data.plan_details.currency);
   return (
     <div className=" bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-h-[300px]">
@@ -63,20 +120,69 @@ export default function SubDetail({
           </div>
 
           {sub_data.status === "active" && (
-            <div className="mt-3">
-              <div className="flex justify-between text-xs text-slate-600 mb-1">
-                <span>Period progress</span>
-                <span>{daysLeft(sub_data.expiry_date)} days left</span>
+            <>
+              <div className="mt-3">
+                <div className="flex justify-between text-xs text-slate-600 mb-1">
+                  <span>Period progress</span>
+                  <span>
+                    {sub_data.upload_tracker.limit -
+                      sub_data.upload_tracker.upload_count}{" "}
+                    uploads left
+                  </span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div
+                    className="bg-dark h-2 rounded-full transition-all"
+                    style={{
+                      width: `${Math.max(5, 100 - (daysLeft(sub_data.expiry_date) / 30) * 100)}%`,
+                    }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2">
-                <div
-                  className="bg-dark h-2 rounded-full transition-all"
-                  style={{
-                    width: `${Math.max(5, 100 - (daysLeft(sub_data.expiry_date) / 30) * 100)}%`,
-                  }}
-                />
+              <div className="mt-3">
+                <div className="flex justify-between text-xs text-slate-600 mb-1">
+                  <span>Upload usage</span>
+                  <span>{daysLeft(sub_data.expiry_date)} days left</span>
+                </div>
+
+                {/* Usage stats */}
+                <div className="flex justify-between text-xs text-slate-500 mb-2">
+                  <span>
+                    {getUsageDisplayText(
+                      sub_data.upload_tracker.upload_count,
+                      sub_data.upload_tracker.limit
+                    )}
+                  </span>
+                  <span>
+                    {sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER
+                      ? "Unlimited"
+                      : `${remainingUploads} remaining`}
+                  </span>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full transition-all duration-300 ${progressBarColor}`}
+                    style={{
+                      width: `${usagePercentage}%`,
+                    }}
+                  />
+                </div>
+
+                {/* Optional: Usage percentage display */}
+                {/* {sub_data.upload_tracker.limit !== Number.MAX_SAFE_INTEGER && (
+                  <div className="text-right text-xs text-slate-400 mt-1">
+                    {Math.round(
+                      (sub_data.upload_tracker.upload_count /
+                        sub_data.upload_tracker.limit) *
+                        100
+                    )}
+                    % used
+                  </div>
+                )} */}
               </div>
-            </div>
+            </>
           )}
         </div>
 
