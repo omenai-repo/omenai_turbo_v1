@@ -3,18 +3,16 @@ import BillingCard from "./components/BillingCard";
 import BillingInfo from "./components/BillingInfo";
 import CancelSubscriptionModal from "./components/CancelSubscriptionModal";
 
-import { useRouter } from "next/navigation";
 import TransactionTable from "./components/TransactionTable";
 import SubDetail from "./components/SubscriptionStatus";
 import UpcomingSub from "./components/UpcomingSub";
-import { useLocalStorage } from "usehooks-ts";
-import { useContext, useEffect } from "react";
-import { auth_uri } from "@omenai/url-config/src/config";
+
 import {
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import type { PaymentMethod } from "@stripe/stripe-js";
 
 export default function SubscriptionActiveTheme({
   subscription_data,
@@ -31,12 +29,6 @@ export default function SubscriptionActiveTheme({
 }) {
   const { user } = useAuth({ requiredRole: "gallery" });
 
-  const [trans_id, set_trans_id] = useLocalStorage("flw_trans_id", "");
-
-  useEffect(() => {
-    set_trans_id("");
-  }, [set_trans_id]);
-
   return (
     <div className="w-full h-full grid 2xl:grid-cols-3 gap-4 my-5">
       {/* Card */}
@@ -44,10 +36,7 @@ export default function SubscriptionActiveTheme({
         <div className="grid grid-cols-2 items-center gap-3 w-full">
           <div className="flex flex-col gap-y-2">
             <BillingCard
-              expiry={subscription_data.card.expiry}
-              first_6digits={subscription_data.card.first_6digits}
-              last_4digits={subscription_data.card.last_4digits}
-              type={subscription_data.card.type}
+              paymentMethod={subscription_data.paymentMethod as PaymentMethod}
               plan_id={subscription_plan.plan_id}
               plan_interval={subscription_data.plan_details.interval}
             />

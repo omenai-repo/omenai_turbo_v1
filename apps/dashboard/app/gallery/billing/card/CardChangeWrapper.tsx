@@ -2,7 +2,6 @@
 import { notFound, useSearchParams } from "next/navigation";
 import PageTitle from "../../components/PageTitle";
 import CardChangeCheckoutItem from "../plans/checkout/components/CardChangeCheckoutItem";
-import { CheckoutStepper } from "../plans/checkout/components/CheckoutStepper";
 import { useQuery } from "@tanstack/react-query";
 import { getSinglePlanData } from "@omenai/shared-services/subscriptions/getSinglePlanData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
@@ -45,8 +44,6 @@ export default function CardChangeWrapper() {
         <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-3 items-baseline">
           <div className="col-span-1">
             <CardChangeCheckoutItem />
-
-            <CheckoutStepper plan={data?.plan} />
           </div>
 
           <div className="col-span-2" />

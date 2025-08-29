@@ -69,7 +69,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json({
         paymentIntent: paymentIntent.client_secret,
-        publishableKey: process.env.STRIPE_PK!,
+        publishableKey: process.env.NEXT_PUBLIC_STRIPE_PK!,
       });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);

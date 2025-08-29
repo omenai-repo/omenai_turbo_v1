@@ -1,17 +1,20 @@
 "use client";
-import React, { useContext } from "react";
 import PageTitle from "../../../components/PageTitle";
-import { CheckoutStepper } from "./components/CheckoutStepper";
 import CheckoutItem from "./components/CheckoutItem";
 import { getSinglePlanData } from "@omenai/shared-services/subscriptions/getSinglePlanData";
 import { useQuery } from "@tanstack/react-query";
-import { notFound, useSearchParams, useRouter } from "next/navigation";
-
-import MigrationUpgradeCheckoutItem from "./components/MigrationUpgradeCheckoutItem";
+import { notFound, useSearchParams } from "next/navigation";
 import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
-import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { PaymentForm } from "./components/InitialPaymentForm";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import InitialPaymentFormWrapper from "./components/InitialPaymentFormWrapper";
+import MigrationUpgradeCheckoutItem from "./components/MigrationUpgradeCheckoutItem";
+import MigrationUpgradeCheckout from "./components/MigrationUpgradeCheckout";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function SubscriptionCheckout() {
   const searchParams = useSearchParams();
@@ -36,14 +39,8 @@ export default function SubscriptionCheckout() {
     queryKey: ["get_plan_and_sub_details"],
     queryFn: async () => {
       const plans = await getSinglePlanData(plan_id);
-      const sub_data = await retrieveSubscriptionData(
-        user.gallery_id,
-        csrf || ""
-      );
-
-      if (!plans?.isOk || !sub_data?.isOk)
-        throw new Error("Something went wrong");
-      else return { plans: plans.data, sub_data: sub_data.data };
+      if (!plans?.isOk) throw new Error("Something went wrong");
+      else return { plans: plans.data };
     },
     refetchOnWindowFocus: false,
   });
@@ -66,14 +63,22 @@ export default function SubscriptionCheckout() {
                 ) : (
                   <CheckoutItem plan={data?.plans} interval={interval} />
                 )}
-                <CheckoutStepper plan={data?.plans} />
+                {/* Render card change payment form */}
+                <InitialPaymentFormWrapper
+                  planId={plan_id || ""}
+                  interval={interval}
+                  amount={
+                    interval === "monthly"
+                      ? +data?.plans.pricing.monthly_price
+                      : data?.plans.pricing.yearly_price || 0
+                  }
+                />
               </div>
             ) : (
               <div className="col-span-1">
-                <MigrationUpgradeCheckoutItem
+                <MigrationUpgradeCheckout
                   plan={data?.plans}
                   interval={interval as "yearly" | "monthly"}
-                  sub_data={data?.sub_data}
                 />
               </div>
             )}

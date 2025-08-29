@@ -79,7 +79,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       type: String,
       default: () => null,
     },
-    clerkUserId: { type: String, required: false, unique: true, index: true },
+    stripe_customer_id: { type: String, default: () => null },
   },
   { timestamps: true }
 );

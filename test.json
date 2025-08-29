@@ -1,0 +1,98 @@
+{
+  "message": "Payment Intent created",
+  "pi": {
+    "id": "pi_3S17tDGmpn0UP4A714Oqng6g",
+    "object": "payment_intent",
+    "amount": 25000,
+    "amount_capturable": 0,
+    "amount_details": {
+      "tip": {}
+    },
+    "amount_received": 25000,
+    "application": null,
+    "application_fee_amount": null,
+    "automatic_payment_methods": {
+      "allow_redirects": "always",
+      "enabled": true
+    },
+    "canceled_at": null,
+    "cancellation_reason": null,
+    "capture_method": "automatic_async",
+    "client_secret": "pi_3S17tDGmpn0UP4A714Oqng6g_secret_hTBjAhGYkvn67RZODEQ6ixkwi",
+    "confirmation_method": "automatic",
+    "created": 1756395447,
+    "currency": "usd",
+    "customer": "cus_Sx1uUu9R2sStOe",
+    "description": null,
+    "excluded_payment_method_types": null,
+    "invoice": null,
+    "last_payment_error": null,
+    "latest_charge": "py_3S17tDGmpn0UP4A71A8hfJPy",
+    "livemode": false,
+    "metadata": {
+      "email": "dantereus1@gmail.com",
+      "name": "Visage of Beauty"
+    },
+    "next_action": null,
+    "on_behalf_of": null,
+    "payment_method": {
+      "id": "pm_1S17teGmpn0UP4A7pT0KzDf2",
+      "object": "payment_method",
+      "allow_redisplay": "unspecified",
+      "amazon_pay": {},
+      "billing_details": {
+        "address": {
+          "city": null,
+          "country": null,
+          "line1": null,
+          "line2": null,
+          "postal_code": null,
+          "state": null
+        },
+        "email": null,
+        "name": null,
+        "phone": null,
+        "tax_id": null
+      },
+      "created": 1756395474,
+      "customer": "cus_Sx1uUu9R2sStOe",
+      "livemode": false,
+      "metadata": {},
+      "type": "amazon_pay"
+    },
+    "payment_method_configuration_details": {
+      "id": "pmc_1QX0LfGmpn0UP4A7ZMJmLwZe",
+      "parent": null
+    },
+    "payment_method_options": {
+      "amazon_pay": {
+        "express_checkout_element_session_id": null
+      },
+      "card": {
+        "installments": null,
+        "mandate_options": null,
+        "network": null,
+        "request_three_d_secure": "automatic"
+      },
+      "cashapp": {},
+      "klarna": {
+        "preferred_locale": null
+      },
+      "link": {
+        "persistent_token": null
+      }
+    },
+    "payment_method_types": ["card", "klarna", "link", "cashapp", "amazon_pay"],
+    "processing": null,
+    "receipt_email": "dantereus1@gmail.com",
+    "review": null,
+    "setup_future_usage": "off_session",
+    "shipping": null,
+    "source": null,
+    "statement_descriptor": null,
+    "statement_descriptor_suffix": null,
+    "status": "succeeded",
+    "transfer_data": null,
+    "transfer_group": null
+  }
+}

@@ -16,9 +16,14 @@ import {
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
-import { createTokenizedCharge } from "@omenai/shared-services/subscriptions/createTokenizedCharge";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import { createStripeTokenizedCharge } from "@omenai/shared-services/subscriptions/stripe/createStripeTokenizedCharge";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
+import BillingCard from "../../../features/components/BillingCard";
+import { PaymentMethod } from "@stripe/stripe-js";
+const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function CheckoutBillingCard({
   plan,
@@ -33,8 +38,8 @@ export default function CheckoutBillingCard({
     _id: string;
   };
   sub_data: SubscriptionModelSchemaTypes & {
-    created: string;
-    updatedAt: string;
+    created?: string;
+    updatedAt?: string;
   };
   interval: string;
   amount: number;
@@ -42,10 +47,7 @@ export default function CheckoutBillingCard({
 }) {
   const queryClient = useQueryClient();
   const { user } = useAuth({ requiredRole: "gallery" });
-  const [transaction_id, set_transaction_id] = useLocalStorage(
-    "flw_trans_id",
-    ""
-  );
+
   const [error, setError] = useState<string>("");
   const searchParams = useSearchParams();
   const plan_action = searchParams.get("plan_action");
@@ -53,43 +55,98 @@ export default function CheckoutBillingCard({
   const [loading, setLoading] = useState<boolean>(false);
   const [migrationLoading, setMigrationLoading] = useState<boolean>(false);
 
+  if (!stripe)
+    toast_notif(
+      "Stripe not loaded yet. Please refresh or contact support if issue persists",
+      "error"
+    );
   const router = useRouter();
+  const handlePaymentResponse = async (
+    stripe: Stripe,
+    data: { status: string; client_secret: string; paymentIntentId: string }
+  ) => {
+    const { status, client_secret, paymentIntentId } = data;
 
-  const url = dashboard_url();
+    switch (status) {
+      case "succeeded":
+        // ✅ Payment complete
+        router.push(
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+        );
+        break;
+
+      case "requires_action":
+        // ⚠️ Needs customer authentication (3DS)
+        const result = await stripe.confirmCardPayment(client_secret);
+        if (result.error) {
+          router.push(
+            `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+          );
+        } else if (result.paymentIntent?.status === "succeeded") {
+          router.push(
+            `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+          );
+        }
+        break;
+
+      case "requires_payment_method":
+        router.push(
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+        );
+        break;
+
+      case "processing":
+        // ⏳ Still pending
+
+        router.push(
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+        );
+        break;
+
+      case "canceled":
+        alert("Payment was canceled.");
+        router.push(`${dashboard_url()}/gallery/billing/plans`);
+        break;
+
+      default:
+        alert(`Unhandled payment status: ${status}`);
+        router.push(`${dashboard_url()}/gallery/billing/plans`);
+        break;
+    }
+  };
 
   async function handlePayNow() {
     setError("");
-    const tokenized_data: SubscriptionTokenizationTypes = {
-      amount,
-      email: sub_data.customer.email,
-      tx_ref: generateAlphaDigit(7),
-      token: sub_data.card.token,
-      gallery_id: sub_data.customer.gallery_id,
-      plan_id: plan._id.toString(),
-      plan_interval: interval,
-    };
+
     setLoading(true);
-    const tokenize_card = await createTokenizedCharge(
-      tokenized_data,
+    const tokenize_card = await createStripeTokenizedCharge(
+      amount,
+      user.gallery_id,
+      {
+        name: user.name,
+        email: user.email,
+        gallery_id: user.gallery_id,
+        plan_id: plan.plan_id,
+        plan_interval: interval,
+      },
       csrf || ""
     );
 
     if (!tokenize_card?.isOk)
-      toast.error("Error notification", {
-        description: "Unable to initiate card charge. Please contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Unable to initiate card charge. Please contact support",
+        "error"
+      );
     else {
-      const { data } = tokenize_card;
-      if (data.status === "error") setError(data.message);
-      else {
-        set_transaction_id(data.data.id);
-        router.replace(`${url}/gallery/billing/plans/checkout/verification`);
-      }
+      const { client_secret, status, paymentIntentId } = tokenize_card;
+
+      await handlePaymentResponse(stripe as Stripe, {
+        status,
+        client_secret,
+        paymentIntentId,
+      });
+
+      toast_notif("Please wait... processing", "info");
     }
 
     setLoading(false);
@@ -143,8 +200,6 @@ export default function CheckoutBillingCard({
     router.replace("/gallery/billing");
   }
 
-  console.log(shouldCharge);
-
   return (
     <>
       <div className="mt-12 space-y-4">
@@ -156,47 +211,25 @@ export default function CheckoutBillingCard({
               Encrypted
             </span>
           </div>
-
-          <div className="bg-white rounded-lg border border-slate-200 p-4 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-8 bg-slate-900 rounded flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">CARD</span>
-                </div>
-                <div>
-                  <p className="font-mono text-sm font-medium text-slate-900">
-                    •••• {sub_data.card.last_4digits}
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    {sub_data.card.expiry}
-                  </p>
-                </div>
-              </div>
-              <Image
-                src={`/icons/${sub_data.card.type.toLowerCase()}.png`}
-                alt={sub_data.card.type}
-                height={24}
-                width={36}
-                className="h-6 w-auto"
-              />
-            </div>
-          </div>
-
-          <Link
-            href={`/gallery/billing/card/?charge_type=card_change&redirect=/gallery/billing/plans/checkout/verification&plan_id=${plan.plan_id}&interval=${interval}`}
-          >
-            <button className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-              Use a different card →
-            </button>
-          </Link>
+          <BillingCard
+            paymentMethod={sub_data.paymentMethod as PaymentMethod}
+            plan_id={plan.plan_id}
+            plan_interval={interval}
+          />
         </div>
 
         <button
           onClick={shouldCharge ? handlePayNow : handleMigrateToPlan}
-          disabled={migrationLoading || loading || !shouldCharge}
+          disabled={migrationLoading || loading}
           className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xs font-medium rounded-xl disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
         >
-          {loading || migrationLoading ? <LoadSmall /> : "Confirm Payment"}
+          {loading || migrationLoading ? (
+            <LoadSmall />
+          ) : shouldCharge ? (
+            "Confirm Payment"
+          ) : (
+            "Migrate to this plan"
+          )}
         </button>
       </div>
     </>

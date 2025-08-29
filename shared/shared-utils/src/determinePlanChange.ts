@@ -1,3 +1,5 @@
+import { SubscriptionModelSchemaTypes } from "@omenai/shared-types";
+
 type PlanChangeResult = {
   action: "upgrade" | "downgrade";
   shouldCharge: boolean;
@@ -14,7 +16,7 @@ export function determinePlanChange(
   currentInterval: "monthly" | "yearly",
   newPrice: number,
   newInterval: "monthly" | "yearly",
-  status: "active" | "canceled" | "expired"
+  status: SubscriptionModelSchemaTypes["status"]
 ): PlanChangeResult {
   const currentPlanData = planTiers[currentPlan as keyof typeof planTiers];
   const currentPrice = currentPlanData[`${currentInterval}Price`];

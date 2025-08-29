@@ -7,13 +7,14 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
 
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+export const POST = withRateLimit(config)(async function POST(
   request: Request
 ) {
   try {
@@ -38,21 +39,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const payload = {
       currency: "USD",
-      amount,
-      email: data.email,
-      tx_ref: `${data.tx_ref}&${data.gallery_id}&${data.plan_id}&${
-        data.plan_interval
-      }&${null}`,
-      country: gallery.address.countryCode,
-      token: data.token,
-      narration: `Payment for Omenai ${data.plan_interval} subscription`,
-      redirect_url: `https://dashboard.omenai.app/gallery/billing/plans/checkout/verification`,
+      amount: 97,
+      email: "ravesb_504e8a8a5125f3c2e894_gbenro@omenai.net",
+      tx_ref:
+        "Eijt51L&d0a5bff5-cca6-4e82-873d-f9865b6aacb5&68ac34f7e4a67e144fbbd3f6&monthly&null",
+      country: "US",
+      token: "flw-t1nf-2af327ab273a2add108a325b9ebfb7d1-m03k",
+      narration: "Payment for Omenai monthly subscription",
+      redirect_url:
+        "https://dashboard.omenai.app/gallery/billing/plans/checkout/verification",
       meta: {
-        gallery_id: data.gallery_id,
+        gallery_id: "d0a5bff5-cca6-4e82-873d-f9865b6aacb5",
         type: "subscription",
-        plan_id: data.plan_id,
-        plan_interval: data.plan_interval,
-        email: data.email,
+        plan_id: "68ac34f7e4a67e144fbbd3f6",
+        plan_interval: "monthly",
+        email: "ravesb_504e8a8a5125f3c2e894_gbenro@omenai.net",
       },
       preauthorize: false,
     };

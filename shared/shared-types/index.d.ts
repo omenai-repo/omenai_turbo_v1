@@ -1,3 +1,4 @@
+import { Stripe } from "stripe";
 // Create discriminated union with role as discriminator
 export type SessionDataType = (
   | ({ role: "gallery" } & Omit<
@@ -101,7 +102,7 @@ export type GallerySchemaTypes = {
   };
   status: "active" | "blocked";
   connected_account_id: string | null;
-  clerkUserId?: string;
+  stripe_customer_id: string | null;
 };
 
 export type IndividualSchemaTypes = {
@@ -529,27 +530,27 @@ export type PurchaseTransactionPricing = {
 
 export type SubscriptionTransactionModelSchemaTypes = {
   trans_id: string;
-  reference: string;
+  payment_ref: string;
   amount: string;
   gallery_id: string;
   date: Date;
-  status: "pending" | "successful";
+  status: "successful" | "failed" | "processing";
+  stripe_customer_id: string;
 };
 
 export type SubscriptionModelSchemaTypes = {
   customer: {
-    id: number;
     name: string;
     phone_number?: string;
     email: string;
-    created_at: string;
     gallery_id: string;
   };
+  subscription_id: string;
+  stripe_customer_id: string;
   start_date: Date;
   expiry_date: Date;
-  status: "active" | "canceled" | "expired";
-  card: SubscriptionCardDetails;
-  payment: SubscriptionPaymentTypes;
+  status: "active" | "canceled" | "expired" | "incomplete";
+  paymentMethod: Stripe.PaymentMethod | null;
   plan_details: {
     type: string;
     value: { monthly_price: string; annual_price: string };
@@ -577,9 +578,9 @@ export type SubscriptionPaymentTypes = {
   status: string;
   value: string;
   trans_ref: string;
-  flw_ref: string;
   currency: string;
   type: string;
+  stripePaymentId: string;
 };
 
 export type SubscriptionTokenizationTypes = {

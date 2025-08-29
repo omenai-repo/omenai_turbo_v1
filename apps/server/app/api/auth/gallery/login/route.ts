@@ -44,6 +44,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         subscription_status,
         connected_account_id,
         status,
+        stripe_customer_id,
       } = user;
 
       const sessionPayload = {
@@ -61,6 +62,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         connected_account_id,
         email: user.email,
         status,
+        stripe_customer_id,
       };
 
       const userAgent: string | null =

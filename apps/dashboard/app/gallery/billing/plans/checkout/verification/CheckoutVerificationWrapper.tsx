@@ -2,39 +2,36 @@
 import Image from "next/image";
 import { notFound, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { verifyFlwTransaction } from "@omenai/shared-services/subscriptions/verifyFlwTransaction";
 import Link from "next/link";
-import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import Load, {
   LoadIcon,
 } from "@omenai/shared-ui-components/components/loader/Load";
 import PageTitle from "../../../../components/PageTitle";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { verifySubscriptionCharge } from "@omenai/shared-services/subscriptions/stripe/verifySubscriptionCharge";
 export default function TransactionVerification() {
-  const transaction_id = useReadLocalStorage("flw_trans_id") as string;
+  const searchParams = useSearchParams();
+  const paymentIntentId = searchParams.get("payment_intent");
 
-  const { csrf } = useAuth();
-  if (
-    transaction_id === undefined ||
-    transaction_id === null ||
-    transaction_id === ""
-  )
-    notFound();
+  if (paymentIntentId === null || paymentIntentId === undefined) notFound();
+
+  const { csrf } = useAuth({ requiredRole: "gallery" });
 
   const { data: verified, isLoading } = useQuery({
     queryKey: ["verify_subscription_payment_on_redirect"],
     queryFn: async () => {
-      const response = await verifyFlwTransaction(transaction_id, csrf || "");
+      const response = await verifySubscriptionCharge(
+        paymentIntentId,
+        csrf || ""
+      );
       if (!response?.isOk) {
         return {
           message: `${response?.message}. Please contact support`,
           isOk: response?.isOk,
         };
-        throw new Error("Something went wrong");
       } else {
         return {
           message: response.message,
-          data: response.data,
           isOk: response.isOk,
         };
       }
