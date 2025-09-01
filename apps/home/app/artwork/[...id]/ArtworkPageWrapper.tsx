@@ -15,21 +15,22 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function ArtworkPageWrapper({ param }: { param: string }) {
   const { user } = useAuth({ requiredRole: "user" });
 
-  const { data: artworkDetails, isLoading } = useQuery({
-    queryKey: ["fetch_single_artwork_data"],
-    queryFn: async () => {
-      const artworkDetails = await fetchSingleArtwork(param);
-      if (!artworkDetails?.isOk) {
-      } else {
-        return artworkDetails.data;
-      }
-    },
-    staleTime: 10 * 60 * 1000, // Individual artworks can be cached longer
-    gcTime: 60 * 60 * 1000, // Keep for 1 hour
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: !!param, // Only fetch if we have a param id
-  });
+const { data: artworkDetails, isLoading } = useQuery({
+  queryKey: ["fetch_single_artwork_data", param],
+  queryFn: async () => {
+    const artworkDetails = await fetchSingleArtwork(param);
+    if (!artworkDetails?.isOk) {
+      throw new Error('Failed to fetch artwork'); // Properly handle errors
+    } else {
+      return artworkDetails.data;
+    }
+  },
+  staleTime: 0, // Data is immediately stale - forces refetch
+  gcTime: 0, // Don't keep in cache at all
+  refetchOnWindowFocus: false,
+  refetchOnMount: true, // Always refetch when component mounts
+  enabled: !!param, // Only fetch if we have a param id
+});
 
   if (isLoading) {
     return <Load />;
