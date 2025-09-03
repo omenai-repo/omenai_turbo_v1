@@ -6,12 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { notFound, useSearchParams } from "next/navigation";
 import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { PaymentForm } from "./components/InitialPaymentForm";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 import InitialPaymentFormWrapper from "./components/InitialPaymentFormWrapper";
-import MigrationUpgradeCheckoutItem from "./components/MigrationUpgradeCheckoutItem";
 import MigrationUpgradeCheckout from "./components/MigrationUpgradeCheckout";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
@@ -23,7 +19,6 @@ export default function SubscriptionCheckout() {
   const id = searchParams.get("id");
   const action = searchParams.get("action");
   const charge_type = searchParams.get("charge_type");
-  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   if (
     plan_id === null ||
@@ -36,7 +31,7 @@ export default function SubscriptionCheckout() {
     notFound();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get_plan_and_sub_details"],
+    queryKey: ["get_plan_details"],
     queryFn: async () => {
       const plans = await getSinglePlanData(plan_id);
       if (!plans?.isOk) throw new Error("Something went wrong");

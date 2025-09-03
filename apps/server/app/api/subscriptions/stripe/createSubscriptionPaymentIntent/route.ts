@@ -52,7 +52,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       customer: customer.id, // retrieved/stored earlier
       setup_future_usage: "off_session", // tells Stripe: also save payment method
       automatic_payment_methods: { enabled: true },
-      metadata: { ...meta },
+      metadata: { ...meta, type: "subscription" },
     });
 
     return NextResponse.json({

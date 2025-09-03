@@ -55,6 +55,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           ...meta,
           seller_id,
           commission: Math.round(meta.unit_price * commision_rate),
+          type: "purchase",
         },
         // In the latest version of the API, specifying the `automatic_payment_methods` parameter
         // is optional because Stripe enables its functionality by default.

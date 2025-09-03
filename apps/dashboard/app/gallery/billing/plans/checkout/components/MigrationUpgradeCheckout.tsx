@@ -6,10 +6,7 @@ import {
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { calculateSubscriptionPricing } from "@omenai/shared-utils/src/calculateSubscriptionPricing";
-import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { useQuery } from "@tanstack/react-query";
-import { differenceInCalendarDays, sub } from "date-fns";
 import React, { useMemo } from "react";
 import MigrationUpgradeCheckoutItem from "./MigrationUpgradeCheckoutItem";
 
@@ -45,7 +42,7 @@ export default function MigrationUpgradeCheckout({
       return response.data as SubscriptionModelSchemaTypes;
     },
     enabled: !!user?.gallery_id && !!csrf,
-    staleTime: 1000 * 60 * 2, // 2 minutes
+    refetchOnWindowFocus: false,
   });
 
   // Only return after all hooks

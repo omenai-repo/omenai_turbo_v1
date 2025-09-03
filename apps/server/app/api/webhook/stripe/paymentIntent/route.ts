@@ -1,5 +1,6 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
+import type Stripe from "stripe";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
@@ -9,6 +10,7 @@ import {
   PaymentStatusTypes,
   PurchaseTransactionModelSchemaTypes,
   PurchaseTransactionPricing,
+  SubscriptionTransactionModelSchemaTypes,
 } from "@omenai/shared-types";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
@@ -24,87 +26,215 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { SubscriptionTransactions } from "@omenai/shared-models/models/transactions/SubscriptionTransactionSchema";
+import {
+  SubscriptionPlan,
+  Subscriptions,
+} from "@omenai/shared-models/models/subscriptions";
+import { getSubscriptionExpiryDate } from "@omenai/shared-utils/src/getSubscriptionExpiryDate";
+
+import { getUploadLimitLookup } from "@omenai/shared-utils/src/uploadLimitUtility";
+import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
+import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
+import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 
 export const POST = withAppRouterHighlight(async function POST(
-  request: Request
-) {
-  const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET!;
-  const rawBody = await request.text();
+  request: Request,
+  context: { params: Promise<Record<string, string>> }
+): Promise<Response> {
+  // Validate environment variable
+  const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET;
+  if (!secretHash) {
+    // Fail fast if secret is missing
+    // Consider logging to external service
+    return NextResponse.json(
+      { error: "Webhook secret missing" },
+      { status: 500 }
+    );
+  }
 
+  const rawBody = await request.text();
   let event;
-  // Only verify the event if you have an endpoint secret defined.
-  // Otherwise use the basic event deserialized with JSON.parse
-  if (secretHash) {
-    // Get the signature sent by Stripe
+  try {
     const signature = request.headers.get("stripe-signature");
-    try {
-      event = await stripe.webhooks.constructEvent(
-        rawBody,
-        signature,
-        secretHash
+    if (!signature) {
+      return NextResponse.json(
+        { error: "Missing Stripe signature" },
+        { status: 400 }
       );
-    } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed.`, err);
-      return NextResponse.json({ status: 400 });
     }
+    event = await stripe.webhooks.constructEvent(
+      rawBody,
+      signature,
+      secretHash
+    );
+  } catch (err) {
+    // Log securely
+    // logger.error("Webhook signature verification failed", { error: err });
+    return NextResponse.json(
+      { error: "Invalid webhook signature" },
+      { status: 400 }
+    );
+  }
+
+  // Only handle supported event types
+  const supportedTypes = [
+    "payment_intent.processing",
+    "payment_intent.payment_failed",
+    "payment_intent.succeeded",
+  ];
+  if (!supportedTypes.includes(event.type)) {
+    return NextResponse.json(
+      { error: "Unsupported event type" },
+      { status: 400 }
+    );
   }
 
   const paymentIntent = event.data.object;
-  const meta = paymentIntent.metadata;
+  // Defensive: Validate paymentIntent object
+  if (!paymentIntent?.id) {
+    return NextResponse.json(
+      { error: "Missing payment intent ID" },
+      { status: 400 }
+    );
+  }
+
+  // Retrieve PI from Stripe (expanded for payment method & charge details)
+  let pi;
+  try {
+    pi = await stripe.paymentIntents.retrieve(paymentIntent.id, {
+      expand: ["payment_method", "charges.data.balance_transaction"],
+    });
+  } catch (err) {
+    // logger.error("Stripe PI retrieval failed", { error: err });
+    return NextResponse.json(
+      { error: "PaymentIntent not found" },
+      { status: 404 }
+    );
+  }
+
+  const meta = pi.metadata;
+  // Defensive: Validate meta.type
+  if (!meta?.type) {
+    return NextResponse.json(
+      { error: "Missing metadata type" },
+      { status: 400 }
+    );
+  }
 
   const client = await connectMongoDB();
+  const session = await client.startSession();
+  try {
+    if (meta.type === "subscription") {
+      await handleSubscriptionPayment(pi, meta, session, event);
+    } else if (meta.type === "purchase") {
+      await handlePurchaseTransaction(pi, meta, session, event);
+    } else {
+      return NextResponse.json(
+        { error: "Unknown transaction type" },
+        { status: 400 }
+      );
+    }
+  } catch (err) {
+    // logger.error("Webhook handler error", { error: err });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  } finally {
+    await session.endSession();
+  }
+
+  return NextResponse.json({ status: 200 });
+});
+
+const handlePurchaseTransaction = async (
+  paymentIntent: any,
+  meta: any,
+  session: any,
+  event: any
+) => {
+  const { isProcessed, existingPayment } = await purchaseIdempotencyCheck(
+    paymentIntent.id,
+    paymentIntent.status
+  );
+
+  if (isProcessed) {
+    // Already processed, return early
+    return NextResponse.json({ status: 200 });
+  }
+
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
   });
 
+  if (!order_info) {
+    console.error(
+      "Order not found for buyer email:",
+      meta.buyer_email,
+      "art_id:",
+      meta.art_id
+    );
+    return NextResponse.json({ status: 404 });
+  }
+
   if (event.type === "payment_intent.processing") {
-    await sendPaymentPendingMail({
-      email: meta.buyer_email,
-      name: order_info.buyer_details.name,
-      artwork: order_info.artwork_data.title,
-    });
+    try {
+      await sendPaymentPendingMail({
+        email: meta.buyer_email,
+        name: order_info.buyer_details.name,
+        artwork: order_info.artwork_data.title,
+      });
+    } catch (error) {
+      console.error("Failed to send payment pending email:", error);
+    }
+    return NextResponse.json({ status: 200 });
   }
 
   if (event.type === "payment_intent.payment_failed") {
-    await sendPaymentFailedMail({
-      email: meta.buyer_email,
-      name: order_info.buyer.name,
-      artwork: order_info.artwork_data.title,
-    });
+    try {
+      await sendPaymentFailedMail({
+        email: meta.buyer_email,
+        name: order_info.buyer_details.name,
+        artwork: order_info.artwork_data.title,
+      });
+    } catch (error) {
+      console.error("Failed to send payment failed email:", error);
+    }
+    return NextResponse.json({ status: 200 });
   }
 
   if (event.type === "payment_intent.succeeded") {
-    // Then define and call a method to handle the successful payment intent.
     if (paymentIntent.status !== "succeeded") {
       return NextResponse.json({ status: 400 });
     }
 
+    const domainStatus =
+      paymentIntent.status === "succeeded"
+        ? "successful"
+        : paymentIntent.status === "processing"
+          ? "processing"
+          : "failed";
+
     let transaction_id;
-
-    // Retrieve the MongoDB Client
-
-    // Create a session with the initialized MongoClient
-    const session = await client.startSession();
 
     const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
     const formatted_date = getFormattedDateTime();
     const date = toUTCDate(new Date());
 
     try {
+      // Remove hold status before starting transaction
       await CreateOrder.updateOne(
         { order_id: order_info.order_id },
         { $set: { hold_status: null } }
       );
-      // Create a session transaction to group multiple database operations
-      // A session transaction ensures that all operations are successful before it it being commited to the DB, if a single error occurs in any operation,
-      // the updates are rolled back and the entire process is aborted.
 
-      session.startTransaction();
+      // Start the transaction
+      await session.startTransaction();
 
-      //   Update Order Payment Information
-
-      // Create the update info
+      // Update Order Payment Information
       const payment_information: PaymentStatusTypes = {
         status: "completed",
         transaction_value: formatPrice(
@@ -125,7 +255,8 @@ export const POST = withAppRouterHighlight(async function POST(
           $set: {
             payment_information,
           },
-        }
+        },
+        { session }
       );
 
       // Update transaction collection
@@ -144,14 +275,19 @@ export const POST = withAppRouterHighlight(async function POST(
         trans_initiator_id: meta.buyer_id,
         trans_recipient_role: "gallery",
         trans_reference: paymentIntent.id,
+        status: domainStatus,
       };
 
-      const create_transaction = await PurchaseTransactions.create(data);
+      const create_transaction = await PurchaseTransactions.create([data], {
+        session,
+      });
+      transaction_id = create_transaction[0].trans_id;
 
       // Update Artwork Availability to false
       await Artworkuploads.updateOne(
         { art_id: meta.art_id },
-        { $set: { availability: false } }
+        { $set: { availability: false } },
+        { session }
       );
 
       // Add this transaction to sales activity for revenue representation
@@ -164,40 +300,45 @@ export const POST = withAppRouterHighlight(async function POST(
         trans_ref: data.trans_reference,
       };
 
-      await SalesActivity.create({ ...activity });
+      await SalesActivity.create([activity], { session });
 
       // Clear the order lock on the artwork
       await releaseOrderLock(meta.art_id, meta.buyer_id);
 
+      // Update other orders for the same artwork
       await CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
           "buyer_details.id": { $ne: meta.buyer_id },
         },
-        { $set: { availability: false } }
+        { $set: { availability: false } },
+        { session }
       );
 
-      transaction_id = create_transaction.trans_id;
-
-      // Once all operations are run with no errors, commit the transaction
+      // Commit the transaction
       await session.commitTransaction();
 
+      // Handle post-transaction operations (outside of transaction)
       const price = formatPrice(paymentIntent.amount_received / 100, currency);
 
-      const buyer_push_token = await DeviceManagement.findOne(
-        { auth_id: order_info.buyer_details.id },
-        "device_push_token"
-      );
-      const seller_push_token = await DeviceManagement.findOne(
-        { auth_id: order_info.seller_details.id },
-        "device_push_token"
-      );
+      // Fetch push tokens for notifications
+      const [buyer_push_token, seller_push_token] = await Promise.all([
+        DeviceManagement.findOne(
+          { auth_id: order_info.buyer_details.id },
+          "device_push_token"
+        ),
+        DeviceManagement.findOne(
+          { auth_id: order_info.seller_details.id },
+          "device_push_token"
+        ),
+      ]);
+
       const notificationPromises = [];
 
-      // Check for actual token value, not just document existence
+      // Send buyer notification if token exists
       if (buyer_push_token?.device_push_token) {
         const buyer_notif_payload: NotificationPayload = {
-          to: buyer_push_token.device_push_token, // Extract the actual token
+          to: buyer_push_token.device_push_token,
           title: "Payment successful",
           body: `Your payment for ${order_info.artwork_data.title} has been confirmed`,
           data: {
@@ -222,9 +363,10 @@ export const POST = withAppRouterHighlight(async function POST(
         );
       }
 
+      // Send seller notification if token exists
       if (seller_push_token?.device_push_token) {
         const seller_notif_payload: NotificationPayload = {
-          to: seller_push_token.device_push_token, // Extract the actual token
+          to: seller_push_token.device_push_token,
           title: "Payment received",
           body: `A payment of ${formatPrice(order_info.artwork_data.pricing.usd_price, "USD")} has been made for your artpiece`,
           data: {
@@ -249,12 +391,15 @@ export const POST = withAppRouterHighlight(async function POST(
         );
       }
 
+      // Execute all post-transaction workflows
       await Promise.all([
         createWorkflow(
           "/api/workflows/shipment/create_shipment",
           `create_shipment_${generateDigit(6)}`,
           JSON.stringify({ order_id: order_info.order_id })
-        ),
+        ).catch((error) => {
+          console.error("Failed to create shipment workflow:", error);
+        }),
         createWorkflow(
           "/api/workflows/emails/sendPaymentSuccessMail",
           `send_payment_success_mail${generateDigit(6)}`,
@@ -269,26 +414,284 @@ export const POST = withAppRouterHighlight(async function POST(
             seller_email: order_info.seller_details.email,
             seller_name: order_info.seller_details.name,
           })
-        ),
+        ).catch((error) => {
+          console.error("Failed to send payment success mail workflow:", error);
+        }),
         ...notificationPromises,
       ]);
 
-      console.log("Transaction committed.");
+      console.log("Transaction committed successfully.");
+      return NextResponse.json({ status: 200 });
     } catch (error) {
-      console.log("An error occurred during the transaction:" + error);
+      console.error("An error occurred during the transaction:", error);
 
-      // If any errors are encountered, abort the transaction process, this rolls back all updates and ensures that the DB isn't written to.
-      await session.abortTransaction();
-      // Exit the webhook
-      return NextResponse.json({ status: 400 });
-    } finally {
-      // End the session to avoid reusing the same Mongoclient for different transactions
-      await session.endSession();
+      try {
+        await session.abortTransaction();
+      } catch (abortError) {
+        console.error("Failed to abort transaction:", abortError);
+      }
+
+      return NextResponse.json({ status: 500 });
     }
-
-    // Catch error above
   }
 
-  // Return a 200 response to acknowledge receipt of the event
-  return NextResponse.json({ status: 200 });
-});
+  // Return appropriate response if event type doesn't match any handled cases
+  return NextResponse.json({ status: 400 });
+};
+
+const handleSubscriptionPayment = async (
+  paymentIntent: any,
+  meta: any,
+  session: any,
+  event: any
+) => {
+  const domainStatus =
+    paymentIntent.status === "succeeded"
+      ? "successful"
+      : paymentIntent.status === "processing"
+        ? "processing"
+        : "failed";
+
+  const { isProcessed, existingPayment } = await subscriptionIdempotencyCheck(
+    paymentIntent.id,
+    String(paymentIntent.customer ?? meta.customer ?? ""),
+    domainStatus
+  );
+
+  if (event.type === "payment_intent.processing") {
+    if (isProcessed) return NextResponse.json({ status: 400 });
+
+    try {
+      await session.startTransaction();
+
+      await SubscriptionTransactions.updateOne(
+        { payment_ref: paymentIntent.id },
+        { $set: { status: domainStatus } },
+        { session }
+      );
+
+      await session.commitTransaction();
+
+      // Send email notification for pending subscription payment (outside transaction)
+      await sendSubscriptionPaymentPendingMail({
+        name: meta.name,
+        email: meta.email,
+      });
+
+      return NextResponse.json({ status: 200 });
+    } catch (error) {
+      await session.abortTransaction();
+      console.error("Error processing payment_intent.processing:", error);
+      return NextResponse.json({ status: 500 });
+    }
+  }
+
+  if (event.type === "payment_intent.payment_failed") {
+    if (isProcessed) return NextResponse.json({ status: 400 });
+
+    try {
+      await session.startTransaction();
+
+      await SubscriptionTransactions.updateOne(
+        { payment_ref: paymentIntent.id },
+        { $set: { status: domainStatus } },
+        { session }
+      );
+
+      await session.commitTransaction();
+
+      // Send email notification for failed subscription payment (outside transaction)
+      await sendSubscriptionPaymentFailedMail({
+        name: meta.name,
+        email: meta.email,
+      });
+
+      return NextResponse.json({ status: 200 });
+    } catch (error) {
+      await session.abortTransaction();
+      console.error("Error processing payment_intent.payment_failed:", error);
+      return NextResponse.json({ status: 500 });
+    }
+  }
+
+  if (event.type === "payment_intent.succeeded") {
+    if (isProcessed) return NextResponse.json({ status: 200 });
+
+    const valueAmountInUnits = Number(paymentIntent.amount) / 100;
+    const nowUTC = toUTCDate(new Date());
+
+    const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
+      amount: formatPrice(valueAmountInUnits, "USD"),
+      payment_ref: paymentIntent.id,
+      date: nowUTC,
+      gallery_id: meta.gallery_id,
+      status: domainStatus,
+      stripe_customer_id: String(paymentIntent.customer ?? ""),
+    };
+
+    const plan_id = meta.plan_id ?? meta.planId;
+    const plan_interval = meta.plan_interval ?? meta.planInterval;
+    const customer = String(paymentIntent.customer ?? meta.customer ?? "");
+    const paymentMethod =
+      paymentIntent.payment_method as Stripe.PaymentMethod | null;
+
+    if (!plan_id || !plan_interval) {
+      return NextResponse.json({ status: 400 });
+    }
+
+    try {
+      await session.startTransaction();
+
+      // Fetch plan and existing subscription in parallel within transaction
+      const [plan, existingSubscription] = await Promise.all([
+        SubscriptionPlan.findOne({ plan_id }).session(session),
+        Subscriptions.findOne({ stripe_customer_id: customer }).session(
+          session
+        ),
+      ]);
+
+      if (!plan) {
+        await session.abortTransaction();
+        return NextResponse.json({ status: 400 });
+      }
+
+      const expiryDate = getSubscriptionExpiryDate(plan_interval);
+
+      const subPayload = {
+        start_date: nowUTC,
+        expiry_date: expiryDate,
+        paymentMethod: paymentMethod ?? undefined,
+        stripe_customer_id: customer,
+        customer: {
+          name: meta.name,
+          email: meta.email,
+          gallery_id: meta.gallery_id,
+        },
+        status: "active",
+        plan_details: {
+          type: plan.name,
+          value: plan.pricing,
+          currency: plan.currency,
+          interval: plan_interval,
+        },
+        next_charge_params: {
+          value:
+            plan_interval === "monthly"
+              ? +plan.pricing.monthly_price
+              : +plan.pricing.annual_price,
+          currency: "USD",
+          type: plan.name,
+          interval: plan_interval,
+          id: plan.plan_id,
+        },
+        upload_tracker: {
+          limit: getUploadLimitLookup(plan.name, plan_interval),
+          next_reset_date: expiryDate.toISOString(),
+          upload_count: existingSubscription
+            ? (existingSubscription.upload_tracker?.upload_count ?? 0)
+            : 0,
+        },
+      };
+
+      // Update/create subscription transaction
+      await SubscriptionTransactions.findOneAndUpdate(
+        { payment_ref: paymentIntent.id },
+        { $set: txnData },
+        { upsert: true, new: true, session }
+      );
+
+      // Handle subscription creation or update
+      if (!existingSubscription) {
+        await Subscriptions.create([subPayload], { session });
+      } else {
+        const isActiveAndNotExpired =
+          existingSubscription.status === "active" &&
+          new Date(existingSubscription.expiry_date) > nowUTC;
+
+        if (isActiveAndNotExpired) {
+          const upload_tracker = {
+            limit: getUploadLimitLookup(plan.name, plan_interval),
+            next_reset_date: expiryDate.toISOString(),
+            upload_count:
+              existingSubscription.upload_tracker?.upload_count ?? 0,
+          };
+          await Subscriptions.updateOne(
+            { stripe_customer_id: customer },
+            { $set: { ...subPayload, upload_tracker } },
+            { session }
+          );
+        } else {
+          await Subscriptions.updateOne(
+            { stripe_customer_id: customer },
+            { $set: subPayload },
+            { session }
+          );
+        }
+      }
+
+      // Update account gallery
+      await AccountGallery.updateOne(
+        { gallery_id: meta.gallery_id },
+        { $set: { subscription_status: { type: plan.name, active: true } } },
+        { session }
+      );
+
+      await session.commitTransaction();
+
+      // Send subscription payment email (outside transaction)
+      await sendSubscriptionPaymentSuccessfulMail({
+        name: meta.name ?? "",
+        email: meta.email ?? "",
+      });
+
+      return NextResponse.json({ status: 200 });
+    } catch (error) {
+      await session.abortTransaction();
+      console.error("Error processing payment_intent.succeeded:", error);
+      return NextResponse.json({ status: 500 });
+    }
+  }
+
+  // Return appropriate response if event type doesn't match any handled cases
+  return NextResponse.json({ status: 400 });
+};
+
+async function subscriptionIdempotencyCheck(
+  paymentId: string,
+  customerId: string,
+  status: string
+) {
+  try {
+    const existingPayment = await SubscriptionTransactions.findOne({
+      payment_ref: paymentId,
+      stripe_customer_id: customerId,
+    });
+
+    if (existingPayment) {
+      if (existingPayment.status === status)
+        return { isProcessed: true, existingPayment };
+    }
+
+    return { isProcessed: false, existingPayment: null };
+  } catch (error) {
+    console.error("Error in subscriptionIdempotencyCheck:", error);
+    throw error;
+  }
+}
+async function purchaseIdempotencyCheck(paymentId: string, status: string) {
+  try {
+    const existingPayment = await PurchaseTransactions.findOne({
+      trans_reference: paymentId,
+    });
+
+    if (existingPayment) {
+      if (existingPayment.status === status)
+        return { isProcessed: true, existingPayment };
+    }
+
+    return { isProcessed: false, existingPayment: null };
+  } catch (error) {
+    console.error("Error in subscriptionIdempotencyCheck:", error);
+    throw error;
+  }
+}

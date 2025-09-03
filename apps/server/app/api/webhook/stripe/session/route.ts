@@ -108,8 +108,6 @@ export const POST = withAppRouterHighlight(async function POST(
         }
       ).session(session);
 
-      console.log(paymentIntent);
-      console.log(meta);
       const transaction_pricing: PurchaseTransactionPricing = {
         amount_total: Math.round(paymentIntent.amount_total / 100),
         unit_price: Math.round(+meta.unit_price),
@@ -125,6 +123,7 @@ export const POST = withAppRouterHighlight(async function POST(
         trans_initiator_id: meta.buyer_id,
         trans_recipient_role: "gallery",
         trans_reference: paymentIntent.id,
+        status: paymentIntent.status,
       };
 
       const createTransactionPromise = PurchaseTransactions.create([data], {

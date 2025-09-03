@@ -83,6 +83,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         ...meta,
         seller_id,
         commission: Math.round(meta.unit_price * commision_rate),
+        type: "purchase",
       },
       expires_at: futureTimestamp,
       mode: "payment",

@@ -11,6 +11,7 @@ const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
     trans_initiator_id: { type: String, required: true },
     trans_recipient_id: { type: String, required: true },
     trans_recipient_role: { type: String, required: true },
+    status: { type: String, required: true },
   },
   { timestamps: true }
 );

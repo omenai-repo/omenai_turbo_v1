@@ -40,10 +40,7 @@ export default function SubscriptionBase() {
         return {
           isSubmitted: response.details_submitted,
           id: acc.data.connected_account_id,
-          isSubActive:
-            sub_check?.data?.status === "active" ||
-            sub_check?.data?.status === "canceled" ||
-            sub_check?.data?.status === "expired",
+          isSubActive: sub_check?.data?.status === "active",
           subscription_data: sub_check.data,
           subscription_plan: sub_check.plan,
         };

@@ -26,8 +26,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       meta: data.meta,
     };
 
-    console.log(payload);
-
     const response = await fetch("https://api.flutterwave.com/v3/payments", {
       method: "POST",
       headers: {

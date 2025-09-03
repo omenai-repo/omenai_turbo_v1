@@ -39,7 +39,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       payment_method: subscription_data.paymentMethod.id,
       off_session: true, // important for stored cards
       confirm: true, // attempt charge immediately
-      metadata: { ...meta },
+      metadata: { ...meta, type: "subscription" },
     });
 
     //   Create a record of this transaction

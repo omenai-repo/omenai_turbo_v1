@@ -518,6 +518,7 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_pricing: PurchaseTransactionPricing;
   trans_date: Date;
   trans_recipient_role: "gallery" | "artist";
+  status: "successful" | "processing" | "failed";
 };
 
 export type PurchaseTransactionPricing = {

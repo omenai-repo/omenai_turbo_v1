@@ -2,23 +2,17 @@
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
-  Elements,
-  CardElement,
   useStripe,
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
-import { createSubscriptionPaymentIntent } from "@omenai/shared-services/subscriptions/stripe/createSubscriptionPaymentIntent";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+
 import { dashboard_url } from "@omenai/url-config/src/config";
 interface SubscriptionFormProps {
   planId: string;
   amount: number;
 }
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
   const stripe = useStripe();
@@ -26,8 +20,6 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -96,9 +88,9 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded-md h-[35px] p-6 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
       >
-        {isProcessing ? "Processing..." : `Subscribe for $${amount / 100}`}
+        {isProcessing ? "Processing..." : `Subscribe for $${amount}`}
       </button>
     </form>
   );

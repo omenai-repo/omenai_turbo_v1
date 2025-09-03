@@ -1,20 +1,15 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { IoIosLock } from "react-icons/io";
-import Image from "next/image";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useLocalStorage } from "usehooks-ts";
 import { updateSubscriptionPlan } from "@omenai/shared-services/subscriptions/updateSubscriptionPlan";
-import Link from "next/link";
 import {
   SubscriptionPlanDataTypes,
   SubscriptionModelSchemaTypes,
-  SubscriptionTokenizationTypes,
   NextChargeParams,
 } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -23,6 +18,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import BillingCard from "../../../features/components/BillingCard";
 import { PaymentMethod } from "@stripe/stripe-js";
+
 const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function CheckoutBillingCard({
@@ -60,7 +56,9 @@ export default function CheckoutBillingCard({
       "Stripe not loaded yet. Please refresh or contact support if issue persists",
       "error"
     );
+
   const router = useRouter();
+
   const handlePaymentResponse = async (
     stripe: Stripe,
     data: { status: string; client_secret: string; paymentIntentId: string }
@@ -77,16 +75,10 @@ export default function CheckoutBillingCard({
 
       case "requires_action":
         // ⚠️ Needs customer authentication (3DS)
-        const result = await stripe.confirmCardPayment(client_secret);
-        if (result.error) {
-          router.push(
-            `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
-          );
-        } else if (result.paymentIntent?.status === "succeeded") {
-          router.push(
-            `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
-          );
-        }
+        await stripe.confirmCardPayment(client_secret);
+        router.push(
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+        );
         break;
 
       case "requires_payment_method":

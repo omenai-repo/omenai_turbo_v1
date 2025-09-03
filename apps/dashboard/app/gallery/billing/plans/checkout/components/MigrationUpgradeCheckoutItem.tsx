@@ -38,10 +38,12 @@ export default function MigrationUpgradeCheckoutItem({
   const currency = getCurrencySymbol(plan.currency);
 
   const totalDays = differenceInCalendarDays(expiryDate, startDate);
+
   const days_used = Math.min(
     differenceInCalendarDays(now, startDate),
     totalDays
   );
+
   const days_left = Math.max(totalDays - days_used, 0);
 
   const { proratedPrice, upgradeCost, grandTotal } = useMemo(

@@ -12,7 +12,7 @@ export default function CardChangeCheckoutItem() {
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-fluid-sm font-medium">Card Change</h1>
+              <h1 className="text-fluid-xs font-medium">Card Change</h1>
               <p className="text-fluid-xxs text-gray-300">
                 Update your payment method
               </p>
@@ -27,12 +27,13 @@ export default function CardChangeCheckoutItem() {
               <Info className="w-4 h-4 text-amber-600" />
             </div>
             <div>
-              <p className="text-fluid-xs font-semibold text-amber-900 mb-1">
+              <p className="text-fluid-xs font-medium text-amber-900 mb-1">
                 Verification Required
               </p>
-              <p className="text-fluid-xs text-amber-800 leading-relaxed">
-                A temporary $1 charge will be applied to verify your card. This
-                amount will be credited to your next subscription payment.
+              <p className="text-fluid-xxs text-amber-800 leading-relaxed">
+                A temporary $0.5 charge will be applied to verify your payment
+                method. This amount will be credited to your next subscription
+                payment.
               </p>
             </div>
           </div>
