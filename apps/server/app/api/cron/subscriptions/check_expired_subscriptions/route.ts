@@ -1,103 +1,157 @@
-import { PaymentMethod } from "@stripe/stripe-js";
-import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+// apps/server/app/api/cron/subscription-renewals/route.ts
+import { NextResponse } from "next/server";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
-import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
-import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-// NOTE: Run every hour
+function cents(amount: number) {
+  return Math.round(Number(amount) * 100);
+}
+
+function idempotencyKey(opts: { subscriptionId: string; attemptAt: string }) {
+  return `sub_renewal:${opts.subscriptionId}:${opts.attemptAt}`;
+}
+
+type LeanExpiredSub = {
+  _id: string;
+  expiry_date: Date;
+  stripe_customer_id?: string;
+  customer: { email: string; name?: string; gallery_id?: string };
+  paymentMethod?: { id: string } | string;
+  next_charge_params?: {
+    id?: string;
+    interval?: string;
+    value: number;
+    currency?: string;
+  };
+};
+
 export const GET = withRateLimit(lenientRateLimit)(async function GET() {
   await connectMongoDB();
 
+  const now = new Date();
+
   try {
-    // Strt session transaction
+    // 1) Get expired subscriptions (that aren’t canceled)
+    const expiredSubs: LeanExpiredSub[] = await Subscriptions.find(
+      { expiry_date: { $lte: now }, status: { $ne: "canceled" } },
+      "_id expiry_date stripe_customer_id customer paymentMethod next_charge_params"
+    )
+      .lean<LeanExpiredSub[]>()
+      .exec();
 
-    // Get current date
-    const currentDate = new Date();
-
-    // find all subscriptions that are past their expiry date and set their status to expired, ignore canceled subscriptions
-    await Subscriptions.updateMany(
-      {
-        expiry_date: { $lte: currentDate },
-        status: { $ne: "canceled" },
-      },
-      { $set: { status: "expired" } }
-    );
-
-    // Find all users with
-    const expired_user_emails = await Subscriptions.find(
-      {
-        expiry_date: { $lte: currentDate },
-        status: "expired",
-      },
-      "customer paymentMethod next_charge_params stripe_customer_id"
-    );
-
-    if (expired_user_emails.length === 0) {
+    if (!expiredSubs.length) {
       return NextResponse.json(
-        { message: "No expired subscriptions" },
+        { message: "No expired subscriptions", attempts: 0 },
         { status: 200 }
       );
     }
 
-    const emailsToUpdate = expired_user_emails.map((email) => {
-      return email.customer.email;
-    });
+    const results: Array<{
+      subscriptionId: string;
+      email?: string;
+      ok: boolean;
+      paymentIntentId?: string;
+      error?: string;
+    }> = [];
 
-    // Iterate through the expired documents
+    // 2) Attempt renewals (Stripe handles the rest via webhooks)
+    for (const sub of expiredSubs) {
+      const email = sub.customer?.email;
+      const amountMajor = sub.next_charge_params?.value;
+      const currency = (
+        sub.next_charge_params?.currency || "usd"
+      ).toLowerCase();
 
-    await AccountGallery.updateMany(
-      { email: { $in: emailsToUpdate } },
-      { $set: { subscription_status: { type: null, active: false } } }
-    );
-
-    const user_token_data = expired_user_emails.map((doc) => {
-      return {
-        email: doc.customer.email,
-        currency: "USD",
-        fullname: doc.customer.name,
-        amount: doc.next_charge_params.value,
-        stripe_customer_id: doc.stripe_customer_id,
-        paymentMethod: doc.PaymentMethod,
-        meta: {
-          planId: doc.next_charge_params.id,
-          planInterval: doc.next_charge_params.interval,
-          gallery_id: doc.customer.gallery_id,
-        },
-      };
-    });
-
-    user_token_data.forEach((user) => {
-      async () => {
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount: Math.round(user.amount * 100),
-          currency: "usd",
-          customer: user.stripe_customer_id, // retrieved/stored earlier
-          payment_method: user.paymentMethod.id,
-          off_session: true, // important for stored cards
-          confirm: true, // attempt charge immediately
-          metadata: { ...user.meta, type: "subscription" },
+      if (!sub.stripe_customer_id || !amountMajor) {
+        results.push({
+          subscriptionId: sub._id,
+          email,
+          ok: false,
+          error: "Missing stripe_customer_id or amount",
         });
-      };
-    });
+        continue;
+      }
+
+      const pm =
+        typeof sub.paymentMethod === "string"
+          ? sub.paymentMethod
+          : sub.paymentMethod?.id;
+
+      if (!pm) {
+        results.push({
+          subscriptionId: sub._id,
+          email,
+          ok: false,
+          error: "No stored payment method",
+        });
+        continue;
+      }
+
+      try {
+        const pi = await stripe.paymentIntents.create(
+          {
+            amount: cents(amountMajor),
+            currency,
+            customer: sub.stripe_customer_id,
+            payment_method: pm,
+            off_session: true,
+            confirm: true,
+            metadata: {
+              type: "subscription",
+              subscription_id: sub._id,
+              planId: sub.next_charge_params?.id ?? "",
+              planInterval: sub.next_charge_params?.interval ?? "",
+              gallery_id: sub.customer?.gallery_id ?? "",
+            },
+          },
+          {
+            idempotencyKey: idempotencyKey({
+              subscriptionId: sub._id,
+              attemptAt: now.toISOString(),
+            }),
+          }
+        );
+
+        results.push({
+          subscriptionId: sub._id,
+          email,
+          ok: true,
+          paymentIntentId: pi.id,
+        });
+      } catch (err: any) {
+        const stripeErr = err as Stripe.errors.StripeError;
+        results.push({
+          subscriptionId: sub._id,
+          email,
+          ok: false,
+          error: stripeErr?.message ?? String(err),
+        });
+      }
+    }
 
     return NextResponse.json(
       {
-        message: "This cron job ran at it's designated time",
+        message: "Subscription renewal attempts executed",
+        attempts: results.length,
+        results,
       },
       { status: 200 }
     );
-  } catch (error) {
-    console.log("An error occurred during the transaction:" + error);
-
-    // If any errors are encountered, abort the transaction process, this rolls back all updates and ensures that the DB isn't written to.
-    // Exit the webhook
-    return NextResponse.json({ status: 500 });
+  } catch (e) {
+    console.error("[subscription-renewals] fatal error:", e);
+    return NextResponse.json(
+      {
+        message: "Subscription renewal cron failed",
+        error: e instanceof Error ? e.message : String(e),
+      },
+      { status: 500 }
+    );
   }
 });

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
 import {
   PaymentElement,
   useStripe,
@@ -12,7 +11,6 @@ export const PaymentMethodChangeForm = () => {
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -33,7 +31,7 @@ export const PaymentMethodChangeForm = () => {
       const { error: stripeError } = await stripe.confirmSetup({
         elements,
         confirmParams: {
-          return_url: `http://localhost:5000/gallery/billing/card/verification`,
+          return_url: `${dashboard_url()}/gallery/billing/card/verification`,
         },
       });
 
