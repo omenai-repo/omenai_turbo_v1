@@ -6,7 +6,6 @@ import {
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 import { dashboard_url } from "@omenai/url-config/src/config";
 interface SubscriptionFormProps {
@@ -74,7 +73,7 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 mb-4">
       <div className="p-4 border rounded-lg">
         <PaymentElement />
       </div>
@@ -88,7 +87,7 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded-md h-[35px] p-6 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
+        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded-md h-[35px] p-6 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer mb-4"
       >
         {isProcessing ? "Processing..." : `Subscribe for $${amount}`}
       </button>

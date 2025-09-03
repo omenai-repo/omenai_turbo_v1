@@ -10,7 +10,7 @@ export default function MobileBlockScreen() {
       <div className="max-w-md w-full text-center space-y-6">
         {/* Logo (Optional) */}
         <Image
-          src="https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/68231da4000e5b382a50/view?project=682272b1001e9d1609a8&mode=admin"
+          src="https://fra.cloud.appwrite.io/v1/storage/buckets/68227462000f77619b04/files/68b8ccd6000dedf704d5/view?project=682273fc00235a5bdb6c"
           alt="Omenai Logo"
           width={120}
           height={40}

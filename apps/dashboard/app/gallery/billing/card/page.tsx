@@ -1,6 +1,6 @@
-import CardChangeWrapper from "./CardChangeWrapper";
+import PaymentMethodChangeWrapper from "./PaymentMethodChangeWrapper";
 export const dynamic = "force-dynamic";
 
 export default function page() {
-  return <CardChangeWrapper />;
+  return <PaymentMethodChangeWrapper />;
 }

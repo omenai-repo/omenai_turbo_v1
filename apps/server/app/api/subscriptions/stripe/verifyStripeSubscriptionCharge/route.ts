@@ -120,7 +120,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (existingTxn?.status === "successful") {
       return NextResponse.json(
-        { message: "Already processed", pi },
+        { message: "Transaction processed successfully", pi },
         { status: 200 }
       );
     }

@@ -194,7 +194,7 @@ export default function CheckoutBillingCard({
 
   return (
     <>
-      <div className="mt-12 space-y-4">
+      <div className="mt-12 space-y-4 mb-4">
         <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-200">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-semibold text-slate-900">Payment Details</h2>
