@@ -36,7 +36,7 @@ export function ArtworksListing({
   const { width } = useWindowSize();
 
   const { data: artworksArray, isLoading: loading } = useQuery({
-    queryKey: ["get_artworks_by_collection"],
+    queryKey: ["get_artworks_by_collection", medium],
     queryFn: async () => {
       const response = await fetchArtworksByCriteria(
         currentPage,
@@ -56,6 +56,9 @@ export function ArtworksListing({
     gcTime: 0,
   });
 
+  if (loading) {
+    return <ArtworksListingSkeletonLoader />;
+  }
   if (
     !artworksArray ||
     artworksArray.data.length === 0 ||
@@ -66,9 +69,6 @@ export function ArtworksListing({
         <NotFoundData />
       </div>
     );
-  }
-  if (loading || isLoading) {
-    return <ArtworksListingSkeletonLoader />;
   }
   const arts = catalogChunk(
     artworks,

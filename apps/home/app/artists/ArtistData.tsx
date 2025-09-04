@@ -21,10 +21,13 @@ export default function ArtistData() {
 
       if (!response.isOk) throw new Error("Something went wrong");
 
-      console.log(response);
-
       return { artist: response.data, artworks: response.artworks };
     },
+
+    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch if we have cached data
   });
 
   if (loading) return <Load />;

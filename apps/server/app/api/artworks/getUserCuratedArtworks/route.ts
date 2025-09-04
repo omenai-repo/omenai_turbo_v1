@@ -4,7 +4,6 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 export const revalidate = 0;
@@ -17,15 +16,14 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
   try {
     await connectMongoDB();
 
-    const { page = 1, preferences, filters } = await request.json();
+    const { page, preferences, filters } = await request.json();
     const skip = (page - 1) * PAGE_SIZE;
 
     // Helper function to fetch gallery IDs based on subscription plan
-    const getGalleryIdsByPlan = async (plan: string | string[]) => {
+    const getGalleryIds = async () => {
       const result = await Subscriptions.aggregate([
         {
           $match: {
-            "plan_details.type": { $in: Array.isArray(plan) ? plan : [plan] },
             status: "active",
           },
         },
@@ -41,10 +39,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     };
 
     // Fetch gallery IDs for basic and pro/premium plans
-    const [basicGalleryIds, proPremiumGalleryIds] = await Promise.all([
-      getGalleryIdsByPlan("Basic"),
-      getGalleryIdsByPlan(["Pro", "Premium"]),
-    ]);
+    const galleries = await getGalleryIds();
 
     // Build filters for artworks
     const builtFilters = buildMongoQuery(filters);
@@ -63,48 +58,15 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
         // Condition for artworks by galleries meeting the specified criteria
         {
           "role_access.role": "gallery",
-          author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+          author_id: { $in: [...galleries] },
         },
       ],
       medium: { $in: preferences },
     })
+      .skip(skip)
+      .limit(PAGE_SIZE)
       .sort({ createdAt: -1 })
       .exec();
-
-    // Calculate how many basic artworks have already been returned in previous pages
-
-    // Separate artworks into basic and pro/premium
-    let selectedBasicArtworks = [];
-    let selectedProPremiumArtworks = [];
-    let artworksByArtist = [];
-
-    for (let artwork of allArtworks) {
-      if (artwork.role_access.role === "artist") {
-        artworksByArtist.push(artwork);
-      } else {
-        if (basicGalleryIds.includes(artwork.author_id)) {
-          selectedBasicArtworks.push(artwork);
-        } else {
-          selectedProPremiumArtworks.push(artwork);
-        }
-      }
-
-      // Stop if we have filled the page
-      if (
-        selectedBasicArtworks.length +
-          selectedProPremiumArtworks.length +
-          artworksByArtist.length >=
-        PAGE_SIZE
-      )
-        break;
-    }
-
-    // Combine and slice the artworks for pagination
-    const allCuratedPaginatedArtworks = [
-      ...selectedBasicArtworks,
-      ...selectedProPremiumArtworks,
-      ...artworksByArtist,
-    ].slice(0, PAGE_SIZE);
 
     // Calculate total adhering to restrictions
     const total = await Artworkuploads.countDocuments({
@@ -116,7 +78,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
         // Condition for artworks by galleries meeting the specified criteria
         {
           "role_access.role": "gallery",
-          author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+          author_id: { $in: [...galleries] },
         },
       ],
       medium: { $in: preferences },
@@ -125,7 +87,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     return NextResponse.json(
       {
         message: "Successful",
-        data: allCuratedPaginatedArtworks,
+        data: allArtworks,
         page,
         pageCount: Math.ceil(total / PAGE_SIZE),
         total,

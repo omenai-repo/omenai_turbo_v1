@@ -50,6 +50,9 @@ export default function ArtworkCard({
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
 
+  const safeSlug = encodeURIComponent(medium)
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29");
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
   return (
     <div className="group relative bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl">
@@ -86,12 +89,14 @@ export default function ArtworkCard({
               </button>
             </Link>
           ) : (
-            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-1 xs:py-2 text-fluid-xxs rounded-md border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
-              <span className="font-semibold">{medium}</span>
+            <Link href={`/collections/${safeSlug}`}>
+              <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-1 xs:py-2 text-fluid-xxs rounded-md border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
+                <span className="font-semibold">{medium}</span>
 
-              {/* Button glow effect */}
-              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
-            </button>
+                {/* Button glow effect */}
+                <div className="absolute inset-0 rounded-md bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
+              </button>
+            </Link>
           )}
         </div>
 

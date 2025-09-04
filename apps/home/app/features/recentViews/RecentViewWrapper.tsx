@@ -21,7 +21,10 @@ export default function RecentViewWrapper({
       if (!data?.isOk) throw new Error("Something went wrong");
       else return data.data;
     },
+    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
     refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch if we have cached data
   });
 
   if (isLoading) return <SectionLoaderContainers title="Recently viewed" />;

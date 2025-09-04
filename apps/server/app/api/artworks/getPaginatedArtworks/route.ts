@@ -21,11 +21,10 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const skip = (page - 1) * PAGE_SIZE;
 
       // Helper function to fetch gallery IDs based on subscription plan
-      const getGalleryIdsByPlan = async (plan: string | string[]) => {
+      const getGalleryIds = async () => {
         const result = await Subscriptions.aggregate([
           {
             $match: {
-              "plan_details.type": { $in: Array.isArray(plan) ? plan : [plan] },
               status: "active",
             },
           },
@@ -41,10 +40,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       };
 
       // Fetch gallery IDs for basic and pro/premium plans
-      const [basicGalleryIds, proPremiumGalleryIds] = await Promise.all([
-        getGalleryIdsByPlan("Basic"),
-        getGalleryIdsByPlan(["Pro", "Premium"]),
-      ]);
+      const galleries = await getGalleryIds();
 
       // Build filters for artworks
       const builtFilters = buildMongoQuery(filters);
@@ -62,7 +58,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           // Condition for artworks by galleries meeting the specified criteria
           {
             "role_access.role": "gallery",
-            author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            author_id: { $in: [...galleries] },
           },
         ],
         ...filterCriteria, // Apply any additional filters
@@ -72,37 +68,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         .limit(PAGE_SIZE)
         .exec();
 
-      // Separate artworks into basic and pro/premium based on gallery_id
-      let selectedBasicArtworks = [];
-      let selectedProPremiumArtworks = [];
-      let artworksByArtist = [];
-
-      for (let artwork of allArtworks) {
-        if (artwork.role_access.role === "artist") {
-          artworksByArtist.push(artwork);
-        } else if (basicGalleryIds.includes(artwork.author_id)) {
-          // TODO: Remove limit
-          selectedBasicArtworks.push(artwork);
-        } else {
-          selectedProPremiumArtworks.push(artwork);
-        }
-
-        // Stop if we have filled the page
-        if (
-          selectedBasicArtworks.length +
-            selectedProPremiumArtworks.length +
-            artworksByArtist.length >=
-          PAGE_SIZE
-        )
-          break;
-      }
-
       // Combine and slice the artworks for pagination
-      const paginatedArtworks = [
-        ...selectedBasicArtworks,
-        ...artworksByArtist,
-        ...selectedProPremiumArtworks,
-      ].slice(0, PAGE_SIZE);
 
       // Calculate total adhering to restrictions
       const total = await Artworkuploads.countDocuments({
@@ -113,7 +79,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           // Condition for artworks by galleries meeting the specified criteria
           {
             "role_access.role": "gallery",
-            author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            author_id: { $in: [...galleries] },
           },
         ],
         ...builtFilters,
@@ -122,7 +88,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       return NextResponse.json(
         {
           message: "Successful",
-          data: paginatedArtworks,
+          data: allArtworks,
           page,
           pageCount: Math.ceil(total / PAGE_SIZE),
           total,

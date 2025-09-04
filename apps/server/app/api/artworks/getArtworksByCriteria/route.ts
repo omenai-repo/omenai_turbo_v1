@@ -4,30 +4,25 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
     const PAGE_SIZE = 30;
-    const BASIC_LIMIT = 25;
     try {
       await connectMongoDB();
       const { page, medium, filters } = await request.json();
       const skip = (page - 1) * PAGE_SIZE;
 
       // Helper function to fetch gallery IDs based on subscription plan
-      const getGalleryIdsByPlan = async (plan: string | string[]) => {
+      const getGalleryIds = async () => {
         const result = await Subscriptions.aggregate([
           {
             $match: {
-              "plan_details.type": { $in: Array.isArray(plan) ? plan : [plan] },
               status: "active",
             },
           },
@@ -43,10 +38,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       };
 
       // Fetch gallery IDs for basic and pro/premium plans
-      const [basicGalleryIds, proPremiumGalleryIds] = await Promise.all([
-        getGalleryIdsByPlan("Basic"),
-        getGalleryIdsByPlan(["Pro", "Premium"]),
-      ]);
+      const galleries = await getGalleryIds();
 
       // Build filters for artworks
       const builtFilters = buildMongoQuery(filters);
@@ -65,7 +57,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           // Condition for artworks by galleries meeting the specified criteria
           {
             "role_access.role": "gallery",
-            author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            author_id: { $in: [...galleries] },
           },
         ],
         medium,
@@ -74,30 +66,6 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         .skip(skip)
         .limit(PAGE_SIZE)
         .exec();
-
-      // Separate artworks into basic and pro/premium based on gallery_id
-      let selectedBasicArtworks = [];
-      let selectedProPremiumArtworks = [];
-      let artworksByArtist = [];
-
-      for (let artwork of allArtworks) {
-        if (artwork.role_access.role === "artist") {
-          artworksByArtist.push(artwork);
-        } else if (basicGalleryIds.includes(artwork.author_id)) {
-          if (selectedBasicArtworks.length < BASIC_LIMIT) {
-            selectedBasicArtworks.push(artwork);
-          }
-        } else {
-          selectedProPremiumArtworks.push(artwork);
-        }
-      }
-
-      // Combine and slice the artworks for pagination
-      const allArtworksByCriteria = [
-        ...selectedBasicArtworks,
-        ...artworksByArtist,
-        ...selectedProPremiumArtworks,
-      ].slice(0, PAGE_SIZE);
 
       // Calculate total adhering to restrictions
       const total = await Artworkuploads.countDocuments({
@@ -109,7 +77,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           // Condition for artworks by galleries meeting the specified criteria
           {
             "role_access.role": "gallery",
-            author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            author_id: { $in: [...galleries] },
           },
         ],
         medium,
@@ -118,7 +86,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       return NextResponse.json(
         {
           message: "Successful",
-          data: allArtworksByCriteria,
+          data: allArtworks,
           page,
           pageCount: Math.ceil(total / PAGE_SIZE),
           total,

@@ -4,11 +4,7 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -22,11 +18,10 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const skip = (page - 1) * PAGE_SIZE;
 
       // Helper function to fetch gallery IDs based on subscription plan
-      const getGalleryIdsByPlan = async (plan: string | string[]) => {
+      const getGalleryIds = async () => {
         const result = await Subscriptions.aggregate([
           {
             $match: {
-              "plan_details.type": { $in: Array.isArray(plan) ? plan : [plan] },
               status: "active",
             },
           },
@@ -42,10 +37,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       };
 
       // Fetch gallery IDs for basic and pro/premium plans
-      const [basicGalleryIds, proPremiumGalleryIds] = await Promise.all([
-        getGalleryIdsByPlan("Basic"),
-        getGalleryIdsByPlan(["Pro", "Premium"]),
-      ]);
+      const galleries = await getGalleryIds();
 
       // Build filters for artworks
       const builtFilters = buildMongoQuery(filters);
@@ -64,49 +56,15 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           // Condition for artworks by galleries meeting the specified criteria
           {
             "role_access.role": "gallery",
-            author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            author_id: { $in: [...galleries] },
           },
         ],
         impressions: { $gt: 0 },
       })
+        .skip(skip)
+        .limit(PAGE_SIZE)
         .sort({ impressions: -1 })
         .exec();
-
-      // Fetch all artworks, no initial limit applied
-
-      // Calculate how many basic artworks have already been returned in previous pages
-      const basicArtworksAlreadyReturned = (page - 1) * PAGE_SIZE - skip;
-
-      // Separate artworks into basic and pro/premium
-      let selectedBasicArtworks = [];
-      let selectedProPremiumArtworks = [];
-      let artworksByArtist = [];
-
-      for (let artwork of allArtworks) {
-        if (artwork.role_access.role === "artist") {
-          artworksByArtist.push(artwork);
-        } else if (basicGalleryIds.includes(artwork.author_id)) {
-          selectedBasicArtworks.push(artwork);
-        } else {
-          selectedProPremiumArtworks.push(artwork);
-        }
-
-        // Stop if we have filled the page
-        if (
-          selectedBasicArtworks.length +
-            selectedProPremiumArtworks.length +
-            artworksByArtist.length >=
-          PAGE_SIZE
-        )
-          break;
-      }
-
-      // Combine and slice the artworks for pagination
-      const allTrendingPaginatedArtworks = [
-        ...selectedBasicArtworks,
-        ...selectedProPremiumArtworks,
-        ...artworksByArtist,
-      ].slice(0, PAGE_SIZE);
 
       const total = await Artworkuploads.countDocuments({
         ...builtFilters,
@@ -117,7 +75,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           // Condition for artworks by galleries meeting the specified criteria
           {
             "role_access.role": "gallery",
-            author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+            author_id: { $in: [...galleries] },
           },
         ],
         impressions: { $gt: 0 },
@@ -126,7 +84,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       return NextResponse.json(
         {
           message: "Successful",
-          data: allTrendingPaginatedArtworks,
+          data: allArtworks,
           page,
           pageCount: Math.ceil(total / 30),
           total,

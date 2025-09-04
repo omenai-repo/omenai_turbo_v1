@@ -13,11 +13,16 @@ const createOrder = new Schema<CreateOrderModelTypes>(
       unique: true,
       index: true,
     },
-    status: { type: String, required: true, default: "processing" },
+    status: {
+      type: String,
+      required: true,
+      default: "processing",
+      index: true,
+    },
     shipping_details: { type: Schema.Types.Mixed, required: true },
     seller_designation: { type: String, required: true },
     exhibition_status: { type: Schema.Types.Mixed, default: () => null },
-    hold_status: { type: Schema.Types.Mixed, default: () => null },
+    hold_status: { type: Schema.Types.Mixed, default: () => null, index: true },
     payment_information: {
       type: Schema.Types.Mixed,
       required: true,
@@ -26,6 +31,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
     order_accepted: {
       type: Schema.Types.Mixed,
       required: true,
+      index: true,
     },
     availability: { type: Boolean, default: () => true },
     expiresAt: { type: Date || null, default: null },

@@ -42,7 +42,6 @@ export default function RecentViewedCard({
                 {name}
               </h3>
               <p className="text-white text-fluid-xxs">
-                by{" "}
                 {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
               </p>
             </div>

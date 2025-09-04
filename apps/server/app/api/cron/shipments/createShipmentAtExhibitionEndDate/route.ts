@@ -127,7 +127,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
 
             // TODO: Implement proper error logging to scale
             if (!order) throw new BadRequestError("Order not found");
-            const nowUTC = toUTCDate(new Date()); // Current date in UTC
             const timeDiff = executeAtUTC.getTime() - nowUTC.getTime(); // difference in milliseconds
             const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // convert to days, round up
             await sendReminderEmail(

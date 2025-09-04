@@ -22,11 +22,10 @@ export default function ArticleWrapper() {
 
       return response.data;
     },
+    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
     refetchOnWindowFocus: false,
-    staleTime: 0,
-    gcTime: 0,
-    refetchOnMount: "always", // Always refetch when component mounts
-    refetchOnReconnect: "always", // Always refetch when reconnecting
+    refetchOnMount: false, // Don't refetch if we have cached data
   });
   if (isLoading) return <Load />;
 

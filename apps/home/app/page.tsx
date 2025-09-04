@@ -25,6 +25,10 @@ export default function Home() {
       if (!promotionals?.isOk) throw new Error("Something went wrong");
       return promotionals.data;
     },
+    staleTime: 60 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 60 * 60 * 1000, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch if we have cached data
   });
 
   if (isLoading) {

@@ -20,6 +20,9 @@ export default function LatestArtworkWrapper({
       else return data.data;
     },
     refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    refetchOnMount: false, // Don't refetch if we have cached data
   });
 
   if (isLoading) return <SectionLoaderContainers title="Latest artworks" />;
