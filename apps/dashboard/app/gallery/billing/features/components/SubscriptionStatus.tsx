@@ -78,7 +78,7 @@ export default function SubDetail({
 
   const currency_symbol = getCurrencySymbol(sub_data.plan_details.currency);
   return (
-    <div className=" bg-white rounded-xl shadow-sm border border-slate-200 p-5 max-h-[300px]">
+    <div className=" bg-white rounded-md shadow-sm border border-slate-200 p-5 max-h-[300px]">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-fluid-xs font-semibold text-slate-900">
           Your Subscription

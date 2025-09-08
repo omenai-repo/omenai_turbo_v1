@@ -49,7 +49,7 @@ export default function Highlight() {
                       className="absolute inset-0 blur-xl opacity-40"
                       style={{ backgroundColor: item.color }}
                     />
-                    <div className="relative p-3 bg-slate-800 rounded-xl border border-slate-700">
+                    <div className="relative p-3 bg-slate-800 rounded-md border border-slate-700">
                       <HighlightCardIcon icon={item.icon} color={item.color} />
                     </div>
                   </div>

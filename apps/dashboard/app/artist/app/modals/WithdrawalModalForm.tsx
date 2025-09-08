@@ -160,7 +160,7 @@ export default function WithdrawalModalForm() {
                 </label>
 
                 {/* Send Amount */}
-                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                <div className="bg-slate-50 rounded-md p-3 border border-slate-200">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-fluid-xs text-slate-600">
@@ -205,7 +205,7 @@ export default function WithdrawalModalForm() {
                 </div>
 
                 {/* Receive Amount */}
-                <div className="bg-green-50 rounded-xl p-3 border border-green-200">
+                <div className="bg-green-50 rounded-md p-3 border border-green-200">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-fluid-xs text-green-700">
@@ -232,7 +232,7 @@ export default function WithdrawalModalForm() {
                 <label className="block text-fluid-xs font-normal text-slate-700">
                   Security PIN
                 </label>
-                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                <div className="bg-slate-50 rounded-md p-3 border border-slate-200">
                   <div className="space-y-2">
                     <p className="text-center text-fluid-xs text-slate-600 mb-2">
                       Enter your 4-digit wallet PIN

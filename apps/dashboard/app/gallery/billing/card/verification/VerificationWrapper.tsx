@@ -131,7 +131,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
         {/* Generic payment confirmation */}
         <div className="flex items-center justify-between mb-8 p-4 bg-gray-50 rounded-2xl">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-md flex items-center justify-center text-white shadow-lg">
               <CreditCard size={24} />
             </div>
             <div>
@@ -248,7 +248,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
       >
         {/* Error message */}
         <div className="flex items-start gap-4 mb-8 p-4 bg-red-50 rounded-2xl border border-red-100">
-          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center text-white shadow-lg flex-shrink-0">
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-md flex items-center justify-center text-white shadow-lg flex-shrink-0">
             <AlertTriangle size={24} />
           </div>
           <div className="flex-1">
@@ -329,7 +329,7 @@ const PaymentSuccessDemo = () => {
           {!showSuccess && (
             <button
               onClick={() => setShowSuccess(true)}
-              className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-xl transition-colors"
+              className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-md transition-colors"
             >
               Show Success Screen
             </button>

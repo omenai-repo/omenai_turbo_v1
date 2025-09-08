@@ -115,7 +115,7 @@ export default function TransactionTable() {
         <Accordion.Item
           key={transaction.trans_id}
           value={transaction.trans_id}
-          className="border border-slate-200 rounded-xl mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
+          className="border border-slate-200 rounded-md mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
         >
           <Accordion.Control className="hover:bg-slate-50 transition-colors">
             <div className="flex items-center justify-between px-4 py-2">

@@ -46,7 +46,6 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
       });
 
       if (error) {
-        console.error(error.message);
         // Show error to user
         setError(error.message || "Payment failed");
       } else {

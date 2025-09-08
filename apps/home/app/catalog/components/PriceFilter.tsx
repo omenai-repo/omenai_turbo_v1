@@ -19,7 +19,7 @@ export default function PriceFilter() {
     <div className="p-2 md:relative w-full md:w-fit">
       <div
         onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 rounded-xl whitespace-nowrap cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
+        className="ring-1 rounded-md whitespace-nowrap cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
       >
         <p className="flex gap-x-2 items-center">
           <span className="font-light">Price</span>

@@ -50,7 +50,7 @@ export default function GalleryRequest({
     <div className="w-full p-1">
       <div
         className={`
-        group relative rounded-xl border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
+        group relative rounded-md border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
         backdrop-blur-sm transition-all duration-500 ${currentStyle.shadowColor}
         ${currentStyle.glowColor}
         transform-gpu
@@ -86,7 +86,7 @@ export default function GalleryRequest({
                 <div className="flex items-center">
                   <span
                     className={`
-                  inline-flex items-center rounded-xl text-fluid-xxs font-medium capitalize
+                  inline-flex items-center rounded-md text-fluid-xxs font-medium capitalize
                   ${tab === "approved" ? " text-emerald-800" : ""}
                   ${tab === "pending" ? " text-amber-800" : ""}
                   ${tab === "rejected" ? " text-red-800" : ""}
@@ -95,7 +95,7 @@ export default function GalleryRequest({
                   >
                     <div
                       className={`
-                    w-1.5 h-1.5 rounded-xl mr-1.5
+                    w-1.5 h-1.5 rounded-md mr-1.5
                     ${tab === "approved" ? "bg-emerald-500" : ""}
                     ${tab === "pending" ? "bg-amber-500 animate-pulse" : ""}
                     ${tab === "rejected" ? "bg-red-500" : ""}
@@ -151,8 +151,8 @@ export default function GalleryRequest({
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-12 h-12 rounded-xl bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
-        <div className="absolute bottom-4 right-8 w-6 h-6 rounded-xl bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
+        <div className="absolute top-4 right-4 w-12 h-12 rounded-md bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
+        <div className="absolute bottom-4 right-8 w-6 h-6 rounded-md bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
 
         {/* Bottom shine effect */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

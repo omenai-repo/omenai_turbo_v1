@@ -111,7 +111,7 @@ export default function DeleteEditorialModal({
             </div>
 
             {/* Warning Box */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+            <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-6">
               <div className="flex gap-3">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">

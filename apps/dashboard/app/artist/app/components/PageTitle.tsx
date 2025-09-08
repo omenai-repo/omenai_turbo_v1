@@ -48,7 +48,7 @@ export default function PageTitle({ title }: { title: string }) {
       </div>
       {title === "My Artworks" && (
         <Link href={"/artist/app/artworks/upload"} className="w-fit">
-          <button className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal whitespace-nowrap">
+          <button className="h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal whitespace-nowrap">
             <span>Upload Artwork</span>
             <IoAdd className="text-fluid-sm" />
           </button>

@@ -121,6 +121,16 @@ export const OrderAcceptedEmail: React.FC<OrderAcceptedEmailProps> = ({
               </Section>
 
               <Text
+                className="text-base mb-6"
+                style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
+              >
+                Kindly note, Payment is required within 24 hours to finalize
+                your purchase. Orders that remain unpaid after this period will
+                be automatically canceled and the artwork will be made available
+                to other buyers.
+              </Text>
+
+              <Text
                 className="text-base mb-4"
                 style={{ color: EMAIL_COLORS.primary, lineHeight: "1.6" }}
               >

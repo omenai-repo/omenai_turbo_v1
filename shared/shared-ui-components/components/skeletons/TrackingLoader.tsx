@@ -55,7 +55,7 @@ export default function TrackingLoader() {
       <Box
         style={{ flex: 1, position: "relative" }}
         bg="dark.8"
-        className="rounded-xl h-[calc(100dvh-10rem)]"
+        className="rounded-md h-[calc(100dvh-10rem)]"
       >
         {/* Simulated origin & destination markers */}
         <Skeleton

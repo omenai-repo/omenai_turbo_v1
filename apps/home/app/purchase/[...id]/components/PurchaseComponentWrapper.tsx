@@ -14,7 +14,6 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   const { user } = useAuth({ requiredRole: "user" });
-  console.log(user);
   const { set_address_on_order, address } = orderStore();
 
   const { data: artwork, isLoading: loading } = useQuery({

@@ -39,7 +39,7 @@ export default function SettingsActions() {
 
         <div className="p-8 space-y-6">
           {/* Password Section */}
-          <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+          <div className="bg-slate-50 rounded-md p-6 border border-slate-200">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
@@ -82,7 +82,7 @@ export default function SettingsActions() {
             <h3 className="text-sm font-medium text-red-600 uppercase tracking-wide mb-4">
               Danger Zone
             </h3>
-            <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+            <div className="bg-red-50 border border-red-200 rounded-md p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">

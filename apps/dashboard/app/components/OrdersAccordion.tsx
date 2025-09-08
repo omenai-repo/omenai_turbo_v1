@@ -60,14 +60,14 @@ export function OrdersAccordion({
           </div>
           <div className="flex gap-x-6 items-center">
             <span className="text-fluid-xxs font-normal">Status</span>
-            <span className="text-fluid-xxs font-medium px-3 py-1 rounded-xl bg-blue-300 text-dark">
+            <span className="text-fluid-xxs font-medium px-3 py-1 rounded-md bg-blue-300 text-dark">
               PENDING
             </span>
           </div>
 
           <div className="mt-5">
             <Link href={route} className="text-fluid-xxs">
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-xl h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-md h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
                 View order
               </button>
             </Link>

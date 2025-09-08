@@ -195,8 +195,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       shipment_product_code: shipping_rate_data.productCode,
       dimensions: data.dimensions,
       quote: {
-        fees: shipping_rate_data.chargeable_price_in_usd,
-        taxes,
+        fees: Number(shipping_rate_data.chargeable_price_in_usd),
+        taxes: Number(taxes),
       },
     };
 

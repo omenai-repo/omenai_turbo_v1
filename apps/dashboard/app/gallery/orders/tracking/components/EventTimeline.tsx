@@ -39,7 +39,7 @@ export default function EventTimeline({
   return (
     <ScrollArea
       h={"100%"}
-      className="w-auto min-w-[350px] py-5 pr-5 h-full bg-white rounded-xl z-[1500]"
+      className="w-auto min-w-[350px] py-5 pr-5 h-full bg-white rounded-md z-[1500]"
     >
       <div className="space-y-2 mb-8">
         {/* <h5 className="text-fluid-base font-semibold mb-5">Shipment events</h5> */}

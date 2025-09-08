@@ -44,8 +44,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     //   Create a record of this transaction
 
-    console.log(paymentIntent);
-
     return NextResponse.json({
       message: "Payment Intent created",
       client_secret: paymentIntent.client_secret,

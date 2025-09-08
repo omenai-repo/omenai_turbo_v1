@@ -276,7 +276,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-slate-900 text-white font-normal rounded-xl shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
+            className="w-full py-3 px-6 bg-slate-900 text-white font-normal rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

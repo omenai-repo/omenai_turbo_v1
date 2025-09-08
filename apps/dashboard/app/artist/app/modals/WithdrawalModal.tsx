@@ -25,7 +25,7 @@ export const WithdrawalModal = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className=" text-dark rounded-xl w-full max-w-lg shadow-xl cursor-default relative h-auto"
+            className=" text-dark rounded-md w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">

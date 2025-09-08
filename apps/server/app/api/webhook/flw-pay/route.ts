@@ -253,6 +253,7 @@ async function handlePurchaseTransaction(
       shipping_cost: Math.round(Number(meta.shipping_cost ?? 0)),
       commission,
       tax_fees: Math.round(Number(meta.tax_fees ?? 0)),
+      currency: "USD",
     };
 
     const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
@@ -284,10 +285,7 @@ async function handlePurchaseTransaction(
         $set: {
           payment_information: {
             status: "completed",
-            transaction_value: formatPrice(
-              Number(verified_transaction.data.amount),
-              "USD"
-            ),
+            transaction_value: Number(verified_transaction.data.amount),
             transaction_date: formatted_date,
             transaction_reference: verified_transaction.data.id,
           } as PaymentStatusTypes,

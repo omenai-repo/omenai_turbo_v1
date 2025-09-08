@@ -42,7 +42,7 @@ export default function ArtistRequest({
     <div className="w-full p-1">
       <div
         className={`
-        group relative rounded-xl ${currentStyle.bgColor} 
+        group relative rounded-md ${currentStyle.bgColor} 
         backdrop-blur-sm transition-all duration-500
         transform-gpu 2xl:py-3 py-2
       `}
@@ -77,7 +77,7 @@ export default function ArtistRequest({
                 `}
                   >
                     <div
-                      className={`w-1.5 h-1.5 rounded-xl mr-1.5 ${currentStyle.dotStyle}`}
+                      className={`w-1.5 h-1.5 rounded-md mr-1.5 ${currentStyle.dotStyle}`}
                     />
                     {tab}
                   </span>
@@ -151,8 +151,8 @@ export default function ArtistRequest({
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-12 h-12 rounded-xl bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
-        <div className="absolute bottom-4 right-8 w-6 h-6 rounded-xl bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
+        <div className="absolute top-4 right-4 w-12 h-12 rounded-md bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
+        <div className="absolute bottom-4 right-8 w-6 h-6 rounded-md bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
 
         {/* Bottom shine effect */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

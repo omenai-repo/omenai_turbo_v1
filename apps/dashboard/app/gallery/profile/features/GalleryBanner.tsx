@@ -19,7 +19,7 @@ export const UserBanner = () => {
         className="w-full h-[200px] object-fill object-center rounded-2xl overflow-hidden"
       />
 
-      <div className="py-[1.5rem] bg-gray-400 rounded-xl w-[95%] -mt-10 xs:px-5 flex  xs:flex-row flex-col items-center justify-between">
+      <div className="py-[1.5rem] bg-gray-400 rounded-md w-[95%] -mt-10 xs:px-5 flex  xs:flex-row flex-col items-center justify-between">
         <div className="flex gap-3">
           {logo !== "" ? (
             <Image

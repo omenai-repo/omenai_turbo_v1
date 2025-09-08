@@ -34,14 +34,14 @@ export default function OrderDetails({
                 height={100}
                 width={100}
                 alt={order.artwork_data.title + " image"}
-                className=" w-[100px] h-[100px] cursor-pointer rounded-[10px]"
+                className=" w-[100px] h-[100px] cursor-pointer rounded-md"
               />
               <div className="">
                 <div className="flex flex-col gap-y-1">
-                  <p className="font-semibold text-dark text-fluid-base">
+                  <p className="font-semibold text-dark text-fluid-xs">
                     {order.artwork_data.title}
                   </p>
-                  <p className="font-normal text-fluid-xs italic text-dark">
+                  <p className="font-medium text-fluid-xxs text-dark">
                     {order.artwork_data.artist}
                   </p>
                 </div>
@@ -60,12 +60,12 @@ export default function OrderDetails({
                 </p>
               </div>
               {/* Uncomment when the new endpoint has been connected */}
-              {/* <div className="flex flex-col text-dark my-3">
+              <div className="flex flex-col text-dark my-3">
                 <p>Shipping carrier</p>
                 <p className="font-semibold">
                   {order.shipping_details.shipment_information.carrier}
                 </p>
-              </div> */}
+              </div>
               <div className="flex flex-col  my-3 text-dark">
                 <p>Price</p>
                 <p className="font-semibold">
@@ -76,9 +76,7 @@ export default function OrderDetails({
                 <p>Shipping</p>
                 <p className="font-semibold">
                   {formatPrice(
-                    +JSON.parse(
-                      order.shipping_details.shipment_information.quote.fees
-                    )
+                    order.shipping_details.shipment_information.quote.fees
                   )}
                 </p>
               </div>
@@ -86,9 +84,7 @@ export default function OrderDetails({
                 <p>Taxes</p>
                 <p className="font-semibold">
                   {formatPrice(
-                    +JSON.parse(
-                      order.shipping_details.shipment_information.quote.taxes
-                    )
+                    order.shipping_details.shipment_information.quote.taxes
                   )}
                 </p>
               </div>

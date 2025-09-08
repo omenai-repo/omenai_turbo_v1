@@ -6,7 +6,7 @@ export default function HighlightCardIcon({
   color: string;
 }) {
   return (
-    <div className={`p-2 rounded-xl bg-white grid place-items-center`}>
+    <div className={`p-2 rounded-md bg-white grid place-items-center`}>
       {icon}
     </div>
   );

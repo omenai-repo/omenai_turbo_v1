@@ -39,7 +39,7 @@ export default function OrderCountdown({
       {isRunning ? (
         <div className="flex flex-col sm:flex-row gap-x-4 gap-y-2">
           <Link href={`${base_url()}/payment/${order_id}?id_key=${user_id}`}>
-            <button className=" bg-dark rounded-xl text-white w-fit disabled:bg-dark/10 text-fluid-xs disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
+            <button className=" bg-dark rounded-md text-white w-fit disabled:bg-dark/10 text-fluid-xs disabled:cursor-not-allowed h-[35px] px-4 flex gap-x-2 items-center justify-center hover:bg-dark/80">
               <span>Pay for this artwork</span>
             </button>
           </Link>

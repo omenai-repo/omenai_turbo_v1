@@ -64,7 +64,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
             rel="noopener noreferrer"
             className="flex-shrink-0"
           >
-            <button className="bg-gray-900 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg whitespace-nowrap group-hover:bg-black">
+            <button className="bg-gray-900 text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg whitespace-nowrap group-hover:bg-black">
               Read Article
             </button>
           </Link>

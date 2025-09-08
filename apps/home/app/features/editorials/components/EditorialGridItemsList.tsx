@@ -77,13 +77,13 @@ export default function EditorialGridItemsList({
         <div className="flex items-center justify-center w-fit space-x-2">
           <button
             onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded-xl border border-[#e0e0e0] hover:border-dark duration-300 grid place-items-center bg-dark text-white"
+            className="h-[35px] w-[40px] rounded-md border border-[#e0e0e0] hover:border-dark duration-300 grid place-items-center bg-dark text-white"
           >
             <MdOutlineKeyboardArrowLeft />
           </button>
           <button
             onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded-xl border border-[#e0e0e0] hover:border-dark duration-300 grid place-items-center bg-dark text-white"
+            className="h-[35px] w-[40px] rounded-md border border-[#e0e0e0] hover:border-dark duration-300 grid place-items-center bg-dark text-white"
           >
             <MdOutlineKeyboardArrowRight />
           </button>

@@ -105,7 +105,7 @@ export default function SelectInput({
                 (individualSignupData.state === "" ||
                   individualSignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-xl placeholder:text-fluid-xs placeholder:text-dark/40"
+            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-md placeholder:text-fluid-xs placeholder:text-dark/40"
           >
             <option value="" className="text-dark/40">
               Select {labelText}

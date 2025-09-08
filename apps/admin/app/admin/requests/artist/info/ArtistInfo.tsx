@@ -243,7 +243,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Algorithm Recommendation */}
-              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <div className="bg-gray-50 rounded-md p-6 border border-gray-200">
                 <h3 className="text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
                   Algorithm Recommendation
                 </h3>
@@ -255,7 +255,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
               </div>
 
               {/* Current Selection */}
-              <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+              <div className="bg-blue-50 rounded-md p-6 border border-blue-200">
                 <h3 className="text-fluid-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
                   Selected Category
                 </h3>
@@ -277,7 +277,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     key={category}
                     onClick={() => setRecommedation(category as ArtistCategory)}
-                    className={`relative p-3 rounded-xl text-fluid-xs font-medium transition-all duration-200 ${
+                    className={`relative p-3 rounded-md text-fluid-xs font-medium transition-all duration-200 ${
                       recommendation === category
                         ? `${getCategoryColor(category)} text-white shadow-lg scale-105`
                         : `${getCategoryBgColor(category as ArtistCategory)} hover:scale-102 border`
@@ -296,7 +296,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
               {/* Warning Message */}
               {recommendation !==
                 request?.categorization.artist_categorization && (
-                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-md flex items-start gap-3">
                   <AlertCircle
                     className="text-amber-600 flex-shrink-0 mt-0.5"
                     size={20}

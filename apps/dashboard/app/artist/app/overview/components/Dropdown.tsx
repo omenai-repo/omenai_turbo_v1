@@ -22,7 +22,7 @@ export default function Dropdown() {
       {/* Dropdown Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 ring-1 border-0 ring-dark/10 text-fluid-xxs text-dark rounded-xl hover:bg-gray-800 transition"
+        className="flex items-center gap-2 px-4 py-2 ring-1 border-0 ring-dark/10 text-fluid-xxs text-dark rounded-md hover:bg-gray-800 transition"
       >
         {sales_activity_year}
         <ChevronDownIcon

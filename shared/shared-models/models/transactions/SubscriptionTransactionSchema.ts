@@ -7,7 +7,7 @@ const subscription_transaction =
     {
       trans_id: { type: String, default: () => `SUB_OM_${generateDigit(6)}` },
       payment_ref: { type: String, required: true },
-      amount: { type: String, required: true },
+      amount: { type: Number, required: true },
       date: { type: Date, required: true },
       gallery_id: { type: String, required: true },
       status: {

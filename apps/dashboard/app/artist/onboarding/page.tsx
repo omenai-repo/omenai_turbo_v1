@@ -57,7 +57,7 @@ export default function ArtistOnboarding() {
 
         <div className="mt-8 space-y-3">
           <Link href={"/artist/onboarding/flow"}>
-            <button className="w-full bg-dark text-fluid-xxs hover:bg-dark/70 text-white py-3 rounded-xl font-semibold transition">
+            <button className="w-full bg-dark text-fluid-xxs hover:bg-dark/70 text-white py-3 rounded-md font-semibold transition">
               Start onboarding process
             </button>
           </Link>

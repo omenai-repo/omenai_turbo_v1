@@ -13,7 +13,7 @@ export default function CurrencyDropdown() {
       {/* Dropdown Button */}
       <button
         // onClick={() => setIsOpen(!isOpen)}
-        className="flex gap-x-2 items-center gap-2 px-4 py-2 ring-1 border-0 bg-white ring-dark/10 text-fluid-xxs text-dark rounded-xl hover:bg-gray-800 transition"
+        className="flex gap-x-2 items-center gap-2 px-4 py-2 ring-1 border-0 bg-white ring-dark/10 text-fluid-xxs text-dark rounded-md hover:bg-gray-800 transition"
       >
         <Image src={"/icons/usa.png"} alt="usa icon" height={24} width={24} />
         USD

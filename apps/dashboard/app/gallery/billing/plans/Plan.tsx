@@ -216,7 +216,7 @@ export default function Plan({
                       sub_data.plan_details.interval === tab &&
                       plan_action === null
                     }
-                    className={`w-full py-3 px-6 rounded-xl font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    className={`w-full py-3 px-6 rounded-md font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       name === "Pro"
                         ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600"
                         : "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900"

@@ -40,7 +40,7 @@ export default function CarouselItemSelect({
             {options.map((option, index) => (
               <label
                 key={index}
-                className="flex items-center space-x-3 p-3 text-fluid-xxs bg-transparent text-dark rounded-xl cursor-pointer transition duration-300 focus-within:ring-2 focus-within:ring-blue-500"
+                className="flex items-center space-x-3 p-3 text-fluid-xxs bg-transparent text-dark rounded-md cursor-pointer transition duration-300 focus-within:ring-2 focus-within:ring-blue-500"
               >
                 <input
                   type="radio"
@@ -52,14 +52,14 @@ export default function CarouselItemSelect({
                   className="hidden"
                 />
                 <motion.div
-                  className={`w-5 h-5 rounded-xl border-2 flex items-center justify-center ${selectedOption === option ? "border-dark" : "border-gray-500"}`}
+                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${selectedOption === option ? "border-dark" : "border-gray-500"}`}
                   animate={
                     selectedOption === option ? { scale: [1, 1.2, 1] } : {}
                   }
                   transition={{ duration: 0.3 }}
                 >
                   {selectedOption === option && (
-                    <div className="w-2.5 h-2.5 bg-dark rounded-xl" />
+                    <div className="w-2.5 h-2.5 bg-dark rounded-md" />
                   )}
                 </motion.div>
                 <span className="text-dark">{option}</span>

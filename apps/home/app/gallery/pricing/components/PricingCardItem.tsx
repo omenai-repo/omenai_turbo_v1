@@ -102,7 +102,7 @@ export default function PricingCardItem({
       <div className="p-8 w-full flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <p className="font-normal">{plan} plan</p>
-          {/* <div className="border border-primary rounded-xl px-2 py-[0.1rem]">
+          {/* <div className="border border-primary rounded-md px-2 py-[0.1rem]">
             <span className="text-fluid-xs text-primary font-normal">popular</span>
           </div> */}
         </div>

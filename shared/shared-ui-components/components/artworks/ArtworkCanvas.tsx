@@ -117,7 +117,7 @@ export default function ArtworkCanvas({
             />
           </Link>
           {isDashboard ? null : (
-            <div className="absolute bottom-3 right-3 p-1 rounded-xl bg-white border-dark/10 grid place-items-center">
+            <div className="absolute bottom-3 right-3 p-1 rounded-md bg-white border-dark/10 grid place-items-center">
               <LikeComponent
                 impressions={impressions}
                 likeIds={likeIds}

@@ -237,10 +237,7 @@ const handlePurchaseTransaction = async (
       // Update Order Payment Information
       const payment_information: PaymentStatusTypes = {
         status: "completed",
-        transaction_value: formatPrice(
-          paymentIntent.amount_received / 100,
-          currency
-        ),
+        transaction_value: paymentIntent.amount_received / 100,
         transaction_date: formatted_date,
         transaction_reference: paymentIntent.id,
       };
@@ -266,6 +263,7 @@ const handlePurchaseTransaction = async (
         shipping_cost: Math.round(+meta.shipping_cost),
         commission: Math.round(+meta.commission),
         tax_fees: Math.round(+meta.tax_fees),
+        currency: "USD",
       };
 
       const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
@@ -521,7 +519,7 @@ const handleSubscriptionPayment = async (
     const nowUTC = toUTCDate(new Date());
 
     const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
-      amount: formatPrice(valueAmountInUnits, "USD"),
+      amount: valueAmountInUnits,
       payment_ref: paymentIntent.id,
       date: nowUTC,
       gallery_id: meta.gallery_id,

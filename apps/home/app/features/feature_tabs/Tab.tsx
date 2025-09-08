@@ -18,7 +18,7 @@ export default function Tab({ title, tag, mobile = false }: TabTypes) {
           : `bg-[#FAFAFA] text-dark border-dark/10 border hover:bg-dark/10`
       } ${
         mobile ? "border-0 border-b-1 border-b-dark/30" : ""
-      } text-fluid-xs  px-4 py-2 rounded-xl duration-200`}
+      } text-fluid-xs  px-4 py-2 rounded-md duration-200`}
     >
       {title}
     </button>

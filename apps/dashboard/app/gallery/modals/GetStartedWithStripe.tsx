@@ -124,7 +124,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={user.name}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full">
@@ -138,7 +138,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={user.email}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full flex flex-col">
@@ -153,7 +153,7 @@ export default function GetStartedWithStripe() {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setCountrySelect(e.target.value)
                   }
-                  className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-xl"
+                  className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-md"
                 >
                   <option value="">Select</option>
                   {country_codes.map((country, index) => {
@@ -177,7 +177,9 @@ export default function GetStartedWithStripe() {
                     <div className="my-5">
                       <p className="text-fluid-xs font-normal">
                         Your connected account ID is:{" "}
-                        <code className="font-bold">{connectedAccountId}</code>{" "}
+                        <code className="font-bold">
+                          {connectedAccountId}
+                        </code>{" "}
                       </p>
                       <span className="text-fluid-xs my-3 font-medium">
                         Hey, don&apos;t worry, we&apos;ll remember it for you!
@@ -200,7 +202,7 @@ export default function GetStartedWithStripe() {
                 <button
                   type="submit"
                   disabled={accountCreatePending}
-                  className="h-[35px] p-5 rounded-xl my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+                  className="h-[35px] p-5 rounded-md my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 >
                   {accountCreatePending ? (
                     <LoadSmall />
@@ -214,7 +216,7 @@ export default function GetStartedWithStripe() {
             {connectedAccountId && (
               <button
                 disabled={accountLinkCreatePending}
-                className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+                className="h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 onClick={handleAccountLink}
               >
                 {accountLinkCreatePending ? (

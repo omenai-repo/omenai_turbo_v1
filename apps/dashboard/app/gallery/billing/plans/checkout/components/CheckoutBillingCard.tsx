@@ -213,7 +213,7 @@ export default function CheckoutBillingCard({
         <button
           onClick={shouldCharge ? handlePayNow : handleMigrateToPlan}
           disabled={migrationLoading || loading}
-          className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xs font-medium rounded-xl disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
+          className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xs font-medium rounded-md disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
         >
           {loading || migrationLoading ? (
             <LoadSmall />

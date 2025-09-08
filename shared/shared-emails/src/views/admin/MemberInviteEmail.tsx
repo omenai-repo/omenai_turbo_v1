@@ -27,7 +27,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
       <Tailwind>
         <Head />
         <Body className="bg-gray-50 dark:bg-gray-900 my-auto mx-auto font-sans px-2">
-          <Container className="bg-white dark:bg-gray-800 border border-solid border-gray-200 dark:border-gray-700 rounded-xl shadow-lg my-[40px] mx-auto p-[32px] max-w-[580px] w-full">
+          <Container className="bg-white dark:bg-gray-800 border border-solid border-gray-200 dark:border-gray-700 rounded-md shadow-lg my-[40px] mx-auto p-[32px] max-w-[580px] w-full">
             {/* Logo Section */}
             <Section className="text-center mb-8">
               <Img

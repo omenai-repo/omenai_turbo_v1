@@ -165,7 +165,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
               fees: "",
               taxes: "",
             },
-            waybillument: "",
+            waybill_document: "",
           },
         },
         hold_status: null,
@@ -179,7 +179,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         seller_designation: designation,
         payment_information: {
           status: "pending",
-          transaction_value: "",
+          transaction_value: 0,
           transaction_date: "",
           transaction_reference: "",
         },

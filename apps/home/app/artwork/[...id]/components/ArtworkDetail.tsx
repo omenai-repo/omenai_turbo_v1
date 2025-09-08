@@ -28,10 +28,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
     data.art_id
   );
 
-  console.log(likedState);
-  console.log(sessionId);
-
   const [loading, setLoading] = useState(false);
+  const [purchase_click_loading, set_click_loading] = useState(false);
 
   const { toggleLoginModal } = actionStore();
 
@@ -42,7 +40,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
     if (sessionId === undefined) toggleLoginModal(true);
     else {
       if (data.pricing.shouldShowPrice === "Yes") {
-        router.push(`/purchase/${data.title}`);
+        set_click_loading(true);
+        router.push(`/purchase/${encodeURIComponent(data.title)}`);
       } else {
         setLoading(true);
         const artwork_data = {
@@ -112,12 +111,12 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
       {/* Certificates and Features */}
       <div className="flex flex-wrap gap-3">
         {data.certificate_of_authenticity === "Yes" && (
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-xl text-sm font-medium border border-emerald-200">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-md text-sm font-medium border border-emerald-200">
             <GrCertificate className="w-4 h-4" />
             <span>Certificate of authenticity</span>
           </div>
         )}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-xl text-sm font-medium border border-blue-200">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-md text-sm font-medium border border-blue-200">
           <PiFrameCornersThin className="w-4 h-4" />
           <span>
             {data.framing === "Framed"
@@ -148,11 +147,11 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
 
       <div className="flex flex-col gap-y-3 font-normal w-full text-fluid-xs">
         <button
-          disabled={loading || !data.availability}
+          disabled={loading || !data.availability || purchase_click_loading}
           onClick={handleBuyButtonClick}
-          className="w-full bg-dark h-[50px] px-4 rounded-xl text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
+          className="w-full bg-dark h-[50px] px-4 rounded-md text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
         >
-          {loading ? (
+          {loading || purchase_click_loading ? (
             <LoadSmall />
           ) : data.pricing.shouldShowPrice === "Yes" ? (
             !data.availability ? (
@@ -171,7 +170,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           (sessionId && !likedState.ids.includes(sessionId))) && (
           <button
             onClick={() => handleLike(true)}
-            className="w-full h-[50px] px-4 justify-center rounded-xl flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark ring-1 ring-dark/50 duration-300 group"
+            className="w-full h-[50px] px-4 justify-center rounded-md flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark ring-1 ring-dark/50 duration-300 group"
           >
             <span>Save artwork</span>
             <IoHeartOutline />
@@ -180,7 +179,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {sessionId && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
-            className="w-full h-[50px] px-4 rounded-xl ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-fluid-xs group"
+            className="w-full h-[50px] px-4 rounded-md ring-1 flex justify-center items-center gap-2 hover:bg-dark/10 duration-200 ring-dark/50 text-dark text-fluid-xs group"
           >
             <span>Remove from saved</span>
             <GiCheckMark />

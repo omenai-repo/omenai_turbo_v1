@@ -24,7 +24,7 @@ export default function ProductItem({
           <div className="flex flex-col items-center space-y-6">
             {/* Image Container */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-slate-100 rounded-xl blur-2xl opacity-30 scale-90"></div>
+              <div className="absolute inset-0 bg-slate-100 rounded-md blur-2xl opacity-30 scale-90"></div>
               <img
                 src={image_href}
                 alt={artwork.title + " image"}
@@ -91,7 +91,7 @@ export default function ProductItem({
 
         {/* Action Button */}
         {/* <div className="p-6 bg-white border-t border-slate-100">
-          <button className="w-full py-3 px-4 text-fluid-xs bg-dark text-white font-semibold rounded-xl shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
+          <button className="w-full py-3 px-4 text-fluid-xs bg-dark text-white font-semibold rounded-md shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
             Create order request
           </button>
         </div> */}

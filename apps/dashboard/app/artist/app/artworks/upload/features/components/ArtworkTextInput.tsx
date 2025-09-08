@@ -70,7 +70,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           defaultValue={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="w-full focus:ring ring-1 border-0 disabled:cursor-not-allowed disabled:ring-dark/10 disabled:text-[#e0e0e0] ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl text-fluid-xxs placeholder:text-dark/40 placeholder:text-fluid-xs"
+          className="w-full focus:ring ring-1 border-0 disabled:cursor-not-allowed disabled:ring-dark/10 disabled:text-[#e0e0e0] ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md text-fluid-xxs placeholder:text-dark/40 placeholder:text-fluid-xs"
         />
       )}
       {type === "textarea" && (

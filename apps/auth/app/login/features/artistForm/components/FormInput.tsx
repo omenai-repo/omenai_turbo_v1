@@ -111,7 +111,7 @@ export default function FormInput() {
           value={form.email}
           name="email"
           placeholder="Enter your email address"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
           onChange={handleChange}
           required
         />
@@ -126,7 +126,7 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name="password"
             placeholder="Enter your password"
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
             onChange={handleChange}
             required
           />

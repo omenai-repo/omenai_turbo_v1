@@ -25,7 +25,7 @@ export default function TransactionTable() {
     refetchOnWindowFocus: false,
   });
   return (
-    <div className=" bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+    <div className=" bg-white rounded-md shadow-sm border border-slate-200 p-6">
       <h2 className="text-base font-semibold text-dark mb-6">
         Recent Transaction Activity
       </h2>
@@ -82,7 +82,7 @@ export default function TransactionTable() {
                       </p>
                     </div>
                     <p className="font-semibold text-dark">
-                      {formatPrice(transaction.amount)}
+                      {formatPrice(transaction.amount, "USD")}
                     </p>
                   </div>
                 </div>

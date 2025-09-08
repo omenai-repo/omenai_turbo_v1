@@ -1,6 +1,5 @@
 "use client";
 import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
 import CheckoutBillingCard from "./CheckoutBillingCard";
 import { differenceInCalendarDays } from "date-fns";
 import {
@@ -11,9 +10,6 @@ import { determinePlanChange } from "@omenai/shared-utils/src/determinePlanChang
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { calculateSubscriptionPricing } from "@omenai/shared-utils/src/calculateSubscriptionPricing";
-import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 
 export default function MigrationUpgradeCheckoutItem({
   plan,
@@ -146,7 +142,7 @@ export default function MigrationUpgradeCheckoutItem({
 
             {/* Notice */}
             {!plan_change_params.shouldCharge && (
-              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-md">
                 <p className="text-sm font-medium text-amber-800">
                   <span className="font-semibold">Note:</span> Your plan change
                   will take effect at the end of your current billing cycle.

@@ -397,8 +397,8 @@ export type TrackingInformationTypes = {
   link: string;
 };
 export type ShippingQuoteTypes = {
-  fees: string;
-  taxes: string;
+  fees: number;
+  taxes: number;
 };
 export type AddressTypes = {
   address_line: string;
@@ -411,7 +411,7 @@ export type AddressTypes = {
 };
 export type PaymentStatusTypes = {
   status: "pending" | "completed";
-  transaction_value: string;
+  transaction_value: number;
   transaction_date: string;
   transaction_reference: string;
 };
@@ -527,12 +527,13 @@ export type PurchaseTransactionPricing = {
   shipping_cost: number;
   amount_total: number;
   tax_fees: number;
+  currency: string;
 };
 
 export type SubscriptionTransactionModelSchemaTypes = {
   trans_id: string;
   payment_ref: string;
-  amount: string;
+  amount: number;
   gallery_id: string;
   date: Date;
   status: "successful" | "failed" | "processing";

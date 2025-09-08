@@ -97,7 +97,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Enter a new password"
             onChange={handleInputChange}
             required
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -113,7 +113,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Confirm new password"
             required
             onChange={handleInputChange}
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-xl placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xxs font-medium"
           />
 
           {errorList.length > 0 &&
@@ -132,7 +132,7 @@ export default function PasswordForm({ id }: IdProps) {
         <div className="w-full">
           <button
             disabled={isLoading}
-            className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+            className="h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
           >
             {isLoading ? <LoadSmall /> : "Change password"}
           </button>

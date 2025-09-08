@@ -30,7 +30,7 @@ export default function ArtworkSelectInput({
       <select
         onChange={handleChange}
         required={required}
-        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-xl "
+        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded-md "
       >
         <option value={""}>Select</option>
 

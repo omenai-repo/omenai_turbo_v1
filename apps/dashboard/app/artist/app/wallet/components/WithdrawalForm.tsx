@@ -10,14 +10,14 @@ export default function WithdrawalForm() {
         <Paper radius="lg" withBorder className="p-5 flex flex-col space-y-2">
           <p className="text-fluid-xxs font-medium">You Send ($)</p>
           <input
-            className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-xl w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
+            className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-md w-full placeholder:text-fluid-xs placeholder:text-dark/40 "
             placeholder="0.0"
           />
         </Paper>
 
         <div className="flex justify-center w-full my-4">
           <div className="flex flex-col items-center">
-            <button className="h-[35px] p-4 rounded-xl w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal">
+            <button className="h-[35px] p-4 rounded-md w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal">
               <RefreshCcwDot size={20} strokeWidth={1.5} absoluteStrokeWidth />
             </button>
             <span className="text-fluid-xxs">Click to convert</span>{" "}
@@ -43,7 +43,7 @@ export default function WithdrawalForm() {
       </div>
 
       <div className="w-full flex justify-center">
-        <button className="h-[35px] p-5 rounded-xl w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
+        <button className="h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
           Withdraw
         </button>
       </div>

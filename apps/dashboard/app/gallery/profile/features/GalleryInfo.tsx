@@ -22,7 +22,7 @@ export default function GalleryInfo() {
         <div className="flex items-center gap-6">
           {/* Logo Container */}
           <div className="relative group">
-            <div className="w-32 h-32 rounded-xl overflow-hidden bg-slate-100 ring-4 ring-white shadow-lg">
+            <div className="w-32 h-32 rounded-md overflow-hidden bg-slate-100 ring-4 ring-white shadow-lg">
               {logo !== "" ? (
                 <Image
                   src={logo}

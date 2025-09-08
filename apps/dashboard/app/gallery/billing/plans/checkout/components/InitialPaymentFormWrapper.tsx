@@ -12,7 +12,7 @@ interface SubscriptionFormProps {
   interval: string;
 }
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
+const stripePromise = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function InitialPaymentFormWrapper({
   planId,
@@ -44,13 +44,17 @@ export default function InitialPaymentFormWrapper({
           );
         }
 
-        console.log(response.client_secret);
         return response.client_secret;
       },
     }
   );
 
-  if (paymentIntentLoading) return <Load />;
+  if (paymentIntentLoading)
+    return (
+      <div>
+        <Load />
+      </div>
+    );
 
   return (
     <Elements

@@ -57,6 +57,10 @@ export default function SimilarArtworks({
     artworks,
     width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
   );
+
+  const safeSlug = encodeURIComponent(medium)
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29");
   return (
     <div className="w-full h-full py-5">
       <h1 className="text-dark font-bold text-fluid-sm">Hot recommendations</h1>
@@ -107,8 +111,8 @@ export default function SimilarArtworks({
         </div>
       </div>
       <div className="flex items-center justify-center py-5">
-        <Link href={`/collections/${medium}`} className="group">
-          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded-xl h-[35px]">
+        <Link href={`/collections/${safeSlug}`} className="group">
+          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded-md h-[35px]">
             View more <FiArrowRight size={18} />
           </button>
         </Link>

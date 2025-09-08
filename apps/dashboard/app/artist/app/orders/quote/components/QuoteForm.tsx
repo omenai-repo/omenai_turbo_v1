@@ -202,7 +202,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
         <div className="order-2 lg:order-1">
           <form onSubmit={handleSubmitQuoteFees} className="space-y-6">
             {/* Dimensions Grid */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-6">
+            <div className="bg-white rounded-md border border-slate-200 p-6 space-y-6">
               <h2 className="text-sm font-medium text-slate-700 uppercase tracking-wide">
                 Package Measurements
               </h2>
@@ -307,7 +307,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             </div>
 
             {/* Special Instructions */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+            <div className="bg-white rounded-md border border-slate-200 p-6 space-y-4">
               <label
                 htmlFor="specialInstructions"
                 className="block text-sm font-medium text-slate-700"
@@ -394,7 +394,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
         {/* Order Details Card */}
         <div className="order-1 lg:order-2">
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden sticky top-6">
+          <div className="bg-white rounded-md border border-slate-200 overflow-hidden sticky top-6">
             {/* Card Header */}
             <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
               <h3 className="text-sm font-medium text-slate-700 uppercase tracking-wide">

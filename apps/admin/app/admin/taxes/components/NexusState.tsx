@@ -11,7 +11,7 @@ type StateFlagCardProps = {
 
 export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-gray-200/50 bg-white/50 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/50">
+    <div className="group relative overflow-hidden rounded-md border border-gray-200/50 bg-white/50 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/50">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-purple-50/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100 dark:from-blue-900/10 dark:to-purple-900/10" />
 

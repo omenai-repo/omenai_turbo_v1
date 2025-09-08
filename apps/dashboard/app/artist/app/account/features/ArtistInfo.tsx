@@ -20,20 +20,20 @@ export default function ArtistInfo() {
         className="flex gap-3 items-center my-5 cursor-pointer"
         onClick={() => updateModal(true)}
       >
-        <div className=" bg-[#eee] rounded-xl flex items-center justify-center">
+        <div className=" bg-[#eee] rounded-md flex items-center justify-center">
           {logo !== "" ? (
             <Image
               src={logo}
               alt="user avatar"
               width={100}
               height={100}
-              className="rounded-xl h-[100px] w-[100px] object-top overflow-hidden"
+              className="rounded-md h-[100px] w-[100px] object-top overflow-hidden"
             />
           ) : (
             <RxAvatar />
           )}
         </div>
-        <button className="h-[35px] py-4 px-6 rounded-xl w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
+        <button className="h-[35px] py-4 px-6 rounded-md w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal">
           Edit profile logo
         </button>
       </div>

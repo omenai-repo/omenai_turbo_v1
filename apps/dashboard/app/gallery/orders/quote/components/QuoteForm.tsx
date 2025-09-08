@@ -27,16 +27,17 @@ import { Checkbox, NativeSelect, ScrollArea } from "@mantine/core";
 import WarningAlert from "./WarningAlert";
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 export default function QuoteForm({ order_id }: { order_id: string }) {
   const { csrf } = useAuth({ requiredRole: "gallery" });
+
+  const queryClient = useQueryClient();
+
   const { data: order_data, isLoading } = useQuery({
-    queryKey: ["get_single_order"],
+    queryKey: ["get_single_order", order_id],
     queryFn: async () => {
       const response = await getSingleOrder(order_id);
-      if (!response?.isOk)
-        throw new Error(
-          response?.message || "Order data cannot be retrieved at this time"
-        );
+      if (!response?.isOk) return undefined;
 
       return {
         data: response.data as CreateOrderModelTypes & {
@@ -46,9 +47,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       };
     },
     refetchOnWindowFocus: false,
+    enabled: !!order_id,
   });
-
-  const queryClient = useQueryClient();
 
   const [package_details, setPackageDetails] = useState<{
     height: string;
@@ -187,6 +187,13 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
     }
   };
   if (isLoading) return <Load />;
+
+  if (order_data === undefined)
+    return (
+      <div className="h-[75vh] grid place-items-center">
+        <NotFoundData />
+      </div>
+    );
   const image_url = getOptimizedImage(
     order_data?.data.artwork_data.url as string,
     "thumbnail",
@@ -195,11 +202,11 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
   // session.data?.user.
   return (
-    <div className="max-w-7xl mt-4">
+    <div className="max-w-7xl my-4 pb-4">
       {/* Header Section */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="p-3 bg-blue-100 rounded-xl">
+          <div className="p-3 bg-blue-100 rounded-md">
             <svg
               className="w-6 h-6 text-dark"
               fill="none"
@@ -219,8 +226,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               Package Details
             </h1>
             <p className="text-slate-600 text-fluid-xs">
-              Please provide accurate dimensions including packaging to
-              calculate shipping costs
+              Please provide accurate dimensions of this piece including
+              packaging to calculate shipping costs
             </p>
           </div>
         </div>
@@ -231,7 +238,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
         <div className="order-2 lg:order-1">
           <form onSubmit={handleSubmitQuoteFees} className="space-y-6">
             {/* Dimensions Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
               <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                 <h2 className="font-semibold text-dark flex items-center gap-2">
                   <svg
@@ -247,7 +254,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                       d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
                     />
                   </svg>
-                  Measurements
+                  Measurements of artpiece (With packaging)
                 </h2>
               </div>
 
@@ -337,7 +344,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             </div>
 
             {/* Exhibition Status */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="bg-white rounded-md shadow-sm border border-slate-200 p-6">
               <div className="space-y-4">
                 <NativeSelect
                   size="md"
@@ -375,7 +382,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             </div>
 
             {/* Special Instructions */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="bg-white rounded-md shadow-sm border border-slate-200 p-6">
               <label className="block text-sm font-medium text-slate-700 mb-3">
                 Special Instructions
                 <span className="text-slate-400 font-normal ml-1">
@@ -387,7 +394,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Add any special pickup instructions, handling requirements, or access details..."
                 rows={2}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xs"
               />
             </div>
 
@@ -460,7 +467,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
         {/* Order Details Card */}
         <div className="order-1 lg:order-2">
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-6">
+          <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden sticky top-6">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-slate-200">
               <h3 className="font-semibold text-dark flex items-center gap-2">
@@ -485,20 +492,20 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <div className="p-6">
               {/* Artwork Image */}
               <div className="mb-6">
-                <div className="relative rounded-xl overflow-hidden shadow-md">
+                <div className="relative rounded-md overflow-hidden shadow-md p-4 space-y-3">
                   <Image
                     src={image_url}
                     alt={order_data!.data.artwork_data.title}
                     height={200}
                     width={300}
-                    className="w-full h-48 object-cover"
+                    className="w-fit h-48 object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                    <p className="text-white font-semibold">
+                  <div className=" bottom-0 left-0 right-0 text-dark/80">
+                    <p className=" font-semibold text-fluid-xs">
                       {order_data?.data.artwork_data.title}
                     </p>
-                    <p className="text-white/80 text-sm">
-                      by {order_data?.data.artwork_data.artist}
+                    <p className="font-medium text-fluid-xxs">
+                      {order_data?.data.artwork_data.artist}
                     </p>
                   </div>
                 </div>

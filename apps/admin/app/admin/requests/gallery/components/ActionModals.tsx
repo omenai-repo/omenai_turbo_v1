@@ -127,7 +127,7 @@ export function ActionModals({
                   : "Unblock Gallery"}
             </h3>
             <div
-              className={`w-16 h-1 mx-auto rounded-xl ${
+              className={`w-16 h-1 mx-auto rounded-md ${
                 type === "accept"
                   ? "bg-gradient-to-r from-green-400 to-emerald-500"
                   : type === "reject"

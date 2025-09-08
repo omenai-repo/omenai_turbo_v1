@@ -10,7 +10,7 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 // import "@dotlottie/react-player/dist/index.css";
 export default function Load() {
   return (
-    <div className="w-full h-[calc(100dvh-10rem)] grid place-items-center">
+    <div className="w-full h-[calc(75dvh-10rem)] grid place-items-center">
       <Lottie
         animationData={animationData}
         loop

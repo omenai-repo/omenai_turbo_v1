@@ -49,7 +49,7 @@ export default function BillingSkeleton() {
           <Skeleton height={32} width={32} circle />
           <Skeleton height={16} width={128} />
         </div>
-        <div className="rounded-xl border border-dark/20 p-4 flex justify-between items-center">
+        <div className="rounded-md border border-dark/20 p-4 flex justify-between items-center">
           <Skeleton height={16} width={128} />
           <Skeleton height={16} width={128} />
         </div>

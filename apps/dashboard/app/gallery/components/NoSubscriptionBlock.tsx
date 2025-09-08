@@ -13,7 +13,7 @@ export default function NoSubscriptionBlock() {
           </p>
         </div>
         <Link href={"/gallery/billing/plans"} className="">
-          <button className="bg-white whitespace-nowrap hover:bg-dark/80 hover:text-white disabled:cursor-not-allowed text-dark focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-xl h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer">
+          <button className="bg-white whitespace-nowrap hover:bg-dark/80 hover:text-white disabled:cursor-not-allowed text-dark focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-md h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer">
             Activate Subscription
           </button>
         </Link>

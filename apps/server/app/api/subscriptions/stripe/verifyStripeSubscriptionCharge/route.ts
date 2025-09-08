@@ -130,7 +130,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const nowUTC = toUTCDate(new Date());
 
     const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
-      amount: formatPrice(amountInUnits, "USD"),
+      amount: amountInUnits,
       payment_ref: pi.id,
       date: nowUTC,
       gallery_id,

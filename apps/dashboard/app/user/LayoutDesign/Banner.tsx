@@ -22,7 +22,7 @@ export default function Banner() {
     <>
       <div className="flex justify-between items-center py-4">
         <div className="flex gap-x-1 items-center">
-          <div className="p-2 xs:p-4 md:p-6 rounded-xl bg-dark/5">
+          <div className="p-2 xs:p-4 md:p-6 rounded-md bg-dark/5">
             <CiUser className="" />
           </div>
 
@@ -32,7 +32,7 @@ export default function Banner() {
           </div>
         </div>
         <div className="" onClick={async () => await handleSignOut()}>
-          <button className="p-3 rounded-xl sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-fluid-xs border-dark hover:border-dark/30">
+          <button className="p-3 rounded-md sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-fluid-xs border-dark hover:border-dark/30">
             Logout
           </button>
         </div>
