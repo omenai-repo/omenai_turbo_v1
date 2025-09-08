@@ -1,7 +1,7 @@
 "use client";
 
 import { DotLoader, PulseLoader } from "react-spinners";
-import animationData from "@omenai/shared-json/src/black_loader.json";
+import animationData from "@omenai/shared-json/src/loading.json";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
@@ -15,7 +15,7 @@ export default function Load() {
         animationData={animationData}
         loop
         autoplay
-        style={{ width: 150 }}
+        style={{ width: 250 }}
       />
     </div>
   );
@@ -28,17 +28,7 @@ export const HomeLoad = () => {
           animationData={animationData}
           loop
           autoplay
-          style={{ width: 150 }}
-        />
-
-        <Image
-          src={
-            "https://fra.cloud.appwrite.io/v1/storage/buckets/68227462000f77619b04/files/68b8ccd6000dedf704d5/view?project=682273fc00235a5bdb6c"
-          }
-          alt="omenai logo"
-          width={130}
-          height={50}
-          priority={true}
+          style={{ width: 250 }}
         />
       </div>
     </div>

@@ -220,6 +220,8 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     },
   };
 
+  console.log(shipmentPayloadData);
+
   try {
     const requestOptions = {
       method: "POST",

@@ -2,7 +2,9 @@
 
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchSubscriptionTransactions } from "@omenai/shared-services/transactions/fetchSubscriptionTransactions";
-import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  LoadIcon,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
@@ -23,7 +25,13 @@ export default function TransactionTable() {
       else throw new Error("Something went wrong");
     },
     refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0,
   });
+
+  if (isLoading) return <Load />;
+
+  const reversedTransactions = transactions.slice().reverse();
   return (
     <div className=" bg-white rounded-md shadow-sm border border-slate-200 p-6">
       <h2 className="text-base font-semibold text-dark mb-6">
@@ -31,17 +39,13 @@ export default function TransactionTable() {
       </h2>
 
       <div className="max-h-[350px] overflow-y-auto pr-2 space-y-3">
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <LoadIcon />
-          </div>
-        ) : transactions.length > 0 ? (
+        {reversedTransactions.length > 0 ? (
           <div className="relative">
             {/* Timeline Line */}
             <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-200"></div>
 
             {/* Transaction Items */}
-            {transactions.map((transaction: any, index: number) => (
+            {reversedTransactions.map((transaction: any, index: number) => (
               <div
                 key={transaction.trans_id}
                 className="relative flex items-start gap-4 pb-6 last:pb-0"
