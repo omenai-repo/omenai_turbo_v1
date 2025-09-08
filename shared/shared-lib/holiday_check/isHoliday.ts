@@ -6,7 +6,8 @@ export async function isHoliday(
   date: Date,
   countryCode: string
 ): Promise<boolean> {
-  const apiKey = "QQowDk3rKdlhZuyPHQO7aoKk0JWkZpVq";
+  const apiKey =
+    process.env.CALENDARIFIC_API_KEY || "QQowDk3rKdlhZuyPHQO7aoKk0JWkZpVq";
   if (!apiKey) {
     console.warn("Calendarific API key not set.");
     return false;
@@ -21,7 +22,7 @@ export async function isHoliday(
     return holidayCache.get(cacheKey)!;
   }
 
-  const url = `https://calendarific.com/api/v2/holidays?api_key=${apiKey}&country=${countryCode}&year=${year}&month=${month}&day=${day}`;
+  const url = `https://calendarific.com/api/v2/holidays?api_key=${apiKey}&country=${countryCode}&year=${year}&month=${month}&day=${day}&type=national`;
 
   try {
     const response = await fetch(url);
@@ -32,8 +33,18 @@ export async function isHoliday(
     }
 
     const data = await response.json();
-    const isHoliday = data.response?.holidays?.length > 0;
+    const holidays = data.response?.holidays ?? [];
+
+    // Keep only major holidays (exclude observances, seasons, local)
+    const majorHolidays = holidays.filter((h: any) =>
+      h.type?.some((t: string) =>
+        ["National holiday", "Public holiday", "Bank holiday"].includes(t)
+      )
+    );
+
+    const isHoliday = majorHolidays.length > 0;
     holidayCache.set(cacheKey, isHoliday);
+
     return isHoliday;
   } catch (error) {
     console.error("Error checking holiday:", error);

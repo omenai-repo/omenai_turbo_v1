@@ -13,13 +13,24 @@ import {
   NotificationPayload,
 } from "@omenai/shared-types";
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
 export const GET = withAppRouterHighlight(async function GET() {
-  const data = await sendSubscriptionPaymentSuccessfulMail({
-    name: "Moses Chukwunekwu",
-    email: "dantereus1@gmail.com",
-  });
+  const plannedShippingDateAndTime = await getFutureShipmentDate(
+    3,
+    true,
+    "US",
+    {
+      hours: "12",
+      minutes: "00",
+    }
+  );
 
-  return NextResponse.json({ message: "Successful" });
+  console.log(plannedShippingDateAndTime);
+
+  return NextResponse.json({
+    message: "Successful",
+    plannedShippingDateAndTime,
+  });
 
   // const res = await fetch("https://exp.host/--/api/v2/push/send", {
   //   method: "POST",
