@@ -55,7 +55,7 @@ export default function ArtworkCard({
     .replace(/\)/g, "%29");
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
   return (
-    <div className="group relative bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl">
+    <div className="group relative bg-white rounded border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
       <div className="relative">
         <Link
           href={`${base_uri}/artwork/${encoded_url}`}
@@ -152,7 +152,7 @@ export default function ArtworkCard({
             {availability && !isDashboard && (
               <Link
                 href={`${base_uri}/artwork/${encoded_url}`}
-                className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark z-20 rounded px-8 py-1 text-fluid-xs"
+                className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark rounded px-8 py-1 text-fluid-xs"
               >
                 {pricing?.price && pricing.shouldShowPrice === "Yes"
                   ? "Purchase"
