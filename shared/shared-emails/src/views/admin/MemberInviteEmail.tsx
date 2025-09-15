@@ -27,7 +27,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
       <Tailwind>
         <Head />
         <Body className="bg-gray-50 dark:bg-gray-900 my-auto mx-auto font-sans px-2">
-          <Container className="bg-white dark:bg-gray-800 border border-solid border-gray-200 dark:border-gray-700 rounded-md shadow-lg my-[40px] mx-auto p-[32px] max-w-[580px] w-full">
+          <Container className="bg-white dark:bg-gray-800 border border-solid border-gray-200 dark:border-gray-700 rounded shadow-lg my-[40px] mx-auto p-[32px] max-w-[580px] w-full">
             {/* Logo Section */}
             <Section className="text-center mb-8">
               <Img
@@ -70,14 +70,14 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
             <Section className="text-center my-8">
               <Link
                 href={`https://admin.omenai.app/activate?token=${token}`}
-                className="bg-[#0f172a] border border-white text-white font-semibold py-3 px-8 rounded-lg inline-block no-underline transition-all duration-200 shadow-md hover:shadow-lg"
+                className="bg-[#0f172a] border border-white text-white font-semibold py-3 px-8 rounded inline-block no-underline transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Activate Admin Account
               </Link>
             </Section>
 
             {/* Security Notice */}
-            <Section className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mt-8 mb-6">
+            <Section className="bg-gray-50 dark:bg-gray-900 rounded p-4 mt-8 mb-6">
               <Text className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-0">
                 <strong className="text-gray-700 dark:text-gray-300">
                   🔒 Security First

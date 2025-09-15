@@ -22,7 +22,10 @@ export default function NavbarLink({
       {disabled ? (
         <>
           <li className="relative text-fluid-base text-dark font-normal">
-            <p className="cursor-not-allowed whitespace-nowrap" aria-disabled>
+            <p
+              className="cursor-not-allowed whitespace-nowrap text-fluid-xxs"
+              aria-disabled
+            >
               {text}
             </p>
             <CiLock className="absolute right-[-15px] top-[-5px]" />

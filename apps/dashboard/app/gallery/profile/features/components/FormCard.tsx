@@ -56,19 +56,19 @@ export const FormCard = () => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Design 1: Clean Card Layout */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="bg-slate-50 px-8 py-6 border-b border-slate-200">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">
+              <h2 className="text-fluid-base font-semibold text-slate-900">
                 Gallery Profile
               </h2>
-              <p className="text-sm text-slate-600 mt-1">
+              <p className="text-fluid-xs text-slate-600 mt-1">
                 Update your gallery information
               </p>
             </div>
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+            <div className="flex items-center gap-2 text-fluid-xs text-slate-500">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -92,7 +92,7 @@ export const FormCard = () => {
           <div className="space-y-8">
             {/* Basic Information */}
             <div>
-              <h3 className="text-sm font-normal text-dark uppercase tracking-wide mb-4">
+              <h3 className="text-fluid-xs font-medium text-dark uppercase tracking-wide mb-4">
                 Basic Information
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
@@ -105,7 +105,7 @@ export const FormCard = () => {
                       type="text"
                       value={user?.name}
                       readOnly
-                      className="w-full px-4 py-3 text-fluid-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 cursor-not-allowed"
+                      className="w-full px-4 py-3 text-fluid-xs bg-slate-50 border border-slate-200 rounded text-slate-900 cursor-not-allowed"
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg
@@ -126,7 +126,7 @@ export const FormCard = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-normal text-dark">
+                  <label className="block text-fluid-xs font-normal text-dark">
                     Email Address
                   </label>
                   <div className="relative">
@@ -134,7 +134,7 @@ export const FormCard = () => {
                       type="email"
                       value={user?.email}
                       readOnly
-                      className="w-full px-4 py-3 text-fluid-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 pr-24 cursor-not-allowed"
+                      className="w-full px-4 py-3 text-fluid-xs bg-slate-50 border border-slate-200 rounded text-slate-900 pr-24 cursor-not-allowed"
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                       {user?.verified ? (
@@ -170,7 +170,7 @@ export const FormCard = () => {
 
             {/* Gallery Details */}
             <div>
-              <h3 className="text-sm font-normal text-dark uppercase tracking-wide mb-4">
+              <h3 className="text-fluid-xs font-medium text-dark uppercase tracking-wide mb-4">
                 Gallery Details
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
@@ -178,26 +178,26 @@ export const FormCard = () => {
                   label="Gallery Address"
                   defaultValue={user.address.address_line}
                   labelText="location"
-                  className="w-full px-4 py-3 text-fluid-xs bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 text-fluid-xs bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
                 />
                 <InputCard
                   label="Admin Name"
                   defaultValue={user?.admin as string}
                   labelText="admin"
-                  className="w-full px-4 py-3 text-fluid-xs bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 text-fluid-xs bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <h3 className="text-sm font-normal text-dark uppercase tracking-wide mb-4">
+              <h3 className="text-fluid-xs font-normal text-dark uppercase tracking-wide mb-4">
                 About Your Gallery
               </h3>
               <TextareaCard
                 label="Gallery Description"
                 rows={4}
-                className="w-full px-4 py-3 text-fluid-xs bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none"
+                className="w-full px-4 py-3 text-fluid-xs bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none"
                 defaultValue={user?.description as string}
                 name="description"
                 placeholder="Tell visitors about your gallery, the artists you represent, and your mission..."
@@ -207,7 +207,7 @@ export const FormCard = () => {
             {/* Submit Button */}
             <div className="pt-6 border-t border-slate-200">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-slate-500">
+                <p className="text-fluid-xs text-slate-500">
                   {!updateData.admin &&
                   !updateData.location &&
                   !updateData.description
@@ -222,7 +222,7 @@ export const FormCard = () => {
                       !updateData.description) ||
                     isLoading
                   }
-                  className="px-4 py-2 bg-slate-900 text-white text-fluid-xs font-normal rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+                  className="px-4 py-2 bg-slate-900 text-white text-fluid-xs font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">

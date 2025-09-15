@@ -8,7 +8,7 @@ export default function RecoveryModalForm() {
   return (
     <div className="w-auto h-auto">
       <div className="flex flex-col gap-8 items-center">
-        <div className="bg-white flex flex-col gap-y-8 px-2 py-4 rounded-md relative">
+        <div className="bg-white flex flex-col gap-y-8 px-2 py-4 rounded relative">
           <div className="absolute top-5 right-5">
             <GrClose
               className="cursor-pointer"

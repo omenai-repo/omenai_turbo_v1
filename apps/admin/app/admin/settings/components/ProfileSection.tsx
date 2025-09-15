@@ -53,7 +53,7 @@ export default function ProfileSection() {
   };
 
   return (
-    <div className="bg-[#0f172a] rounded-lg border border-[#2a2a2a] p-6">
+    <div className="bg-[#0f172a] rounded border border-[#2a2a2a] p-6">
       <h2 className="text-fluid-sm font-semibold text-white mb-6">
         Profile Information
       </h2>

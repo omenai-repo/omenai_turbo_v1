@@ -55,7 +55,7 @@ export default function ArtworkCard({
     .replace(/\)/g, "%29");
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
   return (
-    <div className="group relative bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl">
+    <div className="group relative bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl">
       <div className="relative">
         <Link
           href={`${base_uri}/artwork/${encoded_url}`}
@@ -84,17 +84,17 @@ export default function ArtworkCard({
         <div className="absolute top-4 left-4 z-10">
           {isDashboard && dashboard_type === "gallery" ? (
             <Link href={`/gallery/artworks/edit?id=${name}`}>
-              <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-2 text-fluid-xs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white">
+              <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white text-fluid-xs">
                 Edit artwork
               </button>
             </Link>
-          ) : (
+          ) : isDashboard && dashboard_type === "artist" ? null : (
             <Link href={`/collections/${safeSlug}`}>
-              <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-1 xs:py-2 text-fluid-xxs rounded-md border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
-                <span className="font-semibold">{medium}</span>
+              <button className="px-4 py-1 bg-white text-dark rounded">
+                <span className="font-normal text-fluid-xs ">{medium}</span>
 
                 {/* Button glow effect */}
-                <div className="absolute inset-0 rounded-md bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
+                <div className="absolute inset-0 rounded bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
               </button>
             </Link>
           )}
@@ -119,14 +119,14 @@ export default function ArtworkCard({
       </div>
 
       {/* Content Section */}
-      <div className="p-4">
+      <div className="p-4 space-y-2">
         {/* Artwork Details */}
-        <div className="space-y-2 mb-3">
-          <h3 className="font-medium text-dark text-fluid-base leading-tight line-clamp-2">
+        <div className="space-y-1">
+          <h3 className="font-bold text-dark font-medium text-fluid-base leading-tight line-clamp-2">
             {name}
           </h3>
-          <p className="text-dark/60 text-fluid-xs">
-            by {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
+          <p className="text-dark/90 font-normal text-fluid-xs">
+            {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
           </p>
         </div>
 
@@ -136,11 +136,11 @@ export default function ArtworkCard({
             {/* Price */}
             <div className="flex flex-col">
               {!availability ? (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-fluid-xs font-medium bg-red-50 text-red-700 border border-red-200">
+                <span className="inline-flex items-center px-3 rounded-full text-fluid-xxs font-medium bg-red-50 text-red-700 border border-red-200">
                   Sold
                 </span>
               ) : (
-                <div className="text-[#0f172a] font-semibold text-fluid-base">
+                <div className="text-[#0f172a] font-semibold text-fluid-xs">
                   {pricing?.price && pricing.shouldShowPrice === "Yes"
                     ? formatPrice(pricing.usd_price)
                     : "Price on request"}
@@ -152,7 +152,7 @@ export default function ArtworkCard({
             {availability && !isDashboard && (
               <Link
                 href={`${base_uri}/artwork/${encoded_url}`}
-                className="inline-flex items-center px-4 py-2 rounded-lg bg-dark text-white text-fluid-xs font-medium transition-colors duration-200 hover:bg-dark/80"
+                className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark z-20 rounded px-8 py-1 text-fluid-xs"
               >
                 {pricing?.price && pricing.shouldShowPrice === "Yes"
                   ? "Purchase"
@@ -177,14 +177,6 @@ export default function ArtworkCard({
                 </span>
               )}
             </div>
-            {pricing?.price && pricing.shouldShowPrice === "Yes" && (
-              <div className="flex items-center justify-between text-fluid-xs mt-2">
-                <span className="text-gray-600">Price:</span>
-                <span className="font-medium text-dark">
-                  {formatPrice(pricing.usd_price)}
-                </span>
-              </div>
-            )}
           </div>
         )}
       </div>

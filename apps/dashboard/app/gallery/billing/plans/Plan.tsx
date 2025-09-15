@@ -76,7 +76,7 @@ export default function Plan({
           )}
 
           <div
-            className={`bg-white rounded-2xl shadow-lg overflow-hidden ${
+            className={`bg-white rounded shadow-lg overflow-hidden ${
               name === "Pro"
                 ? "ring-2 ring-blue-600"
                 : "border border-slate-200"
@@ -94,7 +94,7 @@ export default function Plan({
                   </p>
                 </div>
                 {name === "Premium" && (
-                  <div className="p-2 bg-purple-100 rounded-lg">
+                  <div className="p-2 bg-purple-100 rounded">
                     <svg
                       className="w-5 h-5 text-purple-600"
                       fill="none"
@@ -216,7 +216,7 @@ export default function Plan({
                       sub_data.plan_details.interval === tab &&
                       plan_action === null
                     }
-                    className={`w-full py-3 px-6 rounded-md font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    className={`w-full py-3 px-6 rounded font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       name === "Pro"
                         ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600"
                         : "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900"

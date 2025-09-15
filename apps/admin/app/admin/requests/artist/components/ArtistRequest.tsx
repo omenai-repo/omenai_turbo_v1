@@ -42,7 +42,7 @@ export default function ArtistRequest({
     <div className="w-full p-1">
       <div
         className={`
-        group relative rounded-md ${currentStyle.bgColor} 
+        group relative rounded ${currentStyle.bgColor} 
         backdrop-blur-sm transition-all duration-500
         transform-gpu 2xl:py-3 py-2
       `}
@@ -71,22 +71,22 @@ export default function ArtistRequest({
                 <div className="flex items-center">
                   <span
                     className={`
-                  inline-flex items-center rounded-md px-2 text-fluid-xxs font-medium capitalize
+                  inline-flex items-center rounded px-2 text-fluid-xs font-medium capitalize
                   ${currentStyle.badgeStyle}
                   transition-all duration-300 group-hover:shadow-sm
                 `}
                   >
                     <div
-                      className={`w-1.5 h-1.5 rounded-md mr-1.5 ${currentStyle.dotStyle}`}
+                      className={`w-1.5 h-1.5 rounded mr-1.5 ${currentStyle.dotStyle}`}
                     />
                     {tab}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+              <div className="flex items-center gap-x-1.5 text-fluid-xs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
                 <Mail size={14} />
-                <span className="font-medium text-fluid-xxs">
+                <span className="font-medium text-fluid-xs">
                   {artist.email}
                 </span>
               </div>
@@ -151,8 +151,8 @@ export default function ArtistRequest({
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-12 h-12 rounded-md bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
-        <div className="absolute bottom-4 right-8 w-6 h-6 rounded-md bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
+        <div className="absolute top-4 right-4 w-12 h-12 rounded bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
+        <div className="absolute bottom-4 right-8 w-6 h-6 rounded bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
 
         {/* Bottom shine effect */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

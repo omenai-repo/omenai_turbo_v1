@@ -20,7 +20,7 @@ export default async function VerifyEmail({
 
         <Link
           href={"/login/gallery"}
-          className="underline text-fluid-xxs font-medium"
+          className="underline text-fluid-xs font-medium"
         >
           Back to login
         </Link>

@@ -40,7 +40,7 @@ export default function EventTimeline({
   return (
     <ScrollArea
       h={width < 768 ? 450 : 700}
-      className={`w-auto min-w-[300px] max-w-[350px] p-5 h-full bg-white rounded-md z-[1500] `}
+      className={`w-auto min-w-[300px] max-w-[350px] p-5 h-full bg-white rounded z-[1500] `}
     >
       <div className="space-y-2 mb-8">
         {/* <h5 className="text-fluid-base font-semibold mb-5">Shipment events</h5> */}
@@ -51,17 +51,17 @@ export default function EventTimeline({
               alt={artwork_data.title}
               height={60}
               width={60}
-              className="w-[60px] h-[60px] object-cover object-center rounded-[10px]"
+              className="w-[60px] h-[60px] object-cover object-center rounded"
             />
             <div className="whitespace-pre-wrap">
               <p className="font-semibold text-fluid-xs">
                 {artwork_data.title}
               </p>
               <div>
-                <span className="text-fluid-xxs text-muted">
+                <span className="text-fluid-xs text-muted">
                   Tracking number
                 </span>
-                <p className="font-bold text-fluid-xxs">#{tracking_number}</p>
+                <p className="font-bold text-fluid-xs">#{tracking_number}</p>
               </div>
             </div>
           </div>

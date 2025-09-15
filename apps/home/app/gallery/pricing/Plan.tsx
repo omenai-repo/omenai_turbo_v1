@@ -46,7 +46,7 @@ export default function Plan({
               </p>
             </div>
             <div className="flex flex-1 flex-col p-2">
-              <div className="flex flex-1 flex-col justify-between rounded-2xl bg-gray-50 p-4">
+              <div className="flex flex-1 flex-col justify-between rounded bg-gray-50 p-4">
                 <ul role="list" className="space-y-4">
                   {tab === "monthly"
                     ? benefits.monthly.map((benefit) => {

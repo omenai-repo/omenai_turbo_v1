@@ -12,14 +12,14 @@ export default function SecuritySection() {
 
   return (
     <>
-      <div className="bg-[#0f172a] rounded-lg border border-[#2a2a2a] p-6">
+      <div className="bg-[#0f172a] rounded border border-[#2a2a2a] p-6">
         <div className="flex items-center gap-3 mb-6">
           <Shield size={24} className="text-green-500" />
           <h2 className="text-fluid-sm font-semibold text-white">Security</h2>
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-lg border border-[#2a2a2a]">
+          <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded border border-[#2a2a2a]">
             <div>
               <p className="text-white font-medium">Password</p>
               {/* <p className="text-gray-400 text-sm">Last changed 3 months ago</p> */}
@@ -42,7 +42,7 @@ export default function SecuritySection() {
             </Button>
           </div>
 
-          <div className="p-4 bg-[#0a0a0a] rounded-lg border border-[#2a2a2a]">
+          <div className="p-4 bg-[#0a0a0a] rounded border border-[#2a2a2a]">
             <p className="text-white font-medium mb-1">
               Two-Factor Authentication
             </p>

@@ -124,7 +124,7 @@ export default function AddressForm({
   return (
     <>
       <div className="w-full max-w-4xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
           {/* Header */}
           <div className="bg-slate-50 p-4 border-b border-slate-200">
             <h1 className="text-fluid-sm font-semibold text-dark flex items-center gap-3">
@@ -258,7 +258,7 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="px-4 py-2 w-fit grid place-items-center bg-dark text-white font-normal rounded-md shadow-sm transition-all transform active:scale-95 disabled:bg-dark/30 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 min-w-[180px] text-fluid-xs"
+                className="px-4 py-2 w-fit grid place-items-center bg-dark text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:bg-dark/30 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 min-w-[180px] text-fluid-xs"
               >
                 {!loading ? (
                   <span className="flex items-center justify-center gap-2">

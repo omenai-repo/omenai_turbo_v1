@@ -45,7 +45,7 @@ export default function VerifyTransaction({
   });
   return (
     <div className="max-w-lg mx-auto p-6">
-      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-gray-100 rounded overflow-hidden shadow-sm">
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h1 className="text-xl font-bold text-gray-900">
@@ -119,19 +119,19 @@ export default function VerifyTransaction({
               {/* Action Buttons */}
               <div className="flex gap-3 w-full max-w-sm">
                 {verified?.isOk ? (
-                  <button className="flex-1 h-12 bg-gray-900 text-white text-sm font-semibold rounded-md transition-all duration-200 hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-2">
+                  <button className="flex-1 h-12 bg-gray-900 text-white text-sm font-semibold rounded transition-all duration-200 hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-2">
                     View Subscription Info
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <div className="flex gap-3 w-full">
-                    <button className="flex-1 h-12 bg-gray-100 text-gray-700 text-sm font-medium rounded-md transition-all duration-200 hover:bg-gray-200 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-2">
+                    <button className="flex-1 h-12 bg-gray-100 text-gray-700 text-sm font-medium rounded transition-all duration-200 hover:bg-gray-200 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-2">
                       <ArrowLeft className="w-4 h-4" />
                       Go Back
                     </button>
                     <button
                       // onClick={handleRetry}
-                      className="flex-1 h-12 bg-gray-900 text-white text-sm font-semibold rounded-md transition-all duration-200 hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-2"
+                      className="flex-1 h-12 bg-gray-900 text-white text-sm font-semibold rounded transition-all duration-200 hover:bg-gray-800 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-2"
                     >
                       <Loader className="w-4 h-4" />
                       Retry
@@ -142,7 +142,7 @@ export default function VerifyTransaction({
 
               {/* Additional Info */}
               {verified?.isOk && (
-                <div className="mt-6 p-4 bg-green-50 border border-green-100 rounded-md w-full max-w-sm">
+                <div className="mt-6 p-4 bg-green-50 border border-green-100 rounded w-full max-w-sm">
                   <div className="flex items-center gap-2 text-sm text-green-800">
                     <CheckCircle className="w-4 h-4 text-green-600" />
                     <span className="font-medium">

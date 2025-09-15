@@ -49,7 +49,7 @@ const PaymentSuccessfulGalleryMail = (
               Connect account.{" "}
             </Text>
             {/* Transaction Card */}
-            <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-8">
+            <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
               <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4 text-center">
                 Transaction Summary
               </Text>
@@ -92,7 +92,7 @@ const PaymentSuccessfulGalleryMail = (
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <div className="bg-blue-50 border border-blue-200 rounded p-6 mb-8">
               <Text className="text-blue-900 font-semibold text-base mb-3">
                 Next Steps
               </Text>
@@ -104,7 +104,7 @@ const PaymentSuccessfulGalleryMail = (
               <div className="text-center mt-4">
                 <Link
                   href={`${url}/gallery/payouts`}
-                  className="inline-block bg-[#1a1a1a] hover:bg-[#1a1a1a/80] text-white font-medium px-6 py-2 rounded-lg text-sm transition-colors"
+                  className="inline-block bg-[#1a1a1a] hover:bg-[#1a1a1a/80] text-white font-medium px-6 py-2 rounded text-sm transition-colors"
                 >
                   View Payment Details
                 </Link>

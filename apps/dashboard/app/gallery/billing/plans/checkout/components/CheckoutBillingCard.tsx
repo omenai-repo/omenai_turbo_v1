@@ -195,7 +195,7 @@ export default function CheckoutBillingCard({
   return (
     <>
       <div className="mt-12 space-y-4 mb-4">
-        <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-200">
+        <div className="bg-gradient-to-br from-slate-50 to-white rounded p-6 border border-slate-200">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-semibold text-slate-900">Payment Details</h2>
             <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
@@ -213,7 +213,7 @@ export default function CheckoutBillingCard({
         <button
           onClick={shouldCharge ? handlePayNow : handleMigrateToPlan}
           disabled={migrationLoading || loading}
-          className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xs font-medium rounded-md disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
+          className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xs font-medium rounded disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
         >
           {loading || migrationLoading ? (
             <LoadSmall />

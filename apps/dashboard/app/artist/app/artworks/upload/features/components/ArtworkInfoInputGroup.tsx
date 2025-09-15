@@ -4,7 +4,7 @@ import ArtworkTextInput from "./ArtworkTextInput";
 
 export default function ArtworkInfoInputGroup() {
   return (
-    <div className="my-10">
+    <div>
       <h2 className="text-dark font-semibold text-fluid-base my-4">
         Artwork details
       </h2>

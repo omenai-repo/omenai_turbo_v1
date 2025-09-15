@@ -16,7 +16,7 @@ export default function OverviewComponentCard({
         id={id}
         className={` ${
           fullWidth ? "px-1 py-2" : "px-5 py-8"
-        } w-full min-h-[300px] grid place-items-center rounded-lg ring-1 ring-[#eeeeee] mt-5 relative bg-white`}
+        } w-full min-h-[300px] grid place-items-center rounded ring-1 ring-[#eeeeee] mt-5 relative bg-white`}
       >
         {children}
       </div>

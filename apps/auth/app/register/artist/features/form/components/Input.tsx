@@ -31,7 +31,6 @@ export default function Input({
     updateArtistSignupData,
     currentArtistSignupFormIndex,
     setIsFieldDirty,
-    isFieldDirty,
   } = useArtistAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
@@ -91,7 +90,7 @@ export default function Input({
                 w-full h-12 px-4 pr-12
                 bg-white
                 border-2 border-dark/20
-                rounded-md
+                rounded
                 text-fluid-xs text-dark
                 placeholder:text-dark/40
                 transition-all duration-200 ease-in-out

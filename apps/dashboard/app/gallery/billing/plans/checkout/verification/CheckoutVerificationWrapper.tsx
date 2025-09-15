@@ -80,7 +80,7 @@ export default function TransactionVerification() {
                   <h2 className="text-fluid-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     Verifying Transaction
                   </h2>
-                  <p className="text-gray-600 text-fluid-xxs animate-pulse">
+                  <p className="text-gray-600 text-fluid-xs animate-pulse">
                     Please wait while we confirm your payment...
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export default function TransactionVerification() {
                 <div className="w-full pt-4">
                   <Link
                     href="/gallery/billing"
-                    className={`group relative overflow-hidden h-12 px-4 rounded-md w-full flex items-center justify-center gap-3 font-medium text-white transition-all duration-300 transform hover:scale-101 text-fluid-xxs hover:shadow-xl ${
+                    className={`group relative overflow-hidden h-12 px-4 rounded w-full flex items-center justify-center gap-3 font-medium text-white transition-all duration-300 transform hover:scale-101 text-fluid-xs hover:shadow-xl ${
                       verified?.isOk
                         ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                         : "bg-dark hover:bg-dark/80"
@@ -163,7 +163,7 @@ export default function TransactionVerification() {
                 </div>
 
                 {/* Security badge */}
-                <div className="flex items-center gap-2 text-fluid-xxs text-gray-500 pt-2">
+                <div className="flex items-center gap-2 text-fluid-xs text-gray-500 pt-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span>Secure SSL Encrypted Transaction</span>
                 </div>

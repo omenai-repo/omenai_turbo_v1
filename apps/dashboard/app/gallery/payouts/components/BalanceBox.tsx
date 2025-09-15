@@ -38,10 +38,10 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-8 w-full max-w-md shadow-sm">
+    <div className="bg-white border border-gray-100 rounded p-8 w-full max-w-md shadow-sm">
       <div className="flex flex-col items-center space-y-6 text-center">
         {/* Header */}
-        <div className="w-12 h-12 bg-blue-50 rounded-md flex items-center justify-center">
+        <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center">
           <svg
             className="w-6 h-6 text-blue-600"
             viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ export default function BalanceBox({
         </div>
 
         {/* Pending Balance */}
-        <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded-md">
+        <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded">
           <p className="text-fluid-xs text-amber-800">
             Balance on stripe is automatically credited to your bank account.
           </p>
@@ -73,7 +73,7 @@ export default function BalanceBox({
           <button
             onClick={generateLoginLink}
             disabled={generatingLoginLink}
-            className="w-full h-12 bg-gray-900 text-white text-fluid-xs font-semibold rounded-md transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
+            className="w-full h-12 bg-gray-900 text-white text-fluid-xs font-semibold rounded transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
           >
             {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
           </button>

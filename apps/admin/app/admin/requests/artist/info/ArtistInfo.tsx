@@ -131,7 +131,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
     <div className="min-h-screen bg-gray-50 p-4 2xl:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4">
+        <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden mb-4">
           {/* Banner */}
           <div className="h-32 bg-gradient-to-br from-gray-900 to-gray-700 relative">
             <div className="absolute inset-0 bg-black/20"></div>
@@ -195,7 +195,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleFileDownload}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-gray-900 text-white hover:text-dark rounded-lg font-medium hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-gray-900 text-white hover:text-dark rounded font-medium hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     <Download size={14} />
                     Download Resume
@@ -203,7 +203,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     disabled={loading}
                     onClick={() => handleRequestAction("accept")}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -215,7 +215,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     disabled={loading}
                     onClick={() => handleRequestAction("reject")}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-red-600 text-white rounded font-medium hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -236,31 +236,31 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
           <CategorizationAnswers answers={request?.categorization.answers} />
 
           {/* Category Recommendation Section */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <div className="bg-white rounded shadow-sm border border-gray-100 p-8">
             <h2 className="text-fluid-md font-bold text-gray-900 mb-6">
               Category Assessment
             </h2>
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Algorithm Recommendation */}
-              <div className="bg-gray-50 rounded-md p-6 border border-gray-200">
+              <div className="bg-gray-50 rounded p-6 border border-gray-200">
                 <h3 className="text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
                   Algorithm Recommendation
                 </h3>
                 <div
-                  className={`inline-flex items-center px-4 py-2 ${getCategoryColor(request?.categorization.artist_categorization)} text-white rounded-lg text-fluid-xs font-medium shadow-md`}
+                  className={`inline-flex items-center px-4 py-2 ${getCategoryColor(request?.categorization.artist_categorization)} text-white rounded text-fluid-xs font-medium shadow-md`}
                 >
                   {request?.categorization.artist_categorization}
                 </div>
               </div>
 
               {/* Current Selection */}
-              <div className="bg-blue-50 rounded-md p-6 border border-blue-200">
+              <div className="bg-blue-50 rounded p-6 border border-blue-200">
                 <h3 className="text-fluid-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
                   Selected Category
                 </h3>
                 <div
-                  className={`inline-flex items-center px-4 py-2 text-fluid-xs ${getCategoryColor(recommendation)} text-white rounded-lg font-medium shadow-md`}
+                  className={`inline-flex items-center px-4 py-2 text-fluid-xs ${getCategoryColor(recommendation)} text-white rounded font-medium shadow-md`}
                 >
                   {recommendation}
                 </div>
@@ -277,7 +277,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     key={category}
                     onClick={() => setRecommedation(category as ArtistCategory)}
-                    className={`relative p-3 rounded-md text-fluid-xs font-medium transition-all duration-200 ${
+                    className={`relative p-3 rounded text-fluid-xs font-medium transition-all duration-200 ${
                       recommendation === category
                         ? `${getCategoryColor(category)} text-white shadow-lg scale-105`
                         : `${getCategoryBgColor(category as ArtistCategory)} hover:scale-102 border`
@@ -296,7 +296,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
               {/* Warning Message */}
               {recommendation !==
                 request?.categorization.artist_categorization && (
-                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-md flex items-start gap-3">
+                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded flex items-start gap-3">
                   <AlertCircle
                     className="text-amber-600 flex-shrink-0 mt-0.5"
                     size={20}

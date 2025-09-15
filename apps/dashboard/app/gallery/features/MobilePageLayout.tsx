@@ -75,7 +75,7 @@ export default function MobilePageLayout() {
       {/* Close button */}
       <div
         onClick={() => setOpenMobileNav()}
-        className="p-3 bg-white w-fit h-fit my-4 rounded-md mr-5"
+        className="p-3 bg-white w-fit h-fit my-4 rounded mr-5"
       >
         <TfiClose>close</TfiClose>
       </div>

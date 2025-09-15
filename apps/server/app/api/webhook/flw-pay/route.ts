@@ -241,11 +241,7 @@ async function handlePurchaseTransaction(
     }
 
     // build pricing
-    const commission = Math.round(
-      0.5 * Number(meta.unit_price ?? 0) +
-        Number(meta.shipping_cost ?? 0) +
-        Number(meta.tax_fees ?? 0)
-    );
+    const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
 
     const transaction_pricing: PurchaseTransactionPricing = {
       amount_total: Math.round(Number(verified_transaction.data.amount)),

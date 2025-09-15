@@ -49,7 +49,7 @@ export default function AddressTextInput({
         bg-white
         border
         border-slate-300
-        rounded-lg
+        rounded
         text-slate-900
         text-sm
         font-normal

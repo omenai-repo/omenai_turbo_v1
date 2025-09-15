@@ -3,7 +3,7 @@ import { Skeleton } from "@mantine/core";
 export default function PayoutSkeleton() {
   return (
     <div>
-      <div className="rounded-2xl border p-6 flex w-[500px] h-[250px] flex-col items-center justify-center gap-2">
+      <div className="rounded border p-6 flex w-[500px] h-[250px] flex-col items-center justify-center gap-2">
         <Skeleton height={16} width="50%" />
         <Skeleton height={32} width={80} />
         <Skeleton height={16} width="75%" />

@@ -115,7 +115,7 @@ export default function TransactionTable() {
         <Accordion.Item
           key={transaction.trans_id}
           value={transaction.trans_id}
-          className="border border-slate-200 rounded-md mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
+          className="border border-slate-200 rounded mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
         >
           <Accordion.Control className="hover:bg-slate-50 transition-colors">
             <div className="flex items-center justify-between px-4 py-2">
@@ -153,7 +153,7 @@ export default function TransactionTable() {
                       {statusConfig.label}
                     </span>
                   </div>
-                  <p className="text-fluid-xxs text-slate-500">
+                  <p className="text-fluid-xs text-slate-500">
                     {formatISODate(transaction.createdAt)}
                   </p>
                 </div>
@@ -239,17 +239,19 @@ export default function TransactionTable() {
 
               {/* Status Message */}
               <div
-                className={`mt-6 p-4 rounded-lg ${statusConfig.bgColor} border ${statusConfig.borderColor}`}
+                className={`mt-6 p-4 rounded ${statusConfig.bgColor} border ${statusConfig.borderColor}`}
               >
                 <div className="flex gap-3">
                   <div className={`flex-shrink-0 ${statusConfig.color}`}>
                     {statusConfig.icon}
                   </div>
-                  <div className="space-y-1">
-                    <p className={`font-medium ${statusConfig.color}`}>
+                  <div className="">
+                    <p
+                      className={`font-medium text-fluid-xs ${statusConfig.color}`}
+                    >
                       {transaction.trans_status}
                     </p>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-fluid-xs text-slate-600">
                       {statusConfig.message}
                     </p>
                   </div>
@@ -269,7 +271,7 @@ export default function TransactionTable() {
       ) : (
         <>
           {transactions.length === 0 ? (
-            <div className="bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 p-12">
+            <div className="bg-slate-50 rounded border-2 border-dashed border-slate-300 p-12">
               <div className="text-center max-w-sm mx-auto">
                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg
@@ -302,17 +304,14 @@ export default function TransactionTable() {
                   Transaction History
                 </h2>
                 <span className="text-sm text-slate-500">
-                  <Link
-                    href=""
-                    className="text-fluid-xxs underline font-medium"
-                  >
+                  <Link href="" className="text-fluid-xs underline font-medium">
                     See all
                   </Link>
                 </span>
               </div>
               <ScrollArea h={600} className="pr-4">
                 <Accordion
-                  variant="filled"
+                  variant="separated"
                   radius="md"
                   className="space-y-0"
                   styles={{

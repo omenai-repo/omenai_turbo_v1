@@ -96,7 +96,7 @@ export default function ArtworkPriceInputGroup() {
                     artworkUploadData.price.toString() === "" ||
                     conversionLoading
                   }
-                  className="p-2 rounded-md w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/20 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                  className="p-2 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/20 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 >
                   {conversionLoading ? (
                     <Loader color="rgba(255, 255, 255, 1)" size={16} />
@@ -140,8 +140,8 @@ export default function ArtworkPriceInputGroup() {
           />
         </div>
       </div>
-      <div className="w-full text-fluid-xxs my-2">
-        <p className="font-semibold text-fluid-xxs mt-1 text-red-600">
+      <div className="w-full text-fluid-xs my-2">
+        <p className="font-semibold text-fluid-xs mt-1 text-red-600">
           Please note: To ensure consistent pricing across the platform, all
           uploaded prices will be displayed in US Dollar equivalents.
         </p>

@@ -210,7 +210,7 @@ export default function InviteTeamMemberModal({
           }}
         />
 
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+        <div className="bg-blue-50 border border-blue-200 rounded p-4">
           <p className="text-sm text-blue-800">
             The invited member will receive an email with instructions to join
             your team.

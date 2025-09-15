@@ -26,12 +26,12 @@ export default function MediumFilter() {
     <div className="p-2 md:relative w-full md:w-fit">
       <div
         onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 whitespace-nowrap rounded-md cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
+        className="ring-1 whitespace-nowrap rounded cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
       >
         <p className="flex gap-x-2 items-center">
           <span className="text-fluid-xs font-light">Medium</span>
           {filterOptions.medium.length > 0 && (
-            <span className="relative h-2 w-2 p-2.5 grid place-items-center rounded-md bg-dark/10">
+            <span className="relative h-2 w-2 p-2.5 grid place-items-center rounded bg-dark/10">
               <span className="absolute translate-x-[0%] translate-y-[0%]">
                 {filterOptions.medium.length}
               </span>

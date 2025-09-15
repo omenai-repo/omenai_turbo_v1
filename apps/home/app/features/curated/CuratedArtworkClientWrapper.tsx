@@ -33,20 +33,20 @@ export default function CuratedArtworkClientWrapper({
       <div className="flex md:flex-row flex-col gap-4 mt-16">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-md ring-dark font-medium text-[#000000] my-5">
+            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded ring-dark font-normal leading-snug text-[#000000] my-5">
               Just for you
             </p>
-            <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
+            <p className="text-fluid-sm sm:text-fluid-md font-bold  text-[#000000] mt-[20px]">
               Art based off <br /> your preferences.
             </p>
           </div>
 
           <div className="hidden sm:flex flex-col items-end">
-            <p className="text-fluid-base font-bold">Your Art, Your Way:</p>
-            <p className="justify-self-end font-medium text-fluid-xxs">
+            <p className="text-fluid-base font-bold ">Your Art, Your Way:</p>
+            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
               Discover Captivating Pieces{" "}
             </p>
-            <p className="justify-self-end font-medium text-fluid-xxs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
               that truly resonates with You
             </p>
           </div>

@@ -11,13 +11,11 @@ export default function OverviewPage() {
     <div className="w-full">
       <Tour />
       <PageTitle title={"Overview"} />
-      <div className="my-5">
-        <Highlight />
-        <ActivityWrapper />
-        <div className="grid lg:grid-cols-2 gap-x-[1rem] mt-[64px]">
-          <Orders />
-          <PopularArtworks />
-        </div>
+      <Highlight />
+      <ActivityWrapper />
+      <div className="grid lg:grid-cols-2 gap-x-[1rem] mt-[64px]">
+        <Orders />
+        <PopularArtworks />
       </div>
     </div>
   );

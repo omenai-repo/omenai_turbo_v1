@@ -56,20 +56,22 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
       <div className="flex md:flex-row flex-col gap-4 mt-16">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded-md ring-dark font-medium text-[#000000] my-5">
+            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded ring-dark font-normal leading-snug text-[#000000] my-5">
               View history
             </p>
-            <p className="text-fluid-sm sm:text-fluid-md font-bold text-[#000000] mt-[20px]">
+            <p className="text-fluid-sm sm:text-fluid-md font-bold  text-[#000000] mt-[20px]">
               Recently viewed by you.
             </p>
           </div>
 
           <div className="hidden sm:flex flex-col items-end">
-            <p className="text-fluid-base font-bold">Back for a Second Look:</p>
-            <p className="justify-self-end font-medium text-fluid-xxs">
+            <p className="text-fluid-base font-bold ">
+              Back for a Second Look:
+            </p>
+            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
               Rediscover the Art
             </p>
-            <p className="justify-self-end font-medium text-fluid-xxs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
               That Captured Your Attention
             </p>
           </div>
@@ -103,13 +105,13 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
         <div className="flex items-center justify-center w-fit space-x-2">
           <button
             onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded-md border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowLeft />
           </button>
           <button
             onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded-md border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowRight />
           </button>

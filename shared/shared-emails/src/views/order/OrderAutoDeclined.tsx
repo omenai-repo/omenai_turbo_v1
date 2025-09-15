@@ -48,7 +48,7 @@ export const OrderAutoDeclinedEmail: React.FC<OrderAutoDeclinedEmailProps> = ({
         <Body className="bg-gray-50 font-sans">
           <Container
             style={EMAIL_STYLES.container}
-            className="my-10 rounded-lg shadow-sm"
+            className="my-10 rounded shadow-sm"
           >
             {/* Header Section */}
             <Section className="px-8 py-6 text-center border-b border-gray-200">

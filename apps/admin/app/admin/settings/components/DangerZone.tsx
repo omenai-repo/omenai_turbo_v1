@@ -13,13 +13,13 @@ export default function DangerZone() {
 
   return (
     <>
-      <div className="bg-[#0f172a] rounded-lg border border-red-900/50 p-6">
+      <div className="bg-[#0f172a] rounded border border-red-900/50 p-6">
         <div className="flex items-center gap-3 mb-6">
           <TriangleAlert size={24} className="text-red-500" />
           <h2 className="text-xl font-semibold text-white">Danger Zone</h2>
         </div>
 
-        <div className="p-4 bg-red-950/20 rounded-lg border border-red-900/30">
+        <div className="p-4 bg-red-950/20 rounded border border-red-900/30">
           <h3 className="text-white font-medium mb-2">Delete Account</h3>
           <p className="text-gray-400 text-sm mb-4">
             Once you delete your account, there is no going back. All your data

@@ -182,7 +182,7 @@ export default function UpdatePasswordModalForm() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-14 h-14 bg-dark rounded-2xl flex items-center justify-center shadow-lg">
+            <div className="w-14 h-14 bg-dark rounded flex items-center justify-center shadow-lg">
               <Shield className="w-7 h-7 text-white" strokeWidth={1.5} />
             </div>
             <div>
@@ -212,7 +212,7 @@ export default function UpdatePasswordModalForm() {
                 required
                 placeholder="Create a strong password"
                 value={info.password}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded-lg outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
                   focusedField === "password"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -289,7 +289,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Re-enter your password"
                 required
                 value={info.confirmPassword}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded-lg outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
                   focusedField === "confirmPassword"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -327,7 +327,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Enter 6-digit code"
                 required
                 value={info.code}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded-lg outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
                   focusedField === "code"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -344,7 +344,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded-lg text-xs font-normal transition-all duration-200 ${
+                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-normal transition-all duration-200 ${
                   loading ||
                   errorList.length > 0 ||
                   !info.confirmPassword ||
@@ -376,10 +376,10 @@ export default function UpdatePasswordModalForm() {
               {errorList.map((error, index) => (
                 <div
                   key={`${error}-${index}`}
-                  className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg"
+                  className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded"
                 >
                   <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                  <p className="text-fluid-xxs text-red-700">{error}</p>
+                  <p className="text-fluid-xs text-red-700">{error}</p>
                 </div>
               ))}
             </div>
@@ -395,7 +395,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className={`w-full h-12 rounded-lg text-fluid-xs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`w-full h-12 rounded text-fluid-xs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
               loading ||
               errorList.length > 0 ||
               !info.code ||
@@ -419,7 +419,7 @@ export default function UpdatePasswordModalForm() {
           </button>
 
           {/* Security Note */}
-          <div className="mt-6 p-4 bg-dark/20-50 rounded-lg border border-dark/40">
+          <div className="mt-6 p-4 bg-dark/20-50 rounded border border-dark/40">
             <div className="flex gap-3">
               <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
               <div className="text-xs text-dark/20-600 space-y-1">

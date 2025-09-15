@@ -75,11 +75,11 @@ function Pagination<T extends any[]>({
 
   return (
     <nav className="flex justify-center mb-12 mt-20">
-      <ul className="flex items-center gap-x-2 ring-1 ring-dark/10 rounded-lg py-4 px-2">
+      <ul className="flex items-center gap-x-2 ring-1 ring-dark/10 rounded py-4 px-2">
         {/* Prev */}
         <li>
           <button
-            className={`${width > 380 && "px-3 py-2 disabled:bg-dark/10 disabled:text-dark/50 rounded text-fluid-xxs text-white bg-dark"} ${
+            className={`${width > 380 && "px-3 py-2 disabled:bg-dark/10 disabled:text-dark/50 rounded text-fluid-xs text-white bg-dark"} ${
               currentPage === 1 ? "text-dark cursor-not-allowed" : "text-dark"
             }`}
             disabled={currentPage === 1}
@@ -114,7 +114,7 @@ function Pagination<T extends any[]>({
         {/* Next */}
         <li>
           <button
-            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-2 rounded text-white text-fluid-xxs bg-dark"} ${
+            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-2 rounded text-white text-fluid-xs bg-dark"} ${
               currentPage === total
                 ? "text-dark cursor-not-allowed"
                 : "text-dark"

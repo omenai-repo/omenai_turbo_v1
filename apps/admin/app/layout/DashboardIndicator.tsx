@@ -17,7 +17,7 @@ export default function DashboardIndicator({
         </p>
 
         <p className="text-dark">
-          <span className="font-normal text-fluid-xxs capitalize text-dark">
+          <span className="font-normal text-fluid-xs capitalize text-dark">
             {getFormattedDateTime()}
           </span>
         </p>
@@ -32,10 +32,8 @@ export default function DashboardIndicator({
           className=" font-light text-dark"
         />
         <div>
-          <p className="text-dark text-fluid-xxs font-bold">{admin_name}</p>
-          <p className="text-dark text-fluid-xxs font-semibold">
-            {access_role}
-          </p>
+          <p className="text-dark text-fluid-xs font-bold">{admin_name}</p>
+          <p className="text-dark text-fluid-xs font-semibold">{access_role}</p>
         </div>
       </div>
     </div>

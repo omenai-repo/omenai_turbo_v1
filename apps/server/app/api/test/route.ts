@@ -14,7 +14,7 @@ import {
 } from "@omenai/shared-types";
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
-export const GET = withAppRouterHighlight(async function GET() {
+export async function GET() {
   const plannedShippingDateAndTime = await getFutureShipmentDate(
     3,
     true,
@@ -31,26 +31,26 @@ export const GET = withAppRouterHighlight(async function GET() {
     message: "Successful",
     plannedShippingDateAndTime,
   });
+}
 
-  // const res = await fetch("https://exp.host/--/api/v2/push/send", {
-  //   method: "POST",
-  //   headers: {},
-  //   body: JSON.stringify({
-  //     to: "ExponentPushToken[uWP6MPMoP2iBBY1DuIQB3P]",
-  //     title: "New Order",
-  //     body: "You have a new order from John!",
-  //     sound: "default",
-  //     priority: "high",
-  //     data: {
-  //       type: "order",
-  //       orderId: "abc123",
-  //       userId: "john42",
-  //     },
-  //   }),
-  // });
+// const res = await fetch("https://exp.host/--/api/v2/push/send", {
+//   method: "POST",
+//   headers: {},
+//   body: JSON.stringify({
+//     to: "ExponentPushToken[uWP6MPMoP2iBBY1DuIQB3P]",
+//     title: "New Order",
+//     body: "You have a new order from John!",
+//     sound: "default",
+//     priority: "high",
+//     data: {
+//       type: "order",
+//       orderId: "abc123",
+//       userId: "john42",
+//     },
+//   }),
+// });
 
-  // console.log(data);
-});
+// console.log(data);
 
 // {
 //     name: "Moses Chuks",

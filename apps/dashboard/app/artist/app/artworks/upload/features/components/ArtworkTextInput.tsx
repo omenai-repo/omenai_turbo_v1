@@ -70,7 +70,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           defaultValue={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="w-full focus:ring ring-1 border-0 disabled:cursor-not-allowed disabled:ring-dark/10 disabled:text-[#e0e0e0] ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded-md text-fluid-xxs placeholder:text-dark/40 placeholder:text-fluid-xs"
+          className="w-full ring-0 border border-[#E0E0E0] disabled:cursor-not-allowed disabled:ring-dark/10 disabled:text-[#e0e0e0] outline-none focus:border-none focus:ring-dark transition-all duration-200 ease-in-out px-3 py-2 rounded text-fluid-xs placeholder:text-dark/40 placeholder:text-fluid-xs"
         />
       )}
       {type === "textarea" && (
@@ -80,7 +80,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 rounded-[10px]  disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light text-fluid-xxs placeholder:text-[#858585] placeholder:text-fluid-xs"
+          className="border px-2 ring-0 rounded disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light text-fluid-xs placeholder:text-[#858585] placeholder:text-fluid-xs"
         />
       )}
       {errorList.length > 0 &&

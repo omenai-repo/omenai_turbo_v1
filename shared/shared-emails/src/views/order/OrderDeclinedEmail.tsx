@@ -49,7 +49,7 @@ export const OrderDeclinedEmail: React.FC<OrderDeclinedEmailProps> = ({
         <Body className="bg-gray-50 font-sans">
           <Container
             style={EMAIL_STYLES.container}
-            className="my-10 rounded-lg shadow-sm"
+            className="my-10 rounded shadow-sm"
           >
             {/* Header Section */}
             <Section className="px-8 pt-6 text-center border-b border-gray-200">
@@ -80,7 +80,7 @@ export const OrderDeclinedEmail: React.FC<OrderDeclinedEmailProps> = ({
               </Text>
 
               {/* Reason Section */}
-              <Section className="my-6 p-6 bg-gray-50 rounded-lg border-l-4 border-gray-400">
+              <Section className="my-6 p-6 bg-gray-50 rounded border-l-4 border-gray-400">
                 <Text
                   style={{ ...EMAIL_STYLES.text.small, marginBottom: "8px" }}
                 >

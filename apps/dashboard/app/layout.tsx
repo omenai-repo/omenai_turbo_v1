@@ -1,5 +1,4 @@
 import "./globals.css";
-import { Poppins } from "next/font/google";
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import "@mantine/core/styles.css";
@@ -9,11 +8,21 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
+import { Cormorant_Garamond, Work_Sans } from "next/font/google";
 
-const dm_sans = Poppins({
+// Body font → work_sans
+const work_sans = Work_Sans({
   subsets: ["latin"],
-  variable: "--font-sans_serif",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-work_sans",
+  display: "swap",
+});
+
+// Heading font → Cormorant Garamond
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
@@ -29,7 +38,7 @@ export default async function DashboardRootLayout({
         <ColorSchemeScript />
       </head>
       <body
-        className={`${dm_sans.className} flex flex-col px-4 justify-center`}
+        className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col px-4 justify-center`}
       >
         <SessionProvider initialSessionData={initialSessionData}>
           <MantineProvider>

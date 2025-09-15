@@ -14,7 +14,7 @@ export const ChartSkeleton = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[320px] px-4 py-6 rounded-lg bg-white overflow-hidden">
+    <div className="relative w-full h-[320px] px-4 py-6 rounded bg-white overflow-hidden">
       {/* Y-axis grid lines */}
       <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between">
         {[...Array(5)].map((_, idx) => (
@@ -34,7 +34,7 @@ export const ChartSkeleton = () => {
                 key={`bar-${idx}`}
                 width={20}
                 height={`${height}%`}
-                className="bg-gray-400 rounded-md"
+                className="bg-gray-400 rounded"
               />
             ))
           : [...Array(12)].map((_, idx) => (
@@ -42,7 +42,7 @@ export const ChartSkeleton = () => {
                 key={`bar-placeholder-${idx}`}
                 width={20}
                 height="40%" // fallback safe height while waiting for client-side
-                className="bg-gray-400 rounded-md"
+                className="bg-gray-400 rounded"
               />
             ))}
       </div>

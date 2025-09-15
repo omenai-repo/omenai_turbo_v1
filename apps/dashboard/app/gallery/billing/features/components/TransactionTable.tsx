@@ -33,7 +33,7 @@ export default function TransactionTable() {
 
   const reversedTransactions = transactions.slice().reverse();
   return (
-    <div className=" bg-white rounded-md shadow-sm border border-slate-200 p-6">
+    <div className=" bg-white rounded shadow-sm border border-slate-200 p-6">
       <h2 className="text-base font-semibold text-dark mb-6">
         Recent Transaction Activity
       </h2>
@@ -60,14 +60,14 @@ export default function TransactionTable() {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 bg-slate-50 rounded-lg p-4">
+                <div className="flex-1 bg-slate-50 rounded p-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-fluid-xxs font-semibold text-slate-500 mt-0.5">
+                      <p className="text-fluid-xs font-semibold text-slate-500 mt-0.5">
                         #{transaction.trans_id}
                       </p>
                       <p
-                        className={`text-fluid-xxs font-medium ${
+                        className={`text-fluid-xs font-medium ${
                           transaction.status === "successful"
                             ? "text-green-600"
                             : transaction.status === "failed"
@@ -81,7 +81,7 @@ export default function TransactionTable() {
                             ? "Payment failed"
                             : "Payment pending"}
                       </p>
-                      <p className="text-fluid-xxs text-slate-600 mt-1">
+                      <p className="text-fluid-xs text-slate-600 mt-1">
                         {formatISODate(transaction.date)}
                       </p>
                     </div>

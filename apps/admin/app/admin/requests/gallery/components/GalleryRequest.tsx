@@ -50,14 +50,14 @@ export default function GalleryRequest({
     <div className="w-full p-1">
       <div
         className={`
-        group relative rounded-md border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
+        group relative rounded border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
         backdrop-blur-sm transition-all duration-500 ${currentStyle.shadowColor}
         ${currentStyle.glowColor}
         transform-gpu
       `}
       >
         {/* Subtle gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-white/20 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* Main content */}
         <div className="relative z-10 flex justify-between items-center px-4 py-2">
@@ -72,7 +72,7 @@ export default function GalleryRequest({
                   className="transition-all duration-300 group-hover:shadow-lg ring-2 ring-white group-hover:ring-4"
                 />
                 {/* Avatar glow effect */}
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 rounded bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             </div>
 
@@ -86,7 +86,7 @@ export default function GalleryRequest({
                 <div className="flex items-center">
                   <span
                     className={`
-                  inline-flex items-center rounded-md text-fluid-xxs font-medium capitalize
+                  inline-flex items-center rounded text-fluid-xs font-medium capitalize
                   ${tab === "approved" ? " text-emerald-800" : ""}
                   ${tab === "pending" ? " text-amber-800" : ""}
                   ${tab === "rejected" ? " text-red-800" : ""}
@@ -95,7 +95,7 @@ export default function GalleryRequest({
                   >
                     <div
                       className={`
-                    w-1.5 h-1.5 rounded-md mr-1.5
+                    w-1.5 h-1.5 rounded mr-1.5
                     ${tab === "approved" ? "bg-emerald-500" : ""}
                     ${tab === "pending" ? "bg-amber-500 animate-pulse" : ""}
                     ${tab === "rejected" ? "bg-red-500" : ""}
@@ -105,9 +105,9 @@ export default function GalleryRequest({
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+              <div className="flex items-center gap-x-1.5 text-fluid-xs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
                 <Mail size={14} />
-                <span className="font-medium text-fluid-xxs">
+                <span className="font-medium text-fluid-xs">
                   {gallery.email}
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function GalleryRequest({
               size="xs"
               radius="sm"
               className="
-                font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
+                font-normal text-fluid-xs px-4 py-2.5 shadow-lg hover:shadow-xl
                 transition-all duration-300 hover:scale-105 active:scale-95
                 ring-1 ring-blue-200/50 hover:ring-blue-300/70
                 transform-gpu
@@ -151,8 +151,8 @@ export default function GalleryRequest({
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-12 h-12 rounded-md bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
-        <div className="absolute bottom-4 right-8 w-6 h-6 rounded-md bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
+        <div className="absolute top-4 right-4 w-12 h-12 rounded bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
+        <div className="absolute bottom-4 right-8 w-6 h-6 rounded bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
 
         {/* Bottom shine effect */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

@@ -44,13 +44,13 @@ export const highlightCardEl: HighlightCardElProps[] = [
     color: "bg-blue-600/10",
   },
   {
-    title: "Total net earned",
+    title: "net earned",
     icon: net,
     tag: "net",
     color: "bg-green-600/10",
   },
   {
-    title: "Total sales revenue",
+    title: "sales revenue",
     icon: sales_revenue,
     tag: "revenue",
     color: "bg-purple-600/10",

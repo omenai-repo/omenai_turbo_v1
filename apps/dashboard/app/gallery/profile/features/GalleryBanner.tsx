@@ -16,10 +16,10 @@ export const UserBanner = () => {
         alt="user banner"
         width={6000}
         height={4000}
-        className="w-full h-[200px] object-fill object-center rounded-2xl overflow-hidden"
+        className="w-full h-[200px] object-fill object-center rounded overflow-hidden"
       />
 
-      <div className="py-[1.5rem] bg-gray-400 rounded-md w-[95%] -mt-10 xs:px-5 flex  xs:flex-row flex-col items-center justify-between">
+      <div className="py-[1.5rem] bg-gray-400 rounded w-[95%] -mt-10 xs:px-5 flex  xs:flex-row flex-col items-center justify-between">
         <div className="flex gap-3">
           {logo !== "" ? (
             <Image
@@ -27,7 +27,7 @@ export const UserBanner = () => {
               alt="user avatar"
               width={45}
               height={45}
-              className="rounded-2xl overflow-hidden"
+              className="rounded overflow-hidden"
             />
           ) : (
             <RxAvatar />

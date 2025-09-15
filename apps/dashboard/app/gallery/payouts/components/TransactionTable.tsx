@@ -48,7 +48,7 @@ export function TransactionTable({
   );
   return (
     <div className="h-full w-full overflow-auto">
-      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-gray-100 rounded overflow-hidden shadow-sm">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>

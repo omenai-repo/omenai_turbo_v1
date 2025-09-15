@@ -44,7 +44,7 @@ const RequestPriceEmail = (
         <Body className="bg-gray-50 font-sans">
           <Container
             style={EMAIL_STYLES.container}
-            className="my-10 rounded-lg shadow-sm"
+            className="my-10 rounded shadow-sm"
           >
             {/* Header Section */}
             <Section className="px-8 py-6 text-center border-b border-gray-200">
@@ -80,12 +80,12 @@ const RequestPriceEmail = (
               </Text>
 
               {/* Artwork Card */}
-              <Section className="my-8 p-6 bg-gray-50 rounded-lg">
+              <Section className="my-8 p-6 bg-gray-50 rounded">
                 <div className="text-center mb-6">
                   <Img
                     src={image}
                     alt={artwork_data.title}
-                    className="mx-auto rounded-lg shadow-md"
+                    className="mx-auto rounded shadow-md"
                     style={{
                       maxWidth: "300px",
                       width: "100%",
@@ -226,7 +226,7 @@ const RequestPriceEmail = (
               </Section>
 
               {/* Additional Information */}
-              <Section className="my-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <Section className="my-6 p-4 bg-amber-50 rounded border-l-4 border-amber-400">
                 <Text
                   style={{
                     ...EMAIL_STYLES.text.small,

@@ -2,12 +2,16 @@ import {
   RouteIdentifier,
   GalleryProfileUpdateData,
   IndividualProfileUpdateData,
+  ArtistProfileUpdateData,
 } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function updateProfile(
   route: RouteIdentifier,
-  payload: GalleryProfileUpdateData | IndividualProfileUpdateData,
+  payload:
+    | GalleryProfileUpdateData
+    | IndividualProfileUpdateData
+    | ArtistProfileUpdateData,
   id: string,
   token: string
 ) {

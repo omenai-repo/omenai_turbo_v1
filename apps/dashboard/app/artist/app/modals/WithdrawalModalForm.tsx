@@ -121,11 +121,11 @@ export default function WithdrawalModalForm() {
         <WithdrawalSuccessScreen />
       ) : (
         <div className="max-w-lg w-full max-h-[95vh] mx-auto">
-          <div className="bg-white rounded-md shadow-lg overflow-hidden">
+          <div className="bg-white rounded shadow-lg overflow-hidden">
             {/* Header */}
             <div className="bg-dark text-white px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+                <div className="p-3 bg-white/10 rounded backdrop-blur-sm">
                   <svg
                     className="w-6 h-6"
                     fill="none"
@@ -144,7 +144,7 @@ export default function WithdrawalModalForm() {
                   <h2 className="text-fluid-base font-semibold">
                     Withdraw Funds
                   </h2>
-                  <p className="text-fluid-xxs text-slate-300 mt-0.5">
+                  <p className="text-fluid-xs text-slate-300 mt-0.5">
                     Transfer to your bank account
                   </p>
                 </div>
@@ -160,7 +160,7 @@ export default function WithdrawalModalForm() {
                 </label>
 
                 {/* Send Amount */}
-                <div className="bg-slate-50 rounded-md p-3 border border-slate-200">
+                <div className="bg-slate-50 rounded p-3 border border-slate-200">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-fluid-xs text-slate-600">
@@ -178,7 +178,7 @@ export default function WithdrawalModalForm() {
                         type="number"
                         placeholder="0.00"
                         onChange={handleAmountChange}
-                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-fluid-xs font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-300 rounded text-fluid-xs font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -205,17 +205,17 @@ export default function WithdrawalModalForm() {
                 </div>
 
                 {/* Receive Amount */}
-                <div className="bg-green-50 rounded-md p-3 border border-green-200">
+                <div className="bg-green-50 rounded p-3 border border-green-200">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-fluid-xs text-green-700">
                         You Receive
                       </span>
-                      <span className="text-fluid-xxs font-normal text-green-800">
+                      <span className="text-fluid-xs font-normal text-green-800">
                         {user.base_currency}
                       </span>
                     </div>
-                    <div className="bg-white rounded-lg px-4 py-3 border border-green-300">
+                    <div className="bg-white rounded px-4 py-3 border border-green-300">
                       <p className="text-fluid-xs font-semibold text-green-800">
                         {formatPrice(
                           amount_data.currency_amount,
@@ -232,7 +232,7 @@ export default function WithdrawalModalForm() {
                 <label className="block text-fluid-xs font-normal text-slate-700">
                   Security PIN
                 </label>
-                <div className="bg-slate-50 rounded-md p-3 border border-slate-200">
+                <div className="bg-slate-50 rounded p-3 border border-slate-200">
                   <div className="space-y-2">
                     <p className="text-center text-fluid-xs text-slate-600 mb-2">
                       Enter your 4-digit wallet PIN
@@ -265,7 +265,7 @@ export default function WithdrawalModalForm() {
                       <Link
                         onClick={() => toggleWithdrawalFormPopup(false)}
                         href="/artist/app/wallet/pin_recovery"
-                        className="text-fluid-xxs text-slate-600 underline hover:text-dark transition-colors"
+                        className="text-fluid-xs text-slate-600 underline hover:text-dark transition-colors"
                       >
                         Forgot your PIN?
                       </Link>
@@ -276,7 +276,7 @@ export default function WithdrawalModalForm() {
 
               {/* Exchange Rate Info */}
               {amount_data.amount > 0 && amount_data.currency_amount > 0 && (
-                <div className="bg-blue-50 rounded-lg p-2 border border-blue-200">
+                <div className="bg-blue-50 rounded p-2 border border-blue-200">
                   <div className="flex items-center gap-2">
                     <svg
                       className="w-4 h-4 text-blue-600"
@@ -291,7 +291,7 @@ export default function WithdrawalModalForm() {
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <p className="text-fluid-xxs font-semibold text-blue-700">
+                    <p className="text-fluid-xs font-semibold text-blue-700">
                       Exchange rate: 1 USD ={" "}
                       {(
                         amount_data.currency_amount / amount_data.amount
@@ -306,7 +306,7 @@ export default function WithdrawalModalForm() {
               <button
                 onClick={handleWithdrawal}
                 disabled={withdrawalLoading || amount_data.amount === 0}
-                className="w-full py-2 bg-dark text-white font-medium rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+                className="w-full py-2 bg-dark text-white font-medium rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xs"
               >
                 {withdrawalLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -335,7 +335,7 @@ export default function WithdrawalModalForm() {
 
               {/* Security Notice */}
               <div className="text-center">
-                <p className="text-fluid-xxs text-slate-500 flex items-center justify-center">
+                <p className="text-fluid-xs text-slate-500 flex items-center justify-center">
                   <svg
                     className="w-3 h-3"
                     fill="none"

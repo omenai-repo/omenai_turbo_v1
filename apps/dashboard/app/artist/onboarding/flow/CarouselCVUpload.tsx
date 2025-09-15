@@ -20,7 +20,7 @@ export default function CarouselCVUpload({
 
   return (
     <div
-      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/30 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[10px] shadow-md`}
+      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/30 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded shadow-md`}
     >
       <div className="w-full">
         <h2 className="text-fluid-xs font-medium mb-6 text-left">
@@ -38,14 +38,14 @@ export default function CarouselCVUpload({
                 false
               );
             }}
-            className="w-full h-full border border-dashed text-fluid-xs grid place-items-center duration-300 border-dark/30 rounded-[10px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-full h-full border border-dashed text-fluid-xs grid place-items-center duration-300 border-dark/30 rounded outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
           >
             <span className="break-words">{cv.name.substring(0, 30)}</span>
           </button>
         ) : (
           <button
             type="button"
-            className="w-full h-full border border-dashed text-fluid-xs grid place-items-center duration-300 border-dark/30 rounded-[10px] outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-full h-full border border-dashed text-fluid-xs grid place-items-center duration-300 border-dark/30 rounded outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
             onClick={() => {
               imagePickerRef.current?.click();
             }}

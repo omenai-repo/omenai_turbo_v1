@@ -12,7 +12,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 
 const config: CombinedConfig = {
-  ...standardRateLimit,
+  ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
 

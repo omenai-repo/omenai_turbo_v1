@@ -24,7 +24,7 @@ export default function PreferencePicker({
         <ul className="flex flex-wrap justify-center gap-5 text-dark font-medium text-fluid-sm">
           <li onClick={() => handleFilterChange("All")}>
             <button
-              className={`rounded-md w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-fluid-xs transition-all ease-linear duration-100 px-4 py-2 ${
+              className={`rounded w-fit border  font-semibold border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-fluid-xs transition-all ease-linear duration-100 px-4 py-2 ${
                 curated_preference === "All"
                   ? "bg-dark text-white"
                   : "bg-transparent text-dark"
@@ -40,7 +40,7 @@ export default function PreferencePicker({
                 key={preference}
               >
                 <button
-                  className={`rounded-md w-fit border border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-fluid-xs transition-all ease-linear duration-100 px-4 py-2 ${
+                  className={`rounded w-fit border  font-semibold border-[#E0E0E0] hover:ring-2 hover:ring-[#E0E0E0] text-fluid-xs transition-all ease-linear duration-100 px-4 py-2 ${
                     curated_preference === preference
                       ? "bg-dark text-white"
                       : "bg-transparent text-dark"

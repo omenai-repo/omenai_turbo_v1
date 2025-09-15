@@ -90,7 +90,7 @@ export default function TeamManagement() {
         </div>
 
         {/* Main Content Area with Card-like Styling */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200/50 p-8 backdrop-blur-sm">
+        <div className="bg-white rounded shadow-xl border border-gray-200/50 p-8 backdrop-blur-sm">
           <TeamMembersList members={teamMembers} />
         </div>
 

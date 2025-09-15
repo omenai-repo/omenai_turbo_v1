@@ -13,7 +13,7 @@ export default function Accordion({ header, items }: AccordionPropTypes) {
         <hr className="border-1 border-[#e0e0e0]" />
         <div className="py-4 cursor-pointer" onClick={() => setOpen(!open)}>
           <div className="flex justify-between items-center cursor-pointer">
-            <p className="text-fluid-xs font-medium ">{header}</p>
+            <p className="text-fluid-base font-medium  ">{header}</p>
             <MdOutlineKeyboardArrowDown
               className={`${open ? "rotate-180" : "rotate-[-180]"} duration-300`}
             />

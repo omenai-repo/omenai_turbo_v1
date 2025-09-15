@@ -23,7 +23,7 @@ export default function ForbiddenPage({
 
       <div className="relative max-w-md w-full">
         {/* Main card */}
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200/50 p-8 text-center">
+        <div className="bg-white rounded shadow-2xl border border-gray-200/50 p-8 text-center">
           {/* Icon */}
           <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
             <ShieldX className="w-10 h-10 text-red-600" />
@@ -44,7 +44,7 @@ export default function ForbiddenPage({
           </p>
 
           {/* Additional info card */}
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
+          <div className="bg-amber-50 border border-amber-200 rounded p-4 mb-8">
             <div className="flex items-start gap-3">
               <Lock className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
               <div className="text-left">
@@ -64,7 +64,7 @@ export default function ForbiddenPage({
             {onGoBack && (
               <button
                 onClick={onGoBack}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Go Back
@@ -73,7 +73,7 @@ export default function ForbiddenPage({
             {onGoHome && (
               <button
                 onClick={onGoHome}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded transition-colors"
               >
                 <Home className="w-4 h-4" />
                 Go Home

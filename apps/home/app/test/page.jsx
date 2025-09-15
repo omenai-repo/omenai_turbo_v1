@@ -174,7 +174,7 @@ const CreditCardForm = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white rounded shadow-md p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Payment Information
           </h2>
@@ -195,7 +195,7 @@ const CreditCardForm = () => {
                 onChange={handleChange("cardNumber")}
                 onBlur={handleBlur("cardNumber")}
                 placeholder="1234 5678 9012 3456"
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   errors.cardNumber && touched.cardNumber
                     ? "border-red-500"
                     : "border-gray-300"
@@ -227,7 +227,7 @@ const CreditCardForm = () => {
                 onChange={handleChange("name")}
                 onBlur={handleBlur("name")}
                 placeholder="John Doe"
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   errors.name && touched.name
                     ? "border-red-500"
                     : "border-gray-300"
@@ -261,7 +261,7 @@ const CreditCardForm = () => {
                   onChange={handleChange("expirationMonth")}
                   onBlur={handleBlur("expirationMonth")}
                   placeholder="MM"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     errors.expirationMonth && touched.expirationMonth
                       ? "border-red-500"
                       : "border-gray-300"
@@ -293,7 +293,7 @@ const CreditCardForm = () => {
                   onChange={handleChange("expirationYear")}
                   onBlur={handleBlur("expirationYear")}
                   placeholder="YYYY"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     errors.expirationYear && touched.expirationYear
                       ? "border-red-500"
                       : "border-gray-300"
@@ -325,7 +325,7 @@ const CreditCardForm = () => {
                   onChange={handleChange("cvv")}
                   onBlur={handleBlur("cvv")}
                   placeholder="123"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     errors.cvv && touched.cvv
                       ? "border-red-500"
                       : "border-gray-300"
@@ -348,7 +348,7 @@ const CreditCardForm = () => {
               type="button"
               onClick={handleSubmit}
               disabled={!isFormValid}
-              className={`w-full py-2 px-4 rounded-md font-medium transition-colors ${
+              className={`w-full py-2 px-4 rounded font-medium transition-colors ${
                 isFormValid
                   ? "bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"

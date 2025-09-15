@@ -90,7 +90,7 @@ export default function MigrationUpgradeCheckoutItem({
   return (
     <div className="max-w-lg space-y-6 p-4">
       {/* Main Subscription Card */}
-      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-gray-100 rounded overflow-hidden shadow-sm">
         {/* Header Section */}
         <div className="bg-gray-900 p-6 text-white">
           <p className="text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">
@@ -142,7 +142,7 @@ export default function MigrationUpgradeCheckoutItem({
 
             {/* Notice */}
             {!plan_change_params.shouldCharge && (
-              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-md">
+              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded">
                 <p className="text-sm font-medium text-amber-800">
                   <span className="font-semibold">Note:</span> Your plan change
                   will take effect at the end of your current billing cycle.

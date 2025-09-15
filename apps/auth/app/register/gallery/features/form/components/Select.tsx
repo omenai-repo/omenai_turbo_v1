@@ -73,10 +73,7 @@ export default function SelectInput({
         className="flex flex-col gap-y-1"
       >
         <div className="flex flex-col gap-1">
-          <label
-            htmlFor={name}
-            className="text-dark font-normal text-fluid-xxs"
-          >
+          <label htmlFor={name} className="text-dark font-normal text-fluid-xs">
             {label}
           </label>
           <select
@@ -89,7 +86,7 @@ export default function SelectInput({
                 (gallerySignupData.state === "" ||
                   gallerySignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded-md placeholder:text-fluid-xs placeholder:text-dark/40"
+            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xs placeholder:text-dark/40"
           >
             <option value="" className="text-dark/40">
               Select {labelText}
@@ -102,7 +99,7 @@ export default function SelectInput({
                       key={item.code}
                       value={item.name}
                       data-code={item.code}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xs font-medium text-dark/40"
                     >
                       {item.name}
                     </option>
@@ -115,7 +112,7 @@ export default function SelectInput({
                       key={state.isoCode}
                       value={state.name}
                       data-code={state.isoCode}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xs font-medium text-dark/40"
                     >
                       {state.name}
                     </option>
@@ -129,7 +126,7 @@ export default function SelectInput({
                       key={city.name}
                       value={city.name}
                       data-code={city.name}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xs font-medium text-dark/40"
                     >
                       {city.name}
                     </option>

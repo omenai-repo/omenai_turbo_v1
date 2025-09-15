@@ -2,7 +2,6 @@
 import NextTopLoader from "nextjs-toploader";
 import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
-import { useWindowSize } from "usehooks-ts";
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
@@ -22,6 +21,8 @@ import {
 } from "@omenai/url-config/src/config";
 import { useRouter } from "next/navigation";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { UpdateAddressModal } from "./modals/UpdateAddressModal";
+import { UpdateLogoModal } from "./modals/UpdateLogoModal";
 
 export default function ArtistDashboardLayout({
   children,
@@ -69,15 +70,17 @@ export default function ArtistDashboardLayout({
           <PageLayout />
 
           <div
-            className={`w-full xl:ml-[19rem] md:ml-[15rem]  rounded-md relative duration-200`}
+            className={`w-full xl:ml-[19rem] md:ml-[15rem]  rounded relative duration-200`}
           >
             <Appbar />
-            <div className="h-auto rounded-lg relative my-5">
+            <div className="h-auto rounded relative my-5">
               <UploadOrderRejectionReason />
               <UpdatePasswordModal />
               <DeleteAccountConfirmationModal />
               <WithdrawalModal />
               <WalletPinModal />
+              <UpdateAddressModal />
+              <UpdateLogoModal />
 
               {children}
             </div>

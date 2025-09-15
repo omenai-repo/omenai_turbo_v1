@@ -7,18 +7,6 @@ module.exports = {
       },
       center: true,
     },
-    // fontSize: {
-    //   xxxs: "0.56rem",
-    //   xxs: "0.625rem",
-    //   xs: "0.8125rem",
-    //   base: "1rem",
-    //   sm: "1.2rem",
-    //   md: "1.44rem",
-    //   lg: "1.625rem",
-    //   xl: "2.074rem",
-    //   "2xl": "2.488rem",
-    //   "3xl": "2.986rem",
-    // },
     extend: {
       colors: {
         primary: "#2A9EDF",
@@ -38,19 +26,20 @@ module.exports = {
         authSideDark: "#0f172a",
       },
       fontSize: {
-        "fluid-xxs": "clamp(0.625rem, 0.25vw + 0.5rem, 0.75rem)", // 10 > 12px
-        "fluid-xs": "clamp(0.75rem, 0.9vw + 0.2rem, 0.875rem)", // 12px → 14px
-        "fluid-base": "clamp(0.875rem, 1vw + 0.2rem, 1rem)", // 14px → 16px
-        "fluid-sm": "clamp(1rem, 1.1vw + 0.2rem, 1.125rem)", // 16px → 18px
-        "fluid-md": "clamp(1.125rem, 1.2vw + 0.25rem, 1.25rem)", // 18px → 20px
-        "fluid-lg": "clamp(1.25rem, 1.5vw + 0.25rem, 1.5rem)", // 20px → 24px
-        "fluid-xl": "clamp(1.5rem, 2vw + 0.25rem, 1.875rem)", // 24px → 30px
-        "fluid-2xl": "clamp(1.875rem, 2.5vw + 0.25rem, 2.25rem)", // 30px → 36px
-        "fluid-3xl": "clamp(2.25rem, 3vw + 0.25rem, 2.625rem)", // 36px → 42px
+        "fluid-3xs": "clamp(0.625rem, 0.2vw + 0.55rem, 0.75rem)", // 10 → 12px
+        "fluid-xxs": "clamp(0.7rem, 0.25vw + 0.65rem, 0.79rem)", // ~11.2 → 12.6px
+        "fluid-xs": "clamp(0.79rem, 0.35vw + 0.7rem, 0.889rem)", // ~12.6 → 14.2px
+        "fluid-base": "clamp(0.889rem, 0.5vw + 0.8rem, 1rem)", // ~14.2 → 16px
+        "fluid-sm": "clamp(1rem, 0.6vw + 0.9rem, 1.125rem)", // 16 → 18px
+        "fluid-md": "clamp(1.125rem, 0.8vw + 1rem, 1.266rem)", // 18 → 20.25px
+        "fluid-lg": "clamp(1.266rem, 1vw + 1.1rem, 1.422rem)", // ~20.25 → 22.8px
+        "fluid-xl": "clamp(1.422rem, 1.2vw + 1.2rem, 1.602rem)", // ~22.8 → 25.6px
+        "fluid-2xl": "clamp(1.602rem, 1.5vw + 1.3rem, 1.802rem)", // ~25.6 → 28.8px
+        "fluid-3xl": "clamp(1.802rem, 2vw + 1.4rem, 2.027rem)", // ~28.8 → 32px
       },
+
       gridTemplateColumns: {
         "3cols": "repeat(3, minmax(0, 1fr))",
-        // Add more custom grid templates as needed
       },
       screens: {
         xs: "460px",
@@ -64,9 +53,9 @@ module.exports = {
         "3xl": "1560px",
       },
       fontFamily: {
-        sans: ["var(--font-sans-serif)"],
+        sans: ["var(--font-work_sans)", "sans-serif"], // Inter is now the global default
+        heading: ["var(--font-cormorant)", "serif"], // use only when needed
       },
-
       backgroundImage: {
         "hero-image": "url('/images/home_bg.png')",
         "billing-card": "url('/images/curve.jpg')",
@@ -74,6 +63,5 @@ module.exports = {
       },
     },
   },
-
   plugins: [require("flowbite/plugin")],
 };

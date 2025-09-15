@@ -45,7 +45,7 @@ export default function FilterOptionBox({
         className={`z-10 w-full bg-white border border-dark/10 dark:bg-gray-700`}
       >
         <ul
-          className="p-3 space-y-1 text-fluid-sm text-dark dark:text-gray-200"
+          className="p-3 space-y-1 text-fluid-sm text-dark dark:text-dark/50"
           aria-labelledby="dropdownBgHoverButton"
         >
           {filters.map((filter) => {

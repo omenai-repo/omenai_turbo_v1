@@ -86,7 +86,7 @@ export default function RefreshStripe() {
         </div>
       ) : (
         <div className="grid place-items-center h-[78vh]">
-          <div className="bg-white border border-[#E0E0E0] text-dark p-6 rounded-lg w-full max-w-xl shadow-xl cursor-default relative">
+          <div className="bg-white border border-[#E0E0E0] text-dark p-6 rounded w-full max-w-xl shadow-xl cursor-default relative">
             <h1 className="text-fluid-xs font-normal text-dark mb-1">
               Looks like you didn&apos;t complete your Stripe Onboarding.
             </h1>
@@ -106,7 +106,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={user.name}
-                  className="h-[35px] p-5 rounded-md my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+                  className="h-[35px] p-5 rounded my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 />
               </div>
               <div className="relative w-full">
@@ -120,7 +120,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={user.email}
-                  className="h-[35px] p-5 rounded-md my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+                  className="h-[35px] p-5 rounded my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function RefreshStripe() {
             </>
             <button
               disabled={accountLinkCreatePending}
-              className="h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
               onClick={handleAccountLink}
             >
               {accountLinkCreatePending ? (

@@ -3,12 +3,15 @@ import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualS
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 
 const config: CombinedConfig = {
-  ...standardRateLimit,
+  ...strictRateLimit,
   allowedRoles: ["user"],
 };
 

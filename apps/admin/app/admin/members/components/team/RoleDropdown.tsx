@@ -205,7 +205,7 @@ export default function RoleDropdown({
         {!isMemberVerified &&
           (user.access_role === "Owner" || user.access_role === "Admin") && (
             <>
-              <span className="text-amber-500 text-fluid-xxs">
+              <span className="text-amber-500 text-fluid-xs">
                 Team member is yet to accept this invite
               </span>
 

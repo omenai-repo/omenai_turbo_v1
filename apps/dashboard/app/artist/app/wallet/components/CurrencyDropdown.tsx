@@ -13,7 +13,7 @@ export default function CurrencyDropdown() {
       {/* Dropdown Button */}
       <button
         // onClick={() => setIsOpen(!isOpen)}
-        className="flex gap-x-2 items-center gap-2 px-4 py-2 ring-1 border-0 bg-white ring-dark/10 text-fluid-xxs text-dark rounded-md hover:bg-gray-800 transition"
+        className="flex gap-x-2 items-center gap-2 px-4 py-2 ring-1 border-0 bg-white ring-dark/10 text-fluid-xs text-dark rounded hover:bg-gray-800 transition"
       >
         <Image src={"/icons/usa.png"} alt="usa icon" height={24} width={24} />
         USD
@@ -26,8 +26,8 @@ export default function CurrencyDropdown() {
 
       {/* Dropdown Menu */}
       {/* {isOpen && (
-        <div className="absolute mt-2 w-fit px-4 bg-white shadow-lg z-30 rounded-[10px] overflow-hidden">
-          <ul className="py-1 text-dark text-fluid-xxs">
+        <div className="absolute mt-2 w-fit px-4 bg-white shadow-lg z-30 rounded overflow-hidden">
+          <ul className="py-1 text-dark text-fluid-xs">
             {getDynamicYears().map((year) => {
               return (
                 <li key={year}>

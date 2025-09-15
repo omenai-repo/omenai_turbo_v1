@@ -38,9 +38,9 @@ export const ArtworkImage = ({
 
   return (
     <Link href={`/artwork/${title}`} className="w-[250px]">
-      <div className="relative flex items-end max-w-[250px] w-fit rounded-md mb-4">
+      <div className="relative flex items-end max-w-[250px] w-fit rounded mb-4">
         {pricing?.price && (
-          <div className="absolute top-4 right-4 z-10 p-1 rounded-md bg-white border-dark/10 grid place-items-center">
+          <div className="absolute top-4 right-4 z-10 p-1 rounded bg-white border-dark/10 grid place-items-center">
             <LikeComponent
               impressions={impressions}
               likeIds={likeIds}
@@ -53,13 +53,13 @@ export const ArtworkImage = ({
           src={image_href}
           alt="artwork image"
           loading="lazy"
-          className="w-fit max-w-[250px] rounded-sm"
+          className="w-fit max-w-[250px] rounded"
         />
 
-        <div className="absolute bottom-0 flex justify-between items-center gap-y-[0.1rem] text-white px-2 py-4 z-10 bg-dark/30 w-full rounded-sm cursor-pointer">
+        <div className="absolute bottom-0 flex justify-between items-center gap-y-[0.1rem] text-white px-2 py-4 z-10 bg-dark/30 w-full rounded cursor-pointer">
           <div className="flex-col flex gap-y-[0.1rem]">
-            <span className="font-normal text-fluid-xs">{title}</span>
-            <span className="text-fluid-xs text-[#fafafa]">{author}</span>
+            <span className="font-normal text-fluid-xs ">{title}</span>
+            <span className="text-fluid-xs text-[#fafafa] ">{author}</span>
           </div>
 
           {pricing?.price &&

@@ -22,14 +22,14 @@ export default function OverviewOrdersCard({
   const image_url = getOptimizedImage(url, "thumbnail", 40);
 
   return (
-    <div className="flex justify-between items-center px-5 py-3 rounded-lg shadow w-full">
+    <div className="flex justify-between items-center px-5 py-3 rounded shadow w-full">
       <div className=" flex gap-x-3">
         <Image
           src={image_url}
           alt={title}
           height={100}
           width={100}
-          className="rounded-[10px] w-[100px] h-[100px]"
+          className="rounded w-[100px] h-[100px]"
         />
         <div className="flex flex-col">
           <p className="text-dark font-medium text-fluid-base">{title}</p>{" "}
@@ -40,7 +40,7 @@ export default function OverviewOrdersCard({
         <span className="text-dark font-medium text-fluid-xs">
           {order_date}
         </span>
-        <span className="text-amber-600 font-medium px-2 py-1 text-[12px] rounded-md bg-amber-200/50">
+        <span className="text-amber-600 font-medium px-2 py-1 text-[12px] rounded bg-amber-200/50">
           PENDING
         </span>
       </div>

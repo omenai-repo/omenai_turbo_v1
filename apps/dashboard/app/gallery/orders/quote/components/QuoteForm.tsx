@@ -204,9 +204,9 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
   return (
     <div className="max-w-7xl my-4 pb-4">
       {/* Header Section */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+      <div className="bg-white rounded shadow-sm border border-slate-200 p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="p-3 bg-blue-100 rounded-md">
+          <div className="p-3 bg-blue-100 rounded">
             <svg
               className="w-6 h-6 text-dark"
               fill="none"
@@ -238,7 +238,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
         <div className="order-2 lg:order-1">
           <form onSubmit={handleSubmitQuoteFees} className="space-y-6">
             {/* Dimensions Card */}
-            <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
               <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                 <h2 className="font-semibold text-dark flex items-center gap-2">
                   <svg
@@ -272,7 +272,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         cm
@@ -292,7 +292,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         cm
@@ -312,7 +312,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         cm
@@ -332,7 +332,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         kg
@@ -344,7 +344,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             </div>
 
             {/* Exhibition Status */}
-            <div className="bg-white rounded-md shadow-sm border border-slate-200 p-6">
+            <div className="bg-white rounded shadow-sm border border-slate-200 p-6">
               <div className="space-y-4">
                 <NativeSelect
                   size="md"
@@ -382,7 +382,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             </div>
 
             {/* Special Instructions */}
-            <div className="bg-white rounded-md shadow-sm border border-slate-200 p-6">
+            <div className="bg-white rounded shadow-sm border border-slate-200 p-6">
               <label className="block text-sm font-medium text-slate-700 mb-3">
                 Special Instructions
                 <span className="text-slate-400 font-normal ml-1">
@@ -394,7 +394,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Add any special pickup instructions, handling requirements, or access details..."
                 rows={2}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xs"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xs"
               />
             </div>
 
@@ -435,7 +435,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               <button
                 type="submit"
                 disabled={loading || !terms_checked}
-                className="w-full sm:w-auto px-4 py-2 bg-dark mb-4 text-white font-normal text-fluid-xs rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
+                className="w-full sm:w-auto px-4 py-2 bg-dark mb-4 text-white font-normal text-fluid-xs rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -467,7 +467,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
         {/* Order Details Card */}
         <div className="order-1 lg:order-2">
-          <div className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden sticky top-6">
+          <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden sticky top-6">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-slate-200">
               <h3 className="font-semibold text-dark flex items-center gap-2">
@@ -492,7 +492,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <div className="p-6">
               {/* Artwork Image */}
               <div className="mb-6">
-                <div className="relative rounded-md overflow-hidden shadow-md p-4 space-y-3">
+                <div className="relative rounded overflow-hidden shadow-md p-4 space-y-3">
                   <Image
                     src={image_url}
                     alt={order_data!.data.artwork_data.title}
@@ -504,7 +504,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     <p className=" font-semibold text-fluid-xs">
                       {order_data?.data.artwork_data.title}
                     </p>
-                    <p className="font-medium text-fluid-xxs">
+                    <p className="font-medium text-fluid-xs">
                       {order_data?.data.artwork_data.artist}
                     </p>
                   </div>
@@ -552,7 +552,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
                 {/* Status Badge */}
                 <div className="pt-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 rounded-lg text-sm font-medium">
+                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-700 rounded text-sm font-medium">
                     <svg
                       className="w-4 h-4"
                       fill="none"

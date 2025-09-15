@@ -27,21 +27,21 @@ export default function OrderDetails({
     <div className="p-4 max-w-[600px]">
       <div className="w-fit h-full">
         <div className="w-full">
-          <div className="shadow-lg px-5 py-6 rounded-[10px]">
+          <div className="shadow-lg px-5 py-6 rounded">
             <div className="flex flex-col gap-2">
               <Image
                 src={image_href}
                 height={100}
                 width={100}
                 alt={order.artwork_data.title + " image"}
-                className=" w-[100px] h-[100px] cursor-pointer rounded-md"
+                className=" w-[100px] h-[100px] cursor-pointer rounded"
               />
               <div className="">
                 <div className="flex flex-col gap-y-1">
                   <p className="font-semibold text-dark text-fluid-xs">
                     {order.artwork_data.title}
                   </p>
-                  <p className="font-medium text-fluid-xxs text-dark">
+                  <p className="font-medium text-fluid-xs text-dark">
                     {order.artwork_data.artist}
                   </p>
                 </div>

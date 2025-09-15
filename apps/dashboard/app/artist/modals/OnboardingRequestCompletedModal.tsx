@@ -20,7 +20,7 @@ export const OnboardingRequestCompleted = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white text-dark px-6 rounded-[10px] py-12 w-full max-w-lg shadow-xl cursor-default relative h-auto"
+            className="bg-white text-dark px-6 rounded py-12 w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">

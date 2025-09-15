@@ -49,7 +49,7 @@ export const OrderAcceptedEmail: React.FC<OrderAcceptedEmailProps> = ({
       </Preview>
       <Tailwind>
         <Body className="bg-gray-50 font-sans">
-          <Container className="mx-auto my-10 bg-white rounded-lg shadow-sm max-w-[600px]">
+          <Container className="mx-auto my-10 bg-white rounded shadow-sm max-w-[600px]">
             {/* Header Section */}
             <Section className="px-8 py-6 text-center border-b border-gray-200">
               <Img
@@ -108,7 +108,7 @@ export const OrderAcceptedEmail: React.FC<OrderAcceptedEmailProps> = ({
               <Section className="text-center my-8">
                 <Button
                   href={paymentUrl}
-                  className="px-8 py-4 rounded-lg font-medium text-white"
+                  className="px-8 py-4 rounded font-medium text-white"
                   style={{
                     backgroundColor: EMAIL_COLORS.primary,
                     color: EMAIL_COLORS.background,

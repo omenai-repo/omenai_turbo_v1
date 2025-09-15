@@ -6,12 +6,12 @@ type AppbarTypes = {
 export default function DashboardIndicator({ artist_name }: AppbarTypes) {
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-fluid-xxs">
+      <div className="text-fluid-xs">
         <p className="font-normal text-dark">
           Welcome back, <strong>{artist_name}</strong>
         </p>
 
-        <p className="text-dark text-fluid-xxs">
+        <p className="text-dark text-fluid-xs">
           <span className="font-normal capitalize text-dark">
             {getFormattedDateTime()}
           </span>

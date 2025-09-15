@@ -94,12 +94,12 @@ export default function ArtworkCanvas({
       <div className="flex flex-col w-full h-full justify-end">
         <div
           className="relative w-full artContainer"
-          // onMouseMove={handleMouseMove}
-          // onMouseLeave={handleMouseLeave}
-          // ref={containerRef}
-          // onTouchMove={handleTouchMove}
-          // onTouchStart={() => setZoomScale(2)} // Start zoom on touch
-          // onTouchEnd={handleTouchEnd}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          ref={containerRef}
+          onTouchMove={handleTouchMove}
+          onTouchStart={() => setZoomScale(2)} // Start zoom on touch
+          onTouchEnd={handleTouchEnd}
         >
           <Link href={`${url}/artwork/${name}`} className="relative">
             <Image
@@ -117,7 +117,7 @@ export default function ArtworkCanvas({
             />
           </Link>
           {isDashboard ? null : (
-            <div className="absolute bottom-3 right-3 p-1 rounded-md bg-white border-dark/10 grid place-items-center">
+            <div className="absolute bottom-3 right-3 p-1 rounded bg-white border-dark/10 grid place-items-center">
               <LikeComponent
                 impressions={impressions}
                 likeIds={likeIds}
@@ -130,12 +130,12 @@ export default function ArtworkCanvas({
 
         <div className=" bg-transparent pr-3 py-1 w-full">
           <div className="flex flex-col my-2">
-            <p className="font-normal text-fluid-xs text-dark text-ellipsis overflow-hidden whitespace-nowrap">
+            <p className="font-normal  text-fluid-xs text-dark text-ellipsis overflow-hidden whitespace-nowrap">
               {name}
             </p>
 
             <div className="flex justify-between items-center">
-              <p className="font-normal text-[#707070] italic text-fluid-xs text-ellipsis overflow-hidden whitespace-nowrap">
+              <p className="font-normal  text-[#707070] italic text-fluid-xs text-ellipsis overflow-hidden whitespace-nowrap">
                 {artist}
               </p>
               {/* <HiPencil /> */}

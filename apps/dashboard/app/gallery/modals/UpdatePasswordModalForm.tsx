@@ -101,11 +101,11 @@ export default function UpdatePasswordModalForm() {
   return (
     <div className="w-full">
       {/* Design 1: Clean Card with Progress */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded shadow-lg border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="bg-slate-50 px-6 py-5 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-slate-900 rounded-lg">
+            <div className="p-2 bg-slate-900 rounded">
               <svg
                 className="w-5 h-5 text-white"
                 fill="none"
@@ -146,7 +146,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Enter your new password"
-                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xs"
+                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xs"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -177,7 +177,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Confirm your new password"
-                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xs"
+                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xs"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {info.confirmPassword &&
@@ -227,7 +227,7 @@ export default function UpdatePasswordModalForm() {
                 type="text"
                 required
                 placeholder="Enter 6-digit code"
-                className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-dark/30 placeholder:font-normal placeholder:text-fluid-xs focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors font-mono tracking-wider"
+                className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 placeholder:font-normal placeholder:text-fluid-xs focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors font-mono tracking-wider"
               />
               <button
                 type="button"
@@ -239,7 +239,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-3 bg-dark text-white font-normal rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-dark focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xs"
+                className="px-4 py-3 bg-dark text-white font-normal rounded hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-dark focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xs"
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>
@@ -251,7 +251,7 @@ export default function UpdatePasswordModalForm() {
 
           {/* Error Messages */}
           {errorList.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="bg-red-50 border border-red-200 rounded p-4">
               <div className="space-y-2">
                 {errorList.map((error, index) => (
                   <div
@@ -276,7 +276,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-slate-900 text-white font-normal rounded-md shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
+            className="w-full py-3 px-6 bg-slate-900 text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

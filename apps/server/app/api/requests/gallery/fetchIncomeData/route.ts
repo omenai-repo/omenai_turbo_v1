@@ -29,7 +29,7 @@ export const GET = withAppRouterHighlight(async function GET(
           netIncome: {
             $sum: {
               $subtract: [
-                { $ifNull: ["$trans_pricing.amount_total", 0] },
+                { $ifNull: ["$trans_pricing.unit_price", 0] },
                 { $ifNull: ["$trans_pricing.commission", 0] },
               ],
             },

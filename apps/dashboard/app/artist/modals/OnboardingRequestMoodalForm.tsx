@@ -23,7 +23,7 @@ export default function OnboardingRequestModalForm() {
       />
       <div className="w-full flex flex-col space-y-6 text-center">
         <h5 className="font-semibold">Onboarding completed successfully</h5>
-        <p className="text-fluid-xxs">
+        <p className="text-fluid-xs">
           We have received your information and are currently verifying your
           details. This process typically takes between 24 to 48 hours. We
           appreciate your patience.
@@ -31,7 +31,7 @@ export default function OnboardingRequestModalForm() {
         <Link href={`${dashboard_url()}/artist/app/overview`}>
           <button
             onClick={() => setOpenOnboardingCompletedModal(false)}
-            className="text-fluid-xxs h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white font-normal"
+            className="text-fluid-xs h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white font-normal"
           >
             Go to dashboard
           </button>

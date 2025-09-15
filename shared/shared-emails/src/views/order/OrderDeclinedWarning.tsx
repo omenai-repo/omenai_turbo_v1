@@ -35,7 +35,7 @@ export const OrderDeclinedWarningEmail: React.FC<
         <Body className="bg-gray-50 font-sans">
           <Container
             style={EMAIL_STYLES.container}
-            className="my-10 rounded-lg shadow-sm"
+            className="my-10 rounded shadow-sm"
           >
             {/* Header Section */}
             <Section className="px-8 py-6 text-center border-b border-gray-200">
@@ -71,7 +71,7 @@ export const OrderDeclinedWarningEmail: React.FC<
               </Text>
 
               {/* Key Information Box */}
-              <Section className="my-6 p-6 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <Section className="my-6 p-6 bg-amber-50 rounded border-l-4 border-amber-400">
                 <Text
                   style={{
                     ...EMAIL_STYLES.text.base,

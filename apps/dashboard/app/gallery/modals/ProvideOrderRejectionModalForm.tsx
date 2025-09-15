@@ -86,7 +86,7 @@ export default function ProvideOrderRejectionModalForm() {
               required
               rows={5}
               placeholder="e.g Artwork no longer available"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out p-6 rounded-[10px] placeholder:text-dark/40 text-fluid-xs font-medium placeholder:text-fluid-xs"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out p-6 rounded placeholder:text-dark/40 text-fluid-xs font-medium placeholder:text-fluid-xs"
             />
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function ProvideOrderRejectionModalForm() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[35px] p-5 rounded-md w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
           >
             {loading ? <LoadSmall /> : " Decline order"}
           </button>

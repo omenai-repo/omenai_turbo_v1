@@ -1,12 +1,20 @@
 import "./globals.css";
-import { DM_Sans, Poppins } from "next/font/google";
+import { Cormorant_Garamond, Work_Sans } from "next/font/google";
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
 
-const poppins = Poppins({
+const work_sans = Work_Sans({
   subsets: ["latin"],
-  variable: "--font-sans_serif",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-work_sans",
+  display: "swap",
+});
+
+// Heading font → Cormorant Garamond
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 export default async function AuthDashboardRootLayout({
   children,
@@ -15,7 +23,9 @@ export default async function AuthDashboardRootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} flex flex-col justify-center`}>
+      <body
+        className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col justify-center`}
+      >
         <LayoutWrapper children={children} />
         <Analytics />
       </body>

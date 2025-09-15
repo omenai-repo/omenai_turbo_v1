@@ -28,7 +28,7 @@ export const TextareaCard = (props: Props) => {
             handleChange(name, e.target.value)
           }
           className={
-            "p-3 border border-[#E0E0E0] text-fluid-xs placeholder:text-dark font-light placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded-[10px]"
+            "p-3 border border-[#E0E0E0] text-fluid-xs placeholder:text-dark font-normal placeholder:text-fluid-xs bg-white  w-full focus:border-none focus:ring-1 focus:ring-dark focus:outline-none rounded"
           }
           {...rest}
         />

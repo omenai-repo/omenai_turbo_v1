@@ -50,7 +50,6 @@ export default function OrdersGroup() {
           orders: !result ? [] : result.isOk ? result.data : [],
         };
       } catch (error) {
-        console.error(error);
         handleError();
       }
     },
@@ -59,13 +58,12 @@ export default function OrdersGroup() {
   if (isLoading) {
     return <OrderSkeleton />;
   }
-  console.log(data);
   if (!data?.isSubmitted)
     router.replace(`/gallery/payouts/refresh?id=${data!.id}`);
 
   return (
     <>
-      <div className="w-full mt-12">
+      <div className="w-full mt-4">
         {!user.gallery_verified && !data?.isSubActive && (
           <NoVerificationBlock gallery_name={user.name as string} />
         )}

@@ -30,7 +30,7 @@ export default function OrdersGroup() {
 
   return (
     <>
-      <div className="w-full mt-12">
+      <div className="w-full mt-4">
         {isLoading ? <OrderSkeleton /> : <OrdersTab orders={orders} />}
       </div>
     </>

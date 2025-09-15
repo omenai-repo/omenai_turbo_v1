@@ -29,7 +29,7 @@ export default function EditorialItem({
 
   return (
     <>
-      <div className="p-5 relative bg-dark flex flex-col gap-[1.5rem] rounded-[10px] h-[400px] max-w-[300px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px]">
+      <div className="p-5 relative bg-dark flex flex-col gap-[1.5rem] rounded h-[400px] max-w-[300px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px]">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <Image
@@ -37,7 +37,7 @@ export default function EditorialItem({
             alt={title}
             width={200}
             height={200}
-            className="h-[200px] w-full rounded-[10px] object-cover aspect-square object-top"
+            className="h-[200px] w-full rounded object-cover aspect-square object-top"
           />
         ) : (
           <p>No cover</p>
@@ -53,7 +53,7 @@ export default function EditorialItem({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <button className="flex bg-white text-dark px-4 py-2 items-center gap-x-2 rounded-md text-fluid-xs whitespace-nowrap">
+              <button className="flex bg-white text-dark px-4 py-2 items-center gap-x-2 rounded text-fluid-xs whitespace-nowrap">
                 Read full article
               </button>
             </Link>

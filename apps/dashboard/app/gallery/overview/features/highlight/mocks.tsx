@@ -44,7 +44,7 @@ export const highlightCardEl: HighlightCardElProps[] = [
     color: "bg-white",
   },
   {
-    title: "Total artworks uploaded",
+    title: "Total artworks",
     icon: total_artworks_icon,
     tag: "artworks",
     color: "bg-white",

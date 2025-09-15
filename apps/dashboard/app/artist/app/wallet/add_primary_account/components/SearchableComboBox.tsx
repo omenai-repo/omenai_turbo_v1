@@ -161,13 +161,13 @@ export function SearchableSelect({
             options
           ) : type === "branches" ? (
             <Combobox.Empty>
-              <span className="text-fluid-xxs font-light">
+              <span className="text-fluid-xs font-light">
                 No branches listed for this bank. Kindly continue.
               </span>
             </Combobox.Empty>
           ) : (
             <Combobox.Empty>
-              <span className="text-fluid-xxs font-light">
+              <span className="text-fluid-xs font-light">
                 No banks match your search criteria. Please try again.
               </span>
             </Combobox.Empty>

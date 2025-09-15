@@ -9,8 +9,8 @@ export const UserBanner = () => {
     <div className="my-5 flex items-center flex-col justify-center">
       <div className="w-full flex justify-between items-center">
         <h1 className="text-fluid-base font-medium">Edit Profile</h1>
-        <div className="flex items-center gap-x-1 px-4 py-2 rounded-md bg-dark text-white">
-          <p className="text-fluid-xxs">
+        <div className="flex items-center gap-x-1 px-4 py-2 rounded bg-dark text-white">
+          <p className="text-fluid-xs">
             Status:{" "}
             <span
               className={`${

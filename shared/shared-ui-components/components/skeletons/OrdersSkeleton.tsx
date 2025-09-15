@@ -12,14 +12,11 @@ export const OrderSkeleton = () => {
       </div>
       <div className="w-full space-y-5">
         {[...Array(4)].map((_, idx) => (
-          <div
-            key={idx}
-            className="bg-white px-4 py-2 rounded-2xl shadow w-full"
-          >
+          <div key={idx} className="bg-white px-4 py-2 rounded shadow w-full">
             <Skeleton
               height={50}
               circle
-              className="rounded-[10px]"
+              className="rounded"
               width={"7%"}
               mb="sm"
             />

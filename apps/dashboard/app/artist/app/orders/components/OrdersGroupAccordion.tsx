@@ -62,7 +62,7 @@ export function OrdersGroupAccordion({
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-md text-fluid-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth />
           Awaiting payment
         </span>
@@ -75,7 +75,7 @@ export function OrdersGroupAccordion({
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-md text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1.5} absoluteStrokeWidth />
           Payment completed
         </span>
@@ -88,7 +88,7 @@ export function OrdersGroupAccordion({
       tracking_status !== ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-md text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
           <Truck strokeWidth={1.5} absoluteStrokeWidth />
           Delivery in progress
         </span>
@@ -101,7 +101,7 @@ export function OrdersGroupAccordion({
       tracking_status === ""
     ) {
       return (
-        <span className="px-3 py-1 rounded-md text-fluid-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xs font-medium bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth />
           Action required
         </span>
@@ -110,11 +110,11 @@ export function OrdersGroupAccordion({
     if (order_accepted === "declined") {
       return (
         <div className="flex flex-col gap-y-2">
-          <span className="px-3 py-1 rounded-md text-fluid-xs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
+          <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
             <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
             Order declined
           </span>
-          <span className=" rounded-md text-fluid-xs font-normal text-red-600 flex items-center w-fit">
+          <span className=" rounded text-fluid-xs font-normal text-red-600 flex items-center w-fit">
             Reason: {order_decline_reason}
           </span>
         </div>
@@ -123,7 +123,7 @@ export function OrdersGroupAccordion({
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded-md text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xs font-medium bg-green-100 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1.5} absoluteStrokeWidth />
           Order has been fulfilled
         </span>
@@ -144,7 +144,7 @@ export function OrdersGroupAccordion({
             alt={`${order.artwork_data.title} image`}
             width="50"
             height="50"
-            className="object-fill object-center h-[50px] w-[50px] rounded-lg"
+            className="object-fill object-center h-[50px] w-[50px] rounded"
             loading="lazy"
           />
           <div className="flex flex-col">
@@ -160,32 +160,32 @@ export function OrdersGroupAccordion({
       <Accordion.Panel>
         <div className="flex flex-col gap-y-3">
           <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Price</span>
+            <span className="text-fluid-xs font-normal">Price:</span>
             <span className="text-fluid-xs font-semibold text-dark">
               {formatPrice(order.artwork_data.pricing.usd_price)}
             </span>
           </div>
           <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Buyer name</span>
+            <span className="text-fluid-xs font-normal">Buyer name:</span>
             <span className="text-fluid-xs font-medium text-dark">
               {order.buyer_details.name}
             </span>
           </div>
           <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Buyer address</span>
+            <span className="text-fluid-xs font-normal">Buyer address:</span>
             <span className="text-fluid-xs font-medium text-dark">
               {`${order.shipping_details.addresses.destination.state}, 
                 ${order.shipping_details.addresses.destination.country}`}
             </span>
           </div>
           <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Order date</span>
+            <span className="text-fluid-xs font-normal">Order date:</span>
             <span className="text-fluid-xs font-medium text-dark">
               {formatISODate(order.createdAt)}
             </span>
           </div>
-          <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Status</span>
+          <div className="flex gap-x-6 items-start">
+            <span className="text-fluid-xs font-normal">Status:</span>
             {construct_status({
               status: order.status,
               payment_status: order.payment_information.status,
@@ -220,7 +220,7 @@ export function OrdersGroupAccordion({
         }) === "track" && (
           <div className="mt-6">
             <Link href={`/artist/app/orders/tracking/${order.order_id}`}>
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-md h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
             </Link>
@@ -236,12 +236,12 @@ export function OrdersGroupAccordion({
           <div className="mt-5 flex items-center gap-x-6">
             <button
               onClick={() => handleDeclineOrderRequest(order.order_id)}
-              className="hover:bg-red-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-md h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-red-600 cursor-pointer"
+              className="hover:bg-red-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-red-600 cursor-pointer"
             >
               Decline order
             </button>
             <Link href={`/artist/app/orders/quote/${order.order_id}`}>
-              <button className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-md h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-green-600 cursor-pointer">
+              <button className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-green-600 cursor-pointer">
                 Accept order
               </button>
             </Link>

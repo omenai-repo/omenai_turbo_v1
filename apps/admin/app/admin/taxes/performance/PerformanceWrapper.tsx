@@ -87,7 +87,7 @@ export const PerformanceWrapper = () => {
         </div>
 
         {/* Main Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
           {/* State Header */}
           <div className="px-8 py-6 border-b border-gray-100">
             <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export const PerformanceWrapper = () => {
                   {thresholds?.state}
                 </h2>
                 <div
-                  className={`px-3 py-1 rounded-full text-fluid-xxs font-medium ${risk.bg} ${risk.color}`}
+                  className={`px-3 py-1 rounded-full text-fluid-xs font-medium ${risk.bg} ${risk.color}`}
                 >
                   {risk.level} Risk
                 </div>
@@ -118,7 +118,7 @@ export const PerformanceWrapper = () => {
           <div className="px-8 py-6 bg-gray-50/50">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-fluid-xxs 2xl:text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
+                <h3 className="text-fluid-xs 2xl:text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
                   Thresholds
                 </h3>
                 <div className="space-y-2 text-fluid-xs">
@@ -140,7 +140,7 @@ export const PerformanceWrapper = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-fluid-xxs 2xl:text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
+                <h3 className="text-fluid-xs 2xl:text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
                   Timeline
                 </h3>
                 <div className="space-y-2 text-fluid-xs">
@@ -348,7 +348,7 @@ export const PerformanceWrapper = () => {
 
             {/* Alert Banner */}
             {(salesPercentage >= 100 || transactionPercentage >= 100) && (
-              <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-md flex items-start gap-3">
+              <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-red-800 font-medium text-fluid-xs">

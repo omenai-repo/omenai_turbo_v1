@@ -36,7 +36,7 @@ export default function ArtistInfo({
               <div className="relative w-[280px] h-[280px] md:w-[320px] md:h-[320px] mx-auto md:mx-0">
                 {/* Loading state */}
                 {!imageLoaded && (
-                  <div className="absolute inset-0 bg-gray-100 rounded-2xl animate-pulse" />
+                  <div className="absolute inset-0 bg-gray-100 rounded animate-pulse" />
                 )}
 
                 {/* Artist image */}
@@ -45,7 +45,7 @@ export default function ArtistInfo({
                   src={image_href}
                   alt={`${info.name} portrait`}
                   onLoad={() => setImageLoaded(true)}
-                  className={`w-full h-full object-cover rounded-md transition-all duration-500 ${
+                  className={`w-full h-full object-cover rounded transition-all duration-500 ${
                     imageLoaded ? "opacity-100" : "opacity-0"
                   }`}
                 />
@@ -88,10 +88,10 @@ export default function ArtistInfo({
 
               {/* Additional info or actions */}
               {/* <div className="pt-6 flex flex-wrap gap-4">
-                <button className="px-6 py-3 bg-[#0f172a] text-white font-medium rounded-lg hover:bg-[#2a2a2a] transition-colors duration-200">
+                <button className="px-6 py-3 bg-[#0f172a] text-white font-medium rounded hover:bg-[#2a2a2a] transition-colors duration-200">
                   View Portfolio
                 </button>
-                <button className="px-6 py-3 border-2 border-[#0f172a] text-[#0f172a] font-medium rounded-lg hover:bg-[#0f172a] hover:text-white transition-all duration-200">
+                <button className="px-6 py-3 border-2 border-[#0f172a] text-[#0f172a] font-medium rounded hover:bg-[#0f172a] hover:text-white transition-all duration-200">
                   Contact Artist
                 </button>
               </div> */}

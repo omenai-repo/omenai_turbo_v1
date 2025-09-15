@@ -29,7 +29,7 @@ export default function OnboardingFlow() {
         {/* Logout button */}
         <button
           onClick={handleSignOut}
-          className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-md h-[35px] p-5 w-fit text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
+          className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-fit text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           Logout
         </button>
@@ -43,7 +43,7 @@ export default function OnboardingFlow() {
             data-tooltip-content="Before you start showcasing your work, we need to confirm your artistic background."
             data-tooltip-place="top"
             id="onboarding-help"
-            className="w-12 h-12 bg-dark rounded-md grid place-items-center hover:cursor-pointer"
+            className="w-12 h-12 bg-dark rounded grid place-items-center hover:cursor-pointer"
           >
             <span className="text-white">?</span>
           </div>

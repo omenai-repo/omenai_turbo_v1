@@ -147,7 +147,7 @@ body {
 
 /* styles/globals.css */
 .custom-leaflet-popup .leaflet-popup-content-wrapper {
-  @apply bg-zinc-900 text-white rounded-lg shadow-lg p-3;
+  @apply bg-zinc-900 text-white rounded shadow-lg p-3;
   border: white;
 }
 

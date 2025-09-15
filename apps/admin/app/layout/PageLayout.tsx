@@ -57,7 +57,7 @@ export default function PageLayout() {
             </ul>
           </div>
           <div className="w-full flex flex-col">
-            <h1 className="font-medium text-fluid-xxs">Activity</h1>
+            <h1 className="font-medium text-fluid-xs">Activity</h1>
             <ul className="flex flex-col w-full space-y-1">
               {navMockData.activity.map((item, index) => {
                 return (

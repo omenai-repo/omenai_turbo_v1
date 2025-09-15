@@ -17,10 +17,10 @@ export default function FormConfirm() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      {/* <h1 className="text-fluid-xxs sm:text-fluid-base font-semibold mb-4">
+      {/* <h1 className="text-fluid-xs sm:text-fluid-base font-semibold mb-4">
         Confirm account creation
       </h1> */}
-      <p className="text-fluid-xxs my-4 font-normal">
+      <p className="text-fluid-xs my-4 font-normal">
         Please read through and confirm that you understand and accept all the
         terms stated
       </p>
@@ -37,7 +37,7 @@ export default function FormConfirm() {
           />
           <Label
             htmlFor="terms of use"
-            className="text-dark text-fluid-xxs sm:text-fluid-xs"
+            className="text-dark text-fluid-xs sm:text-fluid-xs"
           >
             By ticking this box, I accept the{" "}
             <Link href={"/"} className="underline font-bold">
@@ -56,13 +56,13 @@ export default function FormConfirm() {
         <button
           type="submit"
           disabled={isLoading || !isConsentChecked}
-          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded-md h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
+          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           {isLoading ? <LoadSmall /> : "Create Artist account"}
         </button>
         <button
           disabled={isLoading}
-          className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-md h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-dark cursor-pointer`}
+          className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-dark cursor-pointer`}
           type={"button"}
           onClick={decrementCurrentArtistSignupFormIndex}
         >

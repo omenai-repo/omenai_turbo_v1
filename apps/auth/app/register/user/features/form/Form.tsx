@@ -25,7 +25,7 @@ export default function FormBlock() {
               <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
                 Create a user Account
               </h1>
-              <p className="text-fluid-xxs sm:text-fluid-xs">
+              <p className="text-fluid-xs sm:text-fluid-xs">
                 Please fill your information below
               </p>
             </div>

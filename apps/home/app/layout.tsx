@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Cormorant_Garamond, Work_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
 import LoginModal from "@omenai/shared-ui-components/components/modal/LoginModal";
@@ -19,16 +19,27 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { SessionProvider } from "@omenai/package-provider";
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
 };
-const dm_sans = Poppins({
+
+// Body font → work_sans
+const work_sans = Work_Sans({
   subsets: ["latin"],
-  variable: "--font-sans_serif",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-work_sans",
+  display: "swap",
+});
+
+// Heading font → Cormorant Garamond
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -59,7 +70,9 @@ export default async function RootLayout({
         <head>
           <ColorSchemeScript />
         </head>
-        <body className={`${dm_sans.className} flex flex-col justify-center`}>
+        <body
+          className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col justify-center`}
+        >
           <NextTopLoader color="#0f172a" height={6} />
           <Toaster
             position="top-right"

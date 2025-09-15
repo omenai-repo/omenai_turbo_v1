@@ -11,7 +11,7 @@ type StateFlagCardProps = {
 
 export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-md border border-gray-200/50 bg-white/50 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/50">
+    <div className="group relative overflow-hidden rounded border border-gray-200/50 bg-white/50 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/50">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-purple-50/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100 dark:from-blue-900/10 dark:to-purple-900/10" />
 
@@ -22,8 +22,8 @@ export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
         <div className="flex items-center gap-5">
           {/* Enhanced flag container */}
           <div className="relative">
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 opacity-20 blur-xl transition-all duration-300 group-hover:opacity-40 dark:from-gray-600 dark:to-gray-700" />
-            <div className="relative overflow-hidden rounded-sm shadow-md  transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg dark:ring-gray-700/50">
+            <div className="absolute inset-0 rounded bg-gradient-to-br from-gray-200 to-gray-300 opacity-20 blur-xl transition-all duration-300 group-hover:opacity-40 dark:from-gray-600 dark:to-gray-700" />
+            <div className="relative overflow-hidden rounded shadow-md  transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg dark:ring-gray-700/50">
               <Image
                 src={flag_url}
                 alt={`${state} state flag`}

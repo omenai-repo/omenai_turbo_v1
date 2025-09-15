@@ -43,7 +43,7 @@ export default function EditorialCover({
 
   return (
     <div>
-      <Input.Label className="text-fluid-xxs font-normal">
+      <Input.Label className="text-fluid-xs font-normal">
         Select a cover for this editorial
       </Input.Label>
       <div className="flex flex-col space-y-6 w-full">
@@ -54,7 +54,7 @@ export default function EditorialCover({
               alt="uploaded image"
               width={350}
               height={250}
-              className="w-[350px] h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
+              className="w-[350px] h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
               onClick={() => {
                 setCover(null);
               }}
@@ -62,7 +62,7 @@ export default function EditorialCover({
           ) : (
             <button
               type="button"
-              className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+              className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
               onClick={() => {
                 imagePickerRef.current?.click();
               }}

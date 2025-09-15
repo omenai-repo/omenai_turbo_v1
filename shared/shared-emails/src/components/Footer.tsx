@@ -19,7 +19,7 @@ export const EmailFooter: React.FC<EmailFooterProps> = ({
     <>
       {/* Support Section */}
       {showSupportSection && (
-        <Section className="my-8 mx-8 p-6 bg-gray-50 rounded-lg">
+        <Section className="my-8 mx-8 p-6 bg-gray-50 rounded">
           <Text style={{ ...EMAIL_STYLES.text.base, marginBottom: "8px" }}>
             <strong>{supportTitle}</strong>
           </Text>

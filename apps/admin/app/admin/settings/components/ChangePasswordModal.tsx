@@ -105,9 +105,9 @@ export default function ChangePasswordModal({
     >
       <div className="space-y-5">
         {/* Security notice */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-md p-4">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded p-4">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
               <Lock className="w-4 h-4 text-blue-400" />
             </div>
             <div>

@@ -9,7 +9,7 @@ export default function ArticleCard({ article }: { article: any }) {
   const url = getEditorialFileView(article.cover, 300);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-lg overflow-hidden shadow-sm">
+    <div className="h-full flex flex-col bg-white rounded overflow-hidden shadow-sm">
       {/* Image Section - Fixed height */}
       <div className="flex-shrink-0">
         <Image
@@ -36,7 +36,7 @@ export default function ArticleCard({ article }: { article: any }) {
         {/* Button - Fixed at bottom */}
         <div className="flex-shrink-0 mt-auto pt-3">
           <Link href={`/articles/${article.slug}?id=${article.$id}`}>
-            <button className="duration-300 rounded-md h-[30px] px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark text-white cursor-pointer hover:bg-dark/80 transition-colors">
+            <button className="duration-300 rounded h-[30px] px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark text-white cursor-pointer hover:bg-dark/80 transition-colors">
               View Editorial
             </button>
           </Link>

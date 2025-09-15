@@ -24,7 +24,7 @@ export default function CarouselItemText({
 
   return (
     <div
-      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/30 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded-[10px] shadow-md`}
+      className={`${isInteractable ? "opacity-100 pointer-events-auto" : "opacity-50 pointer-events-none"} flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/30 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded shadow-md`}
     >
       <div className="w-full">
         <h2 className="text-fluid-xs font-medium mb-6 text-left">{question}</h2>
@@ -37,7 +37,7 @@ export default function CarouselItemText({
             rows={5}
             onChange={handleChange}
             placeholder="Please provide your answer"
-            className="resize-none focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out w-full p-4 rounded-[10px] placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-normal text-fluid-xxs font-medium bg-[#fafafa]/50"
+            className="resize-none focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out w-full p-4 rounded placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-normal text-fluid-xs font-medium bg-[#fafafa]/50"
           />
           <span className="text-red-600 font-light text-[12px]">
             This would be visible to everyone
@@ -49,7 +49,7 @@ export default function CarouselItemText({
           placeholder="Your answer"
           name="label"
           onChange={handleChange}
-          className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded-md w-full placeholder:text-fluid-xxs placeholder:text-dark/40 placeholder:font-normal"
+          className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xs font-medium h-[35px] p-5 rounded w-full placeholder:text-fluid-xs placeholder:text-dark/40 placeholder:font-normal"
         />
       )}
 
@@ -61,7 +61,7 @@ export default function CarouselItemText({
               className="flex items-center gap-x-2"
             >
               <MdError className="text-red-600" />
-              <p className="text-red-600 text-fluid-xxs sm:text-fluid-xs">{error}</p>
+              <p className="text-red-600 text-fluid-xs sm:text-fluid-xs">{error}</p>
             </div>
           );
         })} */}

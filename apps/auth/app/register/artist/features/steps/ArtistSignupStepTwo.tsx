@@ -4,12 +4,13 @@ import Input from "../form/components/Input";
 import SelectInput from "../form/components/Select";
 import ActionButtons from "../actions/ActionButtons";
 import { artist_signup_step_two } from "../../../../mocks/input/artist/inputMock";
+import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
 
 export default function ArtistSignupStepTwo() {
-  const { updateGallerySignupData } = useGalleryAuthStore();
+  const { updateArtistSignupData } = useArtistAuthStore();
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     let fieldName = e.target.name;
-    updateGallerySignupData(fieldName, e.target.value);
+    updateArtistSignupData(fieldName, e.target.value);
   }
   return (
     <div className="flex flex-col space-y-6">

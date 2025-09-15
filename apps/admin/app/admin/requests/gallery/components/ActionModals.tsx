@@ -97,7 +97,7 @@ export function ActionModals({
           <div className="flex justify-center mb-6">
             <div
               className={`
-          w-16 h-16 rounded-md flex items-center justify-center shadow-lg
+          w-16 h-16 rounded flex items-center justify-center shadow-lg
           ${
             type === "accept"
               ? "bg-gradient-to-br from-green-400 to-emerald-600"
@@ -127,7 +127,7 @@ export function ActionModals({
                   : "Unblock Gallery"}
             </h3>
             <div
-              className={`w-16 h-1 mx-auto rounded-md ${
+              className={`w-16 h-1 mx-auto rounded ${
                 type === "accept"
                   ? "bg-gradient-to-r from-green-400 to-emerald-500"
                   : type === "reject"

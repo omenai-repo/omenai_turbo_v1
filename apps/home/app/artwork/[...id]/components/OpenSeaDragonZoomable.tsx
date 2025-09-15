@@ -116,7 +116,7 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
         {/* Loading spinner */}
         {isLoading && (
           <div className="absolute z-10 flex items-center justify-center w-full h-full">
-            <div className="w-[100px] h-[100px] p-5 grid place-items-center bg-white rounded-[10px] shadow-lg">
+            <div className="w-[100px] h-[100px] p-5 grid place-items-center bg-white rounded shadow-lg">
               <LoadIcon />
             </div>
           </div>

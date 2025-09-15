@@ -33,7 +33,7 @@ export function TrendingArtistCard({
       >
         <article className="relative">
           {/* Image with Aspect Ratio */}
-          <div className="relative aspect-[4/3] w-[350px] w-full overflow-hidden rounded-md bg-slate-100">
+          <div className="relative aspect-[4/3] w-[350px] w-full overflow-hidden rounded bg-slate-100">
             <Image
               src={image_href}
               alt={artist + " image"}
@@ -49,14 +49,14 @@ export function TrendingArtistCard({
 
           {/* Info Below Image */}
           <div className="mt-4 space-y-2">
-            <h3 className="text-fluid-xs font-semibold text-slate-900 leading-tight">
+            <h3 className="text-fluid-base font-semibold  text-slate-900 leading-tight">
               {artist}
             </h3>
             <div className="flex items-center justify-between">
-              <p className="text-sm text-dark">
+              <p className="text-fluid-xs text-dark">
                 {country} • Born {birthyear}
               </p>
-              <span className="text-sm text-dark">{likes} likes</span>
+              <span className="text-fluid-xs text-dark">{likes} likes</span>
             </div>
           </div>
         </article>

@@ -5,13 +5,13 @@ import { galleryPricingStore } from "@omenai/shared-state-store/src/gallery/gall
 export default function PackageTab() {
   const { activeTab, updateActiveTab } = galleryPricingStore();
   return (
-    <div className="p-2 rounded-lg flex gap-2 bg-gray-400 w-fit">
+    <div className="p-2 rounded flex gap-2 bg-gray-400 w-fit">
       <div
         className={`p-2 ${
           activeTab === "monthly"
             ? "bg-white  text-dark"
             : "bg-transparent text-dark"
-        }  cursor-pointer rounded-lg`}
+        }  cursor-pointer rounded`}
         onClick={() => updateActiveTab("monthly")}
       >
         Monthly billing
@@ -22,7 +22,7 @@ export default function PackageTab() {
           activeTab === "annual"
             ? "bg-white  text-dark"
             : "bg-transpaerent text-dark"
-        }  cursor-pointer rounded-lg`}
+        }  cursor-pointer rounded`}
         onClick={() => updateActiveTab("annual")}
       >
         Annual Billing

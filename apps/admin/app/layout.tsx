@@ -1,6 +1,6 @@
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Cormorant_Garamond, Work_Sans } from "next/font/google";
 import { QueryProvider } from "@omenai/package-provider";
 import { Toaster } from "sonner";
 import "@mantine/core/styles.css";
@@ -15,10 +15,18 @@ import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/tiptap/styles.css";
 
-const nunito_sans = Inter({
+const work_sans = Work_Sans({
   subsets: ["latin"],
-  variable: "--font-nunito_sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-work_sans",
+  display: "swap",
+});
+
+// Heading font → Cormorant Garamond
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 export default function AdminDashboardRootLayout({
   children,
@@ -30,7 +38,9 @@ export default function AdminDashboardRootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={`${nunito_sans.className} flex flex-col justify-center`}>
+      <body
+        className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col justify-center`}
+      >
         <Toaster
           position="top-right"
           expand

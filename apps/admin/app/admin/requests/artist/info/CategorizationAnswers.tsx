@@ -116,7 +116,7 @@ export default function CategorizationAnswers({
   answers: ArtistCategorizationAnswerTypes;
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <div className="bg-white rounded shadow-sm border border-gray-100 p-8">
       {/* Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {categoryItems.map((item) => {
@@ -127,7 +127,7 @@ export default function CategorizationAnswers({
           return (
             <div
               key={item.key}
-              className={`relative overflow-hidden rounded-md border ${item.borderColor} bg-gradient-to-br ${item.bgGradient} p-4 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5`}
+              className={`relative overflow-hidden rounded border ${item.borderColor} bg-gradient-to-br ${item.bgGradient} p-4 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5`}
             >
               {/* Background Pattern */}
               <div className="absolute top-0 right-0 -mt-4 -mr-4 opacity-5">
@@ -139,7 +139,7 @@ export default function CategorizationAnswers({
                 <div className="flex items-start gap-4">
                   {/* Icon */}
                   <div
-                    className={`flex-shrink-0 w-12 h-12 ${item.iconBg} rounded-md flex items-center justify-center`}
+                    className={`flex-shrink-0 w-12 h-12 ${item.iconBg} rounded flex items-center justify-center`}
                   >
                     <IconComponent className={`w-6 h-6 ${item.iconColor}`} />
                   </div>

@@ -19,22 +19,22 @@ export default function PopulartArtworkCard({
 }: PopularArtworkCardProps) {
   const image_url = getOptimizedImage(url, "thumbnail", 40);
   return (
-    <div className="flex justify-between items-center px-5 py-3 rounded-lg ring-1 ring-dark/10 shadow-sm">
+    <div className="flex justify-between items-center px-5 py-3 rounded ring-1 ring-dark/10 shadow-sm">
       <div className=" w-auto flex items-center gap-x-3">
         <Image
           src={image_url}
           alt={title}
           height={70}
           width={70}
-          className="object-top h-[70px] w-[70px] rounded-lg"
+          className="object-top h-[70px] w-[70px] rounded"
         />
         <div className="flex flex-col gap-y-1">
           <p className="text-dark font-semibold text-fluid-xs">{title}</p>
-          <span className="text-dark text-fluid-xxs font-normal">{artist}</span>
+          <span className="text-dark text-fluid-xs font-normal">{artist}</span>
         </div>
       </div>
       <div className="w-fit">
-        <span className="text-dark text-fluid-xxs font-normal">
+        <span className="text-dark text-fluid-xs font-normal">
           {`${impression_count} impressions`}
         </span>
       </div>

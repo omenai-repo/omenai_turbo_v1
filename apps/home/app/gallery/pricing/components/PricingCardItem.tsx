@@ -97,12 +97,12 @@ export default function PricingCardItem({
   }
 
   return (
-    <div className="w-fit rounded-lg text-dark border border-dark/20 shadow-sm">
+    <div className="w-fit rounded text-dark border border-dark/20 shadow-sm">
       {/* Plan name and popularity tag (optional) */}
       <div className="p-8 w-full flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <p className="font-normal">{plan} plan</p>
-          {/* <div className="border border-primary rounded-md px-2 py-[0.1rem]">
+          {/* <div className="border border-primary rounded px-2 py-[0.1rem]">
             <span className="text-fluid-xs text-primary font-normal">popular</span>
           </div> */}
         </div>
@@ -119,7 +119,7 @@ export default function PricingCardItem({
         <div className="flex flex-col gap-4 w-full">
           <button
             onClick={handleSubscribe}
-            className={`bg-primary rounded-md w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-dark disabled:cursor-pointer text-white`}
+            className={`bg-primary rounded w-full py-2 grid place-items-center disabled:bg-dark/10 disabled:text-dark disabled:cursor-pointer text-white`}
           >
             {loading ? <LoadSmall /> : "Subscribe"}
           </button>

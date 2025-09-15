@@ -87,7 +87,7 @@ export default function UploadArtworkImage() {
           <img
             src={URL.createObjectURL(image)}
             alt="uploaded image"
-            className="w-auto h-auto max-h-[50vh] max-w-full object-cover mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
+            className="w-auto h-auto max-h-[50vh] max-w-full object-cover mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
             onClick={() => {
               setImage(null);
             }}
@@ -95,7 +95,7 @@ export default function UploadArtworkImage() {
         ) : (
           <button
             type="button"
-            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded-md text-fluid-xs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded text-fluid-xs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
             onClick={() => {
               imagePickerRef.current?.click();
             }}
@@ -116,10 +116,10 @@ export default function UploadArtworkImage() {
             </svg>
             <span className="">Upload your artpiece</span>
             <div className="flex flex-col items-center mt-8 space-y-2">
-              <span className=" text-fluid-xxs">
+              <span className=" text-fluid-xs">
                 <strong>5MB</strong> MAX SIZE allowed
               </span>
-              <span className="text-fluid-xxs">
+              <span className="text-fluid-xs">
                 Allowed formats: JPEG, JPG and PNG
               </span>
             </div>
@@ -137,7 +137,7 @@ export default function UploadArtworkImage() {
         <button
           onClick={handleImageSubmit}
           type="button"
-          className={`h-[35px] p-5 rounded-md w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal`}
+          className={`h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal`}
         >
           Calculate artwork price
         </button>

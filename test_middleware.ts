@@ -239,7 +239,7 @@
 
 //   if (success) {
 //     return (
-//       <div className="p-6 bg-green-50 rounded-lg">
+//       <div className="p-6 bg-green-50 rounded">
 //         <h3 className="text-green-800 font-semibold">Subscription Created!</h3>
 //         <p className="text-green-600">Your subscription has been successfully activated.</p>
 //       </div>
@@ -248,7 +248,7 @@
 
 //   return (
 //     <form onSubmit={handleSubmit} className="space-y-4">
-//       <div className="p-4 border rounded-lg">
+//       <div className="p-4 border rounded">
 //         <CardElement
 //           options={{
 //             style: {
@@ -273,7 +273,7 @@
 //       <button
 //         type="submit"
 //         disabled={!stripe || isProcessing}
-//         className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+//         className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
 //       >
 //         {isProcessing ? 'Processing...' : `Subscribe for $${amount / 100}`}
 //       </button>

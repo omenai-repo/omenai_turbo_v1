@@ -15,7 +15,7 @@ export default function ArtCollectionCard({
     .replace(/\(/g, "%28")
     .replace(/\)/g, "%29");
   return (
-    <div className="py-4 min-w-[300px] rounded-[10px] relative">
+    <div className="py-4 min-w-[300px] rounded relative">
       <Link href={`/collections/${safeSlug}`}>
         <div className="flex flex-col ">
           <Image
@@ -23,9 +23,9 @@ export default function ArtCollectionCard({
             height={!isCatalog ? 250 : 180}
             src={`/images/${url}.png`}
             alt={title + " image"}
-            className={`min-w-[300px] rounded-[10px] w-full min-h-[200px] h-[250px] object-cover object-center cursor-pointer`}
+            className={`min-w-[300px] rounded w-full min-h-[200px] h-[250px] object-cover object-center cursor-pointer`}
           />
-          <div className="w-fit ring-1 ring-white bg-dark text-white flex flex-col px-3 py-2 left-5 absolute bottom-10 rounded-3xl">
+          <div className="w-fit bg-dark hover:ring-1 hover:ring-white duration-300 text-white flex flex-col px-4 py-1 left-5 absolute bottom-10 rounded font-semibold ">
             <p className="text-fluid-xs font-light">{title}</p>
           </div>
         </div>

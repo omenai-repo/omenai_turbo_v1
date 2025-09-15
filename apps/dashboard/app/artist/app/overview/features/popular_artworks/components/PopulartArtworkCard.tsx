@@ -26,17 +26,17 @@ export default function PopulartArtworkCard({
           alt={title}
           height={60}
           width={60}
-          className="object-top h-[60px] w-[60px] rounded-lg"
+          className="object-top h-[60px] w-[60px] rounded"
         />
         <div className="flex flex-col gap-y-1">
-          <p className="text-dark font-normal text-fluid-xxs sm:text-fluid-xs">
+          <p className="text-dark font-normal text-fluid-xs sm:text-fluid-xs">
             {title}
           </p>
-          <span className="text-dark text-fluid-xxs">{artist}</span>
+          <span className="text-dark text-fluid-xs">{artist}</span>
         </div>
       </div>
       <div className="w-fit">
-        <span className="text-dark text-fluid-xxs">
+        <span className="text-dark text-fluid-xs">
           {`${impression_count} impressions`}
         </span>
       </div>

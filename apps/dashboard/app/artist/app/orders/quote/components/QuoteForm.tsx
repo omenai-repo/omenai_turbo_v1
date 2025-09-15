@@ -170,7 +170,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       {/* Header Section */}
       <div className="mb-8">
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-slate-100 rounded-lg">
+          <div className="p-2 bg-slate-100 rounded">
             <svg
               className="w-6 h-6 text-slate-700"
               fill="none"
@@ -202,7 +202,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
         <div className="order-2 lg:order-1">
           <form onSubmit={handleSubmitQuoteFees} className="space-y-6">
             {/* Dimensions Grid */}
-            <div className="bg-white rounded-md border border-slate-200 p-6 space-y-6">
+            <div className="bg-white rounded border border-slate-200 p-6 space-y-6">
               <h2 className="text-sm font-medium text-slate-700 uppercase tracking-wide">
                 Package Measurements
               </h2>
@@ -224,7 +224,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                       step="any"
                       onChange={handleInputChange}
                       placeholder="0.00"
-                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
                       cm
@@ -248,7 +248,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                       step="any"
                       onChange={handleInputChange}
                       placeholder="0.00"
-                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
                       cm
@@ -272,7 +272,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                       step="any"
                       onChange={handleInputChange}
                       placeholder="0.00"
-                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
                       cm
@@ -296,7 +296,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                       step="any"
                       onChange={handleInputChange}
                       placeholder="0.00"
-                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+                      className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
                       kg
@@ -307,7 +307,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             </div>
 
             {/* Special Instructions */}
-            <div className="bg-white rounded-md border border-slate-200 p-6 space-y-4">
+            <div className="bg-white rounded border border-slate-200 p-6 space-y-4">
               <label
                 htmlFor="specialInstructions"
                 className="block text-sm font-medium text-slate-700"
@@ -323,7 +323,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 onChange={handleInputChange}
                 placeholder="Add any special pickup instructions, handling requirements, or notes..."
                 rows={4}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none placeholder:text-fluid-xs"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none placeholder:text-fluid-xs"
               />
             </div>
 
@@ -366,7 +366,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <button
               type="submit"
               disabled={loading || !terms_checked}
-              className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white font-medium rounded-lg shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
+              className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white font-medium rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
             >
               {loading ? (
                 <LoadSmall />
@@ -394,7 +394,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
         {/* Order Details Card */}
         <div className="order-1 lg:order-2">
-          <div className="bg-white rounded-md border border-slate-200 overflow-hidden sticky top-6">
+          <div className="bg-white rounded border border-slate-200 overflow-hidden sticky top-6">
             {/* Card Header */}
             <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
               <h3 className="text-sm font-medium text-slate-700 uppercase tracking-wide">
@@ -412,7 +412,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     alt={order_data!.data.artwork_data.title}
                     height={200}
                     width={200}
-                    className="rounded-lg object-cover shadow-md"
+                    className="rounded object-cover shadow-md"
                   />
                 </div>
               </div>
@@ -478,7 +478,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               </div>
 
               {/* Shipping Status Badge */}
-              <div className="flex items-center justify-center gap-2 px-4 py-2 bg-amber-50 text-amber-700 rounded-lg">
+              <div className="flex items-center justify-center gap-2 px-4 py-2 bg-amber-50 text-amber-700 rounded">
                 <svg
                   className="w-5 h-5"
                   fill="none"

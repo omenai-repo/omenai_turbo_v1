@@ -12,7 +12,7 @@ import Link from "next/link";
 export default function ArtistOnboarding() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-xl rounded-2xl p-8 max-w-lg">
+      <div className="bg-white shadow-xl rounded p-8 max-w-lg">
         <div className="w-ful my-5">
           <IndividualLogo />
         </div>
@@ -20,12 +20,12 @@ export default function ArtistOnboarding() {
         <h1 className="text-fluid-md font-bold text-gray-900">
           One last step before you begin… 🎨✨
         </h1>
-        <p className="text-gray-600 mt-3 text-fluid-xxs">
+        <p className="text-gray-600 mt-3 text-fluid-xs">
           To ensure a high standard of artistry and credibility on our platform,
           we need to learn more about your artistic journey.
         </p>
 
-        <div className="mt-6 space-y-3 text-fluid-xxs text-left">
+        <div className="mt-6 space-y-3 text-fluid-xs text-left">
           <div className="flex items-center space-x-3">
             <BriefcaseIcon className="w-6 h-6 text-blue-600" />
             <span className="text-dark">Your art style and background</span>
@@ -47,7 +47,7 @@ export default function ArtistOnboarding() {
         </div>
 
         <div className="my-5">
-          <p className="text-gray-600 mt-3 text-fluid-xxs">
+          <p className="text-gray-600 mt-3 text-fluid-xs">
             Once submitted, our team will review your information and verify
             your profile. After approval, you&apos;ll gain full access to
             showcase and sell your work to collectors worldwide. Your data will
@@ -57,7 +57,7 @@ export default function ArtistOnboarding() {
 
         <div className="mt-8 space-y-3">
           <Link href={"/artist/onboarding/flow"}>
-            <button className="w-full bg-dark text-fluid-xxs hover:bg-dark/70 text-white py-3 rounded-md font-semibold transition">
+            <button className="w-full bg-dark text-fluid-xs hover:bg-dark/70 text-white py-3 rounded font-semibold transition">
               Start onboarding process
             </button>
           </Link>

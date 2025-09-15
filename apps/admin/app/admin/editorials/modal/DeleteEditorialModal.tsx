@@ -79,7 +79,7 @@ export default function DeleteEditorialModal({
             {/* Close button */}
             <button
               onClick={close}
-              className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 rounded bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
               disabled={loading}
             >
               <X size={18} />
@@ -87,7 +87,7 @@ export default function DeleteEditorialModal({
 
             {/* Icon and Title */}
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded flex items-center justify-center">
                 <AlertTriangle size={32} className="text-white" />
               </div>
               <div>
@@ -111,10 +111,10 @@ export default function DeleteEditorialModal({
             </div>
 
             {/* Warning Box */}
-            <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-6">
+            <div className="bg-amber-50 border border-amber-200 rounded p-4 mb-6">
               <div className="flex gap-3">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
                     <AlertTriangle size={16} className="text-amber-400" />
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export default function DeleteEditorialModal({
 
       <div
         onClick={open}
-        className="absolute -top-1 -right-1 z-30 cursor-pointer rounded-md h-10 w-10 bg-white shadow-lg grid place-items-center transition-all duration-300 hover:scale-110 hover:shadow-xl active:scale-95"
+        className="absolute -top-1 -right-1 z-30 cursor-pointer rounded h-10 w-10 bg-white shadow-lg grid place-items-center transition-all duration-300 hover:scale-110 hover:shadow-xl active:scale-95"
       >
         <Trash2 size={20} absoluteStrokeWidth className="text-red-500" />
       </div>

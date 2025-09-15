@@ -27,14 +27,14 @@ export function GalleryInfoModal({
     iconColor: string;
     bgColor: string;
   }) => (
-    <div className="flex items-center space-x-4 p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+    <div className="flex items-center space-x-4 p-2 rounded bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
       <div
-        className={`w-12 h-12 ${bgColor} rounded-md flex items-center justify-center flex-shrink-0`}
+        className={`w-12 h-12 ${bgColor} rounded flex items-center justify-center flex-shrink-0`}
       >
         {icon}
       </div>
       <div className="flex-1 text-left">
-        <p className="text-fluid-xxs text-gray-500 font-medium">{label}</p>
+        <p className="text-fluid-xs text-gray-500 font-medium">{label}</p>
         <p className="text-fluid-xs text-gray-900 font-semibold">{value}</p>
       </div>
     </div>
@@ -67,13 +67,13 @@ export function GalleryInfoModal({
     >
       <div className="relative">
         {/* Main modal content */}
-        <div className="relative bg-white rounded-md shadow-2xl overflow-hidden border border-gray-100">
+        <div className="relative bg-white rounded shadow-2xl overflow-hidden border border-gray-100">
           {/* Header section with logo */}
           <div className="relative bg-gray-50 border-b border-gray-100">
             {/* Close button */}
             <button
               onClick={close}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-md bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all duration-200 shadow-sm hover:shadow-md"
             >
               <span className="text-xl leading-none">×</span>
             </button>
@@ -82,12 +82,12 @@ export function GalleryInfoModal({
             <div className="p-6 text-center">
               {/* Logo container */}
               <div className="relative mx-auto w-16 h-16 mb-3">
-                <div className="absolute inset-0 bg-white rounded-2xl shadow-lg" />
+                <div className="absolute inset-0 bg-white rounded shadow-lg" />
                 <div className="relative w-full h-full p-2">
                   <Image
                     src={image_href}
                     alt={`${gallery.name} logo`}
-                    className="w-full h-full object-cover rounded-md"
+                    className="w-full h-full object-cover rounded"
                     radius="lg"
                   />
                 </div>

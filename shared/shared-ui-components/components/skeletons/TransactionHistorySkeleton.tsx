@@ -7,7 +7,7 @@ const TransactionHistorySkeleton = () => {
       {[...Array(5)].map((_, idx) => (
         <div
           key={idx}
-          className="flex justify-between items-center p-4 rounded-2xl bg-gray-100"
+          className="flex justify-between items-center p-4 rounded bg-gray-100"
         >
           <div className="flex items-center gap-4">
             <Skeleton height={50} width={50} circle />

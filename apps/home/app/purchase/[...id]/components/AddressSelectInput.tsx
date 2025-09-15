@@ -94,7 +94,7 @@ export default function AddressSelectInput({
         bg-white
         border
         border-slate-300
-        rounded-lg
+        rounded
         text-slate-900
         text-sm
         font-normal

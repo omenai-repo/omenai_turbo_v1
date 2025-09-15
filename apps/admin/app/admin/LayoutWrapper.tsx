@@ -19,11 +19,9 @@ export default function LayoutWrapper({
           <div className=" w-full h-screen">
             <main className="flex h-full">
               <PageLayout />
-              <div className="w-full xl:ml-[20rem] md:ml-[15rem] px-5 rounded-md relative duration-200">
+              <div className="w-full xl:ml-[20rem] md:ml-[15rem] px-5 rounded relative duration-200">
                 <Appbar />
-                <div className="h-auto rounded-lg relative my-5">
-                  {children}
-                </div>
+                <div className="h-auto rounded relative my-5">{children}</div>
               </div>
             </main>
           </div>

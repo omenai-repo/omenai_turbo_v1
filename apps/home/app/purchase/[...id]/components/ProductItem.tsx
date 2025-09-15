@@ -18,13 +18,13 @@ export default function ProductItem({
   return (
     // Artwork Checkout Component
     <div className="w-full max-w-md mx-auto mb-5">
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="bg-white rounded shadow-lg overflow-hidden">
         {/* Artwork Section */}
         <div className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {/* Image Container */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-slate-100 rounded-md blur-2xl opacity-30 scale-90"></div>
+              <div className="absolute inset-0 bg-slate-100 rounded blur-2xl opacity-30 scale-90"></div>
               <img
                 src={image_href}
                 alt={artwork.title + " image"}
@@ -79,7 +79,7 @@ export default function ProductItem({
               </div>
 
               {/* Notice */}
-              <div className="bg-amber-50 rounded-lg p-3 border border-amber-200">
+              <div className="bg-amber-50 rounded p-3 border border-amber-200">
                 <p className="text-amber-800 text-xs leading-relaxed">
                   <span className="font-semibold">Note:</span> Additional duties
                   and taxes may apply at import
@@ -91,7 +91,7 @@ export default function ProductItem({
 
         {/* Action Button */}
         {/* <div className="p-6 bg-white border-t border-slate-100">
-          <button className="w-full py-3 px-4 text-fluid-xs bg-dark text-white font-semibold rounded-md shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
+          <button className="w-full py-3 px-4 text-fluid-xs bg-dark text-white font-semibold rounded shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
             Create order request
           </button>
         </div> */}

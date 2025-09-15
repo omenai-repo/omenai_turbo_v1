@@ -42,7 +42,7 @@ const OrderRequestToGalleryMail = (
       <Preview>New order request for {artwork_data.title}</Preview>
       <Tailwind>
         <Body className="bg-gray-50 font-sans">
-          <Container className="mx-auto my-10 bg-white rounded-lg shadow-sm max-w-[600px]">
+          <Container className="mx-auto my-10 bg-white rounded shadow-sm max-w-[600px]">
             {/* Header Section */}
             <Section className="px-8 py-6 text-center border-b border-gray-200">
               <Img
@@ -90,12 +90,12 @@ const OrderRequestToGalleryMail = (
               </Text>
 
               {/* Artwork Preview Card */}
-              <Section className="my-8 p-6 bg-gray-50 rounded-lg">
+              <Section className="my-8 p-6 bg-gray-50 rounded">
                 <div className="text-center">
                   <Img
                     src={image}
                     alt={artwork_data.title}
-                    className="mx-auto rounded-lg shadow-md"
+                    className="mx-auto rounded shadow-md"
                     style={{
                       maxWidth: "280px",
                       width: "100%",
@@ -171,7 +171,7 @@ const OrderRequestToGalleryMail = (
               {/* CTA Button */}
               <Section className="text-center my-8">
                 <Link
-                  className="px-8 py-4 rounded-lg font-medium text-white inline-block"
+                  className="px-8 py-4 rounded font-medium text-white inline-block"
                   style={{
                     backgroundColor: "#0f172a",
                     color: "#ffffff",
@@ -184,7 +184,7 @@ const OrderRequestToGalleryMail = (
               </Section>
 
               {/* Action Items */}
-              <Section className="my-6 p-6 bg-blue-50 rounded-lg">
+              <Section className="my-6 p-6 bg-blue-50 rounded">
                 <Text
                   className="text-base mb-4 font-semibold"
                   style={{ color: "#0f172a" }}
@@ -256,7 +256,7 @@ const OrderRequestToGalleryMail = (
               </Section>
 
               {/* Time Reminder */}
-              <Section className="my-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <Section className="my-6 p-4 bg-amber-50 rounded border-l-4 border-amber-400">
                 <Text
                   className="text-sm m-0"
                   style={{ color: "#92400e", lineHeight: "1.5" }}
@@ -287,7 +287,7 @@ const OrderRequestToGalleryMail = (
             </Section>
 
             {/* Support Section */}
-            <Section className="my-8 mx-8 p-6 bg-gray-50 rounded-lg">
+            <Section className="my-8 mx-8 p-6 bg-gray-50 rounded">
               <Text className="text-base mb-2" style={{ color: "#0f172a" }}>
                 <strong>Need help?</strong>
               </Text>

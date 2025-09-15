@@ -16,8 +16,8 @@ export default appRouterSsrErrorHandler(
           {/* Error Icon */}
           <div className="flex justify-center mb-8">
             <div className="relative">
-              <div className="absolute inset-0 bg-red-200 rounded-md blur-2xl opacity-50 animate-pulse"></div>
-              <div className="relative bg-white rounded-md p-6 shadow-lg">
+              <div className="absolute inset-0 bg-red-200 rounded blur-2xl opacity-50 animate-pulse"></div>
+              <div className="relative bg-white rounded p-6 shadow-lg">
                 <svg
                   className="w-16 h-16 text-red-500"
                   fill="none"
@@ -47,7 +47,7 @@ export default appRouterSsrErrorHandler(
             </div>
 
             {/* Error Details */}
-            <div className="bg-white rounded-md p-4 shadow-sm border border-slate-200">
+            <div className="bg-white rounded p-4 shadow-sm border border-slate-200">
               <p className="text-sm text-slate-500 font-mono break-all">
                 {error.message || "An unexpected error occurred"}
               </p>
@@ -57,7 +57,7 @@ export default appRouterSsrErrorHandler(
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => reset()}
-                className="px-4 py-2 text-fluid-xs w-full bg-dark text-white font-normal rounded-lg shadow-sm transform transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
+                className="px-4 py-2 text-fluid-xs w-full bg-dark text-white font-normal rounded shadow-sm transform transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
               >
                 Try again
               </button>
@@ -77,8 +77,8 @@ export default appRouterSsrErrorHandler(
 
           {/* Decorative Elements */}
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute -top-32 -left-32 w-64 h-64 bg-red-50 rounded-md opacity-50"></div>
-            <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-slate-100 rounded-md opacity-50"></div>
+            <div className="absolute -top-32 -left-32 w-64 h-64 bg-red-50 rounded opacity-50"></div>
+            <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-slate-100 rounded opacity-50"></div>
           </div>
         </div>
       </div>

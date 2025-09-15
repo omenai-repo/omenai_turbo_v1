@@ -157,7 +157,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
   return (
     <div className="space-y-4">
       <div>
-        <Input.Label className="text-fluid-xxs font-normal" required>
+        <Input.Label className="text-fluid-xs font-normal" required>
           Headline
         </Input.Label>
         <Input
@@ -169,7 +169,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
         />
       </div>
       <div>
-        <Input.Label className="text-fluid-xxs font-normal" required>
+        <Input.Label className="text-fluid-xs font-normal" required>
           Promotional content
         </Input.Label>
         <Input
@@ -181,7 +181,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
         />
       </div>
       <div>
-        <Input.Label className="text-fluid-xxs font-normal" required>
+        <Input.Label className="text-fluid-xs font-normal" required>
           CTA (This would be a link to the prootional resource)
         </Input.Label>
         <Input
@@ -194,7 +194,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
       </div>
 
       <div>
-        <Input.Label className="text-fluid-xxs font-normal">
+        <Input.Label className="text-fluid-xs font-normal">
           Upload promotional Image
         </Input.Label>
         <div className="flex flex-col space-y-6 w-full items-center">
@@ -205,7 +205,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
                 alt="uploaded image"
                 width={350}
                 height={250}
-                className="w-full h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded-lg cursor-not-allowed"
+                className="w-full h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
                 onClick={() => {
                   setCover(null);
                 }}
@@ -213,7 +213,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
             ) : (
               <button
                 type="button"
-                className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+                className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
                 onClick={() => {
                   imagePickerRef.current?.click();
                 }}
@@ -264,7 +264,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
           color="#0f172a"
           onClick={handlePromotionalUpload}
         >
-          <Text className="text-fluid-xxs font-normal">Add promotional</Text>
+          <Text className="text-fluid-xs font-normal">Add promotional</Text>
         </Button>
       </div>
     </div>

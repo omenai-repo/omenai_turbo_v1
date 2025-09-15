@@ -14,7 +14,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
     <article className="max-w-4xl mx-auto">
       {/* Cover Image */}
       {article.cover && (
-        <div className="relative w-full h-[400px] md:h-[500px] mb-8 rounded-lg overflow-hidden">
+        <div className="relative w-full h-[400px] md:h-[500px] mb-8 rounded overflow-hidden">
           <Image
             src={url}
             alt={article.headline}
@@ -63,7 +63,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
 
       {/* Article Content */}
       <div
-        className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-blockquote:border-l-blue-500 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:rounded-lg prose-img:shadow-lg"
+        className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-blockquote:border-l-blue-500 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:rounded prose-img:shadow-lg"
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
     </article>

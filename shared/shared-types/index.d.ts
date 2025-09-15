@@ -437,6 +437,11 @@ export type IndividualProfileUpdateData = {
   preferences?: string[];
 };
 
+export type ArtistProfileUpdateData = {
+  name?: string;
+  bio?: string;
+};
+
 export type InputData = {
   author: string;
   date: Date;

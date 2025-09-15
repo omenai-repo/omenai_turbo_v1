@@ -29,14 +29,14 @@ const LoggedInUserDropDown = ({
   const { setSelected } = UserDashboardNavigationStore();
 
   return (
-    <div className=" flex items-center justify-center bg-white">
+    <div className=" bg-white">
       <motion.div animate={open ? "open" : "closed"} className="relative">
         <button
           onClick={() => setOpen((pv) => !pv)}
-          className="flex items-center gap-1 pl-3 py-2 rounded-sm text-dark transition-colors"
+          className="flex items-center gap-1 pl-3 py-2 rounded text-dark transition-colors"
         >
           <div>
-            <span className="md:block font-normal whitespace-nowrap text-fluid-xs hidden">
+            <span className="md:block font-medium whitespace-nowrap text-fluid-xxs hidden">
               {user}
             </span>
             <span className="md:block font-normal whitespace-nowrap text-fluid-xxs hidden">
@@ -59,7 +59,7 @@ const LoggedInUserDropDown = ({
           initial={wrapperVariants.closed}
           variants={wrapperVariants}
           style={{ originY: "top", translateX: "-100%" }}
-          className="flex flex-col gap-2 p-5 text-dark bg-white shadow-xl absolute top-[120%] left-[140%] md:left-[100%] w-48 overflow-hidden z-40 ring-1 ring-dark/20 rounded-[10px]"
+          className="flex flex-col gap-2 p-5 text-dark bg-white shadow-xl absolute top-[120%] left-[140%] md:left-[100%] w-48 overflow-hidden z-40 ring-1 ring-dark/20 rounded"
         >
           <Option
             setSelectedTab={setSelected}
@@ -145,7 +145,7 @@ const Option = ({
 }) => {
   const router = useRouter();
   const auth_url = auth_uri();
-  const xs_dashboard_url = dashboard_url();
+  const xxs_dashboard_url = dashboard_url();
   const { signOut } = useAuth({ requiredRole: "user" });
 
   async function handleSignOut() {
@@ -163,21 +163,21 @@ const Option = ({
           <motion.li
             variants={itemVariants}
             onClick={async () => await handleSignOut()}
-            className="flex items-center gap-2 w-full p-3 text-fluid-xs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
+            className="flex items-center gap-2 w-full p-3 text-fluid-xxs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded"
           >
             <motion.span variants={actionIconVariants}>{Icon}</motion.span>
             <span>{text}</span>
           </motion.li>
         </>
       ) : (
-        <Link href={`${xs_dashboard_url}/user/${text.toLowerCase()}`}>
+        <Link href={`${xxs_dashboard_url}/user/${text.toLowerCase()}`}>
           <motion.li
             variants={itemVariants}
             onClick={() => {
               setSelectedTab(text.toLowerCase());
               setOpen(false);
             }}
-            className="flex items-center gap-2 w-full p-3 text-fluid-xs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded-[10px]"
+            className="flex items-center gap-2 w-full p-3 text-fluid-xxs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded"
           >
             <motion.span variants={actionIconVariants}>{Icon}</motion.span>
             <span>{text}</span>

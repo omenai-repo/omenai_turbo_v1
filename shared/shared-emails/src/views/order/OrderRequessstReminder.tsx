@@ -25,7 +25,7 @@ const OrderRequestReminder = (name: string) => {
       <Preview>New order request awaiting your review</Preview>
       <Tailwind>
         <Body className="bg-gray-50 font-sans">
-          <Container className="mx-auto my-10 bg-white rounded-lg shadow-sm max-w-[600px]">
+          <Container className="mx-auto my-10 bg-white rounded shadow-sm max-w-[600px]">
             {/* Header Section */}
             <Section className="px-8 py-6 text-center border-b border-gray-200">
               <Img
@@ -70,7 +70,7 @@ const OrderRequestReminder = (name: string) => {
               {/* CTA Button */}
               <Section className="text-center my-8">
                 <Link
-                  className="px-8 py-4 rounded-lg font-medium text-white inline-block"
+                  className="px-8 py-4 rounded font-medium text-white inline-block"
                   style={{
                     backgroundColor: "#0f172a",
                     color: "#ffffff",
@@ -83,7 +83,7 @@ const OrderRequestReminder = (name: string) => {
               </Section>
 
               {/* Action Items Box */}
-              <Section className="my-6 p-6 bg-gray-50 rounded-lg">
+              <Section className="my-6 p-6 bg-gray-50 rounded">
                 <Text
                   className="text-base mb-4 font-semibold"
                   style={{ color: "#0f172a" }}
@@ -155,7 +155,7 @@ const OrderRequestReminder = (name: string) => {
               </Section>
 
               {/* Reminder Box */}
-              <Section className="my-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <Section className="my-6 p-4 bg-amber-50 rounded border-l-4 border-amber-400">
                 <Text
                   className="text-sm m-0"
                   style={{ color: "#92400e", lineHeight: "1.5" }}
