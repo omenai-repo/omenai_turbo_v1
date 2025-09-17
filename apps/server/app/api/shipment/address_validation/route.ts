@@ -6,6 +6,7 @@ import { validateAddressVerificationRequestData } from "@omenai/shared-lib/valid
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     const {

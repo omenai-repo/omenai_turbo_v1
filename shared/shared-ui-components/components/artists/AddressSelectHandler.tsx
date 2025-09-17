@@ -13,6 +13,7 @@ type SelectInputProps = {
   name: string;
   required: boolean;
   address: AddressTypes;
+  updateCurrency: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function SelectInput({
@@ -22,6 +23,7 @@ export default function SelectInput({
   name,
   onChange,
   address,
+  updateCurrency,
 }: SelectInputProps) {
   const [errorList, setErrorList] = useState<string[]>([]);
   const [stateList, setStateList] = useState<IState[]>([]);
@@ -69,6 +71,7 @@ export default function SelectInput({
         stateCode: "",
         city: "",
       }));
+      updateCurrency(selectedCurrency as string);
     }
 
     if (labelText === "state") {
