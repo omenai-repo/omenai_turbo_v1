@@ -31,7 +31,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
             {/* Logo Section */}
             <Section className="text-center mb-8">
               <Img
-                src="https://fra.cloud.appwrite.io/v1/storage/buckets/68227462000f77619b04/files/68b8ccd6000dedf704d5/view?project=682273fc00235a5bdb6c"
+                src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
                 width="150"
                 height="30"
                 alt="Omenai"

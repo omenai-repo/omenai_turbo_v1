@@ -47,7 +47,7 @@ const OrderRequestToGalleryMail = (
             <Section className="px-8 py-6 text-center border-b border-gray-200">
               <Img
                 src={
-                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68227462000f77619b04/files/68b8ccd6000dedf704d5/view?project=682273fc00235a5bdb6c"
+                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
                 }
                 width="140"
                 height="24"
@@ -309,7 +309,7 @@ const OrderRequestToGalleryMail = (
             <Section className="px-8 py-6 bg-gray-50 border-t border-gray-200">
               <Img
                 src={
-                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68227462000f77619b04/files/68b8ccd6000dedf704d5/view?project=682273fc00235a5bdb6c"
+                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
                 }
                 width="100"
                 height="20"

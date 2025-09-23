@@ -14,6 +14,14 @@ import {
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/tiptap/styles.css";
+import { Viewport } from "next";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 const work_sans = Work_Sans({
   subsets: ["latin"],
@@ -21,13 +29,6 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-// Heading font → Cormorant Garamond
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
 export default function AdminDashboardRootLayout({
   children,
 }: {
@@ -39,7 +40,7 @@ export default function AdminDashboardRootLayout({
         <ColorSchemeScript />
       </head>
       <body
-        className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col justify-center`}
+        className={`${work_sans.variable} flex flex-col justify-center`}
       >
         <Toaster
           position="top-right"

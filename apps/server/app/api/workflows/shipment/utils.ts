@@ -1,4 +1,4 @@
-import { documentation_storage } from "@omenai/appwrite-config/appwrite";
+import { storage } from "@omenai/appwrite-config/appwrite";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -10,7 +10,7 @@ export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
-    const fileUploaded = await documentation_storage.createFile(
+    const fileUploaded = await storage.createFile(
       process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
       ID.unique(),
       file
@@ -104,7 +104,7 @@ export async function handleWaybillUpload(
     throw new ServerError("Waybill document upload failed on Appwrite");
   }
 
-  const waybillDocLink = documentation_storage.getFileView(
+  const waybillDocLink = storage.getFileView(
     APPWRITE_BUCKET_ID,
     uploadedDoc.$id
   );

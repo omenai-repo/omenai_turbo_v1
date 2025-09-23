@@ -1,10 +1,12 @@
 import { editorial_database } from "@omenai/appwrite-config";
 export async function deleteEditorialPiece(documentId: string) {
   try {
-    const response = editorial_database.deleteDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
-      documentId
+    const response = editorial_database.deleteRow({
+      databaseId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
+      tableId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
+      rowId: documentId
+    }
+
     );
 
     return { isOk: true, data: response };

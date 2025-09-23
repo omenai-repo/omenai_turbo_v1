@@ -28,20 +28,15 @@ export const getImageFileView = (
   height?: number,
   quality: number = 70 // Default to 70 instead of 100
 ) => {
-  const fileData = storage.getFilePreview(
-    process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+  const fileData = storage.getFilePreview({
+    bucketId:process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
     fileId,
-    width,
-    height || 0,
-    appwrite_image_gravity.Center,
-    quality, // Use variable quality
-    0,
-    "FFFFFF",
-    0,
-    1,
-    0,
-    "FFFFFF",
-    appwrite_image_format.Webp
+    width, // width, will be resized using this value.
+    height: height|| 0, // height, ignored when 0
+    gravity:appwrite_image_gravity.Center, // crop center
+    quality, // slight compression
+    output:appwrite_image_format.Webp
+  }
   );
 
   return fileData;

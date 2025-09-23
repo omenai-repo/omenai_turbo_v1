@@ -12,13 +12,17 @@ export default function Editorials() {
   const { data: editorials, isLoading } = useQuery({
     queryKey: ["fetch_editorials"],
     queryFn: async () => {
-      const response = await editorial_database.listDocuments(
-        process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!
-      );
+      const response = await editorial_database.listRows({
 
-      if (response?.documents) {
-        return response.documents;
+        databaseId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
+        tableId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!
+      }
+      )
+
+      console.log(response)
+
+      if (response?.rows) {
+        return response.rows;
       } else throw new Error("Something went wrong");
     },
     refetchOnWindowFocus: false,

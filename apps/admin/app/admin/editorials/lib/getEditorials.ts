@@ -3,12 +3,12 @@ import { Query } from "appwrite";
 
 export async function listEditorials() {
   try {
-    const response = editorial_database.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!
-    );
+    const response = editorial_database.listRows({
+      databaseId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
+      tableId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!
+    });
 
-    const result = (await response).documents;
+    const result = (await response).rows;
 
     return { isOk: true, data: result };
   } catch (error) {

@@ -3,10 +3,12 @@ import { Query } from "appwrite";
 
 export async function getEditorial(id: string, slug: string) {
   try {
-    const response = await editorial_database.getDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
-      id
+    const response = await editorial_database.getRow({
+
+      databaseId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
+      tableId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
+      rowId:id
+    }
       //   [Query.equal("slug", slug)]
     );
 

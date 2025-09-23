@@ -54,7 +54,6 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-work_sans)", "sans-serif"], // Inter is now the global default
-        heading: ["var(--font-cormorant)", "serif"], // use only when needed
       },
       backgroundImage: {
         "hero-image": "url('/images/home_bg.png')",

@@ -9,8 +9,8 @@ export const standardRateLimit = {
 
 // Strict rate limiting for expensive operations
 export const strictRateLimit = {
-  limit: 3,
-  window: 60, // 3 requests per minute
+  limit: 10,
+  window: 60, // 10 requests per minute
   keyPrefix: "strict",
 };
 

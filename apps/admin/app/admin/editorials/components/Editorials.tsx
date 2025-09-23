@@ -11,6 +11,7 @@ export default function Editorials() {
     queryKey: ["fetch_admin_editorials"],
     queryFn: async () => {
       const response = await listEditorials();
+      console.log(response)
 
       if (!response.isOk) {
         toast_notif(

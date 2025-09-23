@@ -34,13 +34,7 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-// Heading font → Cormorant Garamond
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
+
 
 export const metadata: Metadata = {
   title: "Omenai",
@@ -71,7 +65,7 @@ export default async function RootLayout({
           <ColorSchemeScript />
         </head>
         <body
-          className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col justify-center`}
+          className={`${work_sans.variable} flex flex-col justify-center`}
         >
           <NextTopLoader color="#0f172a" height={6} />
           <Toaster

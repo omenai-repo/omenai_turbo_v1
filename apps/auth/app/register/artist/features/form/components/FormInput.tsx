@@ -4,7 +4,7 @@ import FormController from "./FormController";
 import { registerAccount } from "@omenai/shared-services/register/registerAccount";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { logo_storage } from "@omenai/appwrite-config/appwrite";
+import { storage } from "@omenai/appwrite-config/appwrite";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
 import uploadArtistLogoContent from "../../uploadArtistLogo";
@@ -91,7 +91,7 @@ export default function FormInput() {
         router.push(`/verify/artist/${response.body.data}`);
         clearData();
       } else {
-        await logo_storage.deleteFile(
+        await storage.deleteFile(
           process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
           file.fileId
         );

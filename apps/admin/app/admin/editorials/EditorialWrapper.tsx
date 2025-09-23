@@ -16,7 +16,7 @@ export default function EditorialWrapper() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-fluid-md font-semibold">Your Editorials</h1>
+        <h1 className="text-fluid-sm font-semibold">Your Editorials</h1>
         <Link href={"/admin/editorials/add"}>
           <Button
             variant="filled"

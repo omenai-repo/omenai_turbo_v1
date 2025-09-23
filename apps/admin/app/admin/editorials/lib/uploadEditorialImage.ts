@@ -1,11 +1,13 @@
-import { editorial_storage, identifier } from "@omenai/appwrite-config";
+import { storage, identifier } from "@omenai/appwrite-config";
 
 export async function uploadEditorialImage(image: File) {
   try {
-    const response = await editorial_storage.createFile(
-      process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_BUCKET_ID!,
-      identifier.unique(),
-      image
+    const response = await storage.createFile({
+      bucketId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_BUCKET_ID!,
+      fileId:identifier.unique(),
+      file:image
+    }
+
     );
     return { isOk: true, data: response };
   } catch (error) {

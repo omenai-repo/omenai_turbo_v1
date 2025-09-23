@@ -8,7 +8,14 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import { Cormorant_Garamond, Work_Sans } from "next/font/google";
+import { Work_Sans } from "next/font/google";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 // Body font → work_sans
 const work_sans = Work_Sans({
@@ -17,15 +24,10 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-// Heading font → Cormorant Garamond
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
+
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
+import { Viewport } from "next";
 export default async function DashboardRootLayout({
   children,
 }: {
@@ -38,7 +40,7 @@ export default async function DashboardRootLayout({
         <ColorSchemeScript />
       </head>
       <body
-        className={`${work_sans.variable} ${cormorantGaramond.variable} flex flex-col px-4 justify-center`}
+        className={`${work_sans.variable} flex flex-col px-4 justify-center`}
       >
         <SessionProvider initialSessionData={initialSessionData}>
           <MantineProvider>

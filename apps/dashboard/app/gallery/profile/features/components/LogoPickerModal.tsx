@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { logo_storage, storage } from "@omenai/appwrite-config/appwrite";
+import { storage } from "@omenai/appwrite-config/appwrite";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ID } from "appwrite";
@@ -77,7 +77,7 @@ export default function LogoPickerModal() {
 
     try {
       if (logo) {
-        const logoUpdated = await logo_storage.createFile(
+        const logoUpdated = await storage.createFile(
           process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
           ID.unique(),
           logo

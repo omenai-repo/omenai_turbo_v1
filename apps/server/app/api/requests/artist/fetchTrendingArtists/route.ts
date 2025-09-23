@@ -5,12 +5,15 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
+
 const config: CombinedConfig = {
   ...lenientRateLimit,
 };
+
 export const GET = withRateLimitHighlightAndCsrf(config)(async function GET() {
   try {
     await connectMongoDB();
+
     const data = await Artworkuploads.aggregate([
       // Stage 1: Filter for artworks by artists only
       {
@@ -84,13 +87,19 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET() {
         $unwind: "$artists",
       },
 
-      // Stage 7: Calculate percentage and filter for 2%+
+      // Stage 7: Calculate percentage safely (avoid divide by zero)
       {
         $addFields: {
           likePercentage: {
-            $multiply: [
-              { $divide: ["$artists.artistLikes", "$totalLikes"] },
-              100,
+            $cond: [
+              { $eq: ["$totalLikes", 0] }, // if no likes at all
+              0, // fallback percentage
+              {
+                $multiply: [
+                  { $divide: ["$artists.artistLikes", "$totalLikes"] },
+                  100,
+                ],
+              },
             ],
           },
         },
@@ -122,11 +131,11 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET() {
         $sort: { likePercentage: -1 },
       },
     ]);
+
     return NextResponse.json({ message: "Trending artist retrieved", data });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

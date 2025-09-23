@@ -4,7 +4,7 @@
   "private": true,
   "main": "appwrite",
   "dependencies": {
-    "appwrite": "^16.0.2"
+    "appwrite": "^20.1.0"
   },
   "devDependencies": {
     "@omenai/typescript-config": "*"

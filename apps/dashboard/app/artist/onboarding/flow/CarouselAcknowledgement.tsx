@@ -9,7 +9,7 @@ import {
   ArtistSchemaTypes,
 } from "@omenai/shared-types";
 import { toast } from "sonner";
-import { documentation_storage } from "@omenai/appwrite-config";
+import { storage } from "@omenai/appwrite-config";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -89,7 +89,7 @@ export default function CarouselAcknowledgement({
           setOpenOnboardingCompletedModal(true);
           // Optionally clear data
         } else {
-          await documentation_storage.deleteFile(
+          await storage.deleteFile(
             process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
             file.fileId
           );
