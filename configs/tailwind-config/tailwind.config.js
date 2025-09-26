@@ -53,7 +53,7 @@ module.exports = {
         "3xl": "1560px",
       },
       fontFamily: {
-        sans: ["var(--font-work_sans)", "sans-serif"], // Inter is now the global default
+        sans: ["var(--font-work_sans)"], 
       },
       backgroundImage: {
         "hero-image": "url('/images/home_bg.png')",

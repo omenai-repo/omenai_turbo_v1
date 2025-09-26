@@ -1,8 +1,10 @@
+import { ArtworkMediumTypes } from "@omenai/shared-types";
+import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 import Image from "next/image";
 import Link from "next/link";
 
 type ArtCollectionCardTypes = {
-  title: string;
+  title: ArtworkMediumTypes;
   url: string;
   isCatalog?: boolean;
 };
@@ -11,12 +13,10 @@ export default function ArtCollectionCard({
   url,
   isCatalog,
 }: ArtCollectionCardTypes) {
-  const safeSlug = encodeURIComponent(title)
-    .replace(/\(/g, "%28")
-    .replace(/\)/g, "%29");
+
   return (
     <div className="py-4 min-w-[300px] rounded relative">
-      <Link href={`/collections/${safeSlug}`}>
+      <Link href={`/collections/${encodeMediumForUrl(title)}`}>
         <div className="flex flex-col ">
           <Image
             width={300}

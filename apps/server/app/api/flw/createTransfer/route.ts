@@ -51,6 +51,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       currency: get_wallet.base_currency,
       beneficiary: get_wallet.primary_withdrawal_account.beneficiary_id,
       beneficiary_name: get_wallet.primary_withdrawal_account.account_name,
+      // TODO: Remove PMCKDU Flag
       reference: `OMENAI_TRANSFER_${generateAlphaDigit(12)}_PMCKDU_1`,
       debit_currency: "USD",
       destination_branch_code:

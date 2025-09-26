@@ -9,6 +9,7 @@ import { galleryProfileUpdate } from "@omenai/shared-state-store/src/gallery/gal
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { MapPin } from "lucide-react";
 
 export const FormCard = () => {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
@@ -203,6 +204,33 @@ export const FormCard = () => {
                 placeholder="Tell visitors about your gallery, the artists you represent, and your mission..."
               />
             </div>
+                    {/* Address */}
+        <div className="group">
+          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+            Gallery Address
+          </label>
+          <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded">
+            <div className="flex items-start space-x-3">
+              <MapPin className="w-5 h-5 text-dark/50 mt-1" />
+              <div>
+                <p className="text-fluid-xs text-dark">
+                  {user.address.address_line}
+                </p>
+                <p className="text-fluid-xs text-dark/50">
+                  {user.address.city}, {user.address.state}, {}
+                  {user.address.zip}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {}}
+              className="px-4 py-2 bg-dark  rounded hover:bg-dark/80 text-white 
+                       transition-all duration-300 text-fluid-xxs font-normal"
+            >
+              Update Address
+            </button>
+          </div>
+        </div>
 
             {/* Submit Button */}
             <div className="pt-6 border-t border-slate-200">

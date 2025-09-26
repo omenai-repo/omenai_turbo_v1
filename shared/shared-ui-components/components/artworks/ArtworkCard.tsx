@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { ArtworkMediumTypes } from "@omenai/shared-types";
+import {encodeMediumForUrl} from "@omenai/shared-utils/src/encodeMediumUrl"
 
 export default function ArtworkCard({
   image,
@@ -44,16 +46,17 @@ export default function ArtworkCard({
   isDashboard?: boolean;
   dashboard_type?: "artist" | "gallery";
   availability: boolean;
-  medium: string;
+  medium: ArtworkMediumTypes;
   trending?: boolean;
 }) {
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
 
-  const safeSlug = encodeURIComponent(medium)
-    .replace(/\(/g, "%28")
-    .replace(/\)/g, "%29");
+
+
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
+
+
   return (
     <div className="group relative bg-white rounded border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
       <div className="relative">
@@ -89,7 +92,7 @@ export default function ArtworkCard({
               </button>
             </Link>
           ) : isDashboard && dashboard_type === "artist" ? null : (
-            <Link href={`/collections/${safeSlug}`}>
+            <Link href={`/collections/${encodeMediumForUrl(medium)}`}>
               <button className="px-4 py-1 bg-white text-dark rounded">
                 <span className="font-normal text-fluid-xs ">{medium}</span>
 

@@ -8,7 +8,8 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { useWindowSize } from "usehooks-ts";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-import { FilterOptions } from "@omenai/shared-types";
+import { ArtworkMediumTypes, FilterOptions } from "@omenai/shared-types";
+import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 
 export default function SimilarArtworks({
   title,
@@ -17,7 +18,7 @@ export default function SimilarArtworks({
 }: {
   title: string;
   sessionId: string | undefined;
-  medium: string;
+  medium: ArtworkMediumTypes;
 }) {
   const { width } = useWindowSize();
   const filter: FilterOptions = {
@@ -84,7 +85,7 @@ export default function SimilarArtworks({
                     impressions: number;
                     like_IDs: string[];
                     art_id: string;
-                    medium: string;
+                    medium: ArtworkMediumTypes;
                     rarity: string;
                     availability: boolean;
                   }) => {
@@ -111,7 +112,7 @@ export default function SimilarArtworks({
         </div>
       </div>
       <div className="flex items-center justify-center py-5">
-        <Link href={`/collections/${safeSlug}`} className="group">
+        <Link href={`/collections/${encodeMediumForUrl(medium)}`} className="group">
           <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded py-1 text-fluid-xs">
             View more <FiArrowRight size={18} />
           </button>

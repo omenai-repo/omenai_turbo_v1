@@ -5,19 +5,28 @@ import Link from "next/link";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { artMediumHistory } from "./artMediumBriefHistory";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import {decodeMediumFromUrl} from "@omenai/shared-utils/src/decodeMediumForUrl"
+import { ArtworkMediumTypes } from "@omenai/shared-types";
 
 type ArtMedium = keyof typeof artMediumHistory;
 
 export default function CollectionWrapper({ id }: { id: string }) {
   const { user } = useAuth({ requiredRole: "user" });
 
-  const pageTitleParser = () => {
-    let decodedId = decodeURIComponent(id);
-    console.log(decodedId);
-    return decodedId as ArtMedium;
-  };
+const pageTitleParser = (): ArtworkMediumTypes | null => {
+  const decodedMedium = decodeMediumFromUrl(id);
+  
+  if (!decodedMedium) {
+    console.warn(`No matching medium found for slug: ${id}`);
+    return null;
+  }
+  
+  console.log('Decoded medium:', decodedMedium);
+  return decodedMedium;
+};
+console.log(pageTitleParser())
 
-  let page_title = pageTitleParser();
+  let page_title = pageTitleParser() as ArtworkMediumTypes
 
   return (
     <main className="">
@@ -57,7 +66,7 @@ export default function CollectionWrapper({ id }: { id: string }) {
         {/* <Filter medium={id} /> */}
         <div className="">
           <ArtworksListing
-            medium={pageTitleParser()}
+            medium={pageTitleParser() || ""}
             sessionId={user ? user.id : undefined}
           />
         </div>

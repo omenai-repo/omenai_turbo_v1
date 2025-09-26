@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchSimilarArtworksByArtist } from "@omenai/shared-services/artworks/fetchSimilarArtworksByArtist";
+import { ArtworkMediumTypes } from "@omenai/shared-types";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
@@ -69,7 +70,7 @@ export default function SimilarArtworksByArtist({
                     impressions: number;
                     like_IDs: string[];
                     art_id: string;
-                    medium: string;
+                    medium: ArtworkMediumTypes;
                     rarity: string;
                     availability: boolean;
                   }) => {

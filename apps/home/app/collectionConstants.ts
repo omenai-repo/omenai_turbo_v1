@@ -1,4 +1,6 @@
-export const collections: { title: string; url: string }[] = [
+import { ArtworkMediumTypes } from "@omenai/shared-types";
+
+export const collections: { title: ArtworkMediumTypes; url: string }[] = [
   { title: "Photography", url: "photography_art" },
   { title: "Acrylic on canvas/linen/panel", url: "acrylic_art" },
   { title: "Sculpture (Bronze/stone/metal)", url: "bronze_art" },
