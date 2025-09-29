@@ -75,36 +75,29 @@ function safeJsonParse<T = unknown>(text: string): T | null {
 
 
 /**
- * Verify Flutterwave webhook signature
- * @param rawBody - The raw request body as string
- * @param headerSignature - The signature from the webhook header
- * @param secret - Your Flutterwave webhook secret
- * @returns boolean indicating if signature is valid
+ * Verify Flutterwave webhook by comparing the secret hash
+ * Flutterwave sends your secret hash in the 'verif-hash' header
  */
 function verifyWebhookSignature(
-  rawBody: string,
-  headerSignature: string | null | undefined,
+  headerHash: string | null | undefined,
   secret: string
 ): boolean {
-  // Basic validation
-  if (!headerSignature || !secret || !rawBody) {
+  if (!headerHash || !secret) {
     return false;
   }
 
   try {
-    // Generate expected signature
-    const expectedSignature = crypto
-      .createHmac('sha256', secret)
-      .update(rawBody, 'utf8')
-      .digest('hex');
-
-    // Compare signatures using timing-safe comparison
-    return crypto.timingSafeEqual(
-      Buffer.from(expectedSignature, 'hex'),
-      Buffer.from(headerSignature, 'hex')
-    );
+    // Simple constant-time string comparison
+    const a = Buffer.from(headerHash, 'utf8');
+    const b = Buffer.from(secret, 'utf8');
+    
+    if (a.length !== b.length) {
+      return false;
+    }
+    
+    return crypto.timingSafeEqual(a, b);
   } catch (error) {
-    console.error('Webhook signature verification failed:', error);
+    console.error('Webhook verification failed:', error);
     return false;
   }
 }
@@ -490,7 +483,7 @@ export const POST = withAppRouterHighlight(async function POST(
   const headerSignature = request.headers.get("verif-hash");
   const secret = process.env.FLW_SECRET_HASH ?? "";
 
-  if (!verifyWebhookSignature(rawBody, headerSignature, secret)) {
+  if (!verifyWebhookSignature(headerSignature, secret)) {
     console.warn("[webhook] invalid signature");
     return NextResponse.json(
       { error: "Invalid webhook signature" },
