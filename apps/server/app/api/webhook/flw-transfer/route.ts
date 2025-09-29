@@ -222,12 +222,13 @@ export const POST = withAppRouterHighlight(async function POST(
   if (req.event === "transfer.completed") {
     // Verify transaction with flw api
     try {
+      const key = process.env.FLW_TEST_SECRET_KEY;
+      if (!key) throw new Error("FLW secret key not configured");
       const verified_transaction = await verifyFlutterwaveTransaction(
         req,
         `https://api.flutterwave.com/v3/transfers/${req.data.id}`
       );
 
-      console.log(verified_transaction);
       const client = await getMongoClient();
 
       const session = await client.startSession();

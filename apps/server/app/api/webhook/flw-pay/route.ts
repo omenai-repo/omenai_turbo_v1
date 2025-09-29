@@ -32,25 +32,6 @@ import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/
 
 /* ----------------------------- Config & schemas --------------------------- */
 
-// minimal shape expected from FLW webhook body (we validate fields we use)
-const FlwWebhookSchema = z.object({
-  event: z.string(),
-  data: z.object({
-    id: z.string(),
-    tx_ref: z.string().optional(),
-    amount: z.union([z.string(), z.number()]).transform(String),
-    currency: z.string(),
-    status: z.string(),
-    meta: z
-      .any()
-      .optional()
-      .refine(
-        (m) => m !== undefined && m !== null,
-        "meta must exist for purchase"
-      ),
-  }),
-});
-
 // the meta fields we rely on
 const MetaSchema = z.object({
   buyer_email: z.string().email(),
@@ -64,15 +45,6 @@ const MetaSchema = z.object({
 });
 
 /* -------------------------- Utility / helpers ------------------------------ */
-
-function safeJsonParse<T = unknown>(text: string): T | null {
-  try {
-    return JSON.parse(text);
-  } catch {
-    return null;
-  }
-}
-
 
 /**
  * Verify Flutterwave webhook by comparing the secret hash
@@ -490,24 +462,8 @@ export const POST = withAppRouterHighlight(async function POST(
       { status: 403 }
     );
   }
+  const body = await request.json();
 
-  const parsed = safeJsonParse(rawBody);
-  if (!parsed) {
-    console.error("[webhook] invalid json body");
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
-
-  const parsedWebhook = FlwWebhookSchema.safeParse(parsed);
-  if (!parsedWebhook.success) {
-    console.error(
-      "[webhook] webhook payload validation failed:",
-      parsedWebhook.error.format()
-    );
-    // respond 200 to avoid retries for malformed events; log for later inspection
-    return NextResponse.json({ status: 200 });
-  }
-
-  const body = parsedWebhook.data;
 
   if (body.event === "charge.completed") {
     try {
