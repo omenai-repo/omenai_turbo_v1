@@ -12,6 +12,10 @@ const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
     trans_recipient_id: { type: String, required: true },
     trans_recipient_role: { type: String, required: true },
     status: { type: String, required: true },
+    verifiedAt: {type: Date},
+    webhookReceivedAt: {type: Date},
+    createdBy: {type: String},
+    webhookConfirmed: {type: Boolean}
   },
   { timestamps: true }
 );

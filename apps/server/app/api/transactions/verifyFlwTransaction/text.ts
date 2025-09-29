@@ -1,8 +1,8 @@
-// apps/server/app/api/webhooks/flutterwave/purchase/route.ts
+// apps/server/app/api/verify-payment/route.ts
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { z } from "zod";
 
 import {
   NotificationPayload,
@@ -10,8 +10,6 @@ import {
   PurchaseTransactionModelSchemaTypes,
   PurchaseTransactionPricing,
 } from "@omenai/shared-types";
-
-import { z } from "zod";
 
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
@@ -27,12 +25,12 @@ import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
-import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-/* ----------------------------- Config & schemas --------------------------- */
+/* ----------------------------- Schemas & Types --------------------------- */
 
 const MetaSchema = z.object({
-  buyer_email: z.email(),
+  buyer_email: z.string().email(),
   buyer_id: z.string().optional(),
   seller_id: z.string().optional(),
   seller_designation: z.string().optional(),
@@ -40,48 +38,17 @@ const MetaSchema = z.object({
   unit_price: z.union([z.string(), z.number()]).optional(),
   shipping_cost: z.union([z.string(), z.number()]).optional(),
   tax_fees: z.union([z.string(), z.number()]).optional(),
+  type: z.string().optional(),
 });
 
-/* -------------------------- Utility / helpers ------------------------------ */
+/* ----------------------------- Helpers --------------------------- */
 
-function verifyWebhookSignature(
-  headerHash: string | null | undefined,
-  secret: string
-): boolean {
-  if (!headerHash || !secret) {
-    return false;
-  }
-
-  try {
-    const a = Buffer.from(headerHash, "utf8");
-    const b = Buffer.from(secret, "utf8");
-
-    if (a.length !== b.length) {
-      return false;
-    }
-
-    return crypto.timingSafeEqual(a, b);
-  } catch (error) {
-    console.error("Webhook verification failed:", error);
-    return false;
-  }
-}
-
-async function fireAndForget(p: Promise<unknown>) {
-  try {
-    await p;
-  } catch (err) {
-    console.error("[webhook][background-task] failure:", err);
-  }
-}
-
-/* ---------------------------- Business logic ------------------------------- */
-
-async function verifyFlutterwaveTransaction(
-  transactionId: string
-): Promise<any> {
+async function verifyFlutterwaveTransaction(transactionId: string): Promise<any> {
   const key = process.env.FLW_TEST_SECRET_KEY;
-  if (!key) throw new Error("FLW secret key not configured");
+  if (!key) {
+    throw new Error("Flutterwave secret key not configured");
+  }
+
   const url = `https://api.flutterwave.com/v3/transactions/${transactionId}/verify`;
   const res = await fetch(url, {
     method: "GET",
@@ -93,29 +60,36 @@ async function verifyFlutterwaveTransaction(
 
   if (!res.ok) {
     const body = await res.text().catch(() => null);
-    const message = `flutterwave verification failed: ${res.status} ${res.statusText}`;
-    console.error("[webhook][flw-verify] ", message, body ?? "");
-    throw new Error(message);
+    throw new Error(`Flutterwave verification failed: ${res.status} ${body || ""}`);
   }
+
   return await res.json();
 }
 
-async function handlePurchaseTransaction(
+async function fireAndForget(p: Promise<unknown>) {
+  try {
+    await p;
+  } catch (err) {
+    console.error("[verification][background-task] failure:", err);
+  }
+}
+
+/* ----------------------------- Core Payment Processing --------------------------- */
+
+async function processPurchaseTransaction(
   verified_transaction: any,
-  reqBody: any
+  source: 'verification' | 'webhook'
 ) {
   const metaRaw = verified_transaction?.data?.meta ?? null;
   const metaParse = MetaSchema.safeParse(metaRaw);
-  
+
   if (!metaParse.success) {
-    console.error(
-      "[webhook][purchase] invalid meta:",
-      metaParse.error.format()
-    );
-    return NextResponse.json({ status: 200 });
+    console.error(`[${source}][purchase] invalid meta:`, metaParse.error.format());
+    throw new Error("Invalid transaction metadata");
   }
-  
+
   const meta = metaParse.data;
+  const flwStatus = String(verified_transaction.data.status).toLowerCase();
 
   // Find the order
   const order_info = await CreateOrder.findOne({
@@ -124,73 +98,35 @@ async function handlePurchaseTransaction(
   });
 
   if (!order_info) {
-    console.error("[webhook][purchase] order not found for meta:", { meta });
-    return NextResponse.json({ status: 200 });
+    console.error(`[${source}][purchase] order not found for meta:`, { meta });
+    throw new Error("Order not found");
   }
 
-  const flwStatus = String(verified_transaction.data.status).toLowerCase();
-
-  // Handle failed/pending
+  // Handle non-successful payments
   if (flwStatus === "failed") {
-    try {
-      await sendPaymentFailedMail({
-        email: meta.buyer_email,
-        name: order_info.buyer_details.name,
-        artwork: order_info.artwork_data.title,
-      });
-    } catch (err) {
-      console.error("[webhook][email] sendPaymentFailedMail failed:", err);
-    }
-    return NextResponse.json({ status: 200 });
+    throw new Error("Payment failed");
   }
 
   if (flwStatus === "pending") {
-    return NextResponse.json({ status: 200 });
+    return {
+      success: false,
+      status: "pending",
+      message: "Payment is still pending",
+    };
   }
 
-  // Verify tx_ref, amount, currency match
-  const tv = String(verified_transaction.data.tx_ref ?? "");
-  const req_tx_ref = String(reqBody?.data?.tx_ref ?? "");
-  const verifiedAmount = String(verified_transaction.data.amount ?? "");
-  const reqAmount = String(reqBody?.data?.amount ?? "");
-  const verifiedCurrency = String(verified_transaction.data.currency ?? "");
-  const reqCurrency = String(reqBody?.data?.currency ?? "");
-
-  if (
-    !(
-      flwStatus === "successful" &&
-      tv &&
-      tv === req_tx_ref &&
-      verifiedAmount === reqAmount &&
-      verifiedCurrency === reqCurrency
-    )
-  ) {
-    console.error("[webhook][purchase] verification mismatch", {
-      flwStatus,
-      tv,
-      req_tx_ref,
-      verifiedAmount,
-      reqAmount,
-      verifiedCurrency,
-      reqCurrency,
-    });
-    return NextResponse.json({ status: 200 });
+  if (flwStatus !== "successful") {
+    throw new Error(`Unexpected payment status: ${flwStatus}`);
   }
 
-  // Connect to MongoDB and get session
+  // Connect to MongoDB and start session
   const client = await connectMongoDB();
   const session = await client.startSession();
 
   try {
-    // Clear hold_status (non-transactional operation)
-    await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
-      { $set: { hold_status: null } }
-    ).session(session);
-
     session.startTransaction();
 
-    // Idempotency check
+    // Idempotency check: has this transaction already been processed?
     const existingTransaction = await PurchaseTransactions.findOne({
       trans_reference: verified_transaction.data.id,
     }).session(session);
@@ -198,18 +134,33 @@ async function handlePurchaseTransaction(
     if (existingTransaction) {
       await session.abortTransaction();
       console.info(
-        "[webhook][purchase] transaction already exists (likely processed by verification):",
+        `[${source}][purchase] transaction already processed:`,
         verified_transaction.data.id
       );
 
-      // Update webhook timestamp outside transaction
-      await PurchaseTransactions.updateOne(
-        { trans_reference: verified_transaction.data.id },
-        { $set: { webhookReceivedAt: new Date(), webhookConfirmed: true } }
-      );
+      // If processed by verification, just update webhook timestamp
+      if (source === 'webhook') {
+        // Update outside of transaction since we're aborting
+        await PurchaseTransactions.updateOne(
+          { trans_reference: verified_transaction.data.id },
+          { $set: { webhookReceivedAt: new Date() } }
+        );
+      }
 
-      return NextResponse.json({ status: 200 });
+      return {
+        success: true,
+        status: "completed",
+        message: "Transaction already processed",
+        order_id: order_info.order_id,
+        alreadyProcessed: true,
+      };
     }
+
+    // Clear hold_status
+    await CreateOrder.updateOne(
+      { order_id: order_info.order_id },
+      { $set: { hold_status: null } }
+    ).session(session);
 
     // Build pricing
     const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
@@ -224,7 +175,7 @@ async function handlePurchaseTransaction(
       currency: "USD",
     };
 
-    const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
+    const transactionData: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
       trans_pricing: transaction_pricing,
       trans_date: nowUTC,
       trans_recipient_id: meta.seller_id ?? "",
@@ -232,14 +183,15 @@ async function handlePurchaseTransaction(
       trans_recipient_role: "artist",
       trans_reference: verified_transaction.data.id,
       status: verified_transaction.data.status,
-      createdBy: 'webhook',
-      webhookReceivedAt: new Date(),
-      webhookConfirmed: true,
+      createdBy: source,
+      ...(source === 'verification' && { verifiedAt: new Date() }),
+      ...(source === 'webhook' && { webhookReceivedAt: new Date() }),
     };
 
+    // Execute all DB operations in parallel
     const formatted_date = getFormattedDateTime();
 
-    const createTransactionPromise = PurchaseTransactions.create([data], {
+    const createTransactionPromise = PurchaseTransactions.create([transactionData], {
       session,
     });
 
@@ -271,7 +223,7 @@ async function handlePurchaseTransaction(
       year,
       value: meta.unit_price,
       id: meta.seller_id,
-      trans_ref: data.trans_reference,
+      trans_ref: transactionData.trans_reference,
     };
 
     const createSalesActivityPromise = SalesActivity.create([activity], {
@@ -307,6 +259,7 @@ async function handlePurchaseTransaction(
       fundWalletPromise,
     ]);
 
+    // Commit transaction
     await session.commitTransaction();
 
     const transaction_id =
@@ -315,7 +268,7 @@ async function handlePurchaseTransaction(
         ? createTransactionResult[0].trans_id
         : undefined;
 
-    // Get push tokens
+    // Post-commit: Send notifications and emails (fire-and-forget)
     const buyer_push = await DeviceManagement.findOne(
       { auth_id: order_info.buyer_details.id },
       "device_push_token"
@@ -349,7 +302,7 @@ async function handlePurchaseTransaction(
           "/api/workflows/notification/pushNotification",
           `notification_workflow_buyer_${order_info.order_id}_${generateDigit(2)}`,
           JSON.stringify(buyer_notif_payload)
-        ).catch((err) => console.error("[workflow][buyer-notif] failed:", err))
+        )
       );
     }
 
@@ -374,16 +327,20 @@ async function handlePurchaseTransaction(
           "/api/workflows/notification/pushNotification",
           `notification_workflow_seller_${order_info.order_id}_${generateDigit(2)}`,
           JSON.stringify(seller_notif_payload)
-        ).catch((err) => console.error("[workflow][seller-notif] failed:", err))
+        )
       );
     }
+
+    Promise.all(notificationPromises).catch((err) =>
+      console.error("[verification][notifications] errors:", err)
+    );
 
     const priceFormatted = formatPrice(
       Number(verified_transaction.data.amount),
       "USD"
     );
 
-    // Launch workflows (fire-and-forget)
+    // Fire-and-forget for shipment and email
     fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
@@ -410,78 +367,64 @@ async function handlePurchaseTransaction(
       )
     );
 
-    if (notificationPromises.length > 0) {
-      Promise.all(notificationPromises).catch((err) =>
-        console.error("[workflow][notifications] errors:", err)
-      );
-    }
+    return {
+      success: true,
+      status: "completed",
+      message: "Payment processed successfully",
+      order_id: order_info.order_id,
+      transaction_id,
+    };
 
-    return NextResponse.json({ status: 200 });
   } catch (err) {
-    console.error("[webhook][purchase] transaction error:", err);
-    try {
-      await session.abortTransaction();
-    } catch (abortErr) {
-      console.error("[webhook][purchase] abort failed:", abortErr);
-    }
-    // Return 200 to prevent Flutterwave retries
-    return NextResponse.json({ status: 200 });
+    console.error(`[${source}][purchase] transaction error:`, err);
+    await session.abortTransaction();
+    throw err;
   } finally {
-    try {
-      await session.endSession();
-    } catch (endErr) {
-      console.error("[webhook][purchase] endSession failed:", endErr);
-    }
+    await session.endSession();
   }
 }
 
-/* ----------------------------- Route handler -------------------------------- */
+/* ----------------------------- Route Handler --------------------------- */
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
-) {
+export const POST = withAppRouterHighlight(async function POST(request: Request) {
   try {
-    // Verify webhook signature
-    const headerSignature = request.headers.get("verif-hash");
-    const secret = process.env.FLW_SECRET_HASH ?? "";
+    const data = await request.json();
 
-    if (!verifyWebhookSignature(headerSignature, secret)) {
-      console.warn("[webhook] invalid signature");
+    if (!data.transaction_id) {
       return NextResponse.json(
-        { error: "Invalid webhook signature" },
-        { status: 403 }
+        { success: false, message: "Transaction ID is required" },
+        { status: 400 }
       );
     }
 
-    // Parse webhook body
-    const body = await request.json();
+    // Verify the transaction with Flutterwave
+    const verified_transaction = await verifyFlutterwaveTransaction(
+      data.transaction_id
+    );
 
-    if (body.event === "charge.completed") {
-      // Verify the transaction server-side with Flutterwave
-      const verified_transaction = await verifyFlutterwaveTransaction(
-        body.data.id
-      );
+    // Check if it's a subscription (no meta or meta.type === 'subscription')
+    const meta = verified_transaction?.data?.meta;
 
-      console.log(verified_transaction)
 
-      // Determine transaction type
-      const transactionType = verified_transaction?.data?.meta
-        ? "purchase"
-        : "subscription";
+    // Handle purchase transaction (with DB updates)
+    const result = await processPurchaseTransaction(
+      verified_transaction,
+      'verification'
+    );
 
-      if (transactionType === "purchase") {
-        return await handlePurchaseTransaction(verified_transaction, body);
-      } else {
-        console.info("[webhook] subscription flow not implemented");
-        return NextResponse.json({ status: 200 });
-      }
-    }
+    return NextResponse.json(result);
 
-    // Other events: accept and return 200
-    return NextResponse.json({ status: 200 });
-  } catch (err) {
-    console.error("[webhook] fatal error processing webhook:", err);
-    // Always return 200 to prevent Flutterwave retries
-    return NextResponse.json({ status: 400 });
+  } catch (error) {
+    console.error("[verification] error:", error);
+    
+    const errorResponse = handleErrorEdgeCases(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: errorResponse?.message || "Payment verification failed",
+      },
+      { status: errorResponse?.status || 500 }
+    );
   }
 });

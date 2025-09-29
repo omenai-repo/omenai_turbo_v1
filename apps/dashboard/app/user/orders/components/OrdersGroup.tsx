@@ -19,7 +19,6 @@ export default function OrdersGroup({
   const [tab, setTab] = useState("pending");
 
   const pending_orders: any = [];
-  const processing_orders: any = [];
   const completed_orders: any = [];
 
   // Loop through orders once to classify them

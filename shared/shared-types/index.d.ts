@@ -410,7 +410,7 @@ export type AddressTypes = {
   zip: string;
 };
 export type PaymentStatusTypes = {
-  status: "pending" | "completed";
+  status: "pending" | "completed" | "processing" | "failed";
   transaction_value: number;
   transaction_date: string;
   transaction_reference: string;
@@ -524,6 +524,10 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_date: Date;
   trans_recipient_role: "gallery" | "artist";
   status: "successful" | "processing" | "failed";
+  createdBy?: 'webhook' | 'verification',      // Who created this record
+  verifiedAt?: Date,                          // When verification route processed it
+  webhookReceivedAt?: Date,                   // When webhook received
+  webhookConfirmed?: boolean,
 };
 
 export type PurchaseTransactionPricing = {

@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import Link from "next/link";
-import { CheckCircle, XCircle, CreditCard, ArrowLeft, Eye } from "lucide-react";
+import { CheckCircle, XCircle, CreditCard, ArrowLeft, Eye, Clock4 } from "lucide-react";
 
 const LoadIcon = () => (
   <div className="relative">
@@ -41,7 +41,7 @@ export default function VerifyTransactionWrapper() {
         );
         const result = await response.json();
 
-        return { message: result.message, isOk: response.ok };
+        return { message: result.message, isOk: response.ok, status: result.status, success: result.success };
       } catch (error) {
         console.error("Error verifying transaction:", error);
         handleError();
@@ -95,13 +95,14 @@ export default function VerifyTransactionWrapper() {
                 {/* Success/Error Icon with Animation */}
                 <div className="relative">
                   <div
-                    className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"} ${verified?.isOk ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}
+                    className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"} ${verified?.isOk && verified.status === 'successful' ? "bg-green-100 text-green-600" : verified?.isOk && verified.status === 'processing'?"bg-amber-100 text-amber-600": "bg-red-100 text-red-600"}`}
                   >
-                    {verified?.isOk ? (
+                    {verified?.status === 'successful' ? (
                       <CheckCircle className="w-12 h-12 animate-pulse" />
-                    ) : (
-                      <XCircle className="w-12 h-12 animate-pulse" />
-                    )}
+                    ) : verified?.status === 'processing'? 
+                    <Clock4 className="w-12 h-12 animate-pulse" />:
+                      <XCircle className="w-12 h-12 animate-pulse" />  
+                    }
                   </div>
 
                   {/* Ripple effect */}
@@ -113,14 +114,14 @@ export default function VerifyTransactionWrapper() {
                 {/* Message */}
                 <div className="text-center space-y-4 max-w-sm">
                   <h2
-                    className={`text-fluid-md font-semibold transition-colors duration-500 ${verified?.isOk ? "text-green-700" : "text-red-700"}`}
+                    className={`text-fluid-md font-semibold transition-colors duration-500 ${verified?.isOk && verified.status === 'successful' ? "text-green-700" : verified?.isOk && verified.status === 'processing'? "text-amber-700": "text-red-700"}`}
                   >
-                    {verified?.isOk
+                    {verified?.success
                       ? "Payment Verified!"
                       : "Payment Verification Failed"}
                   </h2>
 
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-fluid-xs leading-relaxed">
                     {verified?.message}
                   </p>
                 </div>
