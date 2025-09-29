@@ -124,7 +124,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={user.name}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full">
@@ -138,7 +138,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={user.email}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-[#fafafa] focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
+                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full flex flex-col">

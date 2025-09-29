@@ -73,25 +73,40 @@ function safeJsonParse<T = unknown>(text: string): T | null {
   }
 }
 
+
 /**
- * Verify Flutterwave webhook by computing HMAC-SHA256 over raw body using secret.
- * Compare to header value using timingSafeEqual.
+ * Verify Flutterwave webhook signature
+ * @param rawBody - The raw request body as string
+ * @param headerSignature - The signature from the webhook header
+ * @param secret - Your Flutterwave webhook secret
+ * @returns boolean indicating if signature is valid
  */
 function verifyWebhookSignature(
   rawBody: string,
-  headerSignature: string | null,
+  headerSignature: string | null | undefined,
   secret: string
 ): boolean {
-  if (!headerSignature || !secret) return false;
-  // compute expected signature
-  const hmac = crypto
-    .createHmac("sha256", secret)
-    .update(rawBody)
-    .digest("hex");
-  const a = Buffer.from(hmac, "utf8");
-  const b = Buffer.from(headerSignature, "utf8");
-  if (a.length !== b.length) return false;
-  return crypto.timingSafeEqual(a, b);
+  // Basic validation
+  if (!headerSignature || !secret || !rawBody) {
+    return false;
+  }
+
+  try {
+    // Generate expected signature
+    const expectedSignature = crypto
+      .createHmac('sha256', secret)
+      .update(rawBody, 'utf8')
+      .digest('hex');
+
+    // Compare signatures using timing-safe comparison
+    return crypto.timingSafeEqual(
+      Buffer.from(expectedSignature, 'hex'),
+      Buffer.from(headerSignature, 'hex')
+    );
+  } catch (error) {
+    console.error('Webhook signature verification failed:', error);
+    return false;
+  }
 }
 
 /** Wraps async side-effects so they don't crash the request; log errors. */

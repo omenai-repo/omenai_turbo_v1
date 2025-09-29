@@ -53,7 +53,6 @@ const AccountManagement = () => {
 
   if (isLoading) return <AccountManagementSkeleton />;
 
-  console.log(data?.credential_data);
 
   return (
     <div className="min-h-screen">

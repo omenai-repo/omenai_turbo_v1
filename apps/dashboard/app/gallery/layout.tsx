@@ -13,6 +13,8 @@ import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { toast } from "sonner";
 import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { UpdateAddressModal } from "./modals/UpdateAddressModal";
+import {UpdateLogoModal} from "./modals/UpdateLogoModal"
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -69,6 +71,8 @@ export default function GalleryDashboardLayout({
                     <UploadOrderRejectionReason />
                     <UpdatePasswordModal />
                     <DeleteAccountConfirmationModal />
+                    <UpdateAddressModal />
+                    <UpdateLogoModal />
 
                     {children}
                   </>

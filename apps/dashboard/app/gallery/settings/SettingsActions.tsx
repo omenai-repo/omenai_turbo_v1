@@ -27,10 +27,10 @@ export default function SettingsActions() {
               </svg>
             </div>
             <div>
-              <h2 className="text-fluid-sm font-semibold text-slate-900">
+              <h2 className="text-fluid-base font-semibold text-slate-900">
                 Account Security
               </h2>
-              <p className="text-fluid-xs text-slate-600">
+              <p className="text-fluid-xxs text-slate-600">
                 Manage your password and account settings
               </p>
             </div>
@@ -56,21 +56,18 @@ export default function SettingsActions() {
                       d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
                     />
                   </svg>
-                  <h3 className="font-semibold text-slate-900">Password</h3>
+                  <h3 className="font-semibold text-fluid-xs text-slate-900">Password</h3>
                 </div>
-                <p className="text-sm text-slate-600">
-                  Valid as at:{" "}
-                  {new Date(
-                    Date.now() - 30 * 24 * 60 * 60 * 1000
-                  ).toLocaleDateString()}
+                <p className="text-fluid-xxs text-slate-600">
+                  Valid as at today
                 </p>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-fluid-xxs text-slate-500 mt-1">
                   Use a strong password to protect your account
                 </p>
               </div>
               <button
                 onClick={() => updatePasswordModalPopup(true)}
-                className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+                className="px-4 py-2 bg-slate-900 text-white text-fluid-xxs font-medium rounded hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
               >
                 Change Password
               </button>
@@ -79,7 +76,7 @@ export default function SettingsActions() {
 
           {/* Danger Zone */}
           <div className="border-t border-slate-200 pt-6">
-            <h3 className="text-sm font-medium text-red-600 uppercase tracking-wide mb-4">
+            <h3 className="text-fluid-xxs font-medium text-red-600 uppercase tracking-wide mb-4">
               Danger Zone
             </h3>
             <div className="bg-red-50 border border-red-200 rounded p-6">
@@ -99,18 +96,18 @@ export default function SettingsActions() {
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                       />
                     </svg>
-                    <h3 className="font-semibold text-red-900">
+                    <h3 className="font-semibold text-fluid-xs text-red-900">
                       Delete Account
                     </h3>
                   </div>
-                  <p className="text-sm text-red-700">
+                  <p className="text-fluid-xxs text-red-700">
                     Once you delete your account, there is no going back. Please
                     be certain.
                   </p>
                 </div>
                 <button
                   onClick={() => updateDeleteGalleryAccountModalPopup(true)}
-                  className="px-4 py-2 bg-white border border-red-300 text-red-600 text-sm font-medium rounded hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="px-4 py-2 bg-white border border-red-300 text-red-600 text-fluid-xxs font-medium rounded hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                   Delete Account
                 </button>

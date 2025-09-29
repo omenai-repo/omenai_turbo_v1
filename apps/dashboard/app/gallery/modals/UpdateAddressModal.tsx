@@ -1,20 +1,22 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import UpdatePasswordModalForm from "./UpdatePasswordModalForm";
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 
-export const UpdatePasswordModal = () => {
-  const { updatePasswordModalPopup, passwordModalPopup } = artistActionStore();
+import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
+import UpdateAddressModalForm from "./UpdateAddressModalForm";
+import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
+
+export const UpdateAddressModal = () => {
+  const { updateAddressModalPopup, addressModalPopup } = galleryActionStore();
 
   return (
-    <AnimatePresence key={13}>
-      {passwordModalPopup && (
+    <AnimatePresence key={8}>
+      {addressModalPopup && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => {
-            updatePasswordModalPopup(false);
+            updateAddressModalPopup(false);
           }}
           className="bg-slate-900/20 backdrop-blur p-2 fixed inset-0 z-50 grid place-items-center cursor-pointer"
         >
@@ -27,7 +29,7 @@ export const UpdatePasswordModal = () => {
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">
-              <UpdatePasswordModalForm />
+              <UpdateAddressModalForm />
             </div>
           </motion.div>
         </motion.div>

@@ -99,7 +99,7 @@ export default function UpdatePasswordModalForm() {
     setLoading(false);
   }
   return (
-    <div className="w-full">
+    <div className="w-full max-h-[85vh] overflow-y-scroll h-auto">
       {/* Design 1: Clean Card with Progress */}
       <div className=" rounded shadow-lg border border-slate-200 overflow-hidden">
         {/* Header */}

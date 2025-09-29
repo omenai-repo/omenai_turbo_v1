@@ -5,10 +5,13 @@
     "build": "dotenv -- turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test:e2e": "npx playwright test",
+    "test:e2e:ui": "npx playwright test --ui"
   },
   "devDependencies": {
     "@omenai/shared-types": "*",
+    "@playwright/test": "^1.55.1",
     "@types/fs-extra": "^11.0.4",
     "@types/leaflet": "^1.9.17",
     "autoprefixer": "^10.4.20",

@@ -31,10 +31,12 @@ export default function ArtistDashboardLayout({
 }) {
   const router = useRouter();
   const { user } = useAuth({ requiredRole: "artist" });
-  const { data: isOnboardingCompleted, isLoading: loading } = useQuery({
-    queryKey: ["check_user_session"],
+
+
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["check_onboarding_completion"],
     queryFn: async () => {
-      const res = await fetch(`${getApiUrl()}/api/auth/session/user`, {
+      const res = await fetch(`${getApiUrl()}/api/requests/artist/verifyOnboardingCompletion?id=${user.artist_id}`, {
         headers: {
           "Content-Type": "application/json",
           Origin: base_url(),
@@ -43,28 +45,34 @@ export default function ArtistDashboardLayout({
       });
       if (!res.ok) {
         console.error(
-          "Failed to fetch session data:",
-          res.status,
-          res.statusText
+          "Failed to Artist onboarding status:",
         );
         return null;
       }
-      const { user } = await res.json();
-      return user.userData.isOnboardingCompleted;
+      const result = await res.json();
+      return {
+        isOnboardingCompleted: result.isOnboardingCompleted,
+        isArtistVerified: result.isArtistVerified
+      }
     },
+    staleTime: 0,
+    gcTime: 0
   });
 
   if (loading) return <Load />;
+  
 
-  if (isOnboardingCompleted === null) router.replace(`${auth_uri()}/login`);
 
-  if (!isOnboardingCompleted) router.replace(`${dashboard_url()}/onboarding`);
+  if (!data || data.isOnboardingCompleted === null) router.replace(`${auth_uri()}/login`);
+
+  if (data && !data.isOnboardingCompleted) router.replace(`${dashboard_url()}/artist/onboarding`);
+
   return (
     <>
       <div className=" w-full h-full">
         <NextTopLoader color="#0f172a" height={6} />
         <VerificationBlockerModal
-          open={user && user.role === "artist" && !user.artist_verified}
+          open={user && user.role === "artist" && !data?.isArtistVerified}
         />
         <main className="flex h-full">
           <PageLayout />
