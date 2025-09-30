@@ -14,6 +14,7 @@ import {
   Eye,
   Clock4,
 } from "lucide-react";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 
 const LoadIcon = () => (
   <div className="relative">
@@ -46,11 +47,12 @@ export default function VerifyTransactionWrapper() {
             body: JSON.stringify({ transaction_id }),
           }
         );
+        if (!response.ok) throw new Error("Something went wrong");
         const result = await response.json();
 
         return {
           message: result.message,
-          isOk: response.ok,
+          isOk: result.ok,
           status: result.status,
           success: result.success,
         };

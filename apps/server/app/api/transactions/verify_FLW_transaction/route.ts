@@ -130,6 +130,7 @@ async function processPurchaseTransaction(
     );
 
     return {
+      ok: true,
       success: false,
       status: "failed",
       message: "Payment transaction failed",
@@ -154,6 +155,7 @@ async function processPurchaseTransaction(
       }
     );
     return {
+      ok: true,
       success: false,
       status: "pending",
       message: "Payment transaction is still pending",
@@ -193,6 +195,7 @@ async function processPurchaseTransaction(
       }
 
       return {
+        ok: true,
         success: true,
         status: "completed",
         message: "Transaction already processed",
@@ -418,6 +421,7 @@ async function processPurchaseTransaction(
     );
 
     return {
+      ok: true,
       success: true,
       status: "completed",
       message: "Payment processed successfully",
@@ -443,7 +447,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     if (!data.transaction_id) {
       return NextResponse.json(
-        { success: false, message: "Transaction ID is required" },
+        { success: false, message: "Transaction ID is required", ok: false },
         { status: 400 }
       );
     }
@@ -470,6 +474,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     return NextResponse.json(
       {
+        ok: false,
         success: false,
         message: errorResponse?.message || "Payment verification failed",
       },
