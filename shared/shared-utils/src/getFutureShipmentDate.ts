@@ -85,5 +85,5 @@ export async function getFutureShipmentDate(
   const hours = pickup_earliest_time?.hours || "09";
   const minutes = pickup_earliest_time?.minutes || "00";
 
-  return `${year}-${month}-${day}T${hours}:${minutes}:00 ${timezone}`;
+  return `${year}-${month}-${day}T${hours}:${minutes}:00 GMT+01:00`;
 }

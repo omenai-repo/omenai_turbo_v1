@@ -220,7 +220,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     },
   };
 
-  console.log(shipmentPayloadData);
+  console.log(plannedShippingDateAndTime);
 
   try {
     const requestOptions = {
@@ -234,6 +234,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
       requestOptions
     );
     const data = await response.json();
+    console.log(data);
 
     if (!response.ok)
       throw new ServerError("Error creating shipment. Please contact support");

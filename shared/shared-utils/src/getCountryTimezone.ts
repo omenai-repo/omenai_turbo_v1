@@ -8,37 +8,48 @@ export const getUTCOffset = (countryCode: string): string | null => {
   const now = new Date();
 
   try {
-    // Get the offset in minutes from UTC
-    const localTime = new Intl.DateTimeFormat("en-US", {
+    const local = new Intl.DateTimeFormat("en-US", {
       timeZone,
       hour12: false,
       hour: "2-digit",
       minute: "2-digit",
-    }).format(now);
+    }).formatToParts(now);
 
-    const utcTime = new Intl.DateTimeFormat("en-US", {
+    const utc = new Intl.DateTimeFormat("en-US", {
       timeZone: "UTC",
       hour12: false,
       hour: "2-digit",
       minute: "2-digit",
-    }).format(now);
+    }).formatToParts(now);
 
-    const [localHour, localMinute] = localTime.split(":").map(Number);
-    const [utcHour, utcMinute] = utcTime.split(":").map(Number);
+    const localHour = parseInt(
+      local.find((p) => p.type === "hour")?.value || "0",
+      10
+    );
+    const localMinute = parseInt(
+      local.find((p) => p.type === "minute")?.value || "0",
+      10
+    );
 
-    const totalOffsetMinutes =
+    const utcHour = parseInt(
+      utc.find((p) => p.type === "hour")?.value || "0",
+      10
+    );
+    const utcMinute = parseInt(
+      utc.find((p) => p.type === "minute")?.value || "0",
+      10
+    );
+
+    const offsetMinutes =
       (localHour - utcHour) * 60 + (localMinute - utcMinute);
 
-    // Handle negative wraparound (e.g. UTC = 23:00, local = 01:00 next day)
-    const normalizedOffset = ((totalOffsetMinutes + 720) % 1440) - 720; // Normalize to [-720, +720]
+    const sign = offsetMinutes >= 0 ? "+" : "-";
+    const abs = Math.abs(offsetMinutes);
+    const hours = String(Math.floor(abs / 60)).padStart(2, "0");
+    const minutes = String(abs % 60).padStart(2, "0");
 
-    const sign = normalizedOffset >= 0 ? "+" : "-";
-    const absOffset = Math.abs(normalizedOffset);
-    const hours = String(Math.floor(absOffset / 60)).padStart(2, "0");
-    const minutes = String(absOffset % 60).padStart(2, "0");
-
-    return `GMT${sign}${hours}:${minutes}`;
-  } catch (e) {
+    return `${sign}${hours}:${minutes}`;
+  } catch {
     return null;
   }
 };

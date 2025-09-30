@@ -6,7 +6,14 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import Link from "next/link";
-import { CheckCircle, XCircle, CreditCard, ArrowLeft, Eye, Clock4 } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  CreditCard,
+  ArrowLeft,
+  Eye,
+  Clock4,
+} from "lucide-react";
 
 const LoadIcon = () => (
   <div className="relative">
@@ -41,7 +48,12 @@ export default function VerifyTransactionWrapper() {
         );
         const result = await response.json();
 
-        return { message: result.message, isOk: response.ok, status: result.status, success: result.success };
+        return {
+          message: result.message,
+          isOk: response.ok,
+          status: result.status,
+          success: result.success,
+        };
       } catch (error) {
         console.error("Error verifying transaction:", error);
         handleError();
@@ -56,6 +68,21 @@ export default function VerifyTransactionWrapper() {
       return () => clearTimeout(timer);
     }
   }, [isLoading]);
+
+  if (!verified?.isOk)
+    return (
+      <div className="relative h-[80vh] grid place-items-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
+            <div className="flex flex-col items-center justify-center space-y-8">
+              <p className="text-gray-600 text-fluid-xs animate-pulse">
+                Something went wrong. Please reload your page
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <>
@@ -95,26 +122,29 @@ export default function VerifyTransactionWrapper() {
                 {/* Success/Error Icon with Animation */}
                 <div className="relative">
                   <div
-                    className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"} ${verified?.isOk && verified.status === 'successful' ? "bg-green-100 text-green-600" : verified?.isOk && verified.status === 'processing'?"bg-amber-100 text-amber-600": "bg-red-100 text-red-600"}`}
+                    className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"} ${verified.status === "successful" && "bg-green-100 text-green-600"} : ${verified.status === "processing" && "bg-amber-100 text-amber-600"} ${verified.status === "failed" && "bg-red-100 text-red-600"}`}
                   >
-                    {verified?.status === 'successful' ? (
+                    {verified?.status === "successful" ? (
                       <CheckCircle className="w-12 h-12 animate-pulse" />
-                    ) : verified?.status === 'processing'? 
-                    <Clock4 className="w-12 h-12 animate-pulse" />:
-                      <XCircle className="w-12 h-12 animate-pulse" />  
-                    }
+                    ) : verified?.status === "processing" ? (
+                      <Clock4 className="w-12 h-12 animate-pulse" />
+                    ) : (
+                      verified?.status === "failed" && (
+                        <XCircle className="w-12 h-12 animate-pulse" />
+                      )
+                    )}
                   </div>
 
                   {/* Ripple effect */}
-                  {verified?.isOk && (
+                  {
                     <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20"></div>
-                  )}
+                  }
                 </div>
 
                 {/* Message */}
                 <div className="text-center space-y-4 max-w-sm">
                   <h2
-                    className={`text-fluid-md font-semibold transition-colors duration-500 ${verified?.isOk && verified.status === 'successful' ? "text-green-700" : verified?.isOk && verified.status === 'processing'? "text-amber-700": "text-red-700"}`}
+                    className={`text-fluid-md font-semibold transition-colors duration-500 ${verified.status === "successful" ? "text-green-700" : verified.status === "processing" ? "text-amber-700" : "text-red-700"}`}
                   >
                     {verified?.success
                       ? "Payment Verified!"
