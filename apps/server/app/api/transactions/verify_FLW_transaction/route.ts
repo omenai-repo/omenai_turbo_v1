@@ -43,7 +43,9 @@ const MetaSchema = z.object({
 
 /* ----------------------------- Helpers --------------------------- */
 
-async function verifyFlutterwaveTransaction(transactionId: string): Promise<any> {
+async function verifyFlutterwaveTransaction(
+  transactionId: string
+): Promise<any> {
   const key = process.env.FLW_TEST_SECRET_KEY;
   if (!key) {
     throw new Error("Flutterwave secret key not configured");
@@ -60,7 +62,9 @@ async function verifyFlutterwaveTransaction(transactionId: string): Promise<any>
 
   if (!res.ok) {
     const body = await res.text().catch(() => null);
-    throw new Error(`Flutterwave verification failed: ${res.status} ${body || ""}`);
+    throw new Error(
+      `Flutterwave verification failed: ${res.status} ${body || ""}`
+    );
   }
 
   return await res.json();
@@ -78,14 +82,17 @@ async function fireAndForget(p: Promise<unknown>) {
 
 async function processPurchaseTransaction(
   verified_transaction: any,
-  source: 'verification' | 'webhook'
+  source: "verification" | "webhook"
 ) {
   const metaRaw = verified_transaction?.data?.meta ?? null;
   const metaParse = MetaSchema.safeParse(metaRaw);
   const formatted_date = getFormattedDateTime();
 
   if (!metaParse.success) {
-    console.error(`[${source}][purchase] invalid meta:`, metaParse.error.format());
+    console.error(
+      `[${source}][purchase] invalid meta:`,
+      metaParse.error.format()
+    );
     throw new Error("Invalid transaction metadata");
   }
 
@@ -120,7 +127,7 @@ async function processPurchaseTransaction(
           } as PaymentStatusTypes,
         },
       }
-    )
+    );
 
     return {
       success: false,
@@ -130,7 +137,7 @@ async function processPurchaseTransaction(
   }
 
   if (flwStatus === "pending") {
-        await CreateOrder.updateOne(
+    await CreateOrder.updateOne(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
@@ -145,7 +152,7 @@ async function processPurchaseTransaction(
           } as PaymentStatusTypes,
         },
       }
-    )
+    );
     return {
       success: false,
       status: "pending",
@@ -177,7 +184,7 @@ async function processPurchaseTransaction(
       );
 
       // If processed by verification, just update webhook timestamp
-      if (source === 'webhook') {
+      if (source === "webhook") {
         // Update outside of transaction since we're aborting
         await PurchaseTransactions.updateOne(
           { trans_reference: verified_transaction.data.id },
@@ -213,7 +220,10 @@ async function processPurchaseTransaction(
       currency: "USD",
     };
 
-    const transactionData: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
+    const transactionData: Omit<
+      PurchaseTransactionModelSchemaTypes,
+      "trans_id"
+    > = {
       trans_pricing: transaction_pricing,
       trans_date: nowUTC,
       trans_recipient_id: meta.seller_id ?? "",
@@ -222,15 +232,18 @@ async function processPurchaseTransaction(
       trans_reference: verified_transaction.data.id,
       status: verified_transaction.data.status,
       createdBy: source,
-      ...(source === 'verification' && { verifiedAt: new Date() }),
-      ...(source === 'webhook' && { webhookReceivedAt: new Date() }),
+      ...(source === "verification" && { verifiedAt: new Date() }),
+      ...(source === "webhook" && { webhookReceivedAt: new Date() }),
     };
 
     // Execute all DB operations in parallel
 
-    const createTransactionPromise = PurchaseTransactions.create([transactionData], {
-      session,
-    });
+    const createTransactionPromise = PurchaseTransactions.create(
+      [transactionData],
+      {
+        session,
+      }
+    );
 
     const updateArtworkPromise = Artworkuploads.updateOne(
       { art_id: meta.art_id },
@@ -411,7 +424,6 @@ async function processPurchaseTransaction(
       order_id: order_info.order_id,
       transaction_id,
     };
-
   } catch (err) {
     console.error(`[${source}][purchase] transaction error:`, err);
     await session.abortTransaction();
@@ -423,7 +435,9 @@ async function processPurchaseTransaction(
 
 /* ----------------------------- Route Handler --------------------------- */
 
-export const POST = withAppRouterHighlight(async function POST(request: Request) {
+export const POST = withAppRouterHighlight(async function POST(
+  request: Request
+) {
   try {
     const data = await request.json();
 
@@ -438,23 +452,20 @@ export const POST = withAppRouterHighlight(async function POST(request: Request)
     const verified_transaction = await verifyFlutterwaveTransaction(
       data.transaction_id
     );
-    console.log(verified_transaction)
 
     // Check if it's a subscription (no meta or meta.type === 'subscription')
     const meta = verified_transaction?.data?.meta;
 
-
     // Handle purchase transaction (with DB updates)
     const result = await processPurchaseTransaction(
       verified_transaction,
-      'verification'
+      "verification"
     );
 
-    return NextResponse.json(result);
-
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("[verification] error:", error);
-    
+
     const errorResponse = handleErrorEdgeCases(error);
 
     return NextResponse.json(
