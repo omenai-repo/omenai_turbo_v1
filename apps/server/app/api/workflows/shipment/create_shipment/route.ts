@@ -41,6 +41,7 @@ async function callShipmentAPI(data: any): Promise<any> {
     clearTimeout(timeout);
 
     const result = await response.json();
+    console.log(result);
 
     if (!response.ok) {
       const errorResponse = await response.json();

@@ -23,7 +23,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 ) {
   try {
     // Create Checkout Sessions from body params.
-    const url = getApiUrl();
     await connectMongoDB();
     const { item, amount, seller_id, meta, success_url, cancel_url } =
       await request.json();
