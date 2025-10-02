@@ -130,14 +130,14 @@ export default function VerifyTransactionWrapper() {
                   className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${
                     showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"
                   } ${
-                    verified.status === "successful"
+                    verified.status === "completed"
                       ? "bg-green-100 text-green-600"
                       : verified.status === "pending"
                         ? "bg-amber-100 text-amber-600"
                         : "bg-red-100 text-red-600"
                   }`}
                 >
-                  {verified?.status === "successful" ? (
+                  {verified?.status === "completed" ? (
                     <CheckCircle className="w-12 h-12 animate-pulse" />
                   ) : verified?.status === "pending" ? (
                     <Clock4 className="w-12 h-12 animate-pulse" />
@@ -150,7 +150,7 @@ export default function VerifyTransactionWrapper() {
                 {/* Ripple effect */}
                 <div
                   className={`absolute inset-0 rounded-full animate-ping opacity-20 ${
-                    verified.status === "successful"
+                    verified.status === "completed"
                       ? "bg-green-400"
                       : verified.status === "pending"
                         ? "bg-amber-400"
@@ -163,7 +163,7 @@ export default function VerifyTransactionWrapper() {
               <div className="text-center space-y-4 max-w-sm">
                 <h2
                   className={`text-fluid-md font-semibold transition-colors duration-500 ${
-                    verified.status === "successful"
+                    verified.status === "completed"
                       ? "text-green-700"
                       : verified.status === "pending"
                         ? "text-amber-700"
