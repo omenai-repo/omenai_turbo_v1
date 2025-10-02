@@ -24,7 +24,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const authorization: string = request.headers.get("Authorization") ?? "";
 
     const isAccountRegistered = await AccountArtist.findOne(
-      { email: data.email },
+      { email: data.email.toLowerCase() },
       "email"
     ).exec();
 
@@ -37,6 +37,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const saveData = await AccountArtist.create({
       ...parsedData,
+      email: parsedData.email.toLowerCase(),
     });
     const { artist_id } = saveData;
 

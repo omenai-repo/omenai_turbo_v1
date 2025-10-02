@@ -23,7 +23,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       await connectMongoDB();
 
       const user = await AccountGallery.findOne<GallerySchemaTypes>({
-        email,
+        email: email.toLowerCase(),
       }).exec();
 
       if (!user) throw new ConflictError("Invalid credentials");

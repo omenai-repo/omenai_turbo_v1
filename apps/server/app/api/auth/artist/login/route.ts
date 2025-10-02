@@ -24,7 +24,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       await connectMongoDB();
 
       const artist = await AccountArtist.findOne<ArtistSchemaTypes>({
-        email,
+        email: email.toLowerCase(),
       }).exec();
 
       if (!artist) throw new ConflictError("Invalid credentials");

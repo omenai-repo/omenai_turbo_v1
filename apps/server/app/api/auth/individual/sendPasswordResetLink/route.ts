@@ -21,7 +21,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const { recoveryEmail } = await request.json();
 
       const data = await AccountIndividual.findOne(
-        { email: recoveryEmail },
+        { email: recoveryEmail.toLowerCase() },
         "email user_id name verified"
       ).exec();
 

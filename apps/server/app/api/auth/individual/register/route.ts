@@ -22,7 +22,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const data = await request.json();
 
       const isAccountRegistered = await AccountIndividual.findOne(
-        { email: data.email },
+        { email: data.email.toLowerCase() },
         "email"
       ).exec();
 
@@ -35,6 +35,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const saveData = await AccountIndividual.create({
         ...parsedData,
+        email: parsedData.email.toLowerCase(),
       });
 
       if (!saveData)

@@ -23,14 +23,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const data = await request.json();
 
       const isAccountRegistered = await AccountGallery.findOne({
-        email: data.email,
+        email: data.email.toLowerCase(),
       }).exec();
 
       if (isAccountRegistered)
         throw new ConflictError("Account already exists, please login");
 
       const isAccountRejected = await RejectedGallery.findOne({
-        email: data.email,
+        email: data.email.toLowerCase(),
       }).exec();
 
       if (isAccountRejected)
@@ -44,6 +44,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const saveData = await AccountGallery.create({
         ...parsedData,
+        email: parsedData.email.toLowerCase(),
       });
 
       const { gallery_id, email, name } = saveData;

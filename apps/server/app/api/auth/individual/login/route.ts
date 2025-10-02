@@ -27,8 +27,9 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       // 1. Your existing authentication logic
       const user = await AccountIndividual.findOne<IndividualSchemaTypes>({
-        email,
+        email: email.toLowerCase(),
       }).exec();
+
       if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new ConflictError("Invalid credentials");
       }
