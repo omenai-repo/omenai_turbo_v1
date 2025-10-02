@@ -11,7 +11,7 @@ export async function POST() {
     const workflowID = await createWorkflow(
       "/api/workflows/shipment/create_shipment",
       `test_workflow${generateDigit(2)}`,
-      JSON.stringify({ order_id: "3956401" })
+      JSON.stringify({ order_id: "1944490" })
     );
     if (!workflowID) throw new ServerError("Workflow failed");
 

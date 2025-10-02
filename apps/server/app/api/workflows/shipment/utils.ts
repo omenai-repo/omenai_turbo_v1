@@ -10,11 +10,11 @@ export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
-    const fileUploaded = await storage.createFile(
-      process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
-      ID.unique(),
-      file
-    );
+    const fileUploaded = await storage.createFile({
+      bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+      fileId: ID.unique(),
+      file,
+    });
     if (fileUploaded) return fileUploaded;
   } catch (error) {
     throw new Error("Appwrite Exception: Something went wrong on Appwrite");
