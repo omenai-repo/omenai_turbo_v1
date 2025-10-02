@@ -11,7 +11,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
 
   const url = getEditorialFileView(article.cover, 1000);
   return (
-    <article className="max-w-4xl mx-auto">
+    <article className="max-w-4xl mx-auto pt-6 pb-10">
       {/* Cover Image */}
       {article.cover && (
         <div className="relative w-full h-[400px] md:h-[500px] mb-8 rounded overflow-hidden">
@@ -27,7 +27,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
 
       {/* Article Header */}
       <header className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
           {article.headline}
         </h1>
 
@@ -46,8 +46,6 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
               ? format(new Date(article.date), "MMMM d, yyyy")
               : "Unknown date"}
           </time>
-          <span className="mx-2">•</span>
-          <span>10 min read</span>
         </div>
 
         {/* Optional Summary */}

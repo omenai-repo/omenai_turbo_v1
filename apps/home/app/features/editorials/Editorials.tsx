@@ -13,13 +13,11 @@ export default function Editorials() {
     queryKey: ["fetch_editorials"],
     queryFn: async () => {
       const response = await editorial_database.listRows({
+        databaseId: process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
+        tableId: process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
+      });
 
-        databaseId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
-        tableId:process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!
-      }
-      )
-
-      console.log(response)
+      console.log(response);
 
       if (response?.rows) {
         return response.rows;
@@ -40,16 +38,16 @@ export default function Editorials() {
           <div className="flex md:flex-row flex-col gap-4 mt-16 mb-5">
             <div className="flex justify-between items-center w-full my-5">
               <div>
-                <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded ring-dark font-normal leading-snug text-[#000000] my-5">
+                <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
                   Editorial articles
                 </p>
-                <p className="text-fluid-sm sm:text-fluid-md font-bold  text-[#000000] mt-[20px]">
+                <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
                   Beyond the Canvas: Our Curated Editorials
                 </p>
               </div>
 
               <div className="hidden sm:flex flex-col items-end">
-                <p className="text-fluid-base font-bold ">
+                <p className="text-fluid-base font-semibold">
                   Unveiling the Stories Behind the Canvas:
                 </p>
                 <p className="justify-self-end font-normal leading-snug text-fluid-xs">

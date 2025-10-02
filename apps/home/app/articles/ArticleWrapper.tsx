@@ -38,12 +38,16 @@ export default function ArticleWrapper() {
     );
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-6 pb-10">
       <h1 className="text-fluid-xl font-semibold">Editorials</h1>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
+      <div className="flex gap-4 flex-wrap">
         {editorials?.map((editorial: any) => {
           return (
-            <EditorialItemCard key={editorial.slug} editorial={editorial} />
+            <>
+              <EditorialItemCard key={editorial.slug} editorial={editorial} />
+              <EditorialItemCard key={editorial.slug} editorial={editorial} />
+              <EditorialItemCard key={editorial.slug} editorial={editorial} />
+            </>
           );
         })}
       </div>

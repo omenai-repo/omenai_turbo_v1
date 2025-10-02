@@ -104,7 +104,7 @@ export default function ArtworkCard({
         </div>
 
         {/* Top Right Actions */}
-        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
           {trending && (
             <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
               {impressions} {impressions > 1 ? "likes" : "like"}

@@ -119,7 +119,7 @@ export function ActionModals({
 
           {/* Title */}
           <div className="text-center mb-2">
-            <h3 className="text-fluid-base font-bold text-dark mb-2">
+            <h3 className="text-fluid-base font-semiboldtext-dark mb-2">
               {type === "accept"
                 ? "Accept Gallery Request"
                 : type === "reject"

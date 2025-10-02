@@ -10,7 +10,7 @@ export default function AccountSettings() {
   return (
     <div className="space-y-8 animate-fadeIn">
       <div className="pb-6 border-b border-line">
-        <h2 className="text-fluid-base font-bold text-dark mb-2">
+        <h2 className="text-fluid-base font-semiboldtext-dark mb-2">
           Account Settings
         </h2>
         <p className="text-fluid-xs text-dark/50">

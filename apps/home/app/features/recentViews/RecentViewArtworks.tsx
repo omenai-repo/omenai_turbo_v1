@@ -56,16 +56,16 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
       <div className="flex md:flex-row flex-col gap-4 mt-16">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1 rounded ring-dark font-normal leading-snug text-[#000000] my-5">
-              View history
+            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+              Recently viewed
             </p>
-            <p className="text-fluid-sm sm:text-fluid-md font-bold  text-[#000000] mt-[20px]">
+            <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
               Recently viewed by you.
             </p>
           </div>
 
           <div className="hidden sm:flex flex-col items-end">
-            <p className="text-fluid-base font-bold ">
+            <p className="text-fluid-base font-semibold">
               Back for a Second Look:
             </p>
             <p className="justify-self-end font-normal leading-snug text-fluid-xs">

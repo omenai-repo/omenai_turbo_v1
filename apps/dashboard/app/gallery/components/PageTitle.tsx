@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function PageTitle({ title }: { title: string }) {
   const navigation = usePathname();
   const pathnames = navigation.slice(1).split("/");
-
+  const ignoredRoutes = ["gallery", "dashboard"];
   const breadcrumbs = pathnames.map((pathSegment, index, pathSegments) => {
     // Capitalize the first letter of each path segment
     const capitalizedSegment =
@@ -23,8 +23,7 @@ export default function PageTitle({ title }: { title: string }) {
         {index !== 0 && index < pathSegments.length && (
           <IoMdArrowDropright className="ml-3" />
         )}
-        {capitalizedSegment === "Dashboard" ||
-        capitalizedSegment === "Gallery" ? (
+        {ignoredRoutes.includes(capitalizedSegment.toLowerCase()) ? (
           <span>{capitalizedSegment}</span>
         ) : (
           <a

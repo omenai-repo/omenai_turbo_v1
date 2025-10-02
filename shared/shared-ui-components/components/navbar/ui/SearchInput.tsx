@@ -1,53 +1,51 @@
-"use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState, useTransition } from "react";
 import { CiSearch } from "react-icons/ci";
 import { toast } from "sonner";
+import { fetchSearchKeyWordResults } from "@omenai/shared-services/search/fetchSearchKeywordResults";
+
 export default function SearchInput() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const handleEnterKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (searchTerm === "")
-        toast.error("Error notification", {
-          description: "Please include a search term",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      else router.push(`/search?searchTerm=${searchTerm}`);
+  const queryClient = useQueryClient();
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      toast.error("Please include a search term");
+      return;
     }
+
+    // Prefetch so results are cached instantly
+    queryClient.prefetchQuery({
+      queryKey: ["search_results", searchTerm],
+      queryFn: () =>
+        fetchSearchKeyWordResults(searchTerm).then((r) => r?.data || []),
+    });
+
+    startTransition(() => {
+      router.push(`/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+    });
   };
 
-  const handleIconTrigger = () => {
-    if (searchTerm === "")
-      toast.error("Error notification", {
-        description: "Please include a search term",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    else router.push(`/search?searchTerm=${searchTerm}`);
-  };
   return (
-    <div className="relative flex w-full justify-between gap-x-5 items-center rounded border bg-transparent border-dark/30">
+    <div className="relative flex w-auto items-center rounded border bg-transparent border-dark/30">
       <input
         type="text"
-        className="w-full h-[35px] bg-transparent px-3 border-none rounded placeholder:text-fluid-xs placeholder:font-normal placeholder:text-dark focus:border-none focus:ring-0 focus:border-0"
+        className="w-full h-[35px] bg-transparent px-3 border-none rounded placeholder:text-sm placeholder:text-dark focus:ring-0"
         placeholder="Search for anything"
+        value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={handleEnterKeyPress}
+        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
       />
-      <div
-        className=" text-fluid-xs flex items-center gap-x-2 bg-dark rounded text-white w-fit h-full py-2 px-3 cursor-pointer"
-        onClick={handleIconTrigger}
+      <button
+        disabled={isPending}
+        className="flex items-center bg-dark rounded text-white px-3 py-2 mr-0.5 disabled:opacity-50"
+        onClick={handleSearch}
       >
         <CiSearch className="text-white" />
-      </div>
+      </button>
     </div>
   );
 }

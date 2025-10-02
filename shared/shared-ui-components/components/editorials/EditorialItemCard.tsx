@@ -9,7 +9,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
     : null;
 
   return (
-    <div className="group relative bg-white rounded overflow-hidden transition-all duration-500 transform hover:-translate-y-1 h-[420px] max-w-[320px] min-w-[300px] xxl:w-full w-[300px] xxm:w-[350px] xxm:max-w-[350px] border border-dark/30">
+    <div className="group relative bg-white rounded overflow-hidden transition-all duration-500 transform hover:-translate-y-1 h-[420px] max-w-[330px] min-w-[300px] xxl:w-full w-full border border-dark/30">
       {/* Image Section */}
       <div className="relative h-[220px] overflow-hidden">
         {url ? (

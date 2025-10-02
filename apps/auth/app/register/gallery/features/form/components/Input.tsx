@@ -130,10 +130,10 @@ export default function Input({
                 className="
                   absolute right-3 top-1/2 -translate-y-1/2
                   p-1.5
-                  text-gray-400
-                  hover:text-gray-600
+                  text-dark
+                  hover:text-dark/80
                   focus:outline-none
-                  focus:text-gray-600
+                  focus:text-dark/80
                   transition-colors duration-150
                 "
                 tabIndex={-1}

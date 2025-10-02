@@ -159,7 +159,7 @@ export default function PayNowButton({
         </div>
 
         <p className="font-normal text-red-600 w-full mt-6 leading-6">
-          <span className="text-fluid-base font-bold uppercase underline">
+          <span className="text-fluid-base font-semibolduppercase underline">
             Please note:
           </span>
           <br /> To protect your purchase and prevent duplicate transactions, we

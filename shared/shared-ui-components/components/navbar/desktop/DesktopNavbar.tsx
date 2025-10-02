@@ -8,6 +8,7 @@ import { SlMenu } from "react-icons/sl";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { IndividualLogo } from "../../logo/Logo";
 import { base_url, dashboard_url } from "@omenai/url-config/src/config";
+import SearchInput from "../ui/SearchInput";
 
 const navbarlinks = [
   { text: "Collect", link: `${base_url()}/catalog` },
@@ -34,7 +35,7 @@ export default function DesktopNavbar() {
   return (
     <>
       <MobileNavbar />
-      <div className="flex justify-between items-center sticky top-0 z-30 bg-white py-6">
+      <div className="flex justify-between items-center sticky top-0 z-30 bg-white pt-6 pb-3 lg:pb-6">
         <div>
           <IndividualLogo />
         </div>
@@ -52,6 +53,10 @@ export default function DesktopNavbar() {
         </ul>
 
         <div className="flex items-center space-x-4">
+          <div className="hidden lg:block">
+            <SearchInput />
+          </div>
+
           {user?.role === "user" && (
             <LoggedInUser user={user.name} email={user.email} />
           )}
@@ -64,6 +69,9 @@ export default function DesktopNavbar() {
             />
           </div>
         </div>
+      </div>
+      <div className="lg:hidden block">
+        <SearchInput />
       </div>
     </>
   );

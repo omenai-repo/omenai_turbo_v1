@@ -7,63 +7,38 @@ import NotFoundSearchResult from "./NotFoundSearchResult";
 import SearchResultDetails from "./SearchResultDetails";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-
+import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
+import { useQuery } from "@tanstack/react-query";
 export default function SearchResultWrapper() {
   const searchParams = useSearchParams();
   const searchTerm = searchParams.get("searchTerm");
-  const [searchResults, setSearchResults] = useState<
-    | (Pick<
-        ArtworkSchemaTypes,
-        | "art_id"
-        | "artist"
-        | "pricing"
-        | "title"
-        | "url"
-        | "impressions"
-        | "like_IDs"
-        | "medium"
-        | "rarity"
-        | "availability"
-      > & { _id: string })[]
-    | []
-  >([]);
-
-  const [isPending, setIsPending] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsPending(true);
-    const getResults = async () => {
-      const data = await fetchSearchKeyWordResults(searchTerm as string);
-      if (data !== undefined) setSearchResults(data.data);
-
-      if (data === undefined)
-        toast.error("Error notification", {
-          description:
-            "An error has occured, please try again or contact support",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      setIsPending(false);
-    };
-
-    getResults();
-  }, [searchTerm]);
 
   const { user } = useAuth({ requiredRole: "user" });
+
+  const { data: artworks, isLoading } = useQuery({
+    queryKey: ["search_results", searchTerm],
+    queryFn: async () => {
+      if (!searchTerm) {
+        return [];
+      }
+      const data = await fetchSearchKeyWordResults(searchTerm);
+      return data?.data || [];
+    },
+    enabled: !!searchTerm,
+  });
+
+  if (isLoading) return <ArtworksListingSkeletonLoader />;
+
   return (
     <>
       <div className="w-full">
-        {searchResults.length === 0 ? (
+        {artworks.length === 0 ? (
           <NotFoundSearchResult />
         ) : (
           <SearchResultDetails
-            data={searchResults}
+            data={artworks}
             searchTerm={searchTerm as string}
             sessionId={user && user.role === "user" ? user.id : undefined}
-            isPending={isPending}
           />
         )}
       </div>

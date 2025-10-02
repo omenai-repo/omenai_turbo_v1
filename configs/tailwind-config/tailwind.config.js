@@ -47,13 +47,14 @@ module.exports = {
         xxm: "380px",
         xxs: "320px",
         md: "768px",
+        lg: "991px",
         xl: "1280px",
         "2lg": "1024px",
         "2xl": "1440px",
         "3xl": "1560px",
       },
       fontFamily: {
-        sans: ["var(--font-work_sans)"], 
+        sans: ["var(--font-work_sans)"],
       },
       backgroundImage: {
         "hero-image": "url('/images/home_bg.png')",

@@ -32,16 +32,19 @@ export default function LatestArtworkWrapper({
       <div className="flex md:flex-row flex-col gap-4 mb-5">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-[12px] ring-1 px-3 w-fit py-1  rounded ring-dark font-normal text-[#000000] my-5">
+            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
               Latest Artworks
             </p>
-            <p className="text-fluid-sm sm:text-fluid-md  font-bold text-[#000000] mt-[20px]">
+
+            <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
               Newly Arrived: Explore Our Latest Artworks
             </p>
           </div>
 
           <div className="hidden sm:flex flex-col items-end">
-            <p className="text-fluid-base font-bold ">Fresh Off the Easel:</p>
+            <p className="text-fluid-base font-semibold">
+              Fresh Off the Easel:
+            </p>
             <p className="justify-self-end leading-snug font-normal text-fluid-xs">
               Explore the newest
             </p>

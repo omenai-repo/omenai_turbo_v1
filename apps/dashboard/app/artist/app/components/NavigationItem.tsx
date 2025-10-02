@@ -32,9 +32,15 @@ export default function NavigationItem({
         </li>
       ) : (
         <Link
-          onClick={onClick}
+          onClick={(e) => {
+            if (pathname.startsWith(url)) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+            onClick && onClick();
+          }}
           href={url}
-          className={`p-2 ${
+          className={`p-2 ${pathname.startsWith(url) ? "pointer-events-none text-gray-400" : ""}} ${
             pathname.startsWith(url)
               ? "bg-dark text-white"
               : "bg-white text-dark"
