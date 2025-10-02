@@ -25,114 +25,103 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 ) {
   const client = await connectMongoDB();
   const session = await client.startSession();
+
   try {
     const { artist_id, recommendation } = await request.json();
+    if (!artist_id) throw new BadRequestError("Artist ID is required");
 
-    if (!artist_id)
-      throw new BadRequestError("Invalid Parameters - Artist ID is required");
-
-    const get_artist = await AccountArtist.findOne(
+    const artist = await AccountArtist.findOne(
       { artist_id },
-      "name, email base_currency"
+      "name email base_currency"
     );
-    const get_artist_categorization = await ArtistCategorization.findOne(
+    const categorization = await ArtistCategorization.findOne(
       { artist_id },
       "request history id"
     );
-    if (!artist_id || !get_artist_categorization)
-      throw new NotFoundError("Artist not found for the given artist ID");
 
-    const request_history =
-      get_artist_categorization.history === null
-        ? []
-        : get_artist_categorization.history;
+    if (!artist || !categorization) throw new NotFoundError("Artist not found");
 
-    const categorizationRequestUpdate = {
+    // Prepare categorization update
+    const previousHistory = categorization.history ?? [];
+    const nextCategorization =
+      recommendation ||
+      categorization.request?.categorization?.artist_categorization;
+
+    const categorizationUpdate = {
       history: [
-        ...request_history,
+        ...previousHistory,
         {
-          ...get_artist_categorization.request,
+          ...categorization.request,
           categorization: {
-            ...get_artist_categorization.request.categorization,
-            artist_categorization:
-              recommendation ||
-              get_artist_categorization.request.categorization
-                .artist_categorization,
+            ...categorization.request.categorization,
+            artist_categorization: nextCategorization,
           },
         },
       ],
       current: {
         date: new Date(),
         categorization: {
-          ...get_artist_categorization.request.categorization,
-          artist_categorization:
-            recommendation ||
-            get_artist_categorization.request.categorization
-              .artist_categorization,
+          ...categorization.request.categorization,
+          artist_categorization: nextCategorization,
         },
       },
       request: null,
     };
 
-    try {
-      session.startTransaction();
-      const update_artist_categorization = await ArtistCategorization.updateOne(
+    let wallet;
+
+    await session.withTransaction(async () => {
+      // Update categorization
+      const categorizationResult = await ArtistCategorization.updateOne(
         { artist_id },
-        { $set: { ...categorizationRequestUpdate } }
+        { $set: categorizationUpdate },
+        { session }
       );
-      const createWallet = await Wallet.create({
-        owner_id: artist_id,
-        base_currency: get_artist.base_currency,
-      });
-      const update_artist_acc = await AccountArtist.updateOne(
+      if (!categorizationResult.acknowledged)
+        throw new ServerError("Failed to update categorization");
+
+      // Create wallet
+      wallet = await Wallet.create(
+        [
+          {
+            owner_id: artist_id,
+            base_currency: artist.base_currency,
+          },
+        ],
+        { session }
+      );
+      wallet = wallet[0];
+
+      // Update artist account
+      const artistResult = await AccountArtist.updateOne(
         { artist_id },
         {
           $set: {
             artist_verified: true,
-            wallet_id: createWallet.wallet_id,
-            algo_data_id: get_artist_categorization.id,
-            categorization:
-              categorizationRequestUpdate.current.categorization
-                .artist_categorization,
+            wallet_id: wallet.wallet_id,
+            algo_data_id: categorization.id,
+            categorization: nextCategorization,
           },
-        }
+        },
+        { session }
       );
+      if (!artistResult.acknowledged)
+        throw new ServerError("Failed to update artist account");
+    });
 
-      const [accept_artist_verif_result] = await Promise.all([
-        update_artist_categorization,
-        update_artist_acc,
-        createWallet,
-      ]);
+    // Send email AFTER transaction succeeds
+    await sendArtistAcceptedMail({
+      name: artist.name,
+      email: artist.email,
+    });
 
-      if (!accept_artist_verif_result.acknowledged)
-        throw new ServerError(
-          "Artist verification not successful. Please contact IT support"
-        );
-
-      session.commitTransaction();
-
-      // DONE: Send mail to Artist
-      sendArtistAcceptedMail({
-        name: get_artist.name,
-        email: get_artist.email,
-      });
-      return NextResponse.json(
-        { message: "Artist verification accepted" },
-        { status: 200 }
-      );
-    } catch (error) {
-      session.abortTransaction();
-      console.log(error);
-      const error_response = handleErrorEdgeCases(error);
-
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+    return NextResponse.json(
+      { message: "Artist verification accepted" },
+      { status: 200 }
+    );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
+    console.error("Onboarding error:", error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

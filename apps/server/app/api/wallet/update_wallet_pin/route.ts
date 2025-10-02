@@ -6,6 +6,7 @@ import {
   ConflictError,
   ForbiddenError,
   ServerError,
+  NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { hashPassword } from "@omenai/shared-lib/hash/hashPassword";
@@ -25,50 +26,61 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
     const { wallet_id, pin } = await request.json();
-    console.log(wallet_id, pin);
 
-    const isPinRepeatingOrConsecutive: boolean = isRepeatingOrConsecutive(pin);
+    // ✅ Basic input validation
+    if (!wallet_id || !pin) {
+      throw new ForbiddenError("Wallet ID and pin are required");
+    }
 
-    if (isPinRepeatingOrConsecutive)
+    // ✅ Check for repeating/consecutive pin
+    if (isRepeatingOrConsecutive(pin)) {
       throw new ForbiddenError(
         "Wallet pin cannot be repeating or consecutive. Please try again"
       );
+    }
 
+    // ✅ Fetch wallet safely
     const wallet = await Wallet.findOne({ wallet_id }, "wallet_pin");
-    let isPinMatch;
 
-    if (wallet.wallet_pin !== null) {
-      isPinMatch = bcrypt.compareSync(pin, wallet.wallet_pin);
+    if (!wallet) {
+      // if wallet truly "must" exist, this reveals a data integrity issue
+      throw new NotFoundError("Wallet not found for this user");
+    }
 
-      if (isPinMatch)
+    // ✅ Compare with existing pin if present
+    if (wallet.wallet_pin) {
+      const isPinMatch = bcrypt.compareSync(pin, wallet.wallet_pin);
+      if (isPinMatch) {
         throw new ConflictError(
           "Your pin cannot be identical to your previous wallet pin"
         );
+      }
     }
 
+    // ✅ Hash new pin
     const hashedPin = await hashPassword(pin);
 
-    const createWalletPin = await Wallet.updateOne(
+    // ✅ Update wallet
+    const updateResult = await Wallet.updateOne(
       { wallet_id },
       { $set: { wallet_pin: hashedPin } }
     );
 
-    if (createWalletPin.modifiedCount === 0)
+    if (updateResult.modifiedCount === 0) {
       throw new ServerError(
         "An error was encountered while updating your wallet pin. Please try again or contact IT support"
       );
+    }
 
     // TODO: Send mail informing of pin change
 
     return NextResponse.json(
-      {
-        message: "Wallet pin updated successfully",
-      },
+      { message: "Wallet pin updated successfully" },
       { status: 201 }
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       { message: error_response?.message },
