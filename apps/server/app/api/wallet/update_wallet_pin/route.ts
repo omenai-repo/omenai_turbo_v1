@@ -40,7 +40,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     }
 
     // ✅ Fetch wallet safely
-    const wallet = await Wallet.findOne({ wallet_id }, "wallet_pin");
+    const wallet = await Wallet.findOne({ wallet_id }).exec();
 
     if (!wallet) {
       // if wallet truly "must" exist, this reveals a data integrity issue
