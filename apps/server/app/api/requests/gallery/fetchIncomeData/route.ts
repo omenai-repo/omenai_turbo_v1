@@ -1,17 +1,21 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
-export const GET = withAppRouterHighlight(async function GET(
-  request: Request,
-  context: { params: Promise<Record<string, string>> }
-) {
+export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-
   const galleryId = searchParams.get("id");
+
+  if (!galleryId) {
+    return NextResponse.json(
+      { message: "Missing gallery id" },
+      { status: 400 }
+    );
+  }
+
   try {
     await connectMongoDB();
 
@@ -25,12 +29,16 @@ export const GET = withAppRouterHighlight(async function GET(
       {
         $group: {
           _id: null,
-          salesRevenue: { $sum: "$trans_pricing.unit_price" },
+          salesRevenue: {
+            $sum: {
+              $toDouble: { $ifNull: ["$trans_pricing.unit_price", 0] },
+            },
+          },
           netIncome: {
             $sum: {
               $subtract: [
-                { $ifNull: ["$trans_pricing.unit_price", 0] },
-                { $ifNull: ["$trans_pricing.commission", 0] },
+                { $toDouble: { $ifNull: ["$trans_pricing.unit_price", 0] } },
+                { $toDouble: { $ifNull: ["$trans_pricing.commission", 0] } },
               ],
             },
           },
@@ -46,6 +54,7 @@ export const GET = withAppRouterHighlight(async function GET(
     ];
 
     const result = await PurchaseTransactions.aggregate(pipeline);
+
     if (result.length === 0) {
       return NextResponse.json(
         {
@@ -62,10 +71,9 @@ export const GET = withAppRouterHighlight(async function GET(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
     return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status }
+      { message: error_response?.message || "Unexpected error" },
+      { status: error_response?.status || 500 }
     );
   }
 });

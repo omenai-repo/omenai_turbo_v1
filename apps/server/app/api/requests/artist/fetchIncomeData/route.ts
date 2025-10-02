@@ -25,12 +25,12 @@ export const GET = withAppRouterHighlight(async function GET(
       {
         $group: {
           _id: null,
-          salesRevenue: { $sum: "$trans_pricing.unit_price" },
+          salesRevenue: { $sum: { $ifNull: ["$trans_pricing.unit_price", 0] } },
           netIncome: {
             $sum: {
               $subtract: [
-                "$trans_pricing.amount_total",
-                "$trans_pricing.commission",
+                { $ifNull: ["$trans_pricing.amount_total", 0] },
+                { $ifNull: ["$trans_pricing.commission", 0] },
               ],
             },
           },
