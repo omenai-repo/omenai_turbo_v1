@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Combobox, Input, InputBase, Loader, useCombobox } from "@mantine/core";
 import { getBanks } from "@omenai/shared-services/wallet/getBanks";
 import { getBankBranches } from "@omenai/shared-services/wallet/getBankBranches";
@@ -75,57 +75,101 @@ export function SearchableSelect({
     onDropdownOpen: async () => {
       if (data.length === 0 && !loading) {
         setLoading(true);
-        const response = await getAsyncData(
-          type,
-          user.address.countryCode,
-          bankCode || ""
-        );
-        setData(response);
-        setLoading(false);
+        try {
+          const response = await getAsyncData(
+            type,
+            user.address.countryCode,
+            bankCode || ""
+          );
+          setData(response);
+        } catch (error) {
+          console.error("Error loading data:", error);
+        } finally {
+          setLoading(false);
+        }
         combobox.focusSearchInput();
         combobox.resetSelectedOption();
       }
     },
   });
-  const handleOptionSubmit = (val: string) => {
-    const selected_data = data.find((item: BankType | BankBranchType) => {
-      return "name" in item ? item.name === val : item.branch_name === val;
-    });
-    setValue(val);
-    setSelect(type, selected_data as BankType | BankBranchType);
-    combobox.closeDropdown();
-  };
 
-  const options = data
-    .filter((item: BankType | BankBranchType) =>
-      ("name" in item ? item.name : item.branch_name)
-        .toLowerCase()
-        .includes(search.toLowerCase().trim())
-    )
-    .map((item: BankType | BankBranchType) => (
-      <Combobox.Option
-        value={"name" in item ? item.name : item.branch_name}
-        key={"code" in item ? item.code : item.branch_code}
-      >
-        {"name" in item ? item.name : item.branch_name}
-      </Combobox.Option>
-    ));
+  // Memoize the name getter to avoid repetitive conditionals
+  const getName = useCallback(
+    (item: BankType | BankBranchType) =>
+      "name" in item ? item.name : item.branch_name,
+    []
+  );
+
+  const getCode = useCallback(
+    (item: BankType | BankBranchType) =>
+      "code" in item ? item.code : item.branch_code,
+    []
+  );
+
+  // Memoize the handleOptionSubmit to prevent recreation on every render
+  const handleOptionSubmit = useCallback(
+    (val: string) => {
+      const selected_data = data.find(
+        (item: BankType | BankBranchType) => getName(item) === val
+      );
+      setValue(val);
+      setSelect(type, selected_data as BankType | BankBranchType);
+      combobox.closeDropdown();
+    },
+    [data, getName, setSelect, type, combobox]
+  );
+
+  // Memoize filtered and mapped options for better performance
+  const options = useMemo(() => {
+    const searchLower = search.toLowerCase().trim();
+
+    return data
+      .filter((item: BankType | BankBranchType) =>
+        getName(item).toLowerCase().includes(searchLower)
+      )
+      .map((item: BankType | BankBranchType) => (
+        <Combobox.Option value={getName(item)} key={getCode(item)}>
+          {getName(item)}
+        </Combobox.Option>
+      ));
+  }, [data, search, getName, getCode]);
+
+  // Memoize placeholder and label text
+  const placeholderText = useMemo(
+    () => (type === "banks" ? "Select bank" : "Select bank branch"),
+    [type]
+  );
+
+  const labelText = useMemo(
+    () => (type === "banks" ? "Select your bank" : "Select your bank branch"),
+    [type]
+  );
+
+  const searchPlaceholder = useMemo(
+    () => (type === "banks" ? "Search your bank" : "Search your bank branch"),
+    [type]
+  );
+
+  // Memoize empty state message
+  const emptyMessage = useMemo(() => {
+    if (type === "branches") {
+      return "No branches listed for this bank. Kindly continue.";
+    }
+    return "No banks match your search criteria. Please try again.";
+  }, [type]);
 
   return (
     <Combobox
       store={combobox}
       withinPortal={false}
-      onOptionSubmit={(val) => handleOptionSubmit(val)}
+      onOptionSubmit={handleOptionSubmit}
       disabled={disabled}
       dropdownPadding={6}
       offset={0}
-      //   position="top"
     >
       <Combobox.Target>
         <InputBase
-          label={
-            type === "banks" ? "Select your bank" : "Select your bank branch"
-          }
+          label={labelText}
           component="button"
           type="button"
           pointer
@@ -133,11 +177,7 @@ export function SearchableSelect({
           onClick={() => combobox.toggleDropdown()}
           rightSectionPointerEvents="none"
         >
-          {value || (
-            <Input.Placeholder>
-              {type === "banks" ? "Select bank" : "Select bank branch"}
-            </Input.Placeholder>
-          )}
+          {value || <Input.Placeholder>{placeholderText}</Input.Placeholder>}
         </InputBase>
       </Combobox.Target>
 
@@ -146,9 +186,7 @@ export function SearchableSelect({
           className="placeholder:text-dark"
           value={search}
           onChange={(event) => setSearch(event.currentTarget.value)}
-          placeholder={
-            type === "banks" ? "Search your bank" : "Search your bank branch"
-          }
+          placeholder={searchPlaceholder}
         />
         <Combobox.Options>
           {loading ? (
@@ -159,17 +197,9 @@ export function SearchableSelect({
             </Combobox.Empty>
           ) : options.length > 0 ? (
             options
-          ) : type === "branches" ? (
-            <Combobox.Empty>
-              <span className="text-fluid-xs font-light">
-                No branches listed for this bank. Kindly continue.
-              </span>
-            </Combobox.Empty>
           ) : (
             <Combobox.Empty>
-              <span className="text-fluid-xs font-light">
-                No banks match your search criteria. Please try again.
-              </span>
+              <span className="text-fluid-xs font-light">{emptyMessage}</span>
             </Combobox.Empty>
           )}
         </Combobox.Options>

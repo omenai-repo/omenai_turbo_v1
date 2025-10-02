@@ -505,10 +505,10 @@ export type WalletTransactionStatusTypes =
   | "NEW";
 
 export type WithdrawalAccount = {
-  account_number: number;
+  account_number: string;
   bank_name: string;
   account_name: string;
-  bank_id: number;
+  bank_id: string;
   bank_code: string;
   branch: BankBranchType | null;
   bank_country: string;
@@ -524,10 +524,10 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_date: Date;
   trans_recipient_role: "gallery" | "artist";
   status: "successful" | "processing" | "failed";
-  createdBy?: 'webhook' | 'verification',      // Who created this record
-  verifiedAt?: Date,                          // When verification route processed it
-  webhookReceivedAt?: Date,                   // When webhook received
-  webhookConfirmed?: boolean,
+  createdBy?: "webhook" | "verification"; // Who created this record
+  verifiedAt?: Date; // When verification route processed it
+  webhookReceivedAt?: Date; // When webhook received
+  webhookConfirmed?: boolean;
 };
 
 export type PurchaseTransactionPricing = {
@@ -947,14 +947,14 @@ export type FailedCronJobTypes = {
   jobId: string;
 };
 
-export type BankType = { id: number; code: string; name: string };
+export type BankType = { id: string; code: string; name: string };
 export type BankBranchType = {
-  id: number;
+  id: string;
   branch_code: string;
   branch_name: string;
   swift_code: string;
   bic: string;
-  bank_id: number;
+  bank_id: string;
 };
 
 export type TeamMember = {

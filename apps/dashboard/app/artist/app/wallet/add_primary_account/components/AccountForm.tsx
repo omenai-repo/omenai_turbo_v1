@@ -6,7 +6,7 @@ import {
 } from "@omenai/shared-types";
 import { SearchableSelect } from "./SearchableComboBox";
 import { Button, TextInput } from "@mantine/core";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { validateBankAccount } from "@omenai/shared-services/wallet/validateAccount";
 import { addPrimaryAccount } from "@omenai/shared-services/wallet/addPrimaryAccount";
 import { toast } from "sonner";
@@ -14,9 +14,39 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+
+// Move constants outside component to prevent recreation
+const COUNTRIES_WITH_BANK_BRANCHES = [
+  "BJ",
+  "CM",
+  "TD",
+  "CI",
+  "CG",
+  "GA",
+  "GH",
+  "MW",
+  "RW",
+  "SN",
+  "SL",
+  "TZ",
+  "UG",
+];
+
+const TOAST_ERROR_STYLE = {
+  background: "red",
+  color: "white",
+};
+
+const TOAST_SUCCESS_STYLE = {
+  background: "green",
+  color: "white",
+};
+
 export default function AccountForm() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const { user, csrf } = useAuth({ requiredRole: "artist" });
+
   const [selectedBank, setSelectedBank] = useState<BankType | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<BankBranchType | null>(
     null
@@ -29,58 +59,62 @@ export default function AccountForm() {
     account_number: string;
   }>({ isValidated: false, account_name: "", account_number: "" });
 
-  const countries_with_bank_branches = [
-    "BJ",
-    "CM",
-    "TD",
-    "CI",
-    "CG",
-    "GA",
-    "GH",
-    "MW",
-    "RW",
-    "SN",
-    "SL",
-    "TZ",
-    "UG",
-  ];
-
-  const router = useRouter();
-  const showBranches = () => {
-    if (
+  // Memoize whether to show branches
+  const showBranches = useMemo(() => {
+    return (
       user &&
       selectedBank !== null &&
-      countries_with_bank_branches.includes(user.address.countryCode)
-    ) {
-      return true;
+      COUNTRIES_WITH_BANK_BRANCHES.includes(user.address.countryCode)
+    );
+  }, [user, selectedBank]);
+
+  // Memoize bank code for branches
+  const bankCodeForBranches = useMemo(() => {
+    return selectedBank !== null ? selectedBank.id.toString() : "";
+  }, [selectedBank]);
+
+  // Memoize validation button disabled state
+  const isValidationDisabled = useMemo(() => {
+    return !account_number || selectedBank === null;
+  }, [account_number, selectedBank]);
+
+  // Optimize handleSelectOption with useCallback
+  const handleSelectOption = useCallback(
+    (type: "banks" | "branches", value: BankType | BankBranchType) => {
+      if (type === "banks") {
+        setSelectedBank(value as BankType);
+        // Reset branch when bank changes
+        setSelectedBranch(null);
+      }
+      if (type === "branches") {
+        setSelectedBranch(value as BankBranchType);
+      }
+    },
+    []
+  );
+
+  // Optimize account number change handler
+  const handleAccountNumberChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      set_account_number(event.currentTarget.value);
+    },
+    []
+  );
+
+  const handleValidateAccount = useCallback(async () => {
+    if (selectedBank === null || !account_number) {
+      toast.error("Error Notification", {
+        description: "Account number and bank is required",
+        style: TOAST_ERROR_STYLE,
+        className: "class",
+      });
+      return;
     }
-    return false;
-  };
 
-  const handleSelectOption = (
-    type: "banks" | "branches",
-    value: BankType | BankBranchType
-  ) => {
-    if (type === "banks") setSelectedBank(value as BankType);
-    if (type === "branches") setSelectedBranch(value as BankBranchType);
-  };
-
-  const handleValidateAccount = async () => {
     try {
       setLoading(true);
-      if (selectedBank === null || !account_number) {
-        toast.error("Error Notification", {
-          description: "Account number and bank is required",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-        return;
-      }
+
       const validateBankAccountResponse = await validateBankAccount(
-        // DONE: Change this to selectedBank.code
         selectedBank.code,
         account_number,
         csrf || ""
@@ -92,14 +126,12 @@ export default function AccountForm() {
       ) {
         toast.error("Error Notification", {
           description: validateBankAccountResponse?.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
+          style: TOAST_ERROR_STYLE,
           className: "class",
         });
         return;
       }
+
       setValidatedAccount({
         isValidated: true,
         ...validateBankAccountResponse.data,
@@ -107,49 +139,38 @@ export default function AccountForm() {
     } catch (error) {
       toast.error("Error Notification", {
         description:
-          "An error has occured, Please try again or contact suppport",
-        style: {
-          background: "red",
-          color: "white",
-        },
+          "An error has occurred. Please try again or contact support",
+        style: TOAST_ERROR_STYLE,
         className: "class",
       });
     } finally {
       setLoading(false);
-      //   set_account_number("");
-      //   setSelectedBank(null);
-      //   setValidatedAccount({
-      //     isValidated: false,
-      //     account_name: "",
-      //     account_number: "",
-      //   });
     }
-  };
+  }, [selectedBank, account_number, csrf]);
 
-  const handleAddPrimaryAccount = async () => {
-    console.log(account_number, selectedBank);
+  const handleAddPrimaryAccount = useCallback(async () => {
+    if (selectedBank === null || account_number.length === 0) {
+      toast.error("Error Notification", {
+        description: "Account number and bank is required",
+        style: TOAST_ERROR_STYLE,
+        className: "class",
+      });
+      return;
+    }
+
     try {
       setLoading(true);
-      if (selectedBank === null || account_number.length === 0) {
-        toast.error("Error Notification", {
-          description: "Account number and bank is required",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-        return;
-      }
+
       const account_details: Omit<WithdrawalAccount, "beneficiary_id"> = {
-        account_number: Number(validatedAccount.account_number),
+        account_number: validatedAccount.account_number,
         bank_name: selectedBank.name,
         account_name: validatedAccount.account_name,
         bank_id: selectedBank.id,
-        bank_code: selectedBank.code, // DONE: Change to appropriate bank code
+        bank_code: selectedBank.code,
         branch: selectedBranch,
         bank_country: user.address.countryCode,
       };
+
       const add_primary_account_response = await addPrimaryAccount({
         owner_id: user.artist_id,
         account_details,
@@ -163,40 +184,44 @@ export default function AccountForm() {
       ) {
         toast.error("Error Notification", {
           description: add_primary_account_response?.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
+          style: TOAST_ERROR_STYLE,
           className: "class",
         });
         return;
       }
-      toast.error("Operation successful", {
+
+      toast.success("Operation successful", {
         description: add_primary_account_response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
+        style: TOAST_SUCCESS_STYLE,
         className: "class",
       });
+
       await queryClient.invalidateQueries({
         queryKey: ["fetch_wallet_screen"],
       });
+
       router.replace("/artist/app/wallet");
     } catch (error) {
       toast.error("Error Notification", {
         description:
-          "An error has occured. Please try again or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
+          "An error has occurred. Please try again or contact support",
+        style: TOAST_ERROR_STYLE,
         className: "class",
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    selectedBank,
+    account_number,
+    validatedAccount,
+    selectedBranch,
+    user,
+    csrf,
+    queryClient,
+    router,
+  ]);
+
   return (
     <form className="flex flex-col space-y-6">
       <TextInput
@@ -206,17 +231,19 @@ export default function AccountForm() {
         disabled
         className="font-normal"
       />
+
       <SearchableSelect
         type="banks"
         setSelect={handleSelectOption}
-        disabled={false || validatedAccount.isValidated}
+        disabled={validatedAccount.isValidated}
       />
-      {showBranches() && (
+
+      {showBranches && (
         <SearchableSelect
           type="branches"
           setSelect={handleSelectOption}
           disabled={selectedBank === null || validatedAccount.isValidated}
-          bankCode={selectedBank !== null ? selectedBank.id.toString() : ""}
+          bankCode={bankCodeForBranches}
         />
       )}
 
@@ -225,8 +252,10 @@ export default function AccountForm() {
         placeholder="Enter your bank account number"
         className="font-normal"
         withAsterisk
-        onChange={(event) => set_account_number(event.currentTarget.value)}
+        onChange={handleAccountNumberChange}
+        disabled={validatedAccount.isValidated}
       />
+
       <TextInput
         label="Account name"
         placeholder="Your account name will be automatically displayed here"
@@ -238,32 +267,28 @@ export default function AccountForm() {
       />
 
       {!validatedAccount.isValidated ? (
-        <>
-          <Button
-            onClick={handleValidateAccount}
-            variant="filled"
-            color="#0f172a"
-            fullWidth
-            loading={loading}
-            disabled={!account_number || selectedBank === null}
-            className="font-light"
-          >
-            Validate account
-          </Button>
-        </>
+        <Button
+          onClick={handleValidateAccount}
+          variant="filled"
+          color="#0f172a"
+          fullWidth
+          loading={loading}
+          disabled={isValidationDisabled}
+          className="font-light"
+        >
+          Validate account
+        </Button>
       ) : (
-        <>
-          <Button
-            onClick={handleAddPrimaryAccount}
-            variant="filled"
-            color="#0f172a"
-            fullWidth
-            loading={loading}
-            className="font-light"
-          >
-            Add primary account
-          </Button>
-        </>
+        <Button
+          onClick={handleAddPrimaryAccount}
+          variant="filled"
+          color="#0f172a"
+          fullWidth
+          loading={loading}
+          className="font-light"
+        >
+          Add primary account
+        </Button>
       )}
     </form>
   );
