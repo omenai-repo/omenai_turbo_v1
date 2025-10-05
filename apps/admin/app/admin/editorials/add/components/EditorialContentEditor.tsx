@@ -11,7 +11,7 @@ export function EditorialContentEditor({
   handleEditorialUpload: (content: string) => void;
   loading: boolean;
 }) {
-  const editorRef = useRef<TinyMCEEditor>();
+  const editorRef = useRef<TinyMCEEditor | null>(null);
   return (
     <>
       <Editor

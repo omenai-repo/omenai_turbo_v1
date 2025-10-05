@@ -17,6 +17,7 @@ import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import Link from "next/link";
+import { tracking_url } from "@omenai/url-config/src/config";
 
 export function OrdersGroupAccordion({
   orders,
@@ -220,7 +221,9 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "track" && (
           <div className="mt-5">
-            <Link href={`/gallery/orders/tracking/${order.order_id}`}>
+            <Link
+              href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
+            >
               <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>

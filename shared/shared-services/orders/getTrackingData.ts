@@ -18,6 +18,7 @@ export const getTrackingData = async (order_id: string) => {
       order_date: result.order_date,
       arwork_data: result.artwork_data,
       tracking_number: result.tracking_number,
+      shipping_details: result.shipping_details,
     };
   } catch (error: any) {
     return {

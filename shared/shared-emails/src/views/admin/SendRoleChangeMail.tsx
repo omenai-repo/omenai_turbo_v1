@@ -29,14 +29,14 @@ interface RoleUpdateEmailProps {
   updatedBy?: string;
 }
 
-export const RoleUpdateEmail: React.FC<RoleUpdateEmailProps> = ({
+export const RoleUpdateEmail = ({
   recipientName,
   previousRole,
   newRole,
   adminPortalUrl = `${admin_url()}/auth/login`,
   effectiveDate = "immediately",
   updatedBy = "System Administrator",
-}) => {
+}: RoleUpdateEmailProps) => {
   return (
     <Html>
       <Head />

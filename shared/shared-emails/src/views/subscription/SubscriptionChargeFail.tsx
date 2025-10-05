@@ -30,7 +30,7 @@ interface PaymentFailedEmailProps {
   cardType?: string;
 }
 
-export const PaymentFailedEmail: React.FC<PaymentFailedEmailProps> = ({
+export const PaymentFailedEmail = ({
   recipientName,
   subscriptionPlan,
   lastPaymentAttemptDate,
@@ -38,7 +38,7 @@ export const PaymentFailedEmail: React.FC<PaymentFailedEmailProps> = ({
   accountUrl = "/account/billing",
   lastFourDigits,
   cardType,
-}) => {
+}: PaymentFailedEmailProps) => {
   return (
     <Html>
       <Head />

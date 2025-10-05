@@ -7,11 +7,13 @@ const allowed_origins = [
   "https://dashboard.omenai.app",
   "https://admin.omenai.app",
   "https://omenai.app",
+  "https://api.omenai.app",
+  "https://tracking.omenai.app",
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:4000",
   "http://localhost:5000",
-  "https://api.omenai.app",
+  "http://localhost:3002",
 ];
 
 // ... (rest of your middleware code)

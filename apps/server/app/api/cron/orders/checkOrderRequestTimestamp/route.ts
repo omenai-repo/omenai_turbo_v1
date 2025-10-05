@@ -3,12 +3,13 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import OrderDeclinedEmail from "@omenai/shared-emails/src/views/order/OrderDeclinedEmail";
-import OrderAutoDeclined from "@omenai/shared-emails/src/views/order/OrderAutoDeclined";
+import OrderAutoDeclinedEmail from "@omenai/shared-emails/src/views/order/OrderAutoDeclined";
 import OrderRequestReminder from "@omenai/shared-emails/src/views/order/OrderRequessstReminder";
 import OrderDeclinedWarning from "@omenai/shared-emails/src/views/order/OrderDeclinedWarning";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { render } from "@react-email/render";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -59,37 +60,60 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       if (updateResult.modifiedCount > 0) {
         const ordersToEmail = orders96.slice(0, updateResult.modifiedCount);
 
-        // Send emails to buyers
-        const buyerEmailPayload = ordersToEmail.map((order) => ({
-          from: "Orders <omenai@omenai.app>",
-          to: [order.buyer_details.email],
-          subject: "Your order has been declined",
-          react: OrderDeclinedEmail({
-            recipientName: order.buyer_details.name,
-            declineReason:
-              "Seller did not respond within the designated timeframe",
-            artwork: order.artwork_data,
-          }),
-        }));
-
-        // Send emails to sellers
-        const sellerEmailPayload = ordersToEmail.map((order) => ({
-          from: "Orders <omenai@omenai.app>",
-          to: [order.seller_details.email],
-          subject: "Order has been auto declined",
-          react: OrderAutoDeclined(
-            order.seller_details.name,
-            order.artwork_data
-          ),
-        }));
-
         try {
+          // Step 1: Prepare and render all emails for both buyers and sellers concurrently.
+          // This waits for all HTML to be generated before proceeding.
+          const [buyerEmailPayload, sellerEmailPayload] = await Promise.all([
+            // Prepare buyer emails
+            Promise.all(
+              ordersToEmail.map(async (order) => {
+                const html = await render(
+                  OrderDeclinedEmail({
+                    recipientName: order.buyer_details.name,
+                    declineReason:
+                      "Seller did not respond within the designated timeframe",
+                    artwork: order.artwork_data,
+                  })
+                );
+                return {
+                  from: "Orders <omenai@omenai.app>",
+                  to: [order.buyer_details.email],
+                  subject: "Your order has been declined",
+                  html,
+                };
+              })
+            ),
+            // Prepare seller emails
+            Promise.all(
+              ordersToEmail.map(async (order) => {
+                const html = await render(
+                  OrderAutoDeclinedEmail({
+                    name: order.seller_details.name,
+                    artwork: order.artwork_data,
+                  })
+                );
+                return {
+                  from: "Orders <omenai@omenai.app>",
+                  to: [order.seller_details.email],
+                  subject: "Order has been auto declined",
+                  html,
+                };
+              })
+            ),
+          ]);
+
+          // Step 2: Once all payloads are successfully created, send both batches concurrently.
           await Promise.all([
             resend.batch.send(buyerEmailPayload),
             resend.batch.send(sellerEmailPayload),
           ]);
-        } catch (emailError) {
-          console.error("Failed to send auto-decline emails:", emailError);
+
+          console.log(
+            `Successfully dispatched decline emails for ${ordersToEmail.length} orders.`
+          );
+        } catch (error) {
+          // This single catch block now handles errors from both rendering and sending.
+          console.error("Failed to process auto-decline emails:", error);
           // Continue processing - don't fail the whole job for email issues
         }
       }
@@ -104,20 +128,26 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       "order_accepted.status": "",
     });
 
-    if (orders72.length > 0) {
-      const warningEmailPayload = orders72.map((order) => ({
-        from: "Orders <omenai@omenai.app>",
-        to: [order.seller_details.email],
-        subject: "Notice: Potential Order Request Decline",
-        react: OrderDeclinedWarning(order.seller_details.name),
-      }));
+    try {
+      const [orders72EmailWarning] = await Promise.all([
+        Promise.all(
+          orders72.map(async (order) => {
+            const html = await render(
+              OrderDeclinedWarning({ name: order.seller_details.name })
+            );
 
-      try {
-        await resend.batch.send(warningEmailPayload);
-        processedCounts.warningsSent = orders72.length;
-      } catch (emailError) {
-        console.error("Failed to send warning emails:", emailError);
-      }
+            return {
+              from: "Orders <omenai@omenai.app>",
+              to: [order.seller_details.email],
+              subject: "Notice: Potential Order Request Decline",
+              html,
+            };
+          })
+        ),
+      ]);
+      await Promise.all([resend.batch.send(orders72EmailWarning)]);
+    } catch (error) {
+      console.error("Failed to send reminder emails: 72 hrs");
     }
 
     // 3. Send reminders for orders 24-72 hours old

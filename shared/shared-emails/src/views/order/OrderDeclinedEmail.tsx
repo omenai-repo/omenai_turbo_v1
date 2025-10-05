@@ -32,11 +32,11 @@ interface OrderDeclinedEmailProps {
   >;
 }
 
-export const OrderDeclinedEmail: React.FC<OrderDeclinedEmailProps> = ({
+const OrderDeclinedEmail = ({
   recipientName,
   declineReason,
   artwork,
-}) => {
+}: OrderDeclinedEmailProps) => {
   const baseUrl = base_url();
   const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
   const catalogUrl = `${baseUrl}/catalog`;

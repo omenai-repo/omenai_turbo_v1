@@ -1,4 +1,5 @@
 // components/emails/BuyerShipmentEmail.tsx
+import { tracking_url } from "@omenai/url-config/src/config";
 import {
   Html,
   Head,
@@ -72,7 +73,7 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
 
             <div style={{ textAlign: "center", margin: "30px 0" }}>
               <Link
-                href={"https://dashboard.omenai.app/user/orders"}
+                href={`${tracking_url()}?tracking_id=${trackingCode}`}
                 style={{
                   display: "inline-block",
                   backgroundColor: "#0f172a",

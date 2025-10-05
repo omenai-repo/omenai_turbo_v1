@@ -24,9 +24,9 @@ interface OrderDeclinedWarningEmailProps {
   name: string;
 }
 
-export const OrderDeclinedWarningEmail: React.FC<
-  OrderDeclinedWarningEmailProps
-> = ({ name }) => {
+export const OrderDeclinedWarningEmail = ({
+  name,
+}: OrderDeclinedWarningEmailProps) => {
   return (
     <Html>
       <Head />

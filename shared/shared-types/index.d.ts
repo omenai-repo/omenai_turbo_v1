@@ -990,3 +990,32 @@ export type NotificationPayload = {
   data: NotificationData["data"];
   to: string;
 };
+
+// types/tracking.ts
+
+export interface TrackingEvent {
+  date: string;
+  time: string;
+  typeCode: string;
+  serviceArea: { code: string; description: string }[];
+  description: string;
+  signedBy?: string;
+}
+
+export interface TrackingDetails {
+  id: string;
+  service: string;
+  origin: AddressTypes;
+  destination: AddressTypes;
+  status: {
+    description: string;
+    time: string;
+    date: string;
+  };
+  estimatedDeliveryDate?: string;
+  events: TrackingEvent[];
+}
+
+export interface TrackingResponse {
+  shipments: TrackingDetails[];
+}

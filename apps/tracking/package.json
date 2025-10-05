@@ -1,0 +1,24 @@
+{
+  "name": "@omenai/tracking",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3002",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "devDependencies": {
+    "@omenai/shared-services": "*",
+    "@omenai/shared-ui-components": "*",
+    "@omenai/tailwind-config": "*",
+    "@omenai/typescript-config": "*",
+    "@omenai/url-config": "*",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4"
+  }
+}

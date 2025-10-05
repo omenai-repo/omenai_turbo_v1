@@ -32,3 +32,9 @@ export const admin_url = (): string => {
     ? "https://admin.omenai.app"
     : "http://localhost:3001";
 };
+
+export const tracking_url = (): string => {
+  return process.env.NODE_ENV === "production"
+    ? "https://tracking.omenai.app"
+    : "http://localhost:3002";
+};

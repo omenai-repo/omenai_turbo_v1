@@ -1,0 +1,26 @@
+{
+  "extends": "@omenai/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "tailwind.config.js",
+    "app/catalog/components/FilterPill.tsx",
+    "app/catalog/components/MediumFilter.tsx",
+    "app/catalog/components/Pagination.tsx",
+    "app/catalog/components/PriceFilter.tsx",
+    "app/catalog/components/RarityFilter.tsx",
+    "app/catalog/components/YearFilter.tsx",
+    "app/catalog/components/FilterOptionBox.tsx",
+    "app/catalog/components/FilterActions.tsx",
+    "app/catalog/components/Filter.tsx",
+    "app/catalog/components/CancelFilter.tsx",
+    "../../arc.d.ts",
+    "app/test/page.jsx"
+  ],
+  "exclude": ["node_modules"]
+}

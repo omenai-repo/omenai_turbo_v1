@@ -10,27 +10,23 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-const config: CombinedConfig = {
-  ...standardRateLimit,
-  allowedRoles: ["artist", "gallery", "user"],
-};
-export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(
-  request: Request
-) {
+export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const nextRequest = new NextRequest(request);
   const searchParams = nextRequest.nextUrl.searchParams;
 
-  const order_id = searchParams.get("order_id");
-  if (!order_id)
-    throw new BadRequestError("Invalid parameters - order_id required");
+  const id = searchParams.get("order_id");
+  if (!id) throw new BadRequestError("Invalid parameters - order_id required");
+
+  const filter =
+    id.trim().length === 7
+      ? { order_id: id.trim() }
+      : { "shipping_details.shipment_information.tracking.id": id };
 
   await connectMongoDB();
   const order = await CreateOrder.findOne(
-    { order_id },
+    { ...filter },
     "shipping_details createdAt artwork_data"
   );
 
@@ -38,6 +34,9 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(
 
   const tracking_number =
     order.shipping_details.shipment_information.tracking.id;
+
+  if (!tracking_number)
+    throw new NotFoundError("No tracking number found for the given order id");
 
   // const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
   // const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
@@ -65,13 +64,17 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(
         "Unable to fetch shipment event at the moment. Please try again later or contact support"
       );
 
+    const timeStamp = data.shipments[0].shipmentTimeStamp;
+
     return NextResponse.json(
       {
         message: "Successfully fetched shipment events",
         events: data.shipments[0].events,
+        timeStamp,
         cordinates: {},
         order_date: formatISODate(order.createdAt),
         artwork_data: order.artwork_data,
+        shipping_details: order.shipping_details,
         tracking_number,
         // coordinates: {
         //   origin: get_origin_geo_location,

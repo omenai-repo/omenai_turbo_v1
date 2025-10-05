@@ -31,12 +31,12 @@ interface OrderAcceptedEmailProps {
   >;
 }
 
-export const OrderAcceptedEmail: React.FC<OrderAcceptedEmailProps> = ({
+export const OrderAcceptedEmail = ({
   name,
   orderId,
   userId,
   artwork,
-}) => {
+}: OrderAcceptedEmailProps) => {
   const baseUrl = base_url();
   const paymentUrl = `${baseUrl}/payment/${orderId}?id_key=${userId}`;
   const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;

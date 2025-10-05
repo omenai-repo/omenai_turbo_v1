@@ -31,9 +31,7 @@ interface ShipmentPickupNotificationEmailProps {
   daysLeft: string;
 }
 
-export const ShipmentPickupNotificationEmail: React.FC<
-  ShipmentPickupNotificationEmailProps
-> = ({
+export const ShipmentPickupNotificationEmail = ({
   galleryName,
   artwork,
   orderId,
@@ -41,7 +39,7 @@ export const ShipmentPickupNotificationEmail: React.FC<
   pickupAddress,
   daysLeft,
   estimatedPickupDate = `In the next ${daysLeft} day(s)`,
-}) => {
+}: ShipmentPickupNotificationEmailProps) => {
   return (
     <Html>
       <Head />

@@ -17,6 +17,7 @@ import Link from "next/link";
 import OrderCountdown from "./OrderCountdown";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { ClipLoader } from "react-spinners";
+import { tracking_url } from "@omenai/url-config/src/config";
 
 export function OrdersGroupAccordion({
   orders,
@@ -205,21 +206,30 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
-        }) === "processing" && <div className="flex gap-x-2 items-center">
-        <p className="text-amber-700 text-fluid-xs">Payment transaction is currently processing. Please check back later.</p>
-        <ClipLoader size={15} className="text-amber-700" color="#FFA000" />
-        </div>}
+        }) === "processing" && (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-amber-700 text-fluid-xs">
+              Payment transaction is currently processing. Please check back
+              later.
+            </p>
+            <ClipLoader size={15} className="text-amber-700" color="#FFA000" />
+          </div>
+        )}
         {renderButtonAction({
           status: order.status,
           payment_status: order.payment_information.status,
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
-        }) === "awaiting_tracking" && <div className="flex gap-x-2 items-center">
-        <p className="text-green-700 text-fluid-xs">Payment confirmed successfully. Your shipment is being prepared. We'll notify you with tracking details soon..</p>
-        <ClipLoader size={15} className="text-amber-700" color="#2f855a" />
-        </div>}
-
+        }) === "awaiting_tracking" && (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-green-700 text-fluid-xs">
+              Payment confirmed successfully. Your shipment is being prepared.
+              We'll notify you with tracking details soon..
+            </p>
+            <ClipLoader size={15} className="text-amber-700" color="#2f855a" />
+          </div>
+        )}
 
         {renderButtonAction({
           status: order.status,
@@ -229,7 +239,9 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "track" && (
           <div className="mt-6">
-            <Link href={`/user/orders/tracking/${order.order_id}`}>
+            <Link
+              href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
+            >
               <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
@@ -244,20 +256,24 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "pay" && (
           <>
-          <p className="text-red-700 text-fluid-xs">{order.payment_information.status === 'failed' && 'Previous payment attempt failed. Please try again'}</p>
-          <div className="mt-5 flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3">
-            <OrderCountdown
-              expiresAt={
-                order.hold_status === null
-                  ? new Date(
-                      new Date(order.updatedAt).getTime() + 24 * 60 * 60 * 1000
-                    )
-                  : order.hold_status.hold_end_date
-              }
-              order_id={order.order_id}
-              user_id={user.id}
-            />
-          </div>
+            <p className="text-red-700 text-fluid-xs">
+              {order.payment_information.status === "failed" &&
+                "Previous payment attempt failed. Please try again"}
+            </p>
+            <div className="mt-5 flex sm:flex-row flex-col sm:justify-between sm:items-center gap-3">
+              <OrderCountdown
+                expiresAt={
+                  order.hold_status === null
+                    ? new Date(
+                        new Date(order.updatedAt).getTime() +
+                          24 * 60 * 60 * 1000
+                      )
+                    : order.hold_status.hold_end_date
+                }
+                order_id={order.order_id}
+                user_id={user.id}
+              />
+            </div>
           </>
         )}
       </Accordion.Panel>

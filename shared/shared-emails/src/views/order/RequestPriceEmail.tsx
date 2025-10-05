@@ -31,11 +31,11 @@ const RequestPriceEmail = (
     "title" | "artist" | "art_id" | "pricing" | "url" | "medium"
   >
 ) => {
-  const url = base_url();
-  const image = storage.getFileView(
-    process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-    artwork_data.url
-  );
+  const image = storage.getFileView({
+    bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+    fileId: artwork_data.url,
+  });
+
   return (
     <Html>
       <Head />

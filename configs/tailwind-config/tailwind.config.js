@@ -1,10 +1,9 @@
+// @omenai/tailwind-config/tailwind.config.mjs
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   theme: {
     container: {
-      padding: {
-        DEFAULT: "1rem",
-      },
+      padding: { DEFAULT: "1rem" },
       center: true,
     },
     extend: {
@@ -21,23 +20,21 @@ module.exports = {
         sliderTrack: "#e0e0e0",
         sliderThumb: "#ff5722",
         sliderThumbHover: "#e64a19",
-
         line: "#DEDEDE",
         authSideDark: "#0f172a",
       },
       fontSize: {
-        "fluid-3xs": "clamp(0.625rem, 0.2vw + 0.55rem, 0.75rem)", // 10 → 12px
-        "fluid-xxs": "clamp(0.7rem, 0.25vw + 0.65rem, 0.79rem)", // ~11.2 → 12.6px
-        "fluid-xs": "clamp(0.79rem, 0.35vw + 0.7rem, 0.889rem)", // ~12.6 → 14.2px
-        "fluid-base": "clamp(0.889rem, 0.5vw + 0.8rem, 1rem)", // ~14.2 → 16px
-        "fluid-sm": "clamp(1rem, 0.6vw + 0.9rem, 1.125rem)", // 16 → 18px
-        "fluid-md": "clamp(1.125rem, 0.8vw + 1rem, 1.266rem)", // 18 → 20.25px
-        "fluid-lg": "clamp(1.266rem, 1vw + 1.1rem, 1.422rem)", // ~20.25 → 22.8px
-        "fluid-xl": "clamp(1.422rem, 1.2vw + 1.2rem, 1.602rem)", // ~22.8 → 25.6px
-        "fluid-2xl": "clamp(1.602rem, 1.5vw + 1.3rem, 1.802rem)", // ~25.6 → 28.8px
-        "fluid-3xl": "clamp(1.802rem, 2vw + 1.4rem, 2.027rem)", // ~28.8 → 32px
+        "fluid-3xs": "clamp(0.625rem, 0.2vw + 0.55rem, 0.75rem)",
+        "fluid-xxs": "clamp(0.7rem, 0.25vw + 0.65rem, 0.79rem)",
+        "fluid-xs": "clamp(0.79rem, 0.35vw + 0.7rem, 0.889rem)",
+        "fluid-base": "clamp(0.889rem, 0.5vw + 0.8rem, 1rem)",
+        "fluid-sm": "clamp(1rem, 0.6vw + 0.9rem, 1.125rem)",
+        "fluid-md": "clamp(1.125rem, 0.8vw + 1rem, 1.266rem)",
+        "fluid-lg": "clamp(1.266rem, 1vw + 1.1rem, 1.422rem)",
+        "fluid-xl": "clamp(1.422rem, 1.2vw + 1.2rem, 1.602rem)",
+        "fluid-2xl": "clamp(1.602rem, 1.5vw + 1.3rem, 1.802rem)",
+        "fluid-3xl": "clamp(1.802rem, 2vw + 1.4rem, 2.027rem)",
       },
-
       gridTemplateColumns: {
         "3cols": "repeat(3, minmax(0, 1fr))",
       },

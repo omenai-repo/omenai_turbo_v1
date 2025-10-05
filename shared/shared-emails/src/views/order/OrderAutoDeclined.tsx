@@ -31,10 +31,10 @@ interface OrderAutoDeclinedEmailProps {
   >;
 }
 
-export const OrderAutoDeclinedEmail: React.FC<OrderAutoDeclinedEmailProps> = ({
+const OrderAutoDeclinedEmail = ({
   name,
   artwork,
-}) => {
+}: OrderAutoDeclinedEmailProps) => {
   const baseUrl = base_url();
   const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
 
