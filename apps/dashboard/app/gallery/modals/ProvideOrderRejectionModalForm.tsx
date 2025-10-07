@@ -5,13 +5,16 @@ import { declineOrderRequest } from "@omenai/shared-services/orders/declineOrder
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { OrderAcceptedStatusTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 
 export default function ProvideOrderRejectionModalForm() {
-  const { toggleDeclineOrderModal, current_order_id } = actionStore();
+  const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
+    actionStore();
   const { csrf } = useAuth({ requiredRole: "gallery" });
   const queryClient = useQueryClient();
   const [accepted_status, setAcceptedStatus] =
@@ -35,37 +38,56 @@ export default function ProvideOrderRejectionModalForm() {
 
   const handleOrderRejection = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    const response = await declineOrderRequest(
-      accepted_status,
-      current_order_id,
-      csrf || ""
-    );
-    if (!response?.isOk) {
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+
+    try {
+      setLoading(true);
+      if (allKeysEmpty(order_modal_metadata)) {
+        toast_notif(
+          "Invalid request params. Refresh your page. If this error persists, please contact support.",
+          "error"
+        );
+        return;
+      }
+      const response = await declineOrderRequest(
+        accepted_status,
+        current_order_id,
+        order_modal_metadata.seller_designation,
+        order_modal_metadata.art_id,
+        csrf || ""
+      );
+      if (!response?.isOk) {
+        toast.error("Error notification", {
+          description: response?.message,
+          style: {
+            background: "red",
+            color: "white",
+          },
+          className: "class",
+        });
+        setLoading(false);
+      } else {
+        setLoading(false);
+        toast.success("Operation successful", {
+          description: response.message,
+          style: {
+            background: "green",
+            color: "white",
+          },
+          className: "class",
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["fetch_orders_by_category"],
+        });
+        toggleDeclineOrderModal(false);
+        router.refresh();
+      }
+    } catch (error) {
+      toast_notif(
+        "Something went wrong, please try again or contact support",
+        "error"
+      );
+    } finally {
       setLoading(false);
-    } else {
-      setLoading(false);
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["fetch_orders_by_category"],
-      });
-      toggleDeclineOrderModal(false);
-      router.refresh();
     }
   };
 
@@ -76,17 +98,17 @@ export default function ProvideOrderRejectionModalForm() {
       </h1>
       <form className="w-full" onSubmit={handleOrderRejection}>
         <div className="space-y-4 mb-2 flex flex-col w-full">
-          <div className="relative w-full h-auto my-2">
+          <div className="relative w-full h-auto my-2 space-y-2">
             <label htmlFor="shipping" className="text-fluid-xs text-dark mb-2">
-              Reason for declining request
+              Provide a reason for declining order request
             </label>
             <textarea
               onChange={handleInputChange}
               name="reason"
               required
-              rows={5}
-              placeholder="e.g Artwork no longer available"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out p-6 rounded placeholder:text-dark/40 text-fluid-xs font-medium placeholder:text-fluid-xs"
+              rows={3}
+              placeholder="e.g Artwork has been sold"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xs placeholder:text-fluid-xxs"
             />
           </div>
         </div>

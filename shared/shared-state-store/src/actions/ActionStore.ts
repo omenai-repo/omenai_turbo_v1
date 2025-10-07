@@ -52,8 +52,22 @@ type ActionStoreTypes = {
     artwork: Pick<ArtworkSchemaTypes, "pricing" | "title" | "url" | "artist">
   ) => void;
   clearGalleryOrderActionModalData: () => void;
+
   current_order_id: string;
-  update_current_order_id: (id: string) => void;
+
+  order_modal_metadata: {
+    art_id: string;
+    seller_designation: "artist" | "gallery";
+  };
+
+  update_current_order_id: (
+    id: string,
+    metadata: {
+      art_id: string;
+      seller_designation: "artist" | "gallery";
+    }
+  ) => void;
+
   deletGalleryAccountModal: boolean;
   updateDeleteGalleryAccountModalPopup: (value: boolean) => void;
   passwordModalPopup: boolean;
@@ -205,11 +219,23 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
     });
     set({ current_order_id: "" });
   },
-
   current_order_id: "",
-  update_current_order_id: (id: string) => {
-    set({ current_order_id: id });
+
+  order_modal_metadata: {
+    art_id: "",
+    seller_designation: "gallery",
   },
+
+  update_current_order_id: (
+    id: string,
+    metadata: {
+      art_id: string;
+      seller_designation: "artist" | "gallery";
+    }
+  ) => {
+    set({ current_order_id: id, order_modal_metadata: metadata });
+  },
+
   deletGalleryAccountModal: false,
   updateDeleteGalleryAccountModalPopup: (value: boolean) => {
     set({ deletGalleryAccountModal: value });

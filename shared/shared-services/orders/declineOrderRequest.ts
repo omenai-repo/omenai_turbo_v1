@@ -4,6 +4,8 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export const declineOrderRequest = async (
   data: OrderAcceptedStatusTypes,
   order_id: string,
+  seller_designation: "artist" | "gallery",
+  art_id: string,
   token: string
 ) => {
   const url = getApiUrl();
@@ -13,6 +15,8 @@ export const declineOrderRequest = async (
       body: JSON.stringify({
         data,
         order_id,
+        seller_designation,
+        art_id,
       }),
       headers: { "x-csrf-token": token },
       credentials: "include",

@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import {
-  credentials,
-  HEADERS,
+  getDhlHeaders,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
 } from "../resources";
 import { ShipmentPickupRequestDataTypes } from "@omenai/shared-types";
@@ -115,7 +114,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     try {
       const requestOptions = {
         method: "POST",
-        headers: HEADERS,
+        headers: getDhlHeaders(),
         body: JSON.stringify(pickupRequestPayload),
       };
 

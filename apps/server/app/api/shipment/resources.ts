@@ -6,28 +6,25 @@ const API_KEY = (process.env.DHL_API_KEY || "").trim();
 const API_SECRET = (process.env.DHL_API_SECRET || "").trim();
 
 // DHL API version
-export const DHL_API_VERSION = "2.12.0";
+export const DHL_API_VERSION = "3.0.1";
 
 // DHL API credentials encryption
 export const credentials = Buffer.from(`${API_KEY}:${API_SECRET}`).toString(
   "base64"
 );
 
-// DHL API headers
-export const HEADERS = new Headers({
-  "Content-Type": "application/json",
-  Authorization: `Basic ${credentials}`,
-  "x-version": DHL_API_VERSION,
-});
-
-export const TRACKING_HEADER = new Headers({
-  "Content-Type": "application/json",
-  Authorization: `Basic ZGVtby1rZXk6ZGVtby1zZWNyZXQ='`,
-  "x-version": DHL_API_VERSION,
-});
+// Export a FUNCTION that creates and returns new headers
+export const getDhlHeaders = () => {
+  return new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Basic ${credentials}`,
+  });
+};
 
 // DHL API URL
-export const DHL_API_URL = "https://api-eu.dhl.com/shipment/v1";
+export const DHL_API_URL_PROD = "https://express.api.dhl.com/mydhlapi";
+export const DHL_API_URL_TEST = "https://express.api.dhl.com/mydhlapi/test";
+export const SHIPMENT_API_URL = `${DHL_API_URL_TEST}/shipments`;
 
 // DHL API express account number
 export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT =

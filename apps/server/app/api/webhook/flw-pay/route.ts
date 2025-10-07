@@ -28,6 +28,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 /* ----------------------------- Config & schemas --------------------------- */
 
@@ -106,7 +107,7 @@ async function handlePurchaseTransaction(
 ) {
   const metaRaw = verified_transaction?.data?.meta ?? null;
   const metaParse = MetaSchema.safeParse(metaRaw);
-  
+
   if (!metaParse.success) {
     console.error(
       "[webhook][purchase] invalid meta:",
@@ -114,7 +115,7 @@ async function handlePurchaseTransaction(
     );
     return NextResponse.json({ status: 200 });
   }
-  
+
   const meta = metaParse.data;
 
   // Find the order
@@ -183,10 +184,20 @@ async function handlePurchaseTransaction(
 
   try {
     // Clear hold_status (non-transactional operation)
+
     await CreateOrder.updateOne(
       { order_id: order_info.order_id },
       { $set: { hold_status: null } }
     ).session(session);
+
+    const artist = await AccountArtist.findOne(
+      { artist_id: meta.seller_id },
+      "exclusivity_uphold_status"
+    ).session(session);
+
+    // if (!artist) {
+    //   throw new Error("Artist account not found");
+    // }
 
     session.startTransaction();
 
@@ -211,6 +222,14 @@ async function handlePurchaseTransaction(
       return NextResponse.json({ status: 200 });
     }
 
+    const { isBreached, incident_count } = artist.exclusivity_uphold_status;
+
+    // Build pricing
+    const penalty_rate = (10 * (incident_count < 6 ? incident_count : 6)) / 100; // 10% per incident
+    const penalty_fee = isBreached
+      ? penalty_rate * Number(meta.unit_price ?? 0)
+      : 0;
+
     // Build pricing
     const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
     const nowUTC = toUTCDate(new Date());
@@ -222,6 +241,7 @@ async function handlePurchaseTransaction(
       commission,
       tax_fees: Math.round(Number(meta.tax_fees ?? 0)),
       currency: "USD",
+      penalty_fee: Math.round(penalty_fee),
     };
 
     const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
@@ -232,7 +252,7 @@ async function handlePurchaseTransaction(
       trans_recipient_role: "artist",
       trans_reference: verified_transaction.data.id,
       status: verified_transaction.data.status,
-      createdBy: 'webhook',
+      createdBy: "webhook",
       webhookReceivedAt: new Date(),
       webhookConfirmed: true,
     };
@@ -289,6 +309,7 @@ async function handlePurchaseTransaction(
     const wallet_increment_amount = Math.round(
       Number(verified_transaction.data.amount) -
         (commission +
+          penalty_fee +
           Number(meta.tax_fees ?? 0) +
           Number(meta.shipping_cost ?? 0))
     );
@@ -298,6 +319,16 @@ async function handlePurchaseTransaction(
       { $inc: { pending_balance: wallet_increment_amount } }
     ).session(session);
 
+    const revertExclusivityPromise = await AccountArtist.updateOne(
+      { artist_id: meta.seller_id },
+      {
+        $set: {
+          "exclusivity_uphold_status.isBreached": false,
+          "exclusivity_uphold_status.incident_count": 0,
+        },
+      }
+    ).session(session);
+
     const [createTransactionResult] = await Promise.all([
       createTransactionPromise,
       updateOrderPromise,
@@ -305,6 +336,7 @@ async function handlePurchaseTransaction(
       createSalesActivityPromise,
       updateManyOrdersPromise,
       fundWalletPromise,
+      revertExclusivityPromise,
     ]);
 
     await session.commitTransaction();
@@ -462,7 +494,7 @@ export const POST = withAppRouterHighlight(async function POST(
         body.data.id
       );
 
-      console.log(verified_transaction)
+      console.log(verified_transaction);
 
       // Determine transaction type
       const transactionType = verified_transaction?.data?.meta

@@ -30,15 +30,17 @@ export function OrdersGroupAccordion({
     update_current_order_id,
   } = actionStore();
 
-  const router = useRouter();
-
   const get_image_url = (url: string) => {
     const image_url = getOptimizedImage(url, "thumbnail", 40);
     return image_url;
   };
 
-  const handleDeclineOrderRequest = (order_id: string) => {
-    update_current_order_id(order_id);
+  const handleDeclineOrderRequest = (
+    order_id: string,
+    art_id: string,
+    seller_designation: "artist" | "gallery"
+  ) => {
+    update_current_order_id(order_id, { art_id, seller_designation });
     toggleDeclineOrderModal(true);
   };
 
@@ -52,7 +54,7 @@ export function OrdersGroupAccordion({
   }: {
     status: string;
     payment_status: string;
-    tracking_status: string;
+    tracking_status: string | null;
     order_accepted: string;
     delivered: boolean;
     order_decline_reason: string;
@@ -61,7 +63,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "pending" &&
-      tracking_status === ""
+      !tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
@@ -74,7 +76,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "completed" &&
-      tracking_status === ""
+      !tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
@@ -87,7 +89,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "completed" &&
-      tracking_status !== ""
+      tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
@@ -100,7 +102,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "" &&
       payment_status === "pending" &&
-      tracking_status === ""
+      !tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
@@ -239,13 +241,27 @@ export function OrdersGroupAccordion({
         }) === "action" && (
           <div className="mt-5 flex items-center gap-x-6">
             <button
-              onClick={() => handleDeclineOrderRequest(order.order_id)}
-              className="hover:bg-red-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-red-600 cursor-pointer"
+              onClick={() =>
+                handleDeclineOrderRequest(
+                  order.order_id,
+                  order.artwork_data.art_id,
+                  order.seller_designation
+                )
+              }
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded text-fluid-xxs font-normal
+                 text-white bg-red-600 hover:bg-red-700 active:bg-red-800
+                 transition-all duration-200 shadow-sm hover:shadow-md
+                 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:opacity-50"
             >
               Decline order
             </button>
             <Link href={`/gallery/orders/quote/${order.order_id}`}>
-              <button className="hover:bg-green-600/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-green-600 cursor-pointer">
+              <button
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded text-fluid-xxs font-normal
+                   text-white bg-green-600 hover:bg-green-700 active:bg-green-800
+                   transition-all duration-200 shadow-sm hover:shadow-md
+                   focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50"
+              >
                 Accept order
               </button>
             </Link>

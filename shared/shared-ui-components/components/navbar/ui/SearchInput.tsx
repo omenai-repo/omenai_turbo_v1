@@ -30,7 +30,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="relative flex w-auto items-center rounded border bg-transparent border-dark/30">
+    <div className="relative flex w-auto items-center rounded border mb-3 lg:mb-0 bg-transparent border-dark/30">
       <input
         type="text"
         className="w-full h-[35px] bg-transparent px-3 border-none rounded placeholder:text-sm placeholder:text-dark focus:ring-0"

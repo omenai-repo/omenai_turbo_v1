@@ -106,7 +106,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const artwork = await Artworkuploads.findOne(
       { art_id },
-      "title artist pricing url art_id availaility role_access"
+      "title artist pricing url art_id availaility role_access exclusivity_status"
     ).exec();
 
     if (!buyerData || !artwork)
@@ -153,8 +153,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
               pickup_min_time: "",
             },
             tracking: {
-              id: "",
-              link: "",
+              id: null,
+              link: null,
+              delivery_status: null,
+              delivery_date: null,
             },
             planned_shipping_date: "",
             estimates: {

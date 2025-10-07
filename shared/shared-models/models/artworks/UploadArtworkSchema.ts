@@ -1,6 +1,7 @@
 import mongoose, { Schema, models } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 const artworkUpload = new Schema<ArtworkSchemaTypes>(
   {
     artist: { type: String, required: true },
@@ -42,7 +43,12 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
       type: Boolean,
       default: () => true,
     },
-    role_access: {type: Schema.Types.Mixed, required: true}
+    role_access: { type: Schema.Types.Mixed, required: true },
+    exclusivity_status: {
+      exclusivity_type: { type: String || null, default: null },
+      exclusivity_end_date: { type: Date || null, default: null },
+      order_auto_rejection_count: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );

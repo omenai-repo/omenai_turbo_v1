@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { HEADERS, OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT } from "../resources";
+import {
+  getDhlHeaders,
+  OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
+} from "../resources";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import {
@@ -28,7 +31,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       try {
         const requestOptions = {
           method: "GET",
-          headers: HEADERS,
+          headers: getDhlHeaders(),
         };
 
         const response = await fetch(

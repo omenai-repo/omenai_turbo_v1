@@ -31,6 +31,7 @@ export const GET = withAppRouterHighlight(async function GET(
               $subtract: [
                 { $ifNull: ["$trans_pricing.amount_total", 0] },
                 { $ifNull: ["$trans_pricing.commission", 0] },
+                { $ifNull: ["$trans_pricing.penalty_fee", 0] },
               ],
             },
           },

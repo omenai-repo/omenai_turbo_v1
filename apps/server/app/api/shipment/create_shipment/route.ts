@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { HEADERS, OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT } from "../resources";
+import {
+  getDhlHeaders,
+  OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
+  SHIPMENT_API_URL,
+} from "../resources";
 import { ShipmentRequestDataTypes } from "@omenai/shared-types";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
@@ -220,21 +224,15 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     },
   };
 
-  console.log(plannedShippingDateAndTime);
-
   try {
     const requestOptions = {
       method: "POST",
-      headers: HEADERS,
+      headers: getDhlHeaders(),
       body: JSON.stringify(shipmentPayloadData),
     };
 
-    const response = await fetch(
-      `https://express.api.dhl.com/mydhlapi/test/shipments`,
-      requestOptions
-    );
+    const response = await fetch(`${SHIPMENT_API_URL}`, requestOptions);
     const data = await response.json();
-    console.log(data);
 
     if (!response.ok)
       throw new ServerError("Error creating shipment. Please contact support");

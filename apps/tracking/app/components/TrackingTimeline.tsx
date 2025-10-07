@@ -33,6 +33,8 @@ export default function TrackingTimeline({
     return "from-[#0f172a] to-[#1e293b]";
   };
 
+  const reversedEvents = [...events].reverse();
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
       {/* Current Status Banner */}
@@ -60,13 +62,13 @@ export default function TrackingTimeline({
 
       {/* Timeline */}
       <div className="relative">
-        {events.map((event, index) => {
+        {reversedEvents.map((event, index) => {
           const isLatest = index === 0;
 
           return (
             <div key={index} className="relative pb-8 last:pb-0">
               {/* Vertical Line */}
-              {index !== events.length - 1 && (
+              {index !== reversedEvents.length - 1 && (
                 <div className="absolute left-4 md:left-5 top-10 md:top-12 bottom-0 w-0.5 bg-gradient-to-b from-gray-300 to-transparent"></div>
               )}
 

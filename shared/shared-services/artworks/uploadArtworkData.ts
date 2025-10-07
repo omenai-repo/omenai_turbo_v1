@@ -2,7 +2,10 @@ import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function uploadArtworkData(
-  data: Omit<ArtworkSchemaTypes, "art_id" | "availability">,
+  data: Omit<
+    ArtworkSchemaTypes,
+    "art_id" | "availability" | "exclusivity_status"
+  >,
   token: string
 ) {
   try {

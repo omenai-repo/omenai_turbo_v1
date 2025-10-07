@@ -26,6 +26,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 /* ----------------------------- Schemas & Types --------------------------- */
 
@@ -89,14 +90,12 @@ async function processPurchaseTransaction(
   const formatted_date = getFormattedDateTime();
 
   if (!metaParse.success) {
-    console.error(
-      `[${source}][purchase] invalid meta:`,
-      metaParse.error.format()
-    );
+    console.error(`[${source}][purchase] invalid meta:`);
     throw new Error("Invalid transaction metadata");
   }
 
   const meta = metaParse.data;
+
   const flwStatus = String(verified_transaction.data.status).toLowerCase();
 
   // Find the order
@@ -210,8 +209,24 @@ async function processPurchaseTransaction(
       { $set: { hold_status: null } }
     ).session(session);
 
+    const artist = await AccountArtist.findOne(
+      { artist_id: meta.seller_id },
+      "exclusivity_uphold_status"
+    ).session(session);
+
+    if (!artist) {
+      throw new Error("Artist account not found");
+    }
+
+    const { isBreached, incident_count } = artist.exclusivity_uphold_status;
+
     // Build pricing
+    const penalty_rate = (10 * (incident_count < 6 ? incident_count : 6)) / 100; // 10% per incident
+    const penalty_fee = isBreached
+      ? penalty_rate * Number(meta.unit_price ?? 0)
+      : 0;
     const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
+
     const nowUTC = toUTCDate(new Date());
 
     const transaction_pricing: PurchaseTransactionPricing = {
@@ -221,6 +236,7 @@ async function processPurchaseTransaction(
       commission,
       tax_fees: Math.round(Number(meta.tax_fees ?? 0)),
       currency: "USD",
+      penalty_fee: Math.round(penalty_fee),
     };
 
     const transactionData: Omit<
@@ -294,6 +310,7 @@ async function processPurchaseTransaction(
     const wallet_increment_amount = Math.round(
       Number(verified_transaction.data.amount) -
         (commission +
+          penalty_fee +
           Number(meta.tax_fees ?? 0) +
           Number(meta.shipping_cost ?? 0))
     );
@@ -303,6 +320,16 @@ async function processPurchaseTransaction(
       { $inc: { pending_balance: wallet_increment_amount } }
     ).session(session);
 
+    const revertExclusivityPromise = await AccountArtist.updateOne(
+      { artist_id: meta.seller_id },
+      {
+        $set: {
+          "exclusivity_uphold_status.isBreached": false,
+          "exclusivity_uphold_status.incident_count": 0,
+        },
+      }
+    ).session(session);
+
     const [createTransactionResult] = await Promise.all([
       createTransactionPromise,
       updateOrderPromise,
@@ -310,6 +337,7 @@ async function processPurchaseTransaction(
       createSalesActivityPromise,
       updateManyOrdersPromise,
       fundWalletPromise,
+      revertExclusivityPromise,
     ]);
 
     // Commit transaction

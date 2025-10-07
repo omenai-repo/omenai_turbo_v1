@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUserFriendlyError, HEADERS } from "../resources";
+import { getDhlHeaders, getUserFriendlyError } from "../resources";
 import { ShipmentAddressValidationType } from "@omenai/shared-types";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { validateAddressVerificationRequestData } from "@omenai/shared-lib/validations/api/shipment/validateAddressVerificationRequestData";
@@ -39,7 +39,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
     try {
       const requestOptions = {
         method: "GET",
-        headers: HEADERS,
+        headers: getDhlHeaders(),
       };
 
       const response = await fetch(
@@ -48,6 +48,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       );
       const data = await response.json();
       // DONE: Fix for multiple DHL error responses
+      console.log(data);
       if (!response.ok) {
         const error_message = getUserFriendlyError(data.detail);
         throw new BadRequestError(error_message);

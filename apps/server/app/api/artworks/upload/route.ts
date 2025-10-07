@@ -10,7 +10,9 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
-import { CombinedConfig } from "@omenai/shared-types";
+import { CombinedConfig, ExclusivityUpholdStatus } from "@omenai/shared-types";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+import { addDaysToDate } from "@omenai/shared-utils/src/addDaysToDate";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -23,15 +25,29 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
     const data = await request.json();
+    const date = toUTCDate(new Date());
 
     // Validate required fields
     if (!data.author_id || !data.title || !data.role_access?.role) {
       throw new ServerError("Missing required fields");
     }
 
+    const { role_access, title } = data;
+
     // Always trim title
-    const new_title = trimWhiteSpace(data.title);
-    const payload = { ...data, title: new_title };
+    const new_title = trimWhiteSpace(title);
+
+    const exclusivity_status: Pick<
+      ExclusivityUpholdStatus,
+      "exclusivity_type" | "exclusivity_end_date" | "order_auto_rejection_count"
+    > = {
+      exclusivity_type: role_access.role === "artist" ? "exclusive" : null,
+      exclusivity_end_date:
+        role_access.role === "artist" ? addDaysToDate(90) : null,
+      order_auto_rejection_count: 0,
+    };
+
+    const payload = { ...data, title: new_title, exclusivity_status };
 
     // For galleries, check subscription before upload
     if (data.role_access.role === "gallery") {
@@ -41,7 +57,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
 
       if (!active_subscription || active_subscription.status !== "active") {
-        throw new ForbiddenError("No active subscription for this user");
+        throw new ForbiddenError(
+          "No active subscription for this user. Please activate a plan to continue"
+        );
       }
 
       if (

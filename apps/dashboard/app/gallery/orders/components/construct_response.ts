@@ -6,14 +6,14 @@ export const renderButtonAction = ({
 }: {
   status: string;
   payment_status: string;
-  tracking_status: string;
+  tracking_status: string | null;
   order_accepted: string;
 }) => {
   if (
     status === "processing" &&
     order_accepted === "accepted" &&
     payment_status === "pending" &&
-    tracking_status === ""
+    !tracking_status
   ) {
     return null;
   }
@@ -21,7 +21,7 @@ export const renderButtonAction = ({
     status === "processing" &&
     order_accepted === "accepted" &&
     payment_status === "completed" &&
-    tracking_status === ""
+    !tracking_status
   ) {
     return null;
   }
@@ -37,7 +37,7 @@ export const renderButtonAction = ({
     status === "processing" &&
     order_accepted === "" &&
     payment_status === "pending" &&
-    tracking_status === ""
+    !tracking_status
   ) {
     return "action";
   }

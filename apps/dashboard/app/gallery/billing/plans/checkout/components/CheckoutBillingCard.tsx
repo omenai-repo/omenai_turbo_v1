@@ -19,7 +19,7 @@ import { loadStripe, Stripe } from "@stripe/stripe-js";
 import BillingCard from "../../../features/components/BillingCard";
 import { PaymentMethod } from "@stripe/stripe-js";
 
-const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
+const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function CheckoutBillingCard({
   plan,
@@ -132,7 +132,9 @@ export default function CheckoutBillingCard({
     else {
       const { client_secret, status, paymentIntentId } = tokenize_card;
 
-      await handlePaymentResponse(stripe as Stripe, {
+      const stripePromise = await stripe;
+
+      await handlePaymentResponse(stripePromise as Stripe, {
         status,
         client_secret,
         paymentIntentId,

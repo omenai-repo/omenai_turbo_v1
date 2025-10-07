@@ -12,7 +12,7 @@ interface SubscriptionFormProps {
   interval: string;
 }
 
-const stripePromise = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function InitialPaymentFormWrapper({
   planId,

@@ -36,10 +36,6 @@ export function OrdersGroupAccordion({
     return image_url;
   };
   const { user } = useAuth({ requiredRole: "user" });
-  function handleDeclineOrderRequest(order_id: string) {
-    update_current_order_id(order_id);
-    toggleDeclineOrderModal(true);
-  }
 
   function construct_status({
     status,
@@ -51,7 +47,7 @@ export function OrdersGroupAccordion({
   }: {
     status: string;
     payment_status: string;
-    tracking_status: string;
+    tracking_status: string | null;
     order_accepted: string;
     delivered: boolean;
     order_decline_reason?: string;
@@ -60,7 +56,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "pending" &&
-      tracking_status === ""
+      !tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
@@ -73,7 +69,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "completed" &&
-      tracking_status === ""
+      !tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
@@ -86,7 +82,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "accepted" &&
       payment_status === "completed" &&
-      tracking_status !== ""
+      tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
@@ -99,7 +95,7 @@ export function OrdersGroupAccordion({
       status === "processing" &&
       order_accepted === "" &&
       payment_status === "pending" &&
-      tracking_status === ""
+      !tracking_status
     ) {
       return (
         <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">

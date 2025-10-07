@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  getDhlHeaders,
   getUserFriendlyError,
-  HEADERS,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
   selectAppropriateDHLProduct,
 } from "../resources";
@@ -13,11 +13,7 @@ import {
   BadRequestError,
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 const API_URL = "https://express.api.dhl.com/mydhlapi/test/rates";
 
@@ -64,7 +60,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
     try {
       const requestOptions = {
         method: "GET",
-        headers: HEADERS,
+        headers: getDhlHeaders(),
       };
 
       const plannedShippingDate = await getFutureShipmentDate(
@@ -72,8 +68,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         false,
         originCountryCode
       );
-
-      console.log(plannedShippingDate);
 
       const url = new URL(API_URL);
       url.searchParams.append(

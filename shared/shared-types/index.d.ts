@@ -1,21 +1,16 @@
 import { Stripe } from "stripe";
 // Create discriminated union with role as discriminator
 export type SessionDataType = (
-  | ({ role: "gallery" } & Omit<
-      GallerySchemaTypes,
-      "password" | "phone" | "clerkuserId"
-    >)
-  | ({ role: "user" } & Omit<
-      IndividualSchemaTypes,
-      "password" | "phone" | "clerkuserId"
-    >)
-  | ({ role: "admin" } & Omit<
-      AccountAdminSchemaTypes,
-      "password" | "phone" | "clerkuserId"
-    >)
+  | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password" | "phone">)
+  | ({ role: "user" } & Omit<IndividualSchemaTypes, "password" | "phone">)
+  | ({ role: "admin" } & Omit<AccountAdminSchemaTypes, "password" | "phone">)
   | ({ role: "artist" } & Omit<
       ArtistSchemaTypes,
-      "password" | "art_style" | "documentation" | "phone" | "clerkuserId"
+      | "password"
+      | "art_style"
+      | "documentation"
+      | "phone"
+      | "exclusivity_uphold_status"
     >)
 ) & { id: string };
 
@@ -62,6 +57,18 @@ export type ArtistSchemaTypes = {
   documentation?: ArtistDocumentationTypes;
   isOnboardingCompleted: boolean;
   clerkUserId?: string;
+  exclusivity_uphold_status: Pick<
+    ExclusivityUpholdStatus,
+    "isBreached" | "incident_count"
+  >;
+};
+
+type ExclusivityUpholdStatus = {
+  isBreached: boolean; // Whether artist has breached exclusivity terms
+  incident_count: number; // Number of times exclusivity terms have been breached correlating to number of artworks sold in breach of exclusivity
+  exclusivity_end_date: Date | null; // Date when exclusivity ends
+  exclusivity_type: "exclusive" | "non-exclusive" | null; // Type of exclusivity, attributes to whether artist can sell elsewhere
+  order_auto_rejection_count: number; // Number of orders auto-rejected. 3 auto-rejections for a single artwork leads to breach
 };
 
 export type ArtistSignupData = {
@@ -219,7 +226,13 @@ export type ArtworkSchemaTypes = {
   should_show_on_sub_active?: boolean;
   availability: boolean;
   role_access: RoleAccess;
+  exclusivity_status: {
+    exclusivity_type: "exclusive" | "non-exclusive" | null;
+    exclusivity_end_date: Date | null;
+    order_auto_rejection_count: number;
+  };
 };
+
 export type RoleAccess = {
   role: "artist" | "gallery";
   designation: ArtistCategory | null;
@@ -309,7 +322,13 @@ export type CreateOrderModelTypes = {
   artwork_data: Pick<
     ArtworkSchemaTypes,
     "artist" | "pricing" | "title" | "url" | "art_id" | "role_access"
-  > & { _id: ObjectId };
+  > & {
+    _id: ObjectId;
+    exclusivity_status: Omit<
+      ArtworkSchemaTypes["exclusivity_status"],
+      "order_auto_rejection_count"
+    >;
+  };
   buyer_details: OrderBuyerAndSellerDetails;
   seller_details: OrderBuyerAndSellerDetails;
   order_id: string;
@@ -393,8 +412,10 @@ export type OrderAcceptedStatusTypes = {
   reason?: string;
 };
 export type TrackingInformationTypes = {
-  id: string;
-  link: string;
+  id: string | null;
+  link: string | null;
+  delivery_status: "In Transit" | "Delivered" | null;
+  delivery_date: Date | null;
 };
 export type ShippingQuoteTypes = {
   fees: number;
@@ -537,6 +558,7 @@ export type PurchaseTransactionPricing = {
   amount_total: number;
   tax_fees: number;
   currency: string;
+  penalty_fee?: number;
 };
 
 export type SubscriptionTransactionModelSchemaTypes = {

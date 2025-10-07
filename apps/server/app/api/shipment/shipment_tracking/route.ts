@@ -1,6 +1,6 @@
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
-import { getLatLng, HEADERS, TRACKING_HEADER } from "../resources";
+import { DHL_API_URL_TEST, getDhlHeaders, getLatLng } from "../resources";
 import {
   BadRequestError,
   NotFoundError,
@@ -9,8 +9,6 @@ import {
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { CombinedConfig } from "@omenai/shared-types";
 
 export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const nextRequest = new NextRequest(request);
@@ -38,6 +36,8 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
   if (!tracking_number)
     throw new NotFoundError("No tracking number found for the given order id");
 
+  // TODO: Fix this
+
   // const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
   // const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
   // const get_origin_geo_location = await getLatLng(origin_location);
@@ -48,17 +48,19 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
   //   throw new ServerError("Unable to determine geo location coordinates");
 
   // TODO: Change this url to the proper production url
-  const API_URL = `https://api-mock.dhl.com/mydhlapi/shipments/5786694760/tracking?trackingView=all&levelOfDetail=all-checkpoints&requestControlledAccessDataCodes=false&requestGMTOffsetPerEvent=false`;
+  const API_URL = `${DHL_API_URL_TEST}/shipments/9356579890/tracking`;
 
   const url = new URL(API_URL);
   const requestOptions = {
     method: "GET",
-    headers: TRACKING_HEADER,
+    headers: getDhlHeaders(),
   };
 
   try {
     const response = await fetch(url.toString(), requestOptions);
+    console.log("fetched");
     const data = await response.json();
+
     if (!response.ok)
       throw new ServerError(
         "Unable to fetch shipment event at the moment. Please try again later or contact support"

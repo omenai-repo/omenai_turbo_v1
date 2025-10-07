@@ -99,7 +99,10 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       default: () => false,
       index: true,
     },
-    clerkUserId: { type: String, required: false, unique: true, index: true },
+    exclusivity_uphold_status: {
+      isBreached: { type: Boolean, default: false },
+      incident_count: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );

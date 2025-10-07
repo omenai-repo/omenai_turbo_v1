@@ -4,15 +4,16 @@ export const renderButtonAction = ({
   tracking_status,
   order_accepted,
 }: {
-  status: string;
+  status: string | null;
   payment_status: string;
-  tracking_status: string;
+  tracking_status: string | null;
   order_accepted: string;
 }) => {
   if (
-    status === "processing" &&
-    order_accepted === "accepted" &&
-    payment_status === "pending" || payment_status === 'failed'
+    (status === "processing" &&
+      order_accepted === "accepted" &&
+      payment_status === "pending") ||
+    payment_status === "failed"
   ) {
     return "pay";
   }
@@ -20,7 +21,7 @@ export const renderButtonAction = ({
     status === "processing" &&
     order_accepted === "accepted" &&
     payment_status === "completed" &&
-    tracking_status === ""
+    !tracking_status
   ) {
     return "awaiting_tracking";
   }
@@ -28,15 +29,15 @@ export const renderButtonAction = ({
     status === "processing" &&
     order_accepted === "accepted" &&
     payment_status === "completed" &&
-    tracking_status !== ""
+    tracking_status
   ) {
     return "track";
   }
   if (
     status === "processing" &&
     order_accepted === "accepted" &&
-    payment_status === "processing" 
+    payment_status === "processing"
   ) {
-    return 'processing';
+    return "processing";
   }
 };

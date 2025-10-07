@@ -183,6 +183,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
               shipment.data.estimatedDeliveryDate,
             "shipping_details.shipment_information.planned_shipping_date":
               shipment.data.plannedShippingDateAndTime,
+            "shipping_details.shipment_information.tracking.delivery_status":
+              "In Transit",
           },
         }
       );

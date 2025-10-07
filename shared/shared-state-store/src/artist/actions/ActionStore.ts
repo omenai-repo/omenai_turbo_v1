@@ -1,3 +1,4 @@
+import { metadata } from "./../../../../../apps/tracking/app/layout";
 import { AddressTypes, ArtworkSchemaTypes } from "@omenai/shared-types";
 import { create } from "zustand";
 
@@ -22,7 +23,20 @@ type ArtistActionStoreTypes = {
   ) => void;
   clearArtistOrderActionModalData: () => void;
   current_order_id: string;
-  update_current_order_id: (id: string) => void;
+
+  order_modal_metadata: {
+    is_current_order_exclusive: boolean;
+    art_id: string;
+    seller_designation: "artist" | "gallery";
+  };
+  update_current_order_id: (
+    id: string,
+    metadata: {
+      is_current_order_exclusive: boolean;
+      art_id: string;
+      seller_designation: "artist" | "gallery";
+    }
+  ) => void;
   openDeclineOrderModal: boolean;
   toggleDeclineOrderModal: (value: boolean) => void;
 
@@ -113,9 +127,21 @@ export const artistActionStore = create<ArtistActionStoreTypes>((set, get) => ({
     });
     set({ current_order_id: "" });
   },
+  order_modal_metadata: {
+    is_current_order_exclusive: false,
+    art_id: "",
+    seller_designation: "artist",
+  },
   current_order_id: "",
-  update_current_order_id: (id: string) => {
-    set({ current_order_id: id });
+  update_current_order_id: (
+    id: string,
+    metadata: {
+      is_current_order_exclusive: boolean;
+      art_id: string;
+      seller_designation: "artist" | "gallery";
+    }
+  ) => {
+    set({ current_order_id: id, order_modal_metadata: metadata });
   },
   openDeclineOrderModal: false,
   toggleDeclineOrderModal: (value: boolean) => {

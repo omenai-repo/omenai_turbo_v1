@@ -75,7 +75,8 @@ export function shouldSkipMiddleware(
     pathname.startsWith("/collections/") ||
     pathname.startsWith("/articles/") ||
     pathname.startsWith("/test") ||
-    pathname.startsWith("/articles")
+    pathname.startsWith("/articles") ||
+    pathname.startsWith("/search")
   ) {
     return true;
   }
