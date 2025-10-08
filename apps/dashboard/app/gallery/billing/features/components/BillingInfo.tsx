@@ -24,7 +24,7 @@ export default function BillingInfo() {
                 />
               </svg>
             </div>
-            <h3 className="text-fluid-xs font-semibold text-slate-900">
+            <h3 className="text-fluid-xxs font-semibold text-slate-900">
               Billing Information
             </h3>
           </div>
@@ -37,7 +37,7 @@ export default function BillingInfo() {
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                 Gallery Name
               </p>
-              <p className="text-fluid-xs font-medium text-slate-900">
+              <p className="text-fluid-xxs font-medium text-slate-900">
                 {user.name}
               </p>
             </div>
@@ -46,7 +46,7 @@ export default function BillingInfo() {
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                 Email Address
               </p>
-              <p className="text-fluid-xs font-medium text-slate-900 flex items-center gap-2">
+              <p className="text-fluid-xxs font-medium text-slate-900 flex items-center gap-2">
                 {user.email}
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
                   Verified

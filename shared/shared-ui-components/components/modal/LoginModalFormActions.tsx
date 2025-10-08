@@ -16,7 +16,7 @@ export default function LoginModalFormActions({
     <>
       <div className="flex w-full flex-col mt-[1rem] gap-4">
         <div className="flex justify-end w-full my-3">
-          <p className="font-normal text-fluid-xs">
+          <p className="font-normal text-fluid-xxs">
             Forgot password?{" "}
             <span
               onClick={() => toggleLoginModalRecoveryForm(true)}
@@ -30,13 +30,13 @@ export default function LoginModalFormActions({
         <button
           type="submit"
           disabled={loading}
-          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
         >
           {!loading ? "Login to your account" : <LoadSmall />}
         </button>
       </div>
       <div className="w-full flex justify-center my-2">
-        <p className="text-fluid-xs text-dark font-medium">
+        <p className="text-fluid-xxs text-dark font-medium">
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>
             <Link

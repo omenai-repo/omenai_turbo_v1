@@ -15,7 +15,7 @@ export default function IndividualLoginForm() {
         className="w-full h-full flex items-center gap-x-8"
       >
         <div className="flex flex-col space-y-8 w-full ">
-          <div className="text-fluid-xs ">
+          <div className="text-fluid-xxs ">
             <IndividualLogo />
           </div>
           <div className="flex flex-col space-y-10 w-full">

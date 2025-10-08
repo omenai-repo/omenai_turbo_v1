@@ -53,7 +53,6 @@ const AccountManagement = () => {
 
   if (isLoading) return <AccountManagementSkeleton />;
 
-
   return (
     <div className="min-h-screen">
       <div className="max-w-6xl">
@@ -62,7 +61,7 @@ const AccountManagement = () => {
           <h1 className="text-fluid-sm font-bold text-dark mb-2">
             Account Management
           </h1>
-          <p className="text-fluid-xs text-dark/50">
+          <p className="text-fluid-xxs text-dark/50">
             Manage your artist profile and account settings
           </p>
         </div>
@@ -71,7 +70,7 @@ const AccountManagement = () => {
         <div className="flex space-x-1 mb-4 bg-gray-400 p-1 rounded">
           <button
             onClick={() => setActiveTab("account")}
-            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded text-fluid-xs font-normal 
+            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded text-fluid-xxs font-normal 
                      transition-all duration-300 ${
                        activeTab === "account"
                          ? "bg-white text-dark shadow-md"
@@ -83,7 +82,7 @@ const AccountManagement = () => {
           </button>
           <button
             onClick={() => setActiveTab("credentials")}
-            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xs font-normal 
+            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xxs font-normal 
                      transition-all duration-300 ${
                        activeTab === "credentials"
                          ? "bg-white text-dark shadow-md"
@@ -95,7 +94,7 @@ const AccountManagement = () => {
           </button>
           <button
             onClick={() => setActiveTab("settings")}
-            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xs font-normal 
+            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xxs font-normal 
                      transition-all duration-300 ${
                        activeTab === "settings"
                          ? "bg-white text-dark shadow-md"

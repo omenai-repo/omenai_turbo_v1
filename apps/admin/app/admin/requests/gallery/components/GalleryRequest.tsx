@@ -78,7 +78,7 @@ export default function GalleryRequest({
 
             <div className="flex flex-col">
               <div className="flex gap-x-2 items-center">
-                <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300 ">
+                <h4 className="text-fluid-xxs font-medium text-gray-900 transition-colors duration-300 ">
                   {gallery.name}
                 </h4>
 
@@ -86,7 +86,7 @@ export default function GalleryRequest({
                 <div className="flex items-center">
                   <span
                     className={`
-                  inline-flex items-center rounded text-fluid-xs font-medium capitalize
+                  inline-flex items-center rounded text-fluid-xxs font-medium capitalize
                   ${tab === "approved" ? " text-emerald-800" : ""}
                   ${tab === "pending" ? " text-amber-800" : ""}
                   ${tab === "rejected" ? " text-red-800" : ""}
@@ -105,9 +105,9 @@ export default function GalleryRequest({
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-x-1.5 text-fluid-xs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
                 <Mail size={14} />
-                <span className="font-medium text-fluid-xs">
+                <span className="font-medium text-fluid-xxs">
                   {gallery.email}
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function GalleryRequest({
               size="xs"
               radius="sm"
               className="
-                font-normal text-fluid-xs px-4 py-2.5 shadow-lg hover:shadow-xl
+                font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
                 transition-all duration-300 hover:scale-105 active:scale-95
                 ring-1 ring-blue-200/50 hover:ring-blue-300/70
                 transform-gpu

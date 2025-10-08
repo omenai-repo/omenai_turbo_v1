@@ -30,7 +30,7 @@ export default function NavigationItem({
           <IconWrapper className="hover:bg-white hover:text-dark group">
             {icon}
           </IconWrapper>
-          <p className={`text-fluid-xs font-normal`}>{title}</p>
+          <p className={`text-fluid-xxs font-normal`}>{title}</p>
         </li>
       ) : disabled ? (
         <Link
@@ -47,7 +47,9 @@ export default function NavigationItem({
           >
             {icon}
           </IconWrapper>
-          <p className={`text-fluid-xs p-2 font-normal group-hover:text-white`}>
+          <p
+            className={`text-fluid-xxs p-2 font-normal group-hover:text-white`}
+          >
             {title}
           </p>
         </Link>

@@ -62,7 +62,7 @@ export const PaymentMethodChangeForm = () => {
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded h-[35px] p-6 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
+        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
       >
         {isProcessing ? "Processing..." : `Update payment method`}
       </button>

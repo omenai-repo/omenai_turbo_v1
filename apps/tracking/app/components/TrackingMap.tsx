@@ -54,7 +54,7 @@ export default function TrackingMap({
               <h3 className="text-fluid-base md:text-fluid-base font-medium text-[#0f172a] mb-1">
                 Estimated Delivery Date
               </h3>
-              <p className="text-fluid-xs md:text-fluid-base font-semibold text-amber-700">
+              <p className="text-fluid-xxs md:text-fluid-base font-semibold text-amber-700">
                 {estimatedDelivery
                   ? formatDeliveryDate(estimatedDelivery)
                   : formatDateRange()}
@@ -68,7 +68,7 @@ export default function TrackingMap({
       <div className="bg-white rounded shadow-xl border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] p-4 md:p-6">
-          <h3 className="text-fluid-xs md:text-fluid-base font-medium text-white flex items-center gap-2">
+          <h3 className="text-fluid-xxs md:text-fluid-base font-medium text-white flex items-center gap-2">
             <Navigation className="w-5 h-5" />
             Shipment Route
           </h3>
@@ -82,25 +82,25 @@ export default function TrackingMap({
         {/* Details Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 p-4 md:p-6 bg-gray-50">
           <div className="bg-white rounded p-4 shadow-sm">
-            <p className="text-fluid-xs md:text-fluid-base text-gray-500 mb-1 font-medium">
+            <p className="text-fluid-xxs md:text-fluid-base text-gray-500 mb-1 font-medium">
               From
             </p>
-            <p className="text-fluid-xs md:text-fluid-base font-semibold text-[#0f172a]">
+            <p className="text-fluid-xxs md:text-fluid-base font-semibold text-[#0f172a]">
               {origin.address_line}
             </p>
-            <p className="text-fluid-xs md:text-fluid-base text-gray-600">
+            <p className="text-fluid-xxs md:text-fluid-base text-gray-600">
               {origin.zip && `${origin.zip}, `}
               {origin.countryCode}
             </p>
           </div>
           <div className="bg-white rounded p-4 shadow-sm">
-            <p className="text-fluid-xs md:text-fluid-base text-gray-500 mb-1 font-medium">
+            <p className="text-fluid-xxs md:text-fluid-base text-gray-500 mb-1 font-medium">
               To
             </p>
-            <p className="text-fluid-xs md:text-fluid-base font-semibold text-[#0f172a]">
+            <p className="text-fluid-xxs md:text-fluid-base font-semibold text-[#0f172a]">
               {destination.address_line}
             </p>
-            <p className="text-fluid-xs md:text-fluid-base text-gray-600">
+            <p className="text-fluid-xxs md:text-fluid-base text-gray-600">
               {destination.zip && `${destination.zip}, `}
               {destination.countryCode}
             </p>

@@ -34,8 +34,8 @@ export function GalleryInfoModal({
         {icon}
       </div>
       <div className="flex-1 text-left">
-        <p className="text-fluid-xs text-gray-500 font-medium">{label}</p>
-        <p className="text-fluid-xs text-gray-900 font-semibold">{value}</p>
+        <p className="text-fluid-xxs text-gray-500 font-medium">{label}</p>
+        <p className="text-fluid-xxs text-gray-900 font-semibold">{value}</p>
       </div>
     </div>
   );
@@ -99,7 +99,7 @@ export function GalleryInfoModal({
               </h2>
 
               {/* Subtitle */}
-              <p className="text-gray-600 text-fluid-xs">
+              <p className="text-gray-600 text-fluid-xxs">
                 Details for {gallery.name}
               </p>
             </div>

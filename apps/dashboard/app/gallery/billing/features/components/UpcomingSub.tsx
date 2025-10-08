@@ -24,7 +24,7 @@ export default function UpcomingSub({
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center justify-between">
-            <h3 className="text-fluid-xs font-semibold text-slate-900 flex items-center gap-2">
+            <h3 className="text-fluid-xxs font-semibold text-slate-900 flex items-center gap-2">
               <svg
                 className="w-5 h-5 text-slate-600"
                 fill="none"

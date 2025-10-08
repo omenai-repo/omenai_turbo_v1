@@ -11,13 +11,13 @@ export default function DashboardIndicator({
 }: AppbarTypes) {
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-[0.725rem] 2xl:text-fluid-xs">
+      <div className="text-[0.725rem] 2xl:text-fluid-xxs">
         <p className="font-normal text-dark">
           Welcome back, <strong>{admin_name}</strong>
         </p>
 
         <p className="text-dark">
-          <span className="font-normal text-fluid-xs capitalize text-dark">
+          <span className="font-normal text-fluid-xxs capitalize text-dark">
             {getFormattedDateTime()}
           </span>
         </p>
@@ -32,8 +32,10 @@ export default function DashboardIndicator({
           className=" font-light text-dark"
         />
         <div>
-          <p className="text-dark text-fluid-xs font-bold">{admin_name}</p>
-          <p className="text-dark text-fluid-xs font-semibold">{access_role}</p>
+          <p className="text-dark text-fluid-xxs font-bold">{admin_name}</p>
+          <p className="text-dark text-fluid-xxs font-semibold">
+            {access_role}
+          </p>
         </div>
       </div>
     </div>

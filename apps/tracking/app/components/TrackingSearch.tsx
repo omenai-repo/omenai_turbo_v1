@@ -55,13 +55,13 @@ export default function TrackingSearch({
               value={trackingNumber}
               onChange={(e) => setTrackingNumber(e.target.value)}
               placeholder="Enter Order ID or Shipment tracking number"
-              className="flex-1 p-4 text-fluid-xs focus:outline-none focus:ring-0 border-0 text-dark placeholder-dark/40"
+              className="flex-1 p-4 text-fluid-xxs focus:outline-none focus:ring-0 border-0 text-dark placeholder-dark/40"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !trackingNumber.trim()}
-              className="mx-2 md:mx-3 px-4 py-2 bg-gradient-to-r from-[#0f172a] to-[#1e293b] text-white text-fluid-xs font-medium rounded hover:shadow disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
+              className="mx-2 md:mx-3 px-4 py-2 bg-gradient-to-r from-[#0f172a] to-[#1e293b] text-white text-fluid-xxs font-medium rounded hover:shadow disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
             >
               {isLoading ? "Tracking..." : "Track"}
             </button>
@@ -70,7 +70,7 @@ export default function TrackingSearch({
       </form>
 
       {/* Info Text */}
-      <p className="text-center text-fluid-xs text-gray-500 mt-6">
+      <p className="text-center text-fluid-xxs text-gray-500 mt-6">
         Your tracking number can be found in your order confirmation email
       </p>
     </div>

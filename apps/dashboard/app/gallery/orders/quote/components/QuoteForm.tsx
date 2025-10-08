@@ -225,7 +225,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <h1 className="text-fluid-sm font-semibold text-dark">
               Package Details
             </h1>
-            <p className="text-slate-600 text-fluid-xs">
+            <p className="text-slate-600 text-fluid-xxs">
               Please provide accurate dimensions of this piece including
               packaging to calculate shipping costs
             </p>
@@ -272,7 +272,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         cm
@@ -292,7 +292,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         cm
@@ -312,7 +312,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         cm
@@ -332,7 +332,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         type="number"
                         step="any"
                         placeholder="0.00"
-                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
+                        className="w-full pl-4 pr-12 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors"
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 font-medium">
                         kg
@@ -394,7 +394,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Add any special pickup instructions, handling requirements, or access details..."
                 rows={2}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xs"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xxs"
               />
             </div>
 
@@ -435,7 +435,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               <button
                 type="submit"
                 disabled={loading || !terms_checked}
-                className="w-full sm:w-auto px-4 py-2 bg-dark mb-4 text-white font-normal text-fluid-xs rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
+                className="w-full sm:w-auto px-4 py-2 bg-dark mb-4 text-white font-normal text-fluid-xxs rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -501,10 +501,10 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     className="w-fit h-48 object-cover"
                   />
                   <div className=" bottom-0 left-0 right-0 text-dark/80">
-                    <p className=" font-semibold text-fluid-xs">
+                    <p className=" font-semibold text-fluid-xxs">
                       {order_data?.data.artwork_data.title}
                     </p>
-                    <p className="font-medium text-fluid-xs">
+                    <p className="font-medium text-fluid-xxs">
                       {order_data?.data.artwork_data.artist}
                     </p>
                   </div>

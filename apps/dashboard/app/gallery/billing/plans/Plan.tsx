@@ -166,7 +166,7 @@ export default function Plan({
                                 ></path>
                               </svg>
                             </span>
-                            <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
+                            <p className="ml-3 text-fluid-xxs leading-6 text-[#858585]">
                               {benefit}
                             </p>
                           </li>
@@ -192,7 +192,7 @@ export default function Plan({
                                 ></path>
                               </svg>
                             </span>
-                            <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
+                            <p className="ml-3 text-fluid-xxs leading-6 text-[#858585]">
                               {benefit}
                             </p>
                           </li>

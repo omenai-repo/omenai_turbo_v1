@@ -14,7 +14,11 @@ export default function ArtistWorks({
   return (
     <Tabs variant="default" defaultValue="artworks">
       <Tabs.List>
-        <Tabs.Tab value="artworks" leftSection={null} className="text-fluid-xs">
+        <Tabs.Tab
+          value="artworks"
+          leftSection={null}
+          className="text-fluid-xxs"
+        >
           Artworks by this artist
         </Tabs.Tab>
       </Tabs.List>

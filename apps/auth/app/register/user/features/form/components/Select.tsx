@@ -89,7 +89,10 @@ export default function SelectInput({
         className="flex flex-col gap-y-1"
       >
         <div className="flex flex-col gap-1">
-          <label htmlFor={name} className="text-dark font-normal text-fluid-xs">
+          <label
+            htmlFor={name}
+            className="text-dark font-normal text-fluid-xxs"
+          >
             {label}
           </label>
           <select
@@ -102,7 +105,7 @@ export default function SelectInput({
                 (individualSignupData.state === "" ||
                   individualSignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xs placeholder:text-dark/40"
+            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xxs placeholder:text-dark/40"
           >
             <option value="" className="text-dark/40">
               Select {labelText}
@@ -115,7 +118,7 @@ export default function SelectInput({
                       key={country.isoCode}
                       value={country.name}
                       data-code={country.isoCode}
-                      className="px-3 py-5 my-5 text-fluid-xs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
                     >
                       {country.name}
                     </option>
@@ -128,7 +131,7 @@ export default function SelectInput({
                       key={state.isoCode}
                       value={state.name}
                       data-code={state.isoCode}
-                      className="px-3 py-5 my-5 text-fluid-xs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
                     >
                       {state.name}
                     </option>
@@ -141,7 +144,7 @@ export default function SelectInput({
                       key={city.name}
                       value={city.name}
                       data-code={city.name}
-                      className="px-3 py-5 my-5 text-fluid-xs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
                     >
                       {city.name}
                     </option>
@@ -158,7 +161,7 @@ export default function SelectInput({
                   className="flex items-center gap-x-2"
                 >
                   <MdError className="text-red-600" />
-                  <p className="text-red-600 text-fluid-xs">{error}</p>
+                  <p className="text-red-600 text-fluid-xxs">{error}</p>
                 </div>
               );
             })}

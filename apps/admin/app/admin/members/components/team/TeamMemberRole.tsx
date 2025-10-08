@@ -38,10 +38,10 @@ export default function TeamMemberRow({ member }: TeamMemberRowProps) {
         <div className="col-span-5 flex items-center gap-3">
           <Avatar color="initials" name={member.name} />
           <div>
-            <p className="font-medium text-fluid-xs text-white">
+            <p className="font-medium text-fluid-xxs text-white">
               {member.name || "Anonymous"}
             </p>
-            <p className="text-fluid-xs text-gray-400">{member.email}</p>
+            <p className="text-fluid-xxs text-gray-400">{member.email}</p>
           </div>
         </div>
         <div className="col-span-3">
@@ -52,7 +52,7 @@ export default function TeamMemberRow({ member }: TeamMemberRowProps) {
           />
         </div>
         <div className="col-span-2">
-          <p className="text-gray-400 text-fluid-xs">
+          <p className="text-gray-400 text-fluid-xxs">
             {member.joinedAt ? (
               formatDate(new Date(member.joinedAt))
             ) : (

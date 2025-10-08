@@ -59,7 +59,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Awaiting payment
         </span>
@@ -72,7 +72,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Payment completed
         </span>
@@ -85,7 +85,7 @@ export function OrdersGroupAccordion({
       tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Truck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Delivery in progress
         </span>
@@ -98,7 +98,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order in review
         </span>
@@ -107,11 +107,11 @@ export function OrdersGroupAccordion({
     if (order_accepted === "declined") {
       return (
         <div className="flex flex-col gap-y-2">
-          <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
+          <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
             <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
             Order declined
           </span>
-          <span className=" rounded text-fluid-xs font-normal text-red-600 flex items-center w-fit">
+          <span className=" rounded text-fluid-xxs font-normal text-red-600 flex items-center w-fit">
             Reason: {order_decline_reason}
           </span>
         </div>
@@ -120,7 +120,7 @@ export function OrdersGroupAccordion({
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order has been fulfilled
         </span>
@@ -145,10 +145,10 @@ export function OrdersGroupAccordion({
             loading="lazy"
           />
           <div className="flex flex-col">
-            <span className="text-fluid-xs font-semibold">
+            <span className="text-fluid-xxs font-semibold">
               Order ID: #{order.order_id}
             </span>
-            <span className="text-fluid-xs text-gray-500">
+            <span className="text-fluid-xxs text-gray-500">
               {order.artwork_data.title}
             </span>
           </div>
@@ -157,20 +157,20 @@ export function OrdersGroupAccordion({
       <Accordion.Panel>
         <div className="flex flex-col gap-y-3">
           <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Price</span>
-            <span className="text-fluid-xs font-semibold text-dark">
+            <span className="text-fluid-xxs font-normal">Price</span>
+            <span className="text-fluid-xxs font-semibold text-dark">
               {formatPrice(order.artwork_data.pricing.usd_price)}
             </span>
           </div>
 
           <div className="flex gap-x-6 items-center">
-            <span className="text-fluid-xs font-normal">Order date</span>
-            <span className="text-fluid-xs font-normal text-dark">
+            <span className="text-fluid-xxs font-normal">Order date</span>
+            <span className="text-fluid-xxs font-normal text-dark">
               {formatISODate(order.createdAt)}
             </span>
           </div>
           <div className="flex space-2 items-start gap-x-6">
-            {/* <span className="text-fluid-xs font-normal">Status:</span> */}
+            {/* <span className="text-fluid-xxs font-normal">Status:</span> */}
             {construct_status({
               status: order.status,
               payment_status: order.payment_information.status,
@@ -182,7 +182,7 @@ export function OrdersGroupAccordion({
             })}
           </div>
           {/* {order.status === "completed" && (
-            <p className="px-1 py-4 text-fluid-xs font-normal text-dark">
+            <p className="px-1 py-4 text-fluid-xxs font-normal text-dark">
               {formatIntlDateTime(order.updatedAt)}
             </p>
           )} */}
@@ -204,7 +204,7 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "processing" && (
           <div className="flex gap-x-2 items-center">
-            <p className="text-amber-700 text-fluid-xs">
+            <p className="text-amber-700 text-fluid-xxs">
               Payment transaction is currently processing. Please check back
               later.
             </p>
@@ -219,7 +219,7 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "awaiting_tracking" && (
           <div className="flex gap-x-2 items-center">
-            <p className="text-green-700 text-fluid-xs">
+            <p className="text-green-700 text-fluid-xxs">
               Payment confirmed successfully. Your shipment is being prepared.
               We'll notify you with tracking details soon..
             </p>
@@ -238,7 +238,7 @@ export function OrdersGroupAccordion({
             <Link
               href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
             >
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
             </Link>
@@ -252,7 +252,7 @@ export function OrdersGroupAccordion({
           order_accepted: order.order_accepted.status,
         }) === "pay" && (
           <>
-            <p className="text-red-700 text-fluid-xs">
+            <p className="text-red-700 text-fluid-xxs">
               {order.payment_information.status === "failed" &&
                 "Previous payment attempt failed. Please try again"}
             </p>

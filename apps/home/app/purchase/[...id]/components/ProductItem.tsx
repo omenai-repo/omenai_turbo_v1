@@ -37,7 +37,7 @@ export default function ProductItem({
               <h1 className="font-bold text-fluid-md text-dark tracking-tight">
                 {artwork.title}
               </h1>
-              <p className="font-normal  text-fluid-xs text-dark/60 italic">
+              <p className="font-normal  text-fluid-xxs text-dark/60 italic">
                 {artwork.artist}
               </p>
             </div>
@@ -49,7 +49,7 @@ export default function ProductItem({
           <div className="space-y-4">
             {/* Price Row */}
             <div className="flex justify-between items-center py-3 border-b border-slate-200">
-              <span className="text-dark/60 font-normaltext-fluid-xs ">
+              <span className="text-dark/60 font-normaltext-fluid-xxs ">
                 Price
               </span>
               <span className="text-dark font-bold text-fluid-base">
@@ -59,10 +59,10 @@ export default function ProductItem({
 
             {/* Shipping Row */}
             <div className="flex justify-between items-center py-3 border-b border-slate-200">
-              <span className="text-dark/60 font-normal text-fluid-xs">
+              <span className="text-dark/60 font-normal text-fluid-xxs">
                 Shipping
               </span>
-              <span className="text-slate-500 italic text-fluid-xs">
+              <span className="text-slate-500 italic text-fluid-xxs">
                 To be calculated
               </span>
             </div>
@@ -72,7 +72,7 @@ export default function ProductItem({
               <div className="flex justify-between items-center">
                 <span className="text-dark font-bold text-fluid-sm">Total</span>
                 <div className="text-right">
-                  <p className="text-slate-500 text-fluid-xs italic">
+                  <p className="text-slate-500 text-fluid-xxs italic">
                     Pending final calculation
                   </p>
                 </div>
@@ -91,7 +91,7 @@ export default function ProductItem({
 
         {/* Action Button */}
         {/* <div className="p-6 bg-white border-t border-slate-100">
-          <button className="w-full py-3 px-4 text-fluid-xs bg-dark text-white font-semibold rounded shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
+          <button className="w-full py-3 px-4 text-fluid-xxs bg-dark text-white font-semibold rounded shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
             Create order request
           </button>
         </div> */}

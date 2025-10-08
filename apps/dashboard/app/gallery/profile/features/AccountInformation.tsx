@@ -11,11 +11,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 
-
-export default function AccountInformation({ profile }: {profile: any}) {
+export default function AccountInformation({ profile }: { profile: any }) {
   const queryClient = useQueryClient();
   const [hasChanges, setHasChanges] = useState(false);
-  const { updateAddressModalPopup, updateLogoModalPopup } = galleryActionStore();
+  const { updateAddressModalPopup, updateLogoModalPopup } =
+    galleryActionStore();
   const [loading, setLoading] = useState(false);
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
@@ -23,7 +23,7 @@ export default function AccountInformation({ profile }: {profile: any}) {
   const [data, setData] = useState<any>({
     name: profile.name,
     description: profile.description,
-    admin: profile.admin
+    admin: profile.admin,
   });
 
   // Handle form changes
@@ -94,7 +94,7 @@ export default function AccountInformation({ profile }: {profile: any}) {
           <h2 className="text-fluid-base font-medium text-dark mb-1">
             {user.name}
           </h2>
-          <p className="text-fluid-xs text-dark/50">
+          <p className="text-fluid-xxs text-dark/50">
             Manage your professional information and public presence
           </p>
         </div>
@@ -104,7 +104,7 @@ export default function AccountInformation({ profile }: {profile: any}) {
       <div className="space-y-6">
         {/* Artist Name */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Gallery Name
           </label>
           <input
@@ -112,7 +112,7 @@ export default function AccountInformation({ profile }: {profile: any}) {
             disabled
             value={data.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0
                      transition-all duration-300"
             placeholder="Enter your artist name"
@@ -121,7 +121,7 @@ export default function AccountInformation({ profile }: {profile: any}) {
 
         {/* Email */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Email Address
           </label>
           <input
@@ -129,7 +129,7 @@ export default function AccountInformation({ profile }: {profile: any}) {
             disabled
             value={profile.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0 
                      transition-all duration-300"
             placeholder="your@email.com"
@@ -137,14 +137,14 @@ export default function AccountInformation({ profile }: {profile: any}) {
         </div>
         {/* Admin */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Gallery Admin
           </label>
           <input
             type="text"
             value={data.admin}
             onChange={(e) => handleInputChange("admin", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0 
                      transition-all duration-300"
             placeholder="Admin name"
@@ -153,17 +153,17 @@ export default function AccountInformation({ profile }: {profile: any}) {
 
         {/* Address */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Gallery Address
           </label>
           <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded">
             <div className="flex items-start space-x-3">
               <MapPin className="w-5 h-5 text-dark/50 mt-1" />
               <div>
-                <p className="text-fluid-xs text-dark">
+                <p className="text-fluid-xxs text-dark">
                   {profile.address.address_line}
                 </p>
-                <p className="text-fluid-xs text-dark/50">
+                <p className="text-fluid-xxs text-dark/50">
                   {profile.address.city}, {profile.address.state}, {}
                   {profile.address.zip}
                 </p>
@@ -181,14 +181,14 @@ export default function AccountInformation({ profile }: {profile: any}) {
 
         {/* Bio */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Gallery Description
           </label>
           <textarea
             value={data.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
             rows={4}
-            className="w-full px-4 py-3 bg-gray-800 border border-line rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0 
                      transition-all duration-300 resize-none"
             placeholder="Tell us a little about the gallery"

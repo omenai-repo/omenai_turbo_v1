@@ -13,7 +13,7 @@ export default function AccountSettings() {
         <h2 className="text-fluid-base font-semiboldtext-dark mb-2">
           Account Settings
         </h2>
-        <p className="text-fluid-xs text-dark/50">
+        <p className="text-fluid-xxs text-dark/50">
           Manage your security and account preferences
         </p>
       </div>
@@ -26,10 +26,10 @@ export default function AccountSettings() {
               <Lock className="w-6 h-6 text-dark" />
             </div>
             <div>
-              <h3 className="text-fluid-xs font-medium text-dark">
+              <h3 className="text-fluid-xxs font-medium text-dark">
                 Password & Security
               </h3>
-              <p className="text-fluid-xs text-dark/50 mt-1">
+              <p className="text-fluid-xxs text-dark/50 mt-1">
                 Update your password to keep your account secure
               </p>
             </div>
@@ -46,16 +46,16 @@ export default function AccountSettings() {
 
       {/* Danger Zone */}
       <div className="bg-red-50 border-2 border-red-200 p-6 rounded">
-        <h3 className="text-fluid-xs font-medium text-red-900 mb-4 flex items-center space-x-2">
+        <h3 className="text-fluid-xxs font-medium text-red-900 mb-4 flex items-center space-x-2">
           <AlertCircle className="w-5 h-5" />
           <span>Danger Zone</span>
         </h3>
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="text-fluid-xs font-medium text-dark">
+            <h4 className="text-fluid-xxs font-medium text-dark">
               Delete Account
             </h4>
-            <p className="text-fluid-xs text-dark/50 mt-1">
+            <p className="text-fluid-xxs text-dark/50 mt-1">
               Permanently remove your account and all associated data
             </p>
           </div>

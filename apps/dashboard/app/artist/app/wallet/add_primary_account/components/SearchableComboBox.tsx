@@ -199,7 +199,7 @@ export function SearchableSelect({
             options
           ) : (
             <Combobox.Empty>
-              <span className="text-fluid-xs font-light">{emptyMessage}</span>
+              <span className="text-fluid-xxs font-light">{emptyMessage}</span>
             </Combobox.Empty>
           )}
         </Combobox.Options>

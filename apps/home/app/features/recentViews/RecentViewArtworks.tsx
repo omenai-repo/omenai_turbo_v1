@@ -56,7 +56,7 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
       <div className="flex md:flex-row flex-col gap-4 mt-16">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+            <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
               Recently viewed
             </p>
             <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
@@ -68,10 +68,10 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
             <p className="text-fluid-base font-semibold">
               Back for a Second Look:
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               Rediscover the Art
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               That Captured Your Attention
             </p>
           </div>

@@ -32,7 +32,7 @@ export default function CarouselItemSelect({
     >
       <div className="flex flex-col items-center h-[18rem] w-full p-6 bg-white focus:ring ring-1 border-0 ring-dark/30 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out rounded drop-shadow-lg">
         <div className="w-full">
-          <h2 className="text-fluid-xs font-medium mb-6 text-left">
+          <h2 className="text-fluid-xxs font-medium mb-6 text-left">
             {question}
           </h2>
           {/* Options */}
@@ -40,7 +40,7 @@ export default function CarouselItemSelect({
             {options.map((option, index) => (
               <label
                 key={index}
-                className="flex items-center space-x-3 p-3 text-fluid-xs bg-transparent text-dark rounded cursor-pointer transition duration-300 focus-within:ring-2 focus-within:ring-blue-500"
+                className="flex items-center space-x-3 p-3 text-fluid-xxs bg-transparent text-dark rounded cursor-pointer transition duration-300 focus-within:ring-2 focus-within:ring-blue-500"
               >
                 <input
                   type="radio"

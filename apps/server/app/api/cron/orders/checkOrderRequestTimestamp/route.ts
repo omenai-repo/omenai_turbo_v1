@@ -324,26 +324,61 @@ async function updateArtworkRejectionCounts(
       ...new Set(breachedArtworks.map((artwork) => artwork.author_id)),
     ];
 
-    const artistBulkOps = uniqueAuthorIds.map((authorId) => ({
-      updateOne: {
-        filter: { artist_id: authorId },
-        update: {
-          $set: { "exclusivity_uphold_status.isBreached": true },
-          $inc: { "exclusivity_uphold_status.incident_count": 1 },
+    const artistBulkWrites = [];
+    const availabilityBulkWrites = [];
+
+    for (const author_id of uniqueAuthorIds) {
+      artistBulkWrites.push({
+        updateOne: {
+          filter: { artist_id: author_id },
+          update: {
+            $set: { "exclusivity_uphold_status.isBreached": true },
+            $inc: { "exclusivity_uphold_status.incident_count": 1 },
+          },
         },
-      },
-    }));
+      });
+      availabilityBulkWrites.push({
+        updateOne: {
+          filter: { author_id },
+          update: {
+            $set: { availability: false },
+          },
+        },
+      });
+    }
 
-    const artistUpdateResult = await AccountArtist.bulkWrite(artistBulkOps, {
-      ordered: false, // Continue on errors
-    });
+    if (artistBulkWrites.length > 0) {
+      const artistUpdateResult = await AccountArtist.bulkWrite(
+        artistBulkWrites,
+        {
+          ordered: false, // Continue on errors
+        }
+      );
 
-    console.log(
-      `Marked ${artistUpdateResult.modifiedCount} artists as breached (${breachedArtworks.length} artworks exceeded threshold)`
-    );
+      console.log(
+        `Marked ${artistUpdateResult.modifiedCount} artists as breached (${breachedArtworks.length} artworks exceeded threshold)`
+      );
+    } else {
+      console.log("No bulk writes to update breach status was run");
+    }
+
+    if (availabilityBulkWrites.length > 0) {
+      const availabilityUpdateResult = await Artworkuploads.bulkWrite(
+        availabilityBulkWrites,
+        { ordered: false }
+      );
+
+      console.log(
+        `Marked ${availabilityUpdateResult.modifiedCount} artworks as sold (${breachedArtworks.length}`
+      );
+    } else {
+      console.log(
+        "No bulk writes to update artwork availability status was run"
+      );
+    }
   } catch (error) {
     console.error("Failed to update artwork rejection counts:", error);
-    // Don't throw - this shouldn't block the email sending process
-    // Consider logging to monitoring service here
+    // Don't throw an error here - this shouldn't block the email sending process
+    // TODO: Consider logging to monitoring service here
   }
 }

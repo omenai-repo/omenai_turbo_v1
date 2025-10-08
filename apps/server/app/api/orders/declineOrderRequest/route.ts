@@ -92,6 +92,7 @@ async function handleExclusivityBreach(
         },
         { session }
       ),
+      // Optionally change exclusivity status for artwork if necessary
       Artworkuploads.updateOne(
         { art_id },
         {

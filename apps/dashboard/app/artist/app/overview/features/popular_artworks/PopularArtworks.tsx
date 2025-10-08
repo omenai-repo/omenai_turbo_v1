@@ -29,7 +29,7 @@ export default function PopularArtworks() {
           ) : (
             <>
               {popularArtworks.length === 0 ? (
-                <p className="text-dark text-fluid-xs font-medium">
+                <p className="text-dark text-fluid-xxs font-medium">
                   No available data
                 </p>
               ) : (

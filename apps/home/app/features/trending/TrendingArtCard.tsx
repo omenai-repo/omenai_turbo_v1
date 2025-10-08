@@ -49,17 +49,17 @@ export default function TrendingArtworkCard({
 
         <div className=" bg-[#FAFAFA] py-3 px-3">
           <div className="flex justify-between items-center">
-            <p className="font-normal text-fluid-xs text-dark ">
+            <p className="font-normal text-fluid-xxs text-dark ">
               {name.substring(0, 20)}
               {name.length > 20 && "..."}
             </p>
           </div>
           <div className="flex justify-between items-center">
-            <p className="font-normal text-[#858585] italic text-fluid-xs">
+            <p className="font-normal text-[#858585] italic text-fluid-xxs">
               {artist.substring(0, 20)}
               {artist.length > 20 && "..."}
             </p>
-            <span className="text-fluid-xs flex gap-x-1 text-dark my-2">
+            <span className="text-fluid-xxs flex gap-x-1 text-dark my-2">
               {impressions}
               <LikeComponent
                 impressions={impressions}

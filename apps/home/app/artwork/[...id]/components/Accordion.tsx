@@ -25,7 +25,7 @@ export default function Accordion({ header, items }: AccordionPropTypes) {
               {items.map((item, index) => {
                 return (
                   <li
-                    className="flex items-center gap-x-2 text-fluid-xs"
+                    className="flex items-center gap-x-2 text-fluid-xxs"
                     key={index + item.content}
                   >
                     {item.icon && item.icon}

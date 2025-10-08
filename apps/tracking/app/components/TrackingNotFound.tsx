@@ -55,7 +55,7 @@ export default function TrackingNotFound({
           <div className="flex items-start gap-3 mb-4">
             <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="space-y-3">
-              <p className="text-fluid-xs text-gray-700">
+              <p className="text-fluid-xxs text-gray-700">
                 <span className="font-medium text-[#0f172a]">
                   • The tracking number is incorrect
                 </span>
@@ -64,7 +64,7 @@ export default function TrackingNotFound({
                   Please check for any typos or missing digits
                 </span>
               </p>
-              <p className="text-fluid-xs text-gray-700">
+              <p className="text-fluid-xxs text-gray-700">
                 <span className="font-medium text-[#0f172a]">
                   • The shipment is very recent
                 </span>
@@ -73,7 +73,7 @@ export default function TrackingNotFound({
                   Tracking info may take 24-48 hours to appear in the system
                 </span>
               </p>
-              <p className="text-fluid-xs text-gray-700">
+              <p className="text-fluid-xxs text-gray-700">
                 <span className="font-medium text-[#0f172a]">
                   • The shipment hasn&apos;t been picked up yet
                 </span>
@@ -90,20 +90,20 @@ export default function TrackingNotFound({
         <div className="flex flex-col xxs:flex-row gap-3 md:gap-4 justify-center items-center">
           <button
             onClick={onSearchAgain}
-            className="w-full xxs:w-auto px-4 py-2 bg-gradient-to-r from-[#0f172a] to-[#1e293b] text-white text-fluid-xs font-medium rounded hover:shadow-lg transition-all duration-300 hover:scale-105"
+            className="w-full xxs:w-auto px-4 py-2 bg-gradient-to-r from-[#0f172a] to-[#1e293b] text-white text-fluid-xxs font-medium rounded hover:shadow-lg transition-all duration-300 hover:scale-105"
           >
             Try Another Number
           </button>
           <a
             href="mailto:support@omenai.com"
-            className="w-full xxs:w-auto px-4 py-2 bg-white border border-[#0f172a] text-[#0f172a] text-fluid-xs font-medium rounded hover:bg-gray-50 transition-all duration-300"
+            className="w-full xxs:w-auto px-4 py-2 bg-white border border-[#0f172a] text-[#0f172a] text-fluid-xxs font-medium rounded hover:bg-gray-50 transition-all duration-300"
           >
             Contact Support
           </a>
         </div>
 
         {/* Help Text */}
-        <p className="text-fluid-xs text-gray-500 mt-8">
+        <p className="text-fluid-xxs text-gray-500 mt-8">
           Need help? Check your order confirmation email for the correct
           tracking number
         </p>

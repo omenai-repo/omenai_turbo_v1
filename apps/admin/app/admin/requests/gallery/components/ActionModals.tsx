@@ -158,7 +158,7 @@ export function ActionModals({
               color={`${type === "accept" ? "green" : type === "unblock" ? "#0f172a" : "red"}`}
               onClick={handleRequestAction}
               className={`
-            px-4 py-2 text-fluid-xs font-semibold transition-all duration-300 transform hover:scale-105
+            px-4 py-2 text-fluid-xxs font-semibold transition-all duration-300 transform hover:scale-105
             ${
               type === "accept"
                 ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-green-200"
@@ -192,7 +192,7 @@ export function ActionModals({
               variant="outline"
               onClick={close}
               color="#0f172a"
-              className="px-4 py-2 text-fluid-xs font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 transform hover:scale-105"
+              className="px-4 py-2 text-fluid-xxs font-semibold border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 transform hover:scale-105"
               leftSection={<X size={18} strokeWidth={2} />}
             >
               No, Cancel

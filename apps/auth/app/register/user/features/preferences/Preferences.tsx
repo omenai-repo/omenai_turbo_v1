@@ -18,10 +18,10 @@ function Preferences() {
   return (
     <AnimatePresence key={7}>
       <div className="">
-        <p className="text-fluid-xs font-medium text-center">
+        <p className="text-fluid-xxs font-medium text-center">
           Select up to 5 artwork mediums that resonate with you.
         </p>
-        <p className="text-center text-fluid-xs font-semibold my-[1.5rem]">
+        <p className="text-center text-fluid-xxs font-semibold my-[1.5rem]">
           Selected: {preferences.length}/5
         </p>
 

@@ -45,7 +45,7 @@ export default function TrackingTimeline({
             Current Status
           </h2>
         </div>
-        <p className="text-fluid-xs md:text-fluid-base font-normal ml-9 md:ml-10">
+        <p className="text-fluid-xxs md:text-fluid-base font-normal ml-9 md:ml-10">
           {currentStatus}
         </p>
       </div>
@@ -55,7 +55,7 @@ export default function TrackingTimeline({
         <h3 className="text-fluid-base font-medium text-[#0f172a]">
           Shipment History
         </h3>
-        <p className="text-fluid-xs text-gray-600">
+        <p className="text-fluid-xxs text-gray-600">
           Track your artwork&apos;s journey from origin to destination
         </p>
       </div>
@@ -92,17 +92,17 @@ export default function TrackingTimeline({
                 {/* Content */}
                 <div className="flex-1 bg-white rounded shadow-md hover:shadow-xl transition-shadow duration-300 p-4 border border-gray-100">
                   {/* Date & Time */}
-                  <div className="flex flex-wrap items-center mb-1 text-fluid-xs text-gray-500">
+                  <div className="flex flex-wrap items-center mb-1 text-fluid-xxs text-gray-500">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
-                      <p className="text-fluid-xs font-normal text-gray-500 break-words">
+                      <p className="text-fluid-xxs font-normal text-gray-500 break-words">
                         {event.date} at {event.time}
                       </p>
                     </div>
                   </div>
 
                   {/* Status */}
-                  <p className="text-fluid-xs md:text-fluid-base font-medium text-[#0f172a] mb-1">
+                  <p className="text-fluid-xxs md:text-fluid-base font-medium text-[#0f172a] mb-1">
                     {event.serviceArea[0].description ||
                       event.typeCode ||
                       "Status Unknown"}
@@ -110,7 +110,7 @@ export default function TrackingTimeline({
 
                   {/* Description */}
                   {event.description && (
-                    <p className="text-fluid-xs text-gray-600">
+                    <p className="text-fluid-xxs text-gray-600">
                       {event.description}
                     </p>
                   )}

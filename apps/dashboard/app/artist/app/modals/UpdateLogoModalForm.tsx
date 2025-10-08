@@ -12,10 +12,10 @@ export default function UpdateLogoModalForm() {
       <div className="space-y-4">
         <div className="border-2 border-dashed border-line rounded p-8 text-center cursor-pointer hover:border-dark transition-colors duration-300">
           <Camera className="w-12 h-12 text-dark/50 mx-auto mb-3" />
-          <p className="text-fluid-xs text-dark/50 mb-2">
+          <p className="text-fluid-xxs text-dark/50 mb-2">
             Drop your image here or click to browse
           </p>
-          <p className="text-fluid-xs text-gray-light">
+          <p className="text-fluid-xxs text-gray-light">
             PNG, JPG or JPEG up to 5MB
           </p>
         </div>

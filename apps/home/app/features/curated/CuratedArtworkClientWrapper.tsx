@@ -33,7 +33,7 @@ export default function CuratedArtworkClientWrapper({
       <div className="flex md:flex-row flex-col gap-4 mt-16">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+            <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
               Just for you
             </p>
             <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
@@ -43,10 +43,10 @@ export default function CuratedArtworkClientWrapper({
 
           <div className="hidden sm:flex flex-col items-end">
             <p className="text-fluid-base font-semibold">Your Art, Your Way:</p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               Discover Captivating Pieces{" "}
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               that truly resonates with You
             </p>
           </div>

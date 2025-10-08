@@ -28,11 +28,11 @@ export default function Banner() {
 
           <div>
             <h1 className="text-fluid-base font-semibold">{user.name}</h1>
-            <p className="text-fluid-xs font-normal">{user.email}</p>
+            <p className="text-fluid-xxs font-normal">{user.email}</p>
           </div>
         </div>
         <div className="" onClick={async () => await handleSignOut()}>
-          <button className="p-3 rounded sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-fluid-xs border-dark hover:border-dark/30">
+          <button className="p-3 rounded sm:px-4 sm:py-2 md:px-5 md:py-3 bg-dark text-white font-normal border text-fluid-xxs border-dark hover:border-dark/30">
             Logout
           </button>
         </div>

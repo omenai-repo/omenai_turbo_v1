@@ -32,10 +32,10 @@ const WalletPinUpdateCode = (username: string, token: string) => {
               className="mx-auto my-10"
             />
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               Dear {username},
             </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               We have received a request to reset your wallet pin for your
               Omenai Wallet account. Below, you will find your Confirmation
               code. Please note that the validity of this code will expire in{" "}
@@ -43,12 +43,12 @@ const WalletPinUpdateCode = (username: string, token: string) => {
             </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-fluid-xs font-bold leading-[24px]">
+              <Text className="text-black text-fluid-xxs font-bold leading-[24px]">
                 {token}
               </Text>
             </Section>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               If you did not authorize this action. Please contact us
               immediately on{" "}
               <Link

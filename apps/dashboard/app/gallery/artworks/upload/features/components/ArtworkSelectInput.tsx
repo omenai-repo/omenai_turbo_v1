@@ -32,14 +32,14 @@ export default function ArtworkSelectInput({
   };
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-dark font-normal text-fluid-xs">
+      <label htmlFor={name} className="text-dark font-normal text-fluid-xxs">
         {label}
       </label>
       <select
         onChange={handleChange}
         required={required}
         disabled={disabled}
-        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring-1 text-fluid-xs focus:ring-dark h-[40px] px-5 text-dark rounded "
+        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring-1 text-fluid-xxs focus:ring-dark h-[40px] px-5 text-dark rounded "
       >
         <option value={disabled ? "Yes" : ""}>
           {disabled ? "Yes" : "Select"}
@@ -51,7 +51,7 @@ export default function ArtworkSelectInput({
                 <option
                   key={item.code}
                   value={item.code}
-                  className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
+                  className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
                 >
                   {item.name}
                 </option>
@@ -65,7 +65,7 @@ export default function ArtworkSelectInput({
                 <option
                   key={item}
                   value={item}
-                  className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
+                  className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
                 >
                   {item}
                 </option>

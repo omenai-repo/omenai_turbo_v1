@@ -94,7 +94,7 @@ export default function DeleteEditorialModal({
                 <h2 className="text-fluid-md font-semibold">
                   Delete editorial
                 </h2>
-                <p className="text-red-100 text-fluid-xs mt-1">
+                <p className="text-red-100 text-fluid-xxs mt-1">
                   This action cannot be undone
                 </p>
               </div>

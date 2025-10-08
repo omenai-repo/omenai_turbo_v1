@@ -12,8 +12,8 @@ export default function CardChangeCheckoutItem() {
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-fluid-xs font-medium">Card Change</h1>
-              <p className="text-fluid-xs text-gray-300">
+              <h1 className="text-fluid-xxs font-medium">Card Change</h1>
+              <p className="text-fluid-xxs text-gray-300">
                 Update your payment method
               </p>
             </div>

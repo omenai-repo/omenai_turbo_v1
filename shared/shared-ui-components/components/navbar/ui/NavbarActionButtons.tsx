@@ -13,10 +13,10 @@ export default function NavbarActionButtons() {
       <Link href={`${login_base_url}/login`} className="w-fit lg:hidden block">
         <BiUser className="text-fluid-sm" />
       </Link>
-      <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-fluid-xs sm:text-fluid-xs ml-2">
+      <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-fluid-xxs sm:text-fluid-xxs ml-2">
         <Link
           href={`${login_base_url}/login`}
-          className="h-[35px] whitespace-nowrap rounded px-5 flex items-center gap-x-2 text-fluid-xs font-normal hover:border-dark bg-white border border-dark/50 text-dark duration-200"
+          className="h-[35px] whitespace-nowrap rounded px-5 flex items-center gap-x-2 text-fluid-xxs font-normal hover:border-dark bg-white border border-dark/50 text-dark duration-200"
         >
           Login
           {/* <LogIn size={16} strokeWidth={1.5} /> */}
@@ -24,7 +24,7 @@ export default function NavbarActionButtons() {
 
         <Link
           href={`${login_base_url}/register`}
-          className="h-[35px] whitespace-nowrap rounded grid place-items-center px-5 text-fluid-xs font-normal bg-dark hover:bg-dark/80 text-white ring-1 ring-dark/10 duration-200"
+          className="h-[35px] whitespace-nowrap rounded grid place-items-center px-5 text-fluid-xxs font-normal bg-dark hover:bg-dark/80 text-white ring-1 ring-dark/10 duration-200"
         >
           Create an account
         </Link>

@@ -37,10 +37,10 @@ const PaymentSuccessfulGalleryMail = (
               className="mx-auto mt-10"
             />
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               <strong>Dear {name},</strong>
             </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               We are excited to inform you that your artwork, titled{" "}
               <strong>{artwork}</strong> with{" "}
               <strong>(Order ID #{order_id})</strong> has been successfully
@@ -111,7 +111,7 @@ const PaymentSuccessfulGalleryMail = (
               </div>
             </div>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               As always, if you have any questions, feedback, or concerns
               regarding your Order or any other aspect of our service, please
               feel free to reach out to us at{" "}
@@ -127,11 +127,11 @@ const PaymentSuccessfulGalleryMail = (
               .
             </Text>
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               Thank you for being a valued member of <strong>Omenai</strong>,
               and we look forward to seeing more of your incredible work!
             </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>

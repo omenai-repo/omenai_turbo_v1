@@ -24,7 +24,7 @@ export default function SettingsContainer() {
         <h1 className="text-fluid-lg 2xl:text-fluid-xl font-semibold text-dark mb-2">
           Settings
         </h1>
-        <p className="text-dark text-fluid-xs">
+        <p className="text-dark text-fluid-xxs">
           Manage your account settings and preferences
         </p>
       </div>

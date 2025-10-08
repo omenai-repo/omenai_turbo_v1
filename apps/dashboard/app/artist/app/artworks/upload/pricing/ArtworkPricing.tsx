@@ -155,13 +155,15 @@ export default function ArtworkPricing() {
             className="flex flex-col space-y-2 p-5 my-6"
             withBorder
           >
-            <p className="text-fluid-xs">Omenai will list your art piece for</p>
+            <p className="text-fluid-xxs">
+              Omenai will list your art piece for
+            </p>
             <h1 className="text-fluid-md font-bold">
               {formatPrice(pricing.usd_price, "USD")}
             </h1>
-            <p className="text-fluid-xs font-medium">
+            <p className="text-fluid-xxs font-medium">
               ({pricing.currency} equivalent:{" "}
-              <span className="font-bold text-fluid-xs">
+              <span className="font-bold text-fluid-xxs">
                 {formatPrice(pricing.price, pricing.currency)})
               </span>
             </p>
@@ -184,7 +186,7 @@ export default function ArtworkPricing() {
                     onChange={(e) => setPriceConsent(e.target.checked)}
                     className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
                   />
-                  <span className="text-fluid-xs text-dark font-normal group-hover:text-gray-900">
+                  <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
                     I accept the price stipulated for this artwork and agree to
                     have it listed on the platform at this price. I understand
                     that I may cancel this upload if I do not agree.
@@ -197,7 +199,7 @@ export default function ArtworkPricing() {
                     onChange={(e) => setAcknowledgment(e.target.checked)}
                     className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
                   />
-                  <span className="text-fluid-xs text-dark font-normal group-hover:text-gray-900">
+                  <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
                     I acknowledge that this artwork is subject to a 90-day
                     exclusivity period with Omenai and may not be sold through
                     external channels during this time.
@@ -211,7 +213,7 @@ export default function ArtworkPricing() {
                     onChange={(e) => setPenaltyConsent(e.target.checked)}
                     className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
                   />
-                  <span className="text-fluid-xs text-dark font-normal group-hover:text-gray-900">
+                  <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
                     I agree that any breach of this exclusivity obligation will
                     result in a 10% penalty fee deducted from my next successful
                     sale on the platform.
@@ -221,7 +223,7 @@ export default function ArtworkPricing() {
             </Alert>
           </div>
 
-          <div className="mt-4 text-fluid-xs text-gray-500">
+          <div className="mt-4 text-fluid-xxs text-gray-500">
             Acknowledgment: {acknowledgment ? "✔️" : "❌"} | Penalty Consent:{" "}
             {penaltyConsent ? "✔️" : "❌"} | Price Consent:{" "}
             {priceConsent ? "✔️" : "❌"}
@@ -229,7 +231,7 @@ export default function ArtworkPricing() {
 
           <div className="w-full flex justify-between items-center gap-x-4 mb-2 mt-6">
             <Link href={"/artist/app/artworks/upload"} className="w-fit h-fit">
-              <button className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white hover:bg-[#f1f1f1] text-dark ring-1 ring-dark text-fluid-xs font-normal whitespace-nowrap">
+              <button className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white hover:bg-[#f1f1f1] text-dark ring-1 ring-dark text-fluid-xxs font-normal whitespace-nowrap">
                 Cancel
               </button>
             </Link>
@@ -237,7 +239,7 @@ export default function ArtworkPricing() {
             <button
               type="submit"
               disabled={loading || !canProceed}
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs hover:bg-dark/90 font-normal whitespace-nowrap"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs hover:bg-dark/90 font-normal whitespace-nowrap"
             >
               {loading ? <LoadSmall /> : "Upload artwork"}
             </button>

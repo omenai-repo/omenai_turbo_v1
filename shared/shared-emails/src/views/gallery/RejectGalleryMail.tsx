@@ -32,15 +32,15 @@ const RejectGalleryMail = (gallery_name?: string) => {
               className="mx-auto my-10"
             />
 
-            <Text className="text-dark text-fluid-xs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Dear {gallery_name},
             </Text>
-            <Text className="text-dark text-fluid-xs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Thank you for registering your gallery with Omenai After reviewing
               your account, we regret to inform you that your verification
               request has not been approved.
             </Text>
-            <Text className="text-dark text-fluid-xs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Due to this, you will no longer be able to register for an account
               on our platform without further assistance. If you believe this
               decision was made in error or if you would like to discuss your
@@ -54,13 +54,13 @@ const RejectGalleryMail = (gallery_name?: string) => {
               , and we will be happy to assist you.
             </Text>
 
-            <Text className="text-fluid-xs leading-[24px]">
+            <Text className="text-fluid-xxs leading-[24px]">
               We appreciate your interest in OMENAI Inc, and we are here to
               address any questions or concerns you may have.
             </Text>
 
             <br />
-            <Text className="text-fluid-xs leading-[24px]">
+            <Text className="text-fluid-xxs leading-[24px]">
               Best regards, <br /> The Omenai team
             </Text>
 

@@ -112,8 +112,11 @@ export default function SimilarArtworks({
         </div>
       </div>
       <div className="flex items-center justify-center py-5">
-        <Link href={`/collections/${encodeMediumForUrl(medium)}`} className="group">
-          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded py-1 text-fluid-xs">
+        <Link
+          href={`/collections/${encodeMediumForUrl(medium)}`}
+          className="group"
+        >
+          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded py-1 text-fluid-xxs">
             View more <FiArrowRight size={18} />
           </button>
         </Link>

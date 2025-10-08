@@ -30,10 +30,10 @@ const VerifyGalleryEmail = (gallery_name?: string) => {
               className="mx-auto my-10"
             />
 
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               Dear Admin,
             </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               You have received a new gallery verification request from the
               following user on the platform: <strong>{gallery_name}.</strong>
               Please take the necessary steps to review and verify the gallery

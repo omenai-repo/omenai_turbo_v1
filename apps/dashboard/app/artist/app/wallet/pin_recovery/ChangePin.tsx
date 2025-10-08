@@ -98,7 +98,7 @@ export default function WalletPinResetForm() {
       <div className="flex flex-col space-y-6">
         {/* PIN Input */}
         <div className="flex flex-col space-y-4">
-          <span className="font-medium text-fluid-xs">
+          <span className="font-medium text-fluid-xxs">
             Enter new wallet pin
           </span>
           <PinInput
@@ -113,7 +113,7 @@ export default function WalletPinResetForm() {
 
         {/* Confirm PIN Input */}
         <div className="flex flex-col space-y-4">
-          <span className="font-medium text-fluid-xs">
+          <span className="font-medium text-fluid-xxs">
             Confirm new wallet pin
           </span>
           <PinInput
@@ -129,7 +129,7 @@ export default function WalletPinResetForm() {
 
       {/* Error Message */}
       {error && (
-        <span className="text-fluid-xs text-red-600 my-1">{error}</span>
+        <span className="text-fluid-xxs text-red-600 my-1">{error}</span>
       )}
 
       {/* Submit Button */}
@@ -137,7 +137,7 @@ export default function WalletPinResetForm() {
         <button
           disabled={isDisabled}
           onClick={handlePinChange}
-          className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
         >
           {loading ? <LoadSmall /> : "Update wallet pin"}
         </button>

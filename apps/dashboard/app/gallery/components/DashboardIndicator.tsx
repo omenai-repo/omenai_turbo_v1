@@ -55,7 +55,7 @@ export default function DashboardIndicator({
   }
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-fluid-xs">
+      <div className="text-fluid-xxs">
         <p className="font-normal text-dark">
           Welcome back, <strong>{gallery_name}</strong>
         </p>
@@ -72,19 +72,19 @@ export default function DashboardIndicator({
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+            className=" h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>
-          <p className="text-fluid-xs text-dark font-normal">
+          <p className="text-fluid-xxs text-dark font-normal">
             Account currently under review
           </p>
         </div>
       ) : (
         <div className="flex gap-2 items-center">
-          <RiAdminLine className="text-fluid-xs font-light text-dark" />
+          <RiAdminLine className="text-fluid-xxs font-light text-dark" />
           <div>
-            <p className="text-dark text-fluid-xs font-normal">
+            <p className="text-dark text-fluid-xxs font-normal">
               {admin_name} (Admin)
             </p>
           </div>

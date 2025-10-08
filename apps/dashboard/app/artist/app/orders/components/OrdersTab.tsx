@@ -47,7 +47,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
               <h2 className="text-fluid-base font-medium text-slate-900 mb-1">
                 Order Management
               </h2>
-              <p className="text-fluid-xs text-slate-600 mb-6">
+              <p className="text-fluid-xxs text-slate-600 mb-6">
                 Track and manage your orders
               </p>
 
@@ -62,9 +62,9 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
                       className="text-amber-600 data-[active]:text-white"
                       strokeWidth={1.5}
                     />
-                    <p className="font-normal text-dark text-fluid-xs flex items-center gap-x-2">
+                    <p className="font-normal text-dark text-fluid-xxs flex items-center gap-x-2">
                       <span>Pending Orders </span>
-                      <span className="text-fluid-xs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
+                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
                         {pending_orders.length}
                       </span>
                     </p>
@@ -81,9 +81,9 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
                       className="text-blue-600 data-[active]:text-white"
                       strokeWidth={1.5}
                     />
-                    <p className="font-normal text-dark text-fluid-xs flex items-center gap-x-2">
+                    <p className="font-normal text-dark text-fluid-xxs flex items-center gap-x-2">
                       <span>In progress </span>
-                      <span className="text-fluid-xs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
+                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
                         {processing_orders.length}
                       </span>
                     </p>
@@ -100,9 +100,9 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
                       className="text-green-600 data-[active]:text-white"
                       strokeWidth={1.5}
                     />
-                    <p className="font-normal text-dark text-fluid-xs flex items-center gap-x-2">
+                    <p className="font-normal text-dark text-fluid-xxs flex items-center gap-x-2">
                       <span>Completed Orders </span>
-                      <span className="text-fluid-xs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
+                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-full">
                         {completed_orders.length}
                       </span>
                     </p>
@@ -119,7 +119,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
                 </p>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-fluid-xs font-medium text-slate-600">
+                    <span className="text-fluid-xxs font-medium text-slate-600">
                       Total Orders
                     </span>
                     <span className="text-sm font-semibold text-slate-900">

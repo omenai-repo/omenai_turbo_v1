@@ -62,7 +62,7 @@ export default function FilterOptionBox({
                   />
                   <label
                     htmlFor={filter.option}
-                    className="w-full ms-2 text-fluid-xs font-normal text-dark rounded dark:text-white"
+                    className="w-full ms-2 text-fluid-xxs font-normal text-dark rounded dark:text-white"
                   >
                     {filter.option}
                   </label>

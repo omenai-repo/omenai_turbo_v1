@@ -23,7 +23,7 @@ export default function ArtCollectionCard({
             className="min-w-[300px] w-[300px] min-h-[250px] h-[250px] object-cover object-top cursor-pointer"
           />
           <div className="bg-[#FAFAFA] flex flex-col p-4">
-            <p className="text-fluid-xs font-normal">{title}</p>
+            <p className="text-fluid-xxs font-normal">{title}</p>
           </div>
         </div>
       </Link>

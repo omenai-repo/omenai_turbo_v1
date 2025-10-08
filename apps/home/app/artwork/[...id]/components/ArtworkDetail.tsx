@@ -127,7 +127,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
 
       <div className="py-4 border-t border-gray-100">
         <div className="">
-          <p className="text-fluid-xs text-gray-500 uppercase tracking-wide font-normal">
+          <p className="text-fluid-xxs text-gray-500 uppercase tracking-wide font-normal">
             Price
           </p>
           {!data.availability ? (
@@ -144,7 +144,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-y-3 font-normal w-full text-fluid-xs">
+      <div className="flex flex-col gap-y-3 font-normal w-full text-fluid-xxs">
         <button
           disabled={loading || !data.availability || purchase_click_loading}
           onClick={handleBuyButtonClick}
@@ -178,7 +178,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {sessionId && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
-            className="w-full py-2 px-4 rounded ring-1 flex justify-center items-center gap-2 hover:bg-dark/5 duration-200 ring-dark text-dark text-fluid-xs group"
+            className="w-full py-2 px-4 rounded ring-1 flex justify-center items-center gap-2 hover:bg-dark/5 duration-200 ring-dark text-dark text-fluid-xxs group"
           >
             <span>Remove from saved</span>
             <GiCheckMark />

@@ -115,7 +115,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
             <h2 className="text-fluid-sm font-semibold mb-2">
               Payment Method Added!
             </h2>
-            <p className="text-white text-opacity-90 text-fluid-xs">
+            <p className="text-white text-opacity-90 text-fluid-xxs">
               Successfully saved to your account
             </p>
           </div>
@@ -135,10 +135,10 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
               <CreditCard size={24} />
             </div>
             <div>
-              <p className="font-medium text-fluid-xs text-gray-900">
+              <p className="font-medium text-fluid-xxs text-gray-900">
                 New Payment Method
               </p>
-              <p className="text-gray-600 text-fluid-xs">
+              <p className="text-gray-600 text-fluid-xxs">
                 Ready for secure transactions
               </p>
             </div>
@@ -151,7 +151,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
 
         {/* Benefits */}
         <div className="space-y-4 mb-8">
-          <div className="flex items-center gap-3 text-fluid-xs text-gray-700">
+          <div className="flex items-center gap-3 text-fluid-xxs text-gray-700">
             <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
               <Shield size={16} className="text-green-600" />
             </div>
@@ -173,7 +173,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
 
         {/* CTA Button */}
         <Link href={"/gallery/billing"}>
-          <button className="w-full bg-gradient-to-r text-fluid-xs from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+          <button className="w-full bg-gradient-to-r text-fluid-xxs from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
             <ArrowLeft size={18} />
             Back to billing page
           </button>
@@ -233,7 +233,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
             <h2 className="text-fluid-sm font-semibold mb-2">
               Payment Method Failed
             </h2>
-            <p className="text-white text-opacity-90 text-fluid-xs">
+            <p className="text-white text-opacity-90 text-fluid-xxs">
               Unable to save payment method
             </p>
           </div>
@@ -252,10 +252,10 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
             <AlertTriangle size={24} />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-fluid-xs text-gray-900 mb-1">
+            <p className="font-medium text-fluid-xxs text-gray-900 mb-1">
               Error Details
             </p>
-            <p className="text-red-600 text-fluid-xs leading-relaxed">
+            <p className="text-red-600 text-fluid-xxs leading-relaxed">
               {message ||
                 "Something went wrong while adding your payment method"}
             </p>
@@ -288,7 +288,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
         <div className="space-y-3 flex flex-col">
           <button
             onClick={() => window.location.reload()}
-            className="w-full bg-gradient-to-r text-fluid-xs from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r text-fluid-xxs from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
           >
             <RefreshCw size={18} />
             Try Again

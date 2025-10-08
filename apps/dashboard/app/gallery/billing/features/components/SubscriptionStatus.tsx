@@ -80,11 +80,11 @@ export default function SubDetail({
   return (
     <div className=" bg-white rounded shadow-sm border border-slate-200 p-5 max-h-[300px]">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-fluid-xs font-semibold text-slate-900">
+        <h3 className="text-fluid-xxs font-semibold text-slate-900">
           Your Subscription
         </h3>
         <div
-          className={`px-3 py-1 rounded text-fluid-xs font-semibold ${
+          className={`px-3 py-1 rounded text-fluid-xxs font-semibold ${
             sub_data.status === "active"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
@@ -122,7 +122,7 @@ export default function SubDetail({
           {sub_data.status === "active" && (
             <>
               <div className="mt-3">
-                <div className="flex justify-between text-fluid-xs text-slate-600 mb-1">
+                <div className="flex justify-between text-fluid-xxs text-slate-600 mb-1">
                   <span>Period progress</span>
                   <span>{daysLeft(sub_data.expiry_date)} days left</span>
                 </div>
@@ -137,7 +137,7 @@ export default function SubDetail({
               </div>
               <div className="mt-3">
                 {/* Usage stats */}
-                <div className="flex justify-between text-fluid-xs text-slate-500 mb-2">
+                <div className="flex justify-between text-fluid-xxs text-slate-500 mb-2">
                   <span>
                     {getUsageDisplayText(
                       sub_data.upload_tracker.upload_count,
@@ -155,7 +155,7 @@ export default function SubDetail({
                     {/* Optional: Usage percentage display */}
                     {sub_data.upload_tracker.limit !==
                       Number.MAX_SAFE_INTEGER && (
-                      <div className="text-right text-fluid-xs text-slate-600">
+                      <div className="text-right text-fluid-xxs text-slate-600">
                         (
                         {Math.round(
                           (sub_data.upload_tracker.upload_count /

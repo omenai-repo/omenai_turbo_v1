@@ -39,7 +39,7 @@ export default function Plan({
                   {tab === "monthly" ? `/mo` : `/yr`}
                 </span>
               </div>
-              <p className="mt-6 text-fluid-xs text-gray-600">
+              <p className="mt-6 text-fluid-xxs text-gray-600">
                 {name === "Basic" && "All basic features included."}
                 {name === "Pro" && "Best deal for you"}
                 {name === "Premium" && "For those who expect more"}
@@ -69,7 +69,7 @@ export default function Plan({
                                 ></path>
                               </svg>
                             </span>
-                            <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
+                            <p className="ml-3 text-fluid-xxs leading-6 text-[#858585]">
                               {benefit}
                             </p>
                           </li>
@@ -95,7 +95,7 @@ export default function Plan({
                                 ></path>
                               </svg>
                             </span>
-                            <p className="ml-3 text-fluid-xs leading-6 text-[#858585]">
+                            <p className="ml-3 text-fluid-xxs leading-6 text-[#858585]">
                               {benefit}
                             </p>
                           </li>
@@ -104,7 +104,7 @@ export default function Plan({
                 </ul>
                 <div className="mt-8">
                   <Link href={"/auth/login"}>
-                    <button className="h-[35px] px-4 w-full text-fluid-xs text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center">
+                    <button className="h-[35px] px-4 w-full text-fluid-xxs text-white disabled:cursor-not-allowed disabled:bg-dark/10 hover:bg-dark/80 bg-dark duration-300 grid place-items-center">
                       Get started
                     </button>
                   </Link>

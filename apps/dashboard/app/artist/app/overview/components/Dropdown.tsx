@@ -22,7 +22,7 @@ export default function Dropdown() {
       {/* Dropdown Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 ring-1 border-0 ring-dark/10 text-fluid-xs text-dark rounded hover:bg-gray-800 transition"
+        className="flex items-center gap-2 px-4 py-2 ring-1 border-0 ring-dark/10 text-fluid-xxs text-dark rounded hover:bg-gray-800 transition"
       >
         {sales_activity_year}
         <ChevronDownIcon
@@ -35,7 +35,7 @@ export default function Dropdown() {
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute mt-2 w-fit px-4 bg-white shadow-lg z-30 rounded overflow-hidden">
-          <ul className="py-1 text-dark text-fluid-xs">
+          <ul className="py-1 text-dark text-fluid-xxs">
             {getDynamicYears().map((year) => {
               return (
                 <li key={year}>

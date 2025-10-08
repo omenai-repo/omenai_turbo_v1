@@ -8,11 +8,11 @@ export default function Help() {
       </IconWrapper>
 
       <h3>Need help?</h3>
-      <p className="text-fluid-xs">
+      <p className="text-fluid-xxs">
         Feel free to react us through any of our help channels below:
       </p>
 
-      <div className="flex flex-col text-fluid-xs">
+      <div className="flex flex-col text-fluid-xxs">
         <span>
           email: <span className="text-dark font-normal">moses@omenai.net</span>
         </span>

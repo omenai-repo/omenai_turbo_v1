@@ -141,14 +141,14 @@ export default function PayNowButton({
             style="dark"
             animation="duration-500"
             trigger="hover"
-            className={`w-[400px] bg-dark text-fluid-xs text-white p-2 relative ${
+            className={`w-[400px] bg-dark text-fluid-xxs text-white p-2 relative ${
               !lock_status && "hidden"
             }`}
           >
             <button
               onClick={handleClickPayNow}
               disabled={lock_status || loading}
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
             >
               {loading ? <LoadSmall /> : "Proceed to payment"}
             </button>

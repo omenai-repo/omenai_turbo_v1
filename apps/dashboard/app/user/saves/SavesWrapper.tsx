@@ -76,7 +76,7 @@ export default function Saves() {
   return (
     <div className="pb-5">
       <>
-        <p className="text-fluid-xs font-bold my-4">
+        <p className="text-fluid-xxs font-bold my-4">
           {artwork_total} artworks:
         </p>
 

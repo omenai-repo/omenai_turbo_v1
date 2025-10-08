@@ -55,9 +55,9 @@ function Card({
 function Stat({ label, value }: { label: string; value: "yes" | "no" }) {
   return (
     <div className="flex justify-between items-center">
-      <span className="text-fluid-xs text-dark/60">{label}</span>
+      <span className="text-fluid-xxs text-dark/60">{label}</span>
       <span
-        className={`px-3 py-1 rounded text-fluid-xs font-medium ${
+        className={`px-3 py-1 rounded text-fluid-xxs font-medium ${
           value === "yes"
             ? "bg-green-100 text-green-700"
             : "bg-gray-200 text-white"
@@ -72,8 +72,8 @@ function Stat({ label, value }: { label: string; value: "yes" | "no" }) {
 function NumberStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex justify-between items-center">
-      <span className="text-fluid-xs text-dark/60">{label}</span>
-      <span className="px-3 py-1 bg-dark/10 text-dark rounded-full text-fluid-xs font-semibold">
+      <span className="text-fluid-xxs text-dark/60">{label}</span>
+      <span className="px-3 py-1 bg-dark/10 text-dark rounded-full text-fluid-xxs font-semibold">
         {value}
       </span>
     </div>
@@ -95,9 +95,9 @@ function BadgeStat({
 
   return (
     <div className="flex justify-between items-center">
-      <span className="text-fluid-xs text-dark/60">{label}</span>
+      <span className="text-fluid-xxs text-dark/60">{label}</span>
       <span
-        className={`px-3 py-1 rounded text-fluid-xs font-medium ${map[value].bg} ${map[value].text}`}
+        className={`px-3 py-1 rounded text-fluid-xxs font-medium ${map[value].bg} ${map[value].text}`}
       >
         {map[value].label}
       </span>
@@ -159,7 +159,7 @@ export default function Credentials({
         <h2 className="text-fluid-md font-bold text-dark mb-1">
           Your Credentials
         </h2>
-        <p className="text-fluid-xs text-dark/60">
+        <p className="text-fluid-xxs text-dark/60">
           A snapshot of your artistic journey and achievements
         </p>
       </div>

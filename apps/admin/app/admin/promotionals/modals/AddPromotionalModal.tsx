@@ -29,7 +29,7 @@ export function AddPromotionalModal() {
         radius="sm"
         leftSection={<Plus size={16} />}
         className="
-                  font-medium text-fluid-xs px-6 py-2.5 shadow-lg
+                  font-medium text-fluid-xxs px-6 py-2.5 shadow-lg
                   transition-all duration-300 
                   ring-1 ring-red-200/50 hover:ring-red-300/70
                   transform-gpu
@@ -157,7 +157,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
   return (
     <div className="space-y-4">
       <div>
-        <Input.Label className="text-fluid-xs font-normal" required>
+        <Input.Label className="text-fluid-xxs font-normal" required>
           Headline
         </Input.Label>
         <Input
@@ -169,7 +169,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
         />
       </div>
       <div>
-        <Input.Label className="text-fluid-xs font-normal" required>
+        <Input.Label className="text-fluid-xxs font-normal" required>
           Promotional content
         </Input.Label>
         <Input
@@ -181,7 +181,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
         />
       </div>
       <div>
-        <Input.Label className="text-fluid-xs font-normal" required>
+        <Input.Label className="text-fluid-xxs font-normal" required>
           CTA (This would be a link to the prootional resource)
         </Input.Label>
         <Input
@@ -194,7 +194,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
       </div>
 
       <div>
-        <Input.Label className="text-fluid-xs font-normal">
+        <Input.Label className="text-fluid-xxs font-normal">
           Upload promotional Image
         </Input.Label>
         <div className="flex flex-col space-y-6 w-full items-center">
@@ -213,7 +213,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
             ) : (
               <button
                 type="button"
-                className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+                className="w-full h-full border text-fluid-xxs grid place-items-center duration-300 border-dark/50 rounded outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
                 onClick={() => {
                   imagePickerRef.current?.click();
                 }}
@@ -243,7 +243,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
                     strokeWidth={1.5}
                     absoluteStrokeWidth
                   />
-                  <p className="text-red-600 text-fluid-xs">{error}</p>
+                  <p className="text-red-600 text-fluid-xxs">{error}</p>
                 </div>
               );
             })}
@@ -264,7 +264,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
           color="#0f172a"
           onClick={handlePromotionalUpload}
         >
-          <Text className="text-fluid-xs font-normal">Add promotional</Text>
+          <Text className="text-fluid-xxs font-normal">Add promotional</Text>
         </Button>
       </div>
     </div>

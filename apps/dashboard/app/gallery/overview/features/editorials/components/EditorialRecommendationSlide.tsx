@@ -29,8 +29,8 @@ export default function EditorialRecommendationSlide({
         <h4 className="text-fluid-base md:text-fluid-sm xl:text-fluid-md font-normal">
           {title}
         </h4>
-        <p className="text-fluid-xs md:text-fluid-base font-light">{author}</p>
-        <p className="text-fluid-xs md:text-fluid-base font-light">{date}</p>
+        <p className="text-fluid-xxs md:text-fluid-base font-light">{author}</p>
+        <p className="text-fluid-xxs md:text-fluid-base font-light">{date}</p>
       </div>
     </div>
   );

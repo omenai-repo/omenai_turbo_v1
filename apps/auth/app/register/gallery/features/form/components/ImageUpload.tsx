@@ -72,7 +72,7 @@ export default function ImageUpload() {
       >
         <label
           htmlFor="logo"
-          className="text-[#858585] text-fluid-xs font-light sm:text-fluid-xs"
+          className="text-[#858585] text-fluid-xxs font-light sm:text-fluid-xxs"
         >
           Upload a logo of your gallery
         </label>
@@ -92,7 +92,7 @@ export default function ImageUpload() {
           ) : (
             <button
               type="button"
-              className="w-full h-full border text-fluid-xs grid place-items-center duration-300 border-dark/50 rounded outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+              className="w-full h-full border text-fluid-xxs grid place-items-center duration-300 border-dark/50 rounded outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
               onClick={() => {
                 imagePickerRef.current?.click();
               }}
@@ -117,7 +117,7 @@ export default function ImageUpload() {
                 className="flex items-center gap-x-2"
               >
                 <MdError className="text-red-600" />
-                <p className="text-red-600 text-fluid-xs">{error}</p>
+                <p className="text-red-600 text-fluid-xxs">{error}</p>
               </div>
             );
           })}

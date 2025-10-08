@@ -40,7 +40,7 @@ export default function PageLayout() {
         <div className="flex flex-col mt-4 w-full gap-y-2">
           {/* General navigation */}
           <div className="w-full flex flex-col">
-            <h1 className="font-medium text-fluid-xs">Actions</h1>
+            <h1 className="font-medium text-fluid-xxs">Actions</h1>
             <ul className="flex flex-col w-full space-y-1">
               {navMockData.actions.map((item, index) => {
                 return (
@@ -57,7 +57,7 @@ export default function PageLayout() {
             </ul>
           </div>
           <div className="w-full flex flex-col">
-            <h1 className="font-medium text-fluid-xs">Activity</h1>
+            <h1 className="font-medium text-fluid-xxs">Activity</h1>
             <ul className="flex flex-col w-full space-y-1">
               {navMockData.activity.map((item, index) => {
                 return (
@@ -74,7 +74,7 @@ export default function PageLayout() {
             </ul>
           </div>
           <div className="w-full flex flex-col">
-            <h1 className="font-medium text-fluid-xs">Management</h1>
+            <h1 className="font-medium text-fluid-xxs">Management</h1>
             <ul className="flex flex-col w-full space-y-1">
               {navMockData.management.map((item, index) => {
                 return (
@@ -92,7 +92,7 @@ export default function PageLayout() {
           </div>
           {/* Account pages */}
           <div className="w-full flex flex-col">
-            <h1 className="font-medium text-fluid-xs">Account</h1>
+            <h1 className="font-medium text-fluid-xxs">Account</h1>
             <ul className="flex flex-col">
               {navMockData.account.map((item, index) => {
                 return (

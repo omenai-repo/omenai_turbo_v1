@@ -21,7 +21,7 @@ export default function NavbarLink({
     <>
       {disabled ? (
         <>
-          <li className="relative text-fluid-base text-dark font-normal">
+          <li className="relative text-fluid-xs text-dark font-normal">
             <p
               className="cursor-not-allowed whitespace-nowrap text-fluid-xxs"
               aria-disabled
@@ -32,11 +32,11 @@ export default function NavbarLink({
           </li>
         </>
       ) : (
-        <li className="text-fluid-base w-fit text-dark whitespace-nowrap font-normal flex flex-col group">
+        <li className="text-fluid-xs w-fit text-dark whitespace-nowrap font-normal flex flex-col group">
           <Link href={link} onClick={() => updateOpenSideNav(false)}>
             {text}
           </Link>
-          <div className="h-1 bg-dark w-0 group-hover:w-full duration-300" />
+          <div className="h-0.5 bg-dark w-0 group-hover:w-full duration-300" />
         </li>
       )}
     </>

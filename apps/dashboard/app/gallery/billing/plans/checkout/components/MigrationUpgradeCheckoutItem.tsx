@@ -78,8 +78,8 @@ export default function MigrationUpgradeCheckoutItem({
     showMinus?: boolean;
   }) => (
     <div className="flex justify-between items-center">
-      <p className="text-fluid-xs font-semibold">{label}</p>
-      <p className="text-fluid-xs font-semibold">
+      <p className="text-fluid-xxs font-semibold">{label}</p>
+      <p className="text-fluid-xxs font-semibold">
         {showMinus
           ? `-${formatPrice(value, currency)}`
           : formatPrice(value, currency)}

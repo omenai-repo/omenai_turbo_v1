@@ -53,7 +53,7 @@ export default function TransactionTable() {
                 {/* Timeline Dot */}
                 <div className="relative z-10 flex-shrink-0">
                   <div className="w-10 h-10 bg-white border-2 border-slate-300 rounded-full flex items-center justify-center">
-                    <span className="text-fluid-xs font-semibold text-slate-600">
+                    <span className="text-fluid-xxs font-semibold text-slate-600">
                       {index + 1}
                     </span>
                   </div>
@@ -63,11 +63,11 @@ export default function TransactionTable() {
                 <div className="flex-1 bg-slate-50 rounded p-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-fluid-xs font-semibold text-slate-500 mt-0.5">
+                      <p className="text-fluid-xxs font-semibold text-slate-500 mt-0.5">
                         #{transaction.trans_id}
                       </p>
                       <p
-                        className={`text-fluid-xs font-medium ${
+                        className={`text-fluid-xxs font-medium ${
                           transaction.status === "successful"
                             ? "text-green-600"
                             : transaction.status === "failed"
@@ -81,7 +81,7 @@ export default function TransactionTable() {
                             ? "Payment failed"
                             : "Payment pending"}
                       </p>
-                      <p className="text-fluid-xs text-slate-600 mt-1">
+                      <p className="text-fluid-xxs text-slate-600 mt-1">
                         {formatISODate(transaction.date)}
                       </p>
                     </div>
@@ -96,7 +96,7 @@ export default function TransactionTable() {
         ) : (
           <div className="text-center py-12">
             <NotFoundData />
-            <p className="text-fluid-xs text-slate-500 mt-2">
+            <p className="text-fluid-xxs text-slate-500 mt-2">
               No transactions found
             </p>
           </div>

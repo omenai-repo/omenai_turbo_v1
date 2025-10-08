@@ -98,7 +98,7 @@ export default function FormInput() {
   return (
     <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
       <div className="flex flex-col">
-        {/* <label htmlFor={"email"} className="text-fluid-xs text-[#858585]">
+        {/* <label htmlFor={"email"} className="text-fluid-xxs text-[#858585]">
           Email address
         </label> */}
         <input
@@ -106,13 +106,13 @@ export default function FormInput() {
           value={form.email}
           name="email"
           placeholder="Enter your email address"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xs font-medium"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
           onChange={handleChange}
           required
         />
       </div>
       <div className="flex flex-col">
-        {/* <label htmlFor={"password"} className="text-fluid-xs text-[#858585]">
+        {/* <label htmlFor={"password"} className="text-fluid-xxs text-[#858585]">
           Password
         </label> */}
         <div className="w-full relative">
@@ -121,7 +121,7 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name="password"
             placeholder="Enter your password"
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xs placeholder:font-medium text-fluid-xs font-medium"
+            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
             onChange={handleChange}
             required
           />
@@ -139,7 +139,7 @@ export default function FormInput() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
           >
             {loading ? <LoadSmall /> : "Login to your account"}{" "}
           </button>

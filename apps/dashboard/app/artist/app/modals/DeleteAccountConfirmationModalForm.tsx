@@ -67,10 +67,10 @@ export default function DeleteAccountConfirmationModalForm() {
         <div className="bg-[#FDF7EF] p-5 flex flex-col gap-3">
           <p className="font-bold flex items-center gap-x-2">
             <IoWarning className="text-fluid-md text-[#FFA500]" />
-            <span className="text-[#FFA500] text-fluid-xs">Warning</span>
+            <span className="text-[#FFA500] text-fluid-xxs">Warning</span>
           </p>
 
-          <p className="text-fluid-xs text-dark">
+          <p className="text-fluid-xxs text-dark">
             Deleting your account will permanently erase all your uploaded
             artwork and prevent you from using any of the platform&apos;s
             features.{" "}
@@ -86,7 +86,7 @@ export default function DeleteAccountConfirmationModalForm() {
           disabled={loading}
           type="button"
           onClick={handleDeleteArtistAccount}
-          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-normal"
         >
           {loading ? <LoadSmall /> : "I understand, delete this account"}
         </button>

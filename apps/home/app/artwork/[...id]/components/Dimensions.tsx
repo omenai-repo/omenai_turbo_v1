@@ -12,7 +12,7 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
 
       <div className="w-full grid grid-cols-2 gap-x-6">
         <div>
-          <div className="text-fluid-xs font-medium">
+          <div className="text-fluid-xxs font-medium">
             <ul className="w-full grid grid-cols-2 text-dark justify-center gap-y-3 py-4 font-normal">
               <div>
                 <li className=" font-normal text-fluid-xxs">Height:</li>
@@ -31,7 +31,7 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
           </div>
         </div>
         <div>
-          <div className="text-fluid-xs">
+          <div className="text-fluid-xxs">
             <ul className="w-full grid grid-cols-2 text-dark justify-center gap-y-3 py-4 font-normal">
               <div>
                 <li className=" font-normal text-fluid-xxs">Weigth:</li>
@@ -54,7 +54,7 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
   );
 }
 
-// <div className="text-fluid-xs">
+// <div className="text-fluid-xxs">
 //   <ul className=" flex flex-col text-dark/70 justify-center gap-y-3 py-4">
 //     <li className=" font-normal text-fluid-xxs">{dimensions.height}</li>
 //     <li className=" font-normal text-fluid-xxs">{dimensions.width}</li>

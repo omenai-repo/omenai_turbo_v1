@@ -18,7 +18,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       const allArtworks = await Artworkuploads.find(
         { author_id: id },
-        "artist title url art_id like_IDs pricing availability"
+        "artist title url art_id like_IDs pricing availability exclusivity_status"
       ).exec();
 
       const allArtworksCount = await Artworkuploads.countDocuments({

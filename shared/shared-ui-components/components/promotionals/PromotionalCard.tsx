@@ -47,7 +47,7 @@ export default function PromotionalCard({
 
           {/* CTA Button */}
           <Link href={cta} className="inline-block">
-            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 py-1.5  text-fluid-xs rounded border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 py-1.5  text-fluid-xxs rounded border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
               <span className="font-normal text-fluid-xxs">Explore</span>
               <IoIosArrowRoundForward className="transition-transform duration-300 group-hover/btn:translate-x-1" />
 

@@ -71,7 +71,7 @@ export default function Balances({
         <div className="flex justify-between items-end">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <p className="text-fluid-xs text-slate-400">Available Balance</p>
+              <p className="text-fluid-xxs text-slate-400">Available Balance</p>
               <button
                 onClick={() => setShowBalance(!showBalance)}
                 className="p-1 rounded transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600"
@@ -94,7 +94,7 @@ export default function Balances({
                 {showBalance ? formatPrice(available, "USD") : "••••••"}
               </h1>
               {showBalance && available > 0 && (
-                <span className="text-fluid-xs text-green-400 font-medium">
+                <span className="text-fluid-xxs text-green-400 font-medium">
                   +{((available / (available + pending)) * 100).toFixed(0)}%
                 </span>
               )}
@@ -103,7 +103,7 @@ export default function Balances({
           <div>
             <button
               onClick={toggleForm}
-              className="px-4 py-2 bg-white text-dark font-normal rounded shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-fluid-xs"
+              className="px-4 py-2 bg-white text-dark font-normal rounded shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-fluid-xxs"
             >
               <span className="flex items-center gap-2">
                 <svg
@@ -136,7 +136,7 @@ export default function Balances({
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
           <div className="space-y-3 flex-1">
             <div className="flex items-center gap-2">
-              <p className="text-fluid-xs text-slate-400">Pending Balance</p>
+              <p className="text-fluid-xxs text-slate-400">Pending Balance</p>
               <Tooltip
                 multiline
                 w={220}
@@ -166,7 +166,7 @@ export default function Balances({
             <p className="text-xs text-slate-500 uppercase tracking-wide">
               Total
             </p>
-            <p className="text-fluid-xs font-semibold mt-1">
+            <p className="text-fluid-xxs font-semibold mt-1">
               {showBalance ? formatPrice(available + pending, "USD") : "••••"}
             </p>
           </div>
@@ -174,7 +174,7 @@ export default function Balances({
             <p className="text-xs text-slate-500 uppercase tracking-wide">
               Available
             </p>
-            <p className="text-fluid-xs font-semibold mt-1 text-green-400">
+            <p className="text-fluid-xxs font-semibold mt-1 text-green-400">
               {showBalance
                 ? `${(isNaN(available / (available + pending)) ? 0 : (available / (available + pending)) * 100).toFixed(0)}%`
                 : "••"}
@@ -184,7 +184,7 @@ export default function Balances({
             <p className="text-xs text-slate-500 uppercase tracking-wide">
               Pending
             </p>
-            <p className="text-fluid-xs font-semibold mt-1 text-amber-400">
+            <p className="text-fluid-xxs font-semibold mt-1 text-amber-400">
               {showBalance
                 ? `${(isNaN(pending / (available + pending)) ? 0 : (available / (available + pending)) * 100).toFixed(0)}%`
                 : "••"}

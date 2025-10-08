@@ -5,7 +5,7 @@ import Link from "next/link";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { artMediumHistory } from "./artMediumBriefHistory";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import {decodeMediumFromUrl} from "@omenai/shared-utils/src/decodeMediumForUrl"
+import { decodeMediumFromUrl } from "@omenai/shared-utils/src/decodeMediumForUrl";
 import { ArtworkMediumTypes } from "@omenai/shared-types";
 
 type ArtMedium = keyof typeof artMediumHistory;
@@ -13,20 +13,20 @@ type ArtMedium = keyof typeof artMediumHistory;
 export default function CollectionWrapper({ id }: { id: string }) {
   const { user } = useAuth({ requiredRole: "user" });
 
-const pageTitleParser = (): ArtworkMediumTypes | null => {
-  const decodedMedium = decodeMediumFromUrl(id);
-  
-  if (!decodedMedium) {
-    console.warn(`No matching medium found for slug: ${id}`);
-    return null;
-  }
-  
-  console.log('Decoded medium:', decodedMedium);
-  return decodedMedium;
-};
-console.log(pageTitleParser())
+  const pageTitleParser = (): ArtworkMediumTypes | null => {
+    const decodedMedium = decodeMediumFromUrl(id);
 
-  let page_title = pageTitleParser() as ArtworkMediumTypes
+    if (!decodedMedium) {
+      console.warn(`No matching medium found for slug: ${id}`);
+      return null;
+    }
+
+    console.log("Decoded medium:", decodedMedium);
+    return decodedMedium;
+  };
+  console.log(pageTitleParser());
+
+  let page_title = pageTitleParser() as ArtworkMediumTypes;
 
   return (
     <main className="">
@@ -55,7 +55,7 @@ console.log(pageTitleParser())
           </div>
           {/* History */}
           <div className="my-4 lg:w-1/2 w-full">
-            <p className="text-fluid-xs font-medium">
+            <p className="text-fluid-xxs font-medium">
               {artMediumHistory[page_title]}
             </p>
           </div>

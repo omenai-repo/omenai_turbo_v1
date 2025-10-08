@@ -71,7 +71,7 @@ export default function ArtistInfo({
 
               {/* Bio */}
               <div className="space-y-4">
-                <p className="text-[#0f172a] leading-relaxed text-fluid-xs">
+                <p className="text-[#0f172a] leading-relaxed text-fluid-xxs">
                   {displayText}
                   {isTruncated && (
                     <button

@@ -144,7 +144,7 @@ export default function TransactionTable() {
                 {/* Transaction Info */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-fluid-xs text-dark">
+                    <h3 className="font-medium text-fluid-xxs text-dark">
                       Withdrawal
                     </h3>
                     <span
@@ -153,7 +153,7 @@ export default function TransactionTable() {
                       {statusConfig.label}
                     </span>
                   </div>
-                  <p className="text-fluid-xs text-slate-500">
+                  <p className="text-fluid-xxs text-slate-500">
                     {formatISODate(transaction.createdAt)}
                   </p>
                 </div>
@@ -247,11 +247,11 @@ export default function TransactionTable() {
                   </div>
                   <div className="">
                     <p
-                      className={`font-medium text-fluid-xs ${statusConfig.color}`}
+                      className={`font-medium text-fluid-xxs ${statusConfig.color}`}
                     >
                       {transaction.trans_status}
                     </p>
-                    <p className="text-fluid-xs text-slate-600">
+                    <p className="text-fluid-xxs text-slate-600">
                       {statusConfig.message}
                     </p>
                   </div>
@@ -304,7 +304,10 @@ export default function TransactionTable() {
                   Transaction History
                 </h2>
                 <span className="text-sm text-slate-500">
-                  <Link href="" className="text-fluid-xs underline font-medium">
+                  <Link
+                    href=""
+                    className="text-fluid-xxs underline font-medium"
+                  >
                     See all
                   </Link>
                 </span>

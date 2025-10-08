@@ -53,7 +53,7 @@ export default function BalanceBox({
 
         {/* Available Balance */}
         <div>
-          <p className="text-fluid-xs font-medium text-gray-600 mb-2">
+          <p className="text-fluid-xxs font-medium text-gray-600 mb-2">
             Balance on Stripe
           </p>
           <h1 className="text-3xl font-bold text-gray-900">
@@ -63,7 +63,7 @@ export default function BalanceBox({
 
         {/* Pending Balance */}
         <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded">
-          <p className="text-fluid-xs text-amber-800">
+          <p className="text-fluid-xxs text-amber-800">
             Balance on stripe is automatically credited to your bank account.
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function BalanceBox({
           <button
             onClick={generateLoginLink}
             disabled={generatingLoginLink}
-            className="w-full h-12 bg-gray-900 text-white text-fluid-xs font-semibold rounded transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
+            className="w-full h-12 bg-gray-900 text-white text-fluid-xxs font-semibold rounded transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
           >
             {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
           </button>

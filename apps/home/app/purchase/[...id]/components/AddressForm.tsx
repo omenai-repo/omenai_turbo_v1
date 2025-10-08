@@ -148,7 +148,7 @@ export default function AddressForm({
               </svg>
               Shipping Address
             </h1>
-            <p className="text-fluid-xs text-slate-600 mt-1">
+            <p className="text-fluid-xxs text-slate-600 mt-1">
               Please confirm your delivery details
             </p>
           </div>
@@ -258,7 +258,7 @@ export default function AddressForm({
               <button
                 disabled={loading}
                 type="submit"
-                className="px-4 py-2 w-fit grid place-items-center bg-dark text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:bg-dark/30 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 min-w-[180px] text-fluid-xs"
+                className="px-4 py-2 w-fit grid place-items-center bg-dark text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:bg-dark/30 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 min-w-[180px] text-fluid-xxs"
               >
                 {!loading ? (
                   <span className="flex items-center justify-center gap-2">

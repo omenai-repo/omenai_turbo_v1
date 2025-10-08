@@ -90,7 +90,7 @@ export default function AccountInformation({ profile }: any) {
           <h2 className="text-fluid-base font-medium text-dark mb-1">
             {user.name}
           </h2>
-          <p className="text-fluid-xs text-dark/50">
+          <p className="text-fluid-xxs text-dark/50">
             Manage your professional information and public presence
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function AccountInformation({ profile }: any) {
       <div className="space-y-6">
         {/* Artist Name */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Artist Name
           </label>
           <input
@@ -108,7 +108,7 @@ export default function AccountInformation({ profile }: any) {
             disabled
             value={data.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0
                      transition-all duration-300"
             placeholder="Enter your artist name"
@@ -117,7 +117,7 @@ export default function AccountInformation({ profile }: any) {
 
         {/* Email */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Email Address
           </label>
           <input
@@ -125,7 +125,7 @@ export default function AccountInformation({ profile }: any) {
             disabled
             value={profile.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0 
                      transition-all duration-300"
             placeholder="your@email.com"
@@ -134,17 +134,17 @@ export default function AccountInformation({ profile }: any) {
 
         {/* Address */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Artist Address
           </label>
           <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded">
             <div className="flex items-start space-x-3">
               <MapPin className="w-5 h-5 text-dark/50 mt-1" />
               <div>
-                <p className="text-fluid-xs text-dark">
+                <p className="text-fluid-xxs text-dark">
                   {profile.address.address_line}
                 </p>
-                <p className="text-fluid-xs text-dark/50">
+                <p className="text-fluid-xxs text-dark/50">
                   {profile.address.city}, {profile.address.state}, {}
                   {profile.address.zip}
                 </p>
@@ -162,14 +162,14 @@ export default function AccountInformation({ profile }: any) {
 
         {/* Bio */}
         <div className="group">
-          <label className="block text-fluid-xs font-normal text-dark/50 mb-2">
+          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Artist Biography
           </label>
           <textarea
             value={data.bio}
             onChange={(e) => handleInputChange("bio", e.target.value)}
             rows={4}
-            className="w-full px-4 py-3 bg-gray-800 border border-line rounded text-fluid-xs text-dark 
+            className="w-full px-4 py-3 bg-gray-800 border border-line rounded text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0 
                      transition-all duration-300 resize-none"
             placeholder="Tell us about your artistic journey..."

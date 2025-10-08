@@ -29,7 +29,7 @@ export default function ArtworkListing({
 
   return (
     <div className="w-full my-3">
-      <p className="text-fluid-xs font-bold mb-4">
+      <p className="text-fluid-xxs font-bold mb-4">
         {artworks.length} artworks:
       </p>
 

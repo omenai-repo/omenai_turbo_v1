@@ -39,11 +39,11 @@ export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
           {/* State information */}
           <div className="flex flex-col">
             <div className="flex items-center">
-              <h2 className="text-fluid-xs font-semibold text-gray-900 transition-colors duration-200 group-hover:text-gray-700 dark:text-gray-100 dark:group-hover:text-white">
+              <h2 className="text-fluid-xxs font-semibold text-gray-900 transition-colors duration-200 group-hover:text-gray-700 dark:text-gray-100 dark:group-hover:text-white">
                 {state}
               </h2>
             </div>
-            <p className="text-fluid-xs font-medium text-gray-500 dark:text-gray-400">
+            <p className="text-fluid-xxs font-medium text-gray-500 dark:text-gray-400">
               {code}
             </p>
           </div>

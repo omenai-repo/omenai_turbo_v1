@@ -57,7 +57,7 @@ export default appRouterSsrErrorHandler(
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => reset()}
-                className="px-4 py-2 text-fluid-xs w-full bg-dark text-white font-normal rounded shadow-sm transform transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
+                className="px-4 py-2 text-fluid-xxs w-full bg-dark text-white font-normal rounded shadow-sm transform transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
               >
                 Try again
               </button>

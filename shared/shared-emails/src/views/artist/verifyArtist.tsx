@@ -32,19 +32,19 @@ const ArtistVerificationMail = (artist_name: string, token: string) => {
             <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
               Welcome on board to <strong>Omenai for Artists.</strong>
             </Heading>
-            {/* <Text className="text-black text-fluid-xs leading-[24px]"></Text> */}
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            {/* <Text className="text-black text-fluid-xxs leading-[24px]"></Text> */}
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               We, at <strong>Omenai</strong>, are thrilled to have you on board
               and eagerly await the beginning of your journey with us
             </Text>
-            <Text className="text-black text-fluid-xs leading-[24px]">
+            <Text className="text-black text-fluid-xxs leading-[24px]">
               Your email verification token is located below. Enter this code
               into the designated input field on the verification page. Please
               be aware that the validity of this token will expire in{" "}
               <strong>10 minutes.</strong>
             </Text>
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-fluid-xs font-normal leading-[24px]">
+              <Text className="text-black text-fluid-xxs font-normal leading-[24px]">
                 <strong>{token}</strong>
               </Text>
             </Section>

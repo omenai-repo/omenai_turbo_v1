@@ -32,7 +32,7 @@ export default function LatestArtworkWrapper({
       <div className="flex md:flex-row flex-col gap-4 mb-5">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+            <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
               Latest Artworks
             </p>
 
@@ -45,10 +45,10 @@ export default function LatestArtworkWrapper({
             <p className="text-fluid-base font-semibold">
               Fresh Off the Easel:
             </p>
-            <p className="justify-self-end leading-snug font-normal text-fluid-xs">
+            <p className="justify-self-end leading-snug font-normal text-fluid-xxs">
               Explore the newest
             </p>
-            <p className="justify-self-end leading-snug font-normal text-fluid-xs">
+            <p className="justify-self-end leading-snug font-normal text-fluid-xxs">
               masterpieces, just for you
             </p>
           </div>

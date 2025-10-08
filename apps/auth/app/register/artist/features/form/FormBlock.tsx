@@ -14,7 +14,7 @@ export default function FormBlock() {
         className="w-full h-full flex items-center gap-x-8"
       >
         <div className="flex flex-col space-y-4 w-full ">
-          <div className="text-fluid-xs ">
+          <div className="text-fluid-xxs ">
             <GalleryLogo />
           </div>
           <div className="flex flex-col space-y-6 w-full">
@@ -22,7 +22,7 @@ export default function FormBlock() {
               <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
                 Create an Artist Account
               </h1>
-              <p className="text-fluid-xs sm:text-fluid-xs">
+              <p className="text-fluid-xxs sm:text-fluid-xxs">
                 Please fill your information below
               </p>
             </div>

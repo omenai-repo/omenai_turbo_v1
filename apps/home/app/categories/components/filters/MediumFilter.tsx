@@ -37,7 +37,7 @@ export default function MediumFilter({
         className="ring-1 whitespace-nowrap rounded cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
       >
         <p className="flex gap-x-2 items-center">
-          <span className="text-fluid-xs font-light">Medium</span>
+          <span className="text-fluid-xxs font-light">Medium</span>
           {filterOptions.medium.length > 0 && (
             <span className="relative h-2 w-2 p-2.5 grid place-items-center rounded bg-dark/10">
               <span className="absolute translate-x-[0%] translate-y-[0%]">

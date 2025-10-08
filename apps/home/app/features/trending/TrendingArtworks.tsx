@@ -63,7 +63,7 @@ export default function TrendingArtworks({
           href={"/categories/trending-artworks"}
           className="group absolute bottom-16"
         >
-          <button className="flex items-center gap-x-2 text-fluid-xs shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded h-[35px]">
+          <button className="flex items-center gap-x-2 text-fluid-xxs shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded h-[35px]">
             See more
             <IoIosArrowRoundForward />
           </button>

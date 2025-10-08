@@ -179,7 +179,7 @@ export default function NotFound() {
               clipRule="evenodd"
             ></path>
           </svg>
-          <span className="text-fluid-xs">Return Home</span>
+          <span className="text-fluid-xxs">Return Home</span>
         </Link>
       </div>
     </div>

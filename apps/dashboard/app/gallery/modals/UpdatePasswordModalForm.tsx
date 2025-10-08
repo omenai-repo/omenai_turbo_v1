@@ -146,7 +146,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Enter your new password"
-                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xs"
+                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xxs"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -177,7 +177,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Confirm your new password"
-                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xs"
+                  className="w-full px-4 py-3 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xxs"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {info.confirmPassword &&
@@ -227,7 +227,7 @@ export default function UpdatePasswordModalForm() {
                 type="text"
                 required
                 placeholder="Enter 6-digit code"
-                className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 placeholder:font-normal placeholder:text-fluid-xs focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors font-mono tracking-wider"
+                className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 placeholder:font-normal placeholder:text-fluid-xxs focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors font-mono tracking-wider"
               />
               <button
                 type="button"
@@ -239,7 +239,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-3 bg-dark text-white font-normal rounded hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-dark focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xs"
+                className="px-4 py-3 bg-dark text-white font-normal rounded hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:text-dark focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>
@@ -276,7 +276,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-slate-900 text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
+            className="w-full py-3 px-6 bg-slate-900 text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xxs"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

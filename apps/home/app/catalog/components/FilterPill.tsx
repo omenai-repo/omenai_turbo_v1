@@ -34,7 +34,7 @@ export default function FilterPill({ filter }: { filter: string }) {
       onClick={handleRemoveSingleFilter}
       className="px-3 py-1 bg-[#f7f7f7] text-fluid-xxs font-normal text-dark flex items-center gap-x-2 rounded"
     >
-      <span className="text-fluid-xs">{filter}</span>
+      <span className="text-fluid-xxs">{filter}</span>
       <MdClear className="cursor-pointer" />
     </div>
   );

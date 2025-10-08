@@ -34,7 +34,7 @@ export default function TrendingArtworkWrapper({
       <div className="flex md:flex-row flex-col gap-4 mb-5">
         <div className="flex justify-between items-center w-full my-5">
           <div>
-            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+            <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
               Trending artworks
             </p>
             <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
@@ -46,10 +46,10 @@ export default function TrendingArtworkWrapper({
             <p className="text-fluid-base font-semibold">
               Spotlight on Today&apos;s Must-Have Pieces:
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               On the Rise: Discover the Art
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               Everyone&apos;s Talking About
             </p>
           </div>

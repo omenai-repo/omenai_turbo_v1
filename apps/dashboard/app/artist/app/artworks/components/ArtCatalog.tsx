@@ -9,6 +9,7 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { ArtworkMediumTypes, ArtworkSchemaTypes } from "@omenai/shared-types";
 
 export default function ArtCatalog() {
   const { user } = useAuth({ requiredRole: "artist" });
@@ -16,7 +17,7 @@ export default function ArtCatalog() {
   const { width } = useWindowSize();
 
   const { data: artworks, isLoading } = useQuery({
-    queryKey: ["fetch_artworks_by_id"],
+    queryKey: ["fetch_artworks_by_id", user.artist_id],
     queryFn: async () => {
       const artworks = await getAllArtworksById(user.artist_id as string);
       if (artworks!.isOk) {
@@ -26,6 +27,8 @@ export default function ArtCatalog() {
       }
     },
     refetchOnWindowFocus: false,
+
+    enabled: !!user.artist_id,
   });
 
   if (isLoading) {
@@ -50,7 +53,7 @@ export default function ArtCatalog() {
             {arts.map((artworks: any[], index) => {
               return (
                 <div className="flex-1 gap-2 space-y-6" key={index}>
-                  {artworks.map((art: any) => {
+                  {artworks.map((art: ArtworkSchemaTypes) => {
                     return (
                       <ArtworkCard
                         key={art.art_id}
@@ -65,7 +68,15 @@ export default function ArtCatalog() {
                         availability={art.availability}
                         isDashboard={true}
                         dashboard_type="artist"
-                        medium={art.medium}
+                        medium={art.medium as ArtworkMediumTypes}
+                        countdown={
+                          art.exclusivity_status?.exclusivity_type ===
+                            "exclusive" &&
+                          art.exclusivity_status?.exclusivity_end_date
+                            ? (art.exclusivity_status
+                                .exclusivity_end_date as Date)
+                            : null
+                        }
                       />
                     );
                   })}

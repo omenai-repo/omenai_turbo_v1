@@ -177,11 +177,11 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                 </h1>
 
                 <div className="flex flex-wrap gap-3 mb-4">
-                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded-full text-fluid-xs font-normal border border-blue-200">
+                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded-full text-fluid-xxs font-normal border border-blue-200">
                     <Palette size={14} />
                     {artist.art_style}
                   </div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-full text-fluid-xs font-normal border border-green-200">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-full text-fluid-xxs font-normal border border-green-200">
                     <MapPin size={14} />
                     {artist.address.state}, {artist.address.country}
                   </div>
@@ -195,7 +195,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleFileDownload}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-gray-900 text-white hover:text-dark rounded font-medium hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-gray-900 text-white hover:text-dark rounded font-medium hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     <Download size={14} />
                     Download Resume
@@ -203,7 +203,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     disabled={loading}
                     onClick={() => handleRequestAction("accept")}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -215,7 +215,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     disabled={loading}
                     onClick={() => handleRequestAction("reject")}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xs py-2 bg-red-600 text-white rounded font-medium hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-red-600 text-white rounded font-medium hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -244,11 +244,11 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Algorithm Recommendation */}
               <div className="bg-gray-50 rounded p-6 border border-gray-200">
-                <h3 className="text-fluid-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
+                <h3 className="text-fluid-xxs font-semibold text-gray-600 uppercase tracking-wider mb-3">
                   Algorithm Recommendation
                 </h3>
                 <div
-                  className={`inline-flex items-center px-4 py-2 ${getCategoryColor(request?.categorization.artist_categorization)} text-white rounded text-fluid-xs font-medium shadow-md`}
+                  className={`inline-flex items-center px-4 py-2 ${getCategoryColor(request?.categorization.artist_categorization)} text-white rounded text-fluid-xxs font-medium shadow-md`}
                 >
                   {request?.categorization.artist_categorization}
                 </div>
@@ -256,11 +256,11 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
 
               {/* Current Selection */}
               <div className="bg-blue-50 rounded p-6 border border-blue-200">
-                <h3 className="text-fluid-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
+                <h3 className="text-fluid-xxs font-semibold text-blue-600 uppercase tracking-wider mb-3">
                   Selected Category
                 </h3>
                 <div
-                  className={`inline-flex items-center px-4 py-2 text-fluid-xs ${getCategoryColor(recommendation)} text-white rounded font-medium shadow-md`}
+                  className={`inline-flex items-center px-4 py-2 text-fluid-xxs ${getCategoryColor(recommendation)} text-white rounded font-medium shadow-md`}
                 >
                   {recommendation}
                 </div>
@@ -277,7 +277,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <button
                     key={category}
                     onClick={() => setRecommedation(category as ArtistCategory)}
-                    className={`relative p-3 rounded text-fluid-xs font-medium transition-all duration-200 ${
+                    className={`relative p-3 rounded text-fluid-xxs font-medium transition-all duration-200 ${
                       recommendation === category
                         ? `${getCategoryColor(category)} text-white shadow-lg scale-105`
                         : `${getCategoryBgColor(category as ArtistCategory)} hover:scale-102 border`
@@ -302,10 +302,10 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                     size={20}
                   />
                   <div>
-                    <p className="text-amber-800 font-medium text-fluid-xs">
+                    <p className="text-amber-800 font-medium text-fluid-xxs">
                       Category will be updated
                     </p>
-                    <p className="text-amber-700 text-fluid-xs">
+                    <p className="text-amber-700 text-fluid-xxs">
                       The artist will be categorized as{" "}
                       <strong>{recommendation}</strong> instead of the
                       recommended{" "}

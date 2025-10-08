@@ -9,7 +9,7 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
     <div className="my-8 w-full">
       {/* Header Section */}
       <div className="py-5 px-8 bg-slate-50 w-full rounded border border-slate-100">
-        <h3 className="text-slate-800 font-normal text-fluid-xs tracking-wide">
+        <h3 className="text-slate-800 font-normal text-fluid-xxs tracking-wide">
           Additional details about this artwork
         </h3>
       </div>
@@ -20,12 +20,12 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
           {/* Materials */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">
             <div className="col-span-5 md:col-span-4">
-              <p className="font-normal text-slate-700 text-fluid-xs">
+              <p className="font-normal text-slate-700 text-fluid-xxs">
                 Materials
               </p>
             </div>
             <div className="col-span-7 md:col-span-8">
-              <p className="text-slate-900 text-fluid-xs font-normal">
+              <p className="text-slate-900 text-fluid-xxs font-normal">
                 {data.materials}
               </p>
             </div>
@@ -34,12 +34,12 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
           {/* Description */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">
             <div className="col-span-5 md:col-span-4">
-              <p className="font-normal text-slate-700 text-fluid-xs">
+              <p className="font-normal text-slate-700 text-fluid-xxs">
                 Description
               </p>
             </div>
             <div className="col-span-7 md:col-span-8">
-              <p className="text-slate-900 text-fluid-xs font-normal leading-relaxed">
+              <p className="text-slate-900 text-fluid-xxs font-normal leading-relaxed">
                 {data.artwork_description || "N/A"}
               </p>
             </div>
@@ -48,12 +48,12 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
           {/* Packaging */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">
             <div className="col-span-5 md:col-span-4">
-              <p className="font-normal text-slate-700 text-fluid-xs">
+              <p className="font-normal text-slate-700 text-fluid-xxs">
                 Artwork Packaging
               </p>
             </div>
             <div className="col-span-7 md:col-span-8">
-              <p className="text-slate-900 text-fluid-xs font-normal">
+              <p className="text-slate-900 text-fluid-xxs font-normal">
                 {data.framing}
               </p>
             </div>
@@ -62,12 +62,12 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
           {/* Signature */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">
             <div className="col-span-5 md:col-span-4">
-              <p className="font-normal text-slate-700 text-fluid-xs">
+              <p className="font-normal text-slate-700 text-fluid-xxs">
                 Signature
               </p>
             </div>
             <div className="col-span-7 md:col-span-8">
-              <p className="text-slate-900 text-fluid-xs font-normal">
+              <p className="text-slate-900 text-fluid-xxs font-normal">
                 {data.signature}
               </p>
             </div>
@@ -76,14 +76,14 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
           {/* Certificate */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">
             <div className="col-span-5 md:col-span-4">
-              <p className="font-normal text-slate-700 text-fluid-xs">
+              <p className="font-normal text-slate-700 text-fluid-xxs">
                 Certificate of Authenticity
               </p>
             </div>
             <div className="col-span-7 md:col-span-8">
-              <p className="text-slate-900 text-fluid-xs font-normal">
+              <p className="text-slate-900 text-fluid-xxs font-normal">
                 {data.certificate_of_authenticity === "Yes"
-                  ? "Included (Issued by Gallery)"
+                  ? "Included"
                   : "Not available"}
               </p>
             </div>
@@ -92,10 +92,10 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
           {/* Year */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">
             <div className="col-span-5 md:col-span-4">
-              <p className="font-normal text-slate-700 text-fluid-xs">Year</p>
+              <p className="font-normal text-slate-700 text-fluid-xxs">Year</p>
             </div>
             <div className="col-span-7 md:col-span-8">
-              <p className="text-slate-900 text-fluid-xs font-normal">
+              <p className="text-slate-900 text-fluid-xxs font-normal">
                 {data.year}
               </p>
             </div>

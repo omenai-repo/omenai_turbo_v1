@@ -79,7 +79,7 @@ function Pagination<T extends any[]>({
         {/* Prev */}
         <li>
           <button
-            className={`${width > 380 && "px-3 py-1 disabled:bg-dark/10 disabled:text-dark/50 rounded text-fluid-xs text-white bg-dark"} ${
+            className={`${width > 380 && "px-3 py-1 disabled:bg-dark/10 disabled:text-dark/50 rounded text-fluid-xxs text-white bg-dark"} ${
               currentPage === 1 ? "text-dark cursor-not-allowed" : "text-dark"
             }`}
             disabled={currentPage === 1}
@@ -114,7 +114,7 @@ function Pagination<T extends any[]>({
         {/* Next */}
         <li>
           <button
-            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-1 rounded text-white text-fluid-xs bg-dark"} ${
+            className={`${width > 380 && " disabled:bg-dark/10 disabled:text-dark/50 px-3 py-1 rounded text-white text-fluid-xxs bg-dark"} ${
               currentPage === total
                 ? "text-dark cursor-not-allowed"
                 : "text-dark"

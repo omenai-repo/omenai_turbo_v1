@@ -64,14 +64,14 @@ export default function ArtistRequest({
 
             <div className="flex flex-col">
               <div className="flex gap-x-2 items-center">
-                <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300flex items-center gap-x-2">
+                <h4 className="text-fluid-xxs font-medium text-gray-900 transition-colors duration-300flex items-center gap-x-2">
                   {artist.name}
                 </h4>
                 {/* Status badge */}
                 <div className="flex items-center">
                   <span
                     className={`
-                  inline-flex items-center rounded px-2 text-fluid-xs font-medium capitalize
+                  inline-flex items-center rounded px-2 text-fluid-xxs font-medium capitalize
                   ${currentStyle.badgeStyle}
                   transition-all duration-300 group-hover:shadow-sm
                 `}
@@ -84,9 +84,9 @@ export default function ArtistRequest({
                 </div>
               </div>
 
-              <div className="flex items-center gap-x-1.5 text-fluid-xs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
                 <Mail size={14} />
-                <span className="font-medium text-fluid-xs">
+                <span className="font-medium text-fluid-xxs">
                   {artist.email}
                 </span>
               </div>
@@ -103,7 +103,7 @@ export default function ArtistRequest({
                 radius="sm"
                 leftSection={<Shield size={16} />}
                 className="
-                  font-medium text-fluid-xs px-6 py-2.5 shadow-lg
+                  font-medium text-fluid-xxs px-6 py-2.5 shadow-lg
                   transition-all duration-300 
                   ring-1 ring-red-200/50 hover:ring-red-300/70
                   transform-gpu
@@ -130,7 +130,7 @@ export default function ArtistRequest({
                   radius="sm"
                   leftSection={<Eye size={16} />}
                   className="
-                    font-medium text-fluid-xs px-6 py-2.5 shadow-lg
+                    font-medium text-fluid-xxs px-6 py-2.5 shadow-lg
                     transition-all duration-300 
                     ring-1 ring-blue-200/50 hover:ring-blue-300/70
                     transform-gpu

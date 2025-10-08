@@ -130,7 +130,7 @@ export default function ProvideOrderRejectionModalForm() {
                   onChange={(e) => setChecked(e.target.checked)}
                   className="w-5 h-5 accent-red-600 cursor-pointer"
                 />
-                <span className="text-fluid-xs text-dark">
+                <span className="text-fluid-xxs text-dark">
                   Artwork has been sold off platform
                 </span>
               </label>
@@ -145,7 +145,7 @@ export default function ProvideOrderRejectionModalForm() {
               <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
                 <AlertTriangle className="text-red-600 w-5 h-5 mt-0.5 flex-shrink-0" />
                 {/* TODO: Add link to terms of use here */}
-                <p className="text-fluid-xs text-red-600 leading-relaxed">
+                <p className="text-fluid-xxs text-red-600 leading-relaxed">
                   This artwork is still subject to Omenai&apos;s 90-day
                   exclusivity policy. In accordance with our Terms of Use, a 10%
                   penalty fee will be deducted from your next successful sale on
@@ -159,7 +159,7 @@ export default function ProvideOrderRejectionModalForm() {
             <div className="relative w-full h-auto my-2 space-y-2">
               <label
                 htmlFor="shipping"
-                className="text-fluid-xs text-dark mb-2"
+                className="text-fluid-xxs text-dark mb-2"
               >
                 Provide a reason for declining order request
               </label>
@@ -169,7 +169,7 @@ export default function ProvideOrderRejectionModalForm() {
                 required
                 rows={3}
                 placeholder="e.g Artwork has been sold"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xs placeholder:text-fluid-xxs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xxs placeholder:text-fluid-xxs"
               />
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function ProvideOrderRejectionModalForm() {
           <button
             disabled={!checked || loading}
             type="submit"
-            className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xs font-normal transition-all duration-200 ease-in-out
+            className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xxs font-normal transition-all duration-200 ease-in-out
               ${
                 checked && !loading
                   ? "bg-red-600 hover:bg-red-500 text-white"

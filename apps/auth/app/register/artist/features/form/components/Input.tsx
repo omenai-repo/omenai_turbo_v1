@@ -77,7 +77,7 @@ export default function Input({
           {/* Label */}
           <label
             htmlFor={labelText}
-            className="block text-fluid-xs font-normal text-gray-700"
+            className="block text-fluid-xxs font-normal text-gray-700"
           >
             {label}
           </label>
@@ -91,7 +91,7 @@ export default function Input({
                 bg-white
                 border-2 border-dark/20
                 rounded
-                text-fluid-xs text-dark
+                text-fluid-xxs text-dark
                 placeholder:text-dark/40
                 transition-all duration-200 ease-in-out
                 hover:border-dark/30
@@ -154,7 +154,7 @@ export default function Input({
                   className="flex items-center gap-2 text-red-600"
                 >
                   <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-                  <p className="text-fluid-xs">{error}</p>
+                  <p className="text-fluid-xxs">{error}</p>
                 </div>
               ))}
             </div>

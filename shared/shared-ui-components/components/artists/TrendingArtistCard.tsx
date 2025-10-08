@@ -53,10 +53,10 @@ export function TrendingArtistCard({
               {artist}
             </h3>
             <div className="flex items-center justify-between">
-              <p className="text-fluid-xs text-dark">
+              <p className="text-fluid-xxs text-dark">
                 {country} • Born {birthyear}
               </p>
-              <span className="text-fluid-xs text-dark">{likes} likes</span>
+              <span className="text-fluid-xxs text-dark">{likes} likes</span>
             </div>
           </div>
         </article>

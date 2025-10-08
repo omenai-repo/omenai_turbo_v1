@@ -25,7 +25,7 @@ export default function TrendingArtistWrapper() {
       <div className="flex md:flex-row flex-col gap-4 mb-4">
         <div className="flex justify-between items-center w-full my-4">
           <div>
-            <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+            <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
               Trending Artists
             </p>
             <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
@@ -37,10 +37,10 @@ export default function TrendingArtistWrapper() {
             <p className="text-fluid-base font-semibold">
               Omenai's Hot Picks: Unveiling Trending Artists
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               A world of the talented artists
             </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
               setting new trends and inspiring conversations
             </p>
           </div>

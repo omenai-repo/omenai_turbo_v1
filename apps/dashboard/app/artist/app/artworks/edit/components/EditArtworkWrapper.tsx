@@ -179,7 +179,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor={"currency"}
-                className="text-dark font-normal text-fluid-xs"
+                className="text-dark font-normal text-fluid-xxs"
               >
                 Currency
               </label>
@@ -187,7 +187,7 @@ export default function EditArtworkWrapper({
                 onChange={handleChange}
                 name="currency"
                 required={true}
-                className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xs focus:ring-dark px-6 py-2 sm:py-3 rounded "
+                className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded "
               >
                 <option value="">Select</option>
                 <>
@@ -196,7 +196,7 @@ export default function EditArtworkWrapper({
                       <option
                         key={item.code}
                         value={item.code}
-                        className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
+                        className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
                       >
                         {item.name}
                       </option>
@@ -210,7 +210,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col w-full">
               <label
                 htmlFor={"price"}
-                className="text-[#858585] font-normal text-fluid-xs"
+                className="text-[#858585] font-normal text-fluid-xxs"
               >
                 Price (Enter price in your preferred currency)
               </label>
@@ -222,11 +222,11 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xs"
+                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs"
               />
             </div>
 
-            <div className="w-full text-fluid-xs my-4">
+            <div className="w-full text-fluid-xxs my-4">
               {data.currency !== "" &&
                 data.price !== "" &&
                 data.usd_price !== "" && (
@@ -239,7 +239,7 @@ export default function EditArtworkWrapper({
                   </span>
                 )}
 
-              <p className="font-semibold text-fluid-xs mt-1 text-red-600">
+              <p className="font-semibold text-fluid-xxs mt-1 text-red-600">
                 Please note: To ensure consistent pricing across the platform,
                 all uploaded prices will be displayed in US Dollar equivalents.
               </p>
@@ -249,7 +249,7 @@ export default function EditArtworkWrapper({
           <div className="flex flex-col gap-1">
             <label
               htmlFor={"shouldShowPrice"}
-              className="text-dark font-normal text-fluid-xs"
+              className="text-dark font-normal text-fluid-xxs"
             >
               Display price value
             </label>
@@ -257,18 +257,18 @@ export default function EditArtworkWrapper({
               onChange={handleChange}
               name="shouldShowPrice"
               required={true}
-              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xs focus:ring-dark px-6 py-2 sm:py-3 rounded "
+              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded "
             >
               <option value="">Select</option>
               <option
                 value="Yes"
-                className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
+                className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
               >
                 Yes
               </option>
               <option
                 value="No"
-                className="px-3 py-5 my-5 font-normal text-fluid-xs text-dark"
+                className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
               >
                 No
               </option>
@@ -279,7 +279,7 @@ export default function EditArtworkWrapper({
             <button
               disabled={loading}
               type="submit"
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
             >
               {loading ? <LoadSmall /> : " Update pricing details"}
             </button>
@@ -290,7 +290,7 @@ export default function EditArtworkWrapper({
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-normal"
             >
               {deleteLoading ? <LoadSmall /> : " Delete ths artwork"}
             </button>

@@ -96,7 +96,7 @@ export default function FormInput() {
   return (
     <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
       <div className="flex flex-col">
-        {/* <label htmlFor={"email"} className="text-fluid-xs text-[#858585]">
+        {/* <label htmlFor={"email"} className="text-fluid-xxs text-[#858585]">
           Email address
         </label> */}
         <input
@@ -104,13 +104,13 @@ export default function FormInput() {
           value={form.email}
           name="email"
           placeholder="Enter your email address"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xs placeholder:text-fluid-xs placeholder:text-dark/40 placeholder:font-medium font-medium"
+          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xxs placeholder:text-fluid-xxs placeholder:text-dark/40 placeholder:font-medium font-medium"
           onChange={handleChange}
           required
         />
       </div>
       <div className="flex flex-col">
-        {/* <label htmlFor={"password"} className="text-fluid-xs text-[#858585]">
+        {/* <label htmlFor={"password"} className="text-fluid-xxs text-[#858585]">
           Password
         </label> */}
         <div className="w-full relative">
@@ -119,7 +119,7 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name="password"
             placeholder="Enter your password"
-            className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xs placeholder:text-fluid-xs placeholder:text-dark/40 placeholder:font-medium font-medium"
+            className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xxs placeholder:text-fluid-xxs placeholder:text-dark/40 placeholder:font-medium font-medium"
             onChange={handleChange}
             required
           />

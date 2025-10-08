@@ -48,7 +48,7 @@ export default function ShipmentDetails({
               <p className="text-fluid-base text-gray-600 mb-1 font-normal">
                 Tracking ID
               </p>
-              <p className="text-fluid-xs md:text-fluid-base font-medium text-[#0f172a] break-all">
+              <p className="text-fluid-xxs md:text-fluid-base font-medium text-[#0f172a] break-all">
                 {trackingId}
               </p>
             </div>
@@ -60,10 +60,10 @@ export default function ShipmentDetails({
               <Truck className="w-4 h-4  text-white" />
             </div>
             <div className="min-w-0">
-              <p className="text-fluid-xs md:text-fluid-base text-gray-600 mb-1 font-normal">
+              <p className="text-fluid-xxs md:text-fluid-base text-gray-600 mb-1 font-normal">
                 Service Type
               </p>
-              <p className="text-fluid-xs font-medium text-[#0f172a] break-words">
+              <p className="text-fluid-xxs font-medium text-[#0f172a] break-words">
                 {service}
               </p>
             </div>
@@ -75,10 +75,10 @@ export default function ShipmentDetails({
               <Clock className="w-4 h-4  text-white" />
             </div>
             <div className="min-w-0">
-              <p className="text-fluid-xs md:text-fluid-base text-gray-600 mb-1 font-normal">
+              <p className="text-fluid-xxs md:text-fluid-base text-gray-600 mb-1 font-normal">
                 Last Updated
               </p>
-              <p className="text-fluid-xs md:text-fluid-base font-medium text-[#0f172a] break-words">
+              <p className="text-fluid-xxs md:text-fluid-base font-medium text-[#0f172a] break-words">
                 {date} at {time}
               </p>
             </div>

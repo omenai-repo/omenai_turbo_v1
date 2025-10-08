@@ -22,12 +22,12 @@ export default function FormActions() {
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
         >
           {isLoading ? <LoadSmall /> : "Login to your account"}{" "}
         </button>
         <Link href={"/register"}>
-          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center bg-white cursor-pointer">
+          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
             Create an account
           </button>
         </Link>
@@ -35,12 +35,12 @@ export default function FormActions() {
 
       <div className="flex flex-col gap-y-2 my-6 justify-between items-center">
         <div className="flex gap-x-6">
-          <p className="font-semibold text-fluid-xs text-dark ">
+          <p className="font-medium text-fluid-xxs text-dark ">
             <Link href={`/login/artist`} className="text-dark">
               Sign in as Artist{" "}
             </Link>
           </p>
-          <p className="font-semibold text-fluid-xs text-dark">
+          <p className="font-medium text-fluid-xxs text-dark">
             <Link href={`/login/user`} className="text-dark">
               Sign in as collector{" "}
             </Link>
@@ -48,7 +48,7 @@ export default function FormActions() {
         </div>
 
         <p
-          className="text-fluid-xs text-red-600 cursor-pointer underline font-medium"
+          className="text-fluid-xxs text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("gallery")}
         >
           Forgot password?

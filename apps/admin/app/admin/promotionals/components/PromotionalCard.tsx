@@ -43,17 +43,17 @@ export default function PromotionalCard({
         {/* Text content */}
         <div className="flex flex-col justify-center space-y-4 text-white max-w-[60%]">
           <div className="space-y-2">
-            <h3 className="text-fluid-xs font-bold leading-tight tracking-wide transform transition-all duration-300 group-hover:translate-x-1">
+            <h3 className="text-fluid-xxs font-bold leading-tight tracking-wide transform transition-all duration-300 group-hover:translate-x-1">
               {headline}
             </h3>
-            <p className="text-fluid-xs font-medium text-white leading-relaxed opacity-90 transform transition-all duration-300 group-hover:translate-x-1">
+            <p className="text-fluid-xxs font-medium text-white leading-relaxed opacity-90 transform transition-all duration-300 group-hover:translate-x-1">
               {subheadline}
             </p>
           </div>
 
           {/* CTA Button */}
           <Link href={cta} className="inline-block">
-            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-2 xs:py-2.5 text-fluid-xs rounded border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <button className="group/btn relative flex items-center gap-x-2 bg-white/10 backdrop-blur-sm text-white px-4 xs:px-5 py-2 xs:py-2.5 text-fluid-xxs rounded border border-white/20 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:shadow-lg transform hover:scale-105 active:scale-95">
               <span className="font-semibold">Explore</span>
               <IoIosArrowRoundForward className="transition-transform duration-300 group-hover/btn:translate-x-1" />
 

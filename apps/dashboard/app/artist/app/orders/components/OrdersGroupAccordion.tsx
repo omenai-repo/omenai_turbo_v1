@@ -128,7 +128,7 @@ export function OrdersGroupAccordion({
             />
             Order declined
           </span>
-          <span className=" rounded text-fluid-xs font-normal text-red-600 flex items-center w-fit">
+          <span className=" rounded text-fluid-xxs font-normal text-red-600 flex items-center w-fit">
             Reason: {order_decline_reason}
           </span>
         </div>
@@ -162,10 +162,10 @@ export function OrdersGroupAccordion({
             loading="lazy"
           />
           <div className="flex flex-col">
-            <span className="text-fluid-xs font-semibold">
+            <span className="text-fluid-xxs font-semibold">
               Order ID: #{order.order_id}
             </span>
-            <span className="text-fluid-xs text-gray-500">
+            <span className="text-fluid-xxs text-gray-500">
               {order.artwork_data.title}
             </span>
           </div>
@@ -174,32 +174,32 @@ export function OrdersGroupAccordion({
       <Accordion.Panel>
         <div className="flex flex-col gap-y-2">
           <div className="flex gap-x-3 items-center">
-            <span className="text-fluid-xs font-normal">Price:</span>
-            <span className="text-fluid-xs font-semibold text-dark">
+            <span className="text-fluid-xxs font-normal">Price:</span>
+            <span className="text-fluid-xxs font-semibold text-dark">
               {formatPrice(order.artwork_data.pricing.usd_price)}
             </span>
           </div>
           <div className="flex gap-x-3 items-center">
-            <span className="text-fluid-xs font-normal">Buyer name:</span>
-            <span className="text-fluid-xs font-normal text-dark">
+            <span className="text-fluid-xxs font-normal">Buyer name:</span>
+            <span className="text-fluid-xxs font-normal text-dark">
               {order.buyer_details.name}
             </span>
           </div>
           <div className="flex gap-x-3 items-center">
-            <span className="text-fluid-xs font-normal">Buyer address:</span>
-            <span className="text-fluid-xs font-normal text-dark">
+            <span className="text-fluid-xxs font-normal">Buyer address:</span>
+            <span className="text-fluid-xxs font-normal text-dark">
               {`${order.shipping_details.addresses.destination.state}, 
                 ${order.shipping_details.addresses.destination.country}`}
             </span>
           </div>
           <div className="flex gap-x-3 items-center">
-            <span className="text-fluid-xs font-normal">Order date:</span>
-            <span className="text-fluid-xs font-normal text-dark">
+            <span className="text-fluid-xxs font-normal">Order date:</span>
+            <span className="text-fluid-xxs font-normal text-dark">
               {formatISODate(order.createdAt)}
             </span>
           </div>
           <div className="flex gap-x-6 items-start">
-            <span className="text-fluid-xs font-normal">Status:</span>
+            <span className="text-fluid-xxs font-normal">Status:</span>
             {construct_status({
               status: order.status,
               payment_status: order.payment_information.status,
@@ -212,14 +212,14 @@ export function OrdersGroupAccordion({
             })}
           </div>
           {/* {order.status === "completed" && (
-            <p className="px-1 py-4 text-fluid-xs font-normal text-dark">
+            <p className="px-1 py-4 text-fluid-xxs font-normal text-dark">
               {formatIntlDateTime(order.updatedAt)}
             </p>
           )} */}
           {order?.artwork_data?.exclusivity_status?.exclusivity_type ===
             "exclusive" &&
             order.order_accepted.status !== "declined" && (
-              <p className="text-fluid-xs text-amber-500">
+              <p className="text-fluid-xxs text-amber-500">
                 This artpiece is still within it's exclusivity period
               </p>
             )}
@@ -243,7 +243,7 @@ export function OrdersGroupAccordion({
             <Link
               href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
             >
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
             </Link>

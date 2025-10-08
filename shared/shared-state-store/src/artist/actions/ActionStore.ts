@@ -55,6 +55,8 @@ type ArtistActionStoreTypes = {
   clearAddress: () => void;
   logoModalPopup: boolean;
   updateLogoModalPopup: (value: boolean) => void;
+  exclusivityExtendModal: { open: boolean; art_id: string };
+  toggleExclusivityExtendModal: (open: boolean, art_id: string) => void;
 };
 
 const now = new Date();
@@ -200,5 +202,14 @@ export const artistActionStore = create<ArtistActionStoreTypes>((set, get) => ({
   logoModalPopup: false,
   updateLogoModalPopup: (value: boolean) => {
     set({ logoModalPopup: value });
+  },
+
+  exclusivityExtendModal: {
+    open: false,
+    art_id: "",
+  },
+
+  toggleExclusivityExtendModal: (open: boolean, art_id: string) => {
+    set({ exclusivityExtendModal: { open, art_id } });
   },
 }));

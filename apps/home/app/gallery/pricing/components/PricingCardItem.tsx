@@ -103,7 +103,7 @@ export default function PricingCardItem({
         <div className="flex justify-between items-center">
           <p className="font-normal">{plan} plan</p>
           {/* <div className="border border-primary rounded px-2 py-[0.1rem]">
-            <span className="text-fluid-xs text-primary font-normal">popular</span>
+            <span className="text-fluid-xxs text-primary font-normal">popular</span>
           </div> */}
         </div>
         {/* Plan price */}
@@ -113,7 +113,7 @@ export default function PricingCardItem({
         </div>
         {/* Plan description if applicable */}
         <div className="w-full">
-          <p className="font-light text-fluid-xs">{description}</p>
+          <p className="font-light text-fluid-xxs">{description}</p>
         </div>
         {/* Action buttons */}
         <div className="flex flex-col gap-4 w-full">
@@ -131,7 +131,7 @@ export default function PricingCardItem({
       {/* Features */}
       <div className="flex-col flex gap-2 p-8">
         <h6 className="font-normal text-fluid-sm">Features</h6>
-        <span className="text-fluid-xs font-light">
+        <span className="text-fluid-xxs font-light">
           Everything in the <span className="font-normal">{plan}</span> plan
           plus...
         </span>

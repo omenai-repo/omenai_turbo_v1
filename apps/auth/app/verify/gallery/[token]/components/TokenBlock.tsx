@@ -90,13 +90,13 @@ export default function TokenBlock({ token }: TokenProps) {
           Verify your email to kickstart your journey.
         </h1>
         <div className="flex flex-col gap-4 my-[2rem]">
-          <p className="leading-32 font-medium text-fluid-xs">
+          <p className="leading-32 font-medium text-fluid-xxs">
             Thank you for choosing to join{" "}
             <span className="text-dark font-[900]">Omenai</span> We extend our
             warmest welcome and look forward to providing you with an enjoyable
             journey with us
           </p>
-          <p className="leading-32 text-fluid-xs">
+          <p className="leading-32 text-fluid-xxs">
             A token has been sent to the email address you provided to us,
             Kindly utilize this token to authenticate your account and access
             our services.
@@ -120,13 +120,13 @@ export default function TokenBlock({ token }: TokenProps) {
         />
         <button
           disabled={isLoading}
-          className="disabled:bg-dark/10 h-[35px] p-5 rounded w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal duration-200"
+          className="disabled:bg-dark/10 h-[35px] p-5 rounded w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal duration-200"
           type={"submit"}
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>
       </form>
-      <p className="text-fluid-xs">
+      <p className="text-fluid-xxs">
         Did not recieve a code?{" "}
         <button
           disabled={resendTokenLoading}
@@ -137,7 +137,7 @@ export default function TokenBlock({ token }: TokenProps) {
         </button>
       </p>
 
-      <div className="contact my-[3rem] md:w-[50%] font-medium text-fluid-xs mx-auto leading-32">
+      <div className="contact my-[3rem] md:w-[50%] font-medium text-fluid-xxs mx-auto leading-32">
         <p className="text-center">
           Feel free to contact us should you have any issues on{" "}
           <Link

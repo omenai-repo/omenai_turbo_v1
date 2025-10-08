@@ -12,7 +12,7 @@ export default function PendingGalleryRequests({
       {galleries.length === 0 ? (
         <div className="h-[80vh] grid place-items-center">
           <div className="flex flex-col items-center gap-1">
-            <p className="text-dark text-fluid-xs font-medium">
+            <p className="text-dark text-fluid-xxs font-medium">
               No pending Gallery requests
             </p>
           </div>

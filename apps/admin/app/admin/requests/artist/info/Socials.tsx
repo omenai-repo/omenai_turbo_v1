@@ -28,7 +28,7 @@ export const SocialLinks: React.FC<Props> = ({ socials }) => {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-dark/70 hover:text-foreground text-fluid-xs transition underline leading-4 flex gap-x-1 items-center"
+            className="text-dark/70 hover:text-foreground text-fluid-xxs transition underline leading-4 flex gap-x-1 items-center"
           >
             <span>{icon}</span>
             <span>{url}</span>

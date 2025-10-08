@@ -99,7 +99,7 @@ export default function ProvideOrderRejectionModalForm() {
       <form className="w-full" onSubmit={handleOrderRejection}>
         <div className="space-y-4 mb-2 flex flex-col w-full">
           <div className="relative w-full h-auto my-2 space-y-2">
-            <label htmlFor="shipping" className="text-fluid-xs text-dark mb-2">
+            <label htmlFor="shipping" className="text-fluid-xxs text-dark mb-2">
               Provide a reason for declining order request
             </label>
             <textarea
@@ -108,7 +108,7 @@ export default function ProvideOrderRejectionModalForm() {
               required
               rows={3}
               placeholder="e.g Artwork has been sold"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xs placeholder:text-fluid-xxs"
+              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xxs placeholder:text-fluid-xxs"
             />
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function ProvideOrderRejectionModalForm() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-normal"
           >
             {loading ? <LoadSmall /> : " Decline order"}
           </button>

@@ -14,7 +14,9 @@ import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { ArtworkMediumTypes } from "@omenai/shared-types";
-import {encodeMediumForUrl} from "@omenai/shared-utils/src/encodeMediumUrl"
+import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
+import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
+import { useMemo } from "react";
 
 export default function ArtworkCard({
   image,
@@ -30,6 +32,7 @@ export default function ArtworkCard({
   availability,
   medium,
   trending = false,
+  countdown,
 }: {
   image: string;
   artist: string;
@@ -48,14 +51,16 @@ export default function ArtworkCard({
   availability: boolean;
   medium: ArtworkMediumTypes;
   trending?: boolean;
+  countdown?: Date | null;
 }) {
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
-
-
-
   const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
 
+  const expiryDate = useMemo(
+    () => (countdown ? new Date(countdown) : null),
+    [countdown]
+  );
 
   return (
     <div className="group relative bg-white rounded border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
@@ -87,14 +92,14 @@ export default function ArtworkCard({
         <div className="absolute top-4 left-4 z-10">
           {isDashboard && dashboard_type === "gallery" ? (
             <Link href={`/gallery/artworks/edit?id=${name}`}>
-              <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white text-fluid-xs">
+              <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white text-fluid-xxs">
                 Edit artwork
               </button>
             </Link>
           ) : isDashboard && dashboard_type === "artist" ? null : (
             <Link href={`/collections/${encodeMediumForUrl(medium)}`}>
-              <button className="px-4 py-1 bg-white text-dark rounded">
-                <span className="font-normal text-fluid-xs ">{medium}</span>
+              <button className="px-4 py-1 bg-white text-dark rounded hover:border hover:border-dark/80 duration-300">
+                <span className="font-normal text-fluid-xxs ">{medium}</span>
 
                 {/* Button glow effect */}
                 <div className="absolute inset-0 rounded bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
@@ -125,10 +130,10 @@ export default function ArtworkCard({
       <div className="p-4 space-y-2">
         {/* Artwork Details */}
         <div className="space-y-1">
-          <h3 className="font-bold text-dark font-medium text-fluid-base leading-tight line-clamp-2">
+          <h3 className="font-bold text-dark font-medium text-fluid-xs leading-tight line-clamp-2">
             {name}
           </h3>
-          <p className="text-dark/90 font-normal text-fluid-xs">
+          <p className="text-dark/90 font-normal text-fluid-xxs">
             {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
           </p>
         </div>
@@ -143,7 +148,7 @@ export default function ArtworkCard({
                   Sold
                 </span>
               ) : (
-                <div className="text-[#0f172a] font-semibold text-fluid-xs">
+                <div className="text-[#0f172a] font-semibold text-fluid-xxs">
                   {pricing?.price && pricing.shouldShowPrice === "Yes"
                     ? formatPrice(pricing.usd_price)
                     : "Price on request"}
@@ -155,7 +160,7 @@ export default function ArtworkCard({
             {availability && !isDashboard && (
               <Link
                 href={`${base_uri}/artwork/${encoded_url}`}
-                className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark rounded px-8 py-1 text-fluid-xs"
+                className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark rounded px-8 py-1 text-fluid-xxs"
               >
                 {pricing?.price && pricing.shouldShowPrice === "Yes"
                   ? "Purchase"
@@ -167,19 +172,29 @@ export default function ArtworkCard({
 
         {/* Dashboard-specific price display */}
         {isDashboard && (
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex items-center justify-between text-fluid-xs">
-              <span className="text-gray-600">Status:</span>
-              {!availability ? (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
-                  Sold
-                </span>
-              ) : (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                  Available
-                </span>
-              )}
+          <div className="space-y-4">
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between text-fluid-xxs">
+                <span className="text-gray-600 text-fluid-xxs">Status:</span>
+                {!availability ? (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
+                    Sold
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                    Available
+                  </span>
+                )}
+              </div>
             </div>
+            {/* Exclusivity countdown */}
+            {dashboard_type === "artist" && expiryDate && availability && (
+              <ArtistExclusivityCountdown
+                key={expiryDate.getTime()}
+                expiresAt={expiryDate}
+                art_id={art_id}
+              />
+            )}
           </div>
         )}
       </div>

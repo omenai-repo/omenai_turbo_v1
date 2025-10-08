@@ -146,16 +146,16 @@ export default function CategorizationAnswers({
 
                   {/* Text Content */}
                   <div className="flex-1">
-                    <h3 className="font-semibold text-fluid-xs text-gray-900 mb-1">
+                    <h3 className="font-semibold text-fluid-xxs text-gray-900 mb-1">
                       {item.title}
                     </h3>
-                    <p className="text-fluid-xs text-gray-600 mb-3">
+                    <p className="text-fluid-xxs text-gray-600 mb-3">
                       {item.question}
                     </p>
 
                     {/* Answer */}
                     <div className="inline-flex items-center gap-2">
-                      <span className="text-fluid-xs font-normal text-gray-500">
+                      <span className="text-fluid-xxs font-normal text-gray-500">
                         Response:
                       </span>
                       <Badge
@@ -204,8 +204,8 @@ export default function CategorizationAnswers({
             },
           ].map((stat, index) => (
             <div key={index} className="text-center">
-              <p className="text-fluid-xs text-gray-500 mb-1">{stat.label}</p>
-              <p className="font-semibold text-fluid-xs text-gray-900">
+              <p className="text-fluid-xxs text-gray-500 mb-1">{stat.label}</p>
+              <p className="font-semibold text-fluid-xxs text-gray-900">
                 {stat.value}
               </p>
             </div>

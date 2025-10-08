@@ -24,7 +24,7 @@ export default function ArticleCard({ article }: { article: any }) {
       {/* Content Section - Flexible height */}
       <div className="flex flex-col flex-grow p-4 space-y-3">
         {/* Date - Fixed height */}
-        <p className="font-normal text-fluid-xs text-gray-600 flex-shrink-0">
+        <p className="font-normal text-fluid-xxs text-gray-600 flex-shrink-0">
           {formatISODate(article.created_at) || "27, February 2025"}
         </p>
 
@@ -36,7 +36,7 @@ export default function ArticleCard({ article }: { article: any }) {
         {/* Button - Fixed at bottom */}
         <div className="flex-shrink-0 mt-auto pt-3">
           <Link href={`/articles/${article.slug}?id=${article.$id}`}>
-            <button className="duration-300 rounded h-[30px] px-4 w-fit text-center text-fluid-xs flex items-center justify-center bg-dark text-white cursor-pointer hover:bg-dark/80 transition-colors">
+            <button className="duration-300 rounded h-[30px] px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark text-white cursor-pointer hover:bg-dark/80 transition-colors">
               View Editorial
             </button>
           </Link>

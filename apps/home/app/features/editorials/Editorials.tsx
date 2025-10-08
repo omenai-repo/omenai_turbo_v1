@@ -38,7 +38,7 @@ export default function Editorials() {
           <div className="flex md:flex-row flex-col gap-4 mt-16 mb-5">
             <div className="flex justify-between items-center w-full my-5">
               <div>
-                <p className="text-fluid-xs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+                <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
                   Editorial articles
                 </p>
                 <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
@@ -50,10 +50,10 @@ export default function Editorials() {
                 <p className="text-fluid-base font-semibold">
                   Unveiling the Stories Behind the Canvas:
                 </p>
-                <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+                <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
                   Stories and Perspectives
                 </p>
-                <p className="justify-self-end font-normal leading-snug text-fluid-xs">
+                <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
                   from the Art World
                 </p>
               </div>

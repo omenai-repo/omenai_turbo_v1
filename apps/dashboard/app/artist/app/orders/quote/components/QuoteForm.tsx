@@ -189,7 +189,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <h1 className="text-fluid-sm font-semibold text-slate-900">
               Package Dimensions
             </h1>
-            <p className="text-slate-600 mt-1 text-fluid-xs">
+            <p className="text-slate-600 mt-1 text-fluid-xxs">
               Please provide the dimensions of the artwork including packaging
               to calculate accurate shipping costs
             </p>
@@ -323,7 +323,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 onChange={handleInputChange}
                 placeholder="Add any special pickup instructions, handling requirements, or notes..."
                 rows={4}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none placeholder:text-fluid-xs"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none placeholder:text-fluid-xxs"
               />
             </div>
 
@@ -366,7 +366,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
             <button
               type="submit"
               disabled={loading || !terms_checked}
-              className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white font-medium rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xs"
+              className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white font-medium rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xxs"
             >
               {loading ? (
                 <LoadSmall />

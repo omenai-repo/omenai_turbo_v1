@@ -189,7 +189,7 @@ export default function UpdatePasswordModalForm() {
               <h1 className="text-fluid-md font-bold text-dark">
                 Update Password
               </h1>
-              <p className="text-fluid-xs text-dark/20-500 mt-1">
+              <p className="text-fluid-xxs text-dark/20-500 mt-1">
                 Secure your account with a strong password
               </p>
             </div>
@@ -199,7 +199,7 @@ export default function UpdatePasswordModalForm() {
         <form onSubmit={handlePasswordUpdate}>
           {/* Password Field */}
           <div className="mb-5">
-            <label className="block text-fluid-xs font-normal text-dark/20-700 mb-2">
+            <label className="block text-fluid-xxs font-normal text-dark/20-700 mb-2">
               New Password
             </label>
             <div className="relative">
@@ -212,7 +212,7 @@ export default function UpdatePasswordModalForm() {
                 required
                 placeholder="Create a strong password"
                 value={info.password}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
                   focusedField === "password"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -222,7 +222,7 @@ export default function UpdatePasswordModalForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-dark/60 text-fluid-xs hover:text-dark/20-600 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-dark/60 text-fluid-xxs hover:text-dark/20-600 transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -264,7 +264,7 @@ export default function UpdatePasswordModalForm() {
                         key={i}
                         className="text-xs text-dark/20-500 flex items-center gap-1 mt-1"
                       >
-                        <span className="w-1 h-1 bg-dark/60 text-fluid-xs rounded-full"></span>
+                        <span className="w-1 h-1 bg-dark/60 text-fluid-xxs rounded-full"></span>
                         {tip}
                       </p>
                     ))}
@@ -276,7 +276,7 @@ export default function UpdatePasswordModalForm() {
 
           {/* Confirm Password Field */}
           <div className="mb-5">
-            <label className="block text-fluid-xs font-normal text-dark/20-700 mb-2">
+            <label className="block text-fluid-xxs font-normal text-dark/20-700 mb-2">
               Confirm Password
             </label>
             <div className="relative">
@@ -289,7 +289,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Re-enter your password"
                 required
                 value={info.confirmPassword}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
                   focusedField === "confirmPassword"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -299,7 +299,7 @@ export default function UpdatePasswordModalForm() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-dark/60 text-fluid-xs hover:text-dark/20-600 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-dark/60 text-fluid-xxs hover:text-dark/20-600 transition-colors"
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -314,7 +314,7 @@ export default function UpdatePasswordModalForm() {
 
           {/* Confirmation Code Field */}
           <div className="mb-6">
-            <label className="block text-fluid-xs font-normal text-dark/20-700 mb-2">
+            <label className="block text-fluid-xxs font-normal text-dark/20-700 mb-2">
               Verification Code
             </label>
             <div className="relative">
@@ -327,7 +327,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Enter 6-digit code"
                 required
                 value={info.code}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
                   focusedField === "code"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -350,7 +350,7 @@ export default function UpdatePasswordModalForm() {
                   !info.confirmPassword ||
                   !info.password ||
                   codeLoading
-                    ? "bg-dark/20 text-dark/60 text-fluid-xs cursor-not-allowed"
+                    ? "bg-dark/20 text-dark/60 text-fluid-xxs cursor-not-allowed"
                     : "bg-dark text-white hover:bg-dark/80"
                 }`}
               >
@@ -379,7 +379,7 @@ export default function UpdatePasswordModalForm() {
                   className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded"
                 >
                   <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                  <p className="text-fluid-xs text-red-700">{error}</p>
+                  <p className="text-fluid-xxs text-red-700">{error}</p>
                 </div>
               ))}
             </div>
@@ -395,13 +395,13 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className={`w-full h-12 rounded text-fluid-xs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`w-full h-12 rounded text-fluid-xxs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
               loading ||
               errorList.length > 0 ||
               !info.code ||
               !info.confirmPassword ||
               !info.password
-                ? "bg-dark/20 text-dark/60 text-fluid-xs cursor-not-allowed"
+                ? "bg-dark/20 text-dark/60 text-fluid-xxs cursor-not-allowed"
                 : "bg-dark text-white hover:bg-dark/80 shadow-lg hover:shadow-xl"
             }`}
           >

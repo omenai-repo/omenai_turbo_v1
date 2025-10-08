@@ -13,19 +13,19 @@ export default function OrderReceived() {
           strokeWidth={3}
           absoluteStrokeWidth
         />
-        <p className="text-dark text-fluid-xs font-normal ">
+        <p className="text-dark text-fluid-xxs font-normal ">
           Your order has been successfully received, we&apos;ll be in touch
           within the next 48 hours with an accurate shipping quote and next
           steps.
         </p>
-        <p className="text-dark text-fluid-xs font-normal my-5">
+        <p className="text-dark text-fluid-xxs font-normal my-5">
           Thank you for your patience.
         </p>
 
         <Link
           onClick={() => toggleOrderReceivedModal(false)}
           href={"/catalog"}
-          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal"
+          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
         >
           Continue shopping
         </Link>

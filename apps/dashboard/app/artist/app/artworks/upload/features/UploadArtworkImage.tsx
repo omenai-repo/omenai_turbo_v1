@@ -95,7 +95,7 @@ export default function UploadArtworkImage() {
         ) : (
           <button
             type="button"
-            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded text-fluid-xs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+            className="w-[400px] h-[400px] border border-[#E0E0E0] bg-white rounded text-fluid-xxs outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
             onClick={() => {
               imagePickerRef.current?.click();
             }}
@@ -116,10 +116,10 @@ export default function UploadArtworkImage() {
             </svg>
             <span className="">Upload your artpiece</span>
             <div className="flex flex-col items-center mt-8 space-y-2">
-              <span className=" text-fluid-xs">
+              <span className=" text-fluid-xxs">
                 <strong>5MB</strong> MAX SIZE allowed
               </span>
-              <span className="text-fluid-xs">
+              <span className="text-fluid-xxs">
                 Allowed formats: JPEG, JPG and PNG
               </span>
             </div>
@@ -133,11 +133,11 @@ export default function UploadArtworkImage() {
           onChange={handleFileChange}
         />
       </div>
-      <div className="mt-4 flex w-full text-fluid-xs justify-center">
+      <div className="mt-4 flex w-full text-fluid-xxs justify-center">
         <button
           onClick={handleImageSubmit}
           type="button"
-          className={`h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs font-normal`}
+          className={`h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal`}
         >
           Calculate artwork price
         </button>

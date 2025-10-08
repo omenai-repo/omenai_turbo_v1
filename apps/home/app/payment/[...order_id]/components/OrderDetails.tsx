@@ -38,10 +38,10 @@ export default function OrderDetails({
               />
               <div className="">
                 <div className="flex flex-col gap-y-1">
-                  <p className="font-semibold text-dark text-fluid-xs">
+                  <p className="font-semibold text-dark text-fluid-xxs">
                     {order.artwork_data.title}
                   </p>
-                  <p className="font-medium text-fluid-xs text-dark">
+                  <p className="font-medium text-fluid-xxs text-dark">
                     {order.artwork_data.artist}
                   </p>
                 </div>
@@ -49,7 +49,7 @@ export default function OrderDetails({
             </div>
             <hr className="border-[#e0e0e0] my-4" />
 
-            <div className="text-fluid-xs">
+            <div className="text-fluid-xxs">
               <div className="flex flex-col text-dark my-3">
                 <p>Delivery address</p>
                 <p className="font-semibold text-dark">
@@ -95,7 +95,7 @@ export default function OrderDetails({
                   {formatPrice(total_price_number)}
                 </p>
               </div>
-              <p className="my-3 text-dark italic text-fluid-xs">
+              <p className="my-3 text-dark italic text-fluid-xxs">
                 *Additional duties and taxes may apply at import
               </p>
 

@@ -54,14 +54,14 @@ export default function EventTimeline({
               className="w-[60px] h-[60px] object-cover object-center rounded"
             />
             <div className="whitespace-pre-wrap">
-              <p className="font-semibold text-fluid-xs">
+              <p className="font-semibold text-fluid-xxs">
                 {artwork_data.title}
               </p>
               <div>
-                <span className="text-fluid-xs text-muted">
+                <span className="text-fluid-xxs text-muted">
                   Tracking number
                 </span>
-                <p className="font-bold text-fluid-xs">#{tracking_number}</p>
+                <p className="font-bold text-fluid-xxs">#{tracking_number}</p>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function EventTimeline({
       {/* <Divider my={"md"} /> */}
       <Timeline color="#0f172a" active={1} lineWidth={2} bulletSize={30}>
         <Timeline.Item
-          className="text-fluid-xs"
+          className="text-fluid-xxs"
           bullet={
             <MapPinCheckInside
               size={16}
@@ -93,7 +93,7 @@ export default function EventTimeline({
           return (
             <Timeline.Item
               key={event.description}
-              className="text-fluid-xs"
+              className="text-fluid-xxs"
               bullet={
                 <MapPinCheckInside
                   size={16}
