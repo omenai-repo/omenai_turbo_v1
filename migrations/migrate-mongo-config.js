@@ -3,7 +3,7 @@
 const config = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: "",
+    url: "mongodb+srv://omeani:cuT1Ed21KyninL6q@omenai.xdgpvpj.mongodb.net/",
 
     // TODO Change this to your database name:
     databaseName: "test",
@@ -29,7 +29,7 @@ const config = {
   lockTtl: 0,
 
   // The file extension to create migrations and search for in migration dir
-  migrationFileExtension: ".ts",
+  migrationFileExtension: ".js",
 
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determine
   // if the file should be run.  Requires that scripts are coded to be run multiple times.

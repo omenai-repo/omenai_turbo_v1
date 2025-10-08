@@ -9,7 +9,12 @@ import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register
 export default function FormConfirm() {
   const { decrementCurrentArtistSignupFormIndex, isLoading } =
     useArtistAuthStore();
-  const [isConsentChecked, setIsConcentChecked] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [policyAccepted, setPolicyAccepted] = useState(false);
+  const [mailingConsent, setMailingConsent] = useState(false);
+
+  const canProceed = termsAccepted && policyAccepted;
+
   return (
     <motion.div
       initial={{ x: 100, opacity: 0 }}
@@ -17,53 +22,109 @@ export default function FormConfirm() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      {/* <h1 className="text-fluid-xs sm:text-fluid-base font-semibold mb-4">
-        Confirm account creation
-      </h1> */}
-      <p className="text-fluid-xs my-4 font-normal">
-        Please read through and confirm that you understand and accept all the
-        terms stated
+      <p className="text-fluid-xs my-4 font-normal text-dark/80">
+        Review the following terms and confirm your agreement to proceed with
+        account creation
       </p>
 
-      <div className="bg-[#FAFAFA] p-2 my-5 flex flex-col gap-y-5">
-        <div className="flex items-center gap-2">
-          <Checkbox
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setIsConcentChecked(e.target.checked)
-            }
-            id="terms of use"
-            required
-            className="border-dark"
-          />
-          <Label
-            htmlFor="terms of use"
-            className="text-dark text-fluid-xs sm:text-fluid-xs"
-          >
-            By ticking this box, I accept the{" "}
-            <Link href={"/"} className="underline font-bold">
-              Terms of use
-            </Link>{" "}
-            and{" "}
-            <Link href={"/"} className="underline font-bold">
-              Privacy Policy
-            </Link>{" "}
-            of creating an account with Omenai
-          </Label>
+      <div className="bg-white border border-dark/10 rounded-lg p-6 my-6">
+        <h3 className="text-fluid-xs font-semibold text-dark mb-4">
+          Platform Terms
+        </h3>
+
+        <ul className="space-y-3 text-fluid-xs text-dark/70 mb-6">
+          <li className="flex items-start gap-3">
+            <span className="text-dark font-medium mt-0.5">•</span>
+            <span>
+              A 35% commission applies to all artwork sales, covering marketing,
+              platform visibility, payment processing, shipping coordination,
+              and dedicated customer support.
+            </span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-dark font-medium mt-0.5">•</span>
+            <span>
+              All artists must complete a verification process before gaining
+              access to platform features. This ensures quality and authenticity
+              across our creative community.
+            </span>
+          </li>
+        </ul>
+
+        <div className="space-y-4 pt-4 border-t border-dark/10">
+          <div className="flex items-start gap-3">
+            <Checkbox
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setTermsAccepted(e.target.checked)
+              }
+              checked={termsAccepted}
+              id="terms-confirmation"
+              className="mt-0.5 border-dark/30 focus:ring-dark"
+            />
+            <Label
+              htmlFor="terms-confirmation"
+              className="text-dark/80 text-fluid-xs font-normal cursor-pointer"
+            >
+              I have reviewed and accept the terms outlined above
+            </Label>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Checkbox
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPolicyAccepted(e.target.checked)
+              }
+              checked={policyAccepted}
+              id="policy-acceptance"
+              className="mt-0.5 border-dark/30 focus:ring-dark"
+            />
+            <Label
+              htmlFor="policy-acceptance"
+              className="text-dark/80 text-fluid-xs font-normal cursor-pointer"
+            >
+              I accept Omenai's{" "}
+              <Link href={"/"} className="underline font-medium text-dark">
+                Terms of Use
+              </Link>{" "}
+              and{" "}
+              <Link href={"/"} className="underline font-medium text-dark">
+                Privacy Policy
+              </Link>
+            </Label>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Checkbox
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setMailingConsent(e.target.checked)
+              }
+              checked={mailingConsent}
+              id="mailing-consent"
+              className="mt-0.5 border-dark/30 focus:ring-dark"
+            />
+            <Label
+              htmlFor="mailing-consent"
+              className="text-dark/80 text-fluid-xs font-normal cursor-pointer"
+            >
+              I'd like to receive updates, promotions, and news from Omenai
+              (optional)
+            </Label>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col space-y-5 mt-8">
         <button
           type="submit"
-          disabled={isLoading || !isConsentChecked}
-          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
+          disabled={isLoading || !canProceed}
+          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer"
         >
-          {isLoading ? <LoadSmall /> : "Create Artist account"}
+          {isLoading ? <LoadSmall /> : "Create your artist account"}
         </button>
         <button
           disabled={isLoading}
-          className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-dark cursor-pointer`}
-          type={"button"}
+          className="bg-white text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-dark cursor-pointer"
+          type="button"
           onClick={decrementCurrentArtistSignupFormIndex}
         >
           Back

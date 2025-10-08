@@ -34,8 +34,6 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-
-
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Omenai Home",
@@ -65,7 +63,7 @@ export default async function RootLayout({
           <ColorSchemeScript />
         </head>
         <body
-          className={`${work_sans.variable} flex flex-col justify-center`}
+          className={`${work_sans.variable} font-sans flex flex-col justify-center`}
         >
           <NextTopLoader color="#0f172a" height={6} />
           <Toaster

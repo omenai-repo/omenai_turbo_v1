@@ -51,7 +51,7 @@ export default {
         "3xl": "1560px",
       },
       fontFamily: {
-        sans: ["var(--font-work_sans)"],
+        sans: ["var(--font-work_sans), sans-serif"],
       },
       backgroundImage: {
         "hero-image": "url('/images/home_bg.png')",

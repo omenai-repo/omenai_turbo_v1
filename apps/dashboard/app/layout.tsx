@@ -24,7 +24,6 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
 import { Viewport } from "next";
@@ -40,7 +39,7 @@ export default async function DashboardRootLayout({
         <ColorSchemeScript />
       </head>
       <body
-        className={`${work_sans.variable} flex flex-col px-4 justify-center`}
+        className={`${work_sans.variable} font-sans flex flex-col px-4 justify-center`}
       >
         <SessionProvider initialSessionData={initialSessionData}>
           <MantineProvider>

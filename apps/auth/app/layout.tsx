@@ -24,7 +24,7 @@ export default async function AuthDashboardRootLayout({
   return (
     <html lang="en">
       <body
-        className={`${work_sans.variable} flex flex-col justify-center`}
+        className={`${work_sans.variable} font-sans flex flex-col justify-center`}
       >
         <LayoutWrapper children={children} />
         <Analytics />

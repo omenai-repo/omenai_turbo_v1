@@ -28,10 +28,20 @@ export const GET = withAppRouterHighlight(async function GET(
           salesRevenue: { $sum: { $ifNull: ["$trans_pricing.unit_price", 0] } },
           netIncome: {
             $sum: {
-              $subtract: [
+              $add: [
                 { $ifNull: ["$trans_pricing.amount_total", 0] },
-                { $ifNull: ["$trans_pricing.commission", 0] },
-                { $ifNull: ["$trans_pricing.penalty_fee", 0] },
+                {
+                  $multiply: [
+                    { $ifNull: ["$trans_pricing.commission", 0] },
+                    -1,
+                  ],
+                },
+                {
+                  $multiply: [
+                    { $ifNull: ["$trans_pricing.penalty_fee", 0] },
+                    -1,
+                  ],
+                },
               ],
             },
           },
@@ -63,6 +73,7 @@ export const GET = withAppRouterHighlight(async function GET(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.log(error);
 
     return NextResponse.json(
       { message: error_response?.message },

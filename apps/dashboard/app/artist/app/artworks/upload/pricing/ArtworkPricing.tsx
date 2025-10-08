@@ -17,6 +17,7 @@ import { TriangleAlert } from "lucide-react";
 import ArtworkPricingSkeleton from "@omenai/shared-ui-components/components/skeletons/ArtworkPricingSkeleton";
 import Link from "next/link";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 function extractNumberString(str: string) {
   if (!str) return ""; // handle empty or null input
 
@@ -28,6 +29,11 @@ export default function ArtworkPricing() {
   const { user, csrf } = useAuth({ requiredRole: "artist" });
   const { image, setImage, artworkUploadData, clearData } =
     artistArtworkUploadStore();
+  const [acknowledgment, setAcknowledgment] = useState(false);
+  const [penaltyConsent, setPenaltyConsent] = useState(false);
+  const [priceConsent, setPriceConsent] = useState(false);
+
+  const canProceed = acknowledgment && penaltyConsent && priceConsent;
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -56,22 +62,22 @@ export default function ArtworkPricing() {
   });
   const handleArtworkUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!image) {
-      toast.error("Error notification", {
-        description: "Please select an image",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-      setLoading(false);
+      toast_notif("Please select an image to proceed", "error");
+      return;
+    }
+
+    if (!canProceed) {
+      toast_notif(
+        "Terms and conditions must be accepted before proceeding",
+        "error"
+      );
       return;
     }
 
     try {
+      setLoading(true);
       const fileUploaded = await uploadImage(image);
 
       if (!fileUploaded) {
@@ -102,30 +108,16 @@ export default function ArtworkPricing() {
       const uploadResponse = await uploadArtworkData(data, csrf || "");
 
       if (!uploadResponse?.isOk) {
-        await storage.deleteFile(
-          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-          file.fileId
-        );
-        toast.error("Error notification", {
-          description: uploadResponse?.body.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
+        await storage.deleteFile({
+          bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+          fileId: file.fileId,
         });
+        toast_notif(uploadResponse.body.message, "error");
         setImage(null);
         return;
       }
 
-      toast.success("Operation successful", {
-        description: uploadResponse.body.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(uploadResponse.body.message, "success");
       await queryClient.invalidateQueries({
         queryKey: ["fetch_artwork_price", "fetch_artworks_by_id"],
       });
@@ -151,7 +143,7 @@ export default function ArtworkPricing() {
   return (
     <form
       onSubmit={handleArtworkUpload}
-      className="bg-[#f8f8f8] p-10 rounded flex flex-col"
+      className="bg-[#f8f8f8] p-10 rounded flex flex-col max-w-5xl"
     >
       {isLoading ? (
         <ArtworkPricingSkeleton />
@@ -174,23 +166,65 @@ export default function ArtworkPricing() {
               </span>
             </p>
           </Paper>
-          <p className="text-fluid-xs font-medium">
-            If you agree with the price, you can proceed to upload your piece.
-            If not, tap cancel to review your details.
-          </p>
 
           <div className="my-4">
             <Alert
               variant="light"
               color="yellow"
               radius="lg"
-              title="Please note"
-              icon={<TriangleAlert strokeWidth={1.5} absoluteStrokeWidth />}
+              title="Exclusivity Agreement"
+              icon={<TriangleAlert strokeWidth={1.5} />}
               className="font-medium"
             >
-              Uploading this piece confirms your agreement to sell it
-              exclusively through Omenai
+              <div className="mt-3 space-y-2 px-4">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={priceConsent}
+                    onChange={(e) => setPriceConsent(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
+                  />
+                  <span className="text-fluid-xs text-dark font-normal group-hover:text-gray-900">
+                    I accept the price stipulated for this artwork and agree to
+                    have it listed on the platform at this price. I understand
+                    that I may cancel this upload if I do not agree.
+                  </span>
+                </label>
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={acknowledgment}
+                    onChange={(e) => setAcknowledgment(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
+                  />
+                  <span className="text-fluid-xs text-dark font-normal group-hover:text-gray-900">
+                    I acknowledge that this artwork is subject to a 90-day
+                    exclusivity period with Omenai and may not be sold through
+                    external channels during this time.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={penaltyConsent}
+                    onChange={(e) => setPenaltyConsent(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
+                  />
+                  <span className="text-fluid-xs text-dark font-normal group-hover:text-gray-900">
+                    I agree that any breach of this exclusivity obligation will
+                    result in a 10% penalty fee deducted from my next successful
+                    sale on the platform.
+                  </span>
+                </label>
+              </div>
             </Alert>
+          </div>
+
+          <div className="mt-4 text-fluid-xs text-gray-500">
+            Acknowledgment: {acknowledgment ? "✔️" : "❌"} | Penalty Consent:{" "}
+            {penaltyConsent ? "✔️" : "❌"} | Price Consent:{" "}
+            {priceConsent ? "✔️" : "❌"}
           </div>
 
           <div className="w-full flex justify-between items-center gap-x-4 mb-2 mt-6">
@@ -202,10 +236,10 @@ export default function ArtworkPricing() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !canProceed}
               className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xs hover:bg-dark/90 font-normal whitespace-nowrap"
             >
-              {loading ? <LoadSmall /> : "Upload"}
+              {loading ? <LoadSmall /> : "Upload artwork"}
             </button>
           </div>
         </>
