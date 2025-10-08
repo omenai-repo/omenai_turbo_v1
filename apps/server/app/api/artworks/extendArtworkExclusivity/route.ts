@@ -29,12 +29,13 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
 
     const artwork = (await Artworkuploads.findOne(
       { art_id },
-      "exclusivity_status"
+      "exclusivity_status art_id"
     ).lean()) as {
       exclusivity_status?: {
         exclusivity_end_date?: Date;
         exclusivity_date?: Date;
       };
+      art_id: string;
     } | null;
 
     if (!artwork) throw new BadRequestError("Artwork not found");
@@ -51,14 +52,16 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
       }
     );
 
+    console.log(art_id);
     await CreateOrder.updateMany(
       {
-        "artwork_data.art_id": art_id,
+        "artwork_data.art_id": artwork.art_id,
       },
       {
         $set: {
-          "exclusivity_status.exclusivity_type": "exclusive",
-          "exclusivity_status.exclusivity_end_date": future_exclusivity_date,
+          "artwork_data.exclusivity_status.exclusivity_type": "exclusive",
+          "artwork_data.exclusivity_status.exclusivity_end_date":
+            future_exclusivity_date,
         },
       }
     );

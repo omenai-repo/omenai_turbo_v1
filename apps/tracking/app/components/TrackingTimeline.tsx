@@ -2,7 +2,14 @@
 "use client";
 
 import { TrackingEvent } from "@omenai/shared-types";
-import { CheckCircle2, Circle, Calendar } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  Calendar,
+  ChevronDown,
+  Package,
+} from "lucide-react";
+import { useState } from "react";
 
 interface TrackingTimelineProps {
   events: TrackingEvent[];
@@ -13,123 +20,161 @@ export default function TrackingTimeline({
   events,
   currentStatus,
 }: TrackingTimelineProps) {
-  // const formatDate = (timestamp: string) => {
-  //   const date = new Date(timestamp);
-  //   return {
-  //     date: date.toLocaleDateString("en-US", {
-  //       month: "short",
-  //       day: "numeric",
-  //       year: "numeric",
-  //     }),
-  //     time: date.toLocaleTimeString("en-US", {
-  //       hour: "2-digit",
-  //       minute: "2-digit",
-  //     }),
-  //   };
-  // };
-
-  const getStatusColor = (index: number) => {
-    if (index === 0) return "bg-dark/50 ";
-    return "from-[#0f172a] to-[#1e293b]";
-  };
+  const INITIAL_DISPLAY_COUNT = 5;
+  const [showAll, setShowAll] = useState(false);
 
   const reversedEvents = [...events].reverse();
+  const displayedEvents = showAll
+    ? reversedEvents
+    : reversedEvents.slice(0, INITIAL_DISPLAY_COUNT);
+  const hasMore = reversedEvents.length > INITIAL_DISPLAY_COUNT;
+
+  const getStatusStyles = (index: number) => {
+    if (index === 0) {
+      return {
+        bg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+        ring: "ring-4 ring-emerald-100",
+        icon: "text-white",
+      };
+    }
+    return {
+      bg: "bg-gradient-to-br from-slate-700 to-slate-800",
+      ring: "ring-2 ring-slate-200",
+      icon: "text-white",
+    };
+  };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
-      {/* Current Status Banner */}
-      <div className="mb-4 bg-dark rounded p-4 text-white shadow-xl">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className="w-6 h-6" />
-          <h2 className="text-fluid-xxs md:text-fluid-base font-medium">
-            Current Status
-          </h2>
+    <div className="w-full max-w-4xl mx-auto p-6">
+      {/* Current Status Card */}
+      <div className="relative mb-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded p-4 text-white shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16" />
+
+        <div className="relative">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <Package className="w-6 h-6" />
+            </div>
+            <h2 className="text-fluid-base font-medium">Current Status</h2>
+          </div>
+          <p className="text-fluid-xs text-white/90 ml-15 font-normal">
+            {currentStatus}
+          </p>
         </div>
-        <p className="text-fluid-xxs md:text-fluid-base font-normal ml-9 md:ml-10">
-          {currentStatus}
-        </p>
       </div>
 
       {/* Timeline Header */}
-      <div className="mb-6">
-        <h3 className="text-fluid-base font-medium text-[#0f172a]">
-          Shipment History
+      <div className="mb-8">
+        <h3 className="text-fluid-sm font-semibold text-slate-900 mb-1">
+          Shipment Journey
         </h3>
-        <p className="text-fluid-xxs text-gray-600">
-          Track your artwork&apos;s journey from origin to destination
+        <p className="text-fluid-xs text-slate-600">
+          Follow your artwork's journey from origin to destination
         </p>
       </div>
 
       {/* Timeline */}
-      <div className="relative">
-        {reversedEvents.map((event, index) => {
+      <div className="relative space-y-6">
+        {/* Vertical connecting line */}
+        <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-gradient-to-b from-slate-300 via-slate-200 to-transparent" />
+
+        {displayedEvents.map((event, index) => {
           const isLatest = index === 0;
+          const styles = getStatusStyles(index);
 
           return (
-            <div key={index} className="relative pb-8 last:pb-0">
-              {/* Vertical Line */}
-              {index !== reversedEvents.length - 1 && (
-                <div className="absolute left-4 md:left-5 top-10 md:top-12 bottom-0 w-0.5 bg-gradient-to-b from-gray-300 to-transparent"></div>
-              )}
-
-              <div className="relative flex gap-4 md:gap-6 group">
-                {/* Icon */}
-                <div className="relative flex-shrink-0">
+            <div
+              key={index}
+              className="relative"
+              style={{
+                animation: `fadeIn 0.4s ease-out ${index * 0.1}s both`,
+              }}
+            >
+              <div className="flex gap-3 group">
+                {/* Timeline Node */}
+                <div className="relative flex-shrink-0 z-10">
                   <div
-                    className={`w-8 h-8 md:w-10 md:h-10 rounded bg-gradient-to-br ${getStatusColor(index)} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                    className={`w-12 h-12 rounded-full ${styles.bg} ${styles.ring} flex items-center justify-center shadow-sm group-hover:scale-110 transition-all duration-300`}
                   >
                     {isLatest ? (
-                      <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-dark" />
+                      <CheckCircle2 className={`w-6 h-6 ${styles.icon}`} />
                     ) : (
-                      <Circle className="w-3 h-3 text-dark fill-dark" />
+                      <Circle
+                        className={`w-4 h-4 ${styles.icon} fill-current`}
+                      />
                     )}
                   </div>
                   {isLatest && (
-                    <div className="absolute inset-0 rounded bg-gradient-to-br from-dark/50 to-teal-500 animate-ping opacity-20"></div>
+                    <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-20" />
                   )}
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 bg-white rounded shadow-md hover:shadow-xl transition-shadow duration-300 p-4 border border-gray-100">
-                  {/* Date & Time */}
-                  <div className="flex flex-wrap items-center mb-1 text-fluid-xxs text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <p className="text-fluid-xxs font-normal text-gray-500 break-words">
+                {/* Event Card */}
+                <div className="flex-1 pb-2">
+                  <div className="bg-white rounded border-2 border-slate-100 hover:border-slate-300 hover:shadow-xl transition-all duration-300 p-5 group-hover:-translate-y-1">
+                    {/* Date Badge */}
+                    <div className="inline-flex items-center gap-2 bg-slate-50 rounded px-2 py-1.5">
+                      <Calendar className="w-4 h-4 text-slate-600" />
+                      <span className="text-fluid-xxs font-normal text-slate-700">
                         {event.date} at {event.time}
-                      </p>
+                      </span>
                     </div>
+
+                    {/* Status Title */}
+                    <h4 className="text-fluid-xs font-medium text-slate-900 mb-2">
+                      {event.serviceArea[0].description ||
+                        event.typeCode ||
+                        "Status Update"}
+                    </h4>
+
+                    {/* Description */}
+                    {event.description && (
+                      <p className="text-fluid-xs text-slate-600 leading-relaxed">
+                        {event.description}
+                      </p>
+                    )}
                   </div>
-
-                  {/* Status */}
-                  <p className="text-fluid-xxs md:text-fluid-base font-medium text-[#0f172a] mb-1">
-                    {event.serviceArea[0].description ||
-                      event.typeCode ||
-                      "Status Unknown"}
-                  </p>
-
-                  {/* Description */}
-                  {event.description && (
-                    <p className="text-fluid-xxs text-gray-600">
-                      {event.description}
-                    </p>
-                  )}
-
-                  {/* Location */}
-                  {/* <div className="flex items-start gap-2 text-fluid-sm text-gray-700 bg-gray-50 rounded-lg p-3">
-                    <MapPin className="w-4 h-4 md:w-4.5 md:h-4.5 flex-shrink-0 mt-0.5 text-[#0f172a]" />
-                    <span className="break-words">
-                      {location.address_line}
-                      {location.zip && `, ${location.zip}`}
-                      {location.countryCode && ` - ${location.countryCode}`}
-                    </span>
-                  </div> */}
                 </div>
               </div>
             </div>
           );
         })}
+
+        {/* Show More/Less Button */}
+        {hasMore && (
+          <div className="flex justify-center pt-4">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="group flex items-center gap-2 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 rounded-xl px-6 py-3 text-fluid-xs font-medium text-slate-700 transition-all duration-300 shadow-sm hover:shadow-md"
+            >
+              <span>
+                {showAll
+                  ? "Show Less"
+                  : `Show ${reversedEvents.length - INITIAL_DISPLAY_COUNT} More Events`}
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-300 ${
+                  showAll ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+          </div>
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -39,7 +39,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
           update: {
             $set: {
               "exclusivity_status.exclusivity_type": "non-exclusive",
-              "exclusivity_status.exclusivity_end_date": null,
             },
           },
         },
@@ -55,7 +54,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
             $set: {
               "artwork_data.exclusivity_status.exclusivity_type":
                 "non-exclusive",
-              "artwork_data.exclusivity_status.exclusivity_end_date": null,
             },
           },
         },

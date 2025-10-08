@@ -12,11 +12,13 @@ import { AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
-
+import { declineReasonMapping } from "./declineReasonMap";
 export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
     artistActionStore();
   const { csrf } = useAuth({ requiredRole: "artist" });
+
+  const declineReasons = Object.keys(declineReasonMapping);
 
   const [checked, setChecked] = useState(false);
 
@@ -30,15 +32,15 @@ export default function ProvideOrderRejectionModalForm() {
 
   const [loading, setLoading] = useState(false);
 
-  function handleInputChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const { name, value } = e.target;
+  const [selectedReason, setSelectedReason] = useState("");
+
+  const toggleReason = (reason: string) => {
+    setSelectedReason(reason);
     setAcceptedStatus((prev) => ({
       ...prev,
-      [name]: value,
+      reason: declineReasonMapping[reason],
     }));
-  }
+  };
 
   const router = useRouter();
 
@@ -156,21 +158,39 @@ export default function ProvideOrderRejectionModalForm() {
           </>
         ) : (
           <div className="space-y-4 mb-2 flex flex-col w-full">
-            <div className="relative w-full h-auto my-2 space-y-2">
-              <label
-                htmlFor="shipping"
-                className="text-fluid-xxs text-dark mb-2"
-              >
-                Provide a reason for declining order request
-              </label>
-              <textarea
-                onChange={handleInputChange}
-                name="reason"
-                required
-                rows={3}
-                placeholder="e.g Artwork has been sold"
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xxs placeholder:text-fluid-xxs"
-              />
+            <p className="text-gray-500 text-fluid-xxs mb-4">
+              Please choose a reasons that best explain why you&apos;re
+              declining this order.
+            </p>
+
+            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+              {declineReasons.map((reason, index) => (
+                <label
+                  key={index}
+                  htmlFor={`reason-${index}`}
+                  className="flex items-start gap-3 cursor-pointer select-none group"
+                >
+                  <input
+                    id={`reason-${index}`}
+                    type="checkbox"
+                    checked={selectedReason === reason}
+                    onChange={() => toggleReason(reason)}
+                    className="w-5 h-5 accent-red-600 cursor-pointer mt-1"
+                  />
+                  <span className="text-dark text-fluid-xxs leading-relaxed group-hover:text-dark/80">
+                    {reason}
+                  </span>
+                </label>
+              ))}
+
+              {/* Other Option */}
+
+              {accepted_status.reason && (
+                <div className="mt-5 p-3 bg-red-50 border border-red-100 rounded-lg text-fluid-xxs text-red-700">
+                  <strong>Client interpretation:</strong>{" "}
+                  {accepted_status.reason}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -178,11 +198,19 @@ export default function ProvideOrderRejectionModalForm() {
         {/* Submit Button */}
         <div className="w-full mt-5">
           <button
-            disabled={!checked || loading}
+            disabled={
+              (order_modal_metadata.is_current_order_exclusive && !checked) ||
+              loading ||
+              (!order_modal_metadata.is_current_order_exclusive &&
+                (accepted_status.reason ?? "").trim() === "")
+            }
             type="submit"
             className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xxs font-normal transition-all duration-200 ease-in-out
               ${
-                checked && !loading
+                (order_modal_metadata.is_current_order_exclusive && checked) ||
+                (!order_modal_metadata.is_current_order_exclusive &&
+                  (accepted_status.reason ?? "").trim() !== "" &&
+                  !loading)
                   ? "bg-red-600 hover:bg-red-500 text-white"
                   : "bg-dark/10 text-[#A1A1A1] cursor-not-allowed"
               }`}

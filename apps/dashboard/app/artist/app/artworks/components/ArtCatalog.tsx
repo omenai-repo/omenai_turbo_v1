@@ -70,8 +70,6 @@ export default function ArtCatalog() {
                         dashboard_type="artist"
                         medium={art.medium as ArtworkMediumTypes}
                         countdown={
-                          art.exclusivity_status?.exclusivity_type ===
-                            "exclusive" &&
                           art.exclusivity_status?.exclusivity_end_date
                             ? (art.exclusivity_status
                                 .exclusivity_end_date as Date)
