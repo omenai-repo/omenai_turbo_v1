@@ -59,7 +59,8 @@ export default async function RootLayout({
       />
       <html lang="en" {...mantineHtmlProps}>
         <head>
-          <ColorSchemeScript />
+          <meta name="color-scheme" content="light" />
+          <ColorSchemeScript defaultColorScheme="light" />
         </head>
         <body className={`${work_sans.variable} flex flex-col justify-center`}>
           <NextTopLoader color="#0f172a" height={6} />
@@ -72,7 +73,10 @@ export default async function RootLayout({
           />
           <SessionProvider initialSessionData={initialSessionData}>
             <QueryProvider>
-              <MantineProvider>
+              <MantineProvider
+                defaultColorScheme="light"
+                forceColorScheme="light"
+              >
                 {children}
                 <Analytics />
               </MantineProvider>

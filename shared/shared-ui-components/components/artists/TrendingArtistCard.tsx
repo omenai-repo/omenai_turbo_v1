@@ -23,7 +23,6 @@ export function TrendingArtistCard({
   artist_id: string;
 }) {
   const image_href = getOptimizedImage(url, "thumbnail", 40);
-  const encoded_url = decodeURIComponent(artist);
   const base_uri = base_url();
   return (
     <div className="group relative mt-8">

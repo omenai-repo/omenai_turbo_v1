@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { Checkbox, Label } from "flowbite-react";
+import { base_url } from "@omenai/url-config/src/config";
 
 export default function FormConfirm() {
   const { decrementCurrentGallerySignupFormIndex, isLoading } =
@@ -36,18 +37,25 @@ export default function FormConfirm() {
             className="border-dark"
           />
           <Label
-            htmlFor="terms of use"
-            className="text-dark text-fluid-xxs sm:text-fluid-xxs"
+            htmlFor="policy-acceptance"
+            className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
           >
-            By ticking this box, I accept the{" "}
-            <Link href={"/"} className="underline font-bold">
-              Terms of use
+            I accept Omenai's{" "}
+            <Link
+              href={`${base_url()}/legal?ent=gallery`}
+              target="__blank"
+              className="underline font-medium text-dark"
+            >
+              Terms of Use
             </Link>{" "}
             and{" "}
-            <Link href={"/"} className="underline font-bold">
+            <Link
+              href={`${base_url()}/privacy`}
+              target="__blank"
+              className="underline font-medium text-dark"
+            >
               Privacy Policy
-            </Link>{" "}
-            of creating an account with Omenai
+            </Link>
           </Label>
         </div>
       </div>

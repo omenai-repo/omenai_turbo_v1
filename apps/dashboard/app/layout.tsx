@@ -36,13 +36,14 @@ export default async function DashboardRootLayout({
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        <meta name="color-scheme" content="light" />
+        <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body
         className={`${work_sans.variable} font-sans flex flex-col px-4 justify-center`}
       >
         <SessionProvider initialSessionData={initialSessionData}>
-          <MantineProvider>
+          <MantineProvider defaultColorScheme="light" forceColorScheme="light">
             <LayoutWrapper children={children} />
           </MantineProvider>
         </SessionProvider>

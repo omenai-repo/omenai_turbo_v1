@@ -51,6 +51,7 @@ export default function ArtworkListing({
                     sessionId={user ? user.id : undefined}
                     availability={art.availability}
                     medium={art.medium}
+                    author_id={art.author_id}
                   />
                 );
               })}

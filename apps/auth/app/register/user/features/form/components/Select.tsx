@@ -105,9 +105,9 @@ export default function SelectInput({
                 (individualSignupData.state === "" ||
                   individualSignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-medium disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xxs placeholder:text-dark/40"
+            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-normal disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xxs placeholder:text-dark"
           >
-            <option value="" className="text-dark/40">
+            <option value="" className="text-dark">
               Select {labelText}
             </option>
             <>
@@ -118,7 +118,7 @@ export default function SelectInput({
                       key={country.isoCode}
                       value={country.name}
                       data-code={country.isoCode}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
                     >
                       {country.name}
                     </option>
@@ -131,7 +131,7 @@ export default function SelectInput({
                       key={state.isoCode}
                       value={state.name}
                       data-code={state.isoCode}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
                     >
                       {state.name}
                     </option>
@@ -144,7 +144,7 @@ export default function SelectInput({
                       key={city.name}
                       value={city.name}
                       data-code={city.name}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-medium text-dark/40"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
                     >
                       {city.name}
                     </option>

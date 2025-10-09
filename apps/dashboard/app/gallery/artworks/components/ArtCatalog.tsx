@@ -66,6 +66,7 @@ export default function ArtCatalog() {
                         availability={art.availability}
                         isDashboard
                         medium={art.medium}
+                        author_id={art.author_id}
                       />
                     );
                   })}

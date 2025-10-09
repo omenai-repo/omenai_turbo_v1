@@ -18,6 +18,7 @@ import ArtworkPricingSkeleton from "@omenai/shared-ui-components/components/skel
 import Link from "next/link";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { base_url } from "@omenai/url-config/src/config";
 function extractNumberString(str: string) {
   if (!str) return ""; // handle empty or null input
 
@@ -201,8 +202,16 @@ export default function ArtworkPricing() {
                   />
                   <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
                     I acknowledge that this artwork is subject to a 90-day
-                    exclusivity period with Omenai and may not be sold through
-                    external channels during this time.
+                    exclusivity period with Omenai as stipulated in the{" "}
+                    <Link
+                      href={`${base_url()}/legal?ent=artist`}
+                      target="__blank"
+                      className="underline font-semibold text-dark"
+                    >
+                      Terms of Agreement
+                    </Link>{" "}
+                    and may not be sold through external channels during this
+                    time.
                   </span>
                 </label>
 
@@ -216,7 +225,14 @@ export default function ArtworkPricing() {
                   <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
                     I agree that any breach of this exclusivity obligation will
                     result in a 10% penalty fee deducted from my next successful
-                    sale on the platform.
+                    sale on the platform as stipulated in the{" "}
+                    <Link
+                      href={`${base_url()}/legal?ent=artist`}
+                      target="__blank"
+                      className="underline font-semibold text-dark"
+                    >
+                      Terms of Agreement.
+                    </Link>{" "}
                   </span>
                 </label>
               </div>

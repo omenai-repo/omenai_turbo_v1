@@ -15,6 +15,7 @@ import AppStoreAd from "./features/appStoreAd/AppStoreAd";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import TrendingArtistWrapper from "./features/trendingArtists/TrendingArtistWrapper";
+import Newsletter from "./Newsletter";
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
 
@@ -68,6 +69,9 @@ export default function Home() {
       </div>
       <div className="my-6">
         <AppStoreAd />
+      </div>
+      <div className="my-6">
+        <Newsletter />
       </div>
       <Footer />
     </main>

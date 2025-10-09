@@ -18,6 +18,7 @@ import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
+import { tracking_url } from "@omenai/url-config/src/config";
 
 type Payload = {
   order_id: string;
@@ -178,7 +179,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
           $set: {
             "shipping_details.shipment_information.tracking.id":
               shipment.data.shipmentTrackingNumber,
-            "shipping_details.shipment_information.tracking.link": `https://omenai.app/tracking/${payload.order_id}`,
+            "shipping_details.shipment_information.tracking.link": `${tracking_url()}?tracking_id=${shipment.data.shipmentTrackingNumber}`,
             "shipping_details.shipment_information.estimates":
               shipment.data.estimatedDeliveryDate,
             "shipping_details.shipment_information.planned_shipping_date":

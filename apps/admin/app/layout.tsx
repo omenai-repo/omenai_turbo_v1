@@ -37,11 +37,10 @@ export default function AdminDashboardRootLayout({
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        <meta name="color-scheme" content="light" />
+        <ColorSchemeScript defaultColorScheme="light" />
       </head>
-      <body
-        className={`${work_sans.variable} flex flex-col justify-center`}
-      >
+      <body className={`${work_sans.variable} flex flex-col justify-center`}>
         <Toaster
           position="top-right"
           expand
@@ -51,7 +50,7 @@ export default function AdminDashboardRootLayout({
         />
         <NextTopLoader color="#030303" height={6} />
 
-        <MantineProvider>
+        <MantineProvider defaultColorScheme="light" forceColorScheme="light">
           <QueryProvider>{children}</QueryProvider>
         </MantineProvider>
       </body>

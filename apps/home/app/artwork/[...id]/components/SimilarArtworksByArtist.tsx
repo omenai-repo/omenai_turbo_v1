@@ -73,6 +73,7 @@ export default function SimilarArtworksByArtist({
                     medium: ArtworkMediumTypes;
                     rarity: string;
                     availability: boolean;
+                    author_id: string;
                   }) => {
                     return (
                       <ArtworkCard
@@ -87,6 +88,7 @@ export default function SimilarArtworksByArtist({
                         sessionId={sessionId}
                         availability={art.availability}
                         medium={art.medium}
+                        author_id={art.author_id}
                       />
                     );
                   }

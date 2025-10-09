@@ -5,6 +5,7 @@ import { ChangeEvent, useState } from "react";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { Checkbox, Label } from "flowbite-react";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
+import { base_url } from "@omenai/url-config/src/config";
 
 export default function FormConfirm() {
   const { decrementCurrentArtistSignupFormIndex, isLoading } =
@@ -83,11 +84,19 @@ export default function FormConfirm() {
               className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
             >
               I accept Omenai's{" "}
-              <Link href={"/"} className="underline font-medium text-dark">
+              <Link
+                href={`${base_url()}/legal?ent=artist`}
+                target="__blank"
+                className="underline font-medium text-dark"
+              >
                 Terms of Use
               </Link>{" "}
               and{" "}
-              <Link href={"/"} className="underline font-medium text-dark">
+              <Link
+                href={`${base_url()}/privacy`}
+                target="__blank"
+                className="underline font-medium text-dark"
+              >
                 Privacy Policy
               </Link>
             </Label>

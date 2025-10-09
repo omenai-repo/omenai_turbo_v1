@@ -68,6 +68,7 @@ export default function ArtCatalog() {
                         availability={art.availability}
                         isDashboard={true}
                         dashboard_type="artist"
+                        author_id={art.author_id}
                         medium={art.medium as ArtworkMediumTypes}
                         countdown={
                           art.exclusivity_status?.exclusivity_end_date

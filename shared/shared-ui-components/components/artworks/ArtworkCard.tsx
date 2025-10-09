@@ -33,6 +33,7 @@ export default function ArtworkCard({
   medium,
   trending = false,
   countdown,
+  author_id,
 }: {
   image: string;
   artist: string;
@@ -49,6 +50,7 @@ export default function ArtworkCard({
   isDashboard?: boolean;
   dashboard_type?: "artist" | "gallery";
   availability: boolean;
+  author_id: string;
   medium: ArtworkMediumTypes;
   trending?: boolean;
   countdown?: Date | null;
@@ -133,6 +135,7 @@ export default function ArtworkCard({
           <h3 className="font-bold text-dark font-medium text-fluid-xs leading-tight line-clamp-2">
             {name}
           </h3>
+
           <p className="text-dark/90 font-normal text-fluid-xxs">
             {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
           </p>

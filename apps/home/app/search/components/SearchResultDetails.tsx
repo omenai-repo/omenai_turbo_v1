@@ -72,6 +72,7 @@ export default function SearchResultDetails({
                         availability={art.availability}
                         isDashboard={false}
                         medium={art.medium}
+                        author_id={art.author_id}
                       />
                     );
                   })}

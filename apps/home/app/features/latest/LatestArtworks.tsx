@@ -43,6 +43,7 @@ export default function LatestArtworks({
                       availability={art.availability}
                       medium={art.medium}
                       trending={false}
+                      author_id={art.author_id}
                     />
                   );
                 })}

@@ -97,6 +97,7 @@ export function ArtworksListing({
                     sessionId={sessionId}
                     availability={art.availability}
                     medium={art.medium}
+                    author_id={art.author_id}
                   />
                 );
               })}

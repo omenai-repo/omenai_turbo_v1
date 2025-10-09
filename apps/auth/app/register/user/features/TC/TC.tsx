@@ -1,6 +1,7 @@
 "use client";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { base_url } from "@omenai/url-config/src/config";
 import { Checkbox, Label } from "flowbite-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -33,18 +34,25 @@ export default function TC() {
             className="border-dark"
           />
           <Label
-            htmlFor="terms of use"
-            className="text-dark text-fluid-xxs sm:text-fluid-xxs"
+            htmlFor="policy-acceptance"
+            className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
           >
-            By ticking this box, I accept the{" "}
-            <Link href={"/"} className="underline font-bold">
-              Terms of use
+            I accept Omenai's{" "}
+            <Link
+              href={`${base_url()}/legal?ent=collector`}
+              target="__blank"
+              className="underline font-medium text-dark"
+            >
+              Terms of Use
             </Link>{" "}
             and{" "}
-            <Link href={"/"} className="underline font-bold">
+            <Link
+              href={`${base_url()}/privacy`}
+              target="__blank"
+              className="underline font-medium text-dark"
+            >
               Privacy Policy
-            </Link>{" "}
-            of creating an account with Omenai
+            </Link>
           </Label>
         </div>
       </div>

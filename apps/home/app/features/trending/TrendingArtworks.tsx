@@ -48,6 +48,7 @@ export default function TrendingArtworks({
                       availability={art.availability}
                       medium={art.medium}
                       trending={true}
+                      author_id={art.author_id}
                     />
                   );
                 })}

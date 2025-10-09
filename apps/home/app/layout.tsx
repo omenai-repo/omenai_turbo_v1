@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Work_Sans } from "next/font/google";
+import { Work_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
 import LoginModal from "@omenai/shared-ui-components/components/modal/LoginModal";
@@ -60,7 +60,8 @@ export default async function RootLayout({
       />
       <html lang="en" {...mantineHtmlProps}>
         <head>
-          <ColorSchemeScript />
+          <meta name="color-scheme" content="light" />
+          <ColorSchemeScript defaultColorScheme="light" />
         </head>
         <body
           className={`${work_sans.variable} font-sans flex flex-col justify-center`}
@@ -75,7 +76,10 @@ export default async function RootLayout({
           />
           <SessionProvider initialSessionData={initialSessionData}>
             <QueryProvider>
-              <MantineProvider>
+              <MantineProvider
+                defaultColorScheme="light"
+                forceColorScheme="light"
+              >
                 <LoginModal />
                 <RecoveryModal />
                 <OrderReceivedModal />

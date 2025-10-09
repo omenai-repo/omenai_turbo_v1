@@ -59,9 +59,6 @@ export default function SimilarArtworks({
     width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
   );
 
-  const safeSlug = encodeURIComponent(medium)
-    .replace(/\(/g, "%28")
-    .replace(/\)/g, "%29");
   return (
     <div className="w-full h-full py-5">
       <h1 className="text-dark font-bold text-fluid-sm">Hot recommendations</h1>
@@ -82,6 +79,7 @@ export default function SimilarArtworks({
                       usd_price: number;
                       shouldShowPrice: "Yes" | "No" | string;
                     };
+                    author_id: string;
                     impressions: number;
                     like_IDs: string[];
                     art_id: string;
@@ -102,6 +100,7 @@ export default function SimilarArtworks({
                         sessionId={sessionId}
                         availability={art.availability}
                         medium={art.medium}
+                        author_id={art.author_id}
                       />
                     );
                   }

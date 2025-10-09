@@ -1,6 +1,7 @@
 // @omenai/tailwind-config/tailwind.config.mjs
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   theme: {
     container: {
       padding: { DEFAULT: "1rem" },
