@@ -269,6 +269,14 @@ async function processPurchaseTransaction(
       { $set: { availability: false } }
     ).session(session);
 
+    const wallet_increment_amount = Math.round(
+      Number(verified_transaction.data.amount) -
+        (commission +
+          penalty_fee +
+          Number(meta.tax_fees ?? 0) +
+          Number(meta.shipping_cost ?? 0))
+    );
+
     const updateOrderPromise = CreateOrder.updateOne(
       {
         "buyer_details.email": meta.buyer_email,
@@ -306,14 +314,6 @@ async function processPurchaseTransaction(
       },
       { $set: { availability: false } }
     ).session(session);
-
-    const wallet_increment_amount = Math.round(
-      Number(verified_transaction.data.amount) -
-        (commission +
-          penalty_fee +
-          Number(meta.tax_fees ?? 0) +
-          Number(meta.shipping_cost ?? 0))
-    );
 
     const fundWalletPromise = Wallet.updateOne(
       { owner_id: meta.seller_id },

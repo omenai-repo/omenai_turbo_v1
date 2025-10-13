@@ -129,6 +129,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
       splitInvoiceAndReceipt: false,
       receiptAndLabelsInOneImage: true,
     },
+    // TODO: Don't put this in prod
     customerDetails: {
       shipperDetails: {
         postalAddress: {

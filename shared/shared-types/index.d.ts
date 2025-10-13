@@ -385,6 +385,7 @@ export type OrderShippingDetailsTypes = {
     tracking: TrackingInformationTypes;
     quote: ShippingQuoteTypes;
     waybill_document: string;
+    proof_of_delivery?: string;
   };
 };
 
@@ -902,6 +903,13 @@ export type ShipmentRequestDataTypes = {
     fullname: string;
   };
   invoice_number: string;
+};
+
+type ShipmentDeliveryValidation = {
+  tracking_id: string;
+  estimated_delivery_date: Date | string;
+  author_id: string;
+  anount_to_inc: number;
 };
 
 // NEXUS THRESHOLDS

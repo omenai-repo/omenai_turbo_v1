@@ -7,7 +7,7 @@ import GalleriesTerms from "./components/GalleryTerms";
 import CollectorsTerms from "./components/CollectorTerms";
 
 export default function LegalDocuments() {
-  const [activeTab, setActiveTab] = useState("privacy");
+  const [activeTab, setActiveTab] = useState("terms");
   const searchParams = useSearchParams();
   const entity: "artist" | "gallery" | "collector" = searchParams.get("ent") as
     | "artist"
