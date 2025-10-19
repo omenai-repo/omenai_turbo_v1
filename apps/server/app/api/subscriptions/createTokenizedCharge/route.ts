@@ -37,6 +37,8 @@ export const POST = withRateLimit(config)(async function POST(
       ? +data.amount - prorationValue.value
       : data.amount;
 
+    // TODO: Fix this payload data
+
     const payload = {
       currency: "USD",
       amount: 97,
@@ -46,8 +48,7 @@ export const POST = withRateLimit(config)(async function POST(
       country: "US",
       token: "flw-t1nf-2af327ab273a2add108a325b9ebfb7d1-m03k",
       narration: "Payment for Omenai monthly subscription",
-      redirect_url:
-        "https://dashboard.omenai.app/gallery/billing/plans/checkout/verification",
+      redirect_url: `https://staging.dashboard.omenai.app/gallery/billing/plans/checkout/verification`,
       meta: {
         gallery_id: "d0a5bff5-cca6-4e82-873d-f9865b6aacb5",
         type: "subscription",

@@ -1,3 +1,4 @@
+import { dashboard_url } from "@/configs/url-config/src/config";
 import {
   Body,
   Button,
@@ -46,7 +47,7 @@ const SubscriptionPaymentFailedMail = (name: string) => {
             </Text>
 
             <Button
-              href="https://dashboard.omenai.app/gallery/billing"
+              href={`${dashboard_url()}/gallery/billing/card`}
               className="bg-black text-white text-fluid-xxs font-medium px-5 py-3 rounded mt-[20px] mb-[10px] mx-auto block text-center"
             >
               Update Payment Info
