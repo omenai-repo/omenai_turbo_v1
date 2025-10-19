@@ -1,14 +1,14 @@
 import "./globals.css";
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
 import {
   ColorSchemeScript,
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
 import { Work_Sans } from "next/font/google";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 
 export const viewport: Viewport = {
   width: "device-width",

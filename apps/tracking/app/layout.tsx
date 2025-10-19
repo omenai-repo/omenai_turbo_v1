@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
-
 import { Toaster } from "sonner";
 import type { Viewport } from "next";
 import "./globals.css";
