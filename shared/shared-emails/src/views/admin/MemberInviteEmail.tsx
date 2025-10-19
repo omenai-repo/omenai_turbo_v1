@@ -1,4 +1,4 @@
-import { admin_url } from "@/configs/url-config/src/config";
+import { admin_url } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,

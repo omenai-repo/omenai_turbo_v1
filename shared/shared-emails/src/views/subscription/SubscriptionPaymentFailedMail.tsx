@@ -1,4 +1,4 @@
-import { dashboard_url } from "@/configs/url-config/src/config";
+import { dashboard_url } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
