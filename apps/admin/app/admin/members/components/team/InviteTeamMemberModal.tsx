@@ -31,6 +31,15 @@ const roleOptions = [
   },
 ];
 
+// Helper to check if an email address belongs to the allowed domain
+function isAllowedDomainEmail(email: string): boolean {
+  // Add allowed domains here (expand array if needed)
+  const allowedDomain = "omenai.net";
+  const parts = email.split("@");
+  if (parts.length !== 2) return false;
+  return parts[1].toLowerCase() === allowedDomain;
+}
+
 export default function InviteTeamMemberModal({
   opened,
   onClose,
@@ -44,7 +53,7 @@ export default function InviteTeamMemberModal({
     setLoading(true);
     if (email) {
       try {
-        if (!email.includes("omenai.net")) {
+        if (!isAllowedDomainEmail(email)) {
           toast_notif(
             "You can only invite members of your organization to this team",
             "error"
