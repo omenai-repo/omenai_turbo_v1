@@ -1,3 +1,4 @@
+import { admin_url } from "@/configs/url-config/src/config";
 import {
   Body,
   Button,
@@ -69,7 +70,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
             {/* CTA Button */}
             <Section className="text-center my-8">
               <Link
-                href={`https://admin.omenai.app/activate?token=${token}`}
+                href={`${admin_url()}/activate?token=${token}`}
                 className="bg-[#0f172a] border border-white text-white font-semibold py-3 px-8 rounded inline-block no-underline transition-all duration-200 shadow-md hover:shadow-lg"
               >
                 Activate Admin Account

@@ -15,6 +15,7 @@ import {
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -53,7 +54,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       // Get currency rate
       const response = await fetch(
-        `https://api.omenai.app/api/flw/getTransferRate?source=${currency.toUpperCase()}&destination=USD&amount=${price.recommendedPrice}`,
+        `${getApiUrl()}/api/flw/getTransferRate?source=${currency.toUpperCase()}&destination=USD&amount=${price.recommendedPrice}`,
         {
           method: "GET",
           headers: {

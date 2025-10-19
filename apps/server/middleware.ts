@@ -3,6 +3,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const allowed_origins = [
+  "https://staging.auth.omenai.app",
+  "https://staging.dashboard.omenai.app",
+  "https://staging.admin.omenai.app",
+  "https://staging.omenai.app",
+  "https://staging.api.omenai.app",
+  "https://staging.tracking.omenai.app",
   "https://auth.omenai.app",
   "https://dashboard.omenai.app",
   "https://admin.omenai.app",
