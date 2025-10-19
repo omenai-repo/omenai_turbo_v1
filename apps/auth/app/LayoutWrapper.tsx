@@ -1,6 +1,5 @@
 "use client";
 import NextTopLoader from "nextjs-toploader";
-
 import { QueryProvider } from "@omenai/package-provider";
 import { Toaster } from "sonner";
 

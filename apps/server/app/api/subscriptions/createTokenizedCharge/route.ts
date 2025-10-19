@@ -2,9 +2,7 @@ import { Proration } from "@omenai/shared-models/models/prorations/ProrationSche
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { dashboard_url, getApiUrl } from "@omenai/url-config/src/config";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";

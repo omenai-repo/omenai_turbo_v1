@@ -3,13 +3,13 @@ import "./globals.css";
 import { Cormorant_Garamond, Work_Sans } from "next/font/google";
 import { QueryProvider } from "@omenai/package-provider";
 import { Toaster } from "sonner";
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
 import {
   ColorSchemeScript,
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
