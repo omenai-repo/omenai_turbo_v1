@@ -16,6 +16,7 @@ import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
 import NoVerificationBlock from "../../components/NoVerificationBlock";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { isSubscriptionExpired } from "@omenai/shared-utils/src/isSubscriptionExpired";
 export default function OrdersGroup() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const [tab, setTab] = useState("pending");
@@ -48,6 +49,7 @@ export default function OrdersGroup() {
           id: acc.data.connected_account_id,
           isSubActive: sub_check?.data?.status === "active",
           orders: !result ? [] : result.isOk ? result.data : [],
+          subExpiryDate: sub_check?.data?.expiry_date || null,
         };
       } catch (error) {
         handleError();
@@ -67,15 +69,17 @@ export default function OrdersGroup() {
         {!user.gallery_verified && !data?.isSubActive && (
           <NoVerificationBlock gallery_name={user.name as string} />
         )}
-        {(user.gallery_verified as boolean) && !data?.isSubActive && (
-          <NoSubscriptionBlock />
-        )}
+        {(user.gallery_verified as boolean) &&
+          !data?.isSubActive &&
+          isSubscriptionExpired(data?.subExpiryDate) && <NoSubscriptionBlock />}
         {!user.gallery_verified && data?.isSubActive && (
           <NoVerificationBlock gallery_name={user.name as string} />
         )}
-        {(user.gallery_verified as boolean) && data?.isSubActive && (
-          <OrdersTab orders={data?.orders} />
-        )}
+        {(user.gallery_verified as boolean) &&
+          (data?.isSubActive ||
+            !isSubscriptionExpired(data?.subExpiryDate)) && (
+            <OrdersTab orders={data?.orders} />
+          )}
       </div>
     </>
   );
