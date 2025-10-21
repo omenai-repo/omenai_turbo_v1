@@ -48,6 +48,7 @@ export default function OrdersGroup() {
           id: acc.data.connected_account_id,
           isSubActive: sub_check?.data?.status === "active",
           orders: !result ? [] : result.isOk ? result.data : [],
+          subExpiryDate: sub_check?.data?.expiry_date || null,
         };
       } catch (error) {
         handleError();
@@ -55,6 +56,15 @@ export default function OrdersGroup() {
     },
     refetchOnWindowFocus: false,
   });
+  function isSubscriptionExpired(subscriptionDateStr: string): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); //normalize to midnight
+
+    const subscriptionDate = new Date(subscriptionDateStr);
+    subscriptionDate.setHours(0, 0, 0, 0); //normalize to midnight
+
+    return subscriptionDate < today;
+  }
   if (isLoading) {
     return <OrderSkeleton />;
   }
@@ -67,9 +77,9 @@ export default function OrdersGroup() {
         {!user.gallery_verified && !data?.isSubActive && (
           <NoVerificationBlock gallery_name={user.name as string} />
         )}
-        {(user.gallery_verified as boolean) && !data?.isSubActive && (
-          <NoSubscriptionBlock />
-        )}
+        {(user.gallery_verified as boolean) &&
+          !data?.isSubActive &&
+          isSubscriptionExpired(data?.subExpiryDate) && <NoSubscriptionBlock />}
         {!user.gallery_verified && data?.isSubActive && (
           <NoVerificationBlock gallery_name={user.name as string} />
         )}
