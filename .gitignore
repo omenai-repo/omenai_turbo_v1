@@ -5,6 +5,7 @@ node_modules
 .pnp
 .pnp.js
 
+
 # Local env files
 .env
 .env.local
@@ -38,3 +39,6 @@ yarn-error.log*
 *.pem
 .qodo
 .test_middleware.ts
+
+# folders
+/configs/url-config/

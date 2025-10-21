@@ -159,6 +159,7 @@ export const artistActionStore = create<ArtistActionStoreTypes>((set, get) => ({
   },
   withdrawalFormPopup: false,
   toggleWithdrawalFormPopup: (value: boolean) => {
+    document.body.style.overflow = value ? "hidden" : "auto";
     set({ withdrawalFormPopup: value });
   },
   walletPinPopup: false,
