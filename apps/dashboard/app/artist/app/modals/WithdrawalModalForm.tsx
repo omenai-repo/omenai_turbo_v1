@@ -120,7 +120,7 @@ export default function WithdrawalModalForm() {
       {isWithdrawalSuccessful ? (
         <WithdrawalSuccessScreen />
       ) : (
-        <div className="max-w-lg w-full max-h-[95vh] mx-auto">
+        <div className="max-w-lg w-full max-h-[95vh] overflow-y-scroll m-auto">
           <div className="bg-white rounded shadow-lg overflow-hidden">
             {/* Header */}
             <div className="bg-dark text-white px-4 py-3">
