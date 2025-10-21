@@ -16,6 +16,7 @@ import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
 import NoVerificationBlock from "../../components/NoVerificationBlock";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { isSubscriptionExpired } from "@omenai/shared-utils/src/isSubscriptionExpired";
 export default function OrdersGroup() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const [tab, setTab] = useState("pending");
@@ -56,15 +57,6 @@ export default function OrdersGroup() {
     },
     refetchOnWindowFocus: false,
   });
-  function isSubscriptionExpired(subscriptionDateStr: string): boolean {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); //normalize to midnight
-
-    const subscriptionDate = new Date(subscriptionDateStr);
-    subscriptionDate.setHours(0, 0, 0, 0); //normalize to midnight
-
-    return subscriptionDate < today;
-  }
   if (isLoading) {
     return <OrderSkeleton />;
   }
@@ -83,9 +75,11 @@ export default function OrdersGroup() {
         {!user.gallery_verified && data?.isSubActive && (
           <NoVerificationBlock gallery_name={user.name as string} />
         )}
-        {(user.gallery_verified as boolean) && data?.isSubActive && (
-          <OrdersTab orders={data?.orders} />
-        )}
+        {(user.gallery_verified as boolean) &&
+          (data?.isSubActive ||
+            !isSubscriptionExpired(data?.subExpiryDate)) && (
+            <OrdersTab orders={data?.orders} />
+          )}
       </div>
     </>
   );
