@@ -131,7 +131,7 @@ export default function SubDetail({
             </span>
           </div>
 
-          {sub_data.status === "active" && (
+          {(sub_data.status === "active" || sub_data.status === "canceled") && (
             <>
               <div className="mt-3">
                 <div className="flex justify-between text-fluid-xxs text-slate-600 mb-1">
