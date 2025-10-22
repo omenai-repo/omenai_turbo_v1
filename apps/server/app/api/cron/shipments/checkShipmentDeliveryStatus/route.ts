@@ -90,8 +90,8 @@ async function processOrder(order: any, dbConnection: any) {
               status: "completed",
               "shipping_details.shipment_information.tracking.delivery_status":
                 "Delivered",
-              "shipping_details.shipment_information.tracking.delivered_at":
-                new Date(),
+              "shipping_details.shipment_information.tracking.delivery_date":
+                toUTCDate(new Date(latestEvent.date)),
             },
           },
           { session }
@@ -196,7 +196,8 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
             $exists: true,
             $ne: null,
           },
-        "shipping_details.shipment_information.tracking.status": "In Transit",
+        "shipping_details.shipment_information.tracking.delivery_status":
+          "In Transit",
       },
       "order_id shipping_details seller_designation payment_information seller_details"
     ).lean();
