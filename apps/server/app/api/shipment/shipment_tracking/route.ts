@@ -56,10 +56,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     headers: getDhlHeaders(),
   };
 
+  console.log(requestOptions);
+
   try {
     const response = await fetch(url.toString(), requestOptions);
     console.log("fetched");
     const data = await response.json();
+    console.log(data);
 
     if (!response.ok)
       throw new ServerError(
