@@ -95,6 +95,7 @@ async function processOrder(order: any, dbConnection: any) {
                 "Delivered",
               "shipping_details.shipment_information.tracking.delivery_date":
                 toUTCDate(new Date(latestEvent.date)),
+              "shipping_details.delivery_confirmed": true,
             },
           },
           { session }

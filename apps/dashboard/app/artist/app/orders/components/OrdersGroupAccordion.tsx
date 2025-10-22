@@ -84,7 +84,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded tex-fullt-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1} absoluteStrokeWidth size={16} />
           Payment completed
         </span>
@@ -137,7 +137,7 @@ export function OrdersGroupAccordion({
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded text--fullfluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1} absoluteStrokeWidth size={16} />
           Order has been fulfilled
         </span>
