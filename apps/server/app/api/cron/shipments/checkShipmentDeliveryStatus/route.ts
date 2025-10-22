@@ -28,7 +28,10 @@ async function processOrder(order: any, dbConnection: any) {
       `${getApiUrl()}/api/shipment/shipment_tracking?order_id=${order.order_id}`,
       {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://omenai.app",
+        },
         // Add timeout to prevent hanging requests
         signal: AbortSignal.timeout(10000), // 10 second timeout
       }
