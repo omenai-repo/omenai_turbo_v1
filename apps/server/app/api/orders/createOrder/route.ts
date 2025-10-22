@@ -21,7 +21,6 @@ import {
   NotificationPayload,
 } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";

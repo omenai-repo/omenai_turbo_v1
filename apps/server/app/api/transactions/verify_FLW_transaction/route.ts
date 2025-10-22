@@ -289,6 +289,7 @@ async function processPurchaseTransaction(
             transaction_value: Number(verified_transaction.data.amount),
             transaction_date: formatted_date,
             transaction_reference: verified_transaction.data.id,
+            artist_wallet_increment: wallet_increment_amount,
           } as PaymentStatusTypes,
         },
       }

@@ -1,11 +1,10 @@
 import {
   Client,
   Storage,
-  Databases,
   ImageFormat,
   ImageGravity,
   ID,
-  TablesDB
+  TablesDB,
 } from "appwrite";
 
 const client = new Client();
@@ -16,7 +15,6 @@ client
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_CLIENT_ID!);
 
 export const storage = new Storage(client);
-
 
 export const editorial_database = new TablesDB(client);
 export const appwrite_image_format = ImageFormat;

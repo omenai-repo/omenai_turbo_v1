@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, ReactNode } from "react";
-import { ClientSessionData } from "@omenai/shared-types"; // Your existing hook file
+import { ClientSessionData } from "@omenai/shared-types";
 
 interface SessionContextType {
   initialSessionData: ClientSessionData | null;
