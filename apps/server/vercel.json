@@ -21,6 +21,10 @@
       "schedule": "0 * * * *"
     },
     {
+      "path": "/api/cron/shipments/checkShipmentDeliveryStatus",
+      "schedule": "0 * * * *"
+    },
+    {
       "path": "/api/cron/orders/checkOrderRequestTimestamp",
       "schedule": "0 0 * * *"
     },

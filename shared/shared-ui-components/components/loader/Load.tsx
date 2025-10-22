@@ -2,7 +2,6 @@
 
 import { DotLoader, PulseLoader } from "react-spinners";
 import animationData from "@omenai/shared-json/src/loader.json";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 
 // Dynamically import Lottie with SSR turned off
