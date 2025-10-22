@@ -53,7 +53,7 @@ async function processOrder(order: any, dbConnection: any) {
       };
     }
 
-    const latestEvent = trackingResult.events[trackingResult.events.length - 1];
+    const latestEvent = trackingResult.events.at(-1);
 
     // Proceed only if the latest status is "Delivered"
     if (latestEvent?.description !== "Delivered") {
@@ -69,8 +69,8 @@ async function processOrder(order: any, dbConnection: any) {
     const wallet_increment_amount =
       payment_information?.artist_wallet_increment;
 
-    if (seller_designation === "artist" && !seller_details?.seller_id) {
-      throw new Error("Missing seller_id for artist order");
+    if (seller_designation === "artist" && !seller_details?.id) {
+      throw new Error("Missing id for artist order");
     }
 
     if (seller_designation === "artist" && !wallet_increment_amount) {
@@ -105,21 +105,21 @@ async function processOrder(order: any, dbConnection: any) {
         if (seller_designation === "artist" && wallet_increment_amount) {
           // First check if wallet exists
           const walletExists = await Wallet.findOne(
-            { owner_id: seller_details.seller_id },
+            { owner_id: seller_details.id },
             { _id: 1 },
             { session }
           );
 
           if (!walletExists) {
             throw new Error(
-              `Wallet not found for seller ${seller_details.seller_id}. Escalate to IT support.`
+              `Wallet not found for seller ${seller_details.id}. Escalate to IT support.`
             );
           }
 
           // Update wallet balance
           const walletUpdateResult = await Wallet.updateOne(
             {
-              owner_id: seller_details.seller_id,
+              owner_id: seller_details.id,
               pending_balance: { $gte: wallet_increment_amount },
             },
             {
@@ -142,7 +142,7 @@ async function processOrder(order: any, dbConnection: any) {
           }
 
           console.log(
-            `✓ Order ${order.order_id}: Released ${wallet_increment_amount} to seller ${seller_details.seller_id}`
+            `✓ Order ${order.order_id}: Released ${wallet_increment_amount} to seller ${seller_details.id}`
           );
 
           // TODO: Send notification emails
