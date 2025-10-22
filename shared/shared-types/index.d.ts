@@ -436,6 +436,7 @@ export type PaymentStatusTypes = {
   transaction_value: number;
   transaction_date: string;
   transaction_reference: string;
+  artist_wallet_increment?: number;
 };
 
 export type LockModelTypes = {

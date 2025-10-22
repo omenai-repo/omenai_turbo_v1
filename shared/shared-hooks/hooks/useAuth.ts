@@ -1,7 +1,6 @@
 "use client";
 import { useMemo, useCallback } from "react";
 import { auth_uri, base_url, getApiUrl } from "@omenai/url-config/src/config";
-import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AccessRoleTypes,

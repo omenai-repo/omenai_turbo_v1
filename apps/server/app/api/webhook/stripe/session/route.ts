@@ -124,7 +124,7 @@ export const POST = withAppRouterHighlight(async function POST(
       );
 
       // Start the transaction
-      await session.startTransaction();
+      session.startTransaction();
 
       // Prepare payment information
       const payment_information: PaymentStatusTypes = {
