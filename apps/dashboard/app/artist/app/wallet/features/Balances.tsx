@@ -186,7 +186,7 @@ export default function Balances({
             </p>
             <p className="text-fluid-xxs font-semibold mt-1 text-amber-400">
               {showBalance
-                ? `${(isNaN(pending / (available + pending)) ? 0 : (available / (available + pending)) * 100).toFixed(0)}%`
+                ? `${(isNaN(pending / (available + pending)) ? 0 : (pending / (available + pending)) * 100).toFixed(0)}%`
                 : "••"}
             </p>
           </div>
