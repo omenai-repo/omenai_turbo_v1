@@ -196,8 +196,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
             $exists: true,
             $ne: null,
           },
-        // TODO: Add this filter when shipment status is properly stored in DB
-        // "shipping_details.shipment_information.tracking.status": "In Transit",
+        "shipping_details.shipment_information.tracking.status": "In Transit",
       },
       "order_id shipping_details seller_designation payment_information seller_details"
     ).lean();
