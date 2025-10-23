@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import {
+  DHL_API_URL_TEST,
   getDhlHeaders,
   getUserFriendlyError,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
@@ -15,7 +16,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-const API_URL = "https://express.api.dhl.com/mydhlapi/test/rates";
+const API_URL = DHL_API_URL_TEST;
 
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
@@ -95,6 +96,8 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const response = await fetch(url.toString(), requestOptions);
 
       const data = await response.json();
+
+      console.log(data);
 
       // DONE: Fix for multiple DHL error responses
       if (!response.ok) {
