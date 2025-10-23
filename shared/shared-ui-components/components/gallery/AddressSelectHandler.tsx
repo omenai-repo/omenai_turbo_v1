@@ -55,8 +55,8 @@ export default function SelectInput({
   // 🔹 Handle selection changes
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    const selectedCode =
-      e.target.options[e.target.selectedIndex].getAttribute("data-code");
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const selectedCode = selectedOption.dataset.code || "";
 
     if (labelText === "country") {
       onChange((prev) => ({

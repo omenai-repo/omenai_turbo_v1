@@ -3,11 +3,16 @@ import React, { useState } from "react";
 import Plan from "./Plan";
 import PlanDurationTab from "./PlanDurationTab";
 import { SubscriptionPlanDataTypes } from "@omenai/shared-types";
+import { ObjectId } from "mongoose";
+
+interface NewSubscriptionPlanDataTypes extends SubscriptionPlanDataTypes {
+  _id: ObjectId;
+}
 
 export default function PlanWrapper({
   plans,
 }: {
-  plans: SubscriptionPlanDataTypes[];
+  plans: NewSubscriptionPlanDataTypes[];
 }) {
   const [tab, setTab] = useState<"monthly" | "yearly">("monthly");
 
