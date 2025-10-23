@@ -3,18 +3,19 @@ import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWork
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-const APPWRITE_BUCKET_ID =
-  process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!;
 export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
 
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
+    console.log("This has begun running");
     const fileUploaded = await storage.createFile({
       bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
       fileId: ID.unique(),
       file,
     });
+
+    console.log(fileUploaded);
     if (fileUploaded) return fileUploaded;
   } catch (error) {
     throw new Error("Appwrite Exception: Something went wrong on Appwrite");
@@ -104,10 +105,10 @@ export async function handleWaybillUpload(
     throw new ServerError("Waybill document upload failed on Appwrite");
   }
 
-  const waybillDocLink = storage.getFileView(
-    APPWRITE_BUCKET_ID,
-    uploadedDoc.$id
-  );
+  const waybillDocLink = storage.getFileView({
+    bucketId: uploadedDoc.bucketId,
+    fileId: uploadedDoc.$id,
+  });
 
   const updateResult = await CreateOrder.updateOne(
     { order_id: orderId },
