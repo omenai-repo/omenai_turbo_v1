@@ -16,7 +16,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-const API_URL = DHL_API_URL_TEST;
+const API_URL = `${DHL_API_URL_TEST}/rates`;
 
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
