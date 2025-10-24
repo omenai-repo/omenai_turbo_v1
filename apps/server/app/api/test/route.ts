@@ -5,7 +5,6 @@ export async function GET() {
   const response = await sendGalleryShipmentSuccessfulMail({
     name: "Rodolphe",
     email: "rodolphe@omenai.net",
-    dashboardUrl: "app.omenai.net",
   });
   console.log(response);
   return NextResponse.json({

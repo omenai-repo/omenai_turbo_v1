@@ -9,11 +9,9 @@ import {
   Heading,
   Link,
 } from "@react-email/components";
+import { dashboard_url } from "@omenai/url-config/src/config";
 
-export default function SendGalleryShipmentSuccess(
-  name: string,
-  dashboardUrl: string
-) {
+export default function SendGalleryShipmentSuccess(name: string) {
   return (
     <Html>
       <Head />
@@ -80,7 +78,7 @@ export default function SendGalleryShipmentSuccess(
 
             <div style={{ textAlign: "center", margin: "30px 0" }}>
               <Link
-                href={`${dashboardUrl}`}
+                href={`${dashboard_url()}/gallery/orders`}
                 style={{
                   display: "inline-block",
                   backgroundColor: "#0f172a",

@@ -9,11 +9,9 @@ import {
   Heading,
   Link,
 } from "@react-email/components";
+import { dashboard_url } from "@omenai/url-config/src/config";
 
-export default function SendArtistShipmentSuccess(
-  name: string,
-  dashboardUrl: string
-) {
+export default function SendArtistShipmentSuccess(name: string) {
   return (
     <Html>
       <Head />
@@ -82,7 +80,7 @@ export default function SendArtistShipmentSuccess(
 
             <div style={{ textAlign: "center", margin: "30px 0" }}>
               <Link
-                href={`${dashboardUrl}`}
+                href={`${dashboard_url()}/artist/app/orders`}
                 style={{
                   display: "inline-block",
                   backgroundColor: "#10b981",

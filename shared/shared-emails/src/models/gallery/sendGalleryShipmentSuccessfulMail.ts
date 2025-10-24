@@ -4,18 +4,16 @@ import SendGalleryShipmentSuccess from "../../views/shipment/SendGalleryShipment
 type EmailData = {
   name: string;
   email: string;
-  dashboardUrl: string;
 };
 export const sendGalleryShipmentSuccessfulMail = async ({
   name,
   email,
-  dashboardUrl,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai shippment",
     from: "transactions",
     to: email,
     subject: "Shipment Delivery Confirmed!",
-    react: SendGalleryShipmentSuccess(name, dashboardUrl),
+    react: SendGalleryShipmentSuccess(name),
   });
 };
