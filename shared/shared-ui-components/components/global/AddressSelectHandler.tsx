@@ -5,15 +5,23 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useEffect, useState } from "react";
 import { MdError } from "react-icons/md";
 
+type CountryItem = {
+  name: string;
+  alpha2?: string;
+  alpha3?: string;
+  code?: string;
+  currency?: string;
+};
+
 type SelectInputProps = {
   label: string;
   labelText: string;
-  items: { name: string; alpha2: string; alpha3: string; currency: string }[];
+  items: CountryItem[];
   onChange: React.Dispatch<React.SetStateAction<AddressTypes>>;
   name: string;
   required: boolean;
   address: AddressTypes;
-  updateCurrency: React.Dispatch<React.SetStateAction<string>>;
+  updateCurrency?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function SelectInput({
@@ -57,10 +65,9 @@ export default function SelectInput({
   // 🔹 Handle selection changes
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    const selectedCode =
-      e.target.options[e.target.selectedIndex].getAttribute("data-code");
-    const selectedCurrency =
-      e.target.options[e.target.selectedIndex].getAttribute("data-currency");
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const selectedCode = selectedOption.dataset.code || "";
+    const selectedCurrency = selectedOption.dataset.currency || "";
 
     if (labelText === "country") {
       onChange((prev) => ({
@@ -71,7 +78,11 @@ export default function SelectInput({
         stateCode: "",
         city: "",
       }));
-      updateCurrency(selectedCurrency as string);
+
+      // Only update currency if updateCurrency function is provided
+      if (updateCurrency && selectedCurrency) {
+        updateCurrency(selectedCurrency);
+      }
     }
 
     if (labelText === "state") {
@@ -114,17 +125,20 @@ export default function SelectInput({
           </option>
 
           {labelText === "country" &&
-            items.map((item) => (
-              <option
-                key={item.alpha2}
-                value={item.name}
-                data-code={item.alpha2}
-                data-currency={item.currency}
-                className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
-              >
-                {item.name}
-              </option>
-            ))}
+            items.map((item) => {
+              const itemCode = item.alpha2 || item.code || "";
+              return (
+                <option
+                  key={itemCode}
+                  value={item.name}
+                  data-code={itemCode}
+                  data-currency={item.currency}
+                  className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
+                >
+                  {item.name}
+                </option>
+              );
+            })}
 
           {labelText === "state" &&
             stateList.map((state) => (

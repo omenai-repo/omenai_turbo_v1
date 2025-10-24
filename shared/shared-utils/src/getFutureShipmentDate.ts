@@ -2,88 +2,166 @@ import { getUTCOffset } from "./getCountryTimezone";
 import { isHoliday } from "../../shared-lib/holiday_check/isHoliday";
 import { toUTCDate } from "./toUtcDate";
 
-export async function getFutureShipmentDate(
-  days: number,
-  withTime: boolean,
-  countryCode: string,
-  pickup_earliest_time?: { hours: string; minutes: string }
-): Promise<string> {
-  // Input validation
+const MAX_ATTEMPTS = 365;
+const DEFAULT_TIME = { hours: "09", minutes: "00" };
+const FALLBACK_TIMEZONE = "GMT+00:00";
+
+// Helper functions
+function validateDays(days: number): void {
   if (days < 0) {
     throw new Error("Days must be non-negative");
   }
+}
+
+function validateCountryCode(countryCode: string): void {
   if (!countryCode || typeof countryCode !== "string") {
     throw new Error("Valid country code is required");
   }
-  if (withTime && pickup_earliest_time) {
-    const hours = parseInt(pickup_earliest_time.hours);
-    const minutes = parseInt(pickup_earliest_time.minutes);
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      throw new Error("Invalid pickup time format");
-    }
+}
+
+function validatePickupTime(pickupTime: {
+  hours: string;
+  minutes: string;
+}): void {
+  const hours = parseInt(pickupTime.hours);
+  const minutes = parseInt(pickupTime.minutes);
+
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    throw new Error("Invalid pickup time format");
   }
+}
 
-  // Create a new date object to avoid mutation
-  const date = new Date(toUTCDate(new Date()));
-  date.setDate(date.getDate() + days);
+function validateInputs(
+  days: number,
+  countryCode: string,
+  withTime: boolean,
+  pickup_earliest_time?: { hours: string; minutes: string }
+): void {
+  validateDays(days);
+  validateCountryCode(countryCode);
 
+  if (withTime && pickup_earliest_time) {
+    validatePickupTime(pickup_earliest_time);
+  }
+}
+
+function isWeekend(date: Date): boolean {
+  const dayOfWeek = date.getDay();
+  return dayOfWeek === 0 || dayOfWeek === 6;
+}
+
+async function checkIfHoliday(
+  date: Date,
+  countryCode: string
+): Promise<boolean> {
+  try {
+    return await isHoliday(date, countryCode);
+  } catch (error) {
+    console.warn(
+      `Holiday check failed for ${countryCode} on ${date.toISOString()}`
+    );
+    return false;
+  }
+}
+
+async function isBusinessDay(
+  date: Date,
+  countryCode: string
+): Promise<boolean> {
+  if (isWeekend(date)) return false;
+
+  const holiday = await checkIfHoliday(date, countryCode);
+  return !holiday;
+}
+
+async function findNextBusinessDay(
+  startDate: Date,
+  countryCode: string
+): Promise<Date> {
+  const date = new Date(startDate);
   let attempts = 0;
-  const maxAttempts = 365; // Prevent infinite loops
 
-  while (attempts < maxAttempts) {
-    const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-    const weekend = dayOfWeek === 6 || dayOfWeek === 0;
+  while (attempts < MAX_ATTEMPTS) {
+    const isValid = await isBusinessDay(date, countryCode);
 
-    let holiday = false;
-    try {
-      holiday = await isHoliday(date, countryCode);
-    } catch (error) {
-      // Log warning but continue - assume not a holiday if check fails
-      console.warn(
-        `Holiday check failed for ${countryCode} on ${date.toISOString()}`
-      );
-      holiday = false;
-    }
-
-    if (!weekend && !holiday) {
-      break;
+    if (isValid) {
+      return date;
     }
 
     date.setDate(date.getDate() + 1);
     attempts++;
   }
 
-  if (attempts >= maxAttempts) {
-    throw new Error(
-      "Unable to find valid shipment date within reasonable time (365 days)"
-    );
-  }
+  throw new Error(
+    "Unable to find valid shipment date within reasonable time (365 days)"
+  );
+}
 
-  // Format date components
+function formatDateOnly(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
 
-  // Return date only format
-  if (!withTime) {
-    return `${year}-${month}-${day}`;
-  }
+  return `${year}-${month}-${day}`;
+}
 
-  // Handle timezone for time format
-  let timezone;
+function getTimezone(countryCode: string): string {
   try {
-    timezone = getUTCOffset(countryCode);
+    const timezone = getUTCOffset(countryCode);
+
     if (!timezone) {
       throw new Error(`No timezone found for country code: ${countryCode}`);
     }
+
+    return timezone;
   } catch (error) {
     console.warn(`Timezone lookup failed for ${countryCode}`);
-    timezone = "GMT+00:00"; // Fallback to UTC
+    return FALLBACK_TIMEZONE;
+  }
+}
+
+function getPickupTime(pickup_earliest_time?: {
+  hours: string;
+  minutes: string;
+}) {
+  return {
+    hours: pickup_earliest_time?.hours || DEFAULT_TIME.hours,
+    minutes: pickup_earliest_time?.minutes || DEFAULT_TIME.minutes,
+  };
+}
+
+function formatDateWithTime(
+  date: Date,
+  countryCode: string,
+  pickup_earliest_time?: { hours: string; minutes: string }
+): string {
+  const dateOnly = formatDateOnly(date);
+  const timezone = getTimezone(countryCode);
+  const time = getPickupTime(pickup_earliest_time);
+
+  return `${dateOnly}T${time.hours}:${time.minutes}:00 ${timezone}`;
+}
+
+export async function getFutureShipmentDate(
+  days: number,
+  withTime: boolean,
+  countryCode: string,
+  pickup_earliest_time?: { hours: string; minutes: string }
+): Promise<string> {
+  // Validate all inputs
+  validateInputs(days, countryCode, withTime, pickup_earliest_time);
+
+  // Calculate initial date
+  const initialDate = new Date(toUTCDate(new Date()));
+  initialDate.setDate(initialDate.getDate() + days);
+
+  // Find next business day
+  const validDate = await findNextBusinessDay(initialDate, countryCode);
+
+  // Format and return result
+  if (!withTime) {
+    return formatDateOnly(validDate);
   }
 
-  // Use default time if not provided
-  const hours = pickup_earliest_time?.hours || "09";
-  const minutes = pickup_earliest_time?.minutes || "00";
-
-  return `${year}-${month}-${day}T${hours}:${minutes}:00 GMT+01:00`;
+  return formatDateWithTime(validDate, countryCode, pickup_earliest_time);
 }
