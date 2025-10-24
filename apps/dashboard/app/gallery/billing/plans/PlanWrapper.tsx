@@ -8,11 +8,15 @@ import {
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
 
+interface NewSubscriptionPlanDataTypes extends SubscriptionPlanDataTypes {
+  _id: ObjectId;
+}
+
 export default function PlanWrapper({
   plans,
   sub_data,
 }: {
-  plans: SubscriptionPlanDataTypes[];
+  plans: NewSubscriptionPlanDataTypes[];
   sub_data: SubscriptionModelSchemaTypes & {
     created: string;
     updatedAt: string;
@@ -24,7 +28,7 @@ export default function PlanWrapper({
     <div className="">
       <PlanDurationTab tab={tab} setTab={setTab} />
       <div className="flex lg:flex-wrap xl:flex-nowrap justify-center items-center gap-x-4">
-        {plans.map((plan: SubscriptionPlanDataTypes & any) => {
+        {plans.map((plan) => {
           return (
             <Plan
               key={plan.plan_id}
