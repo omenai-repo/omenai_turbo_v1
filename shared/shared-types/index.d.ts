@@ -1,5 +1,12 @@
 import { Stripe } from "stripe";
-// Create discriminated union with role as discriminator
+
+/*
+  ==================================================
+  CORE & AUTH: roles, session shapes, configs
+  ==================================================
+*/
+export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
+
 export type SessionDataType = (
   | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password" | "phone">)
   | ({ role: "user" } & Omit<IndividualSchemaTypes, "password" | "phone">)
@@ -35,7 +42,35 @@ export type CombinedConfig = {
   allowedAdminAccessRoles?: AdminAccessRoleTypes[];
 };
 
-export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
+/*
+  ==================================================
+  SHARED PRIMITIVES & UTILITIES
+  (used across many other types)
+  ==================================================
+*/
+export type AddressTypes = {
+  address_line: string;
+  city: string;
+  country: string;
+  countryCode: string;
+  state: string;
+  stateCode: string;
+  zip: string;
+};
+
+interface Image {
+  bucketId: string;
+  fileId: string;
+}
+
+type EntityType = "artist" | "gallery" | "collector" | "admin";
+
+/*
+  ==================================================
+  USER / ACCOUNT SCHEMAS
+  Grouped: Artist, Gallery, Individual, Admin + signup/register/profile shapes
+  ==================================================
+*/
 export type ArtistSchemaTypes = {
   name: string;
   email: string;
@@ -71,6 +106,13 @@ type ExclusivityUpholdStatus = {
   order_auto_rejection_count: number; // Number of orders auto-rejected. 3 auto-rejections for a single artwork leads to breach
 };
 
+export type ArtistDocumentationTypes = {
+  cv?: string;
+  socials?: { [key?: Socials]: string };
+};
+
+type Socials = "instagram" | "twitter" | "linkedin";
+
 export type ArtistSignupData = {
   name: string;
   email: string;
@@ -83,13 +125,87 @@ export type ArtistSignupData = {
   base_currency: string;
 };
 
-export type ArtistDocumentationTypes = {
-  cv?: string;
-  socials?: { [key?: Socials]: string };
+export type ArtistRegisterData = Pick<
+  ArtistSignupData,
+  "name" | "email" | "password" | "art_style"
+> & {
+  address: AddressTypes;
+  logo: string;
+  base_currency: string;
 };
 
-type Socials = "instagram" | "twitter" | "linkedin";
+export type ArtistProfileUpdateData = {
+  name?: string;
+  bio?: string;
+};
 
+export type ArtistOnboardingData = {
+  bio: string;
+  cv: File | null;
+  graduate: string;
+  mfa: string;
+  biennale: "venice" | "other" | "none" | string;
+  museum_collection: string;
+  art_fair: string;
+  museum_exhibition: string;
+  solo: string;
+  group: string;
+  socials: { [K in Socials]?: string };
+};
+
+/* Artist categorization / algorithm related */
+export type ArtistCategory =
+  | "Emerging"
+  | "Early Mid-career"
+  | "Mid-career"
+  | "Late Mid-career"
+  | "Established"
+  | "Elite";
+
+export type ArtistCategorizationAnswerTypes = {
+  graduate: "yes" | "no";
+  mfa: "yes" | "no";
+  solo: number;
+  group: number;
+  museum_collection: "yes" | "no";
+  biennale: "venice" | "other" | "none";
+  museum_exhibition: "yes" | "no";
+  art_fair: "yes" | "no";
+};
+
+type ArtistCategorizationAlgorithmResult = {
+  status: "success" | "error";
+  totalPoints: Number;
+  rating: string;
+  error?: string;
+  price_range: { min: number; max: number };
+};
+
+export type ArtistAlgorithmData = {
+  date: Date;
+  categorization: {
+    artist_categorization: ArtistCategory | "Unknown";
+    answers: ArtistCategorizationAnswerTypes;
+    price_range: { min: number; max: number };
+  };
+};
+
+export type ArtistAlgorithmSchemaTypes = {
+  artist_id: string;
+  history: ArtistAlgorithmData[] | [];
+  current: ArtistAlgorithmData | null;
+  request: ArtistAlgorithmData | null;
+  id?: string;
+};
+
+export type ArtistCategorizationUpdateDataTypes = {
+  answers: ArtistCategorizationAnswerTypes;
+  bio: string;
+  documentation: ArtistDocumentationTypes;
+  artist_id: string;
+};
+
+/* Gallery */
 export type GallerySchemaTypes = {
   name: string;
   email: string;
@@ -112,6 +228,38 @@ export type GallerySchemaTypes = {
   stripe_customer_id: string | null;
 };
 
+export type GallerySignupData = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  address: AddressTypes;
+  admin: string;
+  phone: string;
+  description: string;
+  logo: File | null;
+};
+
+export type GalleryRegisterData = Pick<
+  GallerySignupData,
+  "name" | "admin" | "email" | "password" | "description"
+> & {
+  address: AddressTypes;
+  logo: string;
+};
+
+export type GalleryLocation = {
+  address: string;
+  country: string;
+};
+
+export type GalleryProfileUpdateData = {
+  location?: string;
+  admin?: string;
+  description?: string;
+};
+
+/* Individual / Collector */
 export type IndividualSchemaTypes = {
   name: string;
   email: string;
@@ -125,20 +273,6 @@ export type IndividualSchemaTypes = {
   clerkUserId?: string;
 };
 
-export type InputProps = {
-  label: string;
-  labelText: string;
-  type: HTMLInputTypeAttribute;
-  placeholder: string;
-  disabled?: boolean;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  buttonType?: "button" | "submit";
-  buttonText?: "Continue" | "Submit";
-  onClick?: () => void;
-  id?: number;
-  onClickPrev?: () => void;
-};
-
 export type IndividualSignupData = {
   name: string;
   email: string;
@@ -146,29 +280,6 @@ export type IndividualSignupData = {
   confirmPassword: string;
   address: AddressTypes;
   phone: string;
-};
-export type AdminSignupData = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-export type GallerySignupData = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  address: AddressTypes;
-  admin: string;
-  phone: string;
-  description: string;
-  logo: File | null;
-};
-
-export type GalleryLocation = {
-  address: string;
-  country: string;
 };
 
 export type IndividualRegisterData = Omit<
@@ -179,28 +290,72 @@ export type IndividualRegisterData = Omit<
   address: AddressTypes;
 };
 
-export type GalleryRegisterData = Pick<
-  GallerySignupData,
-  "name" | "admin" | "email" | "password" | "description"
-> & {
-  address: AddressTypes;
-  logo: string;
+export type IndividualProfileUpdateData = {
+  name?: string;
+  preferences?: string[];
 };
 
-export type ArtistRegisterData = Pick<
-  ArtistSignupData,
-  "name" | "email" | "password" | "art_style"
-> & {
-  address: AddressTypes;
-  logo: string;
-  base_currency: string;
-};
-
-export type RouteIdentifier = "individual" | "gallery" | "artist";
-
-export type Form = {
+export type AccountAdminSchemaTypes = {
+  name: string;
   email: string;
   password: string;
+  admin_id: string;
+  role: AccessRoleTypes;
+  verified: boolean;
+  access_role: AdminAccessRoleTypes;
+  admin_active: boolean;
+  joinedAt: string | Date;
+};
+
+export type AdminSignupData = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type AdminAccessRoleTypes = "Admin" | "Owner" | "Editor" | "Viewer";
+
+export type TeamMember = {
+  admin_id: string;
+  name: string;
+  email: string;
+  access_role: AdminAccessRoleTypes;
+  joinedAt: string;
+  verified: boolean;
+};
+
+/*
+  ==================================================
+  ARTWORK MODELS
+  ==================================================
+*/
+export type ArtworkMediumTypes =
+  | "Photography"
+  | "Works on paper"
+  | "Acrylic on canvas/linen/panel"
+  | "Mixed media on paper/canvas"
+  | "Sculpture (Resin/plaster/clay)"
+  | "Oil on canvas/panel"
+  | "Sculpture (Bronze/stone/metal)";
+
+export type ArtworkDimensions = {
+  width: string;
+  height: string;
+  depth?: string;
+  weight: string;
+};
+
+export type ArtworkPricing = {
+  price: number;
+  usd_price: number;
+  currency: string;
+  shouldShowPrice: "Yes" | "No" | string;
+};
+
+export type RoleAccess = {
+  role: "artist" | "gallery";
+  designation: ArtistCategory | null;
 };
 
 export type ArtworkSchemaTypes = {
@@ -233,68 +388,6 @@ export type ArtworkSchemaTypes = {
   };
 };
 
-export type RoleAccess = {
-  role: "artist" | "gallery";
-  designation: ArtistCategory | null;
-};
-
-export type ArtworkDimensions = {
-  width: string;
-  height: string;
-  depth?: string;
-  weight: string;
-};
-
-export type ArtworkPricing = {
-  price: number;
-  usd_price: number;
-  currency: string;
-  shouldShowPrice: "Yes" | "No" | string;
-};
-
-export type ArtworkMediumTypes =
-  | "Photography"
-  | "Works on paper"
-  | "Acrylic on canvas/linen/panel"
-  | "Mixed media on paper/canvas"
-  | "Sculpture (Resin/plaster/clay)"
-  | "Oil on canvas/panel"
-  | "Sculpture (Bronze/stone/metal)";
-
-export type ArtworkPriceFilterData = {
-  "pricing.price": number;
-  "pricing.usd_price": number;
-  "pricing.shouldShowPrice": string;
-  "pricing.currency": string;
-};
-
-export type ArtistCategory =
-  | "Emerging"
-  | "Early Mid-Career"
-  | "Mid-Career"
-  | "Late Mid-Career"
-  | "Established"
-  | "Elite";
-
-export type FilterOptions = {
-  price: {
-    min: number;
-    max: number;
-  }[];
-  year: {
-    min: number;
-    max: number;
-  }[];
-  medium: string[];
-  rarity: string[];
-};
-
-export type ArtworkResultTypes = ArtworkSchemaTypes & {
-  _id: string;
-  updatedAt: string;
-  createdAt: string;
-};
-
 export type ArtworkUploadStateTypes = {
   artist: string;
   year: number;
@@ -318,33 +411,39 @@ export type ArtworkUploadStateTypes = {
   currency: string;
 };
 
-export type CreateOrderModelTypes = {
-  artwork_data: Pick<
-    ArtworkSchemaTypes,
-    "artist" | "pricing" | "title" | "url" | "art_id" | "role_access"
-  > & {
-    _id: ObjectId;
-    exclusivity_status: Omit<
-      ArtworkSchemaTypes["exclusivity_status"],
-      "order_auto_rejection_count"
-    >;
-  };
-  buyer_details: OrderBuyerAndSellerDetails;
-  seller_details: OrderBuyerAndSellerDetails;
-  order_id: string;
-  status: "processing" | "completed";
-  shipping_details: OrderShippingDetailsTypes;
-  payment_information: PaymentStatusTypes;
-  order_accepted: OrderAcceptedStatusTypes;
-  seller_designation: "artist" | "gallery";
-  exhibition_status: OrderArtworkExhibitionStatus | null;
-  hold_status: HoldStatus;
-  createdAt: string;
+export type ArtworkResultTypes = ArtworkSchemaTypes & {
+  _id: string;
   updatedAt: string;
-  availability: boolean;
-  expiresAt: Date | null;
+  createdAt: string;
 };
 
+export type ArtworkPriceFilterData = {
+  "pricing.price": number;
+  "pricing.usd_price": number;
+  "pricing.shouldShowPrice": string;
+  "pricing.currency": string;
+};
+
+export type FilterOptions = {
+  price: {
+    min: number;
+    max: number;
+  }[];
+  year: {
+    min: number;
+    max: number;
+  }[];
+  medium: string[];
+  rarity: string[];
+};
+
+export type ArtworkCollectionTypes = "trending" | "curated" | "recent";
+
+/*
+  ==================================================
+  ORDERS, SHIPPING & TRACKING
+  ==================================================
+*/
 type OrderArtworkExhibitionStatus = {
   is_on_exhibition: boolean;
   exhibition_end_date: Date | string;
@@ -354,6 +453,31 @@ type OrderArtworkExhibitionStatus = {
 type HoldStatus = {
   is_hold: boolean;
   hold_end_date: Date;
+};
+
+type OrderBuyerAndSellerDetails = {
+  id: string;
+  name: string;
+  email: string;
+  address: AddressTypes;
+  phone: string;
+};
+
+export type OrderAcceptedStatusTypes = {
+  status: "accepted" | "declined" | "";
+  reason?: string;
+};
+
+export type TrackingInformationTypes = {
+  id: string | null;
+  link: string | null;
+  delivery_status: "In Transit" | "Delivered" | null;
+  delivery_date: Date | null;
+};
+
+export type ShippingQuoteTypes = {
+  fees: number;
+  taxes: number;
 };
 
 export type OrderShippingDetailsTypes = {
@@ -389,6 +513,33 @@ export type OrderShippingDetailsTypes = {
   };
 };
 
+export type CreateOrderModelTypes = {
+  artwork_data: Pick<
+    ArtworkSchemaTypes,
+    "artist" | "pricing" | "title" | "url" | "art_id" | "role_access"
+  > & {
+    _id: string;
+    exclusivity_status: Omit<
+      ArtworkSchemaTypes["exclusivity_status"],
+      "order_auto_rejection_count"
+    >;
+  };
+  buyer_details: OrderBuyerAndSellerDetails;
+  seller_details: OrderBuyerAndSellerDetails;
+  order_id: string;
+  status: "processing" | "completed";
+  shipping_details: OrderShippingDetailsTypes;
+  payment_information: PaymentStatusTypes;
+  order_accepted: OrderAcceptedStatusTypes;
+  seller_designation: "artist" | "gallery";
+  exhibition_status: OrderArtworkExhibitionStatus | null;
+  hold_status: HoldStatus;
+  createdAt: string;
+  updatedAt: string;
+  availability: boolean;
+  expiresAt: Date | null;
+};
+
 export type WaybillCacheTypes = {
   order_id: string;
   pdf_base64: string;
@@ -401,36 +552,37 @@ export type ScheduledShipments = {
   status: "scheduled" | "resolved";
 };
 
-type OrderBuyerAndSellerDetails = {
+/* Tracking interfaces (fine-grained event shapes) */
+export interface TrackingEvent {
+  date: string;
+  time: string;
+  typeCode: string;
+  serviceArea: { code: string; description: string }[];
+  description: string;
+  signedBy?: string;
+}
+export interface TrackingDetails {
   id: string;
-  name: string;
-  email: string;
-  address: AddressTypes;
-  phone: string;
-};
-export type OrderAcceptedStatusTypes = {
-  status: "accepted" | "declined" | "";
-  reason?: string;
-};
-export type TrackingInformationTypes = {
-  id: string | null;
-  link: string | null;
-  delivery_status: "In Transit" | "Delivered" | null;
-  delivery_date: Date | null;
-};
-export type ShippingQuoteTypes = {
-  fees: number;
-  taxes: number;
-};
-export type AddressTypes = {
-  address_line: string;
-  city: string;
-  country: string;
-  countryCode: string;
-  state: string;
-  stateCode: string;
-  zip: string;
-};
+  service: string;
+  origin: AddressTypes;
+  destination: AddressTypes;
+  status: {
+    description: string;
+    time: string;
+    date: string;
+  };
+  estimatedDeliveryDate?: string;
+  events: TrackingEvent[];
+}
+export interface TrackingResponse {
+  shipments: TrackingDetails[];
+}
+
+/*
+  ==================================================
+  PAYMENTS, SUBSCRIPTIONS & WALLETS
+  ==================================================
+*/
 export type PaymentStatusTypes = {
   status: "pending" | "completed" | "processing" | "failed";
   transaction_value: number;
@@ -439,67 +591,29 @@ export type PaymentStatusTypes = {
   artist_wallet_increment?: number;
 };
 
-export type LockModelTypes = {
-  lock_id: string;
-  user_id: string;
-  art_id: string;
+export type PurchaseTransactionPricing = {
+  unit_price: number;
+  commission: number;
+  shipping_cost: number;
+  amount_total: number;
+  tax_fees: number;
+  currency: string;
+  penalty_fee?: number;
 };
 
-interface Image {
-  bucketId: string;
-  fileId: string;
-}
-
-export type GalleryProfileUpdateData = {
-  location?: string;
-  admin?: string;
-  description?: string;
-};
-export type IndividualProfileUpdateData = {
-  name?: string;
-  preferences?: string[];
-};
-
-export type ArtistProfileUpdateData = {
-  name?: string;
-  bio?: string;
-};
-
-export type InputData = {
-  author: string;
-  date: Date;
-  tag?: string;
-  summary: string;
-  slug: string;
-  cover?: File;
-  content: string;
-  title: string;
-  minutes: string;
-};
-
-export type Input = {
-  label: string;
-  description: string;
-  placeholder: string;
-  type: string;
-  name: string;
-  register?: UseFormRegister<FieldValues>;
-  onchange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
-  value?: string;
-  disabled?: boolean;
-};
-
-export type AppwriteImageObject = {
-  bucketId: string;
-  $id: string;
-};
-
-export type EditorialFormData = {
-  title: string;
-  summary?: string;
-  slug: string;
-  content: string;
+export type PurchaseTransactionModelSchemaTypes = {
+  trans_id: string;
+  trans_reference: string;
+  trans_initiator_id: string;
+  trans_recipient_id: string;
+  trans_pricing: PurchaseTransactionPricing;
+  trans_date: Date;
+  trans_recipient_role: "gallery" | "artist";
+  status: "successful" | "processing" | "failed";
+  createdBy?: "webhook" | "verification"; // Who created this record
+  verifiedAt?: Date; // When verification route processed it
+  webhookReceivedAt?: Date; // When webhook received
+  webhookConfirmed?: boolean;
 };
 
 export type WalletModelSchemaTypes = {
@@ -536,31 +650,6 @@ export type WithdrawalAccount = {
   branch: BankBranchType | null;
   bank_country: string;
   beneficiary_id: number;
-};
-
-export type PurchaseTransactionModelSchemaTypes = {
-  trans_id: string;
-  trans_reference: string;
-  trans_initiator_id: string;
-  trans_recipient_id: string;
-  trans_pricing: PurchaseTransactionPricing;
-  trans_date: Date;
-  trans_recipient_role: "gallery" | "artist";
-  status: "successful" | "processing" | "failed";
-  createdBy?: "webhook" | "verification"; // Who created this record
-  verifiedAt?: Date; // When verification route processed it
-  webhookReceivedAt?: Date; // When webhook received
-  webhookConfirmed?: boolean;
-};
-
-export type PurchaseTransactionPricing = {
-  unit_price: number;
-  commission: number;
-  shipping_cost: number;
-  amount_total: number;
-  tax_fees: number;
-  currency: string;
-  penalty_fee?: number;
 };
 
 export type SubscriptionTransactionModelSchemaTypes = {
@@ -609,6 +698,7 @@ export type NextChargeParams = {
   interval: string;
   id: string;
 };
+
 export type SubscriptionPaymentTypes = {
   status: string;
   value: string;
@@ -639,6 +729,7 @@ export type SubscriptionCardDetails = {
   token: string;
 };
 
+/* FLW Direct charge input */
 export type CardInputTypes = {
   card: string;
   cvv: string;
@@ -647,16 +738,107 @@ export type CardInputTypes = {
   name: string;
 };
 
-export type AdminGalleryListItemTypes = {
-  name: string;
-  address: AddressTypes;
-  description: string;
-  _id: string;
-  email: string;
-  admin: string;
-  logo: string;
+export type FLWDirectChargeDataTypes = CardInputTypes & {
+  card: string;
+  cvv: string;
+  month: string;
+  year: string;
+  tx_ref: string;
+  amount: string;
+  customer: {
+    name: string;
+    email: string;
+    gallery_id: string;
+    plan_id?: string;
+    plan_interval?: string;
+  };
+  redirect: string;
+  charge_type: string | null;
+};
+
+/*
+  ==================================================
+  TAX / NEXUS RULES
+  ==================================================
+*/
+export type ThresholdTypeDef =
+  | "SALES_ONLY"
+  | "SALES_OR_TRANSACTIONS"
+  | "SALES_AND_TRANSACTIONS"
+  | "NO_SALES_TAX";
+
+export type EvaluationPeriodTypeDef =
+  | "PREVIOUS_CALENDAR_YEAR"
+  | "PREVIOUS_OR_CURRENT_CALENDAR_YEAR"
+  | "ROLLING_12_MONTHS"
+  | "TWELVE_MONTHS_ENDING_SEPTEMBER_30"
+  | "PREVIOUS_12_MONTHS"
+  | "PREVIOUS_4_QUARTERS";
+
+export type NexusRule = {
+  sales_threshold: number | null;
+  transactions_threshold: number | null;
+  threshold_type: ThresholdType;
+  evaluation_period_type: EvaluationPeriodType;
+};
+
+export type NexusCalculation = {
+  total_sales: number;
+  total_transactions: number;
+  sales_exposure_percentage: number;
+  transactions_exposure_percentage: number;
+};
+
+export type NexusDocument = {
+  state: string;
+  stateCode: string;
+  nexus_rule: NexusRule;
+  calculation: NexusCalculation;
+  is_nexus_breached: boolean;
+  date_of_breach?: Date | null;
+  last_reset?: Date;
+  tax_withholding_eligibility: boolean;
+};
+
+export type US_NEXUS_THRESHOLD_LIST = {
+  state: string;
+  stateCode: string;
+  nexus_rule: Pick<NexusRule, "sales_threshold" | "transactions_threshold"> & {
+    threshold_type: ThresholdTypeDef;
+    evaluation_period_type: EvaluationPeriodTypeDef | null;
+    effective_date: Date | string | null;
+    note?: string;
+  };
+};
+
+/*
+  ==================================================
+  CRON, BANK & OTHER UTILS
+  ==================================================
+*/
+export type FailedCronJobTypes = {
+  jobType: string;
+  payload: any;
+  reason: string;
+  retryCount: number;
+  status: "pending" | "reprocessed" | "failed";
+  lastAttempted: Date;
+  jobId: string;
+};
+
+export type BankType = { id: string; code: string; name: string };
+export type BankBranchType = {
+  id: string;
+  branch_code: string;
+  branch_name: string;
+  swift_code: string;
+  bic: string;
+  bank_id: string;
+};
+
+export type ProrationSchemaTypes = {
   gallery_id: string;
-  status: "active" | "blocked";
+  value: number;
 };
 
 export type PromotionalSchemaTypes = {
@@ -681,66 +863,94 @@ export type PromotionalDataUpdateTypes = {
   cta?: string;
 };
 
-export type AccountAdminSchemaTypes = {
+/*
+  ==================================================
+  NOTIFICATIONS & MESSAGES
+  ==================================================
+*/
+export type NotificationData = {
+  id: string;
+  title: string;
+  body: string;
+  data: NotificationDataType;
+  sent: boolean;
+  sentAt: Date;
+  read: boolean;
+  readAt: Date;
+};
+
+export type NotificationDataType = {
+  type: "wallet" | "orders" | "subscriptions" | "updates";
+  access_type: "collector" | "gallery" | "artist";
+  metadata: T; // TODO: declare/replace generic metadata type T
+  userId: string;
+};
+
+export type NotificationPayload = {
+  title: NotificationData["title"];
+  body: NotificationData["body"];
+  data: NotificationData["data"];
+  to: string;
+};
+
+/*
+  ==================================================
+  FORMS & UI TYPES (react/dom dependent)
+  NOTE: these require DOM / React typings in your tsconfig
+  ==================================================
+*/
+export type InputProps = {
+  label: string;
+  labelText: string;
+  type: HTMLInputTypeAttribute;
+  placeholder: string;
+  disabled?: boolean;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  buttonType?: "button" | "submit";
+  buttonText?: "Continue" | "Submit";
+  onClick?: () => void;
+  id?: number;
+  onClickPrev?: () => void;
+};
+
+export type InputData = {
+  author: string;
+  date: Date;
+  tag?: string;
+  summary: string;
+  slug: string;
+  cover?: File;
+  content: string;
+  title: string;
+  minutes: string;
+};
+
+export type Input = {
+  label: string;
+  description: string;
+  placeholder: string;
+  type: string;
   name: string;
+  register?: UseFormRegister<FieldValues>;
+  onchange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  value?: string;
+  disabled?: boolean;
+};
+
+/*
+  ==================================================
+  MISC / ENUMS / SMALL SHAPES
+  ==================================================
+*/
+export type Form = {
   email: string;
   password: string;
-  admin_id: string;
-  role: AccessRoleTypes;
-  verified: boolean;
-  access_role: AdminAccessRoleTypes;
-  admin_active: boolean;
-  joinedAt: string | Date;
 };
 
-export type AdminAccessRoleTypes = "Admin" | "Owner" | "Editor" | "Viewer";
+export type RouteIdentifier = "individual" | "gallery" | "artist";
 
-export type FLWDirectChargeDataTypes = CardInputTypes & {
-  card: string;
-  cvv: string;
-  month: string;
-  year: string;
-  tx_ref: string;
-  amount: string;
-  customer: {
-    name: string;
-    email: string;
-    gallery_id: string;
-    plan_id?: string;
-    plan_interval?: string;
-  };
-  redirect: string;
-  charge_type: string | null;
-};
-
-export type SubscriptionPlanDataTypes = {
-  name: string;
-  pricing: {
-    annual_price: string;
-    monthly_price: string;
-  };
-  plan_id: string;
-  currency: string;
-  benefits: {
-    annual: string[];
-    monthly: string[];
-  };
-};
-
-export type PinAuthorizationData = {
-  mode: "pin";
-  pin: string;
-};
-
-export type AvsAuthorizationData = {
-  mode: "avs_noauth";
-  country?: string;
-  state?: string;
-  city?: string;
-  zip?: string;
-  address?: string;
-};
-export type filterOptionsType = {
+export type FilterOptions = {
   price: {
     min: number;
     max: number;
@@ -753,103 +963,13 @@ export type filterOptionsType = {
   rarity: string[];
 };
 
-export type ProrationSchemaTypes = {
-  gallery_id: string;
-  value: number;
-};
-
-export type ArtworkCollectionTypes = "trending" | "curated" | "recent";
-
-export type ArtistPricingSchemaTypes = {
-  categorization: string;
-  value_range: {
-    min: number;
-    max: number;
-  };
-};
-
-export type ArtistCategory =
-  | "Emerging"
-  | "Early Mid-career"
-  | "Mid-career"
-  | "Late Mid-career"
-  | "Established"
-  | "Elite";
-
-export type ArtistCategorizationAnswerTypes = {
-  graduate: "yes" | "no";
-  mfa: "yes" | "no";
-  solo: number;
-  group: number;
-  museum_collection: "yes" | "no";
-  biennale: "venice" | "other" | "none";
-  museum_exhibition: "yes" | "no";
-  art_fair: "yes" | "no";
-};
-
-type ArtistOnboardingData = {
-  bio: string;
-  cv: File | null;
-  graduate: string;
-  mfa: string;
-  biennale: "venice" | "other" | "none" | string;
-  museum_collection: string;
-  art_fair: string;
-  museum_exhibition: string;
-  solo: string;
-  group: string;
-  socials: { [K in Socials]?: string };
-};
-
-type ArtistCategorizationAlgorithmResult = {
-  status: "success" | "error";
-  totalPoints: number;
-  rating: string;
-  error?: string;
-  price_range: { min: number; max: number };
-};
-
-export type ArtistAlgorithmSchemaTypes = {
-  artist_id: string;
-  history: ArtistAlgorithmData[] | [];
-  current: ArtistAlgorithmData | null;
-  request: ArtistAlgorithmData | null;
-  id?: string;
-};
-
-export type ArtistAlgorithmData = {
-  date: Date;
-  categorization: {
-    artist_categorization: ArtistCategory | "Unknown";
-    answers: ArtistCategorizationAnswerTypes;
-    price_range: { min: number; max: number };
-  };
-};
-
-export type ArtistCategorizationUpdateDataTypes = {
-  answers: ArtistCategorizationAnswerTypes;
-  bio: string;
-  documentation: ArtistDocumentationTypes;
-  artist_id: string;
-};
-export type ArtistCategorizationAnswerTypes = {
-  graduate: "yes" | "no";
-  mfa: "yes" | "no";
-  solo: number;
-  group: number;
-  museum_collection: "yes" | "no";
-  biennale: "venice" | "other" | "none";
-  museum_exhibition: "yes" | "no";
-  art_fair: "yes" | "no";
-};
-
-// Shipment Types
 export type ShipmentDimensions = {
   length: number;
   width: number;
   height: number;
   weight: number;
 };
+
 export type ShipmentAddressValidationType = {
   type: "pickup" | "delivery";
   countryCode: string;
@@ -913,140 +1033,117 @@ type ShipmentDeliveryValidation = {
   anount_to_inc: number;
 };
 
-// NEXUS THRESHOLDS
-
-export type ThresholdTypeDef =
-  | "SALES_ONLY"
-  | "SALES_OR_TRANSACTIONS"
-  | "SALES_AND_TRANSACTIONS"
-  | "NO_SALES_TAX";
-
-export type EvaluationPeriodTypeDef =
-  | "PREVIOUS_CALENDAR_YEAR"
-  | "PREVIOUS_OR_CURRENT_CALENDAR_YEAR"
-  | "ROLLING_12_MONTHS"
-  | "TWELVE_MONTHS_ENDING_SEPTEMBER_30"
-  | "PREVIOUS_12_MONTHS"
-  | "PREVIOUS_4_QUARTERS";
-
-// Nexus Rule Interface
-export type NexusRule = {
-  sales_threshold: number | null;
-  transactions_threshold: number | null;
-  threshold_type: ThresholdType;
-  evaluation_period_type: EvaluationPeriodType;
-};
-
-// Nexus Calculation Interface
-export type NexusCalculation = {
-  total_sales: number;
-  total_transactions: number;
-  sales_exposure_percentage: number;
-  transactions_exposure_percentage: number;
-};
-
-// Nexus Schema Interface
-export type NexusDocument = {
-  state: string;
-  stateCode: string;
-  nexus_rule: NexusRule;
-  calculation: NexusCalculation;
-  is_nexus_breached: boolean;
-  date_of_breach?: Date | null;
-  last_reset?: Date;
-  tax_withholding_eligibility: boolean;
-};
-
-export type US_NEXUS_THRESHOLD_LIST = {
-  state: string;
-  stateCode: string;
-  nexus_rule: Pick<NexusRule, "sales_threshold" | "transactions_threshold"> & {
-    threshold_type: ThresholdTypeDef;
-    evaluation_period_type: EvaluationPeriodTypeDef | null;
-    effective_date: Date | string | null;
-    note?: string;
+/*
+  ==================================================
+  SMALL RE-EXPORT / HELPER TYPES USED ELSEWHERE
+  ==================================================
+*/
+export type ArtworkCollection = ArtworkCollectionTypes;
+export type ArtistPricingSchemaTypes = {
+  categorization: string;
+  value_range: {
+    min: number;
+    max: number;
   };
 };
-// CRONS
-export type FailedCronJobTypes = {
-  jobType: string;
-  payload: any;
+
+export type filterOptionsType = {
+  price: {
+    min: number;
+    max: number;
+  }[];
+  year: {
+    min: number;
+    max: number;
+  }[];
+  medium: string[];
+  rarity: string[];
+};
+
+/*
+  ============================================================
+  TYPES RELATED TO THE DELETION SERVICE
+  ============================================================
+*/
+
+type DeletionRequest = {
+  targetId: string; // target user
+  initiatedBy: "target" | "admin" | "system"; // user or admin or system initiated
   reason: string;
-  retryCount: number;
-  status: "pending" | "reprocessed" | "failed";
-  lastAttempted: Date;
-  jobId: string;
+  status: "requested" | "in_progress" | "completed" | "failed" | "cancelled";
+  startedAt?: Date;
+  completedAt?: Date;
+  gracePeriodUntil?: Date; // Deletion process starts at this date
+  tasks: string[]; // references to DeletionTask
+  metadata?: Record<string, any>;
+  requestId: string;
 };
 
-export type BankType = { id: string; code: string; name: string };
-export type BankBranchType = {
-  id: string;
-  branch_code: string;
-  branch_name: string;
-  swift_code: string;
-  bic: string;
-  bank_id: string;
+type DeletionTask = {
+  requestId: string;
+  service: DeletionTaskServiceType; // references deletion service task e.g., 'orders', 'uploads', 'wallet'
+  entityId?: string; // id to delete
+  entityType: Omit<EntityType, "admin">; // type of entity
+  status: "pending" | "in_progress" | "done" | "failed";
+  attempts: number;
+  lastError?: string;
+  startedAt?: Date;
+  completedAt?: Date;
+  idempotencyKey?: string;
+  result?: any;
 };
 
-export type TeamMember = {
-  admin_id: string;
-  name: string;
-  email: string;
-  access_role: AdminAccessRoleTypes;
-  joinedAt: string;
-  verified: boolean;
-};
+type DeletionTaskServiceType =
+  | "order_service"
+  | "upload_service"
+  | "wallet_service"
+  | "wallet_transaction_service"
+  | "purchase_transaction_service"
+  | "subscription_transaction_service"
+  | "account_service"
+  | "subscriptions_service"
+  | "misc_service"; // miscellaneous service such as device fingerprint, prorations, sales activity, artist categorizations
 
-export type NotificationData = {
-  id: string;
-  title: string;
-  body: string;
-  data: NotificationDataType;
-  sent: boolean;
-  sentAt: Date;
-  read: boolean;
-  readAt: Date;
-};
+// types/deletion-audit-log.ts
 
-export type NotificationDataType = {
-  type: "wallet" | "orders" | "subscriptions" | "updates";
-  access_type: "collector" | "gallery" | "artist";
-  metadata: T;
-  userId: string;
-};
+export type DeletionAuditLog = {
+  deletion_request_id: string; // Reference to the corresponding DeletionRequest
 
-export type NotificationPayload = {
-  title: NotificationData["title"];
-  body: NotificationData["body"];
-  data: NotificationData["data"];
-  to: string;
-};
-
-// types/tracking.ts
-
-export interface TrackingEvent {
-  date: string;
-  time: string;
-  typeCode: string;
-  serviceArea: { code: string; description: string }[];
-  description: string;
-  signedBy?: string;
-}
-
-export interface TrackingDetails {
-  id: string;
-  service: string;
-  origin: AddressTypes;
-  destination: AddressTypes;
-  status: {
-    description: string;
-    time: string;
-    date: string;
+  /**
+   * Information about the user whose data was deleted
+   */
+  target_ref: {
+    target_id: string; // Internal system identifier (e.g. user_id, artist_id, gallery_id)
+    target_email_hash: string; //SHA-256 hash of the user's email or another unique identifier Used for verification without exposing raw PII
   };
-  estimatedDeliveryDate?: string;
-  events: TrackingEvent[];
-}
 
-export interface TrackingResponse {
-  shipments: TrackingDetails[];
-}
+  /**
+   * Who initiated the deletion
+   * - "user" → the user themselves
+   * - "admin" → manually triggered by omenai admin
+   * - "system" → automatically triggered (e.g. due to account expiry)
+   */
+  initiated_by: "target" | "admin" | "system";
+
+  /**
+   * Summarized results of deletion tasks across different services
+   */
+  tasks_summary: {
+    service: DeletionTaskServiceType; // The service or subsystem name (e.g. "orders", "wallet", "files")
+    deleted_records_count?: number; // Number of records deleted within that service
+    status: DeletionTask["status"]; //Status of the deletion task
+    completed_at?: Date; // When the deletion was completed for this service
+    error_message?: string; //Optional error details if task failed
+  }[];
+  requested_at: Date; // When the deletion request was created
+
+  completed_at?: Date; // When the deletion was fully completed (all tasks done)
+
+  /**
+   * When this audit log should expire (e.g. 3 years from now)
+   * Based on your data retention policy
+   */
+  retention_expires_at: Date; // When this audit log should expire (e.g. 3 years from now). Based on Omenai's data retention policy
+
+  signature: string; // HMAC signature to verify record integrity and authenticity. Generated with a signing key
+};

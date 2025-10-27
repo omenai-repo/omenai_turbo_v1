@@ -15,26 +15,6 @@ export async function POST() {
     );
     if (!workflowID) throw new ServerError("Workflow failed");
 
-    // const payload: NotificationPayload = {
-    //   to: "ExponentPushToken[uWP6MPMoP2iBBY1DuIQB3P]",
-    //   title: "New order request",
-    //   body: "You have a new order requst!",
-    //   data: {
-    //     type: "orders",
-    //     access_type: "artist",
-    //     metadata: {
-    //       orderId: "53053us5850",
-    //     },
-    //     userId: "6112636c-ec83-48f2-a7a8-d9f1c9e44b4c",
-    //   },
-    // };
-
-    // const workflowID = await createWorkflow(
-    //   "/api/workflows/notification/pushNotification",
-    //   `notification_workflow${generateDigit(2)}`,
-    //   JSON.stringify(payload)
-    // );
-
     if (!workflowID) throw new ServerError("Workflow failed");
 
     return NextResponse.json(

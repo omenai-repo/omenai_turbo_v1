@@ -15,7 +15,6 @@ export const uploadWaybillDocument = async (file: File) => {
       file,
     });
 
-    console.log(fileUploaded);
     if (fileUploaded) return fileUploaded;
   } catch (error) {
     throw new Error("Appwrite Exception: Something went wrong on Appwrite");

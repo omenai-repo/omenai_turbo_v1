@@ -495,8 +495,6 @@ export const POST = withAppRouterHighlight(async function POST(
         body.data.id
       );
 
-      console.log(verified_transaction);
-
       // Determine transaction type
       const transactionType = verified_transaction?.data?.meta
         ? "purchase"

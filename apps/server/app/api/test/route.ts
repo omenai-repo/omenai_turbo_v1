@@ -1,17 +1,12 @@
+import { sendBuyerShipmentEmail } from "@omenai/shared-emails/src/models/shipment/sendBuyerShipmentEmail";
 import { NextResponse } from "next/server";
 export async function GET() {
-  console.log(
-    "DHL_API_KEY loaded:",
-    !!process.env.DHL_API_KEY,
-    "key",
-    process.env.DHL_API_KEY
-  );
-  console.log(
-    "DHL_API_SECRET loaded:",
-    !!process.env.DHL_API_SECRET,
-    "secret",
-    process.env.DHL_API_SECRET
-  );
+  const promise = await sendBuyerShipmentEmail({
+    name: "Test User",
+    email: "moses@omenai.net",
+    trackingCode: "TEST123456",
+  });
+
   return NextResponse.json({
     message: "Successful",
   });

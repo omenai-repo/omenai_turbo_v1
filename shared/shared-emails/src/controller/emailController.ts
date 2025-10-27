@@ -16,7 +16,6 @@ type EmailPayload = {
 };
 
 export const sendMailVerification = async (datum: EmailPayload) => {
-  console.log(process.env.RESEND_API_KEY!);
   const { data, error } = await resend.emails.send({
     from:
       datum.from === "onboarding"
