@@ -3,10 +3,7 @@ import { Input, TextInput } from "@mantine/core";
 import React, { ChangeEvent, useState } from "react";
 import EditorialCover from "./EditorialCover";
 import { EditorialContentEditor } from "./EditorialContentEditor";
-import {
-  AppwriteImageObject,
-  EditorialSchemaTypes,
-} from "@omenai/shared-types";
+import { EditorialSchemaTypes } from "@omenai/shared-types";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { uploadEditorialImage } from "../../lib/uploadEditorialImage";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
