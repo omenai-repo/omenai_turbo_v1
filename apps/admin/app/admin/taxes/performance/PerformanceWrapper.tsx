@@ -1,8 +1,7 @@
 "use client";
-import { RingProgress, Paper, Badge, Tooltip } from "@mantine/core";
+import { RingProgress, Badge } from "@mantine/core";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import {
-  TrendingUp,
   Calendar,
   AlertCircle,
   ShoppingCart,
@@ -19,9 +18,216 @@ import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime"
 import { useQuery } from "@tanstack/react-query";
 import { fetchNexusData } from "@omenai/shared-services/admin/fetch_nexus_data";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+
+// Risk level configuration
+const RISK_LEVELS = [
+  { threshold: 100, level: "Critical", color: "text-red-600", bg: "bg-red-50" },
+  {
+    threshold: 80,
+    level: "High",
+    color: "text-orange-600",
+    bg: "bg-orange-50",
+  },
+  {
+    threshold: 60,
+    level: "Medium",
+    color: "text-yellow-600",
+    bg: "bg-yellow-50",
+  },
+  { threshold: 0, level: "Low", color: "text-green-600", bg: "bg-green-50" },
+];
+
+// Progress color thresholds
+const getProgressColor = (percentage: number) => {
+  if (percentage >= 90) return "#dc2626";
+  if (percentage >= 70) return "#f59e0b";
+  return "#10b981";
+};
+
+const getRiskLevel = (
+  salesPercentage: number,
+  transactionPercentage: number
+) => {
+  const maxPercentage = Math.max(salesPercentage, transactionPercentage);
+  return (
+    RISK_LEVELS.find((r) => maxPercentage >= r.threshold) ||
+    RISK_LEVELS[RISK_LEVELS.length - 1]
+  );
+};
+
+// Extracted Components
+const NoThresholdMessage = ({
+  state,
+  type,
+}: {
+  state: string;
+  type: string;
+}) => (
+  <div className="flex flex-col space-y-2 w-full h-full">
+    <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
+      <Ban className="w-10 h-10 text-red-600" />
+    </div>
+    <p className="text-fluid-xxs text-center">
+      No {type} requirements for the state of {state}
+    </p>
+  </div>
+);
+
+const ProgressRing = ({
+  percentage,
+  current,
+  threshold,
+  isSales,
+}: {
+  percentage: number;
+  current: number;
+  threshold: number;
+  isSales: boolean;
+}) => (
+  <div className="flex justify-center mb-6">
+    <RingProgress
+      size={180}
+      thickness={16}
+      roundCaps
+      sections={[
+        {
+          value: Math.min(percentage, 100),
+          color: isSales ? getProgressColor(percentage) : "#dc2626",
+        },
+      ]}
+      label={
+        <div className="text-center">
+          <div className="text-fluid-lg font-bold text-gray-900">
+            {isSales ? `$${(current / 1000).toFixed(1)}k` : current}
+          </div>
+          <div className="text-fluid-xxs text-gray-500">
+            of {isSales ? `$${(threshold / 1000).toFixed(1)}k` : threshold}
+          </div>
+        </div>
+      }
+    />
+  </div>
+);
+
+const ThresholdStatus = ({
+  current,
+  threshold,
+  isSales,
+}: {
+  current: number;
+  threshold: number;
+  isSales: boolean;
+}) => {
+  const exceeded = current > threshold;
+  const difference = Math.abs(current - threshold);
+
+  if (isSales) {
+    return exceeded ? (
+      <div className="flex justify-between items-center text-fluid-xxs">
+        <span className="text-red-500">Exceeded threshold by</span>
+        <span className="text-red-500">${difference.toLocaleString()}</span>
+      </div>
+    ) : (
+      <div className="flex justify-between items-center text-fluid-xxs">
+        <span className="text-gray-500">Remaining</span>
+        <span className="text-gray-700">${difference.toLocaleString()}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex justify-between items-center text-fluid-xxs">
+      <span className="text-gray-500">Status</span>
+      {exceeded ? (
+        <span className="text-red-600 font-medium">
+          Exceeded threshold by {difference}
+        </span>
+      ) : (
+        <span className="text-dark font-normal">
+          Will exceed threshold after {difference} transactions
+        </span>
+      )}
+    </div>
+  );
+};
+
+const ProgressBar = ({
+  percentage,
+  isSales,
+}: {
+  percentage: number;
+  isSales: boolean;
+}) => (
+  <div className="w-full bg-gray-200 rounded-full h-2">
+    <div
+      className="h-2 rounded-full transition-all duration-500"
+      style={{
+        width: `${Math.min(percentage, 100)}%`,
+        backgroundColor: isSales ? getProgressColor(percentage) : "#dc2626",
+      }}
+    />
+  </div>
+);
+
+const ProgressSection = ({
+  title,
+  percentage,
+  current,
+  threshold,
+  state,
+  isSales,
+}: {
+  title: string;
+  percentage: number;
+  current: number;
+  threshold: number | null;
+  state: string;
+  isSales: boolean;
+}) => (
+  <div className="relative">
+    <div className="flex items-center justify-between mb-6">
+      <h4 className="text-fluid-xxs font-semibold text-gray-900">{title}</h4>
+      <span className="text-fluid-xxs text-gray-500">
+        {percentage.toFixed(1)}% of threshold
+      </span>
+    </div>
+
+    {threshold !== null ? (
+      <>
+        <ProgressRing
+          percentage={percentage}
+          current={current}
+          threshold={threshold}
+          isSales={isSales}
+        />
+        <div className="space-y-3 text-fluid-xxs">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Current</span>
+            <span
+              className={`${isSales ? "font-medium" : "font-semibold"} text-gray-900`}
+            >
+              {isSales ? `$${current.toLocaleString()}` : current}
+            </span>
+          </div>
+          <ProgressBar percentage={percentage} isSales={isSales} />
+          <ThresholdStatus
+            current={current}
+            threshold={threshold}
+            isSales={isSales}
+          />
+        </div>
+      </>
+    ) : (
+      <NoThresholdMessage
+        state={state}
+        type={isSales ? "sales" : "transactions"}
+      />
+    )}
+  </div>
+);
+
 export const PerformanceWrapper = () => {
   const { user } = useAuth({ requiredRole: "admin" });
-
   const stateCode = useSearchParams().get("code");
 
   if (!stateCode) return notFound();
@@ -29,8 +235,8 @@ export const PerformanceWrapper = () => {
   const thresholds = nexus_thresholds.find(
     (nexus) => nexus.stateCode === stateCode
   );
-
   const rules = thresholds?.nexus_rule;
+
   if (!canAccessRoute(user.access_role, "taxes")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
@@ -39,44 +245,26 @@ export const PerformanceWrapper = () => {
     queryKey: ["fetch_nexus_data", stateCode],
     queryFn: async () => {
       const response = await fetchNexusData(stateCode);
-
       if (!response.isOk)
         throw new Error("Something went wrong, please contact support");
-
       return response.data;
     },
     refetchOnWindowFocus: false,
   });
 
   if (loading) return <Load />;
-
   if (!nexus_data) return notFound();
 
   const { calculation, nexus_rule } = nexus_data;
-
-  const currentSales = calculation.total_sales;
-  const salesThreshold = nexus_rule.sales_threshold;
-  const currentTransactions = calculation.total_transactions;
-  const transactionThreshold = nexus_rule.transactions_threshold;
   const salesPercentage = calculation.sales_exposure_percentage;
   const transactionPercentage = calculation.transactions_exposure_percentage;
-
-  const getRiskLevel = () => {
-    if (salesPercentage >= 100 || transactionPercentage >= 100)
-      return { level: "Critical", color: "text-red-600", bg: "bg-red-50" };
-    if (salesPercentage >= 80 || transactionPercentage >= 80)
-      return { level: "High", color: "text-orange-600", bg: "bg-orange-50" };
-    if (salesPercentage >= 60 || transactionPercentage >= 60)
-      return { level: "Medium", color: "text-yellow-600", bg: "bg-yellow-50" };
-    return { level: "Low", color: "text-green-600", bg: "bg-green-50" };
-  };
-
-  const risk = getRiskLevel();
+  const risk = getRiskLevel(salesPercentage, transactionPercentage);
+  const hasBreachedNexus =
+    salesPercentage >= 100 || transactionPercentage >= 100;
 
   return (
     <div className="min-h-screen bg-gray-50 py-3">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
         <div className="mb-4">
           <h1 className="text-fluid-md font-semibold text-gray-900">
             Nexus Tracking
@@ -86,7 +274,6 @@ export const PerformanceWrapper = () => {
           </p>
         </div>
 
-        {/* Main Card */}
         <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
           {/* State Header */}
           <div className="px-8 py-6 border-b border-gray-100">
@@ -101,7 +288,7 @@ export const PerformanceWrapper = () => {
                   {risk.level} Risk
                 </div>
               </div>
-              {(salesPercentage >= 100 || transactionPercentage >= 100) && (
+              {hasBreachedNexus && (
                 <Badge
                   size="lg"
                   radius="md"
@@ -157,9 +344,7 @@ export const PerformanceWrapper = () => {
                     <Activity className="w-5 h-5 text-dark/70" />
                     <span className="text-gray-700">
                       Evaluation period:{" "}
-                      {nexus_rule.evaluation_period_type
-                        ? nexus_rule.evaluation_period_type
-                        : "Period Unknown"}
+                      {nexus_rule.evaluation_period_type || "Period Unknown"}
                     </span>
                   </div>
                 </div>
@@ -170,184 +355,26 @@ export const PerformanceWrapper = () => {
           {/* Progress Section */}
           <div className="p-4">
             <div className="grid md:grid-cols-2 gap-8">
-              {/* Sales Progress */}
-              <div className="relative">
-                <div className="flex items-center justify-between mb-6">
-                  <h4 className="text-fluid-xxs font-semibold text-gray-900">
-                    Sales Volume
-                  </h4>
-                  <span className="text-fluid-xxs text-gray-500">
-                    {salesPercentage.toFixed(1)}% of threshold
-                  </span>
-                </div>
-
-                {salesThreshold !== null ? (
-                  <>
-                    <div className="flex justify-center mb-6">
-                      <RingProgress
-                        size={180}
-                        thickness={16}
-                        roundCaps
-                        sections={[
-                          {
-                            value: salesPercentage,
-                            color:
-                              salesPercentage >= 90
-                                ? "#dc2626"
-                                : salesPercentage >= 70
-                                  ? "#f59e0b"
-                                  : "#10b981",
-                          },
-                        ]}
-                        label={
-                          <div className="text-center">
-                            <div className="text-fluid-lg font-bold text-gray-900">
-                              ${(currentSales / 1000).toFixed(1)}k
-                            </div>
-                            <div className="text-fluid-xxs text-gray-500">
-                              of ${(salesThreshold / 1000).toFixed(1)}k
-                            </div>
-                          </div>
-                        }
-                      />
-                    </div>
-                    <div className="space-y-3 text-fluid-xxs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Current</span>
-                        <span className="font-medium text-gray-900">
-                          ${currentSales.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full transition-all duration-500"
-                          style={{
-                            width: `${Math.min(salesPercentage, 100)}%`,
-                            backgroundColor:
-                              salesPercentage >= 90
-                                ? "#dc2626"
-                                : salesPercentage >= 70
-                                  ? "#f59e0b"
-                                  : "#10b981",
-                          }}
-                        />
-                      </div>
-                      {currentSales > salesThreshold ? (
-                        <div className="flex justify-between items-center text-fluid-xxs">
-                          <span className="text-red-500">
-                            Exceeded threshold by
-                          </span>
-                          <span className="text-red-500">
-                            ${(currentSales - salesThreshold).toLocaleString()}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="flex justify-between items-center text-fluid-xxs">
-                          <span className="text-gray-500">Remaining</span>
-                          <span className="text-gray-700">
-                            ${(salesThreshold - currentSales).toLocaleString()}
-                          </span>
-                        </div>
-                      )}
-                    </div>{" "}
-                  </>
-                ) : (
-                  <div className="flex flex-col space-y-2 w-full h-full">
-                    <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
-                      <Ban className="w-10 h-10 text-red-600" />
-                    </div>
-                    <p className="text-fluid-xxs text-center">
-                      No sales requirements for the state of {nexus_data.state}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Transactions Progress */}
-              <div className="relative">
-                <div className="flex items-center justify-between mb-6">
-                  <h4 className="text-fluid-xxs font-semibold text-gray-900">
-                    Transactions
-                  </h4>
-                  <span className="text-fluid-xxs text-gray-500">
-                    {transactionPercentage.toFixed(1)}% of threshold
-                  </span>
-                </div>
-
-                {transactionThreshold !== null ? (
-                  <>
-                    <div className="flex justify-center mb-6">
-                      <RingProgress
-                        size={180}
-                        thickness={16}
-                        roundCaps
-                        sections={[
-                          {
-                            value: Math.min(transactionPercentage, 100),
-                            color: "#dc2626",
-                          },
-                        ]}
-                        label={
-                          <div className="text-center">
-                            <div className="text-fluid-lg font-bold text-gray-900">
-                              {currentTransactions}
-                            </div>
-                            <div className="text-fluid-xxs text-gray-500">
-                              of {transactionThreshold}
-                            </div>
-                          </div>
-                        }
-                      />
-                    </div>
-
-                    <div className="space-y-3 text-fluid-xxs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Current</span>
-                        <span className="font-semibold text-gray-900">
-                          {currentTransactions}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full bg-red-600 transition-all duration-500"
-                          style={{
-                            width: `${Math.min(transactionPercentage, 100)}%`,
-                          }}
-                        />
-                      </div>
-                      <div className="flex justify-between items-center text-fluid-xxs">
-                        <span className="text-gray-500">Status</span>
-                        {currentTransactions > transactionThreshold ? (
-                          <span className="text-red-600 font-medium">
-                            Exceeded threshold by{" "}
-                            {currentTransactions - transactionThreshold}
-                          </span>
-                        ) : (
-                          <span className="text-dark font-normal">
-                            Will exceed threshold after{" "}
-                            {transactionThreshold - currentTransactions}{" "}
-                            transactions
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex flex-col space-y-2 w-full h-full">
-                    <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
-                      <Ban className="w-10 h-10 text-red-600" />
-                    </div>
-                    <p className="text-fluid-xxs text-center">
-                      No transactions requirements for the state of{" "}
-                      {nexus_data.state}
-                    </p>
-                  </div>
-                )}
-              </div>
+              <ProgressSection
+                title="Sales Volume"
+                percentage={salesPercentage}
+                current={calculation.total_sales}
+                threshold={nexus_rule.sales_threshold}
+                state={nexus_data.state}
+                isSales={true}
+              />
+              <ProgressSection
+                title="Transactions"
+                percentage={transactionPercentage}
+                current={calculation.total_transactions}
+                threshold={nexus_rule.transactions_threshold}
+                state={nexus_data.state}
+                isSales={false}
+              />
             </div>
 
             {/* Alert Banner */}
-            {(salesPercentage >= 100 || transactionPercentage >= 100) && (
+            {hasBreachedNexus && (
               <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>

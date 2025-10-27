@@ -5,18 +5,14 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-
 import {
   Subscriptions,
   SubscriptionPlan,
 } from "@omenai/shared-models/models/subscriptions";
 import { SubscriptionTransactions } from "@omenai/shared-models/models/transactions/SubscriptionTransactionSchema";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
-
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { getSubscriptionExpiryDate } from "@omenai/shared-utils/src/getSubscriptionExpiryDate";
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-
 import type Stripe from "stripe";
 import mongoose, { ClientSession } from "mongoose";
 import {
@@ -27,6 +23,17 @@ import { z } from "zod";
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+
+/* -------------------------------------------------------------------------- */
+/*                                    TYPES                                   */
+/* -------------------------------------------------------------------------- */
+type PlanName = "Basic" | "Pro" | "Premium";
+type PlanInterval = "monthly" | "yearly";
+type UploadTracker = {
+  limit: number;
+  next_reset_date: string;
+  upload_count: number;
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                CONFIG SETUP                                */
@@ -47,7 +54,6 @@ const MetadataSchema = z.object({
   name: z.string().optional().default(""),
   email: z.string().email().optional().default(""),
   gallery_id: z.string().min(1, "gallery_id missing in metadata"),
-  // Accept both snakeCase and camelCase for backward-compat
   plan_id: z.string().optional(),
   planId: z.string().optional(),
   plan_interval: z.enum(["monthly", "yearly"]).optional(),
@@ -56,214 +62,23 @@ const MetadataSchema = z.object({
 });
 
 /* -------------------------------------------------------------------------- */
-/*                                  HANDLER                                   */
+/*                             UPLOAD LIMIT LOOKUP                            */
 /* -------------------------------------------------------------------------- */
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
-) {
-  try {
-    await connectMongoDB();
+const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
+  Basic: { monthly: 5, yearly: 75 },
+  Pro: { monthly: 15, yearly: 225 },
+  Premium: {
+    monthly: Number.MAX_SAFE_INTEGER,
+    yearly: Number.MAX_SAFE_INTEGER,
+  },
+};
 
-    const parsedBody = RequestSchema.safeParse(await request.json());
-    if (!parsedBody.success) {
-      return badRequest(parsedBody.error.flatten().fieldErrors);
-    }
-    const { paymentIntentId } = parsedBody.data;
-
-    // Retrieve PI from Stripe (expanded for payment method & charge details)
-    let pi: Stripe.PaymentIntent;
-    try {
-      pi = await stripe.paymentIntents.retrieve(paymentIntentId, {
-        expand: ["payment_method", "charges.data.balance_transaction"],
-      });
-    } catch (err) {
-      // Stripe throws for not-found; normalize to 404
-      return NextResponse.json(
-        { message: "PaymentIntent not found" },
-        { status: 404 }
-      );
-    }
-
-    const metadataParse = MetadataSchema.safeParse(pi.metadata ?? {});
-    if (!metadataParse.success) {
-      return badRequest(metadataParse.error.flatten().fieldErrors);
-    }
-    const rawMeta = metadataParse.data;
-
-    const paymentMethod = pi.payment_method as Stripe.PaymentMethod | null;
-    const txnStatus = pi.status;
-    const domainStatus = mapStripeStatusToDomain(txnStatus);
-
-    // Resolve dual-key metadata
-    const plan_id = rawMeta.plan_id ?? rawMeta.planId;
-    const plan_interval = (rawMeta.plan_interval ?? rawMeta.planInterval) as
-      | PlanInterval
-      | undefined;
-    const customer = String(pi.customer ?? rawMeta.customer ?? "");
-    const { name, email, gallery_id } = rawMeta;
-
-    // Minimal required metadata for subsequent writes; keep logic identical
-    if (!gallery_id) {
-      return NextResponse.json(
-        { message: "Missing gallery_id in PaymentIntent metadata" },
-        { status: 400 }
-      );
-    }
-
-    // Idempotency check: if a transaction already exists and is succeeded, return early.
-    const existingTxn = await SubscriptionTransactions.findOne(
-      { payment_ref: pi.id },
-      "status"
-    )
-      .lean<{ status?: string }>()
-      .exec();
-
-    if (existingTxn?.status === "successful") {
-      return NextResponse.json(
-        { message: "Transaction processed successfully", pi },
-        { status: 200 }
-      );
-    }
-
-    // Prepare transaction data
-    const amountInUnits = Number(pi.amount) / 100;
-    const nowUTC = toUTCDate(new Date());
-
-    const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
-      amount: amountInUnits,
-      payment_ref: pi.id,
-      date: nowUTC,
-      gallery_id,
-      status: domainStatus,
-      stripe_customer_id: customer,
-    };
-
-    // Mongoose transaction for atomic writes
-    const session = await mongoose.startSession();
-    let shouldSendSuccessEmail = false;
-
-    try {
-      session.startTransaction();
-
-      // Upsert transaction (idempotent)
-      await SubscriptionTransactions.findOneAndUpdate(
-        { payment_ref: pi.id },
-        { $set: txnData },
-        { upsert: true, new: true, session }
-      );
-
-      // If succeeded -> create or update subscription (same business logic)
-      if (txnStatus === "succeeded") {
-        if (!plan_id || !plan_interval) {
-          await session.abortTransaction();
-          return NextResponse.json(
-            {
-              message:
-                "Missing plan metadata (plan_id or plan_interval) on PaymentIntent",
-            },
-            { status: 400 }
-          );
-        }
-
-        const [plan, existingSubscription] = await Promise.all([
-          SubscriptionPlan.findOne({ plan_id }).session(session),
-          Subscriptions.findOne({ stripe_customer_id: customer }).session(
-            session
-          ),
-        ]);
-
-        if (!plan) {
-          await session.abortTransaction();
-          return NextResponse.json(
-            { message: "Plan not found" },
-            { status: 400 }
-          );
-        }
-
-        const expiryDate = getSubscriptionExpiryDate(plan_interval);
-        const subPayload = buildSubscriptionPayload({
-          nowUTC,
-          expiryDate,
-          paymentMethod: paymentMethod ?? undefined,
-          customer,
-          name,
-          email,
-          gallery_id,
-          plan,
-          plan_interval,
-          existingSubscription,
-        });
-
-        if (!existingSubscription) {
-          await Subscriptions.create([subPayload], { session });
-        } else {
-          await updateExistingSubscription(
-            existingSubscription,
-            customer,
-            subPayload,
-            expiryDate,
-            plan.name as PlanName,
-            plan_interval,
-            session
-          );
-        }
-
-        await AccountGallery.updateOne(
-          { gallery_id },
-          { $set: { subscription_status: { type: plan.name, active: true } } },
-          { session }
-        );
-
-        shouldSendSuccessEmail = true;
-      }
-
-      await session.commitTransaction();
-    } catch (txErr) {
-      await session.abortTransaction();
-      console.error("[subscription.verify] Transaction failed:", txErr);
-      throw txErr;
-    } finally {
-      session.endSession();
-    }
-
-    // Side-effects after commit (don’t jeopardize user outcome if email fails)
-    void safeSendEmail(() => {
-      if (txnStatus === "succeeded" && shouldSendSuccessEmail) {
-        return sendSubscriptionPaymentSuccessfulMail({ name, email });
-      }
-      if (txnStatus === "processing") {
-        return sendSubscriptionPaymentPendingMail({ name, email });
-      }
-      return sendSubscriptionPaymentFailedMail({ name, email });
-    });
-
-    // Final response mirrors original logic
-    if (txnStatus === "succeeded") {
-      return NextResponse.json(
-        { message: "Payment succeeded and processed", pi },
-        { status: 200 }
-      );
-    }
-    if (txnStatus === "processing") {
-      return NextResponse.json(
-        { message: "Payment is processing", pi },
-        { status: 200 }
-      );
-    }
-    return NextResponse.json(
-      { message: "Payment failed", pi },
-      { status: 400 }
-    );
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    // Do not leak internals in production; normalize output
-    console.error("[subscription.verify] Uncaught error:", error);
-    return NextResponse.json(
-      { message: error_response?.message ?? "Internal error" },
-      { status: error_response?.status ?? 500 }
-    );
-  }
-});
+function getUploadLimitLookup(
+  planName: PlanName,
+  planInterval: PlanInterval
+): number {
+  return uploadLimits[planName][planInterval];
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                  HELPERS                                   */
@@ -275,70 +90,104 @@ function badRequest(errors: unknown) {
 function mapStripeStatusToDomain(
   status: Stripe.PaymentIntent.Status
 ): "successful" | "processing" | "failed" {
-  switch (status) {
-    case "succeeded":
-      return "successful";
-    case "processing":
-      return "processing";
-    default:
-      return "failed";
-  }
+  if (status === "succeeded") return "successful";
+  if (status === "processing") return "processing";
+  return "failed";
 }
 
 async function safeSendEmail(fn: () => Promise<unknown>) {
   try {
     await fn();
   } catch (err) {
-    // In production we log and move on; don’t break the API response
     console.error("[subscription.verify] Email dispatch failed:", err);
   }
 }
 
-type UploadTracker = {
-  limit: number;
-  next_reset_date: string;
-  upload_count: number;
-};
+async function retrievePaymentIntent(paymentIntentId: string) {
+  try {
+    return await stripe.paymentIntents.retrieve(paymentIntentId, {
+      expand: ["payment_method", "charges.data.balance_transaction"],
+    });
+  } catch (err) {
+    return null;
+  }
+}
 
-type BuildSubPayloadArgs = {
-  nowUTC: Date;
-  expiryDate: Date;
-  paymentMethod?: Stripe.PaymentMethod;
-  customer: string;
-  name: string;
-  email: string;
-  gallery_id: string;
-  plan: {
-    name: PlanName;
-    pricing: { monthly_price: string | number; annual_price: string | number };
-    currency: string;
-    plan_id: string;
+function resolveMetadata(
+  rawMeta: z.infer<typeof MetadataSchema>,
+  pi: Stripe.PaymentIntent
+) {
+  return {
+    plan_id: rawMeta.plan_id ?? rawMeta.planId,
+    plan_interval: (rawMeta.plan_interval ?? rawMeta.planInterval) as
+      | PlanInterval
+      | undefined,
+    customer: String(pi.customer ?? rawMeta.customer ?? ""),
+    name: rawMeta.name,
+    email: rawMeta.email,
+    gallery_id: rawMeta.gallery_id,
   };
-  plan_interval: PlanInterval;
-  existingSubscription: {
-    status?: "active" | "inactive" | string;
-    expiry_date?: string | Date;
-    upload_tracker?: { upload_count?: number } | null;
-  } | null;
-};
+}
 
-function buildSubscriptionPayload({
-  nowUTC,
-  expiryDate,
-  paymentMethod,
-  customer,
-  name,
-  email,
-  gallery_id,
-  plan,
-  plan_interval,
-  existingSubscription,
-}: BuildSubPayloadArgs) {
-  const uploadTracker: UploadTracker = {
-    limit: getUploadLimitLookup(plan.name, plan_interval),
+async function checkExistingTransaction(paymentRef: string) {
+  return await SubscriptionTransactions.findOne(
+    { payment_ref: paymentRef },
+    "status"
+  )
+    .lean<{ status?: string }>()
+    .exec();
+}
+
+function buildTransactionData(
+  pi: Stripe.PaymentIntent,
+  gallery_id: string,
+  customer: string
+): Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> {
+  const amountInUnits = Number(pi.amount) / 100;
+  const nowUTC = toUTCDate(new Date());
+  const domainStatus = mapStripeStatusToDomain(pi.status);
+
+  return {
+    amount: amountInUnits,
+    payment_ref: pi.id,
+    date: nowUTC,
+    gallery_id,
+    status: domainStatus,
+    stripe_customer_id: customer,
+  };
+}
+
+function buildUploadTracker(
+  planName: PlanName,
+  planInterval: PlanInterval,
+  expiryDate: Date,
+  existingSubscription: any
+): UploadTracker {
+  return {
+    limit: getUploadLimitLookup(planName, planInterval),
     next_reset_date: expiryDate.toISOString(),
     upload_count: existingSubscription?.upload_tracker?.upload_count ?? 0,
   };
+}
+
+function buildSubscriptionPayload(
+  nowUTC: Date,
+  expiryDate: Date,
+  paymentMethod: Stripe.PaymentMethod | undefined,
+  customer: string,
+  name: string,
+  email: string,
+  gallery_id: string,
+  plan: any,
+  plan_interval: PlanInterval,
+  existingSubscription: any
+) {
+  const uploadTracker = buildUploadTracker(
+    plan.name,
+    plan_interval,
+    expiryDate,
+    existingSubscription
+  );
 
   return {
     start_date: nowUTC,
@@ -367,33 +216,30 @@ function buildSubscriptionPayload({
   };
 }
 
-async function updateExistingSubscription(
-  existingSubscription: {
-    status?: string;
-    expiry_date?: string | Date;
-    upload_tracker?: { upload_count?: number } | null;
-  },
+function isSubscriptionActiveAndValid(subscription: any): boolean {
+  if (!subscription) return false;
+
+  const now = new Date();
+  const expiryDate = new Date(subscription.expiry_date ?? 0);
+
+  return subscription.status === "active" && expiryDate > now;
+}
+
+async function upsertSubscription(
   customer: string,
-  subPayload: ReturnType<typeof buildSubscriptionPayload>,
-  expiryDate: Date,
-  planName: PlanName,
-  planInterval: PlanInterval,
+  subPayload: any,
+  existingSubscription: any,
   session: ClientSession
 ) {
-  const now = new Date();
-  const isActiveAndNotExpired =
-    existingSubscription.status === "active" &&
-    new Date(existingSubscription.expiry_date ?? 0) > now;
+  if (!existingSubscription) {
+    await Subscriptions.create([subPayload], { session });
+    return;
+  }
 
-  if (isActiveAndNotExpired) {
-    const upload_tracker: UploadTracker = {
-      limit: getUploadLimitLookup(planName, planInterval),
-      next_reset_date: expiryDate.toISOString(),
-      upload_count: existingSubscription.upload_tracker?.upload_count ?? 0,
-    };
+  if (isSubscriptionActiveAndValid(existingSubscription)) {
     await Subscriptions.updateOne(
       { stripe_customer_id: customer },
-      { $set: { ...subPayload, upload_tracker } },
+      { $set: { ...subPayload, upload_tracker: subPayload.upload_tracker } },
       { session }
     );
   } else {
@@ -405,24 +251,190 @@ async function updateExistingSubscription(
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/*                             UPLOAD LIMIT LOOKUP                            */
-/* -------------------------------------------------------------------------- */
-type PlanName = "Basic" | "Pro" | "Premium";
-type PlanInterval = "monthly" | "yearly";
+async function processSuccessfulPayment(
+  pi: Stripe.PaymentIntent,
+  metadata: ReturnType<typeof resolveMetadata>,
+  paymentMethod: Stripe.PaymentMethod | null,
+  session: ClientSession
+) {
+  const { plan_id, plan_interval, customer, name, email, gallery_id } =
+    metadata;
 
-const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
-  Basic: { monthly: 5, yearly: 75 },
-  Pro: { monthly: 15, yearly: 225 },
-  Premium: {
-    monthly: Number.MAX_SAFE_INTEGER,
-    yearly: Number.MAX_SAFE_INTEGER,
-  },
-};
+  if (!plan_id || !plan_interval) {
+    throw new Error("Missing plan metadata (plan_id or plan_interval)");
+  }
 
-function getUploadLimitLookup(
-  planName: PlanName,
-  planInterval: PlanInterval
-): number {
-  return uploadLimits[planName][planInterval];
+  const [plan, existingSubscription] = await Promise.all([
+    SubscriptionPlan.findOne({ plan_id }).session(session),
+    Subscriptions.findOne({ stripe_customer_id: customer }).session(session),
+  ]);
+
+  if (!plan) {
+    throw new Error("Plan not found");
+  }
+
+  const nowUTC = toUTCDate(new Date());
+  const expiryDate = getSubscriptionExpiryDate(plan_interval);
+
+  const subPayload = buildSubscriptionPayload(
+    nowUTC,
+    expiryDate,
+    paymentMethod ?? undefined,
+    customer,
+    name,
+    email,
+    gallery_id,
+    plan,
+    plan_interval,
+    existingSubscription
+  );
+
+  await upsertSubscription(customer, subPayload, existingSubscription, session);
+
+  await AccountGallery.updateOne(
+    { gallery_id },
+    { $set: { subscription_status: { type: plan.name, active: true } } },
+    { session }
+  );
 }
+
+function getEmailForStatus(
+  status: Stripe.PaymentIntent.Status,
+  shouldSendSuccess: boolean,
+  name: string,
+  email: string
+) {
+  if (status === "succeeded" && shouldSendSuccess) {
+    return () => sendSubscriptionPaymentSuccessfulMail({ name, email });
+  }
+  if (status === "processing") {
+    return () => sendSubscriptionPaymentPendingMail({ name, email });
+  }
+  return () => sendSubscriptionPaymentFailedMail({ name, email });
+}
+
+function getResponseForStatus(
+  status: Stripe.PaymentIntent.Status,
+  pi: Stripe.PaymentIntent
+) {
+  if (status === "succeeded") {
+    return NextResponse.json(
+      { message: "Payment succeeded and processed", pi },
+      { status: 200 }
+    );
+  }
+  if (status === "processing") {
+    return NextResponse.json(
+      { message: "Payment is processing", pi },
+      { status: 200 }
+    );
+  }
+  return NextResponse.json({ message: "Payment failed", pi }, { status: 400 });
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  HANDLER                                   */
+/* -------------------------------------------------------------------------- */
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request
+) {
+  try {
+    await connectMongoDB();
+
+    // Parse and validate request
+    const parsedBody = RequestSchema.safeParse(await request.json());
+    if (!parsedBody.success) {
+      return badRequest(parsedBody.error.flatten().fieldErrors);
+    }
+    const { paymentIntentId } = parsedBody.data;
+
+    // Retrieve PaymentIntent from Stripe
+    const pi = await retrievePaymentIntent(paymentIntentId);
+    if (!pi) {
+      return NextResponse.json(
+        { message: "PaymentIntent not found" },
+        { status: 404 }
+      );
+    }
+
+    // Parse and validate metadata
+    const metadataParse = MetadataSchema.safeParse(pi.metadata ?? {});
+    if (!metadataParse.success) {
+      return badRequest(metadataParse.error.flatten().fieldErrors);
+    }
+
+    const metadata = resolveMetadata(metadataParse.data, pi);
+
+    if (!metadata.gallery_id) {
+      return NextResponse.json(
+        { message: "Missing gallery_id in PaymentIntent metadata" },
+        { status: 400 }
+      );
+    }
+
+    // Check for existing transaction (idempotency)
+    const existingTxn = await checkExistingTransaction(pi.id);
+    if (existingTxn?.status === "successful") {
+      return NextResponse.json(
+        { message: "Transaction processed successfully", pi },
+        { status: 200 }
+      );
+    }
+
+    // Prepare transaction data
+    const txnData = buildTransactionData(
+      pi,
+      metadata.gallery_id,
+      metadata.customer
+    );
+
+    // Process payment in atomic transaction
+    const session = await mongoose.startSession();
+    let shouldSendSuccessEmail = false;
+
+    try {
+      session.startTransaction();
+
+      // Upsert transaction
+      await SubscriptionTransactions.findOneAndUpdate(
+        { payment_ref: pi.id },
+        { $set: txnData },
+        { upsert: true, new: true, session }
+      );
+
+      // Process successful payment
+      if (pi.status === "succeeded") {
+        const paymentMethod = pi.payment_method as Stripe.PaymentMethod | null;
+        await processSuccessfulPayment(pi, metadata, paymentMethod, session);
+        shouldSendSuccessEmail = true;
+      }
+
+      await session.commitTransaction();
+    } catch (txErr) {
+      await session.abortTransaction();
+      console.error("[subscription.verify] Transaction failed:", txErr);
+      throw txErr;
+    } finally {
+      session.endSession();
+    }
+
+    // Send email notification
+    const emailFn = getEmailForStatus(
+      pi.status,
+      shouldSendSuccessEmail,
+      metadata.name,
+      metadata.email
+    );
+    void safeSendEmail(emailFn);
+
+    // Return response
+    return getResponseForStatus(pi.status, pi);
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    console.error("[subscription.verify] Uncaught error:", error);
+    return NextResponse.json(
+      { message: error_response?.message ?? "Internal error" },
+      { status: error_response?.status ?? 500 }
+    );
+  }
+});

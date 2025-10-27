@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { MapPin } from "lucide-react";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import Input from "@omenai/shared-ui-components/components/artists/AddressInputHandler";
-import SelectInput from "@omenai/shared-ui-components/components/artists/AddressSelectHandler";
+import SelectInput from "@omenai/shared-ui-components/components/global/AddressSelectHandler";
 import { artist_countries_codes_currency } from "@omenai/shared-json/src/artist_onboarding_countries";
 import { AddressTypes } from "@omenai/shared-types";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
