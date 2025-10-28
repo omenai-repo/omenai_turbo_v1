@@ -62,10 +62,11 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         "payment_information"
       );
 
-      if (order) {
-        const commitments = generateDeletionCommitments({
-          hasActiveOrder: !!order,
-        });
+      const commitments = generateDeletionCommitments({
+        hasActiveOrder: !!order,
+      });
+
+      if (!commitments.can_delete) {
         return NextResponse.json(
           {
             message: "Account deletion blocked due to active commitments",
