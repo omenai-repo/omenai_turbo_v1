@@ -99,7 +99,7 @@ export default function UpdatePasswordModalForm() {
     setLoading(false);
   }
   return (
-    <div className="w-full max-h-[85vh] overflow-y-scroll h-auto">
+    <div className="w-full overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
       {/* Design 1: Clean Card with Progress */}
       <div className=" rounded shadow-lg border border-slate-200 overflow-hidden">
         {/* Header */}
@@ -149,7 +149,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Enter your new password"
-                  className="w-full px-4 py-2 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xxs"
+                  className="w-full h-12 px-4 pr-12 border border-slate-300 focus:outline-none focus:ring-0 focus:border-dark rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs duration-200 transition-colors font-mono tracking-wider"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -180,7 +180,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Confirm your new password"
-                  className="w-full px-4 py-2 pr-10 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 focus:outline-none transition-colors placeholder:font-normal placeholder:text-fluid-xxs"
+                  className="w-full h-12 px-4 pr-12 border border-slate-300 focus:outline-none focus:ring-0 focus:border-dark rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs duration-200 transition-colors font-mono tracking-wider"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {info.confirmPassword &&
@@ -230,7 +230,7 @@ export default function UpdatePasswordModalForm() {
                 type="text"
                 required
                 placeholder="Enter 6-digit code"
-                className="flex-1 px-4 py-2 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-dark/30 placeholder:font-normal placeholder:text-fluid-xxs focus:border-slate-900 focus:ring-1 focus:ring-slate-900 focus:outline-none transition-colors font-mono tracking-wider"
+                className="w-full h-12 px-4 pr-12 border border-slate-300 focus:outline-none focus:ring-0 focus:border-dark rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs duration-200 transition-colors font-mono tracking-wider"
               />
               <button
                 type="button"
@@ -242,7 +242,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-2 bg-dark text-white font-normal rounded hover:bg-dark/80 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-200 focus:outline-none focus:ring-1 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+                className="px-4 py-2 grid place-items-center w-full bg-dark text-white font-normal rounded hover:bg-dark/80 hover:text-white transition-colors disabled:bg-dark/10 disabled:text-dark disabled:cursor-not-allowed disabled:bg-slate-200 focus:outline-none focus:ring-1 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>

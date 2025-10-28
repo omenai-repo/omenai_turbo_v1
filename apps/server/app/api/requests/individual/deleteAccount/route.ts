@@ -1,9 +1,9 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import {
+  BadRequestError,
   ForbiddenError,
   NotFoundError,
-  ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -29,7 +29,9 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
       const { id, reason } = await request.json();
 
       if (!id || !reason) {
-        throw new ServerError("missing_parameters, No id or reason provided");
+        throw new BadRequestError(
+          "Missing parameters, No ID or Reason provided"
+        );
       }
 
       const collectorAccount = await AccountIndividual.findOne(

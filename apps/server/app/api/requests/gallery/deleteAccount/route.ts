@@ -2,6 +2,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { NextResponse } from "next/server";
 import {
+  BadRequestError,
   ForbiddenError,
   NotFoundError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -29,6 +30,12 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
     try {
       await connectMongoDB();
       const { id, reason }: DeletionRequestBody = await request.json();
+
+      if (!id || !reason) {
+        throw new BadRequestError(
+          "Missing parameters, No ID or Reason provided"
+        );
+      }
 
       const galleryAccount = await AccountGallery.findOne(
         { gallery_id: id },
