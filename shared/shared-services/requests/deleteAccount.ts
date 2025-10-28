@@ -9,7 +9,7 @@ export async function deleteAccount(
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/requests/${route}/deleteAccount`, {
-      method: "POST",
+      method: "DELETE",
       body: JSON.stringify({ id: session_id }),
       headers: { "x-csrf-token": token },
       credentials: "include",

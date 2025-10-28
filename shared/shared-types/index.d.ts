@@ -1056,12 +1056,15 @@ export interface TrackingResponse {
   ============================================================
 */
 
+type EntityType = "user" | "artist" | "gallery" | "admin";
+
 type DeletionRequest = {
   targetId: string; // target user
   initiatedBy: "target" | "admin" | "system"; // user or admin or system initiated
   reason: string;
   status: "requested" | "in_progress" | "completed" | "failed" | "cancelled";
-  startedAt?: Date;
+  entityType: Omit<EntityType, "admin">; // type of entity
+  requestedAt?: Date;
   completedAt?: Date;
   gracePeriodUntil?: Date; // Deletion process starts at this date
   tasks: string[]; // references to DeletionTask
@@ -1092,7 +1095,13 @@ type DeletionTaskServiceType =
   | "subscription_transaction_service"
   | "account_service"
   | "subscriptions_service"
+  | "stripe_service"
   | "misc_service"; // miscellaneous service such as device fingerprint, prorations, sales activity, artist categorizations
+
+export type DeletionRequestBody = {
+  id: string;
+  reason: string;
+};
 
 export type DeletionAuditLog = {
   deletion_request_id: string; // Reference to the corresponding DeletionRequest
