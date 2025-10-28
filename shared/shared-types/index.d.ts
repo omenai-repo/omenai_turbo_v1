@@ -1049,3 +1049,94 @@ export interface TrackingDetails {
 export interface TrackingResponse {
   shipments: TrackingDetails[];
 }
+
+/*
+  ============================================================
+  TYPES RELATED TO THE DELETION SERVICE
+  ============================================================
+*/
+
+type EntityType = "user" | "artist" | "gallery" | "admin";
+
+type DeletionRequest = {
+  targetId: string; // target user
+  initiatedBy: "target" | "admin" | "system"; // user or admin or system initiated
+  reason: string;
+  status: "requested" | "in_progress" | "completed" | "failed" | "cancelled";
+  entityType: Omit<EntityType, "admin">; // type of entity
+  requestedAt?: Date;
+  completedAt?: Date;
+  gracePeriodUntil?: Date; // Deletion process starts at this date
+  tasks: string[]; // references to DeletionTask
+  metadata?: Record<string, any>;
+  requestId: string;
+};
+
+type DeletionTask = {
+  requestId: string;
+  service: DeletionTaskServiceType; // references deletion service task e.g., 'orders', 'uploads', 'wallet'
+  entityId?: string; // id to delete
+  entityType: Omit<EntityType, "admin">; // type of entity
+  status: "pending" | "in_progress" | "done" | "failed";
+  attempts: number;
+  lastError?: string;
+  startedAt?: Date;
+  completedAt?: Date;
+  idempotencyKey?: string;
+  result?: any;
+};
+
+type DeletionTaskServiceType =
+  | "order_service"
+  | "upload_service"
+  | "wallet_service"
+  | "wallet_transaction_service"
+  | "purchase_transaction_service"
+  | "subscription_transaction_service"
+  | "account_service"
+  | "subscriptions_service"
+  | "stripe_service"
+  | "misc_service"; // miscellaneous service such as device fingerprint, prorations, sales activity, artist categorizations
+
+export type DeletionRequestBody = {
+  id: string;
+  reason: string;
+};
+
+export type DeletionAuditLog = {
+  deletion_request_id: string; // Reference to the corresponding DeletionRequest
+
+  /**
+   * Information about the user whose data was deleted
+   */
+  target_ref: {
+    target_id: string; // Internal system identifier (e.g. user_id, artist_id, gallery_id)
+    target_email_hash: string; //SHA-256 hash of the user's email or another unique identifier Used for verification without exposing raw PII
+  };
+
+  /**
+   * Who initiated the deletion
+   * - "user" → the user themselves
+   * - "admin" → manually triggered by omenai admin
+   * - "system" → automatically triggered (e.g. due to account expiry)
+   */
+  initiated_by: "target" | "admin" | "system";
+
+  /**
+   * Summarized results of deletion tasks across different services
+   */
+  tasks_summary: {
+    service: DeletionTaskServiceType; // The service or subsystem name (e.g. "orders", "wallet", "files")
+    deleted_records_count?: number; // Number of records deleted within that service
+    status: DeletionTask["status"]; //Status of the deletion task
+    completed_at?: Date; // When the deletion was completed for this service
+    error_message?: string; //Optional error details if task failed
+  }[];
+  requested_at: Date; // When the deletion request was created
+
+  completed_at?: Date; // When the deletion was fully completed (all tasks done)
+
+  retention_expires_at: Date; // When this audit log should expire (e.g. 3 years from now). Based on Omenai's data retention policy
+
+  signature: string; // HMAC signature to verify record integrity and authenticity. Generated with a signing key
+};

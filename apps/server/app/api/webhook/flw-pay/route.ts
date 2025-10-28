@@ -257,6 +257,14 @@ async function handlePurchaseTransaction(
       webhookConfirmed: true,
     };
 
+    const wallet_increment_amount = Math.round(
+      Number(verified_transaction.data.amount) -
+        (commission +
+          penalty_fee +
+          Number(meta.tax_fees ?? 0) +
+          Number(meta.shipping_cost ?? 0))
+    );
+
     const formatted_date = getFormattedDateTime();
 
     const createTransactionPromise = PurchaseTransactions.create([data], {
@@ -280,6 +288,7 @@ async function handlePurchaseTransaction(
             transaction_value: Number(verified_transaction.data.amount),
             transaction_date: formatted_date,
             transaction_reference: verified_transaction.data.id,
+            artist_wallet_increment: wallet_increment_amount,
           } as PaymentStatusTypes,
         },
       }
@@ -305,14 +314,6 @@ async function handlePurchaseTransaction(
       },
       { $set: { availability: false } }
     ).session(session);
-
-    const wallet_increment_amount = Math.round(
-      Number(verified_transaction.data.amount) -
-        (commission +
-          penalty_fee +
-          Number(meta.tax_fees ?? 0) +
-          Number(meta.shipping_cost ?? 0))
-    );
 
     const fundWalletPromise = Wallet.updateOne(
       { owner_id: meta.seller_id },
@@ -493,8 +494,6 @@ export const POST = withAppRouterHighlight(async function POST(
       const verified_transaction = await verifyFlutterwaveTransaction(
         body.data.id
       );
-
-      console.log(verified_transaction);
 
       // Determine transaction type
       const transactionType = verified_transaction?.data?.meta

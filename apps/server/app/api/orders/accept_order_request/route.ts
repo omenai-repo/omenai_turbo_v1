@@ -22,7 +22,6 @@ import Taxjar from "taxjar";
 import { NexusTransactions } from "@omenai/shared-models/models/transactions/NexusModelSchema";
 import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";

@@ -83,15 +83,27 @@ export default function SubDetail({
         <h3 className="text-fluid-xxs font-semibold text-slate-900">
           Your Subscription
         </h3>
-        <div
-          className={`px-3 py-1 rounded text-fluid-xxs font-semibold ${
-            sub_data.status === "active"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {sub_data.status.toUpperCase()}
-        </div>
+        {sub_data.status === "active" && (
+          <div
+            className={`px-3 py-1 rounded text-fluid-xxs font-semibold bg-green-100 text-green-700`}
+          >
+            {sub_data.status.toUpperCase()}
+          </div>
+        )}
+        {(sub_data.status === "expired" ||
+          sub_data.status === "incomplete") && (
+          <div
+            className={`px-3 py-1 rounded text-fluid-xxs font-semibold bg-red-100 text-red-700`}
+          >
+            {sub_data.status.toUpperCase()}
+          </div>
+        )}
+        {sub_data.status === "canceled" && (
+          <div className="px-3 py-1 rounded text-fluid-xxs text-[#a86a41] font-semibold bg-[#fbf1c6]">
+            {" "}
+            Active &#183; ends in {daysLeft(sub_data.expiry_date)} days
+          </div>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -119,7 +131,7 @@ export default function SubDetail({
             </span>
           </div>
 
-          {sub_data.status === "active" && (
+          {(sub_data.status === "active" || sub_data.status === "canceled") && (
             <>
               <div className="mt-3">
                 <div className="flex justify-between text-fluid-xxs text-slate-600 mb-1">
@@ -184,7 +196,14 @@ export default function SubDetail({
 
         {/* Actions */}
         <div className="pt-2 flex gap-2">
-          {sub_data.status === "canceled" || sub_data.status === "expired" ? (
+          {sub_data.status === "canceled" && (
+            <div className="text-fluid-xxs text-[#a86a41] font-medium bg-[#fefbea] px-4 py-2 rounded border-[#fef2c5] border-2">
+              <span className="font-bold uppercase">Note:</span> Your
+              subscription cancellation will take effect after your current
+              billing cycle.
+            </div>
+          )}
+          {sub_data.status === "expired" && (
             <Link
               href="/gallery/billing/plans?plan_action=reactivation"
               className="w-full"
@@ -193,7 +212,8 @@ export default function SubDetail({
                 Reactivate
               </button>
             </Link>
-          ) : (
+          )}
+          {sub_data.status === "active" && (
             <>
               <Link href="/gallery/billing/plans" className="flex-1">
                 <button className="w-full px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded transition-all hover:bg-slate-200">

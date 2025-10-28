@@ -20,8 +20,8 @@
     "postcss": "^8.4.49",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.16",
-    "turbo": "^2.5.6",
-    "turbo-ignore": "^2.5.6",
+    "turbo": "^2.5.8",
+    "turbo-ignore": "^2.5.8",
     "typescript": "5.5.4"
   },
   "engines": {

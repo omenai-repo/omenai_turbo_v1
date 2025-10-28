@@ -68,7 +68,7 @@ export default function UpcomingSub({
                 </svg>
               </div>
               <div>
-                <p className="text-base font-semibold text-red-600 capitalize">
+                <p className="text-base font-normal text-red-600 capitalize">
                   Subscription {sub_data.status}
                 </p>
               </div>
