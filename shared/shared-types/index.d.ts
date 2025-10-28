@@ -1094,8 +1094,6 @@ type DeletionTaskServiceType =
   | "subscriptions_service"
   | "misc_service"; // miscellaneous service such as device fingerprint, prorations, sales activity, artist categorizations
 
-// types/deletion-audit-log.ts
-
 export type DeletionAuditLog = {
   deletion_request_id: string; // Reference to the corresponding DeletionRequest
 
@@ -1129,10 +1127,6 @@ export type DeletionAuditLog = {
 
   completed_at?: Date; // When the deletion was fully completed (all tasks done)
 
-  /**
-   * When this audit log should expire (e.g. 3 years from now)
-   * Based on your data retention policy
-   */
   retention_expires_at: Date; // When this audit log should expire (e.g. 3 years from now). Based on Omenai's data retention policy
 
   signature: string; // HMAC signature to verify record integrity and authenticity. Generated with a signing key
