@@ -64,9 +64,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
 
       if (order) {
         const commitments = generateDeletionCommitments({
-          hasActiveOrder: true,
-          hasActiveSubscription: true,
-          hasPendingWithdrawal: true,
+          hasActiveOrder: !!order,
         });
         return NextResponse.json(
           {
