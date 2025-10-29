@@ -77,6 +77,8 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         galleryAccount.stripe_connected_account_id
       );
 
+      console.log(hasBalance.balance);
+
       const commitments: DeletionCommitmentResult = generateDeletionCommitments(
         {
           hasActiveOrder: !!order,

@@ -82,7 +82,8 @@
     "MOBILE_USER_AGENT",
     "EMAIL_HASH_KEYS",
     "EMAIL_HASH_ACTIVE_KID",
-    "DATA_DELETION_LOG_SIGNING_KEY"
+    "DATA_DELETION_LOG_SIGNING_KEY",
+    "CRON_SECRET"
   ],
 
   "tasks": {
@@ -170,7 +171,8 @@
         "MOBILE_USER_AGENT",
         "EMAIL_HASH_KEYS",
         "EMAIL_HASH_ACTIVE_KID",
-        "DATA_DELETION_LOG_SIGNING_KEY"
+        "DATA_DELETION_LOG_SIGNING_KEY",
+        "CRON_SECRET"
       ]
     },
     "lint": {

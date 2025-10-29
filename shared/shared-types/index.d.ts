@@ -1062,8 +1062,15 @@ type DeletionRequest = {
   targetId: string; // target user
   initiatedBy: "target" | "admin" | "system"; // user or admin or system initiated
   reason: string;
-  status: "requested" | "in_progress" | "completed" | "failed" | "cancelled";
+  status:
+    | "requested"
+    | "in_progress"
+    | "completed"
+    | "failed"
+    | "cancelled"
+    | "tasks_created";
   entityType: Omit<EntityType, "admin">; // type of entity
+  startedAt?: Date;
   requestedAt?: Date;
   completedAt?: Date;
   gracePeriodUntil?: Date; // Deletion process starts at this date
@@ -1087,16 +1094,16 @@ type DeletionTask = {
 };
 
 type DeletionTaskServiceType =
-  | "order_service"
-  | "upload_service"
-  | "wallet_service"
-  | "wallet_transaction_service"
-  | "purchase_transaction_service"
-  | "subscription_transaction_service"
-  | "account_service"
-  | "subscriptions_service"
-  | "stripe_service"
-  | "misc_service"; // miscellaneous service such as device fingerprint, prorations, sales activity, artist categorizations
+  | "order_service" // all order related data
+  | "upload_service" // for artwork uploads and related media
+  | "wallet_service" // bakes in wallet transaction service
+  | "purchase_transaction_service" // for purchase transaction records
+  | "account_service" // for user/gallery/artist account data
+  | "subscriptions_service" //bakes in prorations service and subscription transaction service
+  | "stripe_service" // deactivate stripe customer and connected accounts
+  | "sales_service" // for sales activity records
+  | "categorization_service" // for artist categorization data
+  | "misc_service"; // miscellaneous service such as device fingerprint and notification_service
 
 export type DeletionRequestBody = {
   id: string;

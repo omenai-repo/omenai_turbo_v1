@@ -2,35 +2,59 @@
   "crons": [
     {
       "path": "/api/cron/subscriptions/check_expired_subscriptions",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/subscriptions/check_expired_subs_status",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/subscriptions/check_days_to_sub_expiry",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/shipments/createShipmentAtExhibitionEndDate",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/shipments/retryFailedShipments",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/shipments/checkShipmentDeliveryStatus",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/orders/checkOrderRequestTimestamp",
-      "schedule": "0 0 * * *"
+      "schedule": "0 0 * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     },
     {
       "path": "/api/cron/orders/declineOrdersWithExpiredHoldStatus",
-      "schedule": "0 * * * *"
+      "schedule": "0 * * * *",
+      "headers": {
+        "Authorization": "Bearer <CRON_SECRET>"
+      }
     }
   ],
 
