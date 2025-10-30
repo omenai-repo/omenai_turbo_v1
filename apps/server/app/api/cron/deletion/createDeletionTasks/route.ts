@@ -1,3 +1,4 @@
+// Note: Run this job every day in staging, and every 15 minutes in prod
 import { ObjectId } from "mongoose";
 import {
   EntityType,
@@ -11,13 +12,13 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
-import { DeletionTaskModel } from "@omenai/shared-models/models/deletion/DeletionTaskSchema";
 import { FailedDeletionTaskModel } from "@omenai/shared-models/models/deletion/FailedDeletionTaskSchema";
 import {
   createDeletionTaskPerService,
   pollExpiredDeletionRequests,
   serviceMap,
 } from "../utils";
+import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
 export type LeanDeletionRequest = Pick<
   DeletionRequest,
@@ -48,7 +49,7 @@ const MAX_EXECUTION_TIME = 55000; // 55 seconds
 // Core Processing Logic
 
 async function processBatch(
-  deletionRequests: LeanDeletionRequest[] // <-- FIX: Not any[]
+  deletionRequests: LeanDeletionRequest[]
 ): Promise<BatchResult> {
   const taskCreationOps: TaskCreationOp[] = [];
 
@@ -158,13 +159,11 @@ async function processBatch(
   };
 }
 
-export const GET = withRateLimit(standardRateLimit)(async function GET(
-  request: Request
-) {
+export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const startTime = Date.now();
 
   try {
-    const mongoose_connection = await connectMongoDB();
+    await connectMongoDB();
 
     // Verify cron authorization
     const authHeader = request.headers.get("Authorization");
