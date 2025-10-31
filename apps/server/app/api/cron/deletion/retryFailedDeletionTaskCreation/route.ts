@@ -70,7 +70,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
   }
 });
 
-export async function processBatch(
+async function processBatch(
   allFailedDeletionTaskCreation: (FlattenMaps<any> &
     Required<{
       _id: unknown;
