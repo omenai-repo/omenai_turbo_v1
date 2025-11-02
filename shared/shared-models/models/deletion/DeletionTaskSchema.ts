@@ -14,6 +14,7 @@ const DeletionTaskSchema = new Schema<DeletionTaskDocument>(
     service: {
       type: String,
       required: true,
+      index: true,
       enum: [
         "order_service",
         "upload_service",
@@ -31,7 +32,7 @@ const DeletionTaskSchema = new Schema<DeletionTaskDocument>(
     entityType: { type: String, required: true },
     status: {
       type: String,
-      enum: ["pending", "in_progress", "done", "failed"],
+      enum: ["pending", "in progress", "done", "failed"],
       default: "pending",
     },
     attempts: { type: Number, default: 0 },
@@ -43,9 +44,6 @@ const DeletionTaskSchema = new Schema<DeletionTaskDocument>(
   },
   { timestamps: true }
 );
-
-DeletionTaskSchema.index({ service: 1, requestId: 1 });
-DeletionTaskSchema.index({ idempotencyKey: 1 }, { unique: true, sparse: true });
 
 export const DeletionTaskModel: Model<DeletionTaskDocument> =
   mongoose.models.DeletionTask ||

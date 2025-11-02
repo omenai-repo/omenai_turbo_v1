@@ -1,8 +1,26 @@
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { DeletionTaskModel } from "@omenai/shared-models/models/deletion/DeletionTaskSchema";
-import { EntityType, DeletionTaskServiceType } from "@omenai/shared-types";
+import { EntityType } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { LeanDeletionRequest } from "./createDeletionTasks/route";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
+
+export const DELETION_TASK_SERVICES = [
+  "order_service",
+  "upload_service",
+  "wallet_service",
+  "purchase_transaction_service",
+  "account_service",
+  "subscriptions_service",
+  "stripe_service",
+  "sales_service",
+  "categorization_service",
+  "misc_service",
+] as const;
+
+type DeletionTaskServiceType = (typeof DELETION_TASK_SERVICES)[number];
 
 export const serviceMap: Record<
   Exclude<EntityType, "admin">,
@@ -75,7 +93,36 @@ export async function pollExpiredDeletionRequests(batch_size: number) {
       "requestId entityType targetId"
     )
       .limit(batch_size)
-      .lean<LeanDeletionRequest[]>();
+      .lean<LeanDeletionRequest[]>()
+      .sort({ createdAt: -1 });
 
   return deletionRequestsWithExpiredGracePeriod;
+}
+
+export async function createWorkflowTarget(metadata: {
+  services: DeletionTaskServiceType[];
+  entityType: Exclude<EntityType, "admin">;
+  targetId: string;
+  requestId: string;
+  targetEmail: string;
+  dataRetentionExpiry: Date;
+  deletionRequestDate: Date;
+  deletionInitiatedBy: "target" | "admin" | "system";
+}): Promise<string | undefined> {
+  const workflowID = await createWorkflow(
+    `/api/workflows/deletion/deletion_workflow`,
+    `test_workflow${generateDigit(2)}`,
+    JSON.stringify(metadata)
+  );
+
+  return workflowID;
+}
+
+export function isDeletionTaskServiceType(
+  value: unknown
+): value is DeletionTaskServiceType {
+  return (
+    typeof value === "string" &&
+    DELETION_TASK_SERVICES.includes(value as DeletionTaskServiceType)
+  );
 }

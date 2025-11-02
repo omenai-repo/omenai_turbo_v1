@@ -1,4 +1,4 @@
-import { DeletionTaskServiceType, EntityType } from "@omenai/shared-types";
+import { DeletionTaskServiceType } from "@omenai/shared-types";
 import { FlattenMaps, ObjectId, Schema } from "mongoose";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
