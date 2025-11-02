@@ -3,12 +3,8 @@
 
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import LikeComponent from "../likes/LikeComponent";
-import Image from "next/image";
 type ArtworkImageProps = {
   url: string;
   title: string;
@@ -39,7 +35,7 @@ export const ArtworkImage = ({
   return (
     <Link href={`/artwork/${title}`} className="w-[250px]">
       <div className="relative flex items-end max-w-[250px] w-fit rounded mb-4">
-        {pricing?.price && (
+        {pricing?.price ? (
           <div className="absolute top-4 right-4 z-10 p-1 rounded bg-white border-dark/10 grid place-items-center">
             <LikeComponent
               impressions={impressions}
@@ -48,10 +44,10 @@ export const ArtworkImage = ({
               art_id={art_id}
             />
           </div>
-        )}
+        ) : null}
         <img
           src={image_href}
-          alt="artwork image"
+          alt="artwork"
           loading="lazy"
           className="w-fit max-w-[250px] rounded"
         />
@@ -62,8 +58,8 @@ export const ArtworkImage = ({
             <span className="text-fluid-xxs text-[#fafafa] ">{author}</span>
           </div>
 
-          {pricing?.price &&
-            (pricing?.price && pricing.shouldShowPrice === "Yes" ? (
+          {pricing?.price ? (
+            pricing?.price && pricing.shouldShowPrice === "Yes" ? (
               <span className="font-normal text-fluid-xxs text-white">
                 {formatPrice(pricing.usd_price)}
               </span>
@@ -71,7 +67,8 @@ export const ArtworkImage = ({
               <span className=" font-normal text-fluid-xxs">
                 Price on request
               </span>
-            ))}
+            )
+          ) : null}
         </div>
       </div>
     </Link>

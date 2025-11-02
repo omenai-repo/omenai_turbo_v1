@@ -21,6 +21,7 @@ export default function PriceFilter({
   return (
     <div className="p-2 relative w-fit">
       <div
+        role="button"
         onClick={() => setOpenDropdown(!openDropdown)}
         className="ring-1 rounded whitespace-nowrap cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
       >

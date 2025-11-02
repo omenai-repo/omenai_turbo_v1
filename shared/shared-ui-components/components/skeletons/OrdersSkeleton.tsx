@@ -4,14 +4,14 @@ export const OrderSkeleton = () => {
   return (
     <div className="w-full flex gap-x-6">
       <div className="w-1/6">
-        {[...Array(3)].map((_, idx) => (
+        {Array.from({ length: 3 }).map((_, idx) => (
           <div className="mb-6" key={idx}>
             <Skeleton height={40} mt={10} width="100%" radius="xl" />
           </div>
         ))}
       </div>
       <div className="w-full space-y-5">
-        {[...Array(4)].map((_, idx) => (
+        {Array.from({ length: 4 }).map((_, idx) => (
           <div key={idx} className="bg-white px-4 py-2 rounded shadow w-full">
             <Skeleton
               height={50}

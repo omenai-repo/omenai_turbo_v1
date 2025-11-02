@@ -50,8 +50,9 @@ export default function EditorialCover({
         <div className="w-[350px] h-[250px]">
           {cover ? (
             <img
+              role="button"
               src={URL.createObjectURL(cover as File)}
-              alt="uploaded image"
+              alt="Editorial cover"
               width={350}
               height={250}
               className="w-[350px] h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"

@@ -26,8 +26,6 @@ export default function ActivationFormInputs() {
 
   const token = useSearchParams().get("token");
 
-  if (!token) return notFound();
-
   const [loading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState<ActivateAdminFormInputsProps>({
@@ -36,6 +34,8 @@ export default function ActivationFormInputs() {
     email: "",
     password: "",
   });
+
+  if (!token) return notFound();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "password") {
@@ -144,6 +144,7 @@ export default function ActivationFormInputs() {
           />
           <div className="w-full h-fit flex justify-end mr-5 my-5">
             <span
+              role="button"
               className="text-[12px] font-semibold cursor-pointer underline duration-200"
               onClick={() => setShow(!show)}
             >

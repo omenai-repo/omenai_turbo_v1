@@ -163,7 +163,7 @@ export default function TrackingTimeline({
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;

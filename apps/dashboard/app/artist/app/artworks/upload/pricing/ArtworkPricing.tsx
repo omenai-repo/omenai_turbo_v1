@@ -7,7 +7,7 @@ import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { createUploadedArtworkData } from "@omenai/shared-utils/src/createUploadedArtworkData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { fetchArtworkPriceForArtist } from "@omenai/shared-services/artworks/fetchArtworkPriceForArtist";
 import { Alert, Paper } from "@mantine/core";
@@ -22,7 +22,7 @@ import { base_url } from "@omenai/url-config/src/config";
 function extractNumberString(str: string) {
   if (!str) return ""; // handle empty or null input
 
-  const cleaned = str.trim().replace(/[^\d.]/g, ""); // keep only digits and dot
+  const cleaned = str.trim().replaceAll(/[^\d.]/g, ""); // keep only digits and dot
 
   return cleaned;
 }

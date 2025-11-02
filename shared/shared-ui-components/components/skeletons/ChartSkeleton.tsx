@@ -17,7 +17,7 @@ export const ChartSkeleton = () => {
     <div className="relative w-full h-[320px] px-4 py-6 rounded bg-white overflow-hidden">
       {/* Y-axis grid lines */}
       <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between">
-        {[...Array(5)].map((_, idx) => (
+        {Array.from({ length: 5 }).map((_, idx) => (
           <Skeleton
             key={`y-line-${idx}`}
             height={1}
@@ -37,7 +37,7 @@ export const ChartSkeleton = () => {
                 className="bg-gray-400 rounded"
               />
             ))
-          : [...Array(12)].map((_, idx) => (
+          : Array.from({ length: 12 }).map((_, idx) => (
               <Skeleton
                 key={`bar-placeholder-${idx}`}
                 width={20}
@@ -49,7 +49,7 @@ export const ChartSkeleton = () => {
 
       {/* X-axis labels (months) */}
       <div className="absolute bottom-2 left-10 right-6 flex justify-between px-4">
-        {[...Array(12)].map((_, idx) => (
+        {Array.from({ length: 12 }).map((_, idx) => (
           <Skeleton
             key={`month-label-${idx}`}
             width={30}
@@ -61,7 +61,7 @@ export const ChartSkeleton = () => {
 
       {/* Y-axis values */}
       <div className="absolute top-6 left-2 h-[85%] flex flex-col justify-between">
-        {[...Array(5)].map((_, idx) => (
+        {Array.from({ length: 5 }).map((_, idx) => (
           <Skeleton
             key={`y-label-${idx}`}
             width={30}

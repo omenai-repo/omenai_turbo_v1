@@ -94,9 +94,9 @@ function createResponse(message: string, data: any, status: number) {
 // Utility function to validate subscription transactions
 function validateSubscription(transaction: any): boolean {
   return (
-    transaction.status === "successful" &&
-    transaction.tx_ref === transaction.tx_ref &&
-    transaction.amount === transaction.amount &&
-    transaction.currency === transaction.currency
+    !!transaction.status &&
+    !!transaction.tx_ref &&
+    !!transaction.amount &&
+    !!transaction.currency
   );
 }

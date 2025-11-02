@@ -139,7 +139,10 @@ export default function UpdatePasswordModalForm() {
           {/* Password Fields */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-fluid-xxs font-medium text-slate-700">
+              <label
+                htmlFor="password"
+                className="block text-fluid-xxs font-medium text-slate-700"
+              >
                 New Password
               </label>
               <div className="relative">
@@ -170,7 +173,10 @@ export default function UpdatePasswordModalForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-fluid-xxs font-medium text-slate-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-fluid-xxs font-medium text-slate-700"
+              >
                 Confirm Password
               </label>
               <div className="relative">
@@ -220,7 +226,10 @@ export default function UpdatePasswordModalForm() {
 
           {/* Confirmation Code Section */}
           <div className="space-y-2">
-            <label className="block text-fluid-xxs font-medium text-slate-700">
+            <label
+              htmlFor="code"
+              className="block text-fluid-xxs font-medium text-slate-700"
+            >
               Verification Code
             </label>
             <div className="flex gap-3">

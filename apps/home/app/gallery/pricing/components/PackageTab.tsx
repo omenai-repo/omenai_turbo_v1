@@ -7,6 +7,7 @@ export default function PackageTab() {
   return (
     <div className="p-2 rounded flex gap-2 bg-gray-400 w-fit">
       <div
+        role="button"
         className={`p-2 ${
           activeTab === "monthly"
             ? "bg-white  text-dark"
@@ -18,6 +19,7 @@ export default function PackageTab() {
       </div>
 
       <div
+        role="button"
         className={`p-2 ${
           activeTab === "annual"
             ? "bg-white  text-dark"

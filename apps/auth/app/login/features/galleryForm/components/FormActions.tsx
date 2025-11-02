@@ -48,6 +48,7 @@ export default function FormActions() {
         </div>
 
         <p
+          role="button"
           className="text-fluid-xxs text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("gallery")}
         >

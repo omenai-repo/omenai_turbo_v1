@@ -3,7 +3,7 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { verifyFlwTransaction } from "@omenai/shared-services/subscriptions/verifyFlwTransaction";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
@@ -12,16 +12,12 @@ import {
   LockKeyhole,
   XCircle,
 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { IoIosLock } from "react-icons/io";
 
 export default function VerifyTransaction({
   transaction_id,
 }: {
   transaction_id: string;
 }) {
-  const queryClient = useQueryClient();
   const { csrf } = useAuth({ requiredRole: "gallery" });
   const { data: verified, isLoading } = useQuery({
     queryKey: ["verify_subscription_payment"],
@@ -32,7 +28,6 @@ export default function VerifyTransaction({
           message: `${response?.message}. Please contact support`,
           isOk: response?.isOk,
         };
-        throw new Error("Something went wrong");
       } else {
         return {
           message: response.message,

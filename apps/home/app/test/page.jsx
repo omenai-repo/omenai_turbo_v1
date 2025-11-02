@@ -36,7 +36,7 @@ const CreditCardForm = () => {
 
   // Validation functions
   const validateCardNumber = (value) => {
-    const digits = value.replace(/\D/g, "");
+    const digits = value.replaceAll(/\D/g, "");
     if (digits.length !== 16) {
       return "Invalid Card Number";
     }
@@ -54,7 +54,7 @@ const CreditCardForm = () => {
   };
 
   const validateMonth = (value) => {
-    const month = parseInt(value, 10);
+    const month = Number.parseInt(value, 10);
     if (!value || value.length !== 2 || month < 1 || month > 12) {
       return "Invalid Month";
     }
@@ -62,7 +62,7 @@ const CreditCardForm = () => {
   };
 
   const validateYear = (value) => {
-    const year = parseInt(value, 10);
+    const year = Number.parseInt(value, 10);
     if (!value || value.length !== 4 || year < currentYear || year > maxYear) {
       return "Invalid Year";
     }
@@ -111,20 +111,20 @@ const CreditCardForm = () => {
     // Apply formatting/restrictions based on field
     switch (field) {
       case "cardNumber":
-        value = value.replace(/\D/g, "").slice(0, 16);
+        value = value.replaceAll(/\D/g, "").slice(0, 16);
         break;
       case "name":
         // Allow letters and spaces only
-        value = value.replace(/[^a-zA-Z\s]/g, "");
+        value = value.replaceAll(/[^a-zA-Z\s]/g, "");
         break;
       case "expirationMonth":
-        value = value.replace(/\D/g, "").slice(0, 2);
+        value = value.replaceAll(/\D/g, "").slice(0, 2);
         break;
       case "expirationYear":
-        value = value.replace(/\D/g, "").slice(0, 4);
+        value = value.replaceAll(/\D/g, "").slice(0, 4);
         break;
       case "cvv":
-        value = value.replace(/\D/g, "").slice(0, 3);
+        value = value.replaceAll(/\D/g, "").slice(0, 3);
         break;
       default:
         break;
@@ -146,7 +146,7 @@ const CreditCardForm = () => {
 
   // Format card number for display
   const formatCardDisplay = (value) => {
-    const digits = value.replace(/\D/g, "");
+    const digits = value.replaceAll(/\D/g, "");
     const groups = digits.match(/.{1,4}/g) || [];
     return groups.join(" ");
   };

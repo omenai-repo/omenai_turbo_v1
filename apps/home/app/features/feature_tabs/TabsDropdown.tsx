@@ -24,6 +24,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
   return (
     <div className="flex justify-between items-center md:hidden w-full relative">
       <div
+        role="button"
         onClick={() => setDropDown(!dropdown)}
         className="py-3 px-4 flex items-center gap-x-4 border-dark/30 border rounded text-fluid-xxs bg-dark text-white"
       >
@@ -36,12 +37,14 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
         } border border-dark/10 duration-200 z-20 items-center bg-white text-fluid-xxs flex-col absolute top-[3.5rem] left-0`}
       >
         <p
+          role="button"
           onClick={() => updatetabState("Recently uploaded", "recent")}
           className="hover:bg-dark/20 duration-200 py-4 px-2"
         >
           Recently uploaded
         </p>
         <p
+          role="button"
           onClick={() => updatetabState("Trending uploads", "trending")}
           className="hover:bg-dark/20 duration-200 py-4 px-2"
         >
@@ -56,6 +59,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
         <div>
           {user && (
             <p
+              role="button"
               className="hover:bg-dark/20 duration-200 py-4 px-2"
               onClick={() => updatetabState("Tailored for you", "tailored")}
             >

@@ -76,6 +76,7 @@ export default function MobilePageLayout() {
       </div>
       {/* Close button */}
       <div
+        role="button"
         onClick={() => setOpenMobileNav()}
         className="p-3 bg-white w-fit h-fit my-4 rounded mr-5"
       >

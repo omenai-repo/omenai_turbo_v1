@@ -37,7 +37,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           "Missing required parameters (medium, height, width, category)"
         );
       }
-      if (isNaN(+height) || isNaN(+width))
+      if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
       const price: ArtworkPricing = calculateArtworkPrice({
         artistCategory: category,

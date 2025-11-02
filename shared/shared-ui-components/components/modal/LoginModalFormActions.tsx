@@ -19,6 +19,7 @@ export default function LoginModalFormActions({
           <p className="font-normal text-fluid-xxs">
             Forgot password?{" "}
             <span
+              role="button"
               onClick={() => toggleLoginModalRecoveryForm(true)}
               className="text-dark cursor-pointer font-bold underline"
             >

@@ -58,7 +58,7 @@ export default function OrderCompletedPage() {
       </div>
 
       {/* Mild Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;

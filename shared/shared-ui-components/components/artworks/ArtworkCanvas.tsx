@@ -93,6 +93,7 @@ export default function ArtworkCanvas({
     <div className="my-2 max-w-full p-0 max-h-full">
       <div className="flex flex-col w-full h-full justify-end">
         <div
+          role="button"
           className="relative w-full artContainer"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}

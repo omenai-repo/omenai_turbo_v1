@@ -24,6 +24,7 @@ export default function NavigationItem({
     <>
       {title === "Sign out" ? (
         <li
+          role="button"
           onClick={onClick}
           className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
         >
@@ -34,6 +35,7 @@ export default function NavigationItem({
         </li>
       ) : disabled ? (
         <Link
+          role="button"
           onClick={onClick}
           href={url}
           className={`px-3 py-1 ${

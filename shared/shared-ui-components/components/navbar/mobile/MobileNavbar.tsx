@@ -14,7 +14,7 @@ export default function MobileNavbar() {
       } duration-300`}
     >
       <div className="flex justify-between items-center py-6 px-4">
-        <div onClick={() => updateOpenSideNav(false)}>
+        <div role="button" onClick={() => updateOpenSideNav(false)}>
           <IndividualLogo />
         </div>
 

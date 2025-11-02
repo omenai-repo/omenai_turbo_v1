@@ -159,8 +159,9 @@ export default function UploadArtworkImage() {
       <div className="w-full h-[60vh] grid place-items-center">
         {image ? (
           <img
+            role="button"
             src={URL.createObjectURL(image)}
-            alt="uploaded image"
+            alt="uploaded artwork"
             className="w-auto h-auto max-h-[50vh] max-w-full object-cover mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
             onClick={() => {
               setImage(null);

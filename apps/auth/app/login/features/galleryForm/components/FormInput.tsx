@@ -38,12 +38,6 @@ const identifyUser = (data: any) => {
   });
 };
 
-const getRedirectUrl = (redirectUri: string, dashboardBaseUrl: string) => {
-  return redirectUri && redirectUri !== ""
-    ? redirectUri
-    : `${dashboardBaseUrl}/gallery/overview`;
-};
-
 const shouldUseDefaultRedirect = (url: string | null) => {
   return url === "" || url === null;
 };
@@ -170,6 +164,7 @@ export default function FormInput() {
           />
           <div className="w-full h-fit flex justify-end mr-5 my-5">
             <span
+              role="button"
               className="text-[12px] font-semibold cursor-pointer underline duration-200"
               onClick={() => setShow(!show)}
             >

@@ -1,13 +1,9 @@
 "use client";
 import { Button, Input, Text, Modal } from "@mantine/core";
 import React, { ChangeEvent, useRef, useState } from "react";
-import { Plus, Image, Ban, Shield } from "lucide-react";
-import { toast } from "sonner";
+import { Plus, Image, Ban } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  PromotionalDataUpdateTypes,
-  PromotionalSchemaTypes,
-} from "@omenai/shared-types";
+import { PromotionalSchemaTypes } from "@omenai/shared-types";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { upload_promotional_image } from "../../lib/createPromotional";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -201,8 +197,9 @@ function PromotionalModalForm({ close }: { close: () => void }) {
           <div className="w-full h-[250px]">
             {cover ? (
               <img
+                role="button"
                 src={URL.createObjectURL(cover as File)}
-                alt="uploaded image"
+                alt="Promotional cover"
                 width={350}
                 height={250}
                 className="w-full h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"

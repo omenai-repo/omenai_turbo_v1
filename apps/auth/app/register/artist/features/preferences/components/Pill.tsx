@@ -16,6 +16,7 @@ export default function Pill({ text, art_styles, logo }: PillProps) {
   };
   return (
     <div
+      role="button"
       onClick={() => selectPill(text)}
       className={`relative w-fit grid place-items-center rounded border-2 hover:bg-dark hover:text-white border-dark hover:ring-2 hover:ring-[#E0E0E0] text-[12px] sm:text-fluid-xxs text-dark transition-all ease-linear duration-200 px-3 py-1 ${
         artistSignupData.art_style === text

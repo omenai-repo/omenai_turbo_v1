@@ -159,7 +159,7 @@ export default function Footer() {
       </div>
 
       {/* Custom hover underline styles */}
-      <style jsx>{`
+      <style>{`
         .footer-link {
           position: relative;
           display: inline-block;
