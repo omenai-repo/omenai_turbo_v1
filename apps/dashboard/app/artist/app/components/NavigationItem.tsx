@@ -14,7 +14,6 @@ export default function NavigationItem({
   title,
   icon,
   url,
-  mobile,
   onClick,
 }: ItemProps) {
   const pathname = usePathname();
@@ -22,6 +21,7 @@ export default function NavigationItem({
     <>
       {title === "Sign out" ? (
         <li
+          role="button"
           onClick={onClick}
           className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
         >
