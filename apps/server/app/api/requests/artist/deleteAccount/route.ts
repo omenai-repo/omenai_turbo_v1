@@ -4,6 +4,7 @@ import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
+  ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
@@ -18,6 +19,7 @@ import {
   hasFinancialCommitments,
 } from "../../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
+import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -37,7 +39,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
 
       const artistAccount = await AccountArtist.findOne(
         { artist_id: id },
-        "wallet_id artist_id"
+        "wallet_id artist_id email"
       );
 
       if (!artistAccount) {
@@ -86,10 +88,18 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         );
       }
 
+      const hashTargetEmail = hashEmail(artistAccount.email);
+
+      if (!hashTargetEmail)
+        throw new ServerError(
+          "Unable to create an Account deletion request at this time, please contact support"
+        );
+
       const gracePeriodEnd = await createDeletionRequestAndRespond({
         targetId: id,
         reason,
         entityType: "artist",
+        email: hashTargetEmail,
       });
 
       return NextResponse.json(

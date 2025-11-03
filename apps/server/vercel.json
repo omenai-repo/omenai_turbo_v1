@@ -31,14 +31,6 @@
     {
       "path": "/api/cron/orders/declineOrdersWithExpiredHoldStatus",
       "schedule": "0 * * * *"
-    },
-    {
-      "path": "/api/cron/deletion/createDeletionTasks",
-      "schedule": "0 * * * *"
-    },
-    {
-      "path": "/api/cron/deletion/retryFailedDeletionTaskCreation",
-      "schedule": "0 * * * *"
     }
   ],
 

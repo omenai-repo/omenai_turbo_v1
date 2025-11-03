@@ -1056,9 +1056,9 @@ export interface TrackingResponse {
   ============================================================
 */
 
-type EntityType = "user" | "artist" | "gallery" | "admin";
+export type EntityType = "user" | "artist" | "gallery" | "admin";
 
-type DeletionRequest = {
+export type DeletionRequest = {
   targetId: string; // target user
   initiatedBy: "target" | "admin" | "system"; // user or admin or system initiated
   reason: string;
@@ -1069,20 +1069,21 @@ type DeletionRequest = {
     | "failed"
     | "cancelled"
     | "tasks_created";
-  entityType: Omit<EntityType, "admin">; // type of entity
+  entityType: Exclude<EntityType, "admin">; // type of entity
+  targetEmail: string;
   startedAt?: Date;
-  requestedAt?: Date;
+  requestedAt: Date;
+  gracePeriodUntil: Date; // Deletion process starts at this date
   completedAt?: Date;
-  gracePeriodUntil?: Date; // Deletion process starts at this date
-  tasks: string[]; // references to DeletionTask
+  services: DeletionTaskServiceType[]; // references to DeletionTask Service
   metadata?: Record<string, any>;
   requestId: string;
 };
 
-type DeletionTask = {
+export type DeletionTask = {
   requestId: string;
   service: DeletionTaskServiceType; // references deletion service task e.g., 'orders', 'uploads', 'wallet'
-  entityId?: string; // id to delete
+  entityId: string; // id to delete
   entityType: Omit<EntityType, "admin">; // type of entity
   status: "pending" | "in_progress" | "done" | "failed";
   attempts: number;
@@ -1093,7 +1094,7 @@ type DeletionTask = {
   result?: any;
 };
 
-type DeletionTaskServiceType =
+export type DeletionTaskServiceType =
   | "order_service" // all order related data
   | "upload_service" // for artwork uploads and related media
   | "wallet_service" // bakes in wallet transaction service
@@ -1143,7 +1144,7 @@ export type DeletionAuditLog = {
 
   completed_at?: Date; // When the deletion was fully completed (all tasks done)
 
-  retention_expires_at: Date; // When this audit log should expire (e.g. 3 years from now). Based on Omenai's data retention policy
+  retention_expired_at: Date; // When this audit log should expire (e.g. 3 years from now). Based on Omenai's data retention policy
 
   signature: string; // HMAC signature to verify record integrity and authenticity. Generated with a signing key
 };

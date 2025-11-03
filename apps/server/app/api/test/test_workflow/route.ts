@@ -9,9 +9,14 @@ import { NotificationPayload } from "@omenai/shared-types";
 export async function POST() {
   try {
     const workflowID = await createWorkflow(
-      "/api/workflows/shipment/create_shipment",
+      "/api/workflows/deletion/deletion_workflow",
       `test_workflow${generateDigit(2)}`,
-      JSON.stringify({ order_id: "3267301" })
+      JSON.stringify({
+        services: [],
+        targetId: "3267301",
+        entityType: "user",
+        requestId: "HEllo",
+      })
     );
     if (!workflowID) throw new ServerError("Workflow failed");
 
