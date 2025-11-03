@@ -3,7 +3,7 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { verifyFlwTransaction } from "@omenai/shared-services/subscriptions/verifyFlwTransaction";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,

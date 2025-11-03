@@ -113,14 +113,14 @@ export default function Filter({ medium }: { medium: string }) {
             {selectedFilters.map((filter) => {
               return <FilterPill key={filter.name} filter={filter.name} />;
             })}
-            <div
-              role="button"
+            <button
+              type="button"
               onClick={handleClearAll}
               className="px-3 py-1 border border-dark/10 rounded hover:bg-dark duration-200 hover:text-white flex gap-x-2 items-center text-[13px] font-normal"
             >
               <span>Clear all selections</span>
               <ImBin2 />
-            </div>
+            </button>
             <button
               onClick={handleSubmitFilter}
               disabled={isEmptyFilter(filterOptions)}

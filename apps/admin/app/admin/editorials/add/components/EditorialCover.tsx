@@ -49,17 +49,19 @@ export default function EditorialCover({
       <div className="flex flex-col space-y-6 w-full">
         <div className="w-[350px] h-[250px]">
           {cover ? (
-            <img
-              role="button"
-              src={URL.createObjectURL(cover as File)}
-              alt="Editorial cover"
-              width={350}
-              height={250}
-              className="w-[350px] h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
+            <button
               onClick={() => {
                 setCover(null);
               }}
-            />
+            >
+              <img
+                src={URL.createObjectURL(cover as File)}
+                alt="Editorial cover"
+                width={350}
+                height={250}
+                className="w-[350px] h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
+              />
+            </button>
           ) : (
             <button
               type="button"

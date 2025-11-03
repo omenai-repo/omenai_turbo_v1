@@ -43,13 +43,13 @@ export default function FormActions() {
           </p>
         </div>
 
-        <p
-          role="button"
+        <button
+          type="button"
           className="text-fluid-xxs text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("individual")}
         >
           Forgot password?
-        </p>
+        </button>
       </div>
     </div>
   );

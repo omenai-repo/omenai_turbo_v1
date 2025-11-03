@@ -6,8 +6,8 @@ export default function PackageTab() {
   const { activeTab, updateActiveTab } = galleryPricingStore();
   return (
     <div className="p-2 rounded flex gap-2 bg-gray-400 w-fit">
-      <div
-        role="button"
+      <button
+        type="button"
         className={`p-2 ${
           activeTab === "monthly"
             ? "bg-white  text-dark"
@@ -16,10 +16,10 @@ export default function PackageTab() {
         onClick={() => updateActiveTab("monthly")}
       >
         Monthly billing
-      </div>
+      </button>
 
-      <div
-        role="button"
+      <button
+        type="button"
         className={`p-2 ${
           activeTab === "annual"
             ? "bg-white  text-dark"
@@ -28,7 +28,7 @@ export default function PackageTab() {
         onClick={() => updateActiveTab("annual")}
       >
         Annual Billing
-      </div>
+      </button>
     </div>
   );
 }

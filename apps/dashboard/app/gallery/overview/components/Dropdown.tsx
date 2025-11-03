@@ -38,12 +38,12 @@ export default function Dropdown() {
           <ul className="py-1 text-dark text-fluid-xxs">
             {getDynamicYears().map((year) => {
               return (
-                <li
-                  role="button"
-                  onClick={() => handleYearChange(year)}
-                  key={year}
-                >
-                  <button className="block w-full px-4 py-2 text-fluid-xxs hover:bg-gray-100">
+                <li key={year}>
+                  <button
+                    type="button"
+                    onClick={() => handleYearChange(year)}
+                    className="block w-full px-4 py-2 text-fluid-xxs hover:bg-gray-100"
+                  >
                     {year}
                   </button>
                 </li>

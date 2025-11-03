@@ -143,13 +143,12 @@ export default function ActivationFormInputs() {
             onChange={handleChange}
           />
           <div className="w-full h-fit flex justify-end mr-5 my-5">
-            <span
-              role="button"
+            <button
               className="text-[12px] font-semibold cursor-pointer underline duration-200"
               onClick={() => setShow(!show)}
             >
               {show ? "Hide Password" : "Show Password"}
-            </span>
+            </button>
           </div>
         </div>
 

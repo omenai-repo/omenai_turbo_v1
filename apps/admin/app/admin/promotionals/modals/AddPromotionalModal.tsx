@@ -196,17 +196,19 @@ function PromotionalModalForm({ close }: { close: () => void }) {
         <div className="flex flex-col space-y-6 w-full items-center">
           <div className="w-full h-[250px]">
             {cover ? (
-              <img
-                role="button"
-                src={URL.createObjectURL(cover as File)}
-                alt="Promotional cover"
-                width={350}
-                height={250}
-                className="w-full h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
+              <button
                 onClick={() => {
                   setCover(null);
                 }}
-              />
+              >
+                <img
+                  src={URL.createObjectURL(cover as File)}
+                  alt="Promotional cover"
+                  width={350}
+                  height={250}
+                  className="w-full h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
+                />
+              </button>
             ) : (
               <button
                 type="button"

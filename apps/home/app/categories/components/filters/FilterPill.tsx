@@ -29,13 +29,13 @@ export default function FilterPill({ filter }: { filter: string }) {
   }
 
   return (
-    <div
-      role="button"
+    <button
+      type="button"
       onClick={handleRemoveSingleFilter}
       className="px-3 py-1.5 bg-[#f7f7f7] text-[13px] font-normal text-dark flex items-center gap-x-2 rounded"
     >
       <span className="text-fluid-xxs">{filter}</span>
       <MdClear className="cursor-pointer" />
-    </div>
+    </button>
   );
 }

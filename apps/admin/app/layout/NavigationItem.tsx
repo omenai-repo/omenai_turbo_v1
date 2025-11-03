@@ -24,18 +24,17 @@ export default function NavigationItem({
     <>
       {title === "Sign out" ? (
         <li
-          role="button"
-          onClick={onClick}
           className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
         >
-          <IconWrapper className="hover:bg-white hover:text-dark group">
-            {icon}
-          </IconWrapper>
-          <p className={`text-fluid-xxs font-normal`}>{title}</p>
+          <button type="button" onClick={onClick}>
+            <IconWrapper className="hover:bg-white hover:text-dark group">
+              {icon}
+            </IconWrapper>
+            <p className={`text-fluid-xxs font-normal`}>{title}</p>
+          </button>
         </li>
       ) : disabled ? (
         <Link
-          role="button"
           onClick={onClick}
           href={url}
           className={`px-3 py-1 ${

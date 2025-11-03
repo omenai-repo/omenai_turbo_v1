@@ -18,13 +18,13 @@ export default function LoginModalFormActions({
         <div className="flex justify-end w-full my-3">
           <p className="font-normal text-fluid-xxs">
             Forgot password?{" "}
-            <span
-              role="button"
+            <button
+              type="button"
               onClick={() => toggleLoginModalRecoveryForm(true)}
               className="text-dark cursor-pointer font-bold underline"
             >
               Let us help
-            </span>
+            </button>
           </p>
         </div>
 
