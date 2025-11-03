@@ -21,7 +21,7 @@ export default function FaqQuestions() {
               href="https://flowbite.com/docs/getting-started/introduction/"
               className="text-cyan-600 hover:underline dark:text-cyan-500"
             >
-              get started&nbsp;
+              get started&nbsp;{" "}
             </a>
             and start developing websites even faster with components on top of
             Tailwind CSS.
@@ -45,7 +45,7 @@ export default function FaqQuestions() {
               className="text-cyan-600 hover:underline dark:text-cyan-500"
             >
               Figma design system
-            </a>
+            </a>{" "}
             based on the utility classes from Tailwind CSS and components from
             Flowbite.
           </p>

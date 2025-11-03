@@ -1,9 +1,7 @@
 "use client";
-
 import { Paper, PinInput } from "@mantine/core";
 import { useState } from "react";
 import { isRepeatingOrConsecutive } from "@omenai/shared-utils/src/checkIfPinRepeating";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
 import { setWalletPin } from "@omenai/shared-services/wallet/setWalletPin";
 import { toast } from "sonner";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
@@ -119,11 +117,15 @@ export default function WalletPinModalForm() {
         {/* PIN Input Fields */}
         <div className="space-y-6">
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="pin"
+              className="block text-sm font-medium text-gray-700"
+            >
               Enter PIN
             </label>
             <PinInput
               size="lg"
+              name="pin"
               mask
               type="number"
               aria-label="Wallet pin"
@@ -134,10 +136,14 @@ export default function WalletPinModalForm() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="confirm"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirm PIN
             </label>
             <PinInput
+              name="confirm"
               size="lg"
               mask
               type="number"

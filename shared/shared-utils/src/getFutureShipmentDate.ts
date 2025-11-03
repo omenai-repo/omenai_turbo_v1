@@ -23,8 +23,8 @@ function validatePickupTime(pickupTime: {
   hours: string;
   minutes: string;
 }): void {
-  const hours = parseInt(pickupTime.hours);
-  const minutes = parseInt(pickupTime.minutes);
+  const hours = Number.parseInt(pickupTime.hours);
+  const minutes = Number.parseInt(pickupTime.minutes);
 
   if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
     throw new Error("Invalid pickup time format");

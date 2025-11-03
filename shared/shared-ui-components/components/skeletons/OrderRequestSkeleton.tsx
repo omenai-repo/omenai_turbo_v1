@@ -3,7 +3,7 @@ import { Skeleton } from "@mantine/core";
 export const OrderRequestSkeleton = () => {
   return (
     <>
-      {[...Array(2)].map((_, idx) => (
+      {Array.from({ length: 2 }).map((_, idx) => (
         <div key={idx} className="bg-white p-4 rounded shadow w-full">
           <Skeleton height={50} className="rounded" width={"7%"} mb="sm" />
 

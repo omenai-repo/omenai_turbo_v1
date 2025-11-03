@@ -27,14 +27,9 @@ export default function ArtistInfoWrapper() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
-  if (!id) return notFound();
-
   const { user } = useAuth({ requiredRole: "admin" });
 
-  // Check permissions
-  if (!canAccessRoute(user.access_role, "requests")) {
-    return <ForbiddenPage userRole={user.access_role} />;
-  }
+  if (!id) return notFound();
 
   const { data: verif_info, isLoading: loading } = useQuery({
     queryKey: ["fetch_artist_verif_info"],
@@ -47,6 +42,11 @@ export default function ArtistInfoWrapper() {
       return response.data as VerificationInfoType;
     },
   });
+
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "requests")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
 
   if (loading) return <Load />;
 

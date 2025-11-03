@@ -6,10 +6,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 
 import Load, {
   LoadSmall,
@@ -21,9 +18,8 @@ import {
   OrderArtworkExhibitionStatus,
   ShipmentDimensions,
 } from "@omenai/shared-types";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import DateTimePickerComponent from "./DateTimePicker";
-import { Checkbox, NativeSelect, ScrollArea } from "@mantine/core";
+import { NativeSelect } from "@mantine/core";
 import WarningAlert from "./WarningAlert";
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -262,7 +258,10 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Length */}
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="length"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       Length
                     </label>
                     <div className="relative">
@@ -282,7 +281,10 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
                   {/* Height */}
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="height"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       Height
                     </label>
                     <div className="relative">
@@ -302,7 +304,10 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
                   {/* Width */}
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="width"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       Width
                     </label>
                     <div className="relative">
@@ -322,7 +327,10 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
                   {/* Weight */}
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-slate-700">
+                    <label
+                      htmlFor="weight"
+                      className="block text-sm font-medium text-slate-700"
+                    >
                       Weight
                     </label>
                     <div className="relative">
@@ -383,8 +391,11 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
             {/* Special Instructions */}
             <div className="bg-white rounded shadow-sm border border-slate-200 p-6">
-              <label className="block text-sm font-medium text-slate-700 mb-3">
-                Special Instructions
+              <label
+                htmlFor="specialInstructions"
+                className="block text-sm font-medium text-slate-700 mb-3"
+              >
+                Special Instructions{" "}
                 <span className="text-slate-400 font-normal ml-1">
                   (optional)
                 </span>

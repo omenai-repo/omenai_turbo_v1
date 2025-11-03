@@ -5,14 +5,10 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
 import LikeComponent from "../likes/LikeComponent";
 
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
-import { IoIosArrowRoundForward } from "react-icons/io";
 import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
@@ -33,7 +29,6 @@ export default function ArtworkCard({
   medium,
   trending = false,
   countdown,
-  author_id,
 }: {
   image: string;
   artist: string;
@@ -57,7 +52,7 @@ export default function ArtworkCard({
 }) {
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
-  const encoded_url = encodeURIComponent(name).replace(/\//g, "%2F");
+  const encoded_url = encodeURIComponent(name).replaceAll(/\//g, "%2F");
 
   const expiryDate = useMemo(
     () => (countdown ? new Date(countdown) : null),

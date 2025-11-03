@@ -1,11 +1,10 @@
 "use client";
-import { Loader, Paper, PinInput } from "@mantine/core";
+import { Loader, PinInput } from "@mantine/core";
 import { RefreshCcwDot } from "lucide-react";
 import Link from "next/link";
 import React, { ChangeEvent, useState } from "react";
 import { getTransferRate } from "@omenai/shared-services/wallet/getTransferRate";
 import { createTransfer } from "@omenai/shared-services/wallet/createTransfer";
-import { toast } from "sonner";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import WithdrawalSuccessScreen from "./WithdrawalSuccessScreen";
 import { useQueryClient } from "@tanstack/react-query";
@@ -155,7 +154,10 @@ export default function WithdrawalModalForm() {
             <div className="p-4 space-y-4">
               {/* Amount Input Section */}
               <div className="space-y-3">
-                <label className="block text-fluid-xxs font-normal text-slate-700">
+                <label
+                  htmlFor="amount"
+                  className="block text-fluid-xxs font-normal text-slate-700"
+                >
                   Withdrawal Amount
                 </label>
 
@@ -175,6 +177,7 @@ export default function WithdrawalModalForm() {
                         $
                       </span>
                       <input
+                        name="amount"
                         type="number"
                         placeholder="0.00"
                         onChange={handleAmountChange}
@@ -229,7 +232,10 @@ export default function WithdrawalModalForm() {
 
               {/* PIN Section */}
               <div className="space-y-2">
-                <label className="block text-fluid-xxs font-normal text-slate-700">
+                <label
+                  htmlFor="pin"
+                  className="block text-fluid-xxs font-normal text-slate-700"
+                >
                   Security PIN
                 </label>
                 <div className="bg-slate-50 rounded p-3 border border-slate-200">
@@ -240,6 +246,7 @@ export default function WithdrawalModalForm() {
                     <div className="flex justify-center">
                       <PinInput
                         size="sm"
+                        name="pin"
                         mask
                         placeholder="○"
                         onChange={(e) => handlePinChange(e)}

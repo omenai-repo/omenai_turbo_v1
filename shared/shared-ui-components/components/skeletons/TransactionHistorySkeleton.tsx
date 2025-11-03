@@ -4,7 +4,7 @@ import { Skeleton } from "@mantine/core";
 const TransactionHistorySkeleton = () => {
   return (
     <div className="space-y-4 max-h-[450px]">
-      {[...Array(5)].map((_, idx) => (
+      {Array.from({ length: 5 }).map((_, idx) => (
         <div
           key={idx}
           className="flex justify-between items-center p-4 rounded bg-gray-100"

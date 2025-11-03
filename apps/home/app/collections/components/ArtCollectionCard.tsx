@@ -9,8 +9,8 @@ export default function ArtCollectionCard({
   url: string;
 }) {
   const safeSlug = encodeURIComponent(title)
-    .replace(/\(/g, "%28")
-    .replace(/\)/g, "%29");
+    .replaceAll(/\(/g, "%28")
+    .replaceAll(/\)/g, "%29");
   return (
     <div className="py-4 min-w-[300px]">
       <Link href={`/collections/${safeSlug}`}>

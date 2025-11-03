@@ -15,7 +15,8 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
     try {
       await connectMongoDB();
-      if (isNaN(Number(page))) throw new BadRequestError("Invalid page number");
+      if (Number.isNaN(Number(page)))
+        throw new BadRequestError("Invalid page number");
 
       const skip = (Number(page) - 1) * 20;
 

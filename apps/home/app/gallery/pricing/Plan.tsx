@@ -16,8 +16,6 @@ export default function Plan({
   tab: "monthly" | "yearly";
   id: ObjectId;
 }) {
-  const searchParams = useSearchParams();
-
   return (
     <>
       <div className="relative z-10 w-fit my-12">
@@ -47,7 +45,7 @@ export default function Plan({
             </div>
             <div className="flex flex-1 flex-col p-2">
               <div className="flex flex-1 flex-col justify-between rounded bg-gray-50 p-4">
-                <ul role="list" className="space-y-4">
+                <ul className="space-y-4">
                   {tab === "monthly"
                     ? benefits.monthly.map((benefit) => {
                         return (
