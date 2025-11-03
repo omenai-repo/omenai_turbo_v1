@@ -1,6 +1,6 @@
 export function convertPriceStringToNumber(priceString: string): number {
   // Remove any currency symbol (e.g., $)
-  const priceWithoutSymbol = priceString.replaceAll(/^\$/, "");
+  const priceWithoutSymbol = priceString.replaceAll(/^\$/g, "");
 
   // replaceAll all commas with empty strings (remove thousands separators)
   const priceWithoutCommas = priceWithoutSymbol.replaceAll(/,/g, "");
