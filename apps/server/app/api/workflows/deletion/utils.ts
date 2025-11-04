@@ -1,4 +1,5 @@
 import { DeletionTaskServiceType } from "@omenai/shared-types";
+import { purchaseTransactionService } from "./services/purchase_transaction_service";
 
 // apps/server/lib/deletion-utils/deleteFromService.ts
 export async function deleteFromService(
@@ -16,6 +17,10 @@ export async function deleteFromService(
     case "subscriptions_service":
       break;
     case "purchase_transaction_service":
+      await purchaseTransactionService(
+        targetId,
+        metadata as Record<string, any>
+      );
       break;
     case "misc_service":
       break;
