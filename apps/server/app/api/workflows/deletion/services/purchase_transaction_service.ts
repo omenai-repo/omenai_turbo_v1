@@ -34,7 +34,7 @@ async function anonymizeArtistTransactions(targetId: string) {
       `Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
     );
   } catch (error) {
-    console.log("Failed anonymization");
+    console.log("Failed anonymization", error);
   }
 }
 
@@ -59,7 +59,7 @@ async function anonymizeGalleryTransactions(targetId: string) {
       `Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
     );
   } catch (error) {
-    console.log("Failed anonymization");
+    console.log("Failed anonymization", error);
   }
 }
 
@@ -83,6 +83,6 @@ async function anonymizeUserTransactions(targetId: string) {
       `Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
     );
   } catch (error) {
-    console.log("Failed anonymization");
+    console.log("Failed anonymization", error);
   }
 }
