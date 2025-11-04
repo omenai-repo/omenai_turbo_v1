@@ -4,85 +4,128 @@ export async function purchaseTransactionService(
   targetId: string,
   metadata: Record<string, any>
 ) {
-  if (metadata.entityType === "artist") {
-    await anonymizeArtistTransactions(targetId);
-  } else if (metadata.entityType === "gallery") {
-    await anonymizeGalleryTransactions(targetId);
+  let summary;
+  if (metadata.entityType === "user") {
+    summary = await anonymizeUserTransactions(targetId);
   } else {
-    await anonymizeUserTransactions(targetId);
+    summary = await anonymizeTransactions(targetId, metadata.entityType);
   }
+  return summary;
 }
 
-async function anonymizeArtistTransactions(targetId: string) {
+async function anonymizeTransactions(targetId: string, entityType: string) {
   try {
-    const transactions = await PurchaseTransactions.updateMany(
-      { trans_recipient_id: { $in: targetId } },
-      {
-        $set: {
-          trans_recipient_id: "deleted_entity",
-          trans_recipient_role: "artist",
-        },
+    const BATCH_SIZE = 1000;
+    let totalModified = 0;
+    let totalMatched = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+      const batch = await PurchaseTransactions.find({
+        trans_recipient_id: targetId,
+      })
+        .limit(BATCH_SIZE)
+        .lean();
+
+      if (batch.length === 0) {
+        hasMore = false;
+        break;
       }
-    );
+
+      const ids = batch.map((doc) => doc._id);
+
+      const result = await PurchaseTransactions.updateMany(
+        { _id: { $in: ids } },
+        {
+          $set: {
+            trans_recipient_id: "deleted_entity",
+            trans_recipient_role: entityType.toLowerCase(),
+          },
+        }
+      );
+
+      totalModified += result.modifiedCount;
+      totalMatched += result.matchedCount;
+
+      console.log(
+        `Batch processed: ${result.modifiedCount} modified, ${totalModified} total so far`
+      );
+
+      if (batch.length < BATCH_SIZE) {
+        hasMore = false;
+      }
+    }
+
     const summary = {
-      anonymized: transactions.modifiedCount,
-      skipped: transactions.matchedCount - transactions.modifiedCount,
-      total: transactions.matchedCount,
+      anonymized: totalModified,
+      skipped: totalMatched - totalModified,
+      total: totalMatched,
     };
 
     console.log(
-      `Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
+      `Completed: Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
     );
+    return summary;
   } catch (error) {
-    console.log("Failed anonymization", error);
-  }
-}
-
-async function anonymizeGalleryTransactions(targetId: string) {
-  try {
-    const transactions = await PurchaseTransactions.updateMany(
-      { trans_recipient_id: { $in: targetId } },
-      {
-        $set: {
-          trans_recipient_id: "deleted_entity",
-          trans_recipient_role: "gallery",
-        },
-      }
-    );
-    const summary = {
-      anonymized: transactions.modifiedCount,
-      skipped: transactions.matchedCount - transactions.modifiedCount,
-      total: transactions.matchedCount,
-    };
-
-    console.log(
-      `Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
-    );
-  } catch (error) {
-    console.log("Failed anonymization", error);
+    console.error("Failed anonymization", error);
+    throw error;
   }
 }
 
 async function anonymizeUserTransactions(targetId: string) {
   try {
-    const transactions = await PurchaseTransactions.updateMany(
-      { trans_initiator_id: { $in: targetId } },
-      {
-        $set: {
-          trans_initiator_id: "deleted_entity",
-        },
+    const BATCH_SIZE = 1000;
+    let totalModified = 0;
+    let totalMatched = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+      const batch = await PurchaseTransactions.find({
+        trans_initiator_id: targetId,
+      })
+        .limit(BATCH_SIZE)
+        .lean();
+
+      if (batch.length === 0) {
+        hasMore = false;
+        break;
       }
-    );
+
+      const ids = batch.map((doc) => doc._id);
+
+      const result = await PurchaseTransactions.updateMany(
+        { _id: { $in: ids } },
+        {
+          $set: {
+            trans_initiator_id: "deleted_entity",
+          },
+        }
+      );
+
+      totalModified += result.modifiedCount;
+      totalMatched += result.matchedCount;
+
+      console.log(
+        `Batch processed: ${result.modifiedCount} modified, ${totalModified} total so far`
+      );
+
+      if (batch.length < BATCH_SIZE) {
+        hasMore = false;
+      }
+    }
+
     const summary = {
-      anonymized: transactions.modifiedCount,
-      skipped: transactions.matchedCount - transactions.modifiedCount,
-      total: transactions.matchedCount,
+      anonymized: totalModified,
+      skipped: totalMatched - totalModified,
+      total: totalMatched,
     };
 
     console.log(
-      `Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
+      `Completed: Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
     );
+    return summary;
   } catch (error) {
-    console.log("Failed anonymization", error);
+    console.error("Failed anonymization", error);
+    throw error;
   }
 }

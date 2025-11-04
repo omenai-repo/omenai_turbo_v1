@@ -17,11 +17,10 @@ export async function deleteFromService(
     case "subscriptions_service":
       break;
     case "purchase_transaction_service":
-      await purchaseTransactionService(
+      return await purchaseTransactionService(
         targetId,
         metadata as Record<string, any>
       );
-      break;
     case "misc_service":
       break;
     case "upload_service":
