@@ -137,7 +137,10 @@ async function processDeletionBatch(
         updateOne: {
           filter: { "artwork_data.url": appwriteId },
           update: {
-            $set: { "artwork_data.url": cloudinaryUrl, deletedEntity: true },
+            $set: {
+              "artwork_data.url": cloudinaryUrl,
+              "artwork_data.deletedEntity": true,
+            },
           },
         },
       }));
