@@ -4,7 +4,26 @@ import mongoose, { Schema } from "mongoose";
 
 const createOrder = new Schema<CreateOrderModelTypes>(
   {
-    artwork_data: { type: Schema.Types.Mixed, required: true },
+    artwork_data: {
+      title: { type: String, required: true, trim: true },
+      url: { type: String, required: true, index: true },
+      artist: { type: String, required: true },
+      art_id: { type: String, required: true, index: true },
+      role_access: {
+        role: { type: String },
+        designation: { type: String },
+      },
+      pricing: {
+        usd_price: { type: Number, required: true },
+        shouldShowPrice: { type: Boolean, required: true, default: true },
+      },
+
+      exclusivity_status: {
+        exlusivity_type: { type: String },
+        exclusivity_status: { type: String },
+      },
+      deletedEntity: { type: Boolean, default: false },
+    },
     buyer_details: { type: Schema.Types.Mixed, required: true },
     seller_details: { type: Schema.Types.Mixed, required: true },
     order_id: {

@@ -12,7 +12,7 @@ export async function saveFailedJob(job: {
   const existing = await FailedJob.findOne({ jobId: job.jobId });
 
   if (existing) {
-    await FailedJob.updateOne(
+    const updateResult = await FailedJob.updateOne(
       { jobId: job.jobId },
       {
         $inc: { retryCount: 1 },
@@ -20,13 +20,17 @@ export async function saveFailedJob(job: {
       }
     );
     console.log(`Incremented retryCount for existing job ${job.jobId}`);
+
+    return updateResult.modifiedCount > 0 ? true : false;
   } else {
-    await FailedJob.create({
+    const createdJob = await FailedJob.create({
       ...job,
       retryCount: 1,
       lastAttemptedAt: new Date(),
       scheduledAt: new Date(),
     });
     console.log(`Saved new failed job ${job.jobId}`);
+
+    return createdJob ? true : false;
   }
 }

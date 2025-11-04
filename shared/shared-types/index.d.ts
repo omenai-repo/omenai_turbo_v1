@@ -328,6 +328,7 @@ export type CreateOrderModelTypes = {
       ArtworkSchemaTypes["exclusivity_status"],
       "order_auto_rejection_count"
     >;
+    deletedEntity: boolean;
   };
   buyer_details: OrderBuyerAndSellerDetails;
   seller_details: OrderBuyerAndSellerDetails;
@@ -775,17 +776,6 @@ export type ArtistCategory =
   | "Established"
   | "Elite";
 
-export type ArtistCategorizationAnswerTypes = {
-  graduate: "yes" | "no";
-  mfa: "yes" | "no";
-  solo: number;
-  group: number;
-  museum_collection: "yes" | "no";
-  biennale: "venice" | "other" | "none";
-  museum_exhibition: "yes" | "no";
-  art_fair: "yes" | "no";
-};
-
 type ArtistOnboardingData = {
   bio: string;
   cv: File | null;
@@ -825,12 +815,6 @@ export type ArtistAlgorithmData = {
   };
 };
 
-export type ArtistCategorizationUpdateDataTypes = {
-  answers: ArtistCategorizationAnswerTypes;
-  bio: string;
-  documentation: ArtistDocumentationTypes;
-  artist_id: string;
-};
 export type ArtistCategorizationAnswerTypes = {
   graduate: "yes" | "no";
   mfa: "yes" | "no";
@@ -842,6 +826,12 @@ export type ArtistCategorizationAnswerTypes = {
   art_fair: "yes" | "no";
 };
 
+export type ArtistCategorizationUpdateDataTypes = {
+  answers: ArtistCategorizationAnswerTypes;
+  bio: string;
+  documentation: ArtistDocumentationTypes;
+  artist_id: string;
+};
 // Shipment Types
 export type ShipmentDimensions = {
   length: number;

@@ -1,0 +1,9 @@
+{
+  "name": "@omenai/cloudinary-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "cloudinary",
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}
