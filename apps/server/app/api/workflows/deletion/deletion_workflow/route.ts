@@ -32,7 +32,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
   // Implement your workflow logic within ctx.run
   await ctx.run("sample_workflow_run", async () => {
-    const serviceOps: { meta: Record<string, any>; fn: Promise<void> }[] = [];
+    const serviceOps: { meta: Record<string, any>; fn: Promise<unknown> }[] =
+      [];
 
     for (const service of services) {
       serviceOps.push({
