@@ -22,23 +22,29 @@ async function anonymizeTransactions(
   targetId: string,
   field: "trans_recipient_id" | "trans_initiator_id"
 ) {
+  const MAX_EXECUTION_TIME = 55000;
+  const startTime = Date.now();
   try {
-    const BATCH_SIZE = 1000;
+    const BATCH_SIZE = 50;
     let totalModified = 0;
     let totalMatched = 0;
-    let hasMore = true;
 
-    while (hasMore) {
+    while (true) {
+      const elapsedTime = Date.now() - startTime;
+
+      if (elapsedTime > MAX_EXECUTION_TIME) {
+        console.warn(
+          `Stopping batch processing: approaching execution time limit (${elapsedTime}ms elapsed)`
+        );
+        break;
+      }
+
       const batch = await PurchaseTransactions.find({
         [field]: targetId,
       })
         .limit(BATCH_SIZE)
         .lean();
 
-      if (batch.length === 0) {
-        hasMore = false;
-        break;
-      }
       const ids = batch.map((doc) => doc._id);
       const result = await PurchaseTransactions.updateMany(
         { _id: { $in: ids } },
@@ -56,11 +62,8 @@ async function anonymizeTransactions(
         `Batch processed: ${result.modifiedCount} modified, ${totalModified} total so far`
       );
 
-      if (batch.length < BATCH_SIZE) {
-        hasMore = false;
-      }
+      if (batch.length === 0) break;
     }
-
     const summary: AnonymizationSummary = {
       anonymized: totalModified,
       skipped: totalMatched - totalModified,
