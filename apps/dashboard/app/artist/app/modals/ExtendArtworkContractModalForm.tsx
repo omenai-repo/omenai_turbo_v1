@@ -108,15 +108,19 @@ export default function ExtendArtworkContractConfirmationModalForm() {
       {/* Terms Section */}
       <div className="space-y-2">
         <h3 className="text-fluid-base font-semibold text-dark flex items-center gap-2">
-          <span className="w-1 h-5 bg-dark rounded-full" />
-          Agreement Terms
+          <span className="w-1 h-5 bg-dark rounded-full" /> Agreement Terms
         </h3>
 
         <div className="space-y-2">
-          <label className="group block">
+          <label
+            aria-label="90-day exclusivity period"
+            htmlFor="90-day exclusivity period"
+            className="group block"
+          >
             <div className="relative bg-white border-2 border-dark/10 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-dark/30 hover:shadow-md has-[:checked]:border-dark has-[:checked]:bg-dark/5 has-[:checked]:shadow-lg">
               <div className="flex items-start gap-2">
                 <input
+                  name="90-day exclusivity period"
                   type="checkbox"
                   checked={acknowledgment}
                   onChange={(e) => setAcknowledgment(e.target.checked)}
@@ -136,10 +140,15 @@ export default function ExtendArtworkContractConfirmationModalForm() {
             </div>
           </label>
 
-          <label className="group block">
+          <label
+            aria-label=" 10% penalty fee"
+            htmlFor=" 10% penalty fee"
+            className="group block"
+          >
             <div className="relative bg-white border-2 border-dark/10 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-dark/30 hover:shadow-md has-[:checked]:border-dark has-[:checked]:bg-dark/5 has-[:checked]:shadow-lg">
               <div className="flex items-start gap-2">
                 <input
+                  name=" 10% penalty fee"
                   type="checkbox"
                   checked={penaltyConsent}
                   onChange={(e) => setPenaltyConsent(e.target.checked)}

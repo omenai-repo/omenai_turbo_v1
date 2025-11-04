@@ -312,7 +312,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 htmlFor="specialInstructions"
                 className="block text-sm font-medium text-slate-700"
               >
-                Special Instructions
+                Special Instructions{" "}
                 <span className="text-slate-500 font-normal ml-1">
                   (optional)
                 </span>

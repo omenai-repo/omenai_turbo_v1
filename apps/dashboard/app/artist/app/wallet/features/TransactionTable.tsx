@@ -1,20 +1,15 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import { Accordion, Pagination, Paper, ScrollArea } from "@mantine/core";
+import React from "react";
+import { Accordion, ScrollArea } from "@mantine/core";
 import { WalletTransactionModelSchemaTypes } from "@omenai/shared-types";
-import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
-import { fetchWalletTransactions } from "@omenai/shared-services/wallet/fetchWalletTransactions";
 import { walletTransactionStore } from "@omenai/shared-state-store/src/artist/wallet/WalletTransactionStateStore";
 import TransactionHistorySkeleton from "@omenai/shared-ui-components/components/skeletons/TransactionHistorySkeleton";
-import TransactionPagination from "./TransactionPagination";
 
 export default function TransactionTable() {
-  const { setTransactions, transactions, transactionLoading } =
-    walletTransactionStore();
+  const { transactions, transactionLoading } = walletTransactionStore();
 
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -174,9 +169,9 @@ export default function TransactionTable() {
                 {/* Left Column */}
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                       Transaction ID
-                    </label>
+                    </span>
                     <div className="flex items-center gap-2">
                       <p className="font-mono text-sm text-dark">
                         {transaction.trans_id}
@@ -206,9 +201,9 @@ export default function TransactionTable() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                       Reference
-                    </label>
+                    </span>
                     <p className="font-mono text-sm text-dark">
                       {transaction.trans_flw_ref_id}
                     </p>
@@ -218,18 +213,18 @@ export default function TransactionTable() {
                 {/* Right Column */}
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                       Amount
-                    </label>
+                    </span>
                     <p className="text-lg font-semibold text-dark">
                       {formatPrice(transaction.trans_amount)}
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                       Date
-                    </label>
+                    </span>
                     <p className="text-sm text-dark">
                       {formatISODate(transaction.createdAt)}
                     </p>

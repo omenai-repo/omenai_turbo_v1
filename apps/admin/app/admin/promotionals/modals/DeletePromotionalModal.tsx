@@ -104,7 +104,7 @@ export default function DeletePromotionalModal({
                 Are you sure you want to delete{" "}
                 <span className="font-semibold text-gray-900">
                   {advertTitle}
-                </span>
+                </span>{" "}
                 ? This will permanently remove the promotional advert from them
                 Omenai homepage.
               </p>
@@ -187,12 +187,12 @@ export default function DeletePromotionalModal({
         </div>
       </Modal>
 
-      <div
+      <button
         onClick={open}
         className="absolute -top-1 -right-1 z-30 cursor-pointer rounded h-10 w-10 bg-white shadow-lg grid place-items-center transition-all duration-300 hover:scale-110 hover:shadow-xl active:scale-95"
       >
         <Trash2 size={20} absoluteStrokeWidth className="text-red-500" />
-      </div>
+      </button>
     </>
   );
 }

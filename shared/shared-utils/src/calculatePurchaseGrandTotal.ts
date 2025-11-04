@@ -3,8 +3,8 @@ export function calculatePurchaseGrandTotal(
   fees: string,
   taxes: string
 ): string {
-  const taxesValue: number = parseFloat(taxes.replace(/[^0-9.]/g, ""));
-  const feesValue: number = parseFloat(fees.replace(/[^0-9.]/g, ""));
+  const taxesValue: number = Number.parseFloat(taxes.replace(/[^0-9.]/g, ""));
+  const feesValue: number = Number.parseFloat(fees.replace(/[^0-9.]/g, ""));
 
   // Calculate total
   const total: number = price + taxesValue + feesValue;

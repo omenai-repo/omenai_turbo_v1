@@ -22,20 +22,20 @@ export const getUTCOffset = (countryCode: string): string | null => {
       minute: "2-digit",
     }).formatToParts(now);
 
-    const localHour = parseInt(
+    const localHour = Number.parseInt(
       local.find((p) => p.type === "hour")?.value || "0",
       10
     );
-    const localMinute = parseInt(
+    const localMinute = Number.parseInt(
       local.find((p) => p.type === "minute")?.value || "0",
       10
     );
 
-    const utcHour = parseInt(
+    const utcHour = Number.parseInt(
       utc.find((p) => p.type === "hour")?.value || "0",
       10
     );
-    const utcMinute = parseInt(
+    const utcMinute = Number.parseInt(
       utc.find((p) => p.type === "minute")?.value || "0",
       10
     );

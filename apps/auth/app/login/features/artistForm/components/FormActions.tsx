@@ -10,8 +10,6 @@ import { auth_uri } from "@omenai/url-config/src/config";
 export default function FormActions() {
   const { updateRecoveryModal } = actionStore();
 
-  const { updateCurrent } = useLoginStore();
-
   const { isLoading } = individualLoginStore();
 
   const auth_url = auth_uri();
@@ -47,12 +45,12 @@ export default function FormActions() {
           </p>
         </div>
 
-        <p
+        <button
           className="text-fluid-xxs text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("artist")}
         >
           Forgot password?
-        </p>
+        </button>
       </div>
     </div>
   );
