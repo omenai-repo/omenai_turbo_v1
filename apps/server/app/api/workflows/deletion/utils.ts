@@ -4,6 +4,7 @@ import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWork
 import { handleUploadDeletionProtocol } from "./services/upload_service";
 import { DeletionTaskServiceType } from "@omenai/shared-types";
 import { purchaseTransactionService } from "./services/purchase_transaction_service";
+import { categorizationService } from "./services/categorization_service";
 
 // apps/server/lib/deletion-utils/deleteFromService.ts
 export async function deleteFromService(
@@ -30,7 +31,7 @@ export async function deleteFromService(
     case "upload_service":
       return await handleUploadDeletionProtocol(targetId);
     case "categorization_service":
-      break;
+      return await categorizationService(targetId);
     case "stripe_service":
       break;
     case "sales_service":
