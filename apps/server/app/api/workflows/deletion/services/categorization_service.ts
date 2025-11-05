@@ -1,71 +1,67 @@
 import { ArtistCategorization } from "@omenai/shared-models/models/artist/ArtistCategorizationSchema";
+import { createFailedTaskJob } from "../utils";
 
-/*
-  step 1 : Validate targetId, if null or undefined, return;
-  setp 2 : Loop 3 time and try to delete the records. If it succeed return a response of type DeletionResult
-            and if it fails, loop again until MAX_ATTEMPTS === 3
-  step 3 : the code will reach step 3 only if all 3 attemps fail and will return;
-*/
-interface DeletionResult {
-  success: boolean;
-  deletedCount: number;
-  targetId: string;
-  attempts: number;
-  error?: string;
-}
+/**
+ * Deletion protocol:
+ * 1. Validated targetId : must be defined and nom-empty string
+ * 2. Check if the artist_id exist
+ * 3. Delete categorization which belong to the following artist_id
+ * 4. Create failed job is deletion failed
+ */
 
-export async function categorizationService(
-  targetId: string
-): Promise<DeletionResult> {
-  const MAX_ATTEMPTS = 3;
-  let lastError: Error | undefined;
-
+export async function categorizationService(targetId: string) {
   // validate targetID
-  if (!targetId) {
+  if (!targetId || targetId === "") {
     const error = "Invalid targetId: must be a non-empty string";
     console.error(error, { received: targetId });
     return {
       success: false,
-      deletedCount: 0,
-      targetId: targetId || "undefined",
-      attempts: 0,
       error,
     };
   }
 
-  // try deletion 3 time
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    try {
-      const result = await ArtistCategorization.deleteOne({
-        artist_id: targetId,
+  try {
+    const isExist = !!(await ArtistCategorization.exists({
+      artist_id: targetId,
+    }));
+    // Return error if artist_id does not exist
+    if (!isExist) {
+      const error =
+        "Invalid targetId: targetId does not exist in ArtistCategorization";
+      console.error(error, { received: targetId });
+      return {
+        success: false,
+        error,
+      };
+    }
+
+    const result = await ArtistCategorization.deleteOne({
+      artist_id: targetId,
+    });
+
+    const deletedCount = result.deletedCount;
+
+    if (deletedCount === 0) {
+      const result = await createFailedTaskJob({
+        error: "Unable to delete artist categorization to Cloudinary",
+        taskId: targetId,
+        payload: { artist_id: targetId },
+        jobType: "delete_artist_categorization",
       });
-      const deletedCount = result.deletedCount || 0;
-      console.log(
-        `Delete category ${deletedCount > 0 ? "successful" : "completed"}: ${deletedCount} document(s) deleted (attempt ${attempt})`
-      );
+      return {
+        success: false,
+        error: "Unable to delete artist categorization to Cloudinary",
+        failedTaskCreated: result,
+      };
+    } else {
+      console.log(`Delete category successful`);
       return {
         success: true,
         deletedCount,
         targetId,
-        attempts: attempt,
       };
-    } catch (error) {
-      lastError = error as Error;
-      console.error(
-        `Delete attempt ${attempt}/${MAX_ATTEMPTS} failed for ${targetId}:`,
-        error
-      );
     }
+  } catch (error) {
+    console.error(`Delete attempt failed for ${targetId}:`, error);
   }
-  // All 3 attempts failed
-  console.error(
-    `Failed to delete categorization after ${MAX_ATTEMPTS} attempts for ${targetId}`
-  );
-  return {
-    success: false,
-    deletedCount: 0,
-    targetId,
-    attempts: MAX_ATTEMPTS,
-    error: lastError?.message || "Unknown error",
-  };
 }
