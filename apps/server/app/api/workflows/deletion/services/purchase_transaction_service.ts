@@ -76,6 +76,5 @@ async function anonymizeTransactions(
     return summary;
   } catch (error) {
     console.error("Failed anonymization", error);
-    throw error;
   }
 }
