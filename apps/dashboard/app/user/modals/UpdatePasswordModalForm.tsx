@@ -173,20 +173,20 @@ export default function UpdatePasswordModalForm() {
     if (strength < 90) return "Good";
     return "Strong";
   };
+
   return (
-    <div className="flex items-center justify-center p-4">
-      <div className=" max-w-md w-full p-8 relative">
+    <div className="flex p-4 overflow-y-auto max-h-[80vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+      <div className=" max-w-lg w-full relative">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-dark rounded-t-2xl"></div>
 
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-4">
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-14 h-14 bg-dark rounded flex items-center justify-center shadow-lg">
-              <Shield className="w-7 h-7 text-white" strokeWidth={1.5} />
+            <div className="w-10 h-10 bg-dark rounded flex items-center justify-center shadow-lg">
+              <Shield className="w-5 h-5 text-white" strokeWidth={1.5} />
             </div>
             <div>
-              <h1 className="text-fluid-md font-bold text-dark">
+              <h1 className="text-fluid-sm font-bold text-dark">
                 Update Password
               </h1>
               <p className="text-fluid-xxs text-dark/20-500 mt-1">
@@ -212,7 +212,7 @@ export default function UpdatePasswordModalForm() {
                 required
                 placeholder="Create a strong password"
                 value={info.password}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border rounded focus:outline-none focus:ring-0 focus:border-dark text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
                   focusedField === "password"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -289,7 +289,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Re-enter your password"
                 required
                 value={info.confirmPassword}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border border-slate-300 focus:outline-none focus:ring-0 focus:border-dark rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs duration-200 transition-colors font-mono tracking-wider ${
                   focusedField === "confirmPassword"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -327,7 +327,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Enter 6-digit code"
                 required
                 value={info.code}
-                className={`w-full h-12 px-4 pr-12 border-2 rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs transition-all duration-200 ${
+                className={`w-full h-12 px-4 pr-12 border border-slate-300 focus:outline-none focus:ring-0 focus:border-dark rounded outline-none text-dark placeholder-dark/60 text-fluid-xxs duration-200 transition-colors font-mono tracking-wider ${
                   focusedField === "code"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -344,7 +344,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-normal transition-all duration-200 ${
+                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-normal transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
                   loading ||
                   errorList.length > 0 ||
                   !info.confirmPassword ||

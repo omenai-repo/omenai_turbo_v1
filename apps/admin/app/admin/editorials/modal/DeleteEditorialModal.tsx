@@ -187,12 +187,12 @@ export default function DeleteEditorialModal({
         </div>
       </Modal>
 
-      <div
+      <button
         onClick={open}
         className="absolute -top-1 -right-1 z-30 cursor-pointer rounded h-10 w-10 bg-white shadow-lg grid place-items-center transition-all duration-300 hover:scale-110 hover:shadow-xl active:scale-95"
       >
         <Trash2 size={20} absoluteStrokeWidth className="text-red-500" />
-      </div>
+      </button>
     </>
   );
 }

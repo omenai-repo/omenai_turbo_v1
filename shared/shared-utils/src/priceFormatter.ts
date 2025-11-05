@@ -6,7 +6,7 @@ export function formatPrice(
 ): string {
   const cleaned =
     typeof rawPrice === "string"
-      ? parseFloat(rawPrice.replace(/^[^\d.-]+/, ""))
+      ? Number.parseFloat(rawPrice.replace(/^[^\d.-]+/, ""))
       : rawPrice;
 
   // Try to find the currency entry

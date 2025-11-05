@@ -6,7 +6,7 @@ export interface DeletionRequestDocument extends DeletionRequest, Document {}
 
 const DeletionRequestSchema = new Schema<DeletionRequestDocument>(
   {
-    targetId: { type: String, required: true },
+    targetId: { type: String, required: true, index: true },
     initiatedBy: {
       type: String,
       required: true,
@@ -20,18 +20,28 @@ const DeletionRequestSchema = new Schema<DeletionRequestDocument>(
     },
     status: {
       type: String,
-      enum: ["requested", "in_progress", "completed", "failed", "cancelled"],
+      enum: [
+        "requested",
+        "in progress",
+        "completed",
+        "tasks_created",
+        "failed",
+        "cancelled",
+      ],
       required: true,
       default: "requested",
     },
+    targetEmail: { type: String, required: true },
     requestedAt: { type: Date },
+    startedAt: { type: Date },
     completedAt: { type: Date },
     gracePeriodUntil: { type: Date },
-    tasks: [{ type: Schema.Types.ObjectId, ref: "DeletionTask" }],
+    services: [{ type: Schema.Types.Array }],
     metadata: { type: Schema.Types.Mixed },
     requestId: {
       type: String,
       unique: true,
+      index: true,
       default: () => uuidv4(),
     },
   },
@@ -39,10 +49,6 @@ const DeletionRequestSchema = new Schema<DeletionRequestDocument>(
     timestamps: true,
   }
 );
-
-// Index by requestId and targetId for quick lookup
-DeletionRequestSchema.index({ requestId: 1 });
-DeletionRequestSchema.index({ targetId: 1 });
 
 export const DeletionRequestModel: Model<DeletionRequestDocument> =
   mongoose.models.DeletionRequest ||

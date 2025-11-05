@@ -1,26 +1,18 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@mantine/core";
-import { TeamMember } from "@omenai/shared-types";
 import { UserRound } from "lucide-react";
 import TeamMembersList from "./TeamMemberList";
 import InviteTeamMemberModal from "./InviteTeamMemberModal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllAdmins } from "@omenai/shared-services/admin/fetch_all_admins";
-import Load, {
-  HomeLoad,
-} from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { canAccessRoute } from "../../../../utils/canAccessRoute";
 import ForbiddenPage from "../../../components/ForbiddenPage";
 export default function TeamManagement() {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const { user } = useAuth({ requiredRole: "admin" });
-
-  // Check permissions
-  if (!canAccessRoute(user.access_role, "team")) {
-    return <ForbiddenPage userRole={user.access_role} />;
-  }
 
   const { data: teamMembers, isLoading: loading } = useQuery({
     queryKey: ["fetch_all_teamMembers"],
@@ -34,9 +26,12 @@ export default function TeamManagement() {
     },
   });
 
-  if (loading) return <Load />;
+  // Check permissions
+  if (!canAccessRoute(user.access_role, "team")) {
+    return <ForbiddenPage userRole={user.access_role} />;
+  }
 
-  const handleRoleUpdate = () => {};
+  if (loading) return <Load />;
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-full p-4">

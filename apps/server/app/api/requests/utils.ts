@@ -4,8 +4,8 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { ServerError } from "../../../custom/errors/dictionary/errorDictionary";
-import { EntityType } from "@omenai/shared-types";
-
+import { DeletionTaskServiceType, EntityType } from "@omenai/shared-types";
+import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
 export interface Commitment {
   type: string;
   description: string;
@@ -164,10 +164,12 @@ export async function createDeletionRequestAndRespond({
   entityType,
   initiatedBy = "target",
   gracePeriodDays = 30,
+  email,
 }: {
   targetId: string;
   reason: string;
-  entityType: Omit<EntityType, "admin">;
+  email: string;
+  entityType: Exclude<EntityType, "admin">;
   initiatedBy?: "target" | "admin" | "system";
   gracePeriodDays?: number;
 }) {
@@ -181,8 +183,9 @@ export async function createDeletionRequestAndRespond({
     reason,
     requestedAt: today,
     gracePeriodUntil: gracePeriodEnd,
-    tasks: [],
+    services: serviceMap[entityType],
     metadata: { targetId },
+    targetEmail: email,
   });
 
   if (!deletionRequest) {
@@ -193,3 +196,33 @@ export async function createDeletionRequestAndRespond({
 
   return gracePeriodEnd;
 }
+
+export const serviceMap: Record<
+  Exclude<EntityType, "admin">,
+  DeletionTaskServiceType[]
+> = {
+  user: [
+    "order_service",
+    "purchase_transaction_service",
+    "account_service",
+    "misc_service",
+  ],
+  artist: [
+    "order_service",
+    "wallet_service",
+    "categorization_service",
+    "upload_service",
+    "account_service",
+    "sales_service",
+    "misc_service",
+  ],
+  gallery: [
+    "order_service",
+    "subscriptions_service",
+    "upload_service",
+    "stripe_service",
+    "account_service",
+    "sales_service",
+    "misc_service",
+  ],
+};

@@ -95,7 +95,7 @@ export function OrderCanceledPage() {
       </Suspense>
 
       {/* Mild Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;

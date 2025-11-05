@@ -31,7 +31,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const numericYear = Number(year);
       const numericLimit = limit ? Number(limit) : 0;
 
-      if (isNaN(numericYear) || (limit && isNaN(numericLimit)))
+      if (Number.isNaN(numericYear) || (limit && Number.isNaN(numericLimit)))
         throw new BadRequestError(
           "Invalid param type. 'year' and 'limit' should be numerical."
         );

@@ -48,7 +48,7 @@ const DeletionAuditLogSchema = new Schema<DeletionAuditLogDocument>(
     tasks_summary: { type: [TaskSummarySchema], required: true },
     requested_at: { type: Date, required: true },
     completed_at: { type: Date },
-    retention_expires_at: { type: Date, required: true },
+    retention_expired_at: { type: Date, required: true },
     signature: { type: String, required: true },
   },
   {

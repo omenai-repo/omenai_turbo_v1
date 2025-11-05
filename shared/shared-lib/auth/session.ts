@@ -16,7 +16,7 @@ interface SessionData {
 
 // Web Crypto API function to generate random bytes
 function generateRandomId(): string {
-  return uuidv4().replace(/-/g, "");
+  return uuidv4().replaceAll(/-/g, "");
 }
 
 // Alternative using crypto.randomUUID() for shorter IDs

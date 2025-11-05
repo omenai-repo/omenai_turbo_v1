@@ -22,8 +22,10 @@ export default function PreferencePicker({
     <div className="w-full flex justify-center items-center mb-8">
       <div>
         <ul className="flex flex-wrap justify-center gap-5 text-dark font-normal text-fluid-sm">
-          <li onClick={() => handleFilterChange("All")}>
+          <li>
             <button
+              type="button"
+              onClick={() => handleFilterChange("All")}
               className={`rounded w-fit border font-normal border-dark/30 hover:ring-1 hover:ring-dark/80 text-fluid-xxs transition-all ease-linear duration-100 px-4 py-2 ${
                 curated_preference === "All"
                   ? "bg-dark text-white"
@@ -35,11 +37,11 @@ export default function PreferencePicker({
           </li>
           {preferences.map((preference) => {
             return (
-              <li
-                onClick={() => handleFilterChange(preference)}
-                key={preference}
-              >
+              <li>
                 <button
+                  type="button"
+                  onClick={() => handleFilterChange(preference)}
+                  key={preference}
                   className={`rounded w-fit border font-normal border-dark/30 hover:ring-1 hover:ring-dark/80 text-fluid-xxs transition-all ease-linear duration-100 px-4 py-2 ${
                     curated_preference === preference
                       ? "bg-dark text-white"

@@ -8,8 +8,12 @@ export default function IconWrapper({
   onClick?: () => void;
 }) {
   return (
-    <div className={`p-2 w-fit rounded  ${className}`} onClick={onClick}>
+    <button
+      type="button"
+      className={`p-2 w-fit rounded  ${className}`}
+      onClick={onClick}
+    >
       {children}
-    </div>
+    </button>
   );
 }

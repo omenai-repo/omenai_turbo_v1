@@ -1,16 +1,12 @@
 "use client";
 
 import { individualLoginStore } from "@omenai/shared-state-store/src/auth/login/IndividualLoginStore";
-import { useLoginStore } from "@omenai/shared-state-store/src/auth/login/LoginStore";
 import Link from "next/link";
-import { GoArrowRight } from "react-icons/go";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
 export default function FormActions() {
   const { updateRecoveryModal } = actionStore();
-
-  const { updateCurrent } = useLoginStore();
 
   const { isLoading } = individualLoginStore();
 
@@ -47,12 +43,13 @@ export default function FormActions() {
           </p>
         </div>
 
-        <p
+        <button
+          type="button"
           className="text-fluid-xxs text-red-600 cursor-pointer underline font-medium"
           onClick={() => updateRecoveryModal("individual")}
         >
           Forgot password?
-        </p>
+        </button>
       </div>
     </div>
   );

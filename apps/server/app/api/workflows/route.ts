@@ -1,25 +1,16 @@
-import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { TestCollection } from "@omenai/shared-models/models/test/TestSchema";
 import { serve } from "@upstash/workflow/nextjs";
 import { NextResponse } from "next/server";
 
+// Map the payload of the expected data here
 type Payload = {
-  title: string;
+  sample: string;
 };
 export const { POST } = serve<Payload[]>(async (ctx) => {
+  // Retrieve the payload here for use within your runs
   const payload: Payload[] = ctx.requestPayload;
-  await connectMongoDB();
-  const [first, second, third] = await Promise.all([
-    ctx.run("create_new_tes", async () => await TestCollection.create(payload)),
-    ctx.run(
-      "create_another",
-      async () => await TestCollection.create({ title: "Hey soul sister" })
-    ),
-    ctx.run(
-      "another_one",
-      async () => await TestCollection.create({ title: "This is good" })
-    ),
-  ]);
-  if (first && second && third)
-    return NextResponse.json({ data: "Successful" }, { status: 201 });
+
+  // Implement your workflow logic within ctx.run
+  ctx.run("create_new_tes", async () => {});
+
+  return NextResponse.json({ data: "Successful" }, { status: 201 });
 });

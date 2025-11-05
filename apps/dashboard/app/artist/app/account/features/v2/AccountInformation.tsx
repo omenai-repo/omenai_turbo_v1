@@ -100,12 +100,16 @@ export default function AccountInformation({ profile }: any) {
       <div className="space-y-6">
         {/* Artist Name */}
         <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
+          <label
+            htmlFor="name"
+            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+          >
             Artist Name
           </label>
           <input
             type="text"
             disabled
+            name="name"
             value={data.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
             className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
@@ -117,11 +121,15 @@ export default function AccountInformation({ profile }: any) {
 
         {/* Email */}
         <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
+          <label
+            htmlFor="email"
+            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+          >
             Email Address
           </label>
           <input
             type="email"
+            name="email"
             disabled
             value={profile.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
@@ -134,7 +142,10 @@ export default function AccountInformation({ profile }: any) {
 
         {/* Address */}
         <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
+          <label
+            htmlFor="address"
+            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+          >
             Artist Address
           </label>
           <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded">
@@ -162,11 +173,15 @@ export default function AccountInformation({ profile }: any) {
 
         {/* Bio */}
         <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
+          <label
+            htmlFor="Biography"
+            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+          >
             Artist Biography
           </label>
           <textarea
             value={data.bio}
+            name="Biography"
             onChange={(e) => handleInputChange("bio", e.target.value)}
             rows={4}
             className="w-full px-4 py-3 bg-gray-800 border border-line rounded text-fluid-xxs text-dark 

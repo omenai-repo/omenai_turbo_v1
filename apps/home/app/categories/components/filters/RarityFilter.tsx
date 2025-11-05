@@ -19,7 +19,8 @@ export default function RarityFilter({
 
   return (
     <div className="p-2 relative w-fit">
-      <div
+      <button
+        type="button"
         onClick={() => setOpenDropdown(!openDropdown)}
         className="ring-1 whitespace-nowrap rounded cursor-pointer ring-[#e0e0e0] font-normal text-[13px] text-dark flex justify-between items-center px-3 h-[35px] hover:bg-[#FAFAFA] hover:ring-dark"
       >
@@ -34,7 +35,7 @@ export default function RarityFilter({
           )}
         </p>
         <MdOutlineKeyboardArrowDown />
-      </div>
+      </button>
       <FilterOptionBox
         filters={rarityFilterOptions}
         label={"rarity"}

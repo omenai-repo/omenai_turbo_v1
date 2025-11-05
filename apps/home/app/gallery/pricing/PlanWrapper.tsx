@@ -20,7 +20,7 @@ export default function PlanWrapper({
     <div>
       <PlanDurationTab tab={tab} setTab={setTab} />
       <div className="flex lg:flex-wrap xl:flex-nowrap justify-center items-center gap-x-4">
-        {plans.map((plan: SubscriptionPlanDataTypes & any) => {
+        {plans.map((plan: SubscriptionPlanDataTypes & { _id: ObjectId }) => {
           return (
             <Plan
               key={plan.plan_id}

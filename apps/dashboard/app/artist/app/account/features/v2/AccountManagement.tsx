@@ -131,7 +131,7 @@ const AccountManagement = () => {
       {showCredentialsModal && <CredentialsUpdateModal />}
 
       {/* Custom Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
