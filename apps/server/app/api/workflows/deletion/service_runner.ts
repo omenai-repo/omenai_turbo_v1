@@ -3,6 +3,7 @@ import { categorizationService } from "./services/categorization_service";
 import { purchaseTransactionService } from "./services/purchase_transaction_service";
 import { handleUploadDeletionProtocol } from "./services/upload_service";
 import { walletDeletionProtocol } from "./services/wallet_service";
+import { subscriptionDeletionProtocol } from "./services/subscription_service";
 
 // apps/server/lib/deletion-utils/deleteFromService.ts
 export async function deleteFromService(
@@ -18,7 +19,7 @@ export async function deleteFromService(
     case "account_service":
       break;
     case "subscriptions_service":
-      break;
+      return await subscriptionDeletionProtocol(targetId);
     case "purchase_transaction_service":
       return await purchaseTransactionService(
         targetId,
