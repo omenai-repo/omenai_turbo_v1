@@ -1,9 +1,12 @@
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
+import { createFailedTaskJob } from "../utils";
 
 interface AnonymizationSummary {
   anonymized: number;
   skipped: number;
   total: number;
+  successfulJobCreations: number;
+  failedJobCreations: number;
 }
 
 export async function purchaseTransactionService(
@@ -29,6 +32,8 @@ async function anonymizeTransactions(
     let totalModified = 0;
     let totalMatched = 0;
 
+    const failedTask: Promise<boolean>[] = [];
+
     while (true) {
       const elapsedTime = Date.now() - startTime;
 
@@ -45,29 +50,69 @@ async function anonymizeTransactions(
         .limit(BATCH_SIZE)
         .lean();
 
+      if (batch.length === 0) {
+        console.log("No more documents to process");
+        break;
+      }
+
       const ids = batch.map((doc) => doc._id);
-      const result = await PurchaseTransactions.updateMany(
-        { _id: { $in: ids } },
-        {
-          $set: {
-            [field]: "deleted_entity",
-          },
+
+      const results = await Promise.allSettled(
+        ids.map(
+          async (id) =>
+            await PurchaseTransactions.updateOne(
+              { _id: id },
+              { $set: { [field]: "deleted_entity" } }
+            )
+        )
+      );
+      results.forEach((result, index) => {
+        if (result.status === "fulfilled") {
+          totalMatched += result.value.matchedCount;
+          totalModified += result.value.modifiedCount;
+
+          if (result.value.modifiedCount === 0) {
+            failedTask.push(
+              createFailedTaskJob({
+                error: "Unable to anonymize transaction",
+                taskId: ids[index] as string,
+                payload: { [field]: targetId },
+                jobType: "anonymize_transaction",
+              })
+            );
+          }
+        } else {
+          failedTask.push(
+            createFailedTaskJob({
+              error: "Unable to anonymize transaction",
+              taskId: ids[index] as string,
+              payload: { [field]: targetId },
+              jobType: "anonymize_transaction",
+            })
+          );
         }
-      );
+      });
 
-      totalModified += result.modifiedCount;
-      totalMatched += result.matchedCount;
-
-      console.log(
-        `Batch processed: ${result.modifiedCount} modified, ${totalModified} total so far`
-      );
+      console.log(`Batch processed, ${totalModified} total so far`);
 
       if (batch.length === 0) break;
     }
+
+    let successfulJobCreations = 0;
+    let failedJobCreations = 0;
+
+    const results = await Promise.allSettled(failedTask);
+    for (const result of results) {
+      if (result.status === "fulfilled") successfulJobCreations++;
+      else failedJobCreations++;
+    }
+
     const summary: AnonymizationSummary = {
       anonymized: totalModified,
       skipped: totalMatched - totalModified,
       total: totalMatched,
+      successfulJobCreations,
+      failedJobCreations,
     };
 
     console.log(

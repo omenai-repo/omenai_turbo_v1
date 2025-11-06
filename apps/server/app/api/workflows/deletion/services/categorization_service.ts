@@ -43,14 +43,14 @@ export async function categorizationService(targetId: string) {
 
     if (deletedCount === 0) {
       const result = await createFailedTaskJob({
-        error: "Unable to delete artist categorization to Cloudinary",
+        error: "Unable to delete artist categorization",
         taskId: targetId,
         payload: { artist_id: targetId },
         jobType: "delete_artist_categorization",
       });
       return {
         success: false,
-        error: "Unable to delete artist categorization to Cloudinary",
+        error: "Unable to delete artist categorization",
         failedTaskCreated: result,
       };
     } else {
