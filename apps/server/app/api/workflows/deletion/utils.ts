@@ -1,45 +1,7 @@
+import crypto from "node:crypto";
 import cloudinary from "@omenai/cloudinary-config";
 import { storage } from "@omenai/appwrite-config";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
-import { handleUploadDeletionProtocol } from "./services/upload_service";
-import { DeletionTaskServiceType } from "@omenai/shared-types";
-import { purchaseTransactionService } from "./services/purchase_transaction_service";
-import { categorizationService } from "./services/categorization_service";
-
-// apps/server/lib/deletion-utils/deleteFromService.ts
-export async function deleteFromService(
-  service: DeletionTaskServiceType,
-  targetId: string,
-  metadata?: Record<string, any>
-) {
-  switch (service) {
-    case "order_service":
-      break;
-    case "wallet_service":
-      return await walletDeletionProtocol(targetId);
-    case "account_service":
-      break;
-    case "subscriptions_service":
-      break;
-    case "purchase_transaction_service":
-      return await purchaseTransactionService(
-        targetId,
-        metadata as Record<string, any>
-      );
-    case "misc_service":
-      break;
-    case "upload_service":
-      return await handleUploadDeletionProtocol(targetId);
-    case "categorization_service":
-      return await categorizationService(targetId);
-    case "stripe_service":
-      break;
-    case "sales_service":
-      break;
-    default:
-      throw new Error(`Unsupported service type: ${service}`);
-  }
-}
 
 export async function uploadToCloudinary(url: string, id: string) {
   try {
@@ -206,7 +168,7 @@ export async function createFailedTaskJob<T>({
  ----------------------------------------------------
 */
 
-export function validateTargetId(targetId: String) {
+export function validateTargetId(targetId: string) {
   // validate targetID
   if (!targetId || targetId === "") {
     const error = "Invalid targetId: must be a non-empty string";
@@ -219,10 +181,6 @@ export function validateTargetId(targetId: String) {
 
   return { success: true };
 }
-
-import crypto from "crypto";
-import { Db } from "mongodb"; // Or your specific Mongo connection type
-import { walletDeletionProtocol } from "./services/wallet_service";
 
 /**
  * This is an irreversible anonymized user ID using HMAC-SHA256.
@@ -246,10 +204,17 @@ export function anonymizeUsername(userId?: string): string {
 
 function hashCode(str: string): number {
   let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const chr = str.charCodeAt(i);
+
+  if (str.length === 0) {
+    return hash;
+  }
+
+  for (const char of str) {
+    const chr = char.codePointAt(0)!;
+
     hash = (hash << 5) - hash + chr;
     hash |= 0;
   }
+
   return hash;
 }
