@@ -72,7 +72,6 @@ export async function subscriptionDeletionProtocol(targetId: string) {
         // 1. Find all payment methods for this customer
         const paymentMethods = await stripe.paymentMethods.list({
           customer: stripeCustomerId,
-          // You can add more types if you accept bank accounts, etc.
           type: "card",
         });
 
