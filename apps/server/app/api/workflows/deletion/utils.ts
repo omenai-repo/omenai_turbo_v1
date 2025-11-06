@@ -16,7 +16,7 @@ export async function deleteFromService(
     case "order_service":
       break;
     case "wallet_service":
-      break;
+      return await walletDeletionProtocol(targetId);
     case "account_service":
       break;
     case "subscriptions_service":
@@ -198,4 +198,58 @@ export async function createFailedTaskJob<T>({
   });
 
   return result;
+}
+
+/*
+ ----------------------------------------------------
+  Validate target ID existence
+ ----------------------------------------------------
+*/
+
+export function validateTargetId(targetId: String) {
+  // validate targetID
+  if (!targetId || targetId === "") {
+    const error = "Invalid targetId: must be a non-empty string";
+    console.error(error, { received: targetId });
+    return {
+      success: false,
+      error,
+    };
+  }
+
+  return { success: true };
+}
+
+import crypto from "crypto";
+import { Db } from "mongodb"; // Or your specific Mongo connection type
+import { walletDeletionProtocol } from "./services/wallet_service";
+
+/**
+ * This is an irreversible anonymized user ID using HMAC-SHA256.
+ */
+export function anonymizeUserId(userId: string, secret: string): string {
+  const hash = crypto.createHmac("sha256", secret).update(userId).digest("hex");
+
+  return `omenai_${hash.slice(0, 16)}`;
+}
+
+/**
+ * A function to generate a display name like "Deleted User #4821 for anonymized user name"
+ */
+export function anonymizeUsername(userId?: string): string {
+  const suffix = userId
+    ? Math.abs(hashCode(userId)).toString().slice(0, 4)
+    : crypto.randomInt(0, 10000).toString().padStart(4, "0");
+
+  return `Deleted User #${suffix}`;
+}
+
+function hashCode(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0;
+  }
+  return hash;
 }
