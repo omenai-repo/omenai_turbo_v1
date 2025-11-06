@@ -1,5 +1,5 @@
 import { ArtistCategorization } from "@omenai/shared-models/models/artist/ArtistCategorizationSchema";
-import { createFailedTaskJob } from "../utils";
+import { createFailedTaskJob, validateTargetId } from "../utils";
 
 /**
  * Deletion protocol:
@@ -10,15 +10,9 @@ import { createFailedTaskJob } from "../utils";
  */
 
 export async function categorizationService(targetId: string) {
-  // validate targetID
-  if (!targetId || targetId === "") {
-    const error = "Invalid targetId: must be a non-empty string";
-    console.error(error, { received: targetId });
-    return {
-      success: false,
-      error,
-    };
-  }
+  const checkIdvalidity = validateTargetId(targetId);
+
+  if (!checkIdvalidity.success) return checkIdvalidity;
 
   try {
     const isExist = !!(await ArtistCategorization.exists({
