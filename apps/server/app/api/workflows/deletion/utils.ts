@@ -239,14 +239,16 @@ export function anonymizeUserId(userId: string, secret: string): string {
 export function anonymizeUsername(userId?: string): string {
   const suffix = userId
     ? Math.abs(hashCode(userId)).toString().slice(0, 4)
-    : Math.floor(Math.random() * 10000);
+    : crypto.randomInt(0, 10000).toString().padStart(4, "0");
+
   return `Deleted User #${suffix}`;
 }
 
 function hashCode(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
+    const chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
     hash |= 0;
   }
   return hash;
