@@ -155,7 +155,7 @@ async function processDeletionBatch(
       jobTasks.push(
         createFailedTaskJob({
           error: fail.reason || "Unable to upload image to Cloudinary",
-          taskId: fail.appwriteId,
+          taskId: `upload_service:${fail.appwriteId}`,
           payload: { appwriteId: fail.appwriteId },
           jobType: "upload_artwork_to_cloudinary",
         })
@@ -166,7 +166,7 @@ async function processDeletionBatch(
       jobTasks.push(
         createFailedTaskJob({
           error: fail.reason || "Unable to delete file from Appwrite",
-          taskId: fail.fileId,
+          taskId: `upload_service:${fail.fileId}`,
           payload: { appwriteId: fail.fileId },
           jobType: "delete_artwork_from_appwrite",
         })
