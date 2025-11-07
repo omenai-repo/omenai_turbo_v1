@@ -1,9 +1,11 @@
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
+import { createFailedTaskJob } from "../utils";
 
 interface AnonymizationSummary {
   anonymized: number;
   skipped: number;
   total: number;
+  successfulJobCreations: boolean;
 }
 
 export async function purchaseTransactionService(
@@ -29,6 +31,8 @@ async function anonymizeTransactions(
     let totalModified = 0;
     let totalMatched = 0;
 
+    let batchNumber = 0;
+
     while (true) {
       const elapsedTime = Date.now() - startTime;
 
@@ -43,31 +47,45 @@ async function anonymizeTransactions(
         [field]: targetId,
       })
         .limit(BATCH_SIZE)
+        .skip(BATCH_SIZE * batchNumber)
         .lean();
 
+      if (batch.length === 0) {
+        console.log("No more documents to process");
+        break;
+      }
+      batchNumber++;
+
       const ids = batch.map((doc) => doc._id);
+
       const result = await PurchaseTransactions.updateMany(
         { _id: { $in: ids } },
-        {
-          $set: {
-            [field]: "deleted_entity",
-          },
-        }
+        { $set: { [field]: "deleted_entity" } }
       );
 
-      totalModified += result.modifiedCount;
       totalMatched += result.matchedCount;
+      totalModified += result.modifiedCount;
 
-      console.log(
-        `Batch processed: ${result.modifiedCount} modified, ${totalModified} total so far`
-      );
+      console.log(`Batch processed, ${totalModified} total so far`);
 
       if (batch.length === 0) break;
     }
+    let failedJobCreations = false;
+
+    if (totalMatched - totalModified > 0) {
+      failedJobCreations = await createFailedTaskJob({
+        error: "Unable to anonymize transaction",
+        taskId: targetId,
+        payload: { [field]: targetId },
+        jobType: "anonymize_transaction",
+      });
+    }
+
     const summary: AnonymizationSummary = {
       anonymized: totalModified,
       skipped: totalMatched - totalModified,
       total: totalMatched,
+      successfulJobCreations: failedJobCreations,
     };
 
     console.log(
