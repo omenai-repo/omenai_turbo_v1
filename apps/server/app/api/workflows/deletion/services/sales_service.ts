@@ -24,6 +24,11 @@ export async function saleService(targetId: string) {
     let totalMatched = 0;
     let batchNumber = 0;
 
+    const anonymizedId = anonymizeUserId(
+      targetId,
+      process.env.ANONYMIZE_SECRET!
+    );
+
     while (true) {
       const elapsedTime = Date.now() - startTime;
 
@@ -53,7 +58,7 @@ export async function saleService(targetId: string) {
         { _id: { $in: ids } },
         {
           $set: {
-            id: anonymizeUserId(targetId, process.env.ANONYMIZE_SECRET!),
+            id: anonymizedId,
           },
         }
       );
