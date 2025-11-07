@@ -1,8 +1,7 @@
 import { DeletionTaskServiceType, EntityType } from "@omenai/shared-types";
 import { serve } from "@upstash/workflow/nextjs";
 import { NextResponse } from "next/server";
-import { deleteFromService } from "../utils";
-import { DeletionAuditLogModel } from "@omenai/shared-models/models/deletion/DeletionAuditLogSchema";
+import { deleteFromService } from "../service_runner";
 
 // Map the payload of the expected data here
 type Payload = {
