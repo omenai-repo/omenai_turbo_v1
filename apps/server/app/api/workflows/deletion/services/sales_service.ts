@@ -22,22 +22,7 @@ export async function saleService(targetId: string) {
     const BATCH_SIZE = 50;
     let totalModified = 0;
     let totalMatched = 0;
-
     let batchNumber = 0;
-
-    // Check if value exists in DB
-    const isExist = !!(await SalesActivity.exists({
-      id: targetId,
-    }));
-
-    if (!isExist) {
-      const error = `Invalid targetId: targetId does not exist in Sale Activity`;
-      console.error(error, { received: targetId });
-      return {
-        success: false,
-        error,
-      };
-    }
 
     while (true) {
       const elapsedTime = Date.now() - startTime;
@@ -77,8 +62,6 @@ export async function saleService(targetId: string) {
       totalModified += result.modifiedCount;
 
       console.log(`Batch processed, ${totalModified} total so far`);
-
-      if (batch.length === 0) break;
     }
     let failedJobCreations = false;
 
@@ -103,7 +86,7 @@ export async function saleService(targetId: string) {
     );
     return summary;
   } catch (error) {
-    console.error("Failed anonymization", error);
+    console.error("saleService anonymization failed", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
