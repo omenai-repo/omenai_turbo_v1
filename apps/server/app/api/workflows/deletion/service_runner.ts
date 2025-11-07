@@ -5,6 +5,8 @@ import { handleUploadDeletionProtocol } from "./services/upload_service";
 import { walletDeletionProtocol } from "./services/wallet_service";
 import { subscriptionDeletionProtocol } from "./services/subscription_service";
 import { accountService } from "./services/account_service";
+import { orderDeletionServiceProtocol } from "./services/order_service";
+import { salesServiceDeletionProtocol } from "./services/sales_service";
 
 // apps/server/lib/deletion-utils/deleteFromService.ts
 export async function deleteFromService(
@@ -14,7 +16,7 @@ export async function deleteFromService(
 ) {
   switch (service) {
     case "order_service":
-      break;
+      return await orderDeletionServiceProtocol(targetId, metadata.entityType);
     case "wallet_service":
       return await walletDeletionProtocol(targetId);
     case "account_service":
@@ -32,10 +34,8 @@ export async function deleteFromService(
       return await handleUploadDeletionProtocol(targetId);
     case "categorization_service":
       return await categorizationService(targetId);
-    case "stripe_service":
-      break;
     case "sales_service":
-      break;
+      return await salesServiceDeletionProtocol(targetId);
     default:
       throw new Error(`Unsupported service type: ${service}`);
   }

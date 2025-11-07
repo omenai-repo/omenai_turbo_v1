@@ -12,7 +12,7 @@ interface AnonymizationSummary {
   successfulJobCreations: boolean;
 }
 
-export async function saleService(targetId: string) {
+export async function salesServiceDeletionProtocol(targetId: string) {
   const checkIdvalidity = validateTargetId(targetId);
   if (!checkIdvalidity.success) return checkIdvalidity;
 

@@ -7,6 +7,12 @@ import {
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import type { Stripe } from "stripe";
 
+interface ISubscriptionLean {
+  stripe_customer_id?: string;
+  subscription_id?: string;
+  customer?: { email?: string };
+}
+
 /*
  * ====================================================================
  * STRIPE SUBSCRIPTION DELETION PROTOCOL
