@@ -3,6 +3,8 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createFailedTaskJob, validateTargetId } from "../utils";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
+import { ArtistSchemaTypes } from "@omenai/shared-types";
+import { storage } from "@omenai/appwrite-config";
 
 export async function accountService(
   targetId: string,
@@ -17,10 +19,12 @@ export async function accountService(
 type AccountType = "artist" | "gallery" | "user";
 
 interface AccountConfig {
-  model: any;
+  model:
+    | typeof AccountArtist
+    | typeof AccountGallery
+    | typeof AccountIndividual;
   idField: string;
   jobType: string;
-  anonymizeFields: Record<string, any>;
   displayName: string;
 }
 
@@ -30,54 +34,18 @@ const ACCOUNT_CONFIGS: Record<AccountType, AccountConfig> = {
     idField: "artist_id",
     jobType: "anonymize_artist_account",
     displayName: "Artist",
-    anonymizeFields: {
-      name: "Deleted Artist",
-      bio: "",
-      art_style: [],
-      categorization: "",
-      password: "",
-      wallet_id: "",
-      algo_data_id: "",
-      documentation: "",
-      bio_video_link: "",
-      logo: "",
-      address: "",
-      phone: "",
-      clerkUserId: "",
-    },
   },
   gallery: {
     model: AccountGallery,
     idField: "gallery_id",
     jobType: "anonymize_gallery_account",
     displayName: "Gallery",
-    anonymizeFields: {
-      password: "",
-      connected_account_id: "",
-      stripe_customer_id: "",
-      phone: "",
-      address: "",
-      clerkUserId: "",
-      name: "Deleted Gallery",
-      description: null,
-      logo: null,
-      admin: null,
-      subscription_status: { type: null, active: false },
-      status: "deleted",
-    },
   },
   user: {
     model: AccountIndividual,
     idField: "user_id",
     jobType: "anonymize_user_account",
     displayName: "User",
-    anonymizeFields: {
-      password: "",
-      address: "",
-      phone: "",
-      name: "Deleted User",
-      preferences: [],
-    },
   },
 };
 
@@ -101,21 +69,41 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
 
     // Check if record exists in DB
     const account = await config.model.findOne({ [config.idField]: targetId });
+    if (!account || !account.email) {
+      const error = `Record does not exist in Account${config.displayName}`;
+      console.error(error, { received: targetId });
+      return {
+        success: false,
+        error,
+      };
+    }
 
-    // Prepare anonymized fields with hashed email
-    const anonymizedFields = {
-      ...config.anonymizeFields,
-      email: hashEmail(account.email),
-    };
+    // delete documentation for artist
+    if (accountType === "artist") {
+      storage
+        .deleteFile({
+          bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+          fileId: account.documentation.cv,
+        })
+        .catch(async (err) => {
+          console.error(
+            `❌ Failed to delete file ${account.documentation.cv}:`,
+            err.message
+          );
+          await createFailedTaskJob({
+            error: `Unable to create job for ${accountType} Account for deleting documentation`,
+            taskId: targetId,
+            payload: { [config.idField]: targetId },
+            jobType: "delete_artist_documentation",
+          });
+        });
+    }
 
-    // Perform operation using updateOne
-    const result = await config.model.updateOne(
-      { [config.idField]: targetId },
-      { $set: anonymizedFields }
-    );
+    // Perform operation using DeleteOne
+    const result = await config.model.deleteOne({ [config.idField]: targetId });
 
     // If update failed, create failed task job; otherwise return success
-    if (result.matchedCount === 0) {
+    if (result.deletedCount === 0) {
       console.error(`Failed Anonymization for`, account.email);
       const failedTask = await createFailedTaskJob({
         error: `Unable to Anonymize ${accountType} Account`,
@@ -132,7 +120,7 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
       console.log(`Anonymize ${config.displayName} Account successful`);
       return {
         success: true,
-        matchedCount: result.matchedCount,
+        deletedCount: result.deletedCount,
       };
     }
   } catch (error) {
