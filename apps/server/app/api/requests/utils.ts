@@ -219,7 +219,6 @@ export const serviceMap: Record<
     "order_service",
     "subscriptions_service",
     "upload_service",
-    "stripe_service",
     "account_service",
     "sales_service",
     "misc_service",
