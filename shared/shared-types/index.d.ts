@@ -1091,7 +1091,6 @@ export type DeletionTaskServiceType =
   | "purchase_transaction_service" // for purchase transaction records
   | "account_service" // for user/gallery/artist account data
   | "subscriptions_service" //bakes in prorations service and subscription transaction service
-  | "stripe_service" // deactivate stripe customer and connected accounts
   | "sales_service" // for sales activity records
   | "categorization_service" // for artist categorization data
   | "misc_service"; // miscellaneous service such as device fingerprint and notification_service
