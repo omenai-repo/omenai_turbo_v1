@@ -43,18 +43,6 @@ const getRedirectUrl = (data: any, dashboardBaseUrl: string) => {
     : `${dashboardBaseUrl}/artist/onboarding`;
 };
 
-const handleUnverifiedUser = async (
-  signOut: () => Promise<void>,
-  router: any,
-  userId: string
-) => {
-  await signOut();
-  toast.info("Signing out...", {
-    description: "You will be redirected to verify your account",
-  });
-  router.replace(`${auth_uri()}/verify/artist/${userId}`);
-};
-
 const showErrorToast = (error: any) => {
   const errorMessage = error?.errors?.[0]?.message;
   toast.error("Error notification", {
@@ -71,16 +59,16 @@ export default function FormInput() {
   const [show, setShow] = useState(false);
   const dashboard_base_url = dashboard_url();
 
-  const [redirect_uri, set_redirect_uri] = useLocalStorage(
-    "redirect_uri_on_login",
-    ""
-  );
-  const url = useReadLocalStorage("redirect_uri_on_login") as string;
-
   const { setIsLoading } = individualLoginStore();
-  const { signOut } = useAuth({ requiredRole: "user" });
+  const { signOut } = useAuth({ requiredRole: "artist" });
   const [form, setForm] = useState<Form>({ email: "", password: "" });
 
+  const handleUnverifiedUser = async () => {
+    await signOut(false);
+    toast.info("Signing out...", {
+      description: "You will be redirected to verify your account",
+    });
+  };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -112,7 +100,8 @@ export default function FormInput() {
     if (data.verified) {
       await handleVerifiedArtist(data);
     } else {
-      await handleUnverifiedUser(signOut, router, data.id);
+      await handleUnverifiedUser();
+      router.replace(`${auth_uri()}/verify/artist/${data.id}`);
     }
   };
 

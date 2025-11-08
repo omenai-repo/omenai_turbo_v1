@@ -10,6 +10,7 @@ import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 import { auth_uri, base_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -40,10 +41,6 @@ const shouldUseDefaultRedirect = (url: string | null) => {
   return url === "" || url === null;
 };
 
-const handleUnverifiedUser = (router: any, userId: string) => {
-  router.replace(`${auth_uri()}/verify/individual/${userId}`);
-};
-
 const showErrorToast = () => {
   toast.error("Error notification", {
     description: "Something went wrong, please try again or contact support",
@@ -62,8 +59,18 @@ export default function FormInput() {
     "redirect_uri_on_login",
     ""
   );
+
+  const { signOut } = useAuth({ requiredRole: "user" });
+
   const url = useReadLocalStorage("redirect_uri_on_login") as string;
   const [form, setForm] = useState<Form>({ email: "", password: "" });
+
+  const handleUnverifiedUser = async () => {
+    toast.info("Signing out...", {
+      description: "You will be redirected to verify your account",
+    });
+    await signOut(false);
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -104,7 +111,8 @@ export default function FormInput() {
     if (data.verified) {
       await handleVerifiedUser(data);
     } else {
-      handleUnverifiedUser(router, data.user_id);
+      await handleUnverifiedUser();
+      router.replace(`${auth_uri()}/verify/individual/${data.user_id}`);
     }
   };
 

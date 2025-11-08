@@ -42,18 +42,6 @@ const shouldUseDefaultRedirect = (url: string | null) => {
   return url === "" || url === null;
 };
 
-const handleUnverifiedGallery = async (
-  signOut: () => Promise<void>,
-  router: any,
-  galleryId: string
-) => {
-  await signOut();
-  toast.info("Signing out...", {
-    description: "You will be redirected to verify your account",
-  });
-  router.replace(`${auth_uri()}/verify/gallery/${galleryId}`);
-};
-
 const showErrorToast = () => {
   toast.error("Error notification", {
     description: "Something went wrong, please try again or contact support",
@@ -74,8 +62,15 @@ export default function FormInput() {
   const url = useReadLocalStorage("redirect_uri_on_login") as string;
 
   const { setIsLoading } = galleryLoginStore();
-  const { signOut } = useAuth({ requiredRole: "user" });
+  const { signOut } = useAuth({ requiredRole: "gallery" });
   const [form, setForm] = useState<Form>({ email: "", password: "" });
+
+  const handleUnverifiedGallery = async () => {
+    await signOut(false);
+    toast.info("Signing out...", {
+      description: "You will be redirected to verify your account",
+    });
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -116,7 +111,8 @@ export default function FormInput() {
     if (data.verified) {
       await handleVerifiedGallery(data);
     } else {
-      await handleUnverifiedGallery(signOut, router, data.id);
+      await handleUnverifiedGallery();
+      router.replace(`${auth_uri()}/verify/gallery/${data.id}`);
     }
   };
 
