@@ -18,10 +18,11 @@ const TaskSummarySchema = new Schema({
       "misc_service",
     ],
   },
-  deleted_records_count: { type: Number },
+  deletionRecordSummary: { type: Schema.Types.Mixed },
+  note: { type: String, required: true },
   status: {
     type: String,
-    enum: ["pending", "in_progress", "done", "failed"],
+    enum: ["complete", "incomplete"],
     required: true,
   },
   completed_at: { type: Date },

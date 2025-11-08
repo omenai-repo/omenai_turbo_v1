@@ -111,7 +111,7 @@ export async function createWorkflowTarget(metadata: {
 }): Promise<string | undefined> {
   const workflowID = await createWorkflow(
     `/api/workflows/deletion/deletion_workflow`,
-    `test_workflow${generateDigit(2)}`,
+    `deletion_workflow${generateDigit(2)}`,
     JSON.stringify(metadata)
   );
 
