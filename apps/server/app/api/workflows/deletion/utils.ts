@@ -218,3 +218,10 @@ function hashCode(str: string): number {
 
   return hash;
 }
+
+export interface DeletionReturnType {
+  success: boolean;
+  note: string;
+  count: Record<string, any>;
+  error?: string;
+}

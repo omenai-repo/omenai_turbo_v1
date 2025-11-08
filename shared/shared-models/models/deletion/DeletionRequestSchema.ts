@@ -36,7 +36,11 @@ const DeletionRequestSchema = new Schema<DeletionRequestDocument>(
     startedAt: { type: Date },
     completedAt: { type: Date },
     gracePeriodUntil: { type: Date },
-    services: [{ type: Schema.Types.Array }],
+    services: {
+      type: [String],
+      required: true,
+    },
+
     metadata: { type: Schema.Types.Mixed },
     requestId: {
       type: String,

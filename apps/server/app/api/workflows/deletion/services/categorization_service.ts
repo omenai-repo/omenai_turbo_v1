@@ -1,5 +1,9 @@
 import { ArtistCategorization } from "@omenai/shared-models/models/artist/ArtistCategorizationSchema";
-import { createFailedTaskJob, validateTargetId } from "../utils";
+import {
+  createFailedTaskJob,
+  DeletionReturnType,
+  validateTargetId,
+} from "../utils";
 
 /**
  * Deletion protocol:
@@ -9,10 +13,12 @@ import { createFailedTaskJob, validateTargetId } from "../utils";
  * 4. Create failed job is deletion failed
  */
 
-export async function categorizationService(targetId: string) {
+export async function categorizationService(
+  targetId: string
+): Promise<DeletionReturnType> {
   const checkIdvalidity = validateTargetId(targetId);
 
-  if (!checkIdvalidity.success) return checkIdvalidity;
+  if (!checkIdvalidity.success) throw new Error("Invalid target ID");
 
   try {
     const isExist = !!(await ArtistCategorization.exists({
@@ -20,12 +26,10 @@ export async function categorizationService(targetId: string) {
     }));
     // Return error if artist_id does not exist
     if (!isExist) {
-      const error =
-        "Invalid targetId: targetId does not exist in ArtistCategorization";
-      console.error(error, { received: targetId });
       return {
-        success: false,
-        error,
+        success: true,
+        count: { deletedCount: 0 },
+        note: "Data non-existent for deletion",
       };
     }
 
@@ -44,18 +48,27 @@ export async function categorizationService(targetId: string) {
       });
       return {
         success: false,
+        count: { deletedCount: 0 },
+        note: "Unable to delete categorization data",
         error: "Unable to delete artist categorization",
-        failedTaskCreated: result,
       };
     } else {
       console.log(`Delete category successful`);
       return {
         success: true,
-        deletedCount,
-        targetId,
+        count: { deletedCount },
+        note: "Deletion protocol successfully executed",
       };
     }
   } catch (error) {
-    console.error(`Delete attempt failed for ${targetId}:`, error);
+    return {
+      success: false,
+      note: "An error prevented this deletion protocol from running. Manual intervention in progress",
+      count: { deletedCount: 0 },
+      error:
+        error instanceof Error
+          ? error.message
+          : `Delete attempt failed for ${targetId}:`,
+    };
   }
 }
