@@ -2,16 +2,11 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import {
   anonymizeUsername,
   createFailedTaskJob,
+  DeletionReturnType,
   validateTargetId,
 } from "../utils";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import type { Stripe } from "stripe";
-
-interface ISubscriptionLean {
-  stripe_customer_id?: string;
-  subscription_id?: string;
-  customer?: { email?: string };
-}
 
 /*
  * ====================================================================
@@ -35,7 +30,9 @@ interface ISubscriptionLean {
  * Handles subscription deletion and anonymization.
  * This is a "parallel" service and must not throw errors.
  */
-export async function subscriptionDeletionProtocol(targetId: string) {
+export async function subscriptionDeletionProtocol(
+  targetId: string
+): Promise<DeletionReturnType> {
   const stats = {
     failedJobCreations: 0,
     anonymizedSubscription: false,
@@ -51,7 +48,12 @@ export async function subscriptionDeletionProtocol(targetId: string) {
         `Invalid targetId for subscriptionDeletionProtocol: ${targetId}`
       );
       // We could create a DLQ job here, but for now, we just exit.
-      return { success: false, ...stats, error: "Invalid target ID" };
+      return {
+        success: false,
+        count: { ...stats },
+        note: "An error occured",
+        error: "Invalid target ID",
+      };
     }
 
     // Step 2: Find user's subscription document
@@ -66,7 +68,11 @@ export async function subscriptionDeletionProtocol(targetId: string) {
     };
 
     if (!subscription) {
-      return { success: true, ...stats, message: "No subscription found." };
+      return {
+        success: true,
+        count: { ...stats },
+        note: "No subscription found.",
+      };
     }
 
     const stripeCustomerId = subscription.stripe_customer_id;
@@ -133,13 +139,22 @@ export async function subscriptionDeletionProtocol(targetId: string) {
       if (!created) stats.failedJobCreations++;
     }
 
-    return { success: true, ...stats };
+    return {
+      success: true,
+      count: { ...stats },
+      note: "Deletion protocol successfully executed",
+    };
   } catch (error) {
     console.error(
       `Fatal error in subscriptionDeletionProtocol for user ${targetId}:`,
       (error as Error).message
     );
 
-    return { success: false, ...stats, error: (error as Error).message };
+    return {
+      success: false,
+      count: { ...stats },
+      note: "An error occured during deletion, Manual intervention in progress",
+      error: (error as Error).message,
+    };
   }
 }

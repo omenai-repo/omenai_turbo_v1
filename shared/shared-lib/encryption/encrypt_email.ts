@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 /**
  * Config:
@@ -147,4 +147,9 @@ export function parseKidFromStoredHash(stored: string): string | null {
   const parts = stored.split("$");
   if (parts.length !== 2) return null;
   return parts[0];
+}
+
+export function createSignature(data: object, key: string): string {
+  crypto.createHmac("sha256", key).update(JSON.stringify(data)).digest("hex");
+  return `signed_with_key_for_${(data as any).deletion_request_id}`;
 }

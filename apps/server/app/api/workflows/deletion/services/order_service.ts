@@ -5,12 +5,13 @@ import {
   anonymizeUserId,
   anonymizeUsername,
   createFailedTaskJob,
+  DeletionReturnType,
 } from "../utils";
 
 export async function orderDeletionServiceProtocol(
   targetId: string,
   entityType: Exclude<EntityType, "admin">
-) {
+): Promise<DeletionReturnType> {
   const stats = {
     documentsUpdated: 0,
     documentsLeft: 0,
@@ -37,7 +38,11 @@ export async function orderDeletionServiceProtocol(
 
     const targetOrderExists = await CreateOrder.exists(filter);
     if (!targetOrderExists)
-      return { success: true, message: "User has no order record" };
+      return {
+        success: true,
+        note: "User has no order record",
+        count: { deletedCount: 0 },
+      };
 
     const anonymizedUserFields = {
       id: anonymizedTargetID,
@@ -69,7 +74,11 @@ export async function orderDeletionServiceProtocol(
       });
     }
 
-    return { success: true, ...stats };
+    return {
+      success: true,
+      count: { ...stats },
+      note: "Deletion protocol successfully completed",
+    };
   } catch (error) {
     let errorMessage = "An unknown error occurred during order deletion.";
 
@@ -82,6 +91,11 @@ export async function orderDeletionServiceProtocol(
       errorMessage
     );
 
-    return { success: false, ...stats, error: errorMessage };
+    return {
+      success: false,
+      count: { ...stats },
+      note: "An error occured during deletion, manual intervention in progress",
+      error: errorMessage,
+    };
   }
 }

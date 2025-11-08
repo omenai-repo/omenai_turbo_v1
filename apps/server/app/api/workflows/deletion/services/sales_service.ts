@@ -2,6 +2,7 @@ import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity"
 import {
   anonymizeUserId,
   createFailedTaskJob,
+  DeletionReturnType,
   validateTargetId,
 } from "../utils";
 
@@ -12,16 +13,22 @@ interface AnonymizationSummary {
   successfulJobCreations: boolean;
 }
 
-export async function salesServiceDeletionProtocol(targetId: string) {
+export async function salesServiceDeletionProtocol(
+  targetId: string
+): Promise<DeletionReturnType> {
+  const stats = {
+    totalModified: 0,
+    totalMatched: 0,
+  };
   const checkIdvalidity = validateTargetId(targetId);
-  if (!checkIdvalidity.success) return checkIdvalidity;
+  if (!checkIdvalidity.success)
+    throw new Error(checkIdvalidity.error ?? "Invalid target ID");
 
   const MAX_EXECUTION_TIME = 55000;
   const startTime = Date.now();
   try {
     const BATCH_SIZE = 50;
-    let totalModified = 0;
-    let totalMatched = 0;
+
     let batchNumber = 0;
 
     const anonymizedId = anonymizeUserId(
@@ -63,14 +70,14 @@ export async function salesServiceDeletionProtocol(targetId: string) {
         }
       );
 
-      totalMatched += result.matchedCount;
-      totalModified += result.modifiedCount;
+      stats.totalMatched += result.matchedCount;
+      stats.totalModified += result.modifiedCount;
 
-      console.log(`Batch processed, ${totalModified} total so far`);
+      console.log(`Batch processed, ${stats.totalModified} total so far`);
     }
     let failedJobCreations = false;
 
-    if (totalMatched - totalModified > 0) {
+    if (stats.totalMatched - stats.totalModified > 0) {
       failedJobCreations = await createFailedTaskJob({
         error: "Unable to anonymize Sales",
         taskId: targetId,
@@ -80,20 +87,26 @@ export async function salesServiceDeletionProtocol(targetId: string) {
     }
 
     const summary: AnonymizationSummary = {
-      anonymized: totalModified,
-      skipped: totalMatched - totalModified,
-      total: totalMatched,
+      anonymized: stats.totalModified,
+      skipped: stats.totalMatched - stats.totalModified,
+      total: stats.totalMatched,
       successfulJobCreations: failedJobCreations,
     };
 
     console.log(
       `Completed: Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
     );
-    return summary;
+    return {
+      success: true,
+      count: { ...summary },
+      note: "Deletion protocol successfully executed",
+    };
   } catch (error) {
     console.error("saleService anonymization failed", error);
     return {
       success: false,
+      count: { ...stats },
+      note: "An error occured during deletion, manual intervention in progress",
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
