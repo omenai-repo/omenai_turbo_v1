@@ -32,8 +32,6 @@ export async function deleteFromService(
       return await handleUploadDeletionProtocol(targetId);
     case "categorization_service":
       return await categorizationService(targetId);
-    case "stripe_service":
-      break;
     case "sales_service":
       break;
     default:
