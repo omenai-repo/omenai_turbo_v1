@@ -8,9 +8,9 @@ import {
 } from "appwrite";
 
 const client = new Client();
-const endpoint = "https://cloud.appwrite.io/v1";
+const endpoint = "https://fra.cloud.appwrite.io/v1";
 
-client
+https: client
   .setEndpoint(endpoint)
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_CLIENT_ID!);
 
