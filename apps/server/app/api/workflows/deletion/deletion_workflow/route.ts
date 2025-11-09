@@ -66,7 +66,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
       if (item.status === "fulfilled") {
         const { success, note, count, error } = item.value;
-        console.log(count);
         const status = success ? "complete" : "incomplete";
 
         taskSummaries.push({

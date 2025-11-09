@@ -112,7 +112,7 @@ export async function subscriptionDeletionProtocol(
     // === MAIN TASK: ANONYMIZE LOCAL DB (Always Runs) ===
 
     const anonymizeResult = await Subscriptions.updateOne(
-      { owner_id: targetId }, // Find the document again to be safe
+      { "customer.gallery_id": targetId },
       {
         $set: {
           "customer.name": anonymizeUsername(targetId),

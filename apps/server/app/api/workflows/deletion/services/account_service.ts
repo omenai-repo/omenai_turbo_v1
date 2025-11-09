@@ -80,7 +80,7 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
     if (accountType === "artist") {
       storage
         .deleteFile({
-          bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+          bucketId: process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!,
           fileId: account.documentation.cv,
         })
         .catch(async (err) => {

@@ -18,7 +18,7 @@ async function deleteFlutterwaveBeneficiary(
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
         signal: controller.signal,
