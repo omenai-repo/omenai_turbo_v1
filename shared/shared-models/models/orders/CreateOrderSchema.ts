@@ -15,7 +15,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
       },
       pricing: {
         usd_price: { type: Number, required: true },
-        shouldShowPrice: { type: Boolean, required: true, default: true },
+        shouldShowPrice: { type: String },
       },
 
       exclusivity_status: {
