@@ -8,7 +8,7 @@ import {
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { AccessRoleTypes, ArtistSchemaTypes } from "@omenai/shared-types";
-import { storage } from "@omenai/appwrite-config";
+import { serverStorage, storage } from "@omenai/appwrite-config";
 
 type AccountType = Exclude<AccessRoleTypes, "admin">;
 
@@ -78,7 +78,7 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
 
     // delete documentation for artist
     if (accountType === "artist") {
-      storage
+      serverStorage
         .deleteFile({
           bucketId: process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!,
           fileId: account.documentation.cv,

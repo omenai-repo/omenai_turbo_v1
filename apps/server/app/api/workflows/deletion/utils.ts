@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import cloudinary from "@omenai/cloudinary-config";
-import { storage } from "@omenai/appwrite-config";
+import { serverStorage, storage } from "@omenai/appwrite-config";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 
 export async function uploadToCloudinary(url: string, id: string) {
@@ -104,7 +104,7 @@ export async function deleteFilesInBatches(fileIds: string[]) {
   const executing: Promise<any>[] = [];
 
   for (const fileId of fileIds) {
-    const task = storage
+    const task = serverStorage
       .deleteFile({ bucketId: process.env.APPWRITE_BUCKET_ID!, fileId })
       .catch((err) => {
         console.error(`❌ Failed to delete file ${fileId}:`, err.message);
