@@ -72,7 +72,6 @@ async function processOrder(order: any, dbConnection: any) {
     const wallet_increment_amount =
       payment_information?.artist_wallet_increment;
 
-    console.log(wallet_increment_amount);
     if (seller_designation === "artist" && !seller_details?.id) {
       throw new Error("Missing id for artist order");
     }
@@ -224,6 +223,9 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       try {
         const deliveryDate = toUTCDate(new Date(estimatedDeliveryDateStr));
+
+        console.log(deliveryDate);
+        console.log(isDateAtLeastTwoDaysPast(deliveryDate));
         return isDateAtLeastTwoDaysPast(deliveryDate);
       } catch (error) {
         console.error(`Order ${order.order_id}: Invalid delivery date format`);
@@ -250,7 +252,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     // Process all eligible orders in parallel with concurrency limit
     const BATCH_SIZE = 10; // Process 10 orders at a time to avoid overwhelming the API
     const results = [];
-    console.log(eligibleOrders);
 
     for (let i = 0; i < eligibleOrders.length; i += BATCH_SIZE) {
       const batch = eligibleOrders.slice(i, i + BATCH_SIZE);
