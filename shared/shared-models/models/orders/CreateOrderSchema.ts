@@ -18,10 +18,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
         shouldShowPrice: { type: String },
       },
 
-      exclusivity_status: {
-        exlusivity_type: { type: String },
-        exclusivity_status: { type: String },
-      },
+      exclusivity_status: { type: Schema.Types.Mixed },
       deletedEntity: { type: Boolean, default: false },
     },
     buyer_details: { type: Schema.Types.Mixed, required: true },

@@ -23,11 +23,8 @@ export function OrdersGroupAccordion({
 }: {
   orders: CreateOrderModelTypes[];
 }) {
-  const {
-    updateArtistOrderActionModalData,
-    toggleDeclineOrderModal,
-    update_current_order_id,
-  } = artistActionStore();
+  const { toggleDeclineOrderModal, update_current_order_id } =
+    artistActionStore();
   // See groceries data above
   const get_image_url = (url: string) => {
     const image_url = getOptimizedImage(url, "thumbnail", 40);
