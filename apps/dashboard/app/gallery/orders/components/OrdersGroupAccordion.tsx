@@ -14,7 +14,6 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Banknote, BanknoteX, CheckCheck, Info, Truck } from "lucide-react";
 import { renderButtonAction } from "./construct_response";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
-import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import Link from "next/link";
 import { tracking_url } from "@omenai/url-config/src/config";
@@ -24,15 +23,15 @@ export function OrdersGroupAccordion({
 }: {
   orders: CreateOrderModelTypes[];
 }) {
-  const {
-    updateGalleryOrderActionModalData,
-    toggleDeclineOrderModal,
-    update_current_order_id,
-  } = actionStore();
+  const { toggleDeclineOrderModal, update_current_order_id } = actionStore();
 
-  const get_image_url = (url: string) => {
-    const image_url = getOptimizedImage(url, "thumbnail", 40);
-    return image_url;
+  const get_image_url = (url: string, deletedEntity: boolean) => {
+    if (deletedEntity) {
+      return url;
+    } else {
+      const image_url = getOptimizedImage(url, "thumbnail", 40);
+      return image_url;
+    }
   };
 
   const handleDeclineOrderRequest = (
@@ -144,7 +143,10 @@ export function OrdersGroupAccordion({
       <Accordion.Control>
         <div className="flex gap-x-2 items-center">
           <Image
-            src={get_image_url(order.artwork_data.url)}
+            src={get_image_url(
+              order.artwork_data.url,
+              order.artwork_data.deletedEntity
+            )}
             alt={`${order.artwork_data.title} image`}
             width="50"
             height="50"
