@@ -11,7 +11,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import kv from "@vercel/kv";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -42,26 +42,27 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         width: +width,
       });
 
-      // Get currency rate
-      const response = await fetch(
-        `${getApiUrl()}/api/flw/getTransferRate?source=${currency.toUpperCase()}&destination=USD&amount=${price.recommendedPrice}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Origin: "https://omenai.app",
-          },
-        }
-      );
-      const result = await response.json();
+      let currentRate = 0;
+      const rate = await kv.get(`USDto${currency.toUpperCase()}`);
 
-      if (!response.ok)
-        throw new ServerError(
-          "Failed to calculate Price. Try again or contact support"
+      if (!rate) {
+        // Get currency rate
+        const request = await fetch(
+          `https://v6.exchangerate-api.com/v6/${process.env
+            .EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
+          { method: "GET" }
         );
+        if (!request.ok)
+          throw new ServerError(
+            "Failed to calculate Price. Try again or contact support"
+          );
+        const result = await request.json();
+        currentRate = result.conversion_rate;
+        await kv.set(`USDto${currency.toUpperCase()}`, currentRate);
+      }
 
       const price_response_data = {
-        price: result.data.source.amount,
+        price: currentRate * price.recommendedPrice,
         usd_price: price.recommendedPrice,
         price_data: price,
         shouldShowPrice: "Yes",
