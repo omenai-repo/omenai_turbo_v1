@@ -42,10 +42,13 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         width: +width,
       });
 
-      let currentRate = 0;
-      const rate = await kv.get(`USDto${currency.toUpperCase()}`);
+      // let currentRate = 0;
+      const rateString: string | null = await kv.get(
+        `USDto${currency.toUpperCase()}`
+      );
+      let rateValue: number;
 
-      if (!rate) {
+      if (!rateString) {
         // Get currency rate
         const request = await fetch(
           `https://v6.exchangerate-api.com/v6/${process.env
@@ -57,12 +60,16 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
             "Failed to calculate Price. Try again or contact support"
           );
         const result = await request.json();
-        currentRate = result.conversion_rate;
-        await kv.set(`USDto${currency.toUpperCase()}`, currentRate);
+        rateValue = result.conversion_rate;
+        await kv.set(`USDto${currency.toUpperCase()}`, rateValue, {
+          ex: 86400, // TTL: 24hrs
+        });
+      } else {
+        rateValue = parseFloat(rateString);
       }
 
       const price_response_data = {
-        price: currentRate * price.recommendedPrice,
+        price: rateValue * price.recommendedPrice,
         usd_price: price.recommendedPrice,
         price_data: price,
         shouldShowPrice: "Yes",
