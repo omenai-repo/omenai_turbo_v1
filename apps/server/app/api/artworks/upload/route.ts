@@ -25,7 +25,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
     const data = await request.json();
-    const date = toUTCDate(new Date());
 
     // Validate required fields
     if (!data.author_id || !data.title || !data.role_access?.role) {

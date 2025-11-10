@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { ArtistCategory, ArtworkMediumTypes } from "@omenai/shared-types";
 import {
@@ -9,11 +9,7 @@ import {
   BadRequestError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -45,12 +41,6 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         height: +height,
         width: +width,
       });
-
-      // if (typeof price !== "number" || price <= 0) {
-      //   throw new ServerError("Price calculation failed");
-      // }
-
-      console.log(price, currency);
 
       // Get currency rate
       const response = await fetch(
