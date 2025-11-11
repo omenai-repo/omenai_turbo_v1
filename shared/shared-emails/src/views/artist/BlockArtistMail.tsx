@@ -32,7 +32,7 @@ const BlockArtistMail = (artist_name: string) => {
             </Text>
             <Text className="text-dark text-fluid-xxs leading-[24px]">
               We wanted to inform you that your artist account has been
-              temporarily blocked. This action was taken due to a violation of
+              temporarily suspended. This action was taken due to a violation of
               our community guidelines.
             </Text>
 
