@@ -73,10 +73,7 @@ export const POST = withAppRouterHighlight(async function POST(
   }
 });
 
-/**
- * Sanitizes a title string into a Redis-safe slug.
- */
-export function slugify(title: string): string {
+function slugify(title: string): string {
   if (!title) return "";
   return title
     .trim()
