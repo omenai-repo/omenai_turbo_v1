@@ -1,6 +1,6 @@
 // session.ts - Using Web Crypto API instead of Node.js crypto
 import { getIronSession } from "iron-session";
-import redis from "./redis";
+import { redis } from "@omenai/upstash-config";
 import { sessionOptions } from "./configs/session-config";
 import { SessionDataType } from "@omenai/shared-types";
 import { v4 as uuidv4 } from "uuid";

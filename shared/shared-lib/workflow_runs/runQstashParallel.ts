@@ -1,7 +1,3 @@
-/**
- * Runs an array of promises in parallel.
- * Optionally handles errors for each job individually.
- */
 export async function runQstashInParallel<T>(
   tasks: Promise<T>[],
   options?: {

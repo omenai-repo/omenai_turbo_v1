@@ -1,8 +1,4 @@
-// Purpose: Core rate limiting logic using Redis
-// ============================================================================
-
-import redis from "./redis";
-
+import { redis } from "@omenai/upstash-config";
 interface RateLimitOptions {
   identifier: string; // Unique key for rate limiting
   limit: number; // Max requests allowed

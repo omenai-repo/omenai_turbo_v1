@@ -11,7 +11,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import kv from "@vercel/kv";
+import { redis } from "@omenai/upstash-config";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -42,30 +42,68 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         width: +width,
       });
 
-      // let currentRate = 0;
-      const rateString: string | null = await kv.get(
-        `USDto${currency.toUpperCase()}`
-      );
       let rateValue: number;
+      const cacheKey = `USDto${currency.toUpperCase()}`;
+      const TTL_SECONDS = 86400;
 
-      if (!rateString) {
-        // Get currency rate
+      try {
+        const cachedRate = await redis.get(cacheKey);
+
+        if (cachedRate) {
+          console.log(`Cache Hit for key: ${cacheKey}`);
+
+          // Parse the JSON string back into a number
+          rateValue = JSON.parse(cachedRate as string);
+        } else {
+          // Cache Miss: Proceed to fetch from external source
+          console.log(`Cache Miss for key: ${cacheKey}. Fetching...`);
+
+          const request = await fetch(
+            `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
+            { method: "GET" }
+          );
+
+          if (!request.ok) {
+            throw new ServerError(
+              "Failed to fetch exchange rate. Try again or contact support"
+            );
+          }
+
+          const result = await request.json();
+          rateValue = result.conversion_rate;
+
+          try {
+            await redis.set(cacheKey, JSON.stringify(rateValue), {
+              ex: TTL_SECONDS,
+            });
+          } catch (redisError) {
+            console.error(
+              `Failed to WRITE to Redis for key ${cacheKey}:`,
+              redisError
+            );
+          }
+        }
+      } catch (redisError) {
+        console.error(
+          `Failed to READ from Redis for key ${cacheKey}:`,
+          redisError
+        );
+
+        // Fallback: Manually run the fetch logic here if the read failed.
         const request = await fetch(
-          `https://v6.exchangerate-api.com/v6/${process.env
-            .EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
+          `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
           { method: "GET" }
         );
-        if (!request.ok)
+
+        if (!request.ok) {
+          // If external API fails after cache failed, then throw a ServerError.
           throw new ServerError(
-            "Failed to calculate Price. Try again or contact support"
+            "Failed to fetch exchange rate after cache failure."
           );
+        }
+
         const result = await request.json();
         rateValue = result.conversion_rate;
-        await kv.set(`USDto${currency.toUpperCase()}`, rateValue, {
-          ex: 86400, // TTL: 24hrs
-        });
-      } else {
-        rateValue = parseFloat(rateString);
       }
 
       const price_response_data = {
