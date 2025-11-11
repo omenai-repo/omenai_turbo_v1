@@ -1,23 +1,16 @@
-import { auth_uri, getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
-  Button,
-  Column,
   Container,
   Head,
-  Heading,
   Hr,
   Html,
   Img,
   Link,
-  Row,
-  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
 
-const BlockArtistMail = (artist_name?: string) => {
-  const url = auth_uri();
+const BlockArtistMail = (artist_name: string) => {
   return (
     <Html>
       <Head />
