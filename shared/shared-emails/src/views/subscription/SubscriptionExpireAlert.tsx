@@ -10,6 +10,7 @@ import {
   Img,
 } from "@react-email/components";
 import * as React from "react";
+import { container, footer, heading, hr, main, text } from "./style";
 
 export const SubscriptionExpireAlert = (name: string, day: string) => {
   return (
@@ -68,43 +69,3 @@ export const SubscriptionExpireAlert = (name: string, day: string) => {
 };
 
 export default SubscriptionExpireAlert;
-
-const main = {
-  backgroundColor: "#ffffff",
-  color: "#0f172a",
-  fontFamily: "Helvetica, Arial, sans-serif",
-  padding: "40px 0",
-} as const;
-
-const container = {
-  backgroundColor: "#ffffff",
-  padding: "40px",
-  borderRadius: "12px",
-  maxWidth: "600px",
-  margin: "0 auto",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-} as const;
-
-const heading = {
-  fontSize: "24px",
-  fontWeight: "bold",
-  marginBottom: "20px",
-  textAlign: "center",
-} as const;
-
-const text = {
-  fontSize: "16px",
-  lineHeight: "1.6",
-  marginBottom: "16px",
-} as const;
-
-const hr = {
-  border: "none",
-  borderTop: "1px solid #EAEAEA",
-  margin: "20px 0",
-} as const;
-
-const footer = {
-  fontSize: "14px",
-  color: "#666666",
-} as const;
