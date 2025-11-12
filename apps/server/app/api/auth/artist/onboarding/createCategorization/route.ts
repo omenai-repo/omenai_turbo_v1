@@ -92,7 +92,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       await session.commitTransaction();
 
-      // todo: Send it to admins
       await sendVerifyArtistMail({
         name: artist.name,
         email: "moses@omenai.net",

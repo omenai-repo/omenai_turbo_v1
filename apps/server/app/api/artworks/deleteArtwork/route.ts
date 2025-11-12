@@ -1,11 +1,17 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  NotFoundError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { serverStorage } from "@omenai/appwrite-config";
+import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
+import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -20,11 +26,31 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const { art_id } = await request.json();
 
-    const artwork = await Artworkuploads.deleteOne({ art_id }).exec();
-    if (!artwork)
+    const artwork = await Artworkuploads.findOne({ art_id }, "url").exec();
+
+    if (!artwork) throw new NotFoundError("Artwork not found");
+
+    await serverStorage
+      .deleteFile({
+        bucketId: process.env.APPWRITE_BUCKET_ID!,
+        fileId: artwork.url,
+      })
+      .catch(async (err) => {
+        console.error(`❌ Failed to delete file ${artwork.url}:`, err.message);
+        await saveFailedJob({
+          jobId: `artwork:${art_id}`,
+          jobType: "delete_artwork_from_appwrite",
+          payload: { appwriteId: artwork.url },
+          reason: err.message,
+        });
+      });
+    const deleteArtwork = await Artworkuploads.deleteOne({ art_id }).exec();
+
+    if (deleteArtwork.deletedCount === 0) {
       throw new ServerError(
-        "Error processing request. Please try again later."
+        "We're having some trouble performing your request at this time. Please try again later or contact support"
       );
+    }
 
     return NextResponse.json(
       {

@@ -52,7 +52,6 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
       }
     );
 
-    console.log(art_id);
     await CreateOrder.updateMany(
       {
         "artwork_data.art_id": artwork.art_id,
