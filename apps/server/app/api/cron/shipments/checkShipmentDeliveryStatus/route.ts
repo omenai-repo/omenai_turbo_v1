@@ -6,6 +6,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
+import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -152,6 +153,10 @@ async function processOrder(order: any, dbConnection: any) {
           // TODO: Send notification emails
           // - Artist: Notify about fund unlock
           // - Gallery: Notify about successful delivery
+          await sendGalleryShipmentSuccessfulMail({
+            name: seller_details.name,
+            email: seller_details.email,
+          });
         }
       });
 
