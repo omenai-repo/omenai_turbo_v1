@@ -6,6 +6,7 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { sendArtistBlockedMail } from "@omenai/shared-emails/src/models/artist/sendArtistBlockedMail";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -20,6 +21,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     await connectMongoDB();
     const { artist_id, status } = await request.json();
 
+    const artist = await AccountArtist.findOne({ artist_id }, "name email");
+
     const block_artist = await AccountArtist.updateOne(
       { artist_id },
       { $set: { status } }
@@ -29,6 +32,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServerError("Something went wrong");
 
     // TODO: Send mail to artist
+    await sendArtistBlockedMail({ email: artist.email, name: artist.name });
 
     return NextResponse.json(
       { message: "Artist status updated" },
