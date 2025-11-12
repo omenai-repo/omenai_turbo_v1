@@ -6,6 +6,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { sendGalleryBlockedEmail } from "@omenai/shared-emails/src/models/gallery/sendGalleryBlockedEmail";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -20,6 +21,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     await connectMongoDB();
     const { gallery_id, status } = await request.json();
 
+    const gallery = await AccountGallery.findOne({ gallery_id }, "name email");
+
     const block_gallery = await AccountGallery.updateOne(
       { gallery_id },
       { $set: { status } }
@@ -29,6 +32,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServerError("Something went wrong");
 
     // TODO: Send mail to gallery
+    await sendGalleryBlockedEmail({ name: gallery.name, email: gallery.email });
 
     return NextResponse.json(
       { message: "Gallery status updated" },

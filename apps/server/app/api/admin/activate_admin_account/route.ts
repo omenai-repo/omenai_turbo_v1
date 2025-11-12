@@ -13,6 +13,7 @@ import {
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
+import { sendAdminActivationEmail } from "@omenai/shared-emails/src/models/admin/sendAdminActivationEmail";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -58,6 +59,10 @@ export const POST = withRateLimit(config)(async function POST(
     await AdminInviteToken.deleteOne({ token });
 
     //TODO - SCOPE CREEP: Send email notification about account activation
+    await sendAdminActivationEmail({
+      name,
+      email,
+    });
 
     return NextResponse.json({
       message:
