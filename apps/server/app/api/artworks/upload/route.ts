@@ -13,6 +13,7 @@ import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { CombinedConfig, ExclusivityUpholdStatus } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { addDaysToDate } from "@omenai/shared-utils/src/addDaysToDate";
+import { redis } from "@omenai/upstash-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -93,15 +94,17 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       }
     }
 
-    // Get updated document count after upload
-    const doc_count = await Artworkuploads.countDocuments({
-      author_id: data.author_id,
-    });
+    const cacheKey = `artwork:${uploadArt.art_id}`;
+
+    try {
+      await redis.set(cacheKey, `${JSON.stringify(uploadArt)}`);
+    } catch (redisWriteErr) {
+      console.error(`Redis Write Error [${cacheKey}]:`, redisWriteErr);
+    }
 
     return NextResponse.json(
       {
-        message: "Artwork uploaded",
-        data: doc_count,
+        message: "Artwork uploaded successfully",
       },
       { status: 200 }
     );

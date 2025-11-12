@@ -2,12 +2,9 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { fetchArtworksFromCache } from "../utils";
 
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
@@ -16,19 +13,22 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       const { id } = await request.json();
 
-      const allArtworks = await Artworkuploads.find(
-        { author_id: id },
-        "artist title url art_id like_IDs pricing availability exclusivity_status"
-      ).exec();
-
-      const allArtworksCount = await Artworkuploads.countDocuments({
+      const allArtworksIds = await Artworkuploads.find({
         author_id: id,
-      });
+      })
+        .sort({ createdAt: -1 })
+        .select("art_id")
+        .lean()
+        .exec();
+
+      const artIds = allArtworksIds.map((a) => a.art_id);
+
+      const allArtworks = await fetchArtworksFromCache(artIds);
+
       return NextResponse.json(
         {
           message: "Successful",
           data: allArtworks,
-          count: allArtworksCount,
         },
         { status: 200 }
       );

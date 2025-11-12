@@ -12,7 +12,13 @@ import { base_url } from "@omenai/url-config/src/config";
 import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { LoadSmall } from "../loader/Load";
 
 export default function ArtworkCard({
   image,
@@ -50,14 +56,48 @@ export default function ArtworkCard({
   trending?: boolean;
   countdown?: Date | null;
 }) {
+  const queryClient = useQueryClient();
+
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
-  const encoded_url = encodeURIComponent(name).replaceAll(/\//g, "%2F");
-
+  const encoded_url = encodeURIComponent(art_id).replaceAll(/\//g, "%2F");
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const expiryDate = useMemo(
     () => (countdown ? new Date(countdown) : null),
     [countdown]
   );
+
+  async function deleteUploadArtwork() {
+    setDeleteLoading(true);
+    const deleteArtworkData = await deleteArtwork(art_id, csrf || "");
+
+    if (!deleteArtworkData?.isOk)
+      toast.error("Error notification", {
+        description: deleteArtworkData?.message,
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+    else {
+      toast.success("Operation successful", {
+        description: deleteArtworkData.message,
+        style: {
+          background: "green",
+          color: "white",
+        },
+        className: "class",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["fetch_artworks_by_id"],
+      });
+      router.replace("/gallery/artworks");
+    }
+    setDeleteLoading(false);
+  }
 
   return (
     <div className="group relative bg-white rounded border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
@@ -88,11 +128,15 @@ export default function ArtworkCard({
         {/* Top Left Badge */}
         <div className="absolute top-4 left-4 z-10">
           {isDashboard && dashboard_type === "gallery" ? (
-            <Link href={`/gallery/artworks/edit?id=${name}`}>
-              <button className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white text-fluid-xxs">
-                Edit artwork
-              </button>
-            </Link>
+            // <Link href={`/gallery/artworks/edit?id=${art_id}`}>
+            // </Link>
+            <button
+              onClick={deleteUploadArtwork}
+              disabled={deleteLoading}
+              className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white"
+            >
+              {deleteLoading ? <LoadSmall /> : " Delete artwork"}
+            </button>
           ) : isDashboard && dashboard_type === "artist" ? null : (
             <Link href={`/collections/${encodeMediumForUrl(medium)}`}>
               <button className="px-4 py-1 bg-white text-dark rounded hover:border hover:border-dark/80 duration-300">

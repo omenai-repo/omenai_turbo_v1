@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
@@ -16,55 +17,31 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       await connectMongoDB();
       const { page = 1, filters } = await request.json();
       const skip = (page - 1) * PAGE_SIZE;
-
-      // Helper function to fetch gallery IDs based on subscription plan
-      const getGalleryIds = async () => {
-        const result = await Subscriptions.aggregate([
-          {
-            $match: {
-              status: "active",
-            },
-          },
-          {
-            $group: {
-              _id: null,
-              galleryIds: { $addToSet: "$customer.gallery_id" },
-            },
-          },
-        ]).exec();
-
-        return result.length > 0 ? result[0].galleryIds : [];
-      };
-
-      // Fetch gallery IDs for basic and pro/premium plans
-      const galleries = await getGalleryIds();
+      const galleries = await getCachedGalleryIds();
 
       // Build filters for artworks
       const builtFilters = buildMongoQuery(filters);
 
-      // Handle the case where builtFilters might be an empty object
       const filterCriteria =
         Object.keys(builtFilters).length > 0 ? builtFilters : {};
 
-      // Fetch all filtered artworks, sorted by creation date
-      const allArtworks = await Artworkuploads.find({
-        ...filterCriteria,
+      const allArtworksIds = await Artworkuploads.find({
         $or: [
-          // Condition for artworks by artists
           { "role_access.role": "artist" },
-
-          // Condition for artworks by galleries meeting the specified criteria
-          {
-            "role_access.role": "gallery",
-            author_id: { $in: [...galleries] },
-          },
+          { "role_access.role": "gallery", author_id: { $in: [...galleries] } },
         ],
-        impressions: { $gt: 0 },
+        ...filterCriteria,
       })
+        .sort({ impressions: -1 })
         .skip(skip)
         .limit(PAGE_SIZE)
-        .sort({ impressions: -1 })
+        .select("art_id")
+        .lean()
         .exec();
+
+      const artIds = allArtworksIds.map((a) => a.art_id);
+
+      const allArtworks = await fetchArtworksFromCache(artIds);
 
       const total = await Artworkuploads.countDocuments({
         ...builtFilters,

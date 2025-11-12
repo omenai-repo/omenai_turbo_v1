@@ -12,6 +12,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { serverStorage } from "@omenai/appwrite-config";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
+import { redis } from "@omenai/upstash-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -30,6 +31,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!artwork) throw new NotFoundError("Artwork not found");
 
+    const deleteArtwork = await Artworkuploads.deleteOne({ art_id }).exec();
+
+    if (deleteArtwork.deletedCount === 0) {
+      throw new ServerError(
+        "We're having some trouble performing your request at this time. Please try again later or contact support"
+      );
+    }
+
     await serverStorage
       .deleteFile({
         bucketId: process.env.APPWRITE_BUCKET_ID!,
@@ -44,13 +53,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           reason: err.message,
         });
       });
-    const deleteArtwork = await Artworkuploads.deleteOne({ art_id }).exec();
 
-    if (deleteArtwork.deletedCount === 0) {
-      throw new ServerError(
-        "We're having some trouble performing your request at this time. Please try again later or contact support"
-      );
-    }
+    await redis.del(`artwork:${art_id}`);
 
     return NextResponse.json(
       {
