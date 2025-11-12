@@ -3,9 +3,14 @@ import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_mid
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
+import { render } from "@react-email/render";
+import { SubscriptionExpireAlert } from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // NOTE: Run every hour - sends reminders to users whose subscriptions expire in 3, 2, or 1 days
 export const GET = withRateLimit(lenientRateLimit)(
@@ -56,6 +61,24 @@ export const GET = withRateLimit(lenientRateLimit)(
       // - Day 3: "Your subscription expires in 3 days"
       // - Day 2: "Your subscription expires in 2 days"
       // - Day 1: "Your subscription expires tomorrow"
+      const expiredSoonEmailPayload = await Promise.all(
+        results.map(async (subscription) => {
+          const html = await render(
+            SubscriptionExpireAlert(
+              subscription.customer.name,
+              `${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`
+            )
+          );
+          return {
+            from: "Subscription <omenai@omenai.app>",
+            to: [subscription.customer.email],
+            subject: `Your Subscription Expires ${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`,
+            html,
+          };
+        })
+      );
+
+      await resend.batch.send(expiredSoonEmailPayload);
 
       return NextResponse.json({
         message: "Subscription reminders processed successfully",
