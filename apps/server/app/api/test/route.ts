@@ -2,31 +2,38 @@ import { sendBuyerShipmentEmail } from "@omenai/shared-emails/src/models/shipmen
 import { NextResponse } from "next/server";
 import { sendArtistShippmentSuccessfulMail } from "../../../../../shared/shared-emails/src/models/artist/sendArtistShippmentSuccessfulMail";
 import { sendGalleryShipmentSuccessfulMail } from "../../../../../shared/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
-import { sendArtistBlockedMail } from "@omenai/shared-emails/src/models/artist/sendArtistBlockedMail";
-import { render } from "@react-email/render";
+import { sendArtistFundUnlockEmail } from "../../../../../shared/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
 import { Resend } from "resend";
-import SubscriptionPaymentFailedMail from "@omenai/shared-emails/src/views/subscription/SubscriptionPaymentFailedMail";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
+import { render } from "@react-email/render";
+import SubscriptionExpireAlert from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
 export async function GET() {
-  // const promise = await sendArtistBlockedMail({
+  // const promise = await sendArtistFundUnlockEmail({
   //   name: "Test User",
   //   email: "rodolphe@omenai.net",
+  //   amount: 2000,
   // });
 
-  const expiredEmailPayload = await Promise.all(
-    Array.from({ length: 2 }).map(async (subscription) => {
-      const html = await render(SubscriptionPaymentFailedMail("Test User"));
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const expiredSoonEmailPayload = await Promise.all(
+    [
+      { email: "rodolphe@omenai.app" },
+      { email: "dantereus1@gmail.com" },
+      { email: "moses@omenai.net" },
+    ].map(async (subscription) => {
+      const html = await render(
+        SubscriptionExpireAlert("Test User", `Tomorrow`)
+      );
       return {
         from: "Subscription <omenai@omenai.app>",
-        to: ["rodolphe@omenai.net"],
-        subject: "Action Required: We were Unable to Process Your Payment",
+        to: [subscription.email],
+        subject: `Your Subscription Expires tomorrow`,
         html,
       };
     })
   );
-  await resend.batch.send(expiredEmailPayload);
+
+  await resend.batch.send(expiredSoonEmailPayload);
 
   return NextResponse.json({
     message: "Successful",

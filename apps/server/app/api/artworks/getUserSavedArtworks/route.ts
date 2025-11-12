@@ -4,98 +4,38 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
   const PAGE_SIZE = 30;
-  const BASIC_LIMIT = 25;
+
   try {
     await connectMongoDB();
 
     const { id, page } = await request.json();
     const skip = (page - 1) * PAGE_SIZE;
 
-    // Helper function to fetch gallery IDs based on subscription plan
-    const getGalleryIdsByPlan = async (plan: string | string[]) => {
-      const result = await Subscriptions.aggregate([
-        {
-          $match: {
-            "plan_details.type": { $in: Array.isArray(plan) ? plan : [plan] },
-            status: "active",
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            galleryIds: { $addToSet: "$customer.gallery_id" },
-          },
-        },
-      ]).exec();
+    const galleries = await getCachedGalleryIds();
 
-      return result.length > 0 ? result[0].galleryIds : [];
-    };
-
-    // Fetch gallery IDs for basic and pro/premium plans
-    const [basicGalleryIds, proPremiumGalleryIds] = await Promise.all([
-      getGalleryIdsByPlan("Basic"),
-      getGalleryIdsByPlan(["Pro", "Premium"]),
-    ]);
-
-    // Fetch all artworks, no initial limit applied
-    const allArtworks = await Artworkuploads.aggregate([
-      {
-        $match: {
-          like_IDs: { $in: [id] },
-          $or: [
-            // Condition for artworks by artists
-            { "role_access.role": "artist" },
-
-            // Condition for artworks by galleries meeting the specified criteria.
-            {
-              "role_access.role": "gallery",
-              author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
-            },
-          ],
-        },
-      },
-      { $sort: { createdAt: -1 } }, // Sort by impression count, most liked first
-    ])
+    const allArtworksIds = await Artworkuploads.find({
+      like_IDs: { $in: [id] },
+      $or: [
+        { "role_access.role": "artist" },
+        { "role_access.role": "gallery", author_id: { $in: [...galleries] } },
+      ],
+    })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(PAGE_SIZE)
+      .select("art_id")
+      .lean()
       .exec();
 
-    // Separate artworks into basic and pro/premium based on gallery_id
-    let selectedBasicArtworks = [];
-    let selectedProPremiumArtworks = [];
-    let artworksByArtist = [];
+    const artIds = allArtworksIds.map((a) => a.art_id);
 
-    for (let artwork of allArtworks) {
-      if (artwork.role_access.role === "artist") {
-        artworksByArtist.push(artwork);
-      } else if (basicGalleryIds.includes(artwork.author_id)) {
-        selectedBasicArtworks.push(artwork);
-      } else {
-        selectedProPremiumArtworks.push(artwork);
-      }
-
-      // Stop if we have filled the page
-      if (
-        selectedBasicArtworks.length +
-          selectedProPremiumArtworks.length +
-          artworksByArtist.length >=
-        PAGE_SIZE
-      )
-        break;
-    }
-
-    // Combine and slice the artworks for pagination
-    const allUserSavedArtworks = [
-      ...selectedBasicArtworks,
-      ...artworksByArtist,
-      ...selectedProPremiumArtworks,
-    ].slice(0, PAGE_SIZE);
+    const allArtworks = await fetchArtworksFromCache(artIds);
 
     // Calculate total adhering to restrictions
     const total = await Artworkuploads.countDocuments({
@@ -106,16 +46,15 @@ export const POST = withAppRouterHighlight(async function POST(
         // Condition for artworks by galleries meeting the specified criteria
         {
           "role_access.role": "gallery",
-          author_id: { $in: [...basicGalleryIds, ...proPremiumGalleryIds] },
+          author_id: { $in: [...galleries] },
         },
       ],
-      like_IDs: { $in: [id] },
     });
 
     return NextResponse.json(
       {
         message: "Successful",
-        data: allUserSavedArtworks,
+        data: allArtworks,
         pageCount: Math.ceil(total / PAGE_SIZE),
         total,
       },

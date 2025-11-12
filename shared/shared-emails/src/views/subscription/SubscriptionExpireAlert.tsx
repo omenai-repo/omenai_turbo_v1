@@ -8,16 +8,15 @@ import {
   Heading,
   Hr,
   Img,
-  Link,
 } from "@react-email/components";
 import * as React from "react";
 import { container, footer, heading, hr, main, text } from "./style";
 
-export const SubscriptionPaymentSuccessfulEmail = (name: string) => {
+export const SubscriptionExpireAlert = (name: string, day: string) => {
   return (
     <Html>
       <Head />
-      <Preview>Your subscription has been successfully activated</Preview>
+      <Preview>Your Subscription Expires {day}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
@@ -27,40 +26,27 @@ export const SubscriptionPaymentSuccessfulEmail = (name: string) => {
             style={{ margin: "0 auto 30px" }}
           />
 
-          <Heading style={heading}>✅ Subscription Activated</Heading>
+          <Heading style={heading}>Your Subscription Expires {day}</Heading>
           <Text style={text}>Hi {name},</Text>
 
           <Text style={text}>
-            We’re excited to inform you that your recent subscription payment
-            was <strong>successful</strong>. Your account is now active, and
-            your subscription has been updated accordingly.
+            We wanted to let you know that your subscription will expire {day}.
           </Text>
 
           <Text style={text}>
-            Thank you for your continued support. Your subscription enables us
-            to offer exclusive access, premium features, and ongoing
-            improvements to your experience on our platform.
+            To ensure uninterrupted access to your account and all your
+            benefits, please renew your subscription before it expires.
+          </Text>
+
+          <Text style={text}>
+            If you’ve already renewed or have any questions about your plan, you
+            can safely ignore this message or contact us anytime.
           </Text>
 
           <Hr style={hr} />
 
           <Text style={text}>
-            If you have any questions or concerns, feel free to contact us at{" "}
-            <Link
-              href="mailto:contact@omenani.net"
-              style={{
-                textDecoration: "underline",
-                color: "#0f172a",
-                fontWeight: "bold",
-              }}
-            >
-              contact@omenani.net
-            </Link>
-            . We're here to help.
-          </Text>
-
-          <Text style={text}>
-            Thank you again for choosing <strong>Omenai</strong>.
+            Thank you for choosing <strong>Omenai</strong>.
           </Text>
 
           <Text style={text}>
@@ -82,4 +68,4 @@ export const SubscriptionPaymentSuccessfulEmail = (name: string) => {
   );
 };
 
-export default SubscriptionPaymentSuccessfulEmail;
+export default SubscriptionExpireAlert;

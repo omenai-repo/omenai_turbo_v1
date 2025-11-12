@@ -1,11 +1,11 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function fetchSingleArtworkOnPurchase(title: string) {
+export async function fetchSingleArtworkOnPurchase(art_id: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/artworks/getSingleArtworkOnPurchase`, {
       method: "POST",
-      body: JSON.stringify({ title }),
+      body: JSON.stringify({ art_id }),
     });
 
     const result = await res.json();

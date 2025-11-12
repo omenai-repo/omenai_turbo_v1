@@ -36,7 +36,6 @@ export default function EditArtworkWrapper({
 
   const { csrf, user } = useAuth({ requiredRole: "gallery" });
 
-  console.log(user.subscription_status);
   const handleChange = async (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
