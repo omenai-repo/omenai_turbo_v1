@@ -7,6 +7,7 @@ export async function GET() {
   const promise = await sendArtistFundUnlockEmail({
     name: "Test User",
     email: "rodolphe@omenai.net",
+    amount: 2000,
   });
 
   return NextResponse.json({

@@ -157,6 +157,7 @@ async function processOrder(order: any, dbConnection: any) {
             await sendArtistFundUnlockEmail({
               name: seller_details.name,
               email: seller_details.email,
+              amount: wallet_increment_amount,
             });
           } else {
             // - Gallery: Notify about successful delivery
