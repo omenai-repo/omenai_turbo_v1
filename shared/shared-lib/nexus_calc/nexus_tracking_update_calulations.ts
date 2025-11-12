@@ -80,7 +80,7 @@ export const updateNexusTracking = async (
   }
 
   if (is_breached) {
-    //TODO: send mail to admin
+    //TODO: send mail to admin that nexus threshold has been breached in the specified state and tax collection registeration is required
   }
 
   await nexus.save();
@@ -109,7 +109,7 @@ export const evaluateNexusThresholds = async (): Promise<void> => {
   );
 
   await Promise.all(
-    allNexusStates.map(async (nexus: NexusDocument & {_id: ObjectId}) => {
+    allNexusStates.map(async (nexus: NexusDocument & { _id: ObjectId }) => {
       const lastReset = nexus.last_reset ?? new Date();
       let shouldReset = false;
 
@@ -145,7 +145,12 @@ export const evaluateNexusThresholds = async (): Promise<void> => {
           bulkOperations.push({
             updateOne: {
               filter: { _id: nexus._id },
-              update: { $set: { tax_withholding_eligibility: true, date_of_breach: now } },
+              update: {
+                $set: {
+                  tax_withholding_eligibility: true,
+                  date_of_breach: now,
+                },
+              },
             },
           });
         }

@@ -24,7 +24,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       { $set: { status: "canceled" } }
     );
 
-    // TODO: Send email to all emails telling them their card is unable to be charged.
+    // TODO: Send email to all users informing users that their card is unable to be charged.
 
     return NextResponse.json({
       message: "Subscription cancellation successful",
