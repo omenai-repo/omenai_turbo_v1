@@ -5,6 +5,7 @@ import { ServerError } from "../../../../custom/errors/dictionary/errorDictionar
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { fetchArtworksFromCache } from "../utils";
 
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
@@ -15,12 +16,19 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       const skip = (page - 1) * 10;
 
-      const allArtworks = await Artworkuploads.find()
+      const allArtworksIds = await Artworkuploads.find()
         .skip(skip)
         .limit(16)
+        .select("art_id")
         .sort({
           createdAt: -1,
-        });
+        })
+        .lean()
+        .exec();
+
+      const artIds = allArtworksIds.map((a) => a.art_id);
+
+      const allArtworks = await fetchArtworksFromCache(artIds);
 
       if (!allArtworks) throw new ServerError("An error was encountered");
 

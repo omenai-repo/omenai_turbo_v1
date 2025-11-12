@@ -41,7 +41,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
     else {
       if (data.pricing.shouldShowPrice === "Yes") {
         set_click_loading(true);
-        router.push(`/purchase/${encodeURIComponent(data.title)}`);
+        router.push(`/purchase/${encodeURIComponent(data.art_id)}`);
       } else {
         setLoading(true);
         const artwork_data = {

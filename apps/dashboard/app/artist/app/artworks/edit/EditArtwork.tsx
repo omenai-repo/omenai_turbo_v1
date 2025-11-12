@@ -16,9 +16,9 @@ export default function EditArtwork() {
     queryKey: ["get_update_pricing_artwork_details"],
     queryFn: async () => {
       if (id === null) return notFound();
-      const title = decodeURIComponent(id);
+      const art_id = decodeURIComponent(id);
 
-      const data = await fetchSingleArtwork(title);
+      const data = await fetchSingleArtwork(art_id);
       if (!data?.isOk) throw new Error("Something went wrong");
       return data.data;
     },

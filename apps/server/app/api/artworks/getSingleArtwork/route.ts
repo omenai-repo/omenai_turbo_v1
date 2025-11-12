@@ -5,6 +5,7 @@ import { NotFoundError } from "../../../../custom/errors/dictionary/errorDiction
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { redis } from "@omenai/upstash-config";
+import { getCachedArtwork } from "../utils";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -12,54 +13,12 @@ export const POST = withAppRouterHighlight(async function POST(
   try {
     await connectMongoDB();
 
-    const { title } = await request.json();
-    const sanitizedTitle = slugify(title);
-    const cacheKey = `artwork:${sanitizedTitle}`;
-    const TTL_SECONDS = 86400;
-
-    let artworkJsonData: any;
-
-    try {
-      const cached = await redis.get(cacheKey);
-
-      if (cached) {
-        console.log(`Cache Hit: ${cacheKey}`);
-
-        try {
-          artworkJsonData =
-            typeof cached === "string" ? JSON.parse(cached) : cached;
-        } catch (err) {
-          console.error(`Error parsing cache value for ${cacheKey}:`, err);
-        }
-      }
-
-      if (!artworkJsonData) {
-        console.log(`Cache Miss: ${cacheKey}`);
-
-        const artwork = await Artworkuploads.findOne({ title }).lean().exec();
-        if (!artwork) throw new NotFoundError("Artwork not found");
-
-        artworkJsonData = artwork;
-
-        try {
-          await redis.set(cacheKey, JSON.stringify(artwork), {
-            ex: TTL_SECONDS,
-          });
-        } catch (redisWriteErr) {
-          console.error(`Redis Write Error [${cacheKey}]:`, redisWriteErr);
-        }
-      }
-    } catch (redisReadErr) {
-      console.error(`Redis Read Error [${cacheKey}]:`, redisReadErr);
-
-      const artwork = await Artworkuploads.findOne({ title }).lean().exec();
-      if (!artwork) throw new NotFoundError("Artwork not found");
-
-      artworkJsonData = artwork;
-    }
+    const { art_id } = await request.json();
+    console.log(art_id);
+    const artwork = await getCachedArtwork(art_id);
 
     return NextResponse.json(
-      { message: "Successful", data: artworkJsonData },
+      { message: "Successful", data: artwork },
       { status: 200 }
     );
   } catch (error) {
@@ -72,13 +31,3 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   }
 });
-
-function slugify(title: string): string {
-  if (!title) return "";
-  return title
-    .trim()
-    .toLowerCase()
-    .replace(/\W+/g, "-")
-    .replace(/_/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
