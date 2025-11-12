@@ -9,7 +9,7 @@ export const sendGalleryBlockedEmail = async ({ name, email }: EmailData) => {
     prefix: "Omenai Team",
     from: "team",
     to: email,
-    subject: "Your Gallery Account Has Been Temporarily Blocked.",
+    subject: "Your Gallery Account Has Been Temporarily Suspended.",
     react: BlockGalleryEmail(name),
   });
 };
