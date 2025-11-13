@@ -49,8 +49,11 @@ export default function SendBuyerShipmentSuccess(
           marginBottom: "24px",
         }}
       >
-        I hope you’re doing well. I’m pleased to inform you that your shipment
-        has been successfully delivered.
+        This is an official notification confirming that the shipment for your
+        order <strong>{trackingCode}</strong> has been successfully completed.
+        The package was dispatched under tracking number{" "}
+        <strong>{trackingCode}</strong> and has been delivered to the address
+        provided during the order process.
       </Text>
       <Text
         style={{
@@ -59,18 +62,11 @@ export default function SendBuyerShipmentSuccess(
           marginBottom: "24px",
         }}
       >
-        <strong>Tracking Code : {trackingCode}</strong>
-      </Text>
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "24px",
-        }}
-      >
-        Please check your package and confirm that everything arrived in good
-        condition. If you have any questions or concerns, feel free to contact
-        me — I’ll be happy to assist.
+        Please note that this message serves as confirmation of successful
+        shipment and delivery. If there are any discrepancies regarding the
+        items received or if further assistance is required, you may contact our
+        customer support team. Our representatives will be available to assist
+        you with any inquiries related to this order.
       </Text>
 
       <Text
