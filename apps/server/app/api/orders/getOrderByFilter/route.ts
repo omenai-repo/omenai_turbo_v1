@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
       "order_accepted.status": "",
     })
       .sort({ updatedAt: -1 })
+      .lean()
       .exec();
 
     if (!orders)

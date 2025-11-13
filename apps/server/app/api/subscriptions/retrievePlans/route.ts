@@ -1,9 +1,13 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions/PlanSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  NotFoundError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { redis } from "@omenai/upstash-config";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -12,14 +16,37 @@ export const GET = withAppRouterHighlight(async function GET() {
   try {
     await connectMongoDB();
 
-    const plans = await SubscriptionPlan.find();
-    if (!plans)
-      throw new ServerError("Something went wrong, contact tech team");
+    const cacheKey = "plans";
 
-    return NextResponse.json({
-      data: plans,
-      message: "Plans retrieved successfully",
-    });
+    try {
+      const stringedPlans = await redis.get(cacheKey);
+
+      if (!stringedPlans) {
+        const plans = await fetchAndSetCache();
+
+        return NextResponse.json({
+          data: plans,
+          message: "Plans retrieved successfully",
+        });
+      }
+
+      const planData =
+        typeof stringedPlans === "string"
+          ? JSON.parse(stringedPlans)
+          : stringedPlans;
+
+      return NextResponse.json({
+        data: planData,
+        message: "Plans retrieved successfully",
+      });
+    } catch (error) {
+      const plans = await fetchAndSetCache();
+
+      return NextResponse.json({
+        data: plans,
+        message: "Plans retrieved successfully",
+      });
+    }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 
@@ -29,3 +56,16 @@ export const GET = withAppRouterHighlight(async function GET() {
     );
   }
 });
+
+async function fetchAndSetCache() {
+  const dbPlans = await SubscriptionPlan.find().lean();
+
+  if (!dbPlans) throw new NotFoundError("No plans stored");
+  try {
+    await redis.set("plans", dbPlans, { ex: 86400 });
+  } catch (redisWriteErr) {
+    console.error(`Redis Write Error [plans:`, redisWriteErr);
+  }
+
+  return dbPlans;
+}

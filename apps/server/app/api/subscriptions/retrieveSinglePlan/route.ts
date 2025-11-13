@@ -15,7 +15,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
   try {
     if (!plan_id) throw new BadRequestError("No plan id provided");
     await connectMongoDB();
-    const plan = await SubscriptionPlan.findOne({ plan_id });
+    const plan = await SubscriptionPlan.findOne({ plan_id }).lean();
 
     if (!plan) throw new ServerError("Something went wrong, contact tech team");
 

@@ -22,7 +22,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       details_submitted: account.details_submitted,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     const error_response = handleErrorEdgeCases(error);
 
     return NextResponse.json(
