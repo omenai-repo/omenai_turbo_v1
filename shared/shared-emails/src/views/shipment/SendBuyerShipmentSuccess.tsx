@@ -1,24 +1,23 @@
 import {
-  Html,
-  Head,
-  Preview,
   Body,
   Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
   Section,
   Text,
-  Heading,
-  Link,
 } from "@react-email/components";
-import { dashboard_url } from "@omenai/url-config/src/config";
+import React from "react";
 
-export default function SendGalleryShipmentSuccess(
+export default function SendBuyerShipmentSuccess(
   trackingCode: string,
   name: string
 ) {
   return (
     <Html>
       <Head />
-      <Preview>Shipment delivery completed and verified successfully.</Preview>
+      <Preview>Great news! Your Shipment Was Successfully Delivered.</Preview>
       <Body
         style={{
           backgroundColor: "#ffffff",
@@ -43,7 +42,7 @@ export default function SendGalleryShipmentSuccess(
                 marginBottom: "20px",
               }}
             >
-              Shipment Delivery Confirmed
+              Artwork Delivered Successfully!
             </Heading>
 
             <Text
@@ -63,17 +62,7 @@ export default function SendGalleryShipmentSuccess(
                 marginBottom: "16px",
               }}
             >
-              Great news! The shipment for your artwork has been successfully
-              delivered and verified by the buyer.
-            </Text>
-            <Text
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.5",
-                marginBottom: "16px",
-              }}
-            >
-              <strong>Tracking Code :</strong> {trackingCode}
+              Congratulations! Your Shipment Was Successfully Delivered!
             </Text>
 
             <Text
@@ -83,27 +72,29 @@ export default function SendGalleryShipmentSuccess(
                 marginBottom: "24px",
               }}
             >
-              The delivery has been confirmed and marked as complete in our
-              system. You can view the full details of this transaction in your
-              gallery dashboard.
+              I hope you’re doing well. I’m pleased to inform you that your
+              shipment has been successfully delivered.
             </Text>
-
-            <div style={{ textAlign: "center", margin: "30px 0" }}>
-              <Link
-                href={`${dashboard_url()}/gallery/orders`}
-                style={{
-                  display: "inline-block",
-                  backgroundColor: "#0f172a",
-                  color: "#ffffff",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontSize: "16px",
-                }}
-              >
-                View Dashboard
-              </Link>
-            </div>
+            <Text
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.5",
+                marginBottom: "24px",
+              }}
+            >
+              <strong>Tracking Code : {trackingCode}</strong>
+            </Text>
+            <Text
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.5",
+                marginBottom: "24px",
+              }}
+            >
+              Please check your package and confirm that everything arrived in
+              good condition. If you have any questions or concerns, feel free
+              to contact me — I’ll be happy to assist.
+            </Text>
 
             <Text
               style={{
@@ -113,8 +104,7 @@ export default function SendGalleryShipmentSuccess(
                 marginTop: "24px",
               }}
             >
-              Thank you for being part of the Omenai community. We appreciate
-              your commitment to delivering exceptional art experiences!
+              Thank you for being part of the Omenai community.
             </Text>
 
             <Text
@@ -124,8 +114,8 @@ export default function SendGalleryShipmentSuccess(
                 marginTop: "32px",
               }}
             >
-              If you have any questions about this delivery or need assistance,
-              our support team is here to help.
+              If you have any questions or need assistance, our support team is
+              here to help.
             </Text>
 
             <Text style={{ marginTop: "40px", fontSize: "16px" }}>

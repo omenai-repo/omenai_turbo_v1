@@ -6,6 +6,9 @@ import { sendArtistFundUnlockEmail } from "../../../../../shared/shared-emails/s
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import SubscriptionExpireAlert from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
+import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
+import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
+import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendBuyerShipmentSuccessEmail";
 export async function GET() {
   // const promise = await sendArtistFundUnlockEmail({
   //   name: "Test User",
@@ -13,27 +16,44 @@ export async function GET() {
   //   amount: 2000,
   // });
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  // const resend = new Resend(process.env.RESEND_API_KEY);
 
-  const expiredSoonEmailPayload = await Promise.all(
-    [
-      { email: "rodolphe@omenai.app" },
-      { email: "dantereus1@gmail.com" },
-      { email: "moses@omenai.net" },
-    ].map(async (subscription) => {
-      const html = await render(
-        SubscriptionExpireAlert("Test User", `Tomorrow`)
-      );
-      return {
-        from: "Subscription <omenai@omenai.app>",
-        to: [subscription.email],
-        subject: `Your Subscription Expires tomorrow`,
-        html,
-      };
-    })
-  );
+  // const expiredSoonEmailPayload = await Promise.all(
+  //   [
+  //     { email: "rodolphe@omenai.app" },
+  //     { email: "dantereus1@gmail.com" },
+  //     { email: "moses@omenai.net" },
+  //   ].map(async (subscription) => {
+  //     const html = await render(
+  //       SubscriptionExpireAlert("Test User", `Tomorrow`)
+  //     );
+  //     return {
+  //       from: "Subscription <omenai@omenai.app>",
+  //       to: [subscription.email],
+  //       subject: `Your Subscription Expires tomorrow`,
+  //       html,
+  //     };
+  //   })
+  // );
 
-  await resend.batch.send(expiredSoonEmailPayload);
+  // await resend.batch.send(expiredSoonEmailPayload);
+
+  await SendBuyerShipmentSuccessEmail({
+    email: "rodolphe@omenai.app",
+    name: "Test User",
+    trackingCode: "1234567",
+  });
+
+  await SendArtistShipmentSuccessEmail({
+    email: "rodolphe@omenai.app",
+    name: "Test User",
+    trackingCode: "1234567",
+  });
+  await SendGalleryShipmentSuccessEmail({
+    email: "rodolphe@omenai.app",
+    name: "Test User",
+    trackingCode: "1234567",
+  });
 
   return NextResponse.json({
     message: "Successful",

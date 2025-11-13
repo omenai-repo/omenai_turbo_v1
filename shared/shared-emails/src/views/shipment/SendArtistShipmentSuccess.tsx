@@ -11,7 +11,10 @@ import {
 } from "@react-email/components";
 import { dashboard_url } from "@omenai/url-config/src/config";
 
-export default function SendArtistShipmentSuccess(name: string) {
+export default function SendArtistShipmentSuccess(
+  trackingCode: string,
+  name: string
+) {
   return (
     <Html>
       <Head />
@@ -65,6 +68,15 @@ export default function SendArtistShipmentSuccess(name: string) {
             >
               Congratulations! Your artwork has been successfully delivered to
               the buyer.
+            </Text>
+            <Text
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.5",
+                marginBottom: "16px",
+              }}
+            >
+              <strong>Tracking Code : </strong> {trackingCode}
             </Text>
 
             <Text
