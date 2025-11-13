@@ -6,6 +6,7 @@ import {
   batchResizeAndUpload,
   createFailedTaskJob,
   deleteFilesInBatches,
+  DeletionReturnType,
 } from "../utils";
 
 /**
@@ -16,21 +17,22 @@ import {
  * 4. Delete all original files from Appwrite (with failure retries logged)
  * 5. Update any existing orders with new thumbnail URLs
  */
-export async function handleUploadDeletionProtocol(targetId: string) {
+export async function handleUploadDeletionProtocol(
+  targetId: string
+): Promise<DeletionReturnType> {
+  const stats = {
+    totalArtworksFetched: 0,
+    totalDeletedFromDB: 0,
+    totalThumbnailUploads: 0,
+    totalAppwriteDeletions: 0,
+    totalSuccessfulJobCreations: 0,
+    totalFailedJobCreations: 0,
+  };
   try {
     if (!targetId) throw new Error("targetId is required");
 
     const batchSize = 50;
     let page = 0;
-
-    const stats = {
-      totalArtworksFetched: 0,
-      totalDeletedFromDB: 0,
-      totalThumbnailUploads: 0,
-      totalAppwriteDeletions: 0,
-      totalSuccessfulJobCreations: 0,
-      totalFailedJobCreations: 0,
-    };
 
     while (true) {
       const artworksQueuedForDeletion = await Artworkuploads.find(
@@ -66,15 +68,16 @@ export async function handleUploadDeletionProtocol(targetId: string) {
     stats.totalDeletedFromDB = deleteArtworks.deletedCount;
 
     return {
-      status: true,
-      message: "Deletion protocol completed successfully",
-      stats,
+      success: true,
+      note: "Deletion protocol completed successfully",
+      count: { ...stats },
     };
   } catch (err) {
     console.error("handleUploadDeletionProtocol error:", err);
     return {
-      status: false,
-      message: "Deletion protocol failed",
+      success: false,
+      note: "Deletion protocol failed",
+      count: { ...stats },
       error: (err as Error).message,
     };
   }

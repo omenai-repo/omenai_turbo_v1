@@ -1,22 +1,16 @@
 import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-import { createFailedTaskJob, validateTargetId } from "../utils";
+import {
+  createFailedTaskJob,
+  DeletionReturnType,
+  validateTargetId,
+} from "../utils";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
-import { ArtistSchemaTypes } from "@omenai/shared-types";
-import { storage } from "@omenai/appwrite-config";
+import { AccessRoleTypes, ArtistSchemaTypes } from "@omenai/shared-types";
+import { serverStorage, storage } from "@omenai/appwrite-config";
 
-export async function accountService(
-  targetId: string,
-  metadata: Record<string, any>
-) {
-  const checkIdvalidity = validateTargetId(targetId);
-  if (!checkIdvalidity.success) return checkIdvalidity;
-
-  return await anonymizeAccount(targetId, metadata.entityType);
-}
-
-type AccountType = "artist" | "gallery" | "user";
+type AccountType = Exclude<AccessRoleTypes, "admin">;
 
 interface AccountConfig {
   model:
@@ -26,6 +20,18 @@ interface AccountConfig {
   idField: string;
   jobType: string;
   displayName: string;
+}
+
+export async function accountService(
+  targetId: string,
+  metadata: Record<string, any>
+): Promise<DeletionReturnType> {
+  const checkIdvalidity = validateTargetId(targetId);
+  if (!checkIdvalidity.success) throw new Error("Invalid targetId");
+
+  const response = await anonymizeAccount(targetId, metadata.entityType);
+
+  return response;
 }
 
 const ACCOUNT_CONFIGS: Record<AccountType, AccountConfig> = {
@@ -59,30 +65,22 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
     }));
 
     if (!isExist) {
-      const error = `Invalid targetId: targetId does not exist in Account${config.displayName}`;
-      console.error(error, { received: targetId });
       return {
-        success: false,
-        error,
+        success: true,
+        count: { deletedCount: 0 },
+
+        note: "Data non-existent for deletion",
       };
     }
 
     // Check if record exists in DB
     const account = await config.model.findOne({ [config.idField]: targetId });
-    if (!account || !account.email) {
-      const error = `Record does not exist in Account${config.displayName}`;
-      console.error(error, { received: targetId });
-      return {
-        success: false,
-        error,
-      };
-    }
 
     // delete documentation for artist
     if (accountType === "artist") {
-      storage
+      serverStorage
         .deleteFile({
-          bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+          bucketId: process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!,
           fileId: account.documentation.cv,
         })
         .catch(async (err) => {
@@ -113,20 +111,24 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
       });
       return {
         success: false,
+        note: "Data not deleted, Intervention in progress",
+        count: { deletedCount: result.deletedCount },
         error: `Unable to anonymize ${accountType} account`,
-        failedTaskCreated: failedTask,
       };
     } else {
       console.log(`Anonymize ${config.displayName} Account successful`);
       return {
         success: true,
-        deletedCount: result.deletedCount,
+        note: "Deletion protocol successfully completed",
+        count: { deletedCount: result.deletedCount },
       };
     }
   } catch (error) {
     console.error("Failed anonymization", error);
     return {
       success: false,
+      note: "An error prevented this deletion protocol from running. Manual intervention in progress",
+      count: { deletedCount: 0 },
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }

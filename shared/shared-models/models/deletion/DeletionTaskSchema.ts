@@ -22,7 +22,6 @@ const DeletionTaskSchema = new Schema<DeletionTaskDocument>(
         "purchase_transaction_service",
         "account_service",
         "subscriptions_service",
-        "stripe_service",
         "categorization_service",
         "sales_service",
         "misc_service",

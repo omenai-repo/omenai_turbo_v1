@@ -253,7 +253,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       });
     }
 
-    //TODO: Update mail to indicate the user has 24 hrs to pay
     await sendOrderAcceptedMail({
       name: order.buyer_details.name,
       email: order.buyer_details.email,

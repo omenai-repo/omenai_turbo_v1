@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { redis } from "@omenai/upstash-config";
+import { getCachedArtwork } from "../utils";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -11,25 +13,21 @@ export const POST = withAppRouterHighlight(async function POST(
   try {
     await connectMongoDB();
 
-    const { title } = await request.json();
-
-    const artwork = await Artworkuploads.findOne({ title }).exec();
-    if (!artwork) throw new NotFoundError("Artwork not found");
+    const { art_id } = await request.json();
+    console.log(art_id);
+    const artwork = await getCachedArtwork(art_id);
 
     return NextResponse.json(
-      {
-        message: "Successful",
-        data: artwork,
-      },
+      { message: "Successful", data: artwork },
       { status: 200 }
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.error("Error in artwork fetch route:", error);
 
-    console.log(error);
     return NextResponse.json(
-      { message: error_response!.message },
-      { status: error_response!.status }
+      { message: error_response?.message ?? "Unknown error occurred" },
+      { status: error_response?.status ?? 500 }
     );
   }
 });

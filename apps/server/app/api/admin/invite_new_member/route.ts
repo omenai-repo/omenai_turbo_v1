@@ -62,8 +62,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
     }
 
-    // TODO: Convert this into a transaction
-
     await sendMemberInviteEmail({ email, token });
 
     return NextResponse.json(

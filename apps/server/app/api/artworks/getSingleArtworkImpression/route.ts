@@ -16,7 +16,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const foundImpression = await Artworkuploads.findOne(
       { art_id: id },
       "like_IDs"
-    );
+    ).lean();
 
     if (!foundImpression)
       throw new ServerError("An unexpected error has occured.");

@@ -5,7 +5,6 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { ServerError } from "../../../custom/errors/dictionary/errorDictionary";
 import { DeletionTaskServiceType, EntityType } from "@omenai/shared-types";
-import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
 export interface Commitment {
   type: string;
   description: string;
@@ -220,7 +219,6 @@ export const serviceMap: Record<
     "order_service",
     "subscriptions_service",
     "upload_service",
-    "stripe_service",
     "account_service",
     "sales_service",
     "misc_service",

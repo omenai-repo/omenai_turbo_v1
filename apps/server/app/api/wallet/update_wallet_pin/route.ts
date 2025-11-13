@@ -72,7 +72,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
     }
 
-    // TODO: Send mail informing of pin change
+    // TODO: Send mail informing user of pin change
 
     return NextResponse.json(
       { message: "Wallet pin updated successfully" },

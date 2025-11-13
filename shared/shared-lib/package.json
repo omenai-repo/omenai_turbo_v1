@@ -14,6 +14,7 @@
   "dependencies": {
     "@omenai/appwrite-config": "*",
     "@omenai/shared-utils": "*",
+    "@omenai/upstash-config": "*",
     "@upstash/ratelimit": "^2.0.4",
     "@upstash/redis": "^1.34.3",
     "bcrypt": "^5.1.1",

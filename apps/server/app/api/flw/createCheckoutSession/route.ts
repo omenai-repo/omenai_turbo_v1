@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";

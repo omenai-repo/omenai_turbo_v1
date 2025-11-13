@@ -75,6 +75,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         "stripe_customer_id"
       );
 
+      //TODO: Re-work this
       const hasBalance = await hasActiveStripeBalance(
         galleryAccount.stripe_connected_account_id
       );
@@ -85,7 +86,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         {
           hasActiveOrder: !!order,
           hasActiveSubscription: !!subscription,
-          hasUnpaidStripeBalance: hasBalance.isBalance,
+          // hasUnpaidStripeBalance: hasBalance.isBalance,
         }
       );
 

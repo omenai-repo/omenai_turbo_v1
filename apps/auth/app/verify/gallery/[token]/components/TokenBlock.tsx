@@ -5,6 +5,7 @@ import { resendCode } from "@omenai/shared-services/verify/resendVerifyCode";
 import { verifyEmail } from "@omenai/shared-services/verify/verifyEmail";
 import { verifyAuthStore } from "@omenai/shared-state-store/src/auth/verify/VerifyAuthStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -23,14 +24,7 @@ export default function TokenBlock({ token }: TokenProps) {
     const error: string = validateStringCode(tokenValue);
 
     if (error) {
-      toast.error("Error notification", {
-        description: error,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(error, "error");
     } else {
       toast.info("Verifying token");
       setIsLoading();
@@ -39,24 +33,9 @@ export default function TokenBlock({ token }: TokenProps) {
         { params: token, token: tokenValue },
         "gallery"
       );
-      if (!res.isOk)
-        toast.error("Error notification", {
-          description: res.body.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+      if (!res.isOk) toast_notif(res.body.message, "error");
       if (res.isOk) {
-        toast.success("Operation successful", {
-          description: res.body.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(res.body.message, "success");
         router.push("/login/gallery");
       }
       setIsLoading();

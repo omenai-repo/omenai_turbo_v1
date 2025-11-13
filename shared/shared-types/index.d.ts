@@ -1091,7 +1091,6 @@ export type DeletionTaskServiceType =
   | "purchase_transaction_service" // for purchase transaction records
   | "account_service" // for user/gallery/artist account data
   | "subscriptions_service" //bakes in prorations service and subscription transaction service
-  | "stripe_service" // deactivate stripe customer and connected accounts
   | "sales_service" // for sales activity records
   | "categorization_service" // for artist categorization data
   | "misc_service"; // miscellaneous service such as device fingerprint and notification_service
@@ -1125,8 +1124,9 @@ export type DeletionAuditLog = {
    */
   tasks_summary: {
     service: DeletionTaskServiceType; // The service or subsystem name (e.g. "orders", "wallet", "files")
-    deleted_records_count?: number; // Number of records deleted within that service
-    status: DeletionTask["status"]; //Status of the deletion task
+    status: "complete" | "incomplete"; //Status of the deletion task
+    note: string; // Note around what happened within the function
+    deletedRecordSummary: Record<string, any>; // Number of records deleted within that service
     completed_at?: Date; // When the deletion was completed for this service
     error_message?: string; //Optional error details if task failed
   }[];

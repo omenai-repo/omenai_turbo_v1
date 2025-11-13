@@ -14,7 +14,6 @@ export const DELETION_TASK_SERVICES = [
   "purchase_transaction_service",
   "account_service",
   "subscriptions_service",
-  "stripe_service",
   "sales_service",
   "categorization_service",
   "misc_service",
@@ -45,7 +44,6 @@ export const serviceMap: Record<
     "order_service",
     "subscriptions_service",
     "upload_service",
-    "stripe_service",
     "account_service",
     "sales_service",
     "misc_service",
@@ -111,7 +109,7 @@ export async function createWorkflowTarget(metadata: {
 }): Promise<string | undefined> {
   const workflowID = await createWorkflow(
     `/api/workflows/deletion/deletion_workflow`,
-    `test_workflow${generateDigit(2)}`,
+    `deletion_workflow${generateDigit(2)}`,
     JSON.stringify(metadata)
   );
 

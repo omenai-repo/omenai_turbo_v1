@@ -18,6 +18,7 @@ export const POST = withAppRouterHighlight(async function POST(
         impressions: -1,
       })
       .limit(3)
+      .lean()
       .exec();
 
     if (!popular_artworks)

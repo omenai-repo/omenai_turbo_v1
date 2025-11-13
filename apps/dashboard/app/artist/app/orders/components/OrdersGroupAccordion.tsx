@@ -23,15 +23,16 @@ export function OrdersGroupAccordion({
 }: {
   orders: CreateOrderModelTypes[];
 }) {
-  const {
-    updateArtistOrderActionModalData,
-    toggleDeclineOrderModal,
-    update_current_order_id,
-  } = artistActionStore();
-  // See groceries data above
-  const get_image_url = (url: string) => {
-    const image_url = getOptimizedImage(url, "thumbnail", 40);
-    return image_url;
+  const { toggleDeclineOrderModal, update_current_order_id } =
+    artistActionStore();
+
+  const get_image_url = (url: string, deletedEntity: boolean) => {
+    if (deletedEntity) {
+      return url;
+    } else {
+      const image_url = getOptimizedImage(url, "thumbnail", 40);
+      return image_url;
+    }
   };
 
   function handleDeclineOrderRequest(
@@ -154,7 +155,10 @@ export function OrdersGroupAccordion({
       <Accordion.Control>
         <div className="flex gap-x-2 items-center">
           <Image
-            src={get_image_url(order.artwork_data.url)}
+            src={get_image_url(
+              order.artwork_data.url,
+              order.artwork_data.deletedEntity
+            )}
             alt={`${order.artwork_data.title} image`}
             width="50"
             height="50"

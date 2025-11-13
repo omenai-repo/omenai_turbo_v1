@@ -55,7 +55,7 @@ type AuthReturn<T extends UserRole | undefined> = {
               | "documentation"
             > & { id: string }
           : SessionDataType | null;
-  signOut: () => Promise<void>;
+  signOut: (shouldRedirect?: boolean) => Promise<void>;
   csrf: string | undefined;
 };
 
@@ -181,26 +181,34 @@ export function useAuth<T extends UserRole | undefined = undefined>(
   }, [isLoading, isLoggedIn, hasRequiredRole]);
 
   // Sign out function
-  const handleSignOut = useCallback(async () => {
-    try {
-      const res = await fetch(`${getApiUrl()}/api/auth/session/logout`, {
-        method: "POST",
-        headers: {
-          Origin: base_url(),
-        },
-        credentials: "include",
-      });
-      if (!res.ok) {
-        console.error("Failed to sign out on server:", await res.text());
+  const handleSignOut = useCallback(
+    async (shouldRedirect = true) => {
+      try {
+        const res = await fetch(`${getApiUrl()}/api/auth/session/logout`, {
+          method: "POST",
+          headers: {
+            Origin: base_url(),
+          },
+          credentials: "include",
+        });
+        if (!res.ok) {
+          console.error("Failed to sign out on server:", await res.text());
+        }
+        queryClient.removeQueries({ queryKey: ["session"] });
+        queryClient.invalidateQueries({ queryKey: ["session"] });
+        if (shouldRedirect) {
+          window.location.href = redirectUrl;
+        }
+      } catch (error) {
+        console.error("Sign out error:", error);
+
+        if (shouldRedirect) {
+          window.location.href = redirectUrl;
+        }
       }
-      queryClient.removeQueries({ queryKey: ["session"] });
-      queryClient.invalidateQueries({ queryKey: ["session"] });
-      window.location.href = redirectUrl;
-    } catch (error) {
-      console.error("Sign out error:", error);
-      window.location.href = redirectUrl;
-    }
-  }, [redirectUrl, queryClient]);
+    },
+    [redirectUrl, queryClient]
+  );
 
   return {
     status,

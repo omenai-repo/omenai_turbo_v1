@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { ArtistCategory, ArtworkMediumTypes } from "@omenai/shared-types";
 import {
@@ -9,13 +9,9 @@ import {
   BadRequestError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { getApiUrl } from "@omenai/url-config/src/config";
+import { redis } from "@omenai/upstash-config";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -46,32 +42,72 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         width: +width,
       });
 
-      // if (typeof price !== "number" || price <= 0) {
-      //   throw new ServerError("Price calculation failed");
-      // }
+      let rateValue: number;
+      const cacheKey = `USDto${currency.toUpperCase()}`;
+      const TTL_SECONDS = 86400;
 
-      console.log(price, currency);
+      try {
+        const cachedRate = await redis.get(cacheKey);
 
-      // Get currency rate
-      const response = await fetch(
-        `${getApiUrl()}/api/flw/getTransferRate?source=${currency.toUpperCase()}&destination=USD&amount=${price.recommendedPrice}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Origin: "https://omenai.app",
-          },
+        if (cachedRate) {
+          console.log(`Cache Hit for key: ${cacheKey}`);
+
+          // Parse the JSON string back into a number
+          rateValue = JSON.parse(cachedRate as string);
+        } else {
+          // Cache Miss: Proceed to fetch from external source
+          console.log(`Cache Miss for key: ${cacheKey}. Fetching...`);
+
+          const request = await fetch(
+            `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
+            { method: "GET" }
+          );
+
+          if (!request.ok) {
+            throw new ServerError(
+              "Failed to fetch exchange rate. Try again or contact support"
+            );
+          }
+
+          const result = await request.json();
+          rateValue = result.conversion_rate;
+
+          try {
+            await redis.set(cacheKey, JSON.stringify(rateValue), {
+              ex: TTL_SECONDS,
+            });
+          } catch (redisError) {
+            console.error(
+              `Failed to WRITE to Redis for key ${cacheKey}:`,
+              redisError
+            );
+          }
         }
-      );
-      const result = await response.json();
-
-      if (!response.ok)
-        throw new ServerError(
-          "Failed to calculate Price. Try again or contact support"
+      } catch (redisError) {
+        console.error(
+          `Failed to READ from Redis for key ${cacheKey}:`,
+          redisError
         );
 
+        // Fallback: Manually run the fetch logic here if the read failed.
+        const request = await fetch(
+          `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
+          { method: "GET" }
+        );
+
+        if (!request.ok) {
+          // If external API fails after cache failed, then throw a ServerError.
+          throw new ServerError(
+            "Failed to fetch exchange rate after cache failure."
+          );
+        }
+
+        const result = await request.json();
+        rateValue = result.conversion_rate;
+      }
+
       const price_response_data = {
-        price: result.data.source.amount,
+        price: rateValue * price.recommendedPrice,
         usd_price: price.recommendedPrice,
         price_data: price,
         shouldShowPrice: "Yes",

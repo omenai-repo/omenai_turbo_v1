@@ -23,10 +23,13 @@ export default function NavigationItem({
         <li
           className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
         >
-          <button type="button" onClick={onClick}>
-            <IconWrapper className="hover:bg-white hover:text-dark group">
-              {icon}
-            </IconWrapper>
+          <button
+            onClick={onClick}
+            type="button"
+            role="container"
+            className="flex items-center"
+          >
+            <IconWrapper className=" hover:text-dark group">{icon}</IconWrapper>
             <p className={`text-fluid-xxs p-2 font-normal`}>{title}</p>
           </button>
         </li>

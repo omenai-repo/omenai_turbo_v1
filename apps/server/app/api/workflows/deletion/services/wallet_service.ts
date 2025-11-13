@@ -2,6 +2,7 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import {
   anonymizeUserId,
   createFailedTaskJob,
+  DeletionReturnType,
   validateTargetId,
 } from "../utils";
 
@@ -17,7 +18,7 @@ async function deleteFlutterwaveBeneficiary(
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
         signal: controller.signal,
@@ -52,7 +53,9 @@ async function deleteFlutterwaveBeneficiary(
 /**
  * Handles wallet anonymization and beneficiary deletion on account deletion.
  */
-export async function walletDeletionProtocol(targetId: string) {
+export async function walletDeletionProtocol(
+  targetId: string
+): Promise<DeletionReturnType> {
   const stats = {
     failedJobCreations: 0,
     anonymizedWallet: false,
@@ -74,7 +77,7 @@ export async function walletDeletionProtocol(targetId: string) {
     } | null>();
 
     if (!wallet)
-      return { success: true, ...stats, message: "No wallet found." };
+      return { success: true, count: { ...stats }, note: "No wallet found." };
 
     const beneficiary_id = wallet.primary_withdrawal_account?.beneficiary_id;
 
@@ -128,13 +131,22 @@ export async function walletDeletionProtocol(targetId: string) {
       if (!created) stats.failedJobCreations++;
     }
 
-    return { success: true, ...stats };
+    return {
+      success: true,
+      count: { ...stats },
+      note: "Deletion protocol successfully completed",
+    };
   } catch (error) {
     console.error(
       `Unable to execute wallet deletion protocol for user: ${targetId}`,
       (error as Error).message
     );
 
-    return { success: false, ...stats, error: (error as Error).message };
+    return {
+      success: false,
+      count: { ...stats },
+      note: "An error occured during deletion, manual intervention in progress",
+      error: (error as Error).message,
+    };
   }
 }

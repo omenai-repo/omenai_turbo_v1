@@ -1,4 +1,4 @@
-import redis from "./redis";
+import { redis } from "@omenai/upstash-config";
 
 interface RateLimitOptions {
   identifier: string;

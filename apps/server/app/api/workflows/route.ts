@@ -10,7 +10,9 @@ export const { POST } = serve<Payload[]>(async (ctx) => {
   const payload: Payload[] = ctx.requestPayload;
 
   // Implement your workflow logic within ctx.run
-  ctx.run("create_new_tes", async () => {});
+  await ctx.run("create_new_tes", async () => {
+    console.log("Hello test workflow");
+  });
 
-  return NextResponse.json({ data: "Successful" }, { status: 201 });
+  return NextResponse.json({ data: "Successful" }, { status: 200 });
 });
