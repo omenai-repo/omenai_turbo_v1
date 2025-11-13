@@ -19,6 +19,7 @@ import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCa
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
 import { tracking_url } from "@omenai/url-config/src/config";
+import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 
 type Payload = {
   order_id: string;
@@ -151,6 +152,17 @@ export const { POST } = serve<Payload>(async (ctx) => {
           ).session(session);
 
           // TODO: Send email informing buyer and seller that shipment creation is scheduled for later
+          await sendShipmentScheduledEmail({
+            email: order.buyer_details.email,
+            name: order.buyer_details.name,
+            trackingCode: order.order_id,
+          });
+
+          await sendShipmentScheduledEmail({
+            email: order.seller_details.email,
+            name: order.seller_details.name,
+            trackingCode: order.order_id,
+          });
 
           session.commitTransaction();
           return true;
