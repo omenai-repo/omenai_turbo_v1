@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
 
     const orders = await CreateOrder.find({ "seller_details.id": id })
       .sort({ updatedAt: -1 })
+      .lean()
       .exec();
 
     if (!orders) throw new ServerError("No orders were found");

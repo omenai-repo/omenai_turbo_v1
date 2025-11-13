@@ -5,6 +5,8 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { redis } from "@omenai/upstash-config";
+import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -15,16 +17,39 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
-    const { email } = await request.json();
-    await connectMongoDB();
-    const account = await AccountGallery.findOne(
-      { email },
-      "connected_account_id gallery_verified"
-    );
+    const { gallery_id } = await request.json();
 
-    return NextResponse.json({
-      data: account,
-    });
+    const cacheKey = `accountId:${gallery_id}`;
+
+    await connectMongoDB();
+
+    try {
+      const accountIdInfo = await redis.get(cacheKey);
+
+      if (!accountIdInfo) {
+        const account = await fetchAndSetRedisCache(gallery_id, cacheKey);
+        return NextResponse.json({
+          message: "Successfully fetched account info",
+          data: account,
+        });
+      }
+
+      const parsedAccountInfo =
+        typeof accountIdInfo === "string"
+          ? JSON.parse(accountIdInfo)
+          : accountIdInfo;
+
+      return NextResponse.json({
+        message: "Successfully fetched account info",
+        data: parsedAccountInfo,
+      });
+    } catch (error) {
+      const account = await fetchAndSetRedisCache(gallery_id, cacheKey);
+      return NextResponse.json({
+        message: "Successfully fetched account info",
+        data: account,
+      });
+    }
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
@@ -35,3 +60,24 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   }
 });
+
+async function fetchAndSetRedisCache(gallery_id: string, cacheKey: string) {
+  const account = await AccountGallery.findOne(
+    { gallery_id },
+    "connected_account_id gallery_verified"
+  ).lean();
+
+  if (!account) {
+    throw new NotFoundError(
+      "An account with the given ID was not found. Please try again or contact support"
+    );
+  }
+
+  try {
+    await redis.set(cacheKey, JSON.stringify(account), { ex: 21600 });
+  } catch (redisWriteErr) {
+    console.error(`Redis Write Error [${cacheKey}]:`, redisWriteErr);
+  }
+
+  return account;
+}

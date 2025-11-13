@@ -23,7 +23,7 @@ export default function SubscriptionBase() {
     queryFn: async () => {
       try {
         // Fetch account ID first, as it's required for the next call
-        const acc = await getAccountId(user.email, csrf || "");
+        const acc = await getAccountId(user.gallery_id, csrf || "");
         if (!acc?.isOk)
           throw new Error("Something went wrong, Please refresh the page");
 

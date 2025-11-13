@@ -13,7 +13,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const fetchTransactions = await SubscriptionTransactions.find({
       gallery_id,
-    });
+    }).lean();
 
     if (!fetchTransactions)
       throw new ServerError("An error was encountered. Please try again");

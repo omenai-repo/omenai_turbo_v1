@@ -1,8 +1,8 @@
+import { plan_details } from "./../../../../../dashboard/app/gallery/billing/plans/plan_details";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 import {
   ForbiddenError,
@@ -11,7 +11,10 @@ import {
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { CombinedConfig } from "@omenai/shared-types";
+import {
+  CombinedConfig,
+  SubscriptionModelSchemaTypes,
+} from "@omenai/shared-types";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -22,83 +25,91 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
-    // Create Checkout Sessions from body params.
     await connectMongoDB();
+
     const { item, amount, seller_id, meta, success_url, cancel_url } =
       await request.json();
 
-    const gallery = await AccountGallery.findOne(
-      { gallery_id: seller_id },
-      "connected_account_id"
-    );
-    const active_subscription = await Subscriptions.findOne(
-      { "customer.gallery_id": seller_id },
-      "plan_details status"
-    );
+    // Fetch gallery and subscription concurrently
+    const [gallery, active_subscription] = await Promise.all([
+      AccountGallery.findOne({ gallery_id: seller_id })
+        .select("connected_account_id")
+        .lean() as unknown as { connected_account_id: string },
+      Subscriptions.findOne({ "customer.gallery_id": seller_id })
+        .select("plan_details status")
+        .lean() as unknown as {
+        plan_details: SubscriptionModelSchemaTypes["plan_details"];
+        status: SubscriptionModelSchemaTypes["status"];
+      },
+    ]);
 
-    if (!active_subscription || active_subscription.status !== "active")
+    if (
+      !gallery ||
+      !active_subscription ||
+      active_subscription.status !== "active"
+    ) {
       throw new ForbiddenError(
-        "Cannot proceed with this purchase at the moment"
+        "Cannot proceed with this purchase at the moment. Please try again later or contact support if this persists"
       );
+    }
 
-    const commision_rate =
-      active_subscription.plan_details.type.toLowerCase() === "premium"
-        ? 0.15
-        : active_subscription.plan_details.type.toLowerCase() === "pro"
-          ? 0.2
-          : 0.25;
+    // Determine commission rate by plan type
+    const planType = active_subscription.plan_details.type?.toLowerCase();
 
-    const commission = Math.round(
-      meta.unit_price * commision_rate * 100 +
-        meta.shipping_cost * 100 +
-        meta.tax_fees * 100
+    const rateMap: Record<string, number> = {
+      premium: 0.15,
+      pro: 0.2,
+      basic: 0.25,
+    };
+    const commissionRate = rateMap[planType] ?? rateMap.basic;
+
+    const baseAmountCents = Math.round(amount * 100);
+    const commissionCents = Math.round(
+      (meta.unit_price * commissionRate + meta.shipping_cost + meta.tax_fees) *
+        100
     );
 
-    const currentTimestampSeconds = Math.floor(Date.now() / 1000);
-    const thirtyMinutesOffset = 30 * 60;
-    const futureTimestamp = currentTimestampSeconds + thirtyMinutesOffset;
+    const expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
             currency: "usd",
-            product_data: {
-              name: item,
-            },
-            unit_amount: Math.round(amount * 100),
+            product_data: { name: item },
+            unit_amount: baseAmountCents,
           },
           quantity: 1,
         },
       ],
-
       payment_intent_data: {
-        application_fee_amount: commission,
+        application_fee_amount: commissionCents,
         transfer_data: {
           destination: gallery.connected_account_id,
         },
       },
       metadata: {
-        ...meta,
         seller_id,
-        commission: Math.round(meta.unit_price * commision_rate),
         type: "purchase",
+        commission: Math.round(meta.unit_price * commissionRate),
       },
-      expires_at: futureTimestamp,
+      expires_at: expiresAt,
       mode: "payment",
       success_url,
       cancel_url,
     });
 
-    if (!session) throw new ServerError("Something went wrong, try again");
+    if (!session)
+      throw new ServerError(
+        "Cannot proceed with this purchase at the moment. Please try again or contact support"
+      );
+
     return NextResponse.json({
       message: "Checkout Session created... Redirecting",
       url: session.url,
     });
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
-
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

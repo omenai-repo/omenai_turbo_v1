@@ -18,10 +18,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
     const { amount, gallery_id, meta } = await request.json();
-    const gallery = await AccountGallery.findOne(
+    const gallery = (await AccountGallery.findOne(
       { gallery_id },
       "stripe_customer_id"
-    );
+    ).lean()) as unknown as { stripe_customer_id: string };
     if (!gallery)
       throw new ServerError("Something went wrong. Please try again");
     // Use an existing Customer ID if this is a returning customer.
