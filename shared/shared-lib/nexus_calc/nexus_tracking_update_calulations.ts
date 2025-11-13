@@ -4,6 +4,7 @@ import { isBefore, subMonths } from "date-fns";
 import { connectMongoDB } from "../mongo_connect/mongoConnect";
 import { NexusDocument } from "@omenai/shared-types";
 import { ObjectId } from "mongoose";
+import { sendNexusTresholdEmail } from "@omenai/shared-emails/src/models/admin/sendNexusTresholdEmail";
 // import { sendAdminEmail, sendBulkVendorEmails } from "../services/emailService";
 
 const THRESHOLD_TYPES = {
@@ -81,6 +82,10 @@ export const updateNexusTracking = async (
 
   if (is_breached) {
     //TODO: send mail to admin that nexus threshold has been breached in the specified state and tax collection registeration is required
+    await sendNexusTresholdEmail({
+      email: "moses@omenai.app",
+      state: nexus.state,
+    });
   }
 
   await nexus.save();
