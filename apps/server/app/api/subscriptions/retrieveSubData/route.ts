@@ -56,10 +56,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     return NextResponse.json(
       {
         message: "Successfully retrieved subscription data",
-        data: {
-          subscription: subscription_data,
-          plan: matchedPlan,
-        },
+        data: subscription_data,
+        plan: matchedPlan,
       },
       { status: 200 }
     );
