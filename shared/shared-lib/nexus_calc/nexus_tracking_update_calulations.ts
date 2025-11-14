@@ -17,7 +17,7 @@ export const updateNexusTracking = async (
   stateCode: string,
   sales: number,
   transactions: number
-): Promise<void> => {
+): Promise<void | { status: boolean; state: string; stateCode: string }> => {
   await connectMongoDB();
   const nexus = await NexusTransactions.findOne({ stateCode });
 
@@ -81,6 +81,15 @@ export const updateNexusTracking = async (
 
   if (is_breached) {
     //TODO: send mail to admin that nexus threshold has been breached in the specified state and tax collection registeration is required
+    return {
+      status: true,
+      state: nexus.state,
+      stateCode: nexus.stateCode,
+    };
+    // await sendNexusTresholdEmail({
+    //   email: "moses@omenai.app",
+    //   state: nexus.state,
+    // });
   }
 
   await nexus.save();

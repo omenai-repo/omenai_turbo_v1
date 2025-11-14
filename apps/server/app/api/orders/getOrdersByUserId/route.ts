@@ -19,6 +19,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const orders = await CreateOrder.find({ "buyer_details.id": id })
         .sort({ updatedAt: -1 })
+        .lean()
         .exec();
 
       if (!orders) throw new ServerError("No orders were found");

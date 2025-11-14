@@ -14,7 +14,7 @@ export default function Load() {
         animationData={animationData}
         loop
         autoplay
-        style={{ width: 200 }}
+        style={{ width: 120 }}
       />
     </div>
   );
@@ -27,7 +27,7 @@ export const HomeLoad = () => {
           animationData={animationData}
           loop
           autoplay
-          style={{ width: 200 }}
+          style={{ width: 120 }}
         />
       </div>
     </div>

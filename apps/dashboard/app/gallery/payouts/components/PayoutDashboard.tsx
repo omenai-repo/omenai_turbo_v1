@@ -20,7 +20,7 @@ export default function PayoutDashboard() {
       try {
         // Ensure user data exists
 
-        const acc = await getAccountId(user.email, csrf || "");
+        const acc = await getAccountId(user.gallery_id, csrf || "");
         if (!acc?.isOk) throw new Error("Failed to fetch account ID");
 
         const connectedAccountId = acc.data.connected_account_id;
@@ -62,6 +62,7 @@ export default function PayoutDashboard() {
 
   if (!isConfirmed!.isSubmitted)
     router.replace(`/gallery/payouts/refresh?id=${isConfirmed!.id}`);
+
   return (
     <div>
       {!isConfirmed?.isSubmitted ? (

@@ -19,7 +19,6 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function UploadArtwork() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
-  const url = auth_uri();
   const router = useRouter();
 
   const { data: isConfirmed, isLoading } = useQuery({
@@ -27,7 +26,7 @@ export default function UploadArtwork() {
     queryFn: async () => {
       try {
         // Fetch account ID first, as it's required for the next call
-        const acc = await getAccountId(user.email as string, csrf || "");
+        const acc = await getAccountId(user.gallery_id as string, csrf || "");
         if (!acc?.isOk)
           throw new Error("Something went wrong, Please refresh the page");
 
