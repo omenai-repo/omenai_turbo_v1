@@ -1,5 +1,4 @@
 // components/emails/BuyerShipmentEmail.tsx
-import { tracking_url } from "@omenai/url-config/src/config";
 import {
   Html,
   Head,
@@ -9,14 +8,16 @@ import {
   Section,
   Text,
   Heading,
-  Link,
 } from "@react-email/components";
 
-export default function BuyerShipmentEmail(trackingCode: string, name: string) {
+export default function SendShipmentScheduled(
+  trackingCode: string,
+  name: string
+) {
   return (
     <Html>
       <Head />
-      <Preview>Your artwork is on the way. Track your shipment now.</Preview>
+      <Preview>Shipment Creation Scheduled for Later</Preview>
       <Body
         style={{
           backgroundColor: "#ffffff",
@@ -41,7 +42,7 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
                 marginBottom: "20px",
               }}
             >
-              Your Shipment is on the Way
+              Shipment Creation Scheduled for Later
             </Heading>
             <Text
               style={{
@@ -60,36 +61,19 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
                 marginBottom: "16px",
               }}
             >
-              Your artwork is currently being prepared for shipment. We’ve
-              created a shipment for your piece and it will soon be on its way.
+              This is to inform you that the creation of the shipment for order{" "}
+              {trackingCode} has been scheduled for a later time. The processing
+              of this shipment is currently pending and will commence as soon as
+              the necessary conditions are met. Once the shipment has been
+              created and prepared for dispatch, you will receive an automated
+              update confirming the status change.
             </Text>
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              <strong>Tracking Code:</strong> {trackingCode}
-            </Text>
-            <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              Open the Omenai App to track your shipment or visit your dashboard
-              on the web
-            </Text>
-
-            <div style={{ textAlign: "center", margin: "30px 0" }}>
-              <Link
-                href={`${tracking_url()}?tracking_id=${trackingCode}`}
-                style={{
-                  display: "inline-block",
-                  backgroundColor: "#0f172a",
-                  color: "#ffffff",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontSize: "16px",
-                }}
-              >
-                Track Shipment
-              </Link>
-            </div>
-
-            <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              You can also track your order directly from your dashboard.
+              Please note that no further action is required at this stage. Our
+              logistics system will automatically proceed with shipment creation
+              once scheduling criteria are fulfilled. If additional information
+              or documentation becomes necessary, our support team will reach
+              out directly.
             </Text>
 
             <Text

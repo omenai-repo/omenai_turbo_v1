@@ -7,6 +7,7 @@ import { sendNexusTresholdEmail } from "../../../../../shared/shared-emails/src/
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import SubscriptionExpireAlert from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
+import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 export async function GET() {
   // const promise = await sendArtistFundUnlockEmail({
   //   name: "Test User",
