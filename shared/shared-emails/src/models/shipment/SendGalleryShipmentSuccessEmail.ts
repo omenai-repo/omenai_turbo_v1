@@ -15,6 +15,6 @@ export const SendGalleryShipmentSuccessEmail = async ({
     from: "orders",
     to: email,
     subject: "Your Shipment Was Successfully Delivered.",
-    react: SendGalleryShipmentSuccess(trackingCode, name),
+    react: SendGalleryShipmentSuccess(name, trackingCode),
   });
 };

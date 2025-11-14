@@ -3,8 +3,8 @@ import { dashboard_url } from "@omenai/url-config/src/config";
 import ShipmentLayout from "./ShipmentLayout";
 
 export default function SendGalleryShipmentSuccess(
-  trackingCode: string,
-  name: string
+  name: string,
+  trackingCode?: string
 ) {
   return (
     <ShipmentLayout
@@ -41,15 +41,17 @@ export default function SendGalleryShipmentSuccess(
         Great news! The shipment for your artwork has been successfully
         delivered and verified by the buyer.
       </Text>
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "16px",
-        }}
-      >
-        <strong>Tracking Code :</strong> {trackingCode}
-      </Text>
+      {trackingCode && (
+        <Text
+          style={{
+            fontSize: "16px",
+            lineHeight: "1.5",
+            marginBottom: "16px",
+          }}
+        >
+          <strong>Tracking Code :</strong> {trackingCode}
+        </Text>
+      )}
       <Text
         style={{
           fontSize: "16px",
