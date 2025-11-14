@@ -14,7 +14,9 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const fetchTransactions = await SubscriptionTransactions.find({
       gallery_id: gallery_id,
-    }).sort({ createdAt: -1 });
+    })
+      .sort({ createdAt: -1 })
+      .lean();
 
     if (!fetchTransactions)
       throw new ServerError("An error was encountered. Please try again");

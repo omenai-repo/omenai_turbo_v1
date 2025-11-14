@@ -3,12 +3,11 @@ import { NextResponse } from "next/server";
 import { sendArtistShippmentSuccessfulMail } from "../../../../../shared/shared-emails/src/models/artist/sendArtistShippmentSuccessfulMail";
 import { sendGalleryShipmentSuccessfulMail } from "../../../../../shared/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "../../../../../shared/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
+import { sendNexusTresholdEmail } from "../../../../../shared/shared-emails/src/models/admin/sendNexusTresholdEmail";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import SubscriptionExpireAlert from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
-import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
-import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
-import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendBuyerShipmentSuccessEmail";
+import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 export async function GET() {
   // const promise = await sendArtistFundUnlockEmail({
   //   name: "Test User",
@@ -38,21 +37,9 @@ export async function GET() {
 
   // await resend.batch.send(expiredSoonEmailPayload);
 
-  await SendBuyerShipmentSuccessEmail({
+  await sendNexusTresholdEmail({
     email: "rodolphe@omenai.app",
-    name: "Test User",
-    trackingCode: "1234567",
-  });
-
-  await SendArtistShipmentSuccessEmail({
-    email: "rodolphe@omenai.app",
-    name: "Test User",
-    trackingCode: "1234567",
-  });
-  await SendGalleryShipmentSuccessEmail({
-    email: "rodolphe@omenai.app",
-    name: "Test User",
-    trackingCode: "1234567",
+    state: "New-York",
   });
 
   return NextResponse.json({

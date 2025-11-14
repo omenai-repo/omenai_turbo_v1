@@ -14,7 +14,8 @@ import { toast } from "sonner";
 import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
-import {UpdateLogoModal} from "./modals/UpdateLogoModal"
+import { UpdateLogoModal } from "./modals/UpdateLogoModal";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -26,17 +27,10 @@ export default function GalleryDashboardLayout({
   const { data: account, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
-      const acc = await getAccountId(user.email as string, csrf || "");
-      if (!acc?.isOk) {
-        toast.error("Error notification", {
-          description: "Something went wrong, Please refresh the page",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      } else return acc.data;
+      const acc = await getAccountId(user.gallery_id as string, csrf || "");
+      if (!acc?.isOk)
+        toast_notif("Something went wrong, Please refresh the page", "error");
+      else return acc.data;
     },
     refetchOnWindowFocus: false,
   });

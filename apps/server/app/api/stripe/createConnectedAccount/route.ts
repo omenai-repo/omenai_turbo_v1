@@ -19,6 +19,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
     const { customer } = await request.json();
+
     const account = await stripe.accounts.create({
       metadata: customer,
       email: customer.email,
@@ -54,7 +55,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       { $set: { connected_account_id: account.id } }
     );
 
-    if (!update_connected_id)
+    if (update_connected_id.modifiedCount === 0)
       throw new ServerError("Something went wrong. Contact Support");
 
     return NextResponse.json(

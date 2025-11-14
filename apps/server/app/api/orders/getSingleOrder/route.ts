@@ -13,7 +13,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const { order_id } = await request.json();
 
-    const order = await CreateOrder.findOne({ order_id });
+    const order = await CreateOrder.findOne({ order_id }).lean();
 
     if (!order) throw new ServerError("No order matching this id found");
 

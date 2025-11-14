@@ -10,6 +10,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { redis } from "@omenai/upstash-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -43,8 +44,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (verify_gallery.modifiedCount === 0)
       throw new ServerError("Something went wrong");
 
-    // DONE: Send mail to gallery
-    sendGalleryAcceptedMail({
+    // Invalidate redis cache
+
+    try {
+      await redis.del(`account:${gallery_id}`);
+    } catch (error) {
+      console.error("Unable to invalidate redis cache");
+    }
+    await sendGalleryAcceptedMail({
       name,
       email,
     });
