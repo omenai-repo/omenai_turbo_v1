@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@omenai/appwrite-config": "*",
-    "@omenai/shared-emails": "*",
     "@omenai/shared-utils": "*",
     "@omenai/upstash-config": "*",
     "@upstash/ratelimit": "^2.0.4",
