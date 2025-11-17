@@ -37,11 +37,10 @@ export default function PreferencePicker({
           </li>
           {preferences.map((preference) => {
             return (
-              <li>
+              <li key={preference}>
                 <button
                   type="button"
                   onClick={() => handleFilterChange(preference)}
-                  key={preference}
                   className={`rounded w-fit border font-normal border-dark/30 hover:ring-1 hover:ring-dark/80 text-fluid-xxs transition-all ease-linear duration-100 px-4 py-2 ${
                     curated_preference === preference
                       ? "bg-dark text-white"
