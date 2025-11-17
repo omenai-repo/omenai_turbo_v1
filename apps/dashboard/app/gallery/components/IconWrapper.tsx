@@ -1,15 +1,9 @@
 export default function IconWrapper({
   children,
   className,
-  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
 }) {
-  return (
-    <span className={`p-2 w-fit rounded ${className}`} onClick={onClick}>
-      {children}
-    </span>
-  );
+  return <span className={`p-2 w-fit rounded ${className}`}>{children}</span>;
 }
