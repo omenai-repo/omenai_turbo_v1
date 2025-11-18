@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -23,6 +24,7 @@ export async function requestPrice(
 
     return { isOk: res.ok, message: result.message, status: res.status };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

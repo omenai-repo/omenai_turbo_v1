@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { ArtistCategorizationUpdateDataTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -19,6 +20,7 @@ export async function onboardArtist(
     const response = await result.json();
     return { isOk: result.ok, message: response.message };
   } catch (error) {
+    LogRollbarServerError(error);
     return { isOk: false, message: "Something went wrong" };
   }
 }

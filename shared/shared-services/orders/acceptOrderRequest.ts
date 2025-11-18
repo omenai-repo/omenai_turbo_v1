@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import {
   HoldStatus,
   OrderArtworkExhibitionStatus,
@@ -30,6 +31,7 @@ export const acceptOrderRequest = async (
     const result = await res.json();
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

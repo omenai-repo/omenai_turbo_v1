@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function deleteArtwork(art_id: string, token: string) {
@@ -14,6 +15,7 @@ export async function deleteArtwork(art_id: string, token: string) {
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

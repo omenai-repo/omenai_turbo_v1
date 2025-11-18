@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { AddressTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -30,6 +31,7 @@ export const createShippingOrder = async (
     const result = await res.json();
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

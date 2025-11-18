@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -13,15 +14,26 @@ export async function resetPassword(
     headers: {
       "Content-type": "application/json",
     },
-  }).then(async (res) => {
-    const data: { message: string } = await res.json();
-    const response = {
-      isOk: res.ok,
-      body: { message: data.message },
-    };
+  })
+    .then(async (res) => {
+      const data: { message: string } = await res.json();
+      const response = {
+        isOk: res.ok,
+        body: { message: data.message },
+      };
 
-    return response;
-  });
+      return response;
+    })
+    .catch((error) => {
+      LogRollbarServerError(error);
+      return {
+        isOk: false,
+        body: {
+          message:
+            "An error was encountered, please try again later or contact support",
+        },
+      };
+    });
 
   return result;
 }

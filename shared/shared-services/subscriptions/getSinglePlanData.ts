@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function getSinglePlanData(plan_id: string) {
@@ -14,6 +15,7 @@ export async function getSinglePlanData(plan_id: string) {
       data: result.data,
     };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { toast } from "sonner";
@@ -17,6 +18,7 @@ export async function resendCode(
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

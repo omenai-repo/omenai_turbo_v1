@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createStripeTokenizedCharge(
@@ -38,6 +39,7 @@ export async function createStripeTokenizedCharge(
       paymentIntentId: result.paymentIntentId,
     };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

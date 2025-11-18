@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { PromotionalSchemaTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -18,6 +19,7 @@ export async function createPromotionalData(
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function checkIsStripeOnboarded(accountId: string, token: string) {
@@ -17,6 +18,7 @@ export async function checkIsStripeOnboarded(accountId: string, token: string) {
       details_submitted: result.details_submitted,
     };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

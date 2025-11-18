@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function updateArtworkImpressions(
@@ -28,6 +29,7 @@ export async function updateArtworkImpressions(
 
     return response;
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

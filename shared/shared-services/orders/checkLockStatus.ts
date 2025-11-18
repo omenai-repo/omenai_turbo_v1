@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const checkLockStatus = async (art_id: string, user_id: string) => {
@@ -13,6 +14,7 @@ export const checkLockStatus = async (art_id: string, user_id: string) => {
     const result = await res.json();
     return { isOk: res.ok, message: result.message, data: result.data };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

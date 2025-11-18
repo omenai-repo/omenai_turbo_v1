@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import {
   IndividualRegisterData,
   GalleryRegisterData,
@@ -16,14 +17,25 @@ export async function registerAccount(
     headers: {
       "Content-type": "application/json",
     },
-  }).then(async (res) => {
-    const response = {
-      isOk: res.ok,
-      body: await res.json(),
-    };
+  })
+    .then(async (res) => {
+      const response = {
+        isOk: res.ok,
+        body: await res.json(),
+      };
 
-    return response;
-  });
+      return response;
+    })
+    .catch((error) => {
+      LogRollbarServerError(error);
+      return {
+        isOk: false,
+        body: {
+          message:
+            "An error was encountered, please try again later or contact support",
+        },
+      };
+    });
 
   return result;
 }

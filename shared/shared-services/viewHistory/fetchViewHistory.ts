@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchViewHistory(user_id: string, token: string) {
@@ -13,6 +14,7 @@ export async function fetchViewHistory(user_id: string, token: string) {
     const result = await res.json();
     return { isOk: res.ok, data: result.data, message: result.message };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

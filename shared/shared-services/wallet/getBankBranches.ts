@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function getBankBranches(bankCode: string) {
@@ -18,6 +19,7 @@ export async function getBankBranches(bankCode: string) {
       data: result.bank_branches,
     };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:

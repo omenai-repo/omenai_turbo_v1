@@ -1,3 +1,4 @@
+import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchTrendingArtworks(page: number, filters?: any) {
@@ -19,6 +20,7 @@ export async function fetchTrendingArtworks(page: number, filters?: any) {
       total: result.total,
     };
   } catch (error: any) {
+    LogRollbarServerError(error);
     return {
       isOk: false,
       message:
