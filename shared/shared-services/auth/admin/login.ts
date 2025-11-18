@@ -1,4 +1,4 @@
-import { rollbarServerInstance } from "@omenai/rollbar-config";
+import LogRollbarServerError from "../../../shared-lib/rollbar/LogRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function loginAdmin(payload: { email: string; password: string }) {
@@ -15,12 +15,7 @@ export async function loginAdmin(payload: { email: string; password: string }) {
     const response = await result.json();
     return { isOk: result.ok, message: response.message, data: response.data };
   } catch (error) {
-    if (error instanceof Error) {
-      rollbarServerInstance.error(error);
-    } else {
-      // Wrap non-Error objects in an Error
-      rollbarServerInstance.error(new Error(String(error)));
-    }
+    LogRollbarServerError(error);
     return { isOk: false, message: "Something went wrong" };
   }
 }
