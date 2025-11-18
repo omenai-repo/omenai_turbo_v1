@@ -1,4 +1,5 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 
 export async function loginUser(payload: { email: string; password: string }) {
   try {
@@ -19,6 +20,12 @@ export async function loginUser(payload: { email: string; password: string }) {
       signInToken: response.signInToken,
     };
   } catch (error) {
+    if (error instanceof Error) {
+      rollbarServerInstance.error(error);
+    } else {
+      // Wrap non-Error objects in an Error
+      rollbarServerInstance.error(new Error(String(error)));
+    }
     return { isOk: false, message: "Something went wrong" };
   }
 }

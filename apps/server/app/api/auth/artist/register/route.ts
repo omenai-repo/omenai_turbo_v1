@@ -12,6 +12,7 @@ import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/se
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
@@ -79,7 +80,15 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    if (error_response?.status && error_response.status >= 500) {
+      if (error instanceof ServerError) {
+        rollbarServerInstance.error(error, {
+          context: "Artist Onboarding registeration",
+        });
+      } else {
+        rollbarServerInstance.error(new Error(String(error)));
+      }
+    }
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

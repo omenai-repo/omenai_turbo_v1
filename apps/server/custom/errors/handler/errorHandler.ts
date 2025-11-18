@@ -1,4 +1,3 @@
-import { RateLimitExceededError } from "./../dictionary/errorDictionary";
 import {
   ACCOUNT_ALREADY_EXISTS_ERROR_CODE,
   BAD_REQUEST_STATUS,
@@ -8,6 +7,8 @@ import {
   SERVER_ERROR_STATUS,
   RATE_LIMIT_EXCEEDED_STATUS,
 } from "../../../constants/statusCodes/codes";
+
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 
 const errorStatusMap: { [key: string]: number } = {
   NotFoundError: NOT_FOUND_STATUS,
@@ -25,6 +26,8 @@ const createErrorObject = (message: string, status: number) => {
 export const handleErrorEdgeCases = (error: any) => {
   const errorName = error.name;
   const errorCode = error.code;
+
+  // Only log server errors
 
   if (errorName in errorStatusMap) {
     return createErrorObject(error.message, errorStatusMap[errorName]);

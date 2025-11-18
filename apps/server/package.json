@@ -18,6 +18,7 @@
     "@omenai/shared-models": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-utils": "*",
+    "@omenai/rollbar-config": "*",
     "@omenai/typescript-config": "*",
     "@omenai/cloudinary-config": "*"
   },
