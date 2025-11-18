@@ -43,11 +43,11 @@ export default function ArticleWrapper() {
       <div className="flex gap-4 flex-wrap">
         {editorials?.map((editorial: any) => {
           return (
-            <>
-              <EditorialItemCard key={editorial.slug} editorial={editorial} />
-              <EditorialItemCard key={editorial.slug} editorial={editorial} />
-              <EditorialItemCard key={editorial.slug} editorial={editorial} />
-            </>
+            // <React.Fragment key={editorial.slug}>
+            <EditorialItemCard key={editorial.slug} editorial={editorial} />
+            // <EditorialItemCard key={editorial.slug} editorial={editorial} />
+            // <EditorialItemCard key={editorial.slug} editorial={editorial} />
+            // </React.Fragment>
           );
         })}
       </div>

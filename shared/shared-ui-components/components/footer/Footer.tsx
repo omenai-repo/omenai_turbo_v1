@@ -3,7 +3,6 @@
 import { base_url } from "@omenai/url-config/src/config";
 import { motion } from "framer-motion";
 import { Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -26,10 +25,13 @@ export default function Footer() {
           {/* Socials */}
           <div className="flex space-x-4 mt-4">
             {[
-              { Icon: Instagram, href: "https://instagram.com" },
+              { Icon: Instagram, href: "https://instagram.com/omenaiofficial" },
               { Icon: Twitter, href: "https://x.com" },
-              { Icon: Facebook, href: "https://facebook.com" },
-              { Icon: Linkedin, href: "https://linkedin.com" },
+              { Icon: Facebook, href: "https://facebook.com/omenaiofficial" },
+              {
+                Icon: Linkedin,
+                href: "https://linkedin.com/company/omenaiart",
+              },
             ].map(({ Icon, href }, i) => (
               <motion.a
                 key={i}
