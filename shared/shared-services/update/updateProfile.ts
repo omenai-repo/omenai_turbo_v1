@@ -1,3 +1,4 @@
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 import {
   RouteIdentifier,
   GalleryProfileUpdateData,
@@ -25,15 +26,31 @@ export async function updateProfile(
       "x-csrf-token": token,
     },
     credentials: "include",
-  }).then(async (res) => {
-    const data: { message: string } = await res.json();
-    const response = {
-      isOk: res.ok,
-      body: { message: data.message },
-    };
+  })
+    .then(async (res) => {
+      const data: { message: string } = await res.json();
+      const response = {
+        isOk: res.ok,
+        body: { message: data.message },
+      };
 
-    return response;
-  });
+      return response;
+    })
+    .catch((error) => {
+      if (error instanceof Error) {
+        rollbarServerInstance.error(error);
+      } else {
+        // Wrap non-Error objects in an Error
+        rollbarServerInstance.error(new Error(String(error)));
+      }
+      return {
+        isOk: false,
+        body: {
+          message:
+            "An error was encountered, please try again later or contact support",
+        },
+      };
+    });
 
   return result;
 }

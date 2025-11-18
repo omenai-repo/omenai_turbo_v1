@@ -1,3 +1,4 @@
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 export async function resendAdminInvite(admin_id: string, token: string) {
   try {
@@ -13,6 +14,12 @@ export async function resendAdminInvite(admin_id: string, token: string) {
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    if (error instanceof Error) {
+      rollbarServerInstance.error(error);
+    } else {
+      // Wrap non-Error objects in an Error
+      rollbarServerInstance.error(new Error(String(error)));
+    }
     return {
       isOk: false,
       message:

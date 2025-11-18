@@ -1,3 +1,4 @@
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { NexusDocument } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -16,6 +17,12 @@ export async function fetchNexusData(code: string) {
       data: result.data as NexusDocument,
     };
   } catch (error: any) {
+    if (error instanceof Error) {
+      rollbarServerInstance.error(error);
+    } else {
+      // Wrap non-Error objects in an Error
+      rollbarServerInstance.error(new Error(String(error)));
+    }
     return {
       isOk: false,
       message:

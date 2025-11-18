@@ -1,3 +1,4 @@
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function getArtworkHighlightData(session_id: string) {
@@ -13,6 +14,12 @@ export async function getArtworkHighlightData(session_id: string) {
     const result = await response.json();
     return { isOk: response.ok, data: result.data, count: result.count };
   } catch (error: any) {
+    if (error instanceof Error) {
+      rollbarServerInstance.error(error);
+    } else {
+      // Wrap non-Error objects in an Error
+      rollbarServerInstance.error(new Error(String(error)));
+    }
     return {
       isOk: false,
       message:

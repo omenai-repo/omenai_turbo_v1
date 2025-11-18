@@ -1,3 +1,4 @@
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchArtistProfile(id: string) {
@@ -18,6 +19,12 @@ export async function fetchArtistProfile(id: string) {
       artist: result.artist,
     };
   } catch (error: any) {
+    if (error instanceof Error) {
+      rollbarServerInstance.error(error);
+    } else {
+      // Wrap non-Error objects in an Error
+      rollbarServerInstance.error(new Error(String(error)));
+    }
     return {
       isOk: false,
       message:
