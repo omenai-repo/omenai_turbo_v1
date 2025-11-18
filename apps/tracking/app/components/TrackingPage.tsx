@@ -19,6 +19,7 @@ export default function TrackingPage() {
 
   const searchParams = useSearchParams();
   const tracking_id = searchParams.get("tracking_id") || "";
+
   // Fetch tracking data
   const { data, isLoading, isError } = useQuery({
     queryKey: ["tracking", searchedNumber],

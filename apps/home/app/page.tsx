@@ -17,13 +17,8 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import TrendingArtistWrapper from "./features/trendingArtists/TrendingArtistWrapper";
 import Newsletter from "./Newsletter";
 
-import { useFeatureFlag } from "configcat-react";
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
-  const { value: isMyNewFeatureEnabled } = useFeatureFlag(
-    "showmynewfeature",
-    false
-  );
 
   const { data: promotionals, isLoading } = useQuery({
     queryKey: ["home"],
@@ -51,15 +46,7 @@ export default function Home() {
       <div>
         <DesktopNavbar />
 
-        {isMyNewFeatureEnabled ? (
-          promotionals && <Hero promotionals={promotionals} />
-        ) : (
-          <>
-            <div className="w-full grid place-items-center p-5 bg-dark text-white">
-              <p>Sorry, this feature is disabled at the moment</p>
-            </div>
-          </>
-        )}
+        {promotionals && <Hero promotionals={promotionals} />}
 
         <LatestArtworkWrapper
           sessionId={user && user.role === "user" ? user.id : undefined}

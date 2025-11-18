@@ -3,6 +3,10 @@ import { Work_Sans } from "next/font/google";
 import LayoutWrapper from "./LayoutWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import { Viewport } from "next";
+import {
+  HighRiskProvider,
+  LowRiskProvider,
+} from "@omenai/package-provider/ConfigCatProvider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -22,13 +26,15 @@ export default async function AuthDashboardRootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={`${work_sans.variable} font-sans flex flex-col justify-center`}
-      >
-        <LayoutWrapper>{children}</LayoutWrapper>
-        <Analytics />
-      </body>
-    </html>
+    <LowRiskProvider>
+      <html lang="en">
+        <body
+          className={`${work_sans.variable} font-sans flex flex-col justify-center`}
+        >
+          <LayoutWrapper>{children}</LayoutWrapper>
+          <Analytics />
+        </body>
+      </html>
+    </LowRiskProvider>
   );
 }

@@ -55,7 +55,6 @@ export default function PayNowButton({
     if (get_purchase_lock?.isOk) {
       if (get_purchase_lock.data.lock_data.user_id === user.id) {
         let checkout_session_response;
-        console.log(role_access);
         if (role_access === "artist") {
           const checkout_session = await createFlwCheckoutSession(
             amount,

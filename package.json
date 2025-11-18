@@ -37,6 +37,7 @@
   ],
   "dependencies": {
     "@babel/types": "^7.27.0",
+    "@configcat/sdk": "^1.0.2",
     "@heroicons/react": "^2.2.0",
     "@highlight-run/next": "^7.9.6",
     "@lottiefiles/dotlottie-react": "^0.17.2",

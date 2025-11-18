@@ -29,6 +29,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       artist_id: id,
     });
     if (!account) throw new NotFoundError("Artist not found for given ID");
+
     const token = generateDigit(7);
 
     const check_code_existence = await VerificationCodes.findOne({

@@ -1,0 +1,9 @@
+{
+  "name": "@omenai/configcat-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "config",
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}

@@ -4,8 +4,8 @@ import { VerificationCodes } from "@omenai/shared-models/models/auth/verificatio
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
 import {
-  ServerError,
   ConflictError,
+  NotFoundError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPasswordConfirmationCodeMail } from "@omenai/shared-emails/src/models/gallery/sendPasswordChangeConfirmationCode";
@@ -28,7 +28,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const account = await AccountGallery.findOne({
       gallery_id: id,
     });
-    if (!account) throw new ServerError("Something went wrong");
+    if (!account) throw new NotFoundError("Gallery not found for given ID");
+
     const token = generateDigit(7);
 
     const check_code_existence = await VerificationCodes.findOne({

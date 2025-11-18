@@ -6,10 +6,18 @@ import PlanWrapper from "./PlanWrapper";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useHighRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
+import SubscriptionBillingBlocker from "@omenai/shared-ui-components/components/blockers/payments/SubscriptionDowntimeBlocker";
 
 export default function Plans() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const url = getApiUrl();
+
+  const { value: isSubscriptionBillingEnabled } = useHighRiskFeatureFlag(
+    "subscription_creation_enabled"
+  );
+
+  if (!isSubscriptionBillingEnabled) return <SubscriptionBillingBlocker />;
 
   const { data, isLoading } = useQuery({
     queryKey: ["get_all_plan_details"],

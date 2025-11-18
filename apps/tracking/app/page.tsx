@@ -1,5 +1,7 @@
-import TrackingPage from "./components/TrackingPage";
+import TrackingPageWrapper from "./TrackingPageWrapper";
+
 export const dynamic = "force-dynamic";
+
 export default function page() {
-  return <TrackingPage />;
+  return <TrackingPageWrapper />;
 }

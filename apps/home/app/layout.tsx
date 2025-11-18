@@ -16,9 +16,13 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
-import { ConfigCatProvider } from "configcat-react";
 import { SessionProvider } from "@omenai/package-provider";
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
+import {
+  HighRiskProvider,
+  LowRiskProvider,
+} from "@omenai/package-provider/ConfigCatProvider";
+
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 
@@ -52,7 +56,7 @@ export default async function RootLayout({
 
   return (
     <RollbarProvider config={clientConfig}>
-      <ConfigCatProvider sdkKey={configCatSdkKey}>
+      <HighRiskProvider>
         <html lang="en" {...mantineHtmlProps}>
           <head>
             <meta name="color-scheme" content="light" />
@@ -85,7 +89,7 @@ export default async function RootLayout({
             </SessionProvider>
           </body>
         </html>
-      </ConfigCatProvider>
+      </HighRiskProvider>
     </RollbarProvider>
   );
 }

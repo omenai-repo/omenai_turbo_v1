@@ -8,7 +8,8 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Image from "next/image";
 import PayNowButton from "./PayNowButton";
 import { calculatePurchaseGrandTotalNumber } from "@omenai/shared-utils/src/calculatePurchaseGrandTotal";
-
+import { useHighRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
+import PaymentBlocker from "./PaymentBlocker";
 export default function OrderDetails({
   order,
   lock_status,
@@ -16,6 +17,19 @@ export default function OrderDetails({
   order: CreateOrderModelTypes;
   lock_status: boolean;
 }) {
+  const { value: isFlutterwavePaymentEnabled } = useHighRiskFeatureFlag(
+    "flutterwave_payment_enabled"
+  );
+  const { value: isStripePaymentEnabled } = useHighRiskFeatureFlag(
+    "stripe_payment_enabled"
+  );
+
+  const showBlocker =
+    (order.seller_designation === "artist" && !isFlutterwavePaymentEnabled) ||
+    (order.seller_designation === "gallery" && !isStripePaymentEnabled);
+
+  if (showBlocker) return <PaymentBlocker />;
+
   const image_href = getOptimizedImage(order.artwork_data.url, "thumbnail", 40);
 
   const total_price_number = calculatePurchaseGrandTotalNumber(
