@@ -6,7 +6,11 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { NextResponse } from "next/server";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ForbiddenError,
+  ServerError,
+} from "../../../../../custom/errors/dictionary/errorDictionary";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
@@ -14,8 +18,17 @@ const config: CombinedConfig = {
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
   request: Request
 ) {
-  const { setupIntentId, gallery_id } = await request.json();
   try {
+    const isSubscriptionEnabled = (await fetchConfigCatValue(
+      "subscription_creation_enabled",
+      "high"
+    )) as boolean;
+
+    if (!isSubscriptionEnabled)
+      throw new ForbiddenError("Subscriptions are currently disabled");
+
+    const { setupIntentId, gallery_id } = await request.json();
+
     if (!setupIntentId || !gallery_id) {
       return NextResponse.json(
         { message: "setupIntentId and gallery_id are required" },

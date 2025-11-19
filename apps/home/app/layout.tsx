@@ -18,10 +18,7 @@ import {
 } from "@mantine/core";
 import { SessionProvider } from "@omenai/package-provider";
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
-import {
-  HighRiskProvider,
-  LowRiskProvider,
-} from "@omenai/package-provider/ConfigCatProvider";
+import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";

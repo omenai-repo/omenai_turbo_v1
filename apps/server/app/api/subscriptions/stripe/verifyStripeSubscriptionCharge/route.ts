@@ -23,6 +23,8 @@ import { z } from "zod";
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { ForbiddenError } from "../../../../../custom/errors/dictionary/errorDictionary";
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -339,6 +341,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isSubscriptionEnabled = (await fetchConfigCatValue(
+      "subscription_creation_enabled",
+      "high"
+    )) as boolean;
+
+    if (!isSubscriptionEnabled)
+      throw new ForbiddenError("Subscriptions are currently disabled");
     await connectMongoDB();
 
     // Parse and validate request

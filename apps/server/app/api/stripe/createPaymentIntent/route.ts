@@ -3,18 +3,21 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
-import {
-  ServerError,
-  ForbiddenError,
-} from "../../../../custom/errors/dictionary/errorDictionary";
+import { ForbiddenError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { SubscriptionModelSchemaTypes } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const isStripePaymentEnabled =
+        (await fetchConfigCatValue("stripe_payment_enabled", "high")) ?? false;
+      if (!isStripePaymentEnabled) {
+        throw new ForbiddenError("Stripe payment is currently disabled");
+      }
       await connectMongoDB();
       const { amount, seller_id, meta } = await request.json();
 
@@ -49,7 +52,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       };
       const commissionRate = rateMap[planType] ?? rateMap.basic;
 
-      const baseAmountCents = Math.round(amount * 100);
       const commissionCents = Math.round(
         (meta.unit_price * commissionRate +
           meta.shipping_cost +
@@ -67,8 +69,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           commission: Math.round(meta.unit_price * commissionRate),
           type: "purchase",
         },
-        // In the latest version of the API, specifying the `automatic_payment_methods` parameter
-        // is optional because Stripe enables its functionality by default.
+
         automatic_payment_methods: {
           enabled: true,
         },

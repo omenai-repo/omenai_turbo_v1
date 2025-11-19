@@ -10,6 +10,7 @@ import {
   SHIPMENT_API_URL,
 } from "../utils";
 import {
+  ForbiddenError,
   NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -20,6 +21,7 @@ import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
 import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 
 type Payload = {
   order_id: string;
@@ -43,7 +45,6 @@ async function callShipmentAPI(data: any): Promise<any> {
     clearTimeout(timeout);
 
     const result = await response.json();
-    console.log(result);
 
     if (!response.ok) {
       const errorResponse = await response.json();

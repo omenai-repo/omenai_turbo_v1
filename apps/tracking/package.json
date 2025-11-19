@@ -14,6 +14,7 @@
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
+    "@omenai/rollbar-config": "*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

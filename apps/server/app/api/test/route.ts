@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
-
-import { sendNexusTresholdEmail } from "../../../../../shared/shared-emails/src/models/admin/sendNexusTresholdEmail";
-
+import { testRollbar } from "@omenai/shared-services/test/test";
 export async function GET() {
-  await sendNexusTresholdEmail({
-    email: "rodolphe@omenai.app",
-    state: "New-York",
-  });
-
+  await testRollbar();
   return NextResponse.json({
     message: "Successful",
   });

@@ -24,6 +24,9 @@ export const viewport: Viewport = {
 };
 import "leaflet/dist/leaflet.css";
 
+import { Provider as RollbarProvider } from "@rollbar/react";
+import { clientConfig } from "@omenai/rollbar-config";
+
 // Body font → work_sans
 const work_sans = Work_Sans({
   subsets: ["latin"],
@@ -44,34 +47,38 @@ export default async function RootLayout({
   const initialSessionData = await getServerSession();
 
   return (
-    <LowRiskProvider>
-      <html lang="en" {...mantineHtmlProps}>
-        <head>
-          <meta name="color-scheme" content="light" />
-          <ColorSchemeScript defaultColorScheme="light" />
-        </head>
-        <body className={`${work_sans.variable} flex flex-col justify-center`}>
-          <NextTopLoader color="#0f172a" height={6} />
-          <Toaster
-            position="top-right"
-            expand
-            visibleToasts={3}
-            closeButton
-            duration={7000}
-          />
-          <SessionProvider initialSessionData={initialSessionData}>
-            <QueryProvider>
-              <MantineProvider
-                defaultColorScheme="light"
-                forceColorScheme="light"
-              >
-                {children}
-                <Analytics />
-              </MantineProvider>
-            </QueryProvider>
-          </SessionProvider>
-        </body>
-      </html>
-    </LowRiskProvider>
+    <RollbarProvider config={clientConfig}>
+      <LowRiskProvider>
+        <html lang="en" {...mantineHtmlProps}>
+          <head>
+            <meta name="color-scheme" content="light" />
+            <ColorSchemeScript defaultColorScheme="light" />
+          </head>
+          <body
+            className={`${work_sans.variable} flex flex-col justify-center`}
+          >
+            <NextTopLoader color="#0f172a" height={6} />
+            <Toaster
+              position="top-right"
+              expand
+              visibleToasts={3}
+              closeButton
+              duration={7000}
+            />
+            <SessionProvider initialSessionData={initialSessionData}>
+              <QueryProvider>
+                <MantineProvider
+                  defaultColorScheme="light"
+                  forceColorScheme="light"
+                >
+                  {children}
+                  <Analytics />
+                </MantineProvider>
+              </QueryProvider>
+            </SessionProvider>
+          </body>
+        </html>
+      </LowRiskProvider>
+    </RollbarProvider>
   );
 }

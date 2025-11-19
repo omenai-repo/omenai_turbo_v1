@@ -6,6 +6,7 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse, NextResponse as res } from "next/server";
 import {
   ConflictError,
+  ForbiddenError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
@@ -13,10 +14,17 @@ import { sendIndividualMail } from "@omenai/shared-emails/src/models/individuals
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
-
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const isCollectorOnboardingEnabled =
+        (await fetchConfigCatValue("collectoronboardingenabled", "low")) ??
+        false;
+
+      if (!isCollectorOnboardingEnabled)
+        throw new ForbiddenError("Collector onboarding is currently disabled");
+
       await connectMongoDB();
 
       const data = await request.json();

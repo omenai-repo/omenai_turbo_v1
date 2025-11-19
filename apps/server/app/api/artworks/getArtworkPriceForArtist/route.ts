@@ -7,11 +7,14 @@ import {
 } from "@omenai/shared-lib/algorithms/priceGenerator";
 import {
   BadRequestError,
+  ForbiddenError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { redis } from "@omenai/upstash-config";
+import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -27,7 +30,18 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       "category"
     ) as ArtistCategory;
     const currency = searchParams.get("currency") as string;
+
     try {
+      const isArtworkPriceEnabled = (await fetchConfigCatValue(
+        "artwork_price_calculation_enabled",
+        "high"
+      )) as boolean;
+
+      if (!isArtworkPriceEnabled)
+        throw new ForbiddenError(
+          "Artwork price calculation is currently disabled"
+        );
+
       if (!medium || !height || !width || !category) {
         throw new ServerError(
           "Missing required parameters (medium, height, width, category)"

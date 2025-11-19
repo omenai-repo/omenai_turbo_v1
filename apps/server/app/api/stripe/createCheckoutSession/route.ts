@@ -15,6 +15,7 @@ import {
   CombinedConfig,
   SubscriptionModelSchemaTypes,
 } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -25,6 +26,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isStripePaymentEnabled =
+      (await fetchConfigCatValue("stripe_payment_enabled", "high")) ?? false;
+    if (!isStripePaymentEnabled) {
+      throw new ForbiddenError("Stripe payment is currently disabled");
+    }
     await connectMongoDB();
 
     const { item, amount, seller_id, meta, success_url, cancel_url } =

@@ -5,6 +5,7 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse, NextResponse as res } from "next/server";
 import {
   ConflictError,
+  ForbiddenError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
@@ -13,10 +14,18 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
   try {
+    const isArtistOnboardingEnabled =
+      (await fetchConfigCatValue("artistonboardingenabled", "low")) ?? false;
+
+    if (!isArtistOnboardingEnabled) {
+      throw new ForbiddenError("Artist onboarding is currently disabled");
+    }
+
     await connectMongoDB();
 
     const data = await request.json();

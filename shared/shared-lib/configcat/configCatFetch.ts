@@ -1,11 +1,14 @@
-import configCatClient from "@omenai/configcat-config";
+import {
+  highRiskconfigCatClient,
+  lowRiskConfigCatClient,
+} from "@omenai/configcat-config";
 
 export async function fetchConfigCatValue(
-  featureKeyword: string
+  featureKeyword: string,
+  riskType: "high" | "low"
 ): Promise<boolean> {
-  const isFeatureEnabled = await configCatClient.getValueAsync(
-    featureKeyword,
-    false
-  );
+  const isFeatureEnabled = await (
+    riskType === "high" ? highRiskconfigCatClient : lowRiskConfigCatClient
+  ).getValueAsync(featureKeyword, false);
   return isFeatureEnabled;
 }

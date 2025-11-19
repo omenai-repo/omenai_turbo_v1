@@ -14,6 +14,7 @@ import { CombinedConfig, ExclusivityUpholdStatus } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { addDaysToDate } from "@omenai/shared-utils/src/addDaysToDate";
 import { redis } from "@omenai/upstash-config";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -24,6 +25,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isArtworkUploadEnabled =
+      (await fetchConfigCatValue("artwork_upload_enabled", "high")) ?? false;
+
+    if (!isArtworkUploadEnabled) {
+      throw new ForbiddenError("Artwork upload is currently disabled");
+    }
+
     await connectMongoDB();
     const data = await request.json();
 
