@@ -6,6 +6,7 @@
   "devDependencies": {
     "@omenai/appwrite-config": "*",
     "@omenai/shared-utils": "*",
+    "@omenai/shared-lib": "*",
     "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
     "@omenai/rollbar-config": "*"

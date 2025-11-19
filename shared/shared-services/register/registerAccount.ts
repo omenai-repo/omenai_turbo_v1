@@ -1,4 +1,4 @@
-import logRollbarServerError from "../../shared-lib/rollbar/logRollbarServerError";
+import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import {
   IndividualRegisterData,
   GalleryRegisterData,
