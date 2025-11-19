@@ -9,7 +9,7 @@ export default function ErrorComponent({
 }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="max-w-md w-full">
+      <div className="max-w-md w-full relative animate-fade-in">
         {/* Error Icon */}
         <div className="flex justify-center mb-8">
           <div className="relative">
@@ -34,19 +34,22 @@ export default function ErrorComponent({
 
         {/* Error Content */}
         <div className="text-center space-y-6">
+          {/* Header Text */}
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-dark">
+            <h1 className="text-fluid-3xl font-bold text-dark">
               Oops! Something went wrong
             </h1>
-            <p className="text-lg text-dark/60 max-w-sm mx-auto">
-              We encountered an unexpected error. Don't worry, we're on it.
+            <p className="text-fluid-base text-dark/60 max-w-sm mx-auto">
+              We&apos;ve run into an unexpected issue. Don&apos;t worry — our
+              team has already been notified and is working on a fix.
             </p>
           </div>
 
-          {/* Error Details */}
-          <div className="bg-white rounded p-4 shadow-sm border border-slate-200">
-            <p className="text-sm text-slate-500 font-mono break-all">
-              {error.message || "An unexpected error occurred"}
+          {/* Safe Error Details */}
+          <div className="bg-white rounded p-4 shadow-sm border border-slate-200 animate-fade-in">
+            <p className="text-sm text-slate-600">
+              Please try again shortly. If the problem continues, feel free to
+              reach out to support for assistance.
             </p>
           </div>
 
@@ -58,6 +61,7 @@ export default function ErrorComponent({
             >
               Try again
             </button>
+
             <button
               onClick={() => (window.location.href = "/")}
               className="px-4 py-2 text-fluid-xxs bg-white text-dark font-medium rounded shadow-sm border border-slate-300 transform transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2"
@@ -68,13 +72,14 @@ export default function ErrorComponent({
 
           {/* Help Text */}
           <p className="text-sm text-slate-500">
-            If this problem persists, please{" "}
+            If this issue persists, please{" "}
             <a
               href="/contact"
               className="text-dark underline underline-offset-2"
             >
               contact support
             </a>
+            .
           </p>
         </div>
 
