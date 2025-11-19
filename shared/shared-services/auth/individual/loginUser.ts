@@ -1,5 +1,5 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
-import LogRollbarServerError from "../../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../../shared-lib/rollbar/logRollbarServerError";
 
 export async function loginUser(payload: { email: string; password: string }) {
   try {
@@ -20,7 +20,7 @@ export async function loginUser(payload: { email: string; password: string }) {
       signInToken: response.signInToken,
     };
   } catch (error) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return { isOk: false, message: "Something went wrong" };
   }
 }

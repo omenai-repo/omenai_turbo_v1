@@ -1,6 +1,6 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { Filter } from "@omenai/shared-utils/src/isFilterEmpty";
-import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../shared-lib/rollbar/logRollbarServerError";
 
 export async function fetchFilterResults(filters: Filter) {
   try {
@@ -14,7 +14,7 @@ export async function fetchFilterResults(filters: Filter) {
 
     return { isOk: res.ok, message: result.message, data: result.data };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

@@ -1,4 +1,4 @@
-import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../shared-lib/rollbar/logRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function getArtworkHighlightData(session_id: string) {
@@ -14,7 +14,7 @@ export async function getArtworkHighlightData(session_id: string) {
     const result = await response.json();
     return { isOk: response.ok, data: result.data, count: result.count };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

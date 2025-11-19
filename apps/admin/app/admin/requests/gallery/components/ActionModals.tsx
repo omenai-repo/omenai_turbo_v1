@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import React from "react";
+import { useRollbar } from "@rollbar/react";
 
 // Configuration object to reduce conditional complexity
 const ACTION_CONFIG = {
@@ -65,6 +66,7 @@ export function ActionModals({
   gallery: GalleryType;
 }) {
   const [loading, setLoading] = useState(false);
+  const rollbar = useRollbar();
   const { gallery_id, name, email } = gallery;
   const queryClient = useQueryClient();
   const { csrf } = useAuth({ requiredRole: "admin" });
@@ -97,6 +99,11 @@ export function ActionModals({
       });
       close();
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification ", {
         description:
           "An error was encountered, please try later or contact support",

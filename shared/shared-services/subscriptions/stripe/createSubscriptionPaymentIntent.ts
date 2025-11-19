@@ -1,4 +1,4 @@
-import LogRollbarServerError from "../../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../../shared-lib/rollbar/logRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createSubscriptionPaymentIntent(
@@ -37,7 +37,7 @@ export async function createSubscriptionPaymentIntent(
       client_secret: result.paymentIntent,
     };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

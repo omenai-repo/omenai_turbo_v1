@@ -1,4 +1,4 @@
-import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../shared-lib/rollbar/logRollbarServerError";
 import { FilterOptions } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -24,7 +24,7 @@ export async function fetchPaginatedArtworks(
       total: result.total,
     };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

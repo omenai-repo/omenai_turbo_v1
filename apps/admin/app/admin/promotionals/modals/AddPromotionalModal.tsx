@@ -10,6 +10,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { createPromotionalData } from "@omenai/shared-services/promotionals/createPromotionalData";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 export function AddPromotionalModal() {
   const [opened, { open, close }] = useDisclosure(false);
   return (
@@ -47,6 +48,7 @@ export function AddPromotionalModal() {
 function PromotionalModalForm({ close }: { close: () => void }) {
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const [errorList, setErrorList] = useState<string[]>([]);
+  const rollbar = useRollbar();
   const [cover, setCover] = useState<File | null>(null);
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
   const MAX_SIZE_MB = 5; // e.g., 5MB
@@ -146,6 +148,11 @@ function PromotionalModalForm({ close }: { close: () => void }) {
 
       close();
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
     } finally {
       setLoading(false);
     }

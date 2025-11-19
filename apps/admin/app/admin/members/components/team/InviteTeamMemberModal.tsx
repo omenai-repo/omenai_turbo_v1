@@ -8,6 +8,7 @@ import { inviteNewMember } from "@omenai/shared-services/admin/invite_new_member
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRollbar } from "@rollbar/react";
 interface InviteTeamMemberModalProps {
   opened: boolean;
   onClose: () => void;
@@ -46,6 +47,7 @@ export default function InviteTeamMemberModal({
 }: InviteTeamMemberModalProps) {
   const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
+  const rollbar = useRollbar();
   const [role, setRole] = useState<TeamMember["access_role"]>("Viewer");
   const { csrf } = useAuth({ requiredRole: "admin" });
   const [loading, setLoading] = useState<boolean>(false);
@@ -76,6 +78,11 @@ export default function InviteTeamMemberModal({
           onClose();
         }
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {

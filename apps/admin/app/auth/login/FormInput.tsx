@@ -17,9 +17,11 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import React from "react";
+import { useRollbar } from "@rollbar/react";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
+  const rollbar = useRollbar();
   const auth_url = auth_uri();
   const dashboard_base_url = dashboard_url();
 
@@ -71,12 +73,22 @@ export default function FormInput() {
               set_redirect_uri("");
             }
           } catch (error) {
+            if (error instanceof Error) {
+              rollbar.error(error);
+            } else {
+              rollbar.error(new Error(String(error)));
+            }
             console.error("Sign-in error:", error);
             throw error;
           }
         }
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       const error_message = (
         error as unknown as { errors: { message: string }[] }
       ).errors[0].message;
