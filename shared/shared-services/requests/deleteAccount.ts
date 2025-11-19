@@ -1,4 +1,4 @@
-import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../shared-lib/rollbar/logRollbarServerError";
 import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -26,7 +26,7 @@ export async function deleteAccount(
       status: res.status,
     };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

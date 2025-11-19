@@ -1,4 +1,4 @@
-import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import { TeamMember } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 export async function updateAdminCredentials(
@@ -20,7 +20,7 @@ export async function updateAdminCredentials(
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

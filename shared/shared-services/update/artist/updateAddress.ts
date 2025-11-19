@@ -1,4 +1,4 @@
-import LogRollbarServerError from "../../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "../../../shared-lib/rollbar/logRollbarServerError";
 import { AddressTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -21,7 +21,7 @@ export async function updateAddress(
 
     return { isOk: result.ok, message: response.message };
   } catch (error) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

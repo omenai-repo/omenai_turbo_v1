@@ -9,6 +9,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateAdminProfile } from "@omenai/shared-services/admin/update_admin_profile";
 import { admin_url } from "@omenai/url-config/src/config";
+import { useRollbar } from "@rollbar/react";
 export default function ProfileSection() {
   const { user, csrf, signOut } = useAuth({
     requiredRole: "admin",
@@ -17,6 +18,7 @@ export default function ProfileSection() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState(user.name);
   const [isEditing, setIsEditing] = useState(false);
+  const rollbar = useRollbar();
   const handleSave = async () => {
     if (user) {
       setLoading(true);
@@ -37,6 +39,11 @@ export default function ProfileSection() {
           await signOut();
         }
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {

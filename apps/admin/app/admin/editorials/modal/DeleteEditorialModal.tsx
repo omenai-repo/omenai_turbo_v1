@@ -9,6 +9,7 @@ import { AlertTriangle, Trash2, X } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { deleteEditorialPiece } from "../lib/deleteEditorial";
 import { deleteEditorialImage } from "../lib/deleteEditorialImage";
+import { useRollbar } from "@rollbar/react";
 
 export default function DeleteEditorialModal({
   document_id,
@@ -18,7 +19,7 @@ export default function DeleteEditorialModal({
   image_id: string;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
-
+  const rollbar = useRollbar();
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
@@ -47,6 +48,11 @@ export default function DeleteEditorialModal({
 
       close();
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif("Something went wrong, please contact support", "error");
     } finally {
       setLoading(false);

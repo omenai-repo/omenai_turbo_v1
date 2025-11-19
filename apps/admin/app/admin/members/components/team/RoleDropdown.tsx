@@ -9,6 +9,7 @@ import { useState } from "react";
 import { editMemberRole } from "@omenai/shared-services/admin/edit_member_role";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { resendAdminInvite } from "@omenai/shared-services/admin/resend_admin_invite";
+import { useRollbar } from "@rollbar/react";
 interface RoleDropdownProps {
   value: TeamMember["access_role"];
   memberName?: string;
@@ -78,6 +79,14 @@ export default function RoleDropdown({
 }: RoleDropdownProps) {
   const { user, csrf } = useAuth({ requiredRole: "admin" });
   const [opened, { open, close }] = useDisclosure(false);
+  const rollbar = useRollbar();
+  function logRollbarClientError(error: any) {
+    if (error instanceof Error) {
+      rollbar.error(error);
+    } else {
+      rollbar.error(new Error(String(error)));
+    }
+  }
   const [pendingRole, setPendingRole] = useState<
     TeamMember["access_role"] | null
   >(null);
@@ -111,6 +120,7 @@ export default function RoleDropdown({
           close();
         }
       } catch (error) {
+        logRollbarClientError(error);
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {
@@ -140,6 +150,7 @@ export default function RoleDropdown({
           close();
         }
       } catch (error) {
+        logRollbarClientError(error);
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {

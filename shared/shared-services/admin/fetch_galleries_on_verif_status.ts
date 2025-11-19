@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import LogRollbarServerError from "../../shared-lib/rollbar/LogRollbarServerError";
+import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchGalleriesOnVerifStatus() {
@@ -15,7 +15,7 @@ export async function fetchGalleriesOnVerifStatus() {
 
     return { isOk: res.ok, message: result.message, data: result.data };
   } catch (error: any) {
-    LogRollbarServerError(error);
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

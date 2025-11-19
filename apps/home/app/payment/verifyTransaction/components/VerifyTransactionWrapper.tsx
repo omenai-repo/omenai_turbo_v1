@@ -8,9 +8,11 @@ import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useRollbar } from "@rollbar/react";
 
 export default function VerifyTransactionWrapper() {
   const searchParams = useSearchParams();
+  const rollbar = useRollbar();
   const transaction_id = searchParams.get("transaction_id");
   const [pur_gid, set_pur_gid] = useLocalStorage<{
     gid: string;
@@ -56,6 +58,11 @@ export default function VerifyTransactionWrapper() {
         const result = await response.json();
         return { message: result.message, isOk: true };
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         console.error("Verification Error:", error);
         handleError();
       }

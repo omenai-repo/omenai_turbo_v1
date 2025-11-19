@@ -3,7 +3,6 @@ import { base_url } from "@omenai/url-config/src/config";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteEditorialModal from "../modal/DeleteEditorialModal";
-import { useState } from "react";
 
 export default function EditorialItemCard({ editorial }: { editorial: any }) {
   const url = editorial.cover
