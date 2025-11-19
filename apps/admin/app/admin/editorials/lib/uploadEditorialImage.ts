@@ -10,11 +10,7 @@ export async function uploadEditorialImage(image: File) {
     });
     return { isOk: true, data: response };
   } catch (error) {
-    if (error instanceof Error) {
-      logRollbarServerError(error);
-    } else {
-      logRollbarServerError(error);
-    }
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

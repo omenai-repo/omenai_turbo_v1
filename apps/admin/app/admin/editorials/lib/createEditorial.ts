@@ -13,11 +13,7 @@ export async function createEditorialPiece(editorial: EditorialSchemaTypes) {
 
     return { isOk: true, data: response };
   } catch (error) {
-    if (error instanceof Error) {
-      logRollbarServerError(error);
-    } else {
-      logRollbarServerError(error);
-    }
+    logRollbarServerError(error);
     return {
       isOk: false,
       message: "Something went wrong, please contact IT team",

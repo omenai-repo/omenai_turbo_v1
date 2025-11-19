@@ -9,11 +9,7 @@ export async function deleteEditorialImage(fileId: string) {
     });
     return { isOk: true };
   } catch (error) {
-    if (error instanceof Error) {
-      logRollbarServerError(error);
-    } else {
-      logRollbarServerError(error);
-    }
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

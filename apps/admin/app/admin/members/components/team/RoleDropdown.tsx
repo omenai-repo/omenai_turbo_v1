@@ -80,6 +80,13 @@ export default function RoleDropdown({
   const { user, csrf } = useAuth({ requiredRole: "admin" });
   const [opened, { open, close }] = useDisclosure(false);
   const rollbar = useRollbar();
+  function logRollbarClientError(error: any) {
+    if (error instanceof Error) {
+      rollbar.error(error);
+    } else {
+      rollbar.error(new Error(String(error)));
+    }
+  }
   const [pendingRole, setPendingRole] = useState<
     TeamMember["access_role"] | null
   >(null);
@@ -113,11 +120,7 @@ export default function RoleDropdown({
           close();
         }
       } catch (error) {
-        if (error instanceof Error) {
-          rollbar.error(error);
-        } else {
-          rollbar.error(new Error(String(error)));
-        }
+        logRollbarClientError(error);
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {
@@ -147,11 +150,7 @@ export default function RoleDropdown({
           close();
         }
       } catch (error) {
-        if (error instanceof Error) {
-          rollbar.error(error);
-        } else {
-          rollbar.error(new Error(String(error)));
-        }
+        logRollbarClientError(error);
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {
