@@ -1,6 +1,6 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { filterOptionsType } from "@omenai/shared-types/index";
-import logRollbarServerError from "../../shared-lib/rollbar/logRollbarServerError";
+import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
 export const fetchCuratedArtworks = async (
   page: number,
   preferences: string[],
