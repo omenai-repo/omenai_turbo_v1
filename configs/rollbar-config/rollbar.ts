@@ -1,4 +1,3 @@
-/// ./src/rollbar.js
 import Rollbar from "rollbar";
 
 const baseConfig = {

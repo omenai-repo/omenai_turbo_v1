@@ -30,6 +30,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         {
           message: "Successful",
           data: allArtworks,
+          count: allArtworks.length,
         },
         { status: 200 }
       );

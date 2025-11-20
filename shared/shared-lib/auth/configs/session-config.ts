@@ -1,6 +1,6 @@
 export const sessionOptions = {
-  cookieName: "omenai_session", // A unique name for your cookie
-  password: process.env.SECRET_COOKIE_PASSWORD as string, // A long, secret password. STORE THIS IN ENV VARS
+  cookieName: "omenai_session",
+  password: process.env.SECRET_COOKIE_PASSWORD as string,
   cookieOptions: {
     domain: process.env.NODE_ENV === "production" ? ".omenai.app" : "localhost",
     path: "/",
