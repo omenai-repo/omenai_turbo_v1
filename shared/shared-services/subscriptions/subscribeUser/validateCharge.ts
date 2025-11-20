@@ -1,4 +1,4 @@
-import logRollbarServerError from "../../../shared-lib/rollbar/logRollbarServerError";
+import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function validateCharge(
