@@ -1,6 +1,6 @@
 import { editorial_database } from "@omenai/appwrite-config";
 import { identifier } from "@omenai/appwrite-config";
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { EditorialSchemaTypes } from "@omenai/shared-types";
 export async function createEditorialPiece(editorial: EditorialSchemaTypes) {
   try {

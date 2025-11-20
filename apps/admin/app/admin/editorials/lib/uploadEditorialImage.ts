@@ -1,5 +1,5 @@
 import { storage, identifier } from "@omenai/appwrite-config";
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import { logRollbarServerError } from "@omenai/rollbar-config";
 
 export async function uploadEditorialImage(image: File) {
   try {

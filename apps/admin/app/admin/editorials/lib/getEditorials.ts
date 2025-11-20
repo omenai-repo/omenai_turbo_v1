@@ -1,5 +1,5 @@
 import { editorial_database } from "@omenai/appwrite-config";
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { Query } from "appwrite";
 
 export async function listEditorials() {

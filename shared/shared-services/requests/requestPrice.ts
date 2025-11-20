@@ -1,4 +1,4 @@
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import {logRollbarServerError} from "@omenai/rollbar-config"
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
