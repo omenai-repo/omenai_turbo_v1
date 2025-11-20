@@ -17,10 +17,12 @@ import NoVerificationBlock from "../../components/NoVerificationBlock";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { isSubscriptionExpired } from "@omenai/shared-utils/src/isSubscriptionExpired";
+import { useRollbar } from "@rollbar/react";
 export default function OrdersGroup() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const [tab, setTab] = useState("pending");
   const router = useRouter();
+  const rollbar = useRollbar();
 
   const { data, isLoading } = useQuery({
     queryKey: ["fetch_orders_by_category"],
@@ -52,6 +54,11 @@ export default function OrdersGroup() {
           subExpiryDate: sub_check?.data?.expiry_date || null,
         };
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         handleError();
       }
     },

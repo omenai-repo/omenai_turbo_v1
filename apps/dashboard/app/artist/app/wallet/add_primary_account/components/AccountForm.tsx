@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 // Move constants outside component to prevent recreation
 const COUNTRIES_WITH_BANK_BRANCHES = [
@@ -46,6 +47,7 @@ export default function AccountForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { user, csrf } = useAuth({ requiredRole: "artist" });
+  const rollbar = useRollbar();
 
   const [selectedBank, setSelectedBank] = useState<BankType | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<BankBranchType | null>(
@@ -137,6 +139,11 @@ export default function AccountForm() {
         ...validateBankAccountResponse.data,
       });
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error Notification", {
         description:
           "An error has occurred. Please try again or contact support",
@@ -202,6 +209,11 @@ export default function AccountForm() {
 
       router.replace("/artist/app/wallet");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error Notification", {
         description:
           "An error has occurred. Please try again or contact support",

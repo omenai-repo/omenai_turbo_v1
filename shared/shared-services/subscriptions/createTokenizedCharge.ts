@@ -1,4 +1,4 @@
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import { logRollbarServerError } from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import { SubscriptionTokenizationTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 

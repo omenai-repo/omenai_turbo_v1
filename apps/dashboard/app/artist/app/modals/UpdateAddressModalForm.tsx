@@ -13,6 +13,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
+import { useRollbar } from "@rollbar/react";
 export const artist_signup_step_two = [
   {
     label: "Country of residence",
@@ -65,6 +66,7 @@ export default function UpdateAddressModalForm() {
   });
   const [base_currency, set_base_currency] = useState<string>("");
   const { user, csrf } = useAuth({ requiredRole: "artist" });
+  const rollbar = useRollbar();
 
   const router = useRouter();
   const handleAddressUpdate = async () => {
@@ -95,6 +97,11 @@ export default function UpdateAddressModalForm() {
         "success"
       );
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong, please try again or contact support",
         "error"

@@ -1,5 +1,5 @@
 // http://api.omenai.app/api/artworks/getArtworkPriceForArtist?medium=Sculpture (Bronze/stone/metal)&category=Mid-Career&height=86&width=102&currency=NGN
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import { logRollbarServerError } from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import { ArtistCategory, ArtworkMediumTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 

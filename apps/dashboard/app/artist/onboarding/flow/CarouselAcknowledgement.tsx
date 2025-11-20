@@ -13,6 +13,7 @@ import { storage } from "@omenai/appwrite-config";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 type Option = "yes" | "no";
 export default function CarouselAcknowledgement({
   isInteractable,
@@ -22,6 +23,7 @@ export default function CarouselAcknowledgement({
   const [loading, setLoading] = useState(false);
   const { onboardingData, field_completion_state } = artistOnboardingStore();
   const { setOpenOnboardingCompletedModal } = actionStore();
+  const rollbar = useRollbar();
 
   const { user } = useAuth({ requiredRole: "artist" });
 
@@ -104,6 +106,11 @@ export default function CarouselAcknowledgement({
         }
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description: "Something went wrong. Please contact customer support",
         style: {

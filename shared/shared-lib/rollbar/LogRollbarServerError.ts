@@ -1,6 +1,6 @@
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 
-export default function logRollbarServerError(error: any) {
+export function logRollbarServerError(error: any) {
   if (error instanceof Error) {
     rollbarServerInstance.error(error);
   } else {

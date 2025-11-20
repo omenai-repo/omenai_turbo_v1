@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { base_url } from "@omenai/url-config/src/config";
+import { useRollbar } from "@rollbar/react";
 function extractNumberString(str: string) {
   if (!str) return ""; // handle empty or null input
 
@@ -33,6 +34,7 @@ export default function ArtworkPricing() {
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
   const [priceConsent, setPriceConsent] = useState(false);
+  const rollbar = useRollbar();
 
   const canProceed = acknowledgment && penaltyConsent && priceConsent;
 
@@ -126,6 +128,11 @@ export default function ArtworkPricing() {
       clearData();
       router.replace("/artist/app/artworks");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       console.error("Error uploading artwork:", error);
       toast.error("Error notification", {
         description:

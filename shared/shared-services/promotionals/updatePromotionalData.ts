@@ -1,4 +1,4 @@
-import logRollbarServerError from "@omenai/shared-lib/rollbar/logRollbarServerError";
+import { logRollbarServerError } from "@omenai/shared-lib/rollbar/logRollbarServerError";
 import { PromotionalDataUpdateTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { ObjectId } from "mongoose";

@@ -11,6 +11,7 @@ import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -62,6 +63,7 @@ export default function FormInput() {
   const { setIsLoading } = individualLoginStore();
   const { signOut } = useAuth({ requiredRole: "artist" });
   const [form, setForm] = useState<Form>({ email: "", password: "" });
+  const rollbar = useRollbar();
 
   const handleUnverifiedUser = async () => {
     await signOut(false);
@@ -82,6 +84,11 @@ export default function FormInput() {
       router.refresh();
       router.replace(redirectUrl);
     } catch (clerkError) {
+      if (clerkError instanceof Error) {
+        rollbar.error(clerkError);
+      } else {
+        rollbar.error(new Error(String(clerkError)));
+      }
       console.error("Clerk sign-in error:", clerkError);
       throw clerkError;
     }
@@ -115,6 +122,11 @@ export default function FormInput() {
       const response = await loginArtist({ ...form });
       await processLoginResponse(response);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       showErrorToast(error);
     } finally {
       setIsLoading();

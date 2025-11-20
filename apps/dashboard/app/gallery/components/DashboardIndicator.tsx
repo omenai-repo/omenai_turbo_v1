@@ -6,6 +6,7 @@ import { verifyGalleryRequest } from "@omenai/shared-services/verification/verif
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 type AppbarTypes = {
   admin_name?: string;
   gallery_name?: string;
@@ -18,6 +19,7 @@ export default function DashboardIndicator({
 }: AppbarTypes) {
   const { csrf } = useAuth();
   const [loading, setLoading] = useState(false);
+  const rollbar = useRollbar();
   async function handleRequestGalleryVerification() {
     setLoading(true);
     try {
@@ -41,6 +43,11 @@ export default function DashboardIndicator({
           className: "class",
         });
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description: "Something wwent wrong. Please try again",
         style: {

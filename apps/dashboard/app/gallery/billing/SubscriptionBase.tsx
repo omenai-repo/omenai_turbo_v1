@@ -12,11 +12,13 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { auth_uri } from "@omenai/url-config/src/config";
 import BillingSkeleton from "@omenai/shared-ui-components/components/skeletons/BillingSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function SubscriptionBase() {
   const router = useRouter();
   const url = auth_uri();
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["subscription_precheck"],
@@ -45,6 +47,11 @@ export default function SubscriptionBase() {
           subscription_plan: sub_check.plan,
         };
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         console.error(error);
         handleError();
       }

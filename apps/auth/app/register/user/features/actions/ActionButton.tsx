@@ -2,6 +2,7 @@ import { validateAddress } from "@omenai/shared-services/address_validation/vali
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { shouldDisableNext } from "@omenai/shared-utils/src/should_disable_next_button";
+import { useRollbar } from "@rollbar/react";
 import React, { useState } from "react";
 import { MdOutlineArrowForward } from "react-icons/md";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ export default function ({
   } = useIndividualAuthStore();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const rollbar = useRollbar();
 
   const validateAddressCapability = async () => {
     if (individualSignupData.phone === "") {
@@ -72,6 +74,11 @@ export default function ({
         handleClickNext();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description:
           "Something went wrong. Could be us, please contact support",

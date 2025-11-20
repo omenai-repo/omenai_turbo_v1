@@ -13,12 +13,14 @@ import { storage } from "@omenai/appwrite-config";
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const { image, setImage, artworkUploadData, clearData } =
     galleryArtworkUploadStore();
   const [loading, setLoading] = useState(false);
+  const rollbar = useRollbar();
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -140,6 +142,11 @@ export default function UploadArtworkImage() {
       clearData();
       router.replace("/gallery/artworks");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       console.error("Error uploading artwork:", error);
       toast.error("Error notification", {
         description:

@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { declineReasonMapping } from "./declineReasonMap";
+import { useRollbar } from "@rollbar/react";
 export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
     artistActionStore();
@@ -21,6 +22,7 @@ export default function ProvideOrderRejectionModalForm() {
   const declineReasons = Object.keys(declineReasonMapping);
 
   const [checked, setChecked] = useState(false);
+  const rollbar = useRollbar();
 
   const queryClient = useQueryClient();
 
@@ -99,6 +101,11 @@ export default function ProvideOrderRejectionModalForm() {
         router.refresh();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong, please try again or contact support",
         "error"

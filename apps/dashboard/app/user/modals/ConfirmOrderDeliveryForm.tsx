@@ -4,6 +4,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { confirmOrderDelivery } from "@omenai/shared-services/orders/confirmOrderDelivery";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useRollbar } from "@rollbar/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +19,7 @@ export default function ConfirmOrderDeliveryForm() {
   const router = useRouter();
 
   const queryClient = useQueryClient();
+  const rollbar = useRollbar();
 
   async function confirmDelivery() {
     setLoading(true);
@@ -49,6 +51,11 @@ export default function ConfirmOrderDeliveryForm() {
         router.refresh();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description: "Something went wrong, try again or contact support",
         style: {

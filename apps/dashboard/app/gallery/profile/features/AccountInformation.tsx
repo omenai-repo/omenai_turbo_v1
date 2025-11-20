@@ -10,6 +10,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
+import { useRollbar } from "@rollbar/react";
 
 export default function AccountInformation({ profile }: { profile: any }) {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
     galleryActionStore();
   const [loading, setLoading] = useState(false);
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
   // Form state
   const [data, setData] = useState<any>({
@@ -56,6 +58,11 @@ export default function AccountInformation({ profile }: { profile: any }) {
 
       await queryClient.invalidateQueries({ queryKey: ["fetch_artist_info"] });
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong, please try again or contact support",
         "error"
