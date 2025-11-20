@@ -8,70 +8,72 @@ const sanitizePath = (path: string) =>
 
 /**
  * Standard rate limiting for most APIs
- * 60 requests per minute
+ * 30 requests per minute
  */
 export const standardRateLimit = {
-  maxTokens: 60,
-  refillRate: 60 / 60, // 1 token/sec
+  maxTokens: 20,
+  refillRate: 1 / 2, // 0.5 tokens/sec
   keyGenerator: async (request: Request, userId?: string) => {
-    const ip = await getClientIdentifier(request, userId);
+    const id = await getClientIdentifier(request, userId);
     const path = sanitizePath(new URL(request.url).pathname);
-    return `standard-${path}:${ip}`;
+    return `standard-${path}:${id}`;
   },
 };
 
 /**
- * Strict rate limiting for expensive operations
- * 10 requests per minute
+ * STRICT rate limiting — used for brute-force sensitive operations
+ * login, password check, OTP verify, withdrawal confirmation, etc.
+ *
+ * Very strict: 5 attempts per minute
  */
 export const strictRateLimit = {
-  maxTokens: 10,
-  refillRate: 10 / 60, // ~0.1667 tokens/sec
+  maxTokens: 5,
+  refillRate: 5 / 600, // 5 tokens per 10 minutes (1 token every 120s)
   keyGenerator: async (request: Request, userId?: string) => {
-    const ip = await getClientIdentifier(request, userId);
+    const id = await getClientIdentifier(request, userId);
     const path = sanitizePath(new URL(request.url).pathname);
-    return `standard-${path}:${ip}`;
+    return `strict-${path}:${id}`;
   },
 };
 
 /**
  * Lenient rate limiting for lightweight operations
- * 100 requests per minute
+ * 60 requests per minute
  */
 export const lenientRateLimit = {
-  maxTokens: 100,
-  refillRate: 100 / 60, // ~1.6667 tokens/sec
+  maxTokens: 60,
+  refillRate: 60 / 60, // 1 token/sec
   keyGenerator: async (request: Request, userId?: string) => {
-    const ip = await getClientIdentifier(request, userId);
+    const id = await getClientIdentifier(request, userId);
     const path = sanitizePath(new URL(request.url).pathname);
-    return `standard-${path}:${ip}`;
+    return `lenient-${path}:${id}`;
   },
 };
 
 /**
- * Currency conversion specific rate limiting
+ * Currency conversion specific rate limit (expensive)
  * 20 requests per minute
  */
 export const currencyRateLimit = {
   maxTokens: 20,
-  refillRate: 20 / 60, // ~0.3333 tokens/sec
+  refillRate: 20 / 60, // ~0.33 tokens/sec
   keyGenerator: async (request: Request, userId?: string) => {
-    const ip = await getClientIdentifier(request, userId);
+    const id = await getClientIdentifier(request, userId);
     const path = sanitizePath(new URL(request.url).pathname);
-    return `standard-${path}:${ip}`;
+    return `currency-${path}:${id}`;
   },
 };
 
 /**
  * Upload endpoint rate limiting
- * 5 uploads per 5 minutes
+ * 5 uploads per 5 minutes (heavy)
  */
 export const uploadRateLimit = {
   maxTokens: 5,
   refillRate: 5 / 300, // ~0.0167 tokens/sec
   keyGenerator: async (request: Request, userId?: string) => {
-    const ip = await getClientIdentifier(request, userId);
+    const id = await getClientIdentifier(request, userId);
     const path = sanitizePath(new URL(request.url).pathname);
-    return `standard-${path}:${ip}`;
+    return `upload-${path}:${id}`;
   },
 };

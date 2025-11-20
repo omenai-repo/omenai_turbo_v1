@@ -2,17 +2,10 @@ import { redis } from "@omenai/upstash-config";
 
 export interface TokenBucketResult {
   success: boolean;
-  remaining: number; // tokens left
-  resetTime: number; // timestamp when bucket refills
+  remaining: number;
+  resetTime: number;
 }
 
-/**
- * Lua script for Token Bucket:
- * KEYS[1] = bucket key
- * ARGV[1] = max tokens
- * ARGV[2] = refill rate (tokens per second)
- * ARGV[3] = now (milliseconds)
- */
 const TOKEN_BUCKET_LUA = `
 local key = KEYS[1]
 local max_tokens = tonumber(ARGV[1])
@@ -40,7 +33,9 @@ if tokens >= 1 then
 end
 
 redis.call("HMSET", key, "tokens", tokens, "last", last)
-redis.call("PEXPIRE", key, math.ceil(1000 * max_tokens / refill_rate))
+
+-- Expire when bucket would fully refill
+redis.call("PEXPIRE", key, math.ceil((max_tokens / refill_rate) * 1000))
 
 return {success, tokens, last}
 `;
@@ -48,20 +43,20 @@ return {success, tokens, last}
 export async function checkRateLimit(
   identifier: string,
   maxTokens: number,
-  refillRate: number // tokens per second
+  refillRate: number
 ): Promise<TokenBucketResult> {
   const now = Date.now();
   const key = `rate_limit:token_bucket:${identifier}`;
 
-  const [success, remaining, last] = (await redis.eval(
+  const [success, remaining] = (await redis.eval(
     TOKEN_BUCKET_LUA,
     [key],
     [maxTokens.toString(), refillRate.toString(), now.toString()]
-  )) as [number, number, number];
+  )) as [number, number];
 
   return {
     success: success === 1,
     remaining: Math.floor(remaining),
-    resetTime: last + (1000 * (maxTokens - remaining)) / refillRate,
+    resetTime: now + ((maxTokens - remaining) / refillRate) * 1000,
   };
 }

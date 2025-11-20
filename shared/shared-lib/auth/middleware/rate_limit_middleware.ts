@@ -26,7 +26,8 @@ export function withRateLimit(config: RateLimitConfig, userId?: string) {
       if (!result.success) {
         return NextResponse.json(
           {
-            message: "Too many requests. Please try again later.",
+            message:
+              "You have made too many requests. Please wait a while before trying again.",
             retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000),
           },
           {
