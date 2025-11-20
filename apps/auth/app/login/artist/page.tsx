@@ -1,7 +1,8 @@
-"use client";
 import Image from "next/image";
 import React from "react";
 import ArtistLoginForm from "../features/artistForm/Form";
+
+export const dynamic = "force-dynamic";
 
 function Page() {
   return (
