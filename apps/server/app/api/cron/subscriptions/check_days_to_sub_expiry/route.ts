@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import { SubscriptionExpireAlert } from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
+import { createErrorRollbarReport } from "../../../util";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -87,6 +88,12 @@ export const GET = withRateLimit(lenientRateLimit)(
       });
     } catch (error) {
       console.error("[subscription-reminders] Error:", error);
+
+      createErrorRollbarReport(
+        "Cron: Check days to subscription expiry - send reminders",
+        error as any,
+        500
+      );
       return NextResponse.json(
         {
           message: "Subscription reminder processing failed",

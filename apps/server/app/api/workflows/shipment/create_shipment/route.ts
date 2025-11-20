@@ -22,6 +22,7 @@ import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShi
 import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 
 type Payload = {
   order_id: string;
@@ -169,6 +170,11 @@ export const { POST } = serve<Payload>(async (ctx) => {
           return true;
         } catch (error) {
           session.abortTransaction();
+          createErrorRollbarReport(
+            "Shipment creation workflow - Failed to abort MongoDB transaction",
+            error as any,
+            500
+          );
           throw new Error("Transaction error, session was aborted");
         } finally {
           session.endSession();
@@ -219,6 +225,11 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
       return true;
     } catch (error: any) {
+      createErrorRollbarReport(
+        "Shipment creation workflow - workflow error",
+        error as any,
+        500
+      );
       await handleWorkflowError(error, payload);
     }
   });

@@ -29,6 +29,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { createErrorRollbarReport } from "../../util";
 
 /* ----------------------------- Config & schemas --------------------------- */
 
@@ -72,6 +73,11 @@ async function fireAndForget(p: Promise<unknown>) {
   try {
     await p;
   } catch (err) {
+    createErrorRollbarReport(
+      "Flutterwave webhook processing - Webhook handler - Fire and forget fn",
+      err as any,
+      500
+    );
     console.error("[webhook][background-task] failure:", err);
   }
 }
@@ -140,6 +146,11 @@ async function handlePurchaseTransaction(
         artwork: order_info.artwork_data.title,
       });
     } catch (err) {
+      createErrorRollbarReport(
+        "Flutterwave webhook processing - sendPaymentFailedMail",
+        err as any,
+        500
+      );
       console.error("[webhook][email] sendPaymentFailedMail failed:", err);
     }
     return NextResponse.json({ status: 200 });
@@ -382,7 +393,13 @@ async function handlePurchaseTransaction(
           "/api/workflows/notification/pushNotification",
           `notification_workflow_buyer_${order_info.order_id}_${generateDigit(2)}`,
           JSON.stringify(buyer_notif_payload)
-        ).catch((err) => console.error("[workflow][buyer-notif] failed:", err))
+        ).catch((err) => {
+          createErrorRollbarReport(
+            "Flutterwave webhook processing - Webhook handler - Buyer notification",
+            err as any,
+            500
+          );
+        })
       );
     }
 
@@ -407,7 +424,13 @@ async function handlePurchaseTransaction(
           "/api/workflows/notification/pushNotification",
           `notification_workflow_seller_${order_info.order_id}_${generateDigit(2)}`,
           JSON.stringify(seller_notif_payload)
-        ).catch((err) => console.error("[workflow][seller-notif] failed:", err))
+        ).catch((err) => {
+          createErrorRollbarReport(
+            "Flutterwave webhook processing - Webhook handler - Seller notification",
+            err as any,
+            500
+          );
+        })
       );
     }
 
@@ -444,9 +467,13 @@ async function handlePurchaseTransaction(
     );
 
     if (notificationPromises.length > 0) {
-      Promise.all(notificationPromises).catch((err) =>
-        console.error("[workflow][notifications] errors:", err)
-      );
+      Promise.all(notificationPromises).catch((err) => {
+        createErrorRollbarReport(
+          "Flutterwave webhook processing - Webhook handler  - Notifications",
+          err as any,
+          500
+        );
+      });
     }
 
     return NextResponse.json({ status: 200 });
@@ -455,6 +482,11 @@ async function handlePurchaseTransaction(
     try {
       await session.abortTransaction();
     } catch (abortErr) {
+      createErrorRollbarReport(
+        "Flutterwave webhook processing - Webhook handler - Abort transaction",
+        abortErr as any,
+        500
+      );
       console.error("[webhook][purchase] abort failed:", abortErr);
     }
     // Return 200 to prevent Flutterwave retries
@@ -463,6 +495,11 @@ async function handlePurchaseTransaction(
     try {
       await session.endSession();
     } catch (endErr) {
+      createErrorRollbarReport(
+        "Flutterwave webhook processing - Webhook handler - End session",
+        endErr as any,
+        500
+      );
       console.error("[webhook][purchase] endSession failed:", endErr);
     }
   }
@@ -511,6 +548,11 @@ export const POST = withAppRouterHighlight(async function POST(
     // Other events: accept and return 200
     return NextResponse.json({ status: 200 });
   } catch (err) {
+    createErrorRollbarReport(
+      "Flutterwave webhook processing - Webhook handler",
+      err as any,
+      500
+    );
     console.error("[webhook] fatal error processing webhook:", err);
     // Always return 200 to prevent Flutterwave retries
     return NextResponse.json({ status: 400 });

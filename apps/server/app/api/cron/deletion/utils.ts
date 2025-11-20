@@ -5,7 +5,12 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { LeanDeletionRequest } from "./createDeletionTasks/route";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  BadRequestError,
+  ServerError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export const DELETION_TASK_SERVICES = [
   "order_service",
@@ -59,42 +64,68 @@ export async function createDeletionTaskPerService(
   const entityType = metadata.entityType as Exclude<EntityType, "admin">;
   const idempotencyKey = `${task}:${entityId}:${entityType}`;
 
-  const createTask = await DeletionTaskModel.create({
-    requestId,
-    service: task,
-    entityId,
-    entityType,
-    idempotencyKey,
-  });
+  try {
+    const createTask = await DeletionTaskModel.create({
+      requestId,
+      service: task,
+      entityId,
+      entityType,
+      idempotencyKey,
+    });
 
-  return createTask._id;
+    return createTask._id;
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    if (error_response?.status && error_response.status >= 500) {
+      if (error instanceof ServerError) {
+        rollbarServerInstance.error(error, {
+          context: "Cron: Creation of Deletion Task",
+        });
+      } else {
+        rollbarServerInstance.error(new Error(String(error)));
+      }
+    }
+  }
 }
 
 export async function pollExpiredDeletionRequests(batch_size: number) {
   const now = toUTCDate(new Date());
   const staleThreshold = new Date(Date.now() - 10 * 60 * 1000); // 10 minutes
 
-  const deletionRequestsWithExpiredGracePeriod: LeanDeletionRequest[] =
-    await DeletionRequestModel.find(
-      {
-        gracePeriodUntil: { $lte: now },
-        $or: [
-          { status: "requested" },
-          // Recover stale "processing" records (crashed runs)
-          {
-            status: "processing",
-            startedAt: { $lt: staleThreshold },
-          },
-        ],
-        entityType: { $ne: "admin" },
-      },
-      "requestId entityType targetId"
-    )
-      .limit(batch_size)
-      .lean<LeanDeletionRequest[]>()
-      .sort({ createdAt: -1 });
+  try {
+    const deletionRequestsWithExpiredGracePeriod: LeanDeletionRequest[] =
+      await DeletionRequestModel.find(
+        {
+          gracePeriodUntil: { $lte: now },
+          $or: [
+            { status: "requested" },
+            // Recover stale "processing" records (crashed runs)
+            {
+              status: "processing",
+              startedAt: { $lt: staleThreshold },
+            },
+          ],
+          entityType: { $ne: "admin" },
+        },
+        "requestId entityType targetId"
+      )
+        .limit(batch_size)
+        .lean<LeanDeletionRequest[]>()
+        .sort({ createdAt: -1 });
 
-  return deletionRequestsWithExpiredGracePeriod;
+    return deletionRequestsWithExpiredGracePeriod;
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    if (error_response?.status && error_response.status >= 500) {
+      if (error instanceof ServerError) {
+        rollbarServerInstance.error(error, {
+          context: "Cron: Deletion Requests Polling",
+        });
+      } else {
+        rollbarServerInstance.error(new Error(String(error)));
+      }
+    }
+  }
 }
 
 export async function createWorkflowTarget(metadata: {
@@ -107,13 +138,26 @@ export async function createWorkflowTarget(metadata: {
   deletionRequestDate: Date;
   deletionInitiatedBy: "target" | "admin" | "system";
 }): Promise<string | undefined> {
-  const workflowID = await createWorkflow(
-    `/api/workflows/deletion/deletion_workflow`,
-    `deletion_workflow${generateDigit(2)}`,
-    JSON.stringify(metadata)
-  );
+  try {
+    const workflowID = await createWorkflow(
+      `/api/workflows/deletion/deletion_workflow`,
+      `deletion_workflow${generateDigit(2)}`,
+      JSON.stringify(metadata)
+    );
 
-  return workflowID;
+    return workflowID;
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    if (error_response?.status && error_response.status >= 500) {
+      if (error instanceof ServerError) {
+        rollbarServerInstance.error(error, {
+          context: "Cron: Creation of Deletion Workflow",
+        });
+      } else {
+        rollbarServerInstance.error(new Error(String(error)));
+      }
+    }
+  }
 }
 
 export function isDeletionTaskServiceType(

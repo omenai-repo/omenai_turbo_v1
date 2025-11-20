@@ -14,7 +14,6 @@ import {
   PurchaseTransactionModelSchemaTypes,
   PurchaseTransactionPricing,
 } from "@omenai/shared-types";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
@@ -22,6 +21,7 @@ import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonth
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
+import { createErrorRollbarReport } from "../../../util";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -55,6 +55,11 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (err) {
     console.error(`⚠️  Webhook signature verification failed.`, err);
+    createErrorRollbarReport(
+      "Stripe Checkout Session webhook processing - Invalid webhook signature",
+      err as any,
+      500
+    );
     return NextResponse.json(
       { error: "Invalid webhook signature" },
       { status: 400 }
@@ -251,6 +256,11 @@ export const POST = withAppRouterHighlight(async function POST(
             `notification_workflow_buyer_${order_info.order_id}_${generateDigit(2)}`,
             JSON.stringify(buyer_notif_payload)
           ).catch((error) => {
+            createErrorRollbarReport(
+              "Stripe Checkout Session webhook processing - Failed to send buyer notification",
+              error as any,
+              500
+            );
             console.error("Failed to send buyer notification:", error);
           })
         );
@@ -279,6 +289,11 @@ export const POST = withAppRouterHighlight(async function POST(
             `notification_workflow_seller_${order_info.order_id}_${generateDigit(2)}`,
             JSON.stringify(seller_notif_payload)
           ).catch((error) => {
+            createErrorRollbarReport(
+              "Stripe Checkout Session webhook processing - Failed to send seller notification",
+              error as any,
+              500
+            );
             console.error("Failed to send seller notification:", error);
           })
         );
@@ -291,6 +306,11 @@ export const POST = withAppRouterHighlight(async function POST(
           `create_shipment_${generateDigit(6)}`,
           JSON.stringify({ order_id: order_info.order_id })
         ).catch((error) => {
+          createErrorRollbarReport(
+            "Stripe Checkout Session webhook processing - Failed to create shipment workflow",
+            error as any,
+            500
+          );
           console.error("Failed to create shipment workflow:", error);
         }),
         createWorkflow(
@@ -308,6 +328,11 @@ export const POST = withAppRouterHighlight(async function POST(
             seller_name: order_info.seller_details.name,
           })
         ).catch((error) => {
+          createErrorRollbarReport(
+            "Stripe Checkout Session webhook processing - Failed to send payment success mail workflow",
+            error as any,
+            500
+          );
           console.error("Failed to send payment success mail workflow:", error);
         }),
         ...notificationPromises,
@@ -315,6 +340,11 @@ export const POST = withAppRouterHighlight(async function POST(
 
       return NextResponse.json({ status: 200 });
     } catch (error) {
+      createErrorRollbarReport(
+        "Stripe Checkout Session webhook processing ",
+        error as any,
+        500
+      );
       console.error("An error occurred during the transaction:", error);
 
       // Only abort if transaction is still in progress
@@ -323,6 +353,11 @@ export const POST = withAppRouterHighlight(async function POST(
           await session.abortTransaction();
           console.log("Transaction aborted.");
         } catch (abortError) {
+          createErrorRollbarReport(
+            "Stripe Checkout Session webhook processing - Failed to abort MongoDB transaction",
+            abortError as any,
+            500
+          );
           console.error("Failed to abort transaction:", abortError);
         }
       }
@@ -346,6 +381,11 @@ export const POST = withAppRouterHighlight(async function POST(
           `Order lock released for art_id: ${meta.art_id}, buyer_id: ${meta.buyer_id}`
         );
       } catch (error) {
+        createErrorRollbarReport(
+          "Stripe Checkout Session webhook processing - Failed to release order lock",
+          error as any,
+          500
+        );
         console.error("Failed to release order lock:", error);
       }
     }
