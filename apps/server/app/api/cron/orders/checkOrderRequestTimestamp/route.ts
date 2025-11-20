@@ -13,6 +13,8 @@ import { render } from "@react-email/render";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { createErrorRollbarReport } from "../../../util";
+import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -266,6 +268,13 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     const duration = Date.now() - startTime;
     console.error(`Order management cron failed after ${duration}ms:`, error);
 
+    const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "Cron: Check order request timestamp - update artwork rejection counts",
+      error as any,
+      error_response?.status
+    );
+
     return NextResponse.json(
       {
         message: "Order management cron job failed",
@@ -377,8 +386,13 @@ async function updateArtworkRejectionCounts(
       );
     }
   } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
     console.error("Failed to update artwork rejection counts:", error);
     // Don't throw an error here - this shouldn't block the email sending process
-    // TODO: Consider logging to monitoring service here
+    createErrorRollbarReport(
+      "Cron: Check order request timestamp - update artwork rejection counts",
+      error as any,
+      error_response?.status
+    );
   }
 }
