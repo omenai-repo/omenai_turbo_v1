@@ -1,55 +1,67 @@
 import { redis } from "@omenai/upstash-config";
-interface RateLimitOptions {
-  identifier: string; // Unique key for rate limiting
-  limit: number; // Max requests allowed
-  window: number; // Time window in seconds
-}
 
-interface RateLimitResult {
-  success: boolean; // Whether request is allowed
-  remaining: number; // Requests left in window
-  resetTime: number; // When window resets (timestamp)
+export interface TokenBucketResult {
+  success: boolean;
+  remaining: number; // tokens left
+  resetTime: number; // timestamp when bucket refills
 }
 
 /**
- * Check if request should be rate limited
- * Uses sliding window algorithm for accuracy
+ * Lua script for Token Bucket:
+ * KEYS[1] = bucket key
+ * ARGV[1] = max tokens
+ * ARGV[2] = refill rate (tokens per second)
+ * ARGV[3] = now (milliseconds)
  */
-export async function checkRateLimit({
-  identifier,
-  limit,
-  window,
-}: RateLimitOptions): Promise<RateLimitResult> {
-  const key = `rate_limit:${identifier}`;
+const TOKEN_BUCKET_LUA = `
+local key = KEYS[1]
+local max_tokens = tonumber(ARGV[1])
+local refill_rate = tonumber(ARGV[2])
+local now = tonumber(ARGV[3])
+
+local data = redis.call("HMGET", key, "tokens", "last")
+local tokens = tonumber(data[1])
+local last = tonumber(data[2])
+
+if tokens == nil then
+  tokens = max_tokens
+  last = now
+end
+
+local delta = math.max(0, now - last)
+local refill = delta / 1000 * refill_rate
+tokens = math.min(max_tokens, tokens + refill)
+last = now
+
+local success = 0
+if tokens >= 1 then
+  tokens = tokens - 1
+  success = 1
+end
+
+redis.call("HMSET", key, "tokens", tokens, "last", last)
+redis.call("PEXPIRE", key, math.ceil(1000 * max_tokens / refill_rate))
+
+return {success, tokens, last}
+`;
+
+export async function checkRateLimit(
+  identifier: string,
+  maxTokens: number,
+  refillRate: number // tokens per second
+): Promise<TokenBucketResult> {
   const now = Date.now();
-  const windowStart = Math.floor(now / (window * 1000)) * (window * 1000);
+  const key = `rate_limit:token_bucket:${identifier}`;
 
-  // Use Redis pipeline for atomic operations
-  const pipeline = redis.pipeline();
+  const [success, remaining, last] = (await redis.eval(
+    TOKEN_BUCKET_LUA,
+    [key],
+    [maxTokens.toString(), refillRate.toString(), now.toString()]
+  )) as [number, number, number];
 
-  // 1. Remove expired entries
-  pipeline.zremrangebyscore(key, 0, windowStart - 1);
-
-  // 2. Count current requests
-  pipeline.zcard(key);
-
-  // 3. Add current request
-  pipeline.zadd(key, { score: now, member: `${now}-${Math.random()}` });
-
-  // 4. Set expiration
-  pipeline.expire(key, window);
-
-  const results = await pipeline.exec();
-  const currentCount = results[1] as number;
-
-  const success = currentCount < limit;
-  const remaining = Math.max(0, limit - currentCount - (success ? 1 : 0));
-  const resetTime = windowStart + window * 1000;
-
-  // If rate limited, remove the request we just added
-  if (!success) {
-    await redis.zpopmax(key);
-  }
-
-  return { success, remaining, resetTime };
+  return {
+    success: success === 1,
+    remaining: Math.floor(remaining),
+    resetTime: last + (1000 * (maxTokens - remaining)) / refillRate,
+  };
 }

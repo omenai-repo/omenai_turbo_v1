@@ -27,10 +27,10 @@ export type SessionData = {
 };
 
 export type CombinedConfig = {
-  limit: number;
-  window: number;
+  maxTokens: number;
+  refillRate: number;
+  keyGenerator: (request: Request, userId?: string) => Promise<string>;
   keyPrefix?: string;
-  keyGenerator?: (request: Request) => string;
   allowedRoles?: AccessRoleTypes[];
   allowedAdminAccessRoles?: AdminAccessRoleTypes[];
 };

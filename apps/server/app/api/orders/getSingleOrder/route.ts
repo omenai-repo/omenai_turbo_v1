@@ -3,9 +3,10 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 
-export const POST = withAppRouterHighlight(async function POST(
+export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request
 ) {
   try {

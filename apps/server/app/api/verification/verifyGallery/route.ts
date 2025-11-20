@@ -1,4 +1,3 @@
-import { getIp } from "@omenai/shared-lib/auth/getIp";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendVerifyGalleryMail } from "@omenai/shared-emails/src/models/verification/sendVerifyGalleryMail";
@@ -8,8 +7,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       const { name } = await request.json();
-
-      const ip = await getIp();
 
       await sendVerifyGalleryMail({ name, email: "moses@omenai.net" });
 

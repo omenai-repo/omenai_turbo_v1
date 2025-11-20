@@ -4,6 +4,7 @@ import { getSessionFromCookie, getSession } from "./session";
 import {
   AccountAdminSchemaTypes,
   AdminAccessRoleTypes,
+  SessionData,
 } from "@omenai/shared-types";
 
 type Role = "user" | "artist" | "gallery" | "admin";
@@ -21,7 +22,7 @@ export async function validateCsrf({
 }: ValidateCsrfOptions): Promise<{
   valid: boolean;
   message: string;
-  sessionData?: any;
+  sessionData?: SessionData & { csrfToken: string };
 }> {
   try {
     const cookieStore = await cookies();
