@@ -28,6 +28,7 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { createErrorRollbarReport } from "../../util";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -169,6 +170,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         cache.set(cacheKey, shipping_rate_data);
       } catch (error) {
         const error_response = handleErrorEdgeCases(error);
+        createErrorRollbarReport(
+          "order: calculate shipping rate",
+          error as any,
+          error_response.status
+        );
         return NextResponse.json(
           { message: error_response?.message },
           { status: error_response?.status }
@@ -250,6 +256,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         JSON.stringify(buyer_notif_payload)
       ).catch((error) => {
         console.error("Failed to send buyer notification:", error);
+        createErrorRollbarReport(
+          "order: failed to send buyer notification",
+          error as any,
+          500
+        );
       });
     }
 
@@ -269,6 +280,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     await session.abortTransaction();
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "order: accept order request",
+      error as any,
+      error_response.status
+    );
     console.log(error);
     return NextResponse.json(
       { message: error_response?.message },

@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { createErrorRollbarReport } from "../../../util";
 
 export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const url = new URL(request.url);
@@ -71,6 +72,11 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "gallery: fetch income data",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message || "Unexpected error" },
       { status: error_response?.status || 500 }

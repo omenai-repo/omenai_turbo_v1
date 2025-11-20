@@ -7,6 +7,7 @@ import {
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../../util";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -57,7 +58,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "wallet: account -> validate account",
+      error as any,
+      error_response.status
+    );
     console.log(error);
 
     return NextResponse.json(

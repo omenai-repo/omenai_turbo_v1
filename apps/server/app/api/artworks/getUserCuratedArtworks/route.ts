@@ -7,6 +7,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";
+import { createErrorRollbarReport } from "../../util";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
@@ -76,7 +77,11 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "artwork: get user curated Artwork",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

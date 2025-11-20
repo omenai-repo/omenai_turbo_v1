@@ -13,6 +13,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
+import { createErrorRollbarReport } from "../../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
@@ -64,7 +65,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "updates: gaallery address",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

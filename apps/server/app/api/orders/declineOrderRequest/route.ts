@@ -21,6 +21,7 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import mongoose from "mongoose";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -152,6 +153,11 @@ async function sendBuyerNotification(
   } catch (error) {
     // Log but don't throw - notification failure shouldn't fail the entire operation
     console.error("Failed to send buyer notification:", error);
+    createErrorRollbarReport(
+      "order: failed to send buyer notification",
+      error as any,
+      500
+    );
   }
 }
 
@@ -175,6 +181,11 @@ async function sendBuyerEmail(
   } catch (error) {
     // Log but don't throw - email failure shouldn't fail the entire operation
     console.error("Failed to send order declined email:", error);
+    createErrorRollbarReport(
+      "order: failed to send order declined email",
+      error as any,
+      500
+    );
   }
 }
 
@@ -264,7 +275,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     }
 
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "order: decline order request",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -13,7 +13,7 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { SERVICE_UNAVAILABLE_STATUS } from "../../../../constants/statusCodes/codes";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -121,10 +121,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       { status: 200 }
     );
   } catch (error) {
-    // if(error.code === SERVICE_UNAVAILABLE_STATUS){
-
-    // }
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "admin:Accept artist verification",
+      error as any,
+      error_response?.status
+    );
     console.error("Onboarding error:", error);
     return NextResponse.json(
       { message: error_response?.message },

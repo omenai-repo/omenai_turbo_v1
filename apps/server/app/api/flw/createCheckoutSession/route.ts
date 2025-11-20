@@ -5,6 +5,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { ForbiddenError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -50,7 +51,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "flutterwave: create checkout session",
+      error as any,
+      error_response.status
+    );
     console.log(error);
     return NextResponse.json(
       { message: error_response?.message },

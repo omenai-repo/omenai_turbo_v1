@@ -10,6 +10,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
+import { createErrorRollbarReport } from "../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -42,6 +43,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "admin: delete member",
+      error as any,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -4,6 +4,7 @@ import { ArtistCategorization } from "@omenai/shared-models/models/artist/Artist
 import { NotFoundError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { createErrorRollbarReport } from "../../../util";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -34,7 +35,11 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "artist: fetch credentials",
+      error as any,
+      error_response.status
+    );
     console.log(error);
     return NextResponse.json(
       { message: error_response?.message },

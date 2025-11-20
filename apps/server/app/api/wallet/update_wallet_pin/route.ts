@@ -14,6 +14,7 @@ import { isRepeatingOrConsecutive } from "@omenai/shared-utils/src/checkIfPinRep
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -81,7 +82,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.error(error);
-
+    createErrorRollbarReport(
+      "wallet: update wallet pin",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

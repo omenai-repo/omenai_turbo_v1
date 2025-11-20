@@ -6,6 +6,7 @@ import {
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { cookies } from "next/headers";
+import { createErrorRollbarReport } from "../../../util";
 
 // POST /api/auth/logout - ENHANCED VERSION
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
@@ -24,6 +25,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       return NextResponse.json({ message: "User successfully logged out" });
     } catch (error) {
+      createErrorRollbarReport("auth: session logout", error as any, 500);
       return NextResponse.json(
         { message: "An error occurred. Please contact support" },
         { status: 500 }

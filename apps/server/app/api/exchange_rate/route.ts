@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../util";
 const config: CombinedConfig = {
   ...lenientRateLimit,
   allowedRoles: ["artist", "gallery"],
@@ -25,7 +26,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     return NextResponse.json({ data: result.conversion_result });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "exchange rate",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

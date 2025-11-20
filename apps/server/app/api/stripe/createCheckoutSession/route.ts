@@ -16,6 +16,7 @@ import {
   SubscriptionModelSchemaTypes,
 } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -116,6 +117,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "stripe: check checkout session",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

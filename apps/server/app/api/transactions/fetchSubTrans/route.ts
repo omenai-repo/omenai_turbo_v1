@@ -4,6 +4,7 @@ import { ServerError } from "../../../../custom/errors/dictionary/errorDictionar
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { SubscriptionTransactions } from "@omenai/shared-models/models/transactions/SubscriptionTransactionSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { createErrorRollbarReport } from "../../util";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
@@ -27,7 +28,11 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "transactions: fetch sub transaction",
+      error as any,
+      error_response.status
+    );
     console.log(error);
 
     return NextResponse.json(

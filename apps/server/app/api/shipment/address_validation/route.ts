@@ -6,6 +6,7 @@ import { validateAddressVerificationRequestData } from "@omenai/shared-lib/valid
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
@@ -29,6 +30,11 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       if (requestValidation) throw new BadRequestError(requestValidation);
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
+      createErrorRollbarReport(
+        "shipment: address verification",
+        error as any,
+        error_response.status
+      );
 
       return NextResponse.json(
         { message: error_response?.message },
@@ -57,6 +63,11 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       console.log(error);
+      createErrorRollbarReport(
+        "shipment: address validation",
+        error as any,
+        error_response.status
+      );
 
       return NextResponse.json(
         { message: error_response?.message },

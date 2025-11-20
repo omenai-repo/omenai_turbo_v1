@@ -13,6 +13,7 @@ import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
@@ -76,7 +77,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "artist: update password",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

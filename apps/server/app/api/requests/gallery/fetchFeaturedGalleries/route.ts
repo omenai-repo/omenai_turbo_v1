@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { createErrorRollbarReport } from "../../../util";
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     try {
@@ -19,7 +20,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "gallery: fetch featured galleries",
+        error as any,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

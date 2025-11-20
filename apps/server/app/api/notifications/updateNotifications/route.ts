@@ -9,6 +9,7 @@ import {
   ForbiddenError,
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../util";
 
 const patchSchema = z
   .object({
@@ -66,6 +67,11 @@ export const PATCH = withRateLimit(standardRateLimit)(async function PATCH(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
+    createErrorRollbarReport(
+      "notifications: update notification",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

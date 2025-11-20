@@ -7,6 +7,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { sendRoleChangeMail } from "@omenai/shared-emails/src/models/admin/sendRoleChangeMail";
+import { createErrorRollbarReport } from "../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -50,6 +51,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "admin: edit member role",
+      error as any,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

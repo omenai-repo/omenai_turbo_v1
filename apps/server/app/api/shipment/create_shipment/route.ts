@@ -9,6 +9,8 @@ import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmen
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { createErrorRollbarReport } from "../../util";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export const POST = withRateLimit(strictRateLimit)(async function POST(
   request: Request
@@ -244,6 +246,12 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     );
   } catch (error) {
     console.log(error);
+    const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "shipment: create shipment",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 });

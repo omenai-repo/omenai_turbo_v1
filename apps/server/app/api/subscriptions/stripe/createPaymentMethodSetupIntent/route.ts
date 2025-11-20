@@ -12,6 +12,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 
 import { CombinedConfig } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
@@ -70,6 +71,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
+    createErrorRollbarReport(
+      "subscription: create payment method setup",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

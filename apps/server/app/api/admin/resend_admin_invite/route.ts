@@ -13,6 +13,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
 import { sendMemberInviteEmail } from "@omenai/shared-emails/src/models/admin/sendMemberInviteEmail";
+import { createErrorRollbarReport } from "../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -61,6 +62,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "admin: resend admin invite",
+      error as any,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -8,6 +8,8 @@ import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmen
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../util";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -126,6 +128,12 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       return NextResponse.json({ message: "Success", data }, { status: 200 });
     } catch (error) {
       console.log(error);
+      const error_response = handleErrorEdgeCases(error);
+      createErrorRollbarReport(
+        "shipment: create pickup",
+        error as any,
+        error_response.status
+      );
       return NextResponse.json({ message: "Error", error }, { status: 500 });
     }
   }

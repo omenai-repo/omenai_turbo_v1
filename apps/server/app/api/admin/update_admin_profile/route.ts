@@ -8,6 +8,7 @@ import {
   ConflictError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -49,7 +50,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "admin: update admin profile",
+      error as any,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

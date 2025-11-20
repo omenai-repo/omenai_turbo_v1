@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
@@ -23,6 +24,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
+      createErrorRollbarReport(
+        "admin: fetch admins",
+        error as any,
+        error_response?.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

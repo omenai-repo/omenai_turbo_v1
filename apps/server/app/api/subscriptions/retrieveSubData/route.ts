@@ -10,6 +10,7 @@ import {
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -63,6 +64,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "subscription: retrieve sub data",
+      error as any,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -4,6 +4,7 @@ import {
 } from "@omenai/shared-lib/auth/session";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { createErrorRollbarReport } from "../../../util";
 export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
@@ -46,6 +47,7 @@ export async function GET(request: Request) {
     // The frontend will use this token for subsequent mutation requests.
     return NextResponse.json({ user, csrfToken }, { status: 200 });
   } catch (error) {
+    createErrorRollbarReport("auth: user session", error as any, 500);
     console.log(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }

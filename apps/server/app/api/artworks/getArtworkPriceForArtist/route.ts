@@ -15,6 +15,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { redis } from "@omenai/upstash-config";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -95,6 +96,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
               `Failed to WRITE to Redis for key ${cacheKey}:`,
               redisError
             );
+            createErrorRollbarReport(
+              "artwork: get Artwork price for artist- Failed to WRITE to Redis for key",
+              redisError as any,
+              500
+            );
           }
         }
       } catch (redisError) {
@@ -134,7 +140,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "artwork: get Artwork price for artist",
+        error as any,
+        error_response.status
+      );
       console.log(error);
       return NextResponse.json(
         { message: error_response?.message },

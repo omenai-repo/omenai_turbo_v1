@@ -8,6 +8,7 @@ import {
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../util";
 
 // TODO: Freakishly protect this route and add Idempotency if possible
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
@@ -42,7 +43,11 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "wallet: fund wallet",
+        error as any,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

@@ -15,6 +15,7 @@ import {
 import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { createErrorRollbarReport } from "../../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -114,15 +115,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error: any) {
       const error_response = handleErrorEdgeCases(error);
-      if (error_response?.status && error_response.status >= 500) {
-        if (error instanceof ServerError) {
-          rollbarServerInstance.error(error, {
-            context: "Artist Onboarding login",
-          });
-        } else {
-          rollbarServerInstance.error(new Error(String(error)));
-        }
-      }
+      createErrorRollbarReport(
+        "auth: artist login",
+        error as any,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

@@ -7,6 +7,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { redis } from "@omenai/upstash-config";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -53,6 +54,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "stripe: get account id",
+      error as any,
+      error_response.status
+    );
 
     return NextResponse.json(
       { message: error_response?.message },
@@ -77,6 +83,11 @@ async function fetchAndSetRedisCache(gallery_id: string, cacheKey: string) {
     await redis.set(cacheKey, JSON.stringify(account), { ex: 21600 });
   } catch (redisWriteErr) {
     console.error(`Redis Write Error [${cacheKey}]:`, redisWriteErr);
+    createErrorRollbarReport(
+      "stripe: check stripe details submitted : redis write error",
+      redisWriteErr as any,
+      500
+    );
   }
 
   return account;
