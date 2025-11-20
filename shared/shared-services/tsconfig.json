@@ -1,3 +1,9 @@
 {
-  "extends": "@omenai/typescript-config/base.json"
+  "extends": "@omenai/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@omenai/shared-lib/*": ["shared/shared-lib/*"]
+    }
+  }
 }

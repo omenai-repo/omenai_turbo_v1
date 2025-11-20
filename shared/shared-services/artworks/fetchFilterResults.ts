@@ -1,6 +1,10 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { Filter } from "@omenai/shared-utils/src/isFilterEmpty";
+<<<<<<< HEAD
 import { logRollbarServerError } from "@omenai/shared-lib/rollbar/logRollbarServerError";
+=======
+import {logRollbarServerError} from "@omenai/rollbar-config"
+>>>>>>> 803a2d78989b652a590ef0824e74ca9f52adca1a
 
 export async function fetchFilterResults(filters: Filter) {
   try {

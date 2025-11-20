@@ -1,6 +1,10 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
+<<<<<<< HEAD
 import { logRollbarServerError } from "@omenai/shared-lib/rollbar/logRollbarServerError";
+=======
+import {logRollbarServerError} from "@omenai/rollbar-config"
+>>>>>>> 803a2d78989b652a590ef0824e74ca9f52adca1a
 
 export async function getSalesActivityData(id: string, year: string) {
   try {
