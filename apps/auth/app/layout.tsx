@@ -7,6 +7,8 @@ import {
   HighRiskProvider,
   LowRiskProvider,
 } from "@omenai/package-provider/ConfigCatProvider";
+import { clientConfig } from "@omenai/rollbar-config";
+import { Provider as RollbarProvider } from "@rollbar/react";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -26,15 +28,17 @@ export default async function AuthDashboardRootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LowRiskProvider>
-      <html lang="en">
-        <body
-          className={`${work_sans.variable} font-sans flex flex-col justify-center`}
-        >
-          <LayoutWrapper>{children}</LayoutWrapper>
-          <Analytics />
-        </body>
-      </html>
-    </LowRiskProvider>
+    <RollbarProvider config={clientConfig}>
+      <LowRiskProvider>
+        <html lang="en">
+          <body
+            className={`${work_sans.variable} font-sans flex flex-col justify-center`}
+          >
+            <LayoutWrapper>{children}</LayoutWrapper>
+            <Analytics />
+          </body>
+        </html>
+      </LowRiskProvider>
+    </RollbarProvider>
   );
 }
