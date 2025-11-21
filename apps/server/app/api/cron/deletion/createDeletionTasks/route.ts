@@ -271,7 +271,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Cron: Deletion Task Creation",
-      error as any,
+      error,
       error_response?.status
     );
 

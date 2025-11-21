@@ -1,4 +1,4 @@
-import {logRollbarServerError} from "@omenai/rollbar-config"
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { AddressTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 

@@ -85,7 +85,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     createErrorRollbarReport(
       "Cron: Artwork Exclusivity Expiration",
-      error as any,
+      error,
       error_response?.status
     );
     return NextResponse.json(

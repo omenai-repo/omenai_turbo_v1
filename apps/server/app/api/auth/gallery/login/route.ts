@@ -13,6 +13,7 @@ import {
 } from "@omenai/shared-lib/auth/session";
 import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { createErrorRollbarReport } from "../../../util";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -115,6 +116,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
+      createErrorRollbarReport(
+        "auth: gallery login",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

@@ -12,6 +12,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withAppRouterHighlight(async function GET(request: Request) {
   try {
@@ -108,6 +109,11 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "shipment: shipment tracking",
+      error,
+      error_response.status
+    );
 
     return NextResponse.json(
       { message: error_response?.message },

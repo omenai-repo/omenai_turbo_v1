@@ -6,6 +6,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...lenientRateLimit,
@@ -38,6 +39,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
+    createErrorRollbarReport(
+      "viewhistory: create view history",
+      error,
+      error_response.status
+    );
 
     return NextResponse.json(
       { message: error_response?.message },

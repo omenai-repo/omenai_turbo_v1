@@ -18,6 +18,7 @@ import {
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
+import { createErrorRollbarReport } from "../../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -106,7 +107,11 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
     } catch (error) {
       console.error(error);
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "individual: delete count",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

@@ -5,3 +5,4 @@ export const FORBIDDEN_STATUS = 403;
 export const CONFLICT_STATUS = 409;
 export const RATE_LIMIT_EXCEEDED_STATUS = 429;
 export const BAD_REQUEST_STATUS = 400;
+export const SERVICE_UNAVAILABLE_STATUS = 503;

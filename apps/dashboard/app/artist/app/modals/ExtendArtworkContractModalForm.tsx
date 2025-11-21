@@ -9,9 +9,11 @@ import { extendArtworkExclusivity } from "@omenai/shared-services/artworks/exten
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { useRollbar } from "@rollbar/react";
 export default function ExtendArtworkContractConfirmationModalForm() {
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
+  const rollbar = useRollbar();
   const [loading, setLoading] = useState(false);
   const isFormValid = acknowledgment && penaltyConsent;
   const { csrf } = useAuth({ requiredRole: "artist" });
@@ -58,6 +60,11 @@ export default function ExtendArtworkContractConfirmationModalForm() {
       router.refresh();
       toggleExclusivityExtendModal(false, "");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
     } finally {
       setLoading(false);
     }

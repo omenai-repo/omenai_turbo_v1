@@ -1,5 +1,5 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
-import {logRollbarServerError} from "@omenai/rollbar-config"
+import { logRollbarServerError } from "@omenai/rollbar-config";
 
 export async function loginUser(payload: { email: string; password: string }) {
   try {

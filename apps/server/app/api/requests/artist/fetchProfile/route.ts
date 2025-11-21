@@ -7,6 +7,7 @@ import {
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { ArtistSchemaTypes } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../../util";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -41,7 +42,11 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "artist: fetch profile",
+      error,
+      error_response.status
+    );
     console.log(error);
     return NextResponse.json(
       { message: error_response?.message },

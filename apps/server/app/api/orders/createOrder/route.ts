@@ -28,6 +28,7 @@ import {
   CreateOrderModelTypes,
   NotificationPayload,
 } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -292,6 +293,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "order: create order",
+      error,
+      error_response.status
+    );
     console.error("Order creation error:", error);
     return NextResponse.json(
       { message: error_response?.message },

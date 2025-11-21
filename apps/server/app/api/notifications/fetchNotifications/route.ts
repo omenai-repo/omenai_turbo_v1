@@ -8,6 +8,7 @@ import {
   ForbiddenError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { NotificationHistory } from "@omenai/shared-models/models/notifications/NotificationHistorySchema";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
   request: Request
@@ -44,6 +45,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
+    createErrorRollbarReport(
+      "notifications: fetch notification",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -5,6 +5,7 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import { RouteIdentifier } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,6 +13,7 @@ export default function RecoveryEmailInputField() {
   const [isLoading, setIsloading] = useState(false);
   const [email, setEmail] = useState("");
   const { recoveryModal, updateRecoveryModal } = actionStore();
+  const rollbar = useRollbar();
   const { csrf } = useAuth();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +32,11 @@ export default function RecoveryEmailInputField() {
         updateRecoveryModal(recoveryModal.type);
       } else toast_notif(data.body.message, "error");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description:
           "Something went wrong, please try again or contact support",

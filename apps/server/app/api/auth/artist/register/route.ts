@@ -15,6 +15,7 @@ import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
@@ -89,15 +90,11 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    if (error_response?.status && error_response.status >= 500) {
-      if (error instanceof ServerError) {
-        rollbarServerInstance.error(error, {
-          context: "Artist Onboarding registeration",
-        });
-      } else {
-        rollbarServerInstance.error(new Error(String(error)));
-      }
-    }
+    createErrorRollbarReport(
+      "auth: artist register",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

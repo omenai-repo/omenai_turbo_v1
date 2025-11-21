@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 const steps = {
   0: ["name", "email"],
   1: ["country", "address_line", "state", "city", "zip"],
@@ -25,6 +26,7 @@ export default function () {
   } = useArtistAuthStore();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const rollbar = useRollbar();
 
   const validateAddressCapability = async () => {
     if (artistSignupData.phone === "") {
@@ -57,6 +59,11 @@ export default function () {
         handleClickNext();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description:
           "Something went wrong. Could be us, please contact support",

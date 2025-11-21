@@ -15,9 +15,11 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function UploadArtwork() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
   const router = useRouter();
 
@@ -46,6 +48,11 @@ export default function UploadArtwork() {
           isSubActive: sub_check?.data?.status === "active",
         };
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         console.error(error);
         handleError();
       }

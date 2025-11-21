@@ -5,6 +5,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { NexusTransactions } from "@omenai/shared-models/models/transactions/NexusModelSchema";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function GET(request: Request) {
@@ -31,7 +32,11 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "admin: get nexus data",
+        error,
+        error_response?.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

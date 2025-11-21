@@ -6,6 +6,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { createErrorRollbarReport } from "../../util";
 
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request
@@ -32,7 +33,11 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "order: retrieve order lock status",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

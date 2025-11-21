@@ -1,12 +1,10 @@
-"use client";
 import Image from "next/image";
 import React from "react";
-import { useLoginStore } from "@omenai/shared-state-store/src/auth/login/LoginStore";
 import IndividualLoginForm from "../features/individualForm/Form";
 
-function Page() {
-  const { current } = useLoginStore();
+export const dynamic = "force-dynamic";
 
+function Page() {
   return (
     <section className="h-[100vh] overflow-x-hidden">
       <div className="w-full h-full md:grid grid-cols-2">

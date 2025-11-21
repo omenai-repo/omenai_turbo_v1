@@ -8,6 +8,7 @@ import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function WalletPinModalForm() {
   const queryClient = useQueryClient();
@@ -17,6 +18,7 @@ export default function WalletPinModalForm() {
   const [error, setError] = useState({ isError: false, value: "" });
   const [loading, setLoading] = useState(false);
   const { toggleWalletPinPopup } = artistActionStore();
+  const rollbar = useRollbar();
 
   const updatePin = (value: string) => {
     setError({ isError: false, value: "" });
@@ -76,6 +78,11 @@ export default function WalletPinModalForm() {
       queryClient.invalidateQueries({ queryKey: ["fetch_wallet_screen"] });
       toggleWalletPinPopup(false);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error Notification", {
         description:
           "Something went wrong, please try again or contact support",

@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function WalletPinResetForm() {
   const queryClient = useQueryClient();
@@ -20,6 +21,7 @@ export default function WalletPinResetForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const rollbar = useRollbar();
 
   // Centralized error handler
   const handleError = (message: string) => {
@@ -84,6 +86,11 @@ export default function WalletPinResetForm() {
       queryClient.invalidateQueries({ queryKey: ["fetch_wallet_screen"] });
       router.replace("/artist/app/wallet");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       handleError("Something went wrong. Please try again or contact support.");
     } finally {
       setLoading(false);

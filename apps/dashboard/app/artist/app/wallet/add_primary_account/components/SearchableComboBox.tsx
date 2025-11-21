@@ -11,6 +11,7 @@ import {
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 async function getAsyncData(
   type: "banks" | "branches",
@@ -65,6 +66,7 @@ export function SearchableSelect({
   const [data, setData] = useState<BankType[] | BankBranchType[]>([]);
   const { user } = useAuth({ requiredRole: "artist" });
   const [search, setSearch] = useState("");
+  const rollbar = useRollbar();
 
   const combobox = useCombobox({
     onDropdownClose: () => {
@@ -83,6 +85,11 @@ export function SearchableSelect({
           );
           setData(response);
         } catch (error) {
+          if (error instanceof Error) {
+            rollbar.error(error);
+          } else {
+            rollbar.error(new Error(String(error)));
+          }
           console.error("Error loading data:", error);
         } finally {
           setLoading(false);

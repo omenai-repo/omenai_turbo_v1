@@ -5,6 +5,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { fetchArtworksFromCache } from "../utils";
+import { createErrorRollbarReport } from "../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
@@ -35,7 +36,11 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "artwork: get All Artwork by id",
+        error,
+        error_response?.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

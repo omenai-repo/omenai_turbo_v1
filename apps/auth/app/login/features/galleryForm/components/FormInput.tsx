@@ -12,6 +12,7 @@ import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -63,6 +64,7 @@ export default function FormInput() {
 
   const { setIsLoading } = galleryLoginStore();
   const { signOut } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
   const [form, setForm] = useState<Form>({ email: "", password: "" });
 
   const handleUnverifiedGallery = async () => {
@@ -93,6 +95,11 @@ export default function FormInput() {
         set_redirect_uri("");
       }
     } catch (clerkError) {
+      if (clerkError instanceof Error) {
+        rollbar.error(clerkError);
+      } else {
+        rollbar.error(new Error(String(clerkError)));
+      }
       console.error("Clerk sign-in error:", clerkError);
       throw clerkError;
     }
@@ -126,6 +133,11 @@ export default function FormInput() {
       const response = await loginGallery({ ...form });
       await processLoginResponse(response);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       console.error("Login error:", error);
       showErrorToast();
     } finally {

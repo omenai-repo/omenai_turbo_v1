@@ -61,7 +61,7 @@ export async function GET() {
     const errorResponse = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Cron: Delete from Appwrite failed jobs",
-      error as any,
+      error,
       errorResponse?.status
     );
     return NextResponse.json(

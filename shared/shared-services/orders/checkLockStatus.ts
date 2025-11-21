@@ -1,4 +1,4 @@
-import {logRollbarServerError} from "@omenai/rollbar-config"
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const checkLockStatus = async (art_id: string, user_id: string) => {

@@ -3,6 +3,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextRequest, NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { createErrorRollbarReport } from "../../util";
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,7 +36,11 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "order: get order by filter",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

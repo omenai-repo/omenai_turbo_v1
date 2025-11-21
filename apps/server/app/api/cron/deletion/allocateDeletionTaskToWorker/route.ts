@@ -151,7 +151,7 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Cron: Deletion Task Allocation",
-      error as any,
+      error,
       error_response?.status
     );
 

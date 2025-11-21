@@ -196,7 +196,7 @@ const handlePurchaseTransaction = async (
     } catch (error) {
       createErrorRollbarReport(
         "Stripe PaymentIntent webhook processing - Failed to send payment pending email",
-        error as any,
+        error,
         500
       );
       console.error("Failed to send payment pending email:", error);
@@ -214,7 +214,7 @@ const handlePurchaseTransaction = async (
     } catch (error) {
       createErrorRollbarReport(
         "Stripe PaymentIntent webhook processing - Failed to send payment failed email",
-        error as any,
+        error,
         500
       );
       console.error("Failed to send payment failed email:", error);
@@ -371,7 +371,7 @@ const handlePurchaseTransaction = async (
           ).catch((error) => {
             createErrorRollbarReport(
               "Stripe PaymentIntent webhook processing - Failed to send buyer notification",
-              error as any,
+              error,
               500
             );
             console.error("Failed to send buyer notification:", error);
@@ -403,7 +403,7 @@ const handlePurchaseTransaction = async (
           ).catch((error) => {
             createErrorRollbarReport(
               "Stripe PaymentIntent webhook processing - Failed to send seller notification",
-              error as any,
+              error,
               500
             );
             console.error("Failed to send seller notification:", error);
@@ -420,7 +420,7 @@ const handlePurchaseTransaction = async (
         ).catch((error) => {
           createErrorRollbarReport(
             "Stripe PaymentIntent webhook processing - Failed to create shipment workflow",
-            error as any,
+            error,
             500
           );
           console.error("Failed to create shipment workflow:", error);
@@ -449,7 +449,7 @@ const handlePurchaseTransaction = async (
     } catch (error) {
       createErrorRollbarReport(
         "Stripe PaymentIntent webhook processing - An error occurred during the purchase transaction",
-        error as any,
+        error,
         500
       );
       console.error(
@@ -520,7 +520,7 @@ const handleSubscriptionPayment = async (
       }
       createErrorRollbarReport(
         "Stripe PaymentIntent webhook processing - An error occurred during the purchase transaction",
-        error as any,
+        error,
         500
       );
       console.error("Error processing payment_intent.processing:", error);
@@ -561,7 +561,7 @@ const handleSubscriptionPayment = async (
       }
       createErrorRollbarReport(
         "Stripe PaymentIntent webhook processing - Mongo transaction error",
-        error as any,
+        error,
         500
       );
       console.error("Error processing payment_intent.payment_failed:", error);
@@ -713,7 +713,7 @@ const handleSubscriptionPayment = async (
       }
       createErrorRollbarReport(
         "Stripe PaymentIntent webhook processing - An error occurred during the purchase transaction",
-        error as any,
+        error,
         500
       );
       console.error("Error processing payment_intent.succeeded:", error);
@@ -746,7 +746,7 @@ async function subscriptionIdempotencyCheck(
   } catch (error) {
     createErrorRollbarReport(
       "Stripe PaymentIntent webhook processing - Subscription idempotency check error",
-      error as any,
+      error,
       500
     );
     console.error("Error in subscriptionIdempotencyCheck:", error);

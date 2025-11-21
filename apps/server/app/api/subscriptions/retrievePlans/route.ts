@@ -8,6 +8,7 @@ import {
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { redis } from "@omenai/upstash-config";
+import { createErrorRollbarReport } from "../../util";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -49,6 +50,11 @@ export const GET = withAppRouterHighlight(async function GET() {
     }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "subscription: retrieve plans",
+      error,
+      error_response.status
+    );
 
     return NextResponse.json(
       { message: error_response?.message },
@@ -65,6 +71,11 @@ async function fetchAndSetCache() {
     await redis.set("plans", dbPlans, { ex: 86400 });
   } catch (redisWriteErr) {
     console.error(`Redis Write Error [plans:`, redisWriteErr);
+    createErrorRollbarReport(
+      "subscription: retrieve plans: Redis write Error",
+      redisWriteErr as any,
+      500
+    );
   }
 
   return dbPlans;

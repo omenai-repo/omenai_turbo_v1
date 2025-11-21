@@ -25,6 +25,7 @@ import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/mo
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { ForbiddenError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../../util";
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -441,6 +442,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.error("[subscription.verify] Uncaught error:", error);
+    createErrorRollbarReport(
+      "subscription: verify stripe subscription charge",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message ?? "Internal error" },
       { status: error_response?.status ?? 500 }

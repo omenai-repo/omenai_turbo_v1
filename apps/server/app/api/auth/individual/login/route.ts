@@ -17,6 +17,7 @@ import {
 
 import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { createErrorRollbarReport } from "../../../util";
 // SERVER SIDE - Generate a sign-in token/ticket
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request, response?: Response) {
@@ -95,6 +96,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error: any) {
       const errorResponse = handleErrorEdgeCases(error);
+      createErrorRollbarReport("auth: user login", error, errorResponse.status);
       console.log(error);
       return NextResponse.json(
         { message: errorResponse?.message },

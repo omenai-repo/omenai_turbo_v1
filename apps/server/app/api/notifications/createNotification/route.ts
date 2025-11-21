@@ -12,6 +12,7 @@ import { NotificationDataType } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import z from "zod";
+import { createErrorRollbarReport } from "../../util";
 
 const NotificationDataSchema = z.object({
   type: z.enum(["wallet", "orders", "subscriptions", "updates"]),
@@ -60,6 +61,11 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
+    createErrorRollbarReport(
+      "notifications: create notification",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

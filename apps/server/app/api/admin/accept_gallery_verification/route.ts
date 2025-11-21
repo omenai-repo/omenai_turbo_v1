@@ -11,6 +11,7 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { redis } from "@omenai/upstash-config";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -50,6 +51,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       await redis.del(`account:${gallery_id}`);
     } catch (error) {
       console.error("Unable to invalidate redis cache");
+      createErrorRollbarReport(
+        "admin: Accept gallery verification; Unable to invalidate redis cache",
+        error,
+        500
+      );
     }
     await sendGalleryAcceptedMail({
       name,
@@ -62,6 +68,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "admin:Accept gallery verification",
+      error,
+      error_response?.status
+    );
 
     return NextResponse.json(
       { message: error_response?.message },

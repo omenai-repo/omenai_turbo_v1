@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "devDependencies": {
+    "@omenai/shared-lib": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-ui-components": "*",
     "@omenai/tailwind-config": "*",

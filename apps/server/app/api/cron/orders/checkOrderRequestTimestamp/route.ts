@@ -271,7 +271,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Cron: Check order request timestamp - update artwork rejection counts",
-      error as any,
+      error,
       error_response?.status
     );
 
@@ -391,7 +391,7 @@ async function updateArtworkRejectionCounts(
     // Don't throw an error here - this shouldn't block the email sending process
     createErrorRollbarReport(
       "Cron: Check order request timestamp - update artwork rejection counts",
-      error as any,
+      error,
       error_response?.status
     );
   }

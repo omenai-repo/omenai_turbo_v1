@@ -168,7 +168,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
 
     createErrorRollbarReport(
       "Cron: Create shipment at exhibition end date",
-      error as any,
+      error,
       errorResponse?.status
     );
     return NextResponse.json(

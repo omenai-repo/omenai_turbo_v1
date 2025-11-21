@@ -1,4 +1,4 @@
-import {logRollbarServerError} from "@omenai/rollbar-config"
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import {
   IndividualRegisterData,
   GalleryRegisterData,

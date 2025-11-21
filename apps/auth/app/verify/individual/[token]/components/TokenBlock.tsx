@@ -5,6 +5,7 @@ import { verifyEmail } from "@omenai/shared-services/verify/verifyEmail";
 import { verifyAuthStore } from "@omenai/shared-state-store/src/auth/verify/VerifyAuthStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -16,6 +17,7 @@ export default function TokenBlock({ token }: TokenProps) {
   const [tokenValue, setTokenValue] = useState("");
   const { isLoading, setIsLoading } = verifyAuthStore();
   const [resendTokenLoading, setResentTokenLoading] = useState(false);
+  const rollbar = useRollbar();
 
   const router = useRouter();
 
@@ -49,6 +51,11 @@ export default function TokenBlock({ token }: TokenProps) {
       const payload = { author: token };
       await resendCode("individual", payload);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description:
           "Something went wrong. Please try again or contact support",

@@ -258,7 +258,7 @@ export const POST = withAppRouterHighlight(async function POST(
           ).catch((error) => {
             createErrorRollbarReport(
               "Stripe Checkout Session webhook processing - Failed to send buyer notification",
-              error as any,
+              error,
               500
             );
             console.error("Failed to send buyer notification:", error);
@@ -291,7 +291,7 @@ export const POST = withAppRouterHighlight(async function POST(
           ).catch((error) => {
             createErrorRollbarReport(
               "Stripe Checkout Session webhook processing - Failed to send seller notification",
-              error as any,
+              error,
               500
             );
             console.error("Failed to send seller notification:", error);
@@ -308,7 +308,7 @@ export const POST = withAppRouterHighlight(async function POST(
         ).catch((error) => {
           createErrorRollbarReport(
             "Stripe Checkout Session webhook processing - Failed to create shipment workflow",
-            error as any,
+            error,
             500
           );
           console.error("Failed to create shipment workflow:", error);
@@ -330,7 +330,7 @@ export const POST = withAppRouterHighlight(async function POST(
         ).catch((error) => {
           createErrorRollbarReport(
             "Stripe Checkout Session webhook processing - Failed to send payment success mail workflow",
-            error as any,
+            error,
             500
           );
           console.error("Failed to send payment success mail workflow:", error);
@@ -342,7 +342,7 @@ export const POST = withAppRouterHighlight(async function POST(
     } catch (error) {
       createErrorRollbarReport(
         "Stripe Checkout Session webhook processing ",
-        error as any,
+        error,
         500
       );
       console.error("An error occurred during the transaction:", error);
@@ -355,7 +355,7 @@ export const POST = withAppRouterHighlight(async function POST(
         } catch (abortError) {
           createErrorRollbarReport(
             "Stripe Checkout Session webhook processing - Failed to abort MongoDB transaction",
-            abortError as any,
+            abortError,
             500
           );
           console.error("Failed to abort transaction:", abortError);
@@ -383,7 +383,7 @@ export const POST = withAppRouterHighlight(async function POST(
       } catch (error) {
         createErrorRollbarReport(
           "Stripe Checkout Session webhook processing - Failed to release order lock",
-          error as any,
+          error,
           500
         );
         console.error("Failed to release order lock:", error);

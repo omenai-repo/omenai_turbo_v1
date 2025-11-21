@@ -27,6 +27,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { createErrorRollbarReport } from "../../util";
 
 /* ----------------------------- Schemas & Types --------------------------- */
 
@@ -500,6 +501,11 @@ export const POST = withAppRouterHighlight(async function POST(
     console.error("[verification] error:", error);
 
     const errorResponse = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "transactions: verify flutterwaze transaction",
+      error,
+      errorResponse.status
+    );
 
     return NextResponse.json(
       {

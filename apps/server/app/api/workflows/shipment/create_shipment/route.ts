@@ -172,7 +172,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
           session.abortTransaction();
           createErrorRollbarReport(
             "Shipment creation workflow - Failed to abort MongoDB transaction",
-            error as any,
+            error,
             500
           );
           throw new Error("Transaction error, session was aborted");
@@ -227,7 +227,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
     } catch (error: any) {
       createErrorRollbarReport(
         "Shipment creation workflow - workflow error",
-        error as any,
+        error,
         500
       );
       await handleWorkflowError(error, payload);

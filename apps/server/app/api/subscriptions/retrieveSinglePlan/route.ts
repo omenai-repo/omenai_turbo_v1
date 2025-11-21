@@ -7,6 +7,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const searchParam = new URL(request.url).searchParams;
@@ -26,7 +27,11 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
-
+    createErrorRollbarReport(
+      "subscription: retrieve single plan",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

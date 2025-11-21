@@ -15,6 +15,7 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { addDaysToDate } from "@omenai/shared-utils/src/addDaysToDate";
 import { redis } from "@omenai/upstash-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -108,6 +109,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       await redis.set(cacheKey, `${JSON.stringify(uploadArt)}`);
     } catch (redisWriteErr) {
       console.error(`Redis Write Error [${cacheKey}]:`, redisWriteErr);
+      createErrorRollbarReport(
+        "artwork: Redis Write Error",
+        redisWriteErr as any,
+        500
+      );
     }
 
     return NextResponse.json(
@@ -118,6 +124,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport("artwork: upload", error, error_response.status);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }
