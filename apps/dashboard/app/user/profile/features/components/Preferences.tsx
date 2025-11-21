@@ -14,7 +14,7 @@ let artTypes = [
 ];
 export default function Preferences() {
   return (
-    <div className="w-full w-full">
+    <div className="w-full">
       <AnimatePresence>
         <div className="space-y-4">
           {/* Header */}

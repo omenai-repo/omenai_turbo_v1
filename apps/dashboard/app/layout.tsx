@@ -19,6 +19,8 @@ import { SessionProvider } from "@omenai/package-provider";
 import { Viewport } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import { clientConfig } from "@omenai/rollbar-config";
+import { Provider as RollbarProvider } from "@rollbar/react";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -41,26 +43,28 @@ export default async function DashboardRootLayout({
 }) {
   const initialSessionData = await getServerSession();
   return (
-    <HighRiskProvider>
-      <html lang="en" {...mantineHtmlProps}>
-        <head>
-          <meta name="color-scheme" content="light" />
-          <ColorSchemeScript defaultColorScheme="light" />
-        </head>
-        <body
-          className={`${work_sans.variable} font-sans flex flex-col px-4 justify-center`}
-        >
-          <SessionProvider initialSessionData={initialSessionData}>
-            <MantineProvider
-              defaultColorScheme="light"
-              forceColorScheme="light"
-            >
-              <LayoutWrapper children={children} />
-            </MantineProvider>
-          </SessionProvider>
-          <Analytics />
-        </body>
-      </html>
-    </HighRiskProvider>
+    <RollbarProvider config={clientConfig}>
+      <HighRiskProvider>
+        <html lang="en" {...mantineHtmlProps}>
+          <head>
+            <meta name="color-scheme" content="light" />
+            <ColorSchemeScript defaultColorScheme="light" />
+          </head>
+          <body
+            className={`${work_sans.variable} font-sans flex flex-col px-4 justify-center`}
+          >
+            <SessionProvider initialSessionData={initialSessionData}>
+              <MantineProvider
+                defaultColorScheme="light"
+                forceColorScheme="light"
+              >
+                <LayoutWrapper children={children} />
+              </MantineProvider>
+            </SessionProvider>
+            <Analytics />
+          </body>
+        </html>
+      </HighRiskProvider>
+    </RollbarProvider>
   );
 }
