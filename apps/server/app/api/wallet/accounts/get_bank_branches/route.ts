@@ -60,7 +60,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: account -> get bank branches",
-        error as any,
+        error,
         error_response.status
       );
       console.log(error);

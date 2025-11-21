@@ -40,7 +40,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "promotional: update promotional data",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

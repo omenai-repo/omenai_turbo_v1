@@ -101,7 +101,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       console.log(error);
       createErrorRollbarReport(
         "auth: gallery register",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artist: verify onboarding completion",
-      error as any,
+      error,
       error_response.status
     );
     console.log(error);

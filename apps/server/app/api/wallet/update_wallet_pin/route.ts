@@ -84,7 +84,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.error(error);
     createErrorRollbarReport(
       "wallet: update wallet pin",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

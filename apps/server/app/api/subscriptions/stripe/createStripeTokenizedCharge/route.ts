@@ -65,7 +65,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "subscription: create stripe token charge",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

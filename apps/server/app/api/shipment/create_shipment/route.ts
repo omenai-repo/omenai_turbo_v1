@@ -249,7 +249,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "shipment: create shipment",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json({ message: "Error", error }, { status: 500 });

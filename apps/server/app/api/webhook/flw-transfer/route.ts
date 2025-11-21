@@ -93,7 +93,7 @@ async function checkAndHandleTransferStatus(
   } catch (error) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing -Transfer Webhook handler - End session",
-      error as any,
+      error,
       500
     );
     return { isOk: false };
@@ -120,7 +120,7 @@ async function handleTransferPending(verified_transaction: any, session: any) {
 
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error as any,
+      error,
       500
     );
 
@@ -150,7 +150,7 @@ async function handleTransferSuccess(verified_transaction: any, session: any) {
     session.abortTransaction();
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error as any,
+      error,
       500
     );
     console.log(error);
@@ -179,7 +179,7 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
   } catch (error) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error as any,
+      error,
       500
     );
     await session.abortTransaction();
@@ -220,7 +220,7 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
   } catch (error) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error as any,
+      error,
       500
     );
     await session.abortTransaction();
@@ -267,7 +267,7 @@ export const POST = withAppRouterHighlight(async function POST(
     } catch (error) {
       createErrorRollbarReport(
         "Flutterwave Transfer webhook processing -Transfer Webhook handler",
-        error as any,
+        error,
         500
       );
       return NextResponse.json({ status: 400 });

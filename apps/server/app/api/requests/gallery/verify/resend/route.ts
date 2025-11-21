@@ -70,7 +70,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       console.log(error);
       createErrorRollbarReport(
         "gallery: resend verification code",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

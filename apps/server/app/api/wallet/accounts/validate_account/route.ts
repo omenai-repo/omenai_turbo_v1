@@ -60,7 +60,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "wallet: account -> validate account",
-      error as any,
+      error,
       error_response.status
     );
     console.log(error);

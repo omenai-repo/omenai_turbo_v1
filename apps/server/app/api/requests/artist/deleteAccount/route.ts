@@ -116,7 +116,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artist: delete account",
-        error as any,
+        error,
         error_response.status
       );
 

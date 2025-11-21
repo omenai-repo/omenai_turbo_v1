@@ -130,7 +130,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: delete account",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

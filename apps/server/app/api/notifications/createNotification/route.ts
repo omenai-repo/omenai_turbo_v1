@@ -63,7 +63,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "notifications: create notification",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

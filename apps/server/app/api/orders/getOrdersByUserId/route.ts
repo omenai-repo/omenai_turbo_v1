@@ -36,7 +36,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: get order by user id",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

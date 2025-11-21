@@ -53,7 +53,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       console.error("Unable to invalidate redis cache");
       createErrorRollbarReport(
         "admin: Accept gallery verification; Unable to invalidate redis cache",
-        error as any,
+        error,
         500
       );
     }
@@ -70,7 +70,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin:Accept gallery verification",
-      error as any,
+      error,
       error_response?.status
     );
 

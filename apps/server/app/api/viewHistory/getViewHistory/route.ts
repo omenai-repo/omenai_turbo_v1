@@ -30,7 +30,7 @@ export const POST = withAppRouterHighlight(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "viewHistory: get view history",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

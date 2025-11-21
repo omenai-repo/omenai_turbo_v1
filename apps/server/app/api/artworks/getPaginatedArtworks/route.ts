@@ -75,7 +75,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get paginated Artwork",
-        error as any,
+        error,
         error_response.status
       );
       console.log(error);

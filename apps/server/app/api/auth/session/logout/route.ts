@@ -25,7 +25,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       return NextResponse.json({ message: "User successfully logged out" });
     } catch (error) {
-      createErrorRollbarReport("auth: session logout", error as any, 500);
+      createErrorRollbarReport("auth: session logout", error, 500);
       return NextResponse.json(
         { message: "An error occurred. Please contact support" },
         { status: 500 }

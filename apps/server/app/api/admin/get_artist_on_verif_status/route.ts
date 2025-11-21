@@ -30,7 +30,7 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "admin: get artist verif status",
-        error as any,
+        error,
         error_response?.status
       );
       return NextResponse.json(

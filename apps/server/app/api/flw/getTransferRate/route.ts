@@ -46,7 +46,7 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "flutterwave: get transfert rate",
-        error as any,
+        error,
         error_response.status
       );
       console.log(error);

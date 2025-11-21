@@ -91,7 +91,7 @@ export const GET = withRateLimit(lenientRateLimit)(
 
       createErrorRollbarReport(
         "Cron: Check days to subscription expiry - send reminders",
-        error as any,
+        error,
         500
       );
       return NextResponse.json(

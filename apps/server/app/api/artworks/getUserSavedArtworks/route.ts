@@ -65,7 +65,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: get user saved Artwork",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

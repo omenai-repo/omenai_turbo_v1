@@ -111,7 +111,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "shipment: shipment tracking",
-      error as any,
+      error,
       error_response.status
     );
 

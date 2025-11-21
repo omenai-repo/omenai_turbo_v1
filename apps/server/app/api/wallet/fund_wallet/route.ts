@@ -45,7 +45,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: fund wallet",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

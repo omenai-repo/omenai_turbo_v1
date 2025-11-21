@@ -27,7 +27,7 @@ export const POST = withAppRouterHighlight(async function POST(
     console.error("Error in artwork fetch route:", error);
     createErrorRollbarReport(
       "artwork: get single Artwork",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

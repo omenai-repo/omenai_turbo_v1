@@ -26,8 +26,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.error(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
-      "shipment: check stripe details submitted",
-      error as any,
+      "stripe: check stripe details submitted",
+      error,
       error_response.status
     );
 

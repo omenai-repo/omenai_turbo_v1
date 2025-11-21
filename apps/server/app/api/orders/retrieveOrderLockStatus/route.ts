@@ -35,7 +35,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: retrieve order lock status",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

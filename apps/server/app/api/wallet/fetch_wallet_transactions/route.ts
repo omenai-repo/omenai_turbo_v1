@@ -78,7 +78,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: fetch wallet transactions",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

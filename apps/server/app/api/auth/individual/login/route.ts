@@ -96,11 +96,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error: any) {
       const errorResponse = handleErrorEdgeCases(error);
-      createErrorRollbarReport(
-        "auth: user login",
-        error as any,
-        errorResponse.status
-      );
+      createErrorRollbarReport("auth: user login", error, errorResponse.status);
       console.log(error);
       return NextResponse.json(
         { message: errorResponse?.message },

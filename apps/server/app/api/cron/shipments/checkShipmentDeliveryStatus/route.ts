@@ -349,7 +349,7 @@ Cron Job Summary:
 
     createErrorRollbarReport(
       "Cron: Check shipment delivery status",
-      error as any,
+      error,
       errorResponse?.status
     );
 

@@ -33,7 +33,7 @@ export const GET = async function GET(request: Request) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: check admin activation",
-      error as any,
+      error,
       error_response?.status
     );
     return NextResponse.json(

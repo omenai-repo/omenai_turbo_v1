@@ -155,7 +155,7 @@ async function sendBuyerNotification(
     console.error("Failed to send buyer notification:", error);
     createErrorRollbarReport(
       "order: failed to send buyer notification",
-      error as any,
+      error,
       500
     );
   }
@@ -183,7 +183,7 @@ async function sendBuyerEmail(
     console.error("Failed to send order declined email:", error);
     createErrorRollbarReport(
       "order: failed to send order declined email",
-      error as any,
+      error,
       500
     );
   }
@@ -277,7 +277,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: decline order request",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

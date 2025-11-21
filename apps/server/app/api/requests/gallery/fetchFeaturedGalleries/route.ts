@@ -22,7 +22,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: fetch featured galleries",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

@@ -98,7 +98,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
             );
             createErrorRollbarReport(
               "artwork: get Artwork price for artist- Failed to WRITE to Redis for key",
-              redisError as any,
+              redisError,
               500
             );
           }
@@ -142,7 +142,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get Artwork price for artist",
-        error as any,
+        error,
         error_response.status
       );
       console.log(error);

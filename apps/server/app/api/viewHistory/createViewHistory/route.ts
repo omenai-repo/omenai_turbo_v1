@@ -41,7 +41,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "viewhistory: create view history",
-      error as any,
+      error,
       error_response.status
     );
 

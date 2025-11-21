@@ -53,11 +53,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         await session.commitTransaction();
       } catch (error) {
         await session.abortTransaction();
-        createErrorRollbarReport(
-          "gallery: verify mail update",
-          error as any,
-          500
-        );
+        createErrorRollbarReport("gallery: verify mail update", error, 500);
       } finally {
         await session.endSession();
       }
@@ -70,7 +66,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: verify mail",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

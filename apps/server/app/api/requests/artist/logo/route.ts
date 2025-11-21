@@ -39,11 +39,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "artist: logo",
-      error as any,
-      error_response.status
-    );
+    createErrorRollbarReport("artist: logo", error, error_response.status);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

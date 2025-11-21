@@ -52,7 +52,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         await session.abortTransaction();
         createErrorRollbarReport(
           "artist: failed to update account artist",
-          error as any,
+          error,
           500
         );
       } finally {
@@ -67,7 +67,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artist: verify mail",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

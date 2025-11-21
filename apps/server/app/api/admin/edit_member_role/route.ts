@@ -53,7 +53,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: edit member role",
-      error as any,
+      error,
       error_response?.status
     );
     return NextResponse.json(

@@ -107,7 +107,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: artist onboarding create categorization",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

@@ -50,7 +50,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get Artwork by artist",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

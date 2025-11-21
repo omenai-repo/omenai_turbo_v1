@@ -33,7 +33,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "individual: get user",
-      error as any,
+      error,
       error_response.status
     );
 

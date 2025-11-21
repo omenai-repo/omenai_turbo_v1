@@ -53,7 +53,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       console.log(error);
       createErrorRollbarReport(
         "individual: verify mail",
-        error as any,
+        error,
         error_response.status
       );
 

@@ -32,7 +32,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "sales: get activity by Id ",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

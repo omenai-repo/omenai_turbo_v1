@@ -29,7 +29,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "locks: release Lock",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

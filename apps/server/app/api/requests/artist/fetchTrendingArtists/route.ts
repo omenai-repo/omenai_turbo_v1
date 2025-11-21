@@ -139,7 +139,7 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET() {
     console.error(error);
     createErrorRollbarReport(
       "artist: fetch trending artist",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

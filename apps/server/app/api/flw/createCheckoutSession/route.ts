@@ -53,7 +53,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "flutterwave: create checkout session",
-      error as any,
+      error,
       error_response.status
     );
     console.log(error);

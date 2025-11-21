@@ -26,7 +26,7 @@ export const GET = withAppRouterHighlight(async function GET() {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "promotional: get promotional data",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

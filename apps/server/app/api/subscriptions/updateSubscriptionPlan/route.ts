@@ -60,7 +60,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "subscription: update subscription plan",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

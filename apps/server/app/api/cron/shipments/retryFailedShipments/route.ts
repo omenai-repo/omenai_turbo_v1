@@ -183,11 +183,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       concurrency: MAX_CONCURRENT_JOBS,
     });
   } catch (error) {
-    createErrorRollbarReport(
-      "Cron: Failed Job Retry - Shipments",
-      error as any,
-      500
-    );
+    createErrorRollbarReport("Cron: Failed Job Retry - Shipments", error, 500);
     console.error("[failed-job-retry] Error:", error);
     return NextResponse.json(
       {

@@ -74,7 +74,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "gallery: fetch income data",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

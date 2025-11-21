@@ -73,7 +73,7 @@ export const POST = withRateLimit(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin:Activate admin account",
-      error as any,
+      error,
       error_response?.status
     );
     return NextResponse.json(

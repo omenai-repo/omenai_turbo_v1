@@ -43,7 +43,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: block gallery",
-      error as any,
+      error,
       error_response?.status
     );
 

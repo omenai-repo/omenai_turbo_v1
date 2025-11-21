@@ -77,7 +77,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "subscription: create subscription payment intent",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

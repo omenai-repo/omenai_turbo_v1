@@ -117,7 +117,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: artist login",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

@@ -52,7 +52,7 @@ export const GET = withAppRouterHighlight(async function GET() {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "subscription: retrieve plans",
-      error as any,
+      error,
       error_response.status
     );
 

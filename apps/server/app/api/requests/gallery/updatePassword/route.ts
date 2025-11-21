@@ -69,11 +69,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       await session.commitTransaction();
     } catch (error) {
       await session.abortTransaction();
-      createErrorRollbarReport(
-        "gallery: update gallery password",
-        error as any,
-        500
-      );
+      createErrorRollbarReport("gallery: update gallery password", error, 500);
     } finally {
       await session.endSession();
     }
@@ -87,7 +83,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "gallery: update password",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

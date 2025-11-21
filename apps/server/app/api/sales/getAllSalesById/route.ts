@@ -27,7 +27,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "sales: get all sales by ID",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

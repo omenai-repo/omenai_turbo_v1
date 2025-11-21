@@ -46,7 +46,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: reject gallery verification",
-      error as any,
+      error,
       error_response?.status
     );
     return NextResponse.json(

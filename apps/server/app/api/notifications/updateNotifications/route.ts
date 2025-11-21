@@ -69,7 +69,7 @@ export const PATCH = withRateLimit(standardRateLimit)(async function PATCH(
     console.log(error);
     createErrorRollbarReport(
       "notifications: update notification",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

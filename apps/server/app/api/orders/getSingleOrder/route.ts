@@ -29,7 +29,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: get single order",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

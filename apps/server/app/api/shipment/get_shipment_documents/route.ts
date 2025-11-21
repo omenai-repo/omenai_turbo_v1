@@ -49,7 +49,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "shipment: get shipment documents",
-        error as any,
+        error,
         error_response.status
       );
 

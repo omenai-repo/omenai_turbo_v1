@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     // The frontend will use this token for subsequent mutation requests.
     return NextResponse.json({ user, csrfToken }, { status: 200 });
   } catch (error) {
-    createErrorRollbarReport("auth: user session", error as any, 500);
+    createErrorRollbarReport("auth: user session", error, 500);
     console.log(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }

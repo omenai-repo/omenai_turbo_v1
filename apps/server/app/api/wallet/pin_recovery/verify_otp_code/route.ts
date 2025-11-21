@@ -49,7 +49,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "wallet: pin recovery -> verify otp code",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

@@ -12,11 +12,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       return NextResponse.json({});
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-      createErrorRollbarReport(
-        "featured artist",
-        error as any,
-        error_response.status
-      );
+      createErrorRollbarReport("featured artist", error, error_response.status);
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

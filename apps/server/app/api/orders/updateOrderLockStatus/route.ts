@@ -35,7 +35,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: update order lock status",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

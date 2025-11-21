@@ -97,7 +97,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "wallet: add primary account",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

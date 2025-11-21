@@ -73,7 +73,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "subscription: create payment method setup",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

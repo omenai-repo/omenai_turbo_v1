@@ -12,7 +12,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artist: fetch emerging artist",
-        error as any,
+        error,
         error_response.status
       );
       console.log(error);

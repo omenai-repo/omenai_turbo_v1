@@ -65,7 +65,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "gallery: request password confirmation",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

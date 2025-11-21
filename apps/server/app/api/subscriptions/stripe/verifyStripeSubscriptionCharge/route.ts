@@ -444,7 +444,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.error("[subscription.verify] Uncaught error:", error);
     createErrorRollbarReport(
       "subscription: verify stripe subscription charge",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

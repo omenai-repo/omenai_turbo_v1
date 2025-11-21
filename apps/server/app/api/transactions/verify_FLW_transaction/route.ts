@@ -503,7 +503,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const errorResponse = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "transactions: verify flutterwaze transaction",
-      error as any,
+      error,
       errorResponse.status
     );
 

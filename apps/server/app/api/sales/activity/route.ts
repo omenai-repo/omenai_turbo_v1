@@ -26,11 +26,7 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "sales: activity",
-      error as any,
-      error_response.status
-    );
+    createErrorRollbarReport("sales: activity", error, error_response.status);
 
     return NextResponse.json(
       { message: error_response?.message },

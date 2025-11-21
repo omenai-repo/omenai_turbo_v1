@@ -80,7 +80,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     console.log(error);
     createErrorRollbarReport(
       "subscription: update payment method",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

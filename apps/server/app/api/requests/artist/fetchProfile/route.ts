@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artist: fetch profile",
-      error as any,
+      error,
       error_response.status
     );
     console.log(error);

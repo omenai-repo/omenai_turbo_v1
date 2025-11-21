@@ -42,7 +42,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "admin: fetch artist verify info",
-        error as any,
+        error,
         error_response?.status
       );
       return NextResponse.json(

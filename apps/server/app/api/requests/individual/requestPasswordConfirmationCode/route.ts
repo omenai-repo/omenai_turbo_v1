@@ -64,7 +64,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "individual: request password comfirmation code",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

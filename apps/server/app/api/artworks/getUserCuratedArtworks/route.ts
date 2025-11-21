@@ -79,7 +79,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: get user curated Artwork",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

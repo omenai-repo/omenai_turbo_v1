@@ -70,7 +70,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "individual: send password reset link",
-        error as any,
+        error,
         error_response.status
       );
       return NextResponse.json(

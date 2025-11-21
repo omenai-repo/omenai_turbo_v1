@@ -51,7 +51,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function PUT(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: update Artwork data",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

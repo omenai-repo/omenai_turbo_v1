@@ -128,7 +128,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "shipment: get rate",
-        error as any,
+        error,
         error_response.status
       );
 

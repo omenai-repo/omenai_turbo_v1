@@ -30,7 +30,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "transactions: fetch sub transaction",
-      error as any,
+      error,
       error_response.status
     );
     console.log(error);

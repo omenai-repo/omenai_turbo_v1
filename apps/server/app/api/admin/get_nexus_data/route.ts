@@ -34,7 +34,7 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "admin: get nexus data",
-        error as any,
+        error,
         error_response?.status
       );
       return NextResponse.json(

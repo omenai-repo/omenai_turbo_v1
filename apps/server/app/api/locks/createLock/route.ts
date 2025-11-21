@@ -63,7 +63,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     console.log(error);
     createErrorRollbarReport(
       "locks: create Lock",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

@@ -32,7 +32,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "shipment: address verification",
-        error as any,
+        error,
         error_response.status
       );
 
@@ -65,7 +65,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       console.log(error);
       createErrorRollbarReport(
         "shipment: address validation",
-        error as any,
+        error,
         error_response.status
       );
 

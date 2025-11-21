@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: get order by filter",
-      error as any,
+      error,
       error_response.status
     );
     return NextResponse.json(

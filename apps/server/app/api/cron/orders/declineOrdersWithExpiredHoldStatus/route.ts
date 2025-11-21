@@ -116,7 +116,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
 
     createErrorRollbarReport(
       "Cron: Decline orders with expired hold status",
-      error as any,
+      error,
       error_response?.status
     );
     return NextResponse.json(

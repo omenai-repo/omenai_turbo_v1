@@ -295,7 +295,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: create order",
-      error as any,
+      error,
       error_response.status
     );
     console.error("Order creation error:", error);

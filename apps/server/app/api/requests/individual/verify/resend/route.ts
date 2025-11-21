@@ -74,7 +74,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       console.log(error);
       createErrorRollbarReport(
         "individual: verify resend",
-        error as any,
+        error,
         error_response.status
       );
 
