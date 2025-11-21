@@ -14,6 +14,7 @@ export default function RecoveryEmailInputField() {
   const [email, setEmail] = useState("");
   const { recoveryModal, updateRecoveryModal } = actionStore();
   const rollbar = useRollbar();
+  console.log(rollbar);
   const { csrf } = useAuth();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,9 +34,9 @@ export default function RecoveryEmailInputField() {
       } else toast_notif(data.body.message, "error");
     } catch (error) {
       if (error instanceof Error) {
-        rollbar.error(error);
+        rollbar.info(error);
       } else {
-        rollbar.error(new Error(String(error)));
+        rollbar.info(new Error(String(error)));
       }
       toast.error("Error notification", {
         description:
