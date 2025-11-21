@@ -49,8 +49,6 @@ export default async function RootLayout({
 }) {
   const initialSessionData = await getServerSession();
 
-  const configCatSdkKey = process.env.NEXT_PUBLIC_CONFIGCAT_SDK_KEY as string;
-
   return (
     <RollbarProvider config={clientConfig}>
       <HighRiskProvider>

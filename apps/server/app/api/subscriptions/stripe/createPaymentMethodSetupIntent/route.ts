@@ -7,6 +7,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import {
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 
@@ -27,7 +28,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     )) as boolean;
 
     if (!isSubscriptionEnabled)
-      throw new ForbiddenError("Subscriptions are currently disabled");
+      throw new ServiceUnavailableError("Subscriptions are currently disabled");
 
     await connectMongoDB();
     const { gallery_id, email } = await request.json();

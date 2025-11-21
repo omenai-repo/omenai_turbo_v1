@@ -4,12 +4,14 @@ import { NextResponse } from "next/server";
 import {
   NotFoundError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { CombinedConfig, WithdrawalAccount } from "@omenai/shared-types";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -20,6 +22,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isWalletWithdrawalEnabled =
+      (await fetchConfigCatValue("wallet_withdrawal_enabled", "high")) ?? false;
+    if (!isWalletWithdrawalEnabled) {
+      throw new ServiceUnavailableError("Wallet is temporarily disabled");
+    }
     await connectMongoDB();
     const {
       owner_id,

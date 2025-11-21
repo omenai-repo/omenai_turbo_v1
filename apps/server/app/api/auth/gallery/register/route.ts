@@ -9,6 +9,7 @@ import {
   ConflictError,
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendGalleryMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryMail";
@@ -25,7 +26,9 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         (await fetchConfigCatValue("galleryonboardingenabled", "low")) ?? false;
 
       if (!isGalleryOnboardingEnabled) {
-        throw new ForbiddenError("Gallery onboarding is currently disabled");
+        throw new ServiceUnavailableError(
+          "Gallery onboarding is currently disabled"
+        );
       }
       await connectMongoDB();
 

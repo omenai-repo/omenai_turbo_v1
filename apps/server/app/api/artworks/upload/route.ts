@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import {
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -30,7 +31,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       (await fetchConfigCatValue("artwork_upload_enabled", "high")) ?? false;
 
     if (!isArtworkUploadEnabled) {
-      throw new ForbiddenError("Artwork upload is currently disabled");
+      throw new ServiceUnavailableError("Artwork upload is currently disabled");
     }
 
     await connectMongoDB();

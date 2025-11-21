@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import {
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -27,7 +28,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     )) as boolean;
 
     if (!isSubscriptionEnabled)
-      throw new ForbiddenError("Subscriptions are currently disabled");
+      throw new ServiceUnavailableError("Subscriptions are currently disabled");
     await connectMongoDB();
     const { data, gallery_id, action } = await request.json();
 

@@ -4,7 +4,10 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { ForbiddenError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ForbiddenError,
+  ServiceUnavailableError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
@@ -19,7 +22,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       (await fetchConfigCatValue("flutterwave_payment_enabled", "high")) ??
       false;
     if (!isFlwPaymentEnabled) {
-      throw new ForbiddenError("Flutterwave payment is currently disabled");
+      throw new ServiceUnavailableError(
+        "Flutterwave payment is currently disabled"
+      );
     }
     const data = await request.json();
 

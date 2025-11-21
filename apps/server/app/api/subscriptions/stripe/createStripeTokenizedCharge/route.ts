@@ -10,6 +10,7 @@ import {
   ForbiddenError,
   NotFoundError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
@@ -31,7 +32,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     )) as boolean;
 
     if (!isSubscriptionEnabled)
-      throw new ForbiddenError("Subscriptions are currently disabled");
+      throw new ServiceUnavailableError("Subscriptions are currently disabled");
     await connectMongoDB();
     const { amount, gallery_id, meta } = await request.json();
     const subscription_data = await Subscriptions.findOne(

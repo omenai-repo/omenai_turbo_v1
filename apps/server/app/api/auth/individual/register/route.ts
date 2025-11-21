@@ -8,6 +8,7 @@ import {
   ConflictError,
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendIndividualMail } from "@omenai/shared-emails/src/models/individuals/sendIndividualMail";
@@ -24,7 +25,9 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         false;
 
       if (!isCollectorOnboardingEnabled)
-        throw new ForbiddenError("Collector onboarding is currently disabled");
+        throw new ServiceUnavailableError(
+          "Collector onboarding is currently disabled"
+        );
 
       await connectMongoDB();
 

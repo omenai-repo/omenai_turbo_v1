@@ -3,7 +3,10 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
-import { ForbiddenError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ForbiddenError,
+  ServiceUnavailableError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
@@ -17,7 +20,9 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const isStripePaymentEnabled =
         (await fetchConfigCatValue("stripe_payment_enabled", "high")) ?? false;
       if (!isStripePaymentEnabled) {
-        throw new ForbiddenError("Stripe payment is currently disabled");
+        throw new ServiceUnavailableError(
+          "Stripe payment is currently disabled"
+        );
       }
       await connectMongoDB();
       const { amount, seller_id, meta } = await request.json();

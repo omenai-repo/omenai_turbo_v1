@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import {
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -30,7 +31,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const isStripePaymentEnabled =
       (await fetchConfigCatValue("stripe_payment_enabled", "high")) ?? false;
     if (!isStripePaymentEnabled) {
-      throw new ForbiddenError("Stripe payment is currently disabled");
+      throw new ServiceUnavailableError("Stripe payment is currently disabled");
     }
     await connectMongoDB();
 

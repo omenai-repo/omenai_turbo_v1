@@ -7,6 +7,7 @@ import {
   ConflictError,
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
@@ -24,7 +25,9 @@ export const POST = withAppRouterHighlight(async function POST(
       (await fetchConfigCatValue("artistonboardingenabled", "low")) ?? false;
 
     if (!isArtistOnboardingEnabled) {
-      throw new ForbiddenError("Artist onboarding is currently disabled");
+      throw new ServiceUnavailableError(
+        "Artist onboarding is currently disabled"
+      );
     }
 
     await connectMongoDB();

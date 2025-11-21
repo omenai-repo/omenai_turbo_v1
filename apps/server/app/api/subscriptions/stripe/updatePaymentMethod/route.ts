@@ -9,6 +9,7 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import {
   ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../../util";
@@ -26,7 +27,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     )) as boolean;
 
     if (!isSubscriptionEnabled)
-      throw new ForbiddenError("Subscriptions are currently disabled");
+      throw new ServiceUnavailableError("Subscriptions are currently disabled");
 
     const { setupIntentId, gallery_id } = await request.json();
 

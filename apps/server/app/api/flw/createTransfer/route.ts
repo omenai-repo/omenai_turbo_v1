@@ -8,6 +8,7 @@ import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { getApiUrl } from "@omenai/url-config/src/config";
@@ -28,7 +29,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const isWalletWithdrawalEnabled =
       (await fetchConfigCatValue("wallet_withdrawal_enabled", "high")) ?? false;
     if (!isWalletWithdrawalEnabled) {
-      throw new ForbiddenError("Wallet withdrawal is currently disabled");
+      throw new ServiceUnavailableError(
+        "Wallet withdrawal is currently disabled"
+      );
     }
     const {
       amount,
