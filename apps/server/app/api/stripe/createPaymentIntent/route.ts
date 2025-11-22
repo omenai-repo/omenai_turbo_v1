@@ -84,6 +84,13 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         },
       });
 
+      console.log("Created payment intent:", paymentIntent);
+      console.log("Created Payment Intent ID:", paymentIntent.id);
+      console.log(
+        "Created Payment Intent Client Secret:",
+        paymentIntent.client_secret
+      );
+
       return NextResponse.json({
         paymentIntent: paymentIntent.client_secret,
         publishableKey: process.env.NEXT_PUBLIC_STRIPE_PK!,
