@@ -83,7 +83,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         transfer_data: {
           destination: gallery.connected_account_id,
         },
-        expiresAt,
       });
 
       return NextResponse.json({
