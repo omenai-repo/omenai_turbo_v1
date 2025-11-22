@@ -78,44 +78,56 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
 
     const expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
-
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: { name: item },
-            unit_amount: baseAmountCents,
+    try {
+      const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: { name: item },
+              unit_amount: baseAmountCents,
+            },
+            quantity: 1,
           },
-          quantity: 1,
+        ],
+        payment_intent_data: {
+          application_fee_amount: commissionCents,
+          transfer_data: {
+            destination: gallery.connected_account_id,
+          },
         },
-      ],
-      payment_intent_data: {
-        application_fee_amount: commissionCents,
-        transfer_data: {
-          destination: gallery.connected_account_id,
+        metadata: {
+          seller_id,
+          type: "purchase",
+          commission: Math.round(meta.unit_price * commissionRate),
         },
-      },
-      metadata: {
-        seller_id,
-        type: "purchase",
-        commission: Math.round(meta.unit_price * commissionRate),
-      },
-      expires_at: expiresAt,
-      mode: "payment",
-      success_url,
-      cancel_url,
-    });
+        expires_at: expiresAt,
+        mode: "payment",
+        success_url,
+        cancel_url,
+      });
 
-    if (!session)
-      throw new ServerError(
-        "Cannot proceed with this purchase at the moment. Please try again or contact support"
+      if (!session)
+        throw new ServerError(
+          "Cannot proceed with this purchase at the moment. Please try again or contact support"
+        );
+
+      return NextResponse.json({
+        message: "Checkout Session created... Redirecting",
+        url: session.url,
+      });
+    } catch (error) {
+      const error_response = handleErrorEdgeCases(error);
+      createErrorRollbarReport(
+        "stripe: check checkout session",
+        error,
+        error_response.status
       );
-
-    return NextResponse.json({
-      message: "Checkout Session created... Redirecting",
-      url: session.url,
-    });
+      return NextResponse.json(
+        { message: error_response?.message },
+        { status: error_response?.status }
+      );
+    }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(

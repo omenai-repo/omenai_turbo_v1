@@ -65,7 +65,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           100
       );
 
-      const expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100),
         currency: "usd",
