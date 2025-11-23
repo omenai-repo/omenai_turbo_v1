@@ -13,7 +13,6 @@ import {
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { redis } from "@omenai/upstash-config";
-import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../util";
 
@@ -43,11 +42,19 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           "Artwork price calculation is currently disabled"
         );
 
+      console.log(
+        `Calculating price for medium: ${medium}, height: ${height}, width: ${width}, category: ${category}, currency: ${currency}`
+      );
+
       if (!medium || !height || !width || !category) {
         throw new ServerError(
           "Missing required parameters (medium, height, width, category)"
         );
       }
+
+      console.log(
+        `Calculating price for medium: ${medium}, height: ${height}, width: ${width}, category: ${category}, currency: ${currency}`
+      );
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
       const price: ArtworkPricing = calculateArtworkPrice({
