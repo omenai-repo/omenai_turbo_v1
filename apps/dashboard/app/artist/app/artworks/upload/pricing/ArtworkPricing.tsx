@@ -8,7 +8,6 @@ import { createUploadedArtworkData } from "@omenai/shared-utils/src/createUpload
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
-import { toast } from "sonner";
 import { fetchArtworkPriceForArtist } from "@omenai/shared-services/artworks/fetchArtworkPriceForArtist";
 import { Alert, Paper } from "@mantine/core";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
@@ -34,6 +33,7 @@ export default function ArtworkPricing() {
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
   const [priceConsent, setPriceConsent] = useState(false);
+
   const rollbar = useRollbar();
 
   const canProceed = acknowledgment && penaltyConsent && priceConsent;
@@ -45,7 +45,12 @@ export default function ArtworkPricing() {
   const artwork_width = extractNumberString(artworkUploadData.width);
 
   const { data: pricing, isLoading } = useQuery({
-    queryKey: ["fetch_artwork_price"],
+    queryKey: [
+      "fetch_artwork_price",
+      artwork_height,
+      artwork_width,
+      artworkUploadData.medium,
+    ],
     queryFn: async () => {
       const response = await fetchArtworkPriceForArtist(
         artworkUploadData.medium as ArtworkMediumTypes,
@@ -60,9 +65,11 @@ export default function ArtworkPricing() {
 
       return response.data;
     },
+    enabled: !!artwork_height && !!artwork_width && !!artworkUploadData.medium,
     refetchOnWindowFocus: false,
-    staleTime: 0,
+    staleTime: 1000 * 60 * 5,
   });
+
   const handleArtworkUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -92,6 +99,8 @@ export default function ArtworkPricing() {
         fileId: fileUploaded.$id,
       };
 
+      console.log(file);
+
       const data = createUploadedArtworkData(
         {
           ...artworkUploadData,
@@ -110,22 +119,34 @@ export default function ArtworkPricing() {
 
       const uploadResponse = await uploadArtworkData(data, csrf || "");
 
+      console.log(uploadResponse);
+
       if (!uploadResponse?.isOk) {
-        await storage.deleteFile({
-          bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-          fileId: file.fileId,
-        });
-        toast_notif(uploadResponse.body.message, "error");
-        setImage(null);
-        return;
+        try {
+          toast_notif(uploadResponse.body.message, "error");
+          await storage.deleteFile({
+            bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+            fileId: file.fileId,
+          });
+        } catch (error) {
+          rollbar.error({
+            context: "Artist artwork upload: Delete appwrite image",
+            error,
+          });
+        } finally {
+          setImage(null);
+          return;
+        }
       }
 
       toast_notif(uploadResponse.body.message, "success");
+
       await queryClient.invalidateQueries({
-        queryKey: ["fetch_artwork_price", "fetch_artworks_by_id"],
+        queryKey: ["fetch_artworks_by_id"],
       });
-      queryClient.removeQueries({ queryKey: ["fetch_artwork_price"] });
+
       clearData();
+
       router.replace("/artist/app/artworks");
     } catch (error) {
       if (error instanceof Error) {
@@ -134,15 +155,10 @@ export default function ArtworkPricing() {
         rollbar.error(new Error(String(error)));
       }
       console.error("Error uploading artwork:", error);
-      toast.error("Error notification", {
-        description:
-          "An error occurred while uploading the artwork. Please try again.",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "An error occurred while uploading the artwork. Please try again later.",
+        "error"
+      );
     } finally {
       setLoading(false);
     }

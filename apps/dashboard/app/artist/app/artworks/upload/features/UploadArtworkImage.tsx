@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
@@ -51,26 +52,14 @@ export default function UploadArtworkImage() {
 
   function handleImageSubmit() {
     if (image === null)
-      toast.error("Error notification", {
-        description: "Please upload your artwork before proceeding",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif("Please upload your artwork before proceeding", "error");
     else {
       const fileType = image.type.split("/")[1];
       if (!acceptedFileTypes.includes(fileType)) {
-        toast.error("Error notification", {
-          description:
-            "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
+          "error"
+        );
         return;
       }
       toast.info("Operation in progress", {
