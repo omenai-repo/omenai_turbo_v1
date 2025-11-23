@@ -27,18 +27,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     try {
       const accountIdInfo = await redis.get(cacheKey);
 
-      if (!accountIdInfo) {
+      const parsedAccountInfo =
+        typeof accountIdInfo === "string"
+          ? JSON.parse(accountIdInfo)
+          : accountIdInfo;
+
+      if (
+        !parsedAccountInfo ||
+        parsedAccountInfo.connected_account_id === null
+      ) {
         const account = await fetchAndSetRedisCache(gallery_id, cacheKey);
         return NextResponse.json({
           message: "Successfully fetched account info",
           data: account,
         });
       }
-
-      const parsedAccountInfo =
-        typeof accountIdInfo === "string"
-          ? JSON.parse(accountIdInfo)
-          : accountIdInfo;
 
       return NextResponse.json({
         message: "Successfully fetched account info",

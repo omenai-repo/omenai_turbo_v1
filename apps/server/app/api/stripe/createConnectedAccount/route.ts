@@ -8,6 +8,8 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { createErrorRollbarReport } from "../../util";
+import { redis } from "@omenai/upstash-config";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -59,6 +61,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (update_connected_id.modifiedCount === 0)
       throw new ServerError("Something went wrong. Contact Support");
 
+    // Set cache
+
+    try {
+      const accountData = {
+        connected_account_id: account.id,
+        gallery_verified: true,
+      };
+      await redis.del(`accountId:${customer.customer_id}`);
+      await redis.set(`accountId:${customer.customer_id}`, JSON.stringify(accountData));
+    } catch (error) {
+      rollbarServerInstance.error({
+        context: "Redis deletion: Connected account ID",
+        error,
+      });
+    }
     return NextResponse.json(
       {
         message: "Connected account created",

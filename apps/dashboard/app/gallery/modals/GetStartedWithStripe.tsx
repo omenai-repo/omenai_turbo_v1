@@ -124,7 +124,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={user.name}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
+                  className="w-full text-fluid-xs disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full">
@@ -138,7 +138,7 @@ export default function GetStartedWithStripe() {
                   disabled
                   type="text"
                   value={user.email}
-                  className="w-full disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
+                  className="w-full text-fluid-xs disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
                 />
               </div>
               <div className="relative w-full flex flex-col">
@@ -153,7 +153,7 @@ export default function GetStartedWithStripe() {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setCountrySelect(e.target.value)
                   }
-                  className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded"
+                  className="border-0 ring-1 text-fluid-xs ring-dark/20 focus:ring focus:ring-dark px-6 py-2 sm:py-3 rounded"
                 >
                   <option value="">Select</option>
                   {country_codes.map((country, index) => {
