@@ -15,7 +15,7 @@ export default function ArtistData() {
   if (!id || !url) return notFound();
 
   const { data: artist_data, isLoading: loading } = useQuery({
-    queryKey: ["fetch_artist_data"],
+    queryKey: ["fetch_artist_data", id],
     queryFn: async () => {
       const response = await fetchArtistData(id, "1");
 
