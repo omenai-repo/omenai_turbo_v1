@@ -23,7 +23,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       const artist_data = await AccountArtist.findOne(
         { artist_id },
-        "logo name bio"
+        "logo name bio documentation"
       );
 
       if (!artist_data || artist_data.length === 0) {
