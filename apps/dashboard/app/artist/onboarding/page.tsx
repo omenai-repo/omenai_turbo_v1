@@ -1,15 +1,22 @@
+"use client";
 import {
   BriefcaseIcon,
   AcademicCapIcon,
   BuildingLibraryIcon,
   DocumentTextIcon,
 } from "@heroicons/react/24/solid";
-
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 
 import Link from "next/link";
 
 export default function ArtistOnboarding() {
+  const { signOut } = useAuth({ requiredRole: "artist" });
+  const handleSignOut = async () => {
+    await signOut();
+    toast_notif("Signing you out... please wait", "info");
+  };
   return (
     <div>
       <div className="relative min-h-screen w-full flex items-center justify-center bg-gray-100">
@@ -65,7 +72,7 @@ export default function ArtistOnboarding() {
           </div>
         </div>
         <button
-          // onClick={handleSignOut}
+          onClick={handleSignOut}
           className="bg-dark absolute top-6 right-6 hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-fit text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           Logout
