@@ -60,7 +60,7 @@ const DesktopNavbar = () => {
         : "w-full bg-white rounded-none" // LIGHT THEME FULL WIDTH
     }
   `;
-
+  const login_base_url = auth_uri();
   return (
     <>
       <nav className={navClasses}>
@@ -103,12 +103,18 @@ const DesktopNavbar = () => {
               <UserMenu />
             ) : (
               <div className="hidden lg:flex space-x-3">
-                <button className="px-4 py-2 text-fluid-xs  font-normal text-slate-800 hover:text-slate-800/80 transition-colors duration-200 rounded shadow-sm shadow-slate-500/20 hover:shadow-slate-500/30">
+                <Link
+                  href={`${login_base_url}/login`}
+                  className="px-4 py-2 text-fluid-xs  font-normal text-slate-800 hover:text-slate-800/80 transition-colors duration-200 rounded shadow-sm shadow-slate-500/20 hover:shadow-slate-500/30"
+                >
                   Login
-                </button>
-                <button className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-1.5 text-fluid-xxs font-normal rounded shadow-lg shadow-slate-500/30 transition-all duration-300 transform hover:scale-[1.02]">
+                </Link>
+                <Link
+                  href={`${login_base_url}/register`}
+                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 text-fluid-xxs font-normal rounded shadow-lg shadow-slate-500/30 transition-all duration-300 transform hover:scale-[1.02]"
+                >
                   Sign up
-                </button>
+                </Link>
               </div>
             )}
 
@@ -150,12 +156,18 @@ const DesktopNavbar = () => {
 
             {!isCollectorLoggedIn && (
               <div className="pt-4 flex flex-row space-x-2">
-                <button className="w-full text-center px-3 py-2 text-fluid-xs font-normal text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-sm border border-slate-300 shadow-sm transition">
+                <Link
+                  href={`${login_base_url}/login`}
+                  className="w-full text-center px-3 py-2 text-fluid-xs font-normal text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-sm border border-slate-300 shadow-sm transition"
+                >
                   Login
-                </button>
-                <button className="w-full text-center bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 text-fluid-xs font-normal rounded-sm shadow-lg">
+                </Link>
+                <Link
+                  href={`${login_base_url}/register`}
+                  className="w-full text-center bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 text-fluid-xs font-normal rounded-sm shadow-lg"
+                >
                   Sign up
-                </button>
+                </Link>
               </div>
             )}
           </div>
