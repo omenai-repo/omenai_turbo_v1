@@ -73,7 +73,7 @@ export default function ImageUpload() {
       >
         <label
           htmlFor="logo"
-          className="text-[#858585] text-fluid-xxs font-light sm:text-fluid-xxs"
+          className="text-dark text-fluid-xxs font-normal sm:text-fluid-xs"
         >
           Upload a logo or a picture of yourself
         </label>
@@ -84,7 +84,7 @@ export default function ImageUpload() {
               alt="uploaded image"
               width={200}
               height={200}
-              className="w-[250px] h-[250px] object-cover object-top mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
+              className="w-[250px] h-[250px] object-contain object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed border p-2 border-[#d4d4d4]"
               onClick={() => {
                 setCover(null);
                 updateArtistSignupData("logo", null);
@@ -93,7 +93,7 @@ export default function ImageUpload() {
           ) : (
             <button
               type="button"
-              className="w-full h-full border text-fluid-xxs grid place-items-center duration-300 border-dark/50 rounded outline-none p-5 focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
+              className="w-full h-full border text-fluid-xxs grid place-items-center duration-300 border-[#d4d4d4] rounded outline-none p-5 hover:border-dark"
               onClick={() => {
                 imagePickerRef.current?.click();
               }}

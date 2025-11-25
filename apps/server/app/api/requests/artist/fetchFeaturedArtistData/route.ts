@@ -16,10 +16,6 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
     try {
       await connectMongoDB();
-      if (Number.isNaN(Number(page)))
-        throw new BadRequestError("Invalid page number");
-
-      const skip = (Number(page) - 1) * 20;
 
       const artist_data = await AccountArtist.findOne(
         { artist_id },
@@ -35,9 +31,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const artworksForArtist = await Artworkuploads.find({
         author_id: artist_id,
       })
-        // .sort({ createdAt: -1 })
-        // .skip(skip)
-        // .limit(20)
+
         .exec();
 
       return NextResponse.json({

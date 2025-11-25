@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendVerifyGalleryMail } from "@omenai/shared-emails/src/models/verification/sendVerifyGalleryMail";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { fortKnoxRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
-export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
+
+export const POST = withRateLimitHighlightAndCsrf(fortKnoxRateLimit)(
   async function POST(request: Request) {
     try {
       const { name } = await request.json();

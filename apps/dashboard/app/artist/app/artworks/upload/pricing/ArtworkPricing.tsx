@@ -33,6 +33,7 @@ export default function ArtworkPricing() {
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
   const [priceConsent, setPriceConsent] = useState(false);
+  const [hasUploaded, setHasUploaded] = useState(false);
 
   const rollbar = useRollbar();
 
@@ -88,26 +89,24 @@ export default function ArtworkPricing() {
 
     try {
       setLoading(true);
-      const fileUploaded = await uploadImage(image);
 
-      if (!fileUploaded) {
-        throw new Error("Image upload failed");
-      }
+      // 1 ─ Upload image
+      const fileUploaded = await uploadImage(image);
+      if (!fileUploaded) throw new Error("Image upload failed");
 
       const file = {
         bucketId: fileUploaded.bucketId,
         fileId: fileUploaded.$id,
       };
 
-      console.log(file);
-
+      // 2 ─ Build payload
       const data = createUploadedArtworkData(
         {
           ...artworkUploadData,
-          price: pricing.price,
-          usd_price: pricing.usd_price,
-          shouldShowPrice: pricing.shouldShowPrice,
-          currency: pricing.currency,
+          price: pricing?.price,
+          usd_price: pricing?.usd_price,
+          shouldShowPrice: pricing?.shouldShowPrice,
+          currency: pricing?.currency,
         },
         file.fileId,
         (user.artist_id as string) ?? "",
@@ -117,10 +116,8 @@ export default function ArtworkPricing() {
         }
       );
 
+      // 3 ─ Upload metadata
       const uploadResponse = await uploadArtworkData(data, csrf || "");
-
-      console.log(uploadResponse);
-
       if (!uploadResponse?.isOk) {
         try {
           toast_notif(uploadResponse.body.message, "error");
@@ -135,25 +132,35 @@ export default function ArtworkPricing() {
           });
         } finally {
           setImage(null);
-          return;
         }
+        return;
       }
 
+      // 4 ─ Success toast
       toast_notif(uploadResponse.body.message, "success");
 
+      // 5 ─ Invalidate listings
       await queryClient.invalidateQueries({
         queryKey: ["fetch_artworks_by_id"],
       });
 
-      clearData();
+      setHasUploaded(true);
 
+      // 6 ─ Redirect IMMEDIATELY so component unmounts
       router.replace("/artist/app/artworks");
+
+      // 7 ─ Clear store AFTER redirect so current page never rerenders
+      setTimeout(() => {
+        clearData();
+        setImage(null);
+      }, 1000); // microtask / async tick
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
       } else {
         rollbar.error(new Error(String(error)));
       }
+
       console.error("Error uploading artwork:", error);
       toast_notif(
         "An error occurred while uploading the artwork. Please try again later.",
@@ -169,7 +176,7 @@ export default function ArtworkPricing() {
       onSubmit={handleArtworkUpload}
       className="bg-[#f8f8f8] p-10 rounded flex flex-col max-w-5xl"
     >
-      {isLoading ? (
+      {isLoading || !pricing || hasUploaded ? (
         <ArtworkPricingSkeleton />
       ) : (
         <>

@@ -6,6 +6,7 @@ import {
 } from "@omenai/shared-lib/storage/getImageFileView";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import Image from "next/image";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -25,11 +26,16 @@ export default function ProductItem({
             {/* Image Container */}
             <div className="relative group">
               <div className="absolute inset-0 bg-slate-100 rounded blur-2xl opacity-30 scale-90"></div>
-              <img
-                src={image_href}
-                alt={artwork.title + " image"}
-                className="relative w-auto max-w-[280px] rounded max-h-[400px] h-auto object-cover cursor-pointer shadow-md transition-transform duration-300 transform active:scale-95"
-              />
+              <div className="relative group w-full">
+                <div className="absolute inset-0 bg-gradient-to-tr from-slate-200 via-slate-100 to-slate-200 rounded-2xl blur-3xl opacity-30 scale-95"></div>
+                <Image
+                  src={image_href}
+                  alt={`${artwork.title} image`}
+                  width={280} // max width
+                  height={400} // max height
+                  className="relative rounded object-cover shadow-md transition-transform duration-300 transform group-hover:scale-105 cursor-pointer"
+                />
+              </div>
             </div>
 
             {/* Artwork Details */}
@@ -88,13 +94,6 @@ export default function ProductItem({
             </div>
           </div>
         </div>
-
-        {/* Action Button */}
-        {/* <div className="p-6 bg-white border-t border-slate-100">
-          <button className="w-full py-3 px-4 text-fluid-xxs bg-dark text-white font-semibold rounded shadow-sm transition-transform transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2">
-            Create order request
-          </button>
-        </div> */}
       </div>
     </div>
   );

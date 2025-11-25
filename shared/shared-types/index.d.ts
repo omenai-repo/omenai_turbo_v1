@@ -121,8 +121,7 @@ export type IndividualSchemaTypes = {
   preferences: string[];
   verified: boolean;
   role: AccessRoleTypes;
-  address?: AddressTypes;
-  clerkUserId?: string;
+  address: AddressTypes;
 };
 
 export type InputProps = {

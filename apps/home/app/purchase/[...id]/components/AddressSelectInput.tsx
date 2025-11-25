@@ -86,28 +86,24 @@ export default function AddressSelectInput({
           value={selectValue()}
           className="
         appearance-none
-        w-full
-        px-4
-        py-3
-        pr-10
-        bg-white
-        border
-        border-slate-300
-        rounded
-        text-slate-900
-        text-sm
-        font-normal
-        transition-all
-        duration-200
-        focus:border-slate-900
-        focus:ring-2
-        focus:ring-slate-900
-        focus:ring-offset-0
-        focus:outline-none
-        disabled:bg-slate-50
-        disabled:text-slate-500
-        disabled:cursor-not-allowed
-        cursor-pointer
+            w-full
+            px-4
+            py-3
+            bg-white
+            border border-slate-300
+            rounded-md
+            text-slate-900
+            text-sm
+            placeholder:text-slate-400
+            transition-all duration-200
+            focus:outline-none
+            focus:border-[#0F172A]
+            focus:ring-0
+            hover:border-slate-400
+            disabled:bg-slate-50
+            disabled:text-slate-500
+            disabled:border-slate-200
+            disabled:cursor-not-allowed
       "
         >
           <option value="" className="text-slate-400">

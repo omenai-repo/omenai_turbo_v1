@@ -19,9 +19,11 @@ export default function AddressTextInput({
   disabled?: boolean;
 }) {
   const { setAddress } = orderStore();
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAddress(name, e.target.value);
   };
+
   return (
     <div className="w-full space-y-2">
       <label
@@ -40,33 +42,28 @@ export default function AddressTextInput({
           disabled={disabled}
           required={required}
           placeholder={placeholder}
+          defaultValue={defaultValue ?? ""}
           onChange={handleInputChange}
-          defaultValue={defaultValue !== undefined ? defaultValue : ""}
           className="
-        w-full
-        px-4
-        py-3
-        bg-white
-        border
-        border-slate-300
-        rounded
-        text-slate-900
-        text-sm
-        font-normal
-        placeholder:text-slate-400
-        placeholder:text-sm
-        transition-all
-        duration-200
-        focus:border-slate-900
-        focus:ring-2
-        focus:ring-slate-900
-        focus:ring-offset-0
-        focus:outline-none
-        disabled:bg-slate-50
-        disabled:text-slate-500
-        disabled:cursor-not-allowed
-        disabled:border-slate-200
-      "
+            w-full
+            px-4
+            py-3
+            bg-white
+            border border-slate-300
+            rounded-md
+            text-slate-900
+            text-sm
+            placeholder:text-slate-400
+            transition-all duration-200
+            focus:outline-none
+            focus:border-[#0F172A]
+            focus:ring-0
+            hover:border-slate-400
+            disabled:bg-slate-50
+            disabled:text-slate-500
+            disabled:border-slate-200
+            disabled:cursor-not-allowed
+          "
         />
       </div>
     </div>

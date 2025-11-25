@@ -1,4 +1,5 @@
 "use client";
+
 import PageTitle from "../../components/PageTitle";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPlanData } from "@omenai/shared-services/subscriptions/getAllPlanData";
@@ -17,10 +18,9 @@ export default function Plans() {
     "subscription_creation_enabled"
   );
 
-  if (!isSubscriptionBillingEnabled) return <SubscriptionBillingBlocker />;
-
-  const { data, isLoading } = useQuery({
+  const query = useQuery({
     queryKey: ["get_all_plan_details"],
+    enabled: isSubscriptionBillingEnabled,
     queryFn: async () => {
       const plans = await getAllPlanData();
       const res = await fetch(`${url}/api/subscriptions/retrieveSubData`, {
@@ -36,6 +36,13 @@ export default function Plans() {
     },
     refetchOnWindowFocus: false,
   });
+
+  // Early return happens AFTER all hooks
+  if (!isSubscriptionBillingEnabled) {
+    return <SubscriptionBillingBlocker />;
+  }
+
+  const { data, isLoading } = query;
 
   return (
     <div>

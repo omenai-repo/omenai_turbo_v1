@@ -7,6 +7,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 type AppbarTypes = {
   admin_name?: string;
   gallery_name?: string;
@@ -25,37 +26,23 @@ export default function DashboardIndicator({
     try {
       const response = await verifyGalleryRequest(gallery_name!, csrf || "");
       if (!response?.isOk)
-        toast.error("Error notification", {
-          description: response?.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          response.message ||
+            "An error was encountered, please try again later or contact support",
+          "error"
+        );
       else
-        toast.success("Operation successful", {
-          description: response.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message || "Verification request sent", "success");
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
       } else {
         rollbar.error(new Error(String(error)));
       }
-      toast.error("Error notification", {
-        description: "Something wwent wrong. Please try again",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "An error was encountered, please try again later or contact support",
+        "error"
+      );
     } finally {
       setLoading(false);
     }

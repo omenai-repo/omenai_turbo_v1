@@ -7,6 +7,5 @@ export default async function PurhasePage({
 }) {
   const slug = decodeURIComponent(decodeURIComponent((await params).id));
 
-  console.log(slug);
   return <PurchaseComponentWrapper slug={slug} />;
 }

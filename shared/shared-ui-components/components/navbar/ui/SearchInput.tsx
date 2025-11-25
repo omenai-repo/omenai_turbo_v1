@@ -1,51 +1,88 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState, useTransition } from "react";
-import { CiSearch } from "react-icons/ci";
+import { useState, useTransition, useCallback } from "react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { fetchSearchKeyWordResults } from "@omenai/shared-services/search/fetchSearchKeywordResults";
+import { icons } from "./icons";
+import { CiSearch } from "react-icons/ci";
+import debounce from "lodash.debounce";
 
-export default function SearchInput() {
+export default function SearchInput({
+  setIsMobileMenuOpen,
+}: {
+  setIsMobileMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const handleSearch = async () => {
+  const debouncedPrefetch = useCallback(
+    debounce((term: string) => {
+      if (!term.trim()) return;
+      queryClient.prefetchQuery({
+        queryKey: ["search_results", term],
+        queryFn: () =>
+          fetchSearchKeyWordResults(term).then((r) => r?.data || []),
+      });
+    }, 500),
+    []
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsMobileMenuOpen(false);
+    const term = e.target.value;
+    setSearchTerm(term);
+    debouncedPrefetch(term);
+  };
+
+  const handleSearch = () => {
     if (!searchTerm.trim()) {
       toast.error("Please include a search term");
       return;
     }
-
-    // Prefetch so results are cached instantly
-    queryClient.prefetchQuery({
-      queryKey: ["search_results", searchTerm],
-      queryFn: () =>
-        fetchSearchKeyWordResults(searchTerm).then((r) => r?.data || []),
-    });
-
     startTransition(() => {
       router.push(`/search?searchTerm=${encodeURIComponent(searchTerm)}`);
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
   return (
-    <div className="relative flex w-auto items-center rounded border mb-3 lg:mb-0 bg-transparent border-dark/30">
+    <motion.div
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="relative w-full md:w-72"
+    >
+      {/* Search Input */}
       <input
         type="text"
-        className="w-full h-[35px] bg-transparent px-3 border-none rounded placeholder:text-sm placeholder:text-dark focus:ring-0"
-        placeholder="Search for anything"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Search artworks, artists..."
+        className="w-full py-2 pl-4 pr-10 bg-slate-800 border border-slate-700 rounded text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 placeholder:text-fluid-xxs placeholder:text-white"
       />
+
+      {/* Search Button with spinner inside */}
       <button
-        disabled={isPending}
-        className="flex items-center bg-dark rounded text-white px-3 py-2 mr-0.5 disabled:opacity-50"
         onClick={handleSearch}
+        disabled={isPending}
+        className="absolute right-1 top-1/2 -translate-y-1/2 p-1 flex items-center justify-center text-white rounded hover:bg-slate-700 transition disabled:opacity-50 w-8 h-8"
+        aria-label="Search"
       >
-        <CiSearch className="text-white" />
+        {isPending ? (
+          <div className="h-4 w-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+        ) : (
+          <CiSearch className="w-5 h-5" />
+        )}
       </button>
-    </div>
+    </motion.div>
   );
 }

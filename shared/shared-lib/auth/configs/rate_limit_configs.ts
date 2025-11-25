@@ -77,3 +77,12 @@ export const uploadRateLimit = {
     return `upload-${path}:${id}`;
   },
 };
+export const fortKnoxRateLimit = {
+  maxTokens: 1,
+  refillRate: 1 / 21600, // ~0.000046 tokens/sec
+  keyGenerator: async (request: Request, userId?: string) => {
+    const id = await getClientIdentifier(request, userId);
+    const path = sanitizePath(new URL(request.url).pathname);
+    return `fortknox-${path}:${id}`;
+  },
+};

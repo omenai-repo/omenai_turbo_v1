@@ -1,78 +1,172 @@
 "use client";
-import NavbarLink from "../ui/NavbarLink";
-import NavbarActionButtons from "../ui/NavbarActionButtons";
-import MobileNavbar from "../mobile/MobileNavbar";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import LoggedInUser from "../ui/LoggedInUser";
-import { SlMenu } from "react-icons/sl";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { UserMenu } from "../ui/UserMenu";
+import { icons } from "../ui/icons";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import Link from "next/link";
 import { IndividualLogo } from "../../logo/Logo";
-import { base_url, dashboard_url } from "@omenai/url-config/src/config";
+import NavbarLink from "../ui/NavbarLink";
 import SearchInput from "../ui/SearchInput";
+import {
+  admin_url,
+  auth_uri,
+  dashboard_url,
+} from "@omenai/url-config/src/config";
 
-const navbarlinks = [
-  { text: "Collect", link: `${base_url()}/catalog` },
-  // { text: "Shop", link: "https://omenai.shop" },
-  { text: "Editorials", link: `${base_url()}/articles` },
+export const navigation = [
+  { name: "Collect", href: "/catalog" },
+  { name: "Editorials", href: "/articles" },
 ];
-export default function DesktopNavbar() {
-  const { updateOpenSideNav } = actionStore();
+
+const loggedInRouteMap = {
+  artist: `${dashboard_url()}/artist/app/overview`,
+  gallery: `${dashboard_url()}/gallery/overview`,
+  admin: `${admin_url()}/admin/requests/gallery`,
+};
+
+// Component for the User Dropdown
+
+// Main Navbar Component
+const DesktopNavbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const { user } = useAuth({ requiredRole: "user" });
 
-  const navbarlinks = [
-    { text: "Collect", link: `${base_url()}/catalog` },
-    // { text: "Shop", link: "https://omenai.shop" },
-    { text: "Editorials", link: `${base_url()}/articles` },
-    ...(user && user.role !== "user"
-      ? [
-          {
-            text: "Go to dashboard",
-            link: `${dashboard_url()}/${user.role === "artist" ? "artist/app/" : "gallery/"}overview`,
-          },
-        ]
-      : []),
-  ];
+  const isLoggedIn = !!user;
+  const isCollectorLoggedIn = !!user && user.role === "user";
+
+  // Logic for scroll state (Full-width vs. Floating)
+  const handleScroll = useCallback(() => {
+    // Check if scroll position is beyond a certain threshold (e.g., 50px)
+    const offset = window.scrollY;
+    if (offset > 5) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  const navClasses = `
+    fixed z-30 top-0 left-0 right-0 transition-all duration-500 ease-in-out transform py-4 md:px-12
+    ${
+      isScrolled
+        ? "md:top-6 md:w-[96%] md:max-w-6xl md:mx-auto bg-white/90 shadow-2xl ring-1 ring-dark/10 rounded-xl backdrop-blur-lg" // LIGHT THEME FLOATING
+        : "w-full bg-white rounded-none" // LIGHT THEME FULL WIDTH
+    }
+  `;
+
   return (
     <>
-      <MobileNavbar />
-      <div className="flex justify-between items-center sticky top-0 z-30 bg-white pt-6 pb-3 lg:pb-6">
-        <div>
+      <nav className={navClasses}>
+        <div
+          className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? "px-4" : "px-4"}`}
+        >
           <IndividualLogo />
-        </div>
-        <ul className="hidden md:flex gap-x-6">
-          {navbarlinks.map((item) => {
-            return (
+
+          {/* Desktop Navigation Links (Hidden on Mobile) */}
+          <div className="hidden lg:flex lg:space-x-8 items-center">
+            {navigation.map((item) => (
               <NavbarLink
-                key={item.link}
+                key={item.name}
+                text={item.name}
+                link={item.href}
                 disabled={false}
-                text={item.text}
-                link={item.link}
               />
-            );
-          })}
-        </ul>
+            ))}
+            {isLoggedIn && user.role !== "user" && (
+              <NavbarLink
+                text={`Go to ${user.role} dashboard`}
+                link={
+                  isLoggedIn
+                    ? loggedInRouteMap[
+                        user.role as keyof typeof loggedInRouteMap
+                      ]
+                    : `${auth_uri()}/login`
+                }
+                disabled={false}
+              />
+            )}
 
-        <div className="flex items-center space-x-4">
-          <div className="hidden lg:block">
-            <SearchInput />
+            {/* Search Bar */}
+            <SearchInput setIsMobileMenuOpen={setIsMobileMenuOpen} />
           </div>
 
-          {user?.role === "user" && (
-            <LoggedInUser user={user.name} email={user.email} />
-          )}
-          {!user && <NavbarActionButtons />}
-          {user && user.role !== "user" && <NavbarActionButtons />}
-          <div className="md:hidden block">
-            <SlMenu
-              className="text-fluid-sm"
-              onClick={() => updateOpenSideNav(true)}
-            />
+          {/* Auth & Menu Controls */}
+          <div className="flex items-center space-x-3">
+            {isCollectorLoggedIn ? (
+              <UserMenu />
+            ) : (
+              <div className="hidden lg:flex space-x-3">
+                <button className="px-4 py-2 text-fluid-xs  font-normal text-slate-800 hover:text-slate-800/80 transition-colors duration-200 rounded shadow-sm shadow-slate-500/20 hover:shadow-slate-500/30">
+                  Login
+                </button>
+                <button className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-1.5 text-fluid-xxs font-normal rounded shadow-lg shadow-slate-500/30 transition-all duration-300 transform hover:scale-[1.02]">
+                  Sign up
+                </button>
+              </div>
+            )}
+
+            {/* Mobile Menu Button (Hamburger) */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg text-slate-800 hover:bg-slate-800 transition-colors duration-200"
+              aria-controls="mobile-menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? (
+                <icons.X className="h-6 w-6" aria-label="Close menu" />
+              ) : (
+                <icons.Menu className="h-6 w-6" aria-label="Open menu" />
+              )}
+            </button>
           </div>
         </div>
-      </div>
-      <div className="lg:hidden block">
-        <SearchInput />
-      </div>
+
+        {/* Mobile Menu Content (Transitioning Drawer) */}
+        <div
+          id="mobile-menu"
+          className={`lg:hidden overflow-hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen ? "max-h-96 opacity-100 mt-4 border-t border-slate-700 pt-4" : "max-h-0 opacity-0"}`}
+        >
+          <div className="space-y-2 px-2 pb-3">
+            {navigation.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="block w-full text-fluid-xs font-normal text-slate-800 hover:bg-slate-700/50 px-3 py-2 rounded-lg"
+              >
+                {item.name}
+              </a>
+            ))}
+
+            <div className="relative pt-2">
+              <SearchInput setIsMobileMenuOpen={setIsMobileMenuOpen} />
+            </div>
+
+            {!isCollectorLoggedIn && (
+              <div className="pt-4 flex flex-row space-x-2">
+                <button className="w-full text-center px-3 py-2 text-fluid-xs font-normal text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-sm border border-slate-300 shadow-sm transition">
+                  Login
+                </button>
+                <button className="w-full text-center bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 text-fluid-xs font-normal rounded-sm shadow-lg">
+                  Sign up
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+      <div
+        className={`transition-all duration-500 ease-in-out ${isScrolled ? "h-0 opacity-0" : "h-20 opacity-100"}`}
+        aria-hidden={isScrolled}
+      ></div>
     </>
   );
-}
+};
+
+export default DesktopNavbar;
