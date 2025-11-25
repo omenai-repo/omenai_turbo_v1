@@ -62,6 +62,7 @@ export default function Filter() {
     if (response?.isOk) {
       setPageCount(response.count);
       setArtworks(response.data);
+      set_artwork_total(response.total);
     }
     setIsLoading(false);
   };
