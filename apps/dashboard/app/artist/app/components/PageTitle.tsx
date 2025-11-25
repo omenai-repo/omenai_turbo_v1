@@ -43,7 +43,6 @@ export default function PageTitle({ title }: { title: string }) {
   return (
     <div className="flex justify-between items-center w-full">
       <div className="w-full flex flex-col gap-y-1">
-        <h1 className="font-bold text-fluid-xxs text-dark">{title}</h1>
         <p className="text-fluid-3xs flex">{breadcrumbs}</p>
       </div>
       {title === "My Artworks" && (

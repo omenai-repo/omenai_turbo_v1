@@ -22,7 +22,7 @@ export default function CollectorSignup() {
           {/* Form Section - full width on mobile, scrollable, and centered */}
           <div className="w-full h-screen overflow-y-auto lg:ml-[100%]">
             <div className="flex items-center justify-center min-h-screen p-6">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-xl">
                 <Form />
               </div>
             </div>

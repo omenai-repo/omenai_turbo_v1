@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
+
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 type TokenProps = {
   token: string;
 };
@@ -97,7 +99,7 @@ export default function TokenBlock({ token }: TokenProps) {
       >
         <input
           type="text"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40"
+          className={INPUT_CLASS}
           placeholder="Verification token"
           required
           onChange={(e: ChangeEvent<HTMLInputElement>) =>

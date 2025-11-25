@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Search, Package } from "lucide-react";
-
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 interface TrackingSearchProps {
   onSearch: (trackingNumber: string) => void;
   initialTrackingNumber: string;
@@ -55,7 +55,7 @@ export default function TrackingSearch({
               value={trackingNumber}
               onChange={(e) => setTrackingNumber(e.target.value)}
               placeholder="Enter Order ID or Shipment tracking number"
-              className="flex-1 p-4 text-fluid-xxs focus:outline-none focus:ring-0 border-0 text-dark placeholder-dark/40"
+              className={INPUT_CLASS}
               disabled={isLoading}
             />
             <button

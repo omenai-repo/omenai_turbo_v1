@@ -1,5 +1,6 @@
 "use client";
 import { individualProfileUdateStore } from "@omenai/shared-state-store/src/individual/individual_profile_update/IndividualProfileUpdateStore";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import clsx from "clsx";
 import { ChangeEvent } from "react";
 
@@ -27,7 +28,7 @@ export const InputCard = ({ label, labelText, value }: Props) => {
             setProfileUpdateData(labelText, e.target.value)
           }
           disabled={labelText === "email"}
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xxs placeholder:text-dark/40 w-full disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#858585]"
+          className={INPUT_CLASS}
         />
       </div>
     </div>

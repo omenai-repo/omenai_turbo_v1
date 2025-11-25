@@ -32,14 +32,15 @@ export default function Input({
     updateGallerySignupData,
     currentGallerySignupFormIndex,
     setIsFieldDirty,
-    isFieldDirty,
   } = useGalleryAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
 
   const [show, setShow] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     updateGallerySignupData(e.target.name, e.target.value);
     setErrorList([]);
 
@@ -83,29 +84,10 @@ export default function Input({
           >
             {label}
           </label>
-
-          {/* Input Container */}
-          <div className="relative group">
-            <input
-              type={type === "password" ? (show ? "text" : type) : type}
-              className={`
-                w-full h-12 px-4 pr-12
-                bg-white
-                border-2 border-dark/20
-                rounded
-                text-fluid-xxs text-dark
-                placeholder:text-dark/40
-                transition-all duration-200 ease-in-out
-                hover:border-dark/30
-                focus:border-dark
-                focus:outline-none
-                focus:ring-4
-                focus:ring-dark/5
-                
-                disabled:bg-gray-50
-                disabled:border-dark/20
-                disabled:text-gray-500
-                disabled:cursor-not-allowed
+          {labelText === "description" ? (
+            <>
+              <textarea
+                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed
                 
                 ${
                   errorList.length > 0
@@ -113,21 +95,43 @@ export default function Input({
                     : ""
                 }
               `}
-              placeholder={`${placeholder}`}
-              disabled={disabled}
-              onChange={handleChange}
-              onKeyDown={handleKeyPress}
-              name={labelText}
-              required={true}
-              value={(gallerySignupData as Record<string, any>)[labelText]}
-            />
+                placeholder={`${placeholder}`}
+                disabled={disabled}
+                onChange={handleChange}
+                onKeyDown={handleKeyPress}
+                name={labelText}
+                required={true}
+                value={(gallerySignupData as Record<string, any>)[labelText]}
+                rows={4}
+              />
+            </>
+          ) : (
+            <div className="relative group">
+              <input
+                type={type === "password" ? (show ? "text" : type) : type}
+                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed
+                
+                ${
+                  errorList.length > 0
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-500/10"
+                    : ""
+                }
+              `}
+                placeholder={`${placeholder}`}
+                disabled={disabled}
+                onChange={handleChange}
+                onKeyDown={handleKeyPress}
+                name={labelText}
+                required={true}
+                value={(gallerySignupData as Record<string, any>)[labelText]}
+              />
 
-            {/* Password Toggle */}
-            {type === "password" && (
-              <button
-                type="button"
-                onClick={() => setShow(!show)}
-                className="
+              {/* Password Toggle */}
+              {type === "password" && (
+                <button
+                  type="button"
+                  onClick={() => setShow(!show)}
+                  className="
                   absolute right-3 top-1/2 -translate-y-1/2
                   p-1.5
                   text-dark
@@ -136,17 +140,17 @@ export default function Input({
                   focus:text-dark/80
                   transition-colors duration-150
                 "
-                tabIndex={-1}
-              >
-                {show ? (
-                  <EyeOff className="w-4 h-4" strokeWidth={2} />
-                ) : (
-                  <Eye className="w-4 h-4" strokeWidth={2} />
-                )}
-              </button>
-            )}
-          </div>
-
+                  tabIndex={-1}
+                >
+                  {show ? (
+                    <EyeOff className="w-4 h-4" strokeWidth={2} />
+                  ) : (
+                    <Eye className="w-4 h-4" strokeWidth={2} />
+                  )}
+                </button>
+              )}
+            </div>
+          )}
           {/* Error Messages */}
           {errorList.length > 0 && (
             <div className="space-y-1.5 animate-in slide-in-from-top-1">

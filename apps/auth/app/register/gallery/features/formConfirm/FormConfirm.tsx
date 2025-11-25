@@ -60,14 +60,7 @@ export default function FormConfirm() {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-5 mt-8">
-        <button
-          type="submit"
-          disabled={isLoading || !isConsentChecked}
-          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
-        >
-          {isLoading ? <LoadSmall /> : "Create account"}
-        </button>
+      <div className="flex flex-row space-x-4 mt-8">
         <button
           disabled={isLoading}
           className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-dark cursor-pointer`}
@@ -75,6 +68,13 @@ export default function FormConfirm() {
           onClick={decrementCurrentGallerySignupFormIndex}
         >
           Back
+        </button>
+        <button
+          type="submit"
+          disabled={isLoading || !isConsentChecked}
+          className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
+        >
+          {isLoading ? <LoadSmall /> : "Create account"}
         </button>
       </div>
     </motion.div>

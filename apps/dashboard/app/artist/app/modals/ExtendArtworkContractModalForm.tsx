@@ -155,7 +155,7 @@ export default function ExtendArtworkContractConfirmationModalForm() {
             <div className="relative bg-white border-2 border-dark/10 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-dark/30 hover:shadow-md has-[:checked]:border-dark has-[:checked]:bg-dark/5 has-[:checked]:shadow-lg">
               <div className="flex items-start gap-2">
                 <input
-                  name=" 10% penalty fee"
+                  name="10% penalty fee"
                   type="checkbox"
                   checked={penaltyConsent}
                   onChange={(e) => setPenaltyConsent(e.target.checked)}

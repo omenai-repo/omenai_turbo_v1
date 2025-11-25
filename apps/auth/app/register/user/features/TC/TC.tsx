@@ -57,21 +57,21 @@ export default function TC() {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-5 mt-8">
+      <div className="flex gap-x-4 items-center">
+        <button
+          disabled={isLoading}
+          className={`border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/5 disabled:text-white disabled:border-0 rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
+          type={"button"}
+          onClick={decrementCurrentSignupFormIndex}
+        >
+          Back
+        </button>
         <button
           type="submit"
           disabled={isLoading || !isChecked}
           className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20  duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           {isLoading ? <LoadSmall /> : "Create account"}
-        </button>
-        <button
-          disabled={isLoading}
-          className={` bg-white  text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-dark cursor-pointer`}
-          type={"button"}
-          onClick={decrementCurrentSignupFormIndex}
-        >
-          Back
         </button>
       </div>
     </motion.div>

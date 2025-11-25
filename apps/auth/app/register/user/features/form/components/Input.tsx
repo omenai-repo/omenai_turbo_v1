@@ -67,24 +67,7 @@ export default function Input({
           <div className="relative group">
             <input
               type={type === "password" ? (show ? "text" : type) : type}
-              className={`
-                w-full h-12 px-4 pr-12
-                bg-white
-                border-2 border-dark/20
-                rounded
-                text-fluid-xxs text-dark
-                placeholder:text-dark/40
-                transition-all duration-200 ease-in-out
-                hover:border-dark/30
-                focus:border-dark
-                focus:outline-none
-                focus:ring-4
-                focus:ring-dark/5
-                
-                disabled:bg-gray-50
-                disabled:border-dark/20
-                disabled:text-gray-500
-                disabled:cursor-not-allowed
+              className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed
                 
                 ${
                   errorList.length > 0

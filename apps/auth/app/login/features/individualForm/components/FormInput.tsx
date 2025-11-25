@@ -27,7 +27,7 @@ const INPUT_CONFIG = {
 };
 
 const INPUT_CLASSES =
-  "focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xxs placeholder:text-fluid-xxs placeholder:text-dark/40 placeholder:font-medium font-medium";
+  "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed";
 
 // Helper functions
 const identifyUser = (data: any) => {

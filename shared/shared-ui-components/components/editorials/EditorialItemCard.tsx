@@ -1,74 +1,72 @@
-import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCoverFileView";
-import { base_url } from "@omenai/url-config/src/config";
-import Image from "next/image";
+import { Image as ImageIcon, ArrowRight } from "lucide-react";
 import Link from "next/link";
-
+import { base_url } from "@omenai/url-config/src/config";
+import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCoverFileView";
+// Note: Next.js 'Image' and 'Link' are replaced with standard HTML elements for rendering in this environment.
 export default function EditorialItemCard({ editorial }: { editorial: any }) {
   const url = editorial.cover
     ? getEditorialFileView(editorial.cover, 300)
     : null;
 
   return (
-    <div className="group relative bg-white rounded overflow-hidden transition-all duration-500 transform hover:-translate-y-1 h-[420px] max-w-[330px] min-w-[300px] xxl:w-full w-full border border-dark/30">
+    // Card Container: Sleek floating effect with subtle shadow and rounded corners.
+    <div
+      className="group relative bg-white rounded-xl transition-all duration-300 
+                    transform  h-[420px] w-full max-w-[330px]  border border-slate-200 overflow-hidden"
+    >
       {/* Image Section */}
       <div className="relative h-[220px] overflow-hidden">
         {url ? (
-          <Image
+          // Image with Hover Effect: Subtle zoom and brightness change
+          <img
             src={url}
             alt={editorial.headline}
-            fill
-            className="object-cover transition-transform duration-700"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05] group-hover:brightness-90"
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-dark/30 to-gray-200 flex items-center justify-center">
-            <div className="text-gray-400 text-center">
-              <svg
-                className="w-16 h-16 mx-auto mb-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <p className="text-sm font-medium">No cover image</p>
+          // Placeholder Section
+          <div className="h-full w-full bg-slate-800 flex items-center justify-center text-gray-400">
+            <div className="text-center">
+              <ImageIcon className="w-10 h-10 mx-auto mb-2 text-slate-500" />
+              <p className="text-sm font-medium text-slate-400">
+                No Cover Image
+              </p>
             </div>
           </div>
         )}
 
-        {/* Subtle overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Dynamic Image Overlay (Dark Gradient on Hover) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       {/* Content Section */}
-      <div className="p-6 flex flex-col justify-between h-[200px] bg-white">
+      <div className="p-6 flex flex-col h-[200px] bg-white">
         {/* Title */}
-        <h1 className="text-gray-900 text-fluid-sm font-medium leading-tight line-clamp-3 mb-4 group-hover:text-gray-700 transition-colors duration-300">
+        <h1 className="text-gray-900 text-xl font-semibold leading-snug line-clamp-3 mb-4 transition-colors duration-300 group-hover:text-slate-700">
           {editorial.headline}
         </h1>
 
-        {/* Bottom section */}
-        <div className="flex items-center gap-4 mt-auto">
+        {/* Bottom Section: Read Button and Decorator */}
+        <div className="mt-auto flex items-center justify-between">
+          {/* Read Article Link: Sleek, integrated button style */}
           <Link
             href={`${base_url()}/articles/${editorial.slug}?id=${editorial.$id}`}
             rel="noopener noreferrer"
-            className="flex-shrink-0"
+            className="inline-flex items-center text-sm font-medium text-slate-700 hover:text-black transition-colors duration-300 group-hover:text-black"
           >
-            <button className="bg-gray-900 text-white px-6 py-2.5 rounded text-sm font-medium hover:bg-gray-800 transition-all duration-300 shadow-md hover:shadow-lg whitespace-nowrap group-hover:bg-black">
-              Read Article
-            </button>
+            Read Article
+            <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
 
-          {/* Decorative line */}
-          <div className="flex-1 h-px bg-gradient-to-r from-dark/30 via-dark/20 to-transparent" />
+          {/* Decorative Time/Date/Accent (Optional: Add real time data here) */}
+          <div className="text-xs font-mono text-slate-400 uppercase tracking-widest">
+            {new Date(editorial.date).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
         </div>
       </div>
-
-      {/* Subtle border accent */}
-      <div className="absolute inset-0 rounded-3xl border border-transparent transition-colors duration-300 pointer-events-none" />
     </div>
   );
 }

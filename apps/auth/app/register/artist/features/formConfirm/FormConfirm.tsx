@@ -23,7 +23,7 @@ export default function FormConfirm() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      <p className="text-fluid-xxs my-4 font-normal text-dark/80">
+      <p className="text-fluid-xxs my-4 font-normal text-dark/70">
         Review the following terms and confirm your agreement to proceed with
         account creation
       </p>
@@ -64,7 +64,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="terms-confirmation"
-              className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
+              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
             >
               I have reviewed and accept the terms outlined above
             </Label>
@@ -81,7 +81,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="policy-acceptance"
-              className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
+              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
             >
               I accept Omenai's{" "}
               <Link
@@ -113,7 +113,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="mailing-consent"
-              className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
+              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
             >
               I'd like to receive updates, promotions, and news from Omenai
               (optional)
@@ -122,21 +122,21 @@ export default function FormConfirm() {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-5 mt-8">
+      <div className="flex flex-row gap-x-4 my-5">
+        <button
+          disabled={isLoading}
+          className="border border-slate-400 bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/5 disabled:border-0 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
+          type="button"
+          onClick={decrementCurrentArtistSignupFormIndex}
+        >
+          Back
+        </button>
         <button
           type="submit"
           disabled={isLoading || !canProceed}
           className="bg-dark hover:bg-dark/80 text-white border-0 ring-dark/20 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
         >
           {isLoading ? <LoadSmall /> : "Create your artist account"}
-        </button>
-        <button
-          disabled={isLoading}
-          className="bg-white text-dark focus:ring ring-1 border-0 ring-dark/50 focus:ring-dark duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-dark cursor-pointer"
-          type="button"
-          onClick={decrementCurrentArtistSignupFormIndex}
-        >
-          Back
         </button>
       </div>
     </motion.div>

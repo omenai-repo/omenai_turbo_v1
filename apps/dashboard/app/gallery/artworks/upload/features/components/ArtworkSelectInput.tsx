@@ -1,5 +1,6 @@
 "use client";
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { ChangeEvent } from "react";
 
 type ArtworkSelectInputProps = {
@@ -39,7 +40,7 @@ export default function ArtworkSelectInput({
         onChange={handleChange}
         required={required}
         disabled={disabled}
-        className="border-0 ring-1 disabled:cursor-not-allowed ring-dark/20 focus:ring-1 text-fluid-xxs focus:ring-dark h-[40px] px-5 text-dark rounded "
+        className={SELECT_CLASS}
       >
         <option value={disabled ? "Yes" : ""}>
           {disabled ? "Yes" : "Select"}

@@ -58,7 +58,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
             author_id: { $in: [...galleries] },
           },
         ],
-        ...builtFilters,
+        ...filterCriteria,
       });
 
       return NextResponse.json(

@@ -12,32 +12,34 @@ export default function GallerySignupStepTwo() {
     updateGallerySignupData(fieldName, e.target.value);
   }
   return (
-    <div className="flex flex-col space-y-4">
-      {gallery_signup_step_two.map((form_step, index) => {
-        return (
-          <div key={index}>
-            {form_step.type === "select" ? (
-              <SelectInput
-                label={form_step.label}
-                items={form_step.items as { code: string; name: string }[]}
-                name={form_step.label}
-                required={false}
-                labelText={form_step.labelText}
-              />
-            ) : (
-              <Input
-                label={form_step.label}
-                type={form_step.type}
-                placeholder={form_step.placeholder}
-                buttonType={"button"}
-                buttonText={"Continue"}
-                labelText={form_step.labelText}
-                onChange={handleChange}
-              />
-            )}
-          </div>
-        );
-      })}
+    <div className="flex flex-col space-y-5">
+      <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+        {gallery_signup_step_two.map((form_step, index) => {
+          return (
+            <div key={index}>
+              {form_step.type === "select" ? (
+                <SelectInput
+                  label={form_step.label}
+                  items={form_step.items as { code: string; name: string }[]}
+                  name={form_step.label}
+                  required={false}
+                  labelText={form_step.labelText}
+                />
+              ) : (
+                <Input
+                  label={form_step.label}
+                  type={form_step.type}
+                  placeholder={form_step.placeholder}
+                  buttonType={"button"}
+                  buttonText={"Continue"}
+                  labelText={form_step.labelText}
+                  onChange={handleChange}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
       <ActionButtons />
     </div>
   );

@@ -1,4 +1,5 @@
 import { Input, Paper, PinInput } from "@mantine/core";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { CircleDollarSign, RefreshCcwDot } from "lucide-react";
 import React from "react";
 
@@ -9,10 +10,7 @@ export default function WithdrawalForm() {
         <p className="text-fluid-xxs font-medium">Enter withdrawal amount</p>
         <Paper radius="lg" withBorder className="p-5 flex flex-col space-y-2">
           <p className="text-fluid-xxs font-medium">You Send ($)</p>
-          <input
-            className="disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-dark/30 focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded w-full placeholder:text-fluid-xxs placeholder:text-dark/40 "
-            placeholder="0.0"
-          />
+          <input className={INPUT_CLASS} placeholder="0.0" />
         </Paper>
 
         <div className="flex justify-center w-full my-4">

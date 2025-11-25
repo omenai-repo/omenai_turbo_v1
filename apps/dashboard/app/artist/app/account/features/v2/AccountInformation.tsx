@@ -11,6 +11,8 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRollbar } from "@rollbar/react";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+
 export default function AccountInformation({ profile }: any) {
   const queryClient = useQueryClient();
   const [hasChanges, setHasChanges] = useState(false);
@@ -119,9 +121,7 @@ export default function AccountInformation({ profile }: any) {
             name="name"
             value={data.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0
-                     transition-all duration-300"
+            className={INPUT_CLASS}
             placeholder="Enter your artist name"
           />
         </div>
@@ -140,9 +140,7 @@ export default function AccountInformation({ profile }: any) {
             disabled
             value={profile.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0 
-                     transition-all duration-300"
+            className={INPUT_CLASS}
             placeholder="your@email.com"
           />
         </div>

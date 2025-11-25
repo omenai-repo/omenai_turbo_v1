@@ -8,6 +8,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function RecoveryEmailInputField() {
   const [isLoading, setIsloading] = useState(false);
@@ -55,7 +56,7 @@ export default function RecoveryEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
+        className={INPUT_CLASS}
         placeholder="Email address"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
