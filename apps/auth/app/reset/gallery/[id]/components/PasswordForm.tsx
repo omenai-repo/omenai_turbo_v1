@@ -8,6 +8,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, Key, useState } from "react";
 import { toast } from "sonner";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type IdProps = {
   id: string;
@@ -97,7 +98,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Enter a new password"
             onChange={handleInputChange}
             required
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
+            className={INPUT_CLASS}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -113,7 +114,7 @@ export default function PasswordForm({ id }: IdProps) {
             placeholder="Confirm new password"
             required
             onChange={handleInputChange}
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
+            className={INPUT_CLASS}
           />
 
           {errorList.length > 0 &&

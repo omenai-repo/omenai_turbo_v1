@@ -1,6 +1,6 @@
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 import { ChangeEvent, HTMLInputTypeAttribute } from "react";
-
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 export default function AddressTextInput({
   placeholder,
   label,
@@ -44,26 +44,7 @@ export default function AddressTextInput({
           placeholder={placeholder}
           defaultValue={defaultValue ?? ""}
           onChange={handleInputChange}
-          className="
-            w-full
-            px-4
-            py-3
-            bg-white
-            border border-slate-300
-            rounded-md
-            text-slate-900
-            text-sm
-            placeholder:text-slate-400
-            transition-all duration-200
-            focus:outline-none
-            focus:border-[#0F172A]
-            focus:ring-0
-            hover:border-slate-400
-            disabled:bg-slate-50
-            disabled:text-slate-500
-            disabled:border-slate-200
-            disabled:cursor-not-allowed
-          "
+          className={INPUT_CLASS}
         />
       </div>
     </div>

@@ -4,6 +4,7 @@ import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_va
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useEffect, useState } from "react";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type ArtworkTextInputProps = {
   label: string;
@@ -70,7 +71,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           defaultValue={value}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="w-full ring-0 border border-[#E0E0E0] disabled:cursor-not-allowed disabled:ring-dark/10 disabled:text-[#e0e0e0] outline-none focus:border-none focus:ring-dark transition-all duration-200 ease-in-out px-3 py-2 rounded text-fluid-xxs placeholder:text-dark/40 placeholder:text-fluid-xxs"
+          className={INPUT_CLASS}
         />
       )}
       {type === "textarea" && (
@@ -80,7 +81,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 rounded disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light text-fluid-xxs placeholder:text-[#858585] placeholder:text-fluid-xxs"
+          className={INPUT_CLASS}
         />
       )}
       {errorList.length > 0 &&

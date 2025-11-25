@@ -18,6 +18,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function EditArtworkWrapper({
   artwork,
@@ -187,7 +188,7 @@ export default function EditArtworkWrapper({
                 onChange={handleChange}
                 name="currency"
                 required={true}
-                className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded "
+                className={SELECT_CLASS}
               >
                 <option value="">Select</option>
                 <>
@@ -257,7 +258,7 @@ export default function EditArtworkWrapper({
               onChange={handleChange}
               name="shouldShowPrice"
               required={true}
-              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded "
+              className={SELECT_CLASS}
             >
               <option value="">Select</option>
               <option

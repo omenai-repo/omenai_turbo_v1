@@ -18,6 +18,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import React from "react";
 import { useRollbar } from "@rollbar/react";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -118,7 +119,7 @@ export default function FormInput() {
           value={form.email}
           name="email"
           placeholder="Enter your email address"
-          className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
+          className={INPUT_CLASS}
           onChange={handleChange}
           required
         />
@@ -133,7 +134,7 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name="password"
             placeholder="Enter your password"
-            className="relative w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
+            className={INPUT_CLASS}
             onChange={handleChange}
             required
           />

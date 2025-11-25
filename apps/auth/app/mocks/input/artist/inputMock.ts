@@ -53,8 +53,7 @@ export const artist_signup_step_two = [
     labelText: "zip",
   },
   {
-    label:
-      "Phone number (Preferably a WhatsApp number to facilitate notifications via whatapp)",
+    label: "Phone number",
     type: "text",
     placeholder: "e.g +12345678901",
     labelText: "phone",

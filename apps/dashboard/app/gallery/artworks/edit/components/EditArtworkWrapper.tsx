@@ -18,6 +18,10 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import {
+  INPUT_CLASS,
+  SELECT_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function EditArtworkWrapper({
   artwork,
@@ -187,7 +191,7 @@ export default function EditArtworkWrapper({
                 onChange={handleChange}
                 name="currency"
                 required={true}
-                className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs focus:ring-dark px-6 py-2 sm:py-3 rounded "
+                className={SELECT_CLASS}
               >
                 <option value="">Select</option>
                 <>
@@ -222,7 +226,7 @@ export default function EditArtworkWrapper({
                 disabled={data.currency === ""}
                 placeholder={"Enter price in your preferred currency"}
                 onChange={handleChange}
-                className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs"
+                className={INPUT_CLASS}
               />
             </div>
 
@@ -263,7 +267,7 @@ export default function EditArtworkWrapper({
                   user.subscription_status.type.toLowerCase()
                 )
               }
-              className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs disabled:cursor-not-allowed focus:ring-dark px-6 py-2 sm:py-3 rounded "
+              className={SELECT_CLASS}
             >
               <option
                 value={

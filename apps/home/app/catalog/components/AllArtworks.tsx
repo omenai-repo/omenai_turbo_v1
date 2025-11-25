@@ -58,7 +58,7 @@ export default function AllArtworks() {
   ) {
     return (
       <div className="w-full h-full grid place-items-center my-12">
-        <NotFoundData />
+        <NotFoundData className="h-[40vh]" title="No artworks found" />
       </div>
     );
   }

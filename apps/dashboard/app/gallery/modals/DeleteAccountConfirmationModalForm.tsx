@@ -153,7 +153,7 @@ export default function DeleteAccountConfirmationModalForm() {
                       placeholder="Tell us briefly"
                       value={otherText}
                       onChange={(e) => setOtherText(e.target.value)}
-                      className="mt-2 w-full max-w-[300px] rounded border px-3 py-2 text-fluid-xs placeholder:text-fluid-xxs bg-slate-50 dark:bg-slate-700"
+                      className="w-full max-w-[300px] bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed"
                     />
                   )}
                 </div>

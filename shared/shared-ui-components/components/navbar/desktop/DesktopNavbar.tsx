@@ -40,7 +40,7 @@ const DesktopNavbar = () => {
   const handleScroll = useCallback(() => {
     // Check if scroll position is beyond a certain threshold (e.g., 50px)
     const offset = window.scrollY;
-    if (offset > 5) {
+    if (offset > 1) {
       setIsScrolled(true);
     } else {
       setIsScrolled(false);

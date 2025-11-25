@@ -1,5 +1,6 @@
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import { ArtistOnboardingData, Socials } from "@omenai/shared-types";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import React, { ChangeEvent } from "react";
 
 const SOCIAL_PREFIXES = {
@@ -122,7 +123,7 @@ export default function CarouselSocials({
                 onClick={(e) => handleClick(e, name)}
                 name={name}
                 defaultValue={defaultValue}
-                className="disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring ring-1 border-0 ring-dark/30 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out text-fluid-xxs font-medium h-[35px] p-5 rounded w-full placeholder:text-[12px] placeholder:text-dark/40 placeholder:font-light"
+                className={INPUT_CLASS}
               />
             );
           })}

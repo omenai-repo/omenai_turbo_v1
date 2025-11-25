@@ -69,7 +69,7 @@ export default function ImageUpload() {
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.33 }}
-        className="flex flex-col space-y-6 container w-full items-center"
+        className="flex flex-col space-y-6 w-full"
       >
         <label
           htmlFor="logo"
@@ -77,14 +77,14 @@ export default function ImageUpload() {
         >
           Upload a logo or a picture of yourself
         </label>
-        <div className="w-[250px] h-[250px]">
+        <div className="w-full h-[250px]">
           {cover ? (
             <Image
               src={URL.createObjectURL(cover as File)}
               alt="uploaded image"
-              width={200}
-              height={200}
-              className="w-[250px] h-[250px] object-contain object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed border p-2 border-[#d4d4d4]"
+              width={500}
+              height={500}
+              className="w-full h-[250px] object-contain object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed border p-2 border-[#d4d4d4]"
               onClick={() => {
                 setCover(null);
                 updateArtistSignupData("logo", null);
