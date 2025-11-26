@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { MapPin } from "lucide-react";
+import { AlertCircle, MapPin } from "lucide-react";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import Input from "@omenai/shared-ui-components/components/artists/AddressInputHandler";
 import SelectInput from "@omenai/shared-ui-components/components/global/AddressSelectHandler";
@@ -160,6 +160,19 @@ export default function UpdateAddressModalForm() {
             </div>
           );
         })}
+      </div>
+      <div className="mt-6 p-4 bg-dark/20-50 rounded border border-dark/40">
+        <div className="flex gap-3">
+          <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
+          <div className="text-xs text-dark/20-600 space-y-1">
+            <p className="font-normal">Please note:</p>
+            <p>
+              Changing your address will only apply to future orders. Any orders
+              that are currently being processed or have already been shipped
+              will be delivered to your previous address.
+            </p>
+          </div>
+        </div>
       </div>
       <div className="flex space-x-3 pt-2 mt-4">
         <button
