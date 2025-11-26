@@ -65,7 +65,7 @@ const DesktopNavbar = () => {
     <>
       <nav className={navClasses}>
         <div
-          className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? "px-4" : "px-4"}`}
+          className={`flex items-center justify-between transition-all duration-300 px-4`}
         >
           <IndividualLogo />
 

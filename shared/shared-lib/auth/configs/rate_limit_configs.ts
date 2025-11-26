@@ -42,7 +42,7 @@ export const strictRateLimit = {
  */
 export const lenientRateLimit = {
   maxTokens: 60,
-  refillRate: 60 / 60, // 1 token/sec
+  refillRate: 1, // 1 token/sec
   keyGenerator: async (request: Request, userId?: string) => {
     const id = await getClientIdentifier(request, userId);
     const path = sanitizePath(new URL(request.url).pathname);
