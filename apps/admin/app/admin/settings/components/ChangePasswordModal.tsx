@@ -133,7 +133,7 @@ export default function ChangePasswordModal({
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.currentTarget.value)}
           leftSection={
-            <div className="text-gray-500">
+            <div className="text-slate-700">
               <Lock size={18} />
             </div>
           }
@@ -175,7 +175,7 @@ export default function ChangePasswordModal({
             value={newPassword}
             onChange={(e) => setNewPassword(e.currentTarget.value)}
             leftSection={
-              <div className="text-gray-500">
+              <div className="text-slate-700">
                 <Lock size={18} />
               </div>
             }
@@ -247,7 +247,7 @@ export default function ChangePasswordModal({
                     }`}
                   />
                 </div>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-slate-700">
                   {newPassword.length < 8
                     ? "Weak"
                     : newPassword.length < 12
@@ -264,7 +264,7 @@ export default function ChangePasswordModal({
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.currentTarget.value)}
           leftSection={
-            <div className="text-gray-500">
+            <div className="text-slate-700">
               <Lock size={18} />
             </div>
           }

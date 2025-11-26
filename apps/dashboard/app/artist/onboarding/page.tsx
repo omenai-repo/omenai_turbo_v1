@@ -11,8 +11,16 @@ import Link from "next/link";
 
 export default function ArtistOnboarding() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-xl rounded p-8 max-w-lg">
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-gray-100">
+      <div
+        className="absolute inset-0 z-0 opacity-90"
+        style={{
+          // Uses a subtle CSS background image for the dot mesh effect
+          backgroundImage: `radial-gradient(circle, #d4d4d4 1px, transparent 1px)`,
+          backgroundSize: "20px 20px",
+        }}
+      />
+      <div className="relatiev z-10 bg-white shadow-xl rounded p-8 max-w-lg">
         <div className="w-ful my-5">
           <IndividualLogo />
         </div>

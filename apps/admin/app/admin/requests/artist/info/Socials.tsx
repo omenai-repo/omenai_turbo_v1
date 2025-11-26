@@ -1,12 +1,21 @@
 import { Socials } from "@omenai/shared-types";
 import Link from "next/link";
-import { FaInstagram, FaLinkedin } from "react-icons/fa";
+import {
+  FaInstagram,
+  FaLinkedin,
+  FaFacebook,
+  FaTiktok,
+  FaBehance,
+} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 const socialIcons: Record<Socials, React.ReactNode> = {
   instagram: <FaInstagram className="w-4 h-4" />,
   twitter: <FaXTwitter className="w-4 h-4" />,
   linkedin: <FaLinkedin className="w-4 h-4" />,
+  facebook: <FaFacebook className="w-4 h-4" />,
+  tiktok: <FaTiktok className="w-4 h-4" />,
+  behance: <FaBehance className="w-4 h-4" />,
 };
 
 interface Props {

@@ -61,7 +61,7 @@ export default function ArtistInfo({
                 </h1>
                 <div className="flex items-center gap-3">
                   <div className="h-[2px] w-16 bg-[#0f172a]"></div>
-                  <span className="text-sm uppercase tracking-widest text-gray-500">
+                  <span className="text-sm uppercase tracking-widest text-slate-700">
                     Artist
                   </span>
                 </div>

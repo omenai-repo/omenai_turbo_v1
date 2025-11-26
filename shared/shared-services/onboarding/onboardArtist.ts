@@ -3,7 +3,8 @@ import { ArtistCategorizationUpdateDataTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function onboardArtist(
-  payload: ArtistCategorizationUpdateDataTypes
+  payload: ArtistCategorizationUpdateDataTypes,
+  csrfToken: string
 ) {
   try {
     const url = getApiUrl();
@@ -12,9 +13,8 @@ export async function onboardArtist(
       {
         method: "POST",
         body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "x-csrf-token": csrfToken },
+        credentials: "include",
       }
     );
     const response = await result.json();

@@ -8,20 +8,36 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import { RouteIdentifier } from "@omenai/shared-types";
 
 type TokenProps = {
   token: string;
+  route: RouteIdentifier;
 };
-export default function TokenBlock({ token }: TokenProps) {
+export default function TokenBlock({ token, route }: TokenProps) {
   const [tokenValue, setTokenValue] = useState("");
-  const { isLoading, setIsLoading } = verifyAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
   const [resendTokenLoading, setResentTokenLoading] = useState(false);
+
   const rollbar = useRollbar();
 
   const router = useRouter();
+
+  const [seconds, setSeconds] = useState(60);
+
+  // Countdown logic
+  useEffect(() => {
+    if (seconds === 0) return; // stop countdown at 0
+
+    const interval = setInterval(() => {
+      setSeconds((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [seconds]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -31,18 +47,18 @@ export default function TokenBlock({ token }: TokenProps) {
       toast_notif(error, "error");
     } else {
       toast.info("Verifying token");
-      setIsLoading();
+      setIsLoading(true);
 
       const res = await verifyEmail(
         { params: token, token: tokenValue },
-        "artist"
+        route
       );
       if (!res.isOk) toast_notif(res.body.message, "error");
       if (res.isOk) {
         toast_notif(res.body.message, "success");
-        router.push("/login/artist");
+        router.push(`/login/${route}`);
       }
-      setIsLoading();
+      setIsLoading(false);
     }
   }
 
@@ -51,22 +67,30 @@ export default function TokenBlock({ token }: TokenProps) {
     toast.info("A new token is on it's way to you");
     try {
       const payload = { author: token };
-      await resendCode("artist", payload);
+      const resent = await resendCode(route, payload);
+      if (resent.isOk) {
+        toast_notif(
+          "A new reset token has been sent to your registered email",
+          "success"
+        );
+      } else {
+        toast_notif(
+          resent.message ||
+            "An error occured while performing this request, please try again or contact support",
+          "error"
+        );
+      }
+      setSeconds(30);
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
       } else {
         rollbar.error(new Error(String(error)));
       }
-      toast.error("Error notification", {
-        description:
-          "Something went wrong. Please try again or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Something went wrong. Please try again or contact support",
+        "error"
+      );
     } finally {
       setResentTokenLoading(false);
     }
@@ -108,20 +132,28 @@ export default function TokenBlock({ token }: TokenProps) {
         />
         <button
           disabled={isLoading}
-          className=" disabled:bg-dark/10 h-[35px] p-5 rounded w-auto flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal duration-200"
+          className=" disabled:bg-dark/10 p-5 rounded min-w-[100px] w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal duration-200"
           type={"submit"}
         >
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>
       </form>
-      <p className="text-fluid-xxs">
-        Did not recieve a code?{" "}
+      <p className="text-fluid-xxs mt-2">
+        Did not receive a code?{" "}
         <button
-          disabled={resendTokenLoading}
-          className="text-dark font-bold cursor-pointer"
+          disabled={seconds > 0 || resendTokenLoading}
           onClick={resendVerification}
+          className={`font-bold transition ${
+            seconds > 0 || resendTokenLoading
+              ? "text-slate-800 cursor-not-allowed"
+              : "text-dark cursor-pointer hover:text-slate-800"
+          }`}
         >
-          {resendTokenLoading ? <LoadSmall /> : "Resend code"}
+          {resendTokenLoading
+            ? "Sending..." // replace with <LoadSmall /> if you want
+            : seconds > 0
+              ? `Resend code in ${seconds}s`
+              : "Resend code"}
         </button>
       </p>
 

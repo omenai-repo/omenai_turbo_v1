@@ -70,7 +70,7 @@ export default function TrackingSearch({
       </form>
 
       {/* Info Text */}
-      <p className="text-center text-fluid-xxs text-gray-500 mt-6">
+      <p className="text-center text-fluid-xxs text-slate-700 mt-6">
         Your tracking number can be found in your order confirmation email
       </p>
     </div>

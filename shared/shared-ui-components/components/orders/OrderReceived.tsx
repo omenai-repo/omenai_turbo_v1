@@ -94,7 +94,7 @@ export default function OrderReceived() {
             Order Received
           </h2>
 
-          <p className="mt-2 text-gray-500 text-fluid-xxs leading-relaxed max-w-xs mx-auto">
+          <p className="mt-2 text-slate-700 text-fluid-xxs leading-relaxed max-w-xs mx-auto">
             We've sent a confirmation email
           </p>
         </motion.div>
@@ -136,7 +136,7 @@ export default function OrderReceived() {
                   <h4 className="text-sm font-semibold text-gray-900">
                     {step.title}
                   </h4>
-                  <p className="mt-0.5 text-fluid-xxs text-gray-500 leading-relaxed pr-2">
+                  <p className="mt-0.5 text-fluid-xxs text-slate-700 leading-relaxed pr-2">
                     {step.description}
                   </p>
                 </div>

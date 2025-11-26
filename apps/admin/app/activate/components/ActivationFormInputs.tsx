@@ -120,7 +120,7 @@ export default function ActivationFormInputs() {
     p-3
                 disabled:bg-gray-50
                 disabled:border-dark/20
-                disabled:text-gray-500
+                disabled:text-slate-700
                 disabled:cursor-not-allowed"
           onChange={handleChange}
         />
@@ -145,7 +145,7 @@ export default function ActivationFormInputs() {
     p-3
                 disabled:bg-gray-50
                 disabled:border-dark/20
-                disabled:text-gray-500
+                disabled:text-slate-700
                 disabled:cursor-not-allowed"
           onChange={handleChange}
         />
@@ -171,7 +171,7 @@ export default function ActivationFormInputs() {
     p-3
                 disabled:bg-gray-50
                 disabled:border-dark/20
-                disabled:text-gray-500
+                disabled:text-slate-700
                 disabled:cursor-not-allowed"
             onChange={handleChange}
           />
@@ -198,7 +198,7 @@ export default function ActivationFormInputs() {
     p-3
                 disabled:bg-gray-50
                 disabled:border-dark/20
-                disabled:text-gray-500
+                disabled:text-slate-700
                 disabled:cursor-not-allowed"
             onChange={handleChange}
           />

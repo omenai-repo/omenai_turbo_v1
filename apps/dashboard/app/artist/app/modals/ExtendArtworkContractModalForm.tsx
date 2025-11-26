@@ -177,7 +177,7 @@ export default function ExtendArtworkContractConfirmationModalForm() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center text-fluid-xxs text-gray-500 gap-2">
+      <div className="flex items-center justify-center text-fluid-xxs text-slate-700 gap-2">
         <span
           className={`flex items-center gap-1 ${
             acknowledgment ? "text-emerald-600" : "text-gray-400"

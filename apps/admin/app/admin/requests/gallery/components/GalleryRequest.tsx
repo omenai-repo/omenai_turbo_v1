@@ -105,7 +105,7 @@ export default function GalleryRequest({
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-gray-500">
+              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-slate-700">
                 <Mail size={14} />
                 <span className="font-medium text-fluid-xxs">
                   {gallery.email}

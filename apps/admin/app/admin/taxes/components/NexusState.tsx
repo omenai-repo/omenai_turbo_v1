@@ -43,7 +43,7 @@ export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
                 {state}
               </h2>
             </div>
-            <p className="text-fluid-xxs font-medium text-gray-500 dark:text-gray-400">
+            <p className="text-fluid-xxs font-medium text-slate-700 dark:text-gray-400">
               {code}
             </p>
           </div>

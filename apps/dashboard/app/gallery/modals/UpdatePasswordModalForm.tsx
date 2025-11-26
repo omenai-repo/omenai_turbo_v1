@@ -149,7 +149,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Enter your new password"
-                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed tracking-wider"
+                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -183,7 +183,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Confirm your new password"
-                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed tracking-wider"
+                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {info.confirmPassword &&
@@ -236,7 +236,7 @@ export default function UpdatePasswordModalForm() {
                 type="text"
                 required
                 placeholder="Enter 6-digit code"
-                className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed tracking-wider"
+                className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
               />
               <button
                 type="button"

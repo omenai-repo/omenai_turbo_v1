@@ -33,7 +33,7 @@ export default function Plan({
                   ? `$${pricing.monthly_price}`
                   : `$${pricing.annual_price}`}
 
-                <span className="text-fluid-lg font-semibold leading-8 tracking-normal text-gray-500">
+                <span className="text-fluid-lg font-semibold leading-8 tracking-normal text-slate-700">
                   {tab === "monthly" ? `/mo` : `/yr`}
                 </span>
               </div>

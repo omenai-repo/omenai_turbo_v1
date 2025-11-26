@@ -212,7 +212,7 @@ export default function UpdatePasswordModalForm() {
                 required
                 placeholder="Create a strong password"
                 value={info.password}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed ${
+                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed ${
                   focusedField === "password"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -289,7 +289,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Re-enter your password"
                 required
                 value={info.confirmPassword}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed ${
+                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed ${
                   focusedField === "confirmPassword"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -327,7 +327,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Enter 6-digit code"
                 required
                 value={info.code}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-gray-500 disabled:cursor-not-allowed ${
+                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed ${
                   focusedField === "code"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"

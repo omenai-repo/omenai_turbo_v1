@@ -144,7 +144,7 @@ const ActionButtons = () => (
 );
 
 const SecurityBadge = () => (
-  <div className="flex items-center gap-2 text-fluid-xxs text-gray-500 pt-2">
+  <div className="flex items-center gap-2 text-fluid-xxs text-slate-700 pt-2">
     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
     <span>Secure SSL Encrypted Transaction</span>
   </div>

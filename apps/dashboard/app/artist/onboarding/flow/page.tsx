@@ -1,6 +1,6 @@
 import React from "react";
-import OnboardingFlow from "./OnboardingWrapper";
-export const dynamic = "force-dynamic";
+import OnboardingContainer from "./OnboardingContainer";
+
 export default function page() {
-  return <OnboardingFlow />;
+  return <OnboardingContainer />;
 }

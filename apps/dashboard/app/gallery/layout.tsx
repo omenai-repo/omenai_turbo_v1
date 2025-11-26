@@ -3,7 +3,6 @@ import NextTopLoader from "nextjs-toploader";
 import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
-import NoMobileView from "../components/NoMobileView";
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
@@ -15,6 +14,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
 import { UpdateLogoModal } from "./modals/UpdateLogoModal";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import NoMobileView from "../components/NoMobileView";
 export default function GalleryDashboardLayout({
   children,
 }: {

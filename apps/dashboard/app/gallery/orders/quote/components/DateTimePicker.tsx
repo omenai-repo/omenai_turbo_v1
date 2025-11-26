@@ -29,7 +29,7 @@ export default function DateTimePickerComponent({
           status: "pending",
         })
       }
-      className="placeholder:text-fluid-xxs placeholder:font-light placeholder:text-gray-500"
+      className="placeholder:text-fluid-xxs placeholder:font-light placeholder:text-slate-700"
       inputSize="sm"
       timePickerProps={{
         withDropdown: true,

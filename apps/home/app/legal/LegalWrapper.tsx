@@ -40,7 +40,7 @@ export default function LegalDocuments() {
               className={`p-2 rounded font-medium text-sm transition-colors ${
                 activeTab === "privacy"
                   ? "border-dark bg-dark text-white px-4"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  : "border-transparent text-slate-700 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
               Privacy Policy
@@ -50,7 +50,7 @@ export default function LegalDocuments() {
               className={`p-2 rounded font-medium text-sm transition-colors ${
                 activeTab === "terms"
                   ? "border-dark text-white bg-dark"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  : "border-transparent text-slate-700 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
               Terms of Use

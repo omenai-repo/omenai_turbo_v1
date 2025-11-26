@@ -83,7 +83,7 @@ export default function ForbiddenPage({
         </div>
 
         {/* Help text */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-slate-700 mt-6">
           Error Code: ACCESS_DENIED_INSUFFICIENT_PRIVILEGES
         </p>
       </div>

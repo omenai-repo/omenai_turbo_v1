@@ -269,7 +269,7 @@ export default function ArtworkPricing() {
             </Alert>
           </div>
 
-          <div className="mt-4 text-fluid-xxs text-gray-500">
+          <div className="mt-4 text-fluid-xxs text-slate-700">
             Acknowledgment: {acknowledgment ? "✔️" : "❌"} | Penalty Consent:{" "}
             {penaltyConsent ? "✔️" : "❌"} | Price Consent:{" "}
             {priceConsent ? "✔️" : "❌"}
