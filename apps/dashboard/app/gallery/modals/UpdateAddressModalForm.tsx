@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { useRollbar } from "@rollbar/react";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 
 export const address_inputs = [
   {
@@ -159,19 +160,11 @@ export default function UpdateAddressModalForm() {
           );
         })}
       </div>
-      <div className="mt-6 p-4 bg-dark/20-50 rounded border border-dark/40">
-        <div className="flex gap-3">
-          <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
-          <div className="text-xs text-dark/20-600 space-y-1">
-            <p className="font-normal">Please note:</p>
-            <p>
-              Changing your address will only apply to future orders. Any orders
-              that are currently being processed or have already been shipped
-              will be delivered to your previous address.
-            </p>
-          </div>
-        </div>
-      </div>
+      <AlertComponent title="Please note:">
+        Changing your address will only apply to future orders. Any orders that
+        are currently being processed or have already been shipped will be
+        delivered to your previous address.
+      </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}

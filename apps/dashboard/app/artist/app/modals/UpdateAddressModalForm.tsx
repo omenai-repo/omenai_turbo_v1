@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
 import { useRollbar } from "@rollbar/react";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 export const artist_signup_step_two = [
   {
     label: "Country of residence",
@@ -161,19 +162,11 @@ export default function UpdateAddressModalForm() {
           );
         })}
       </div>
-      <div className="mt-6 p-4 bg-dark/20-50 rounded border border-dark/40">
-        <div className="flex gap-3">
-          <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
-          <div className="text-xs text-dark/20-600 space-y-1">
-            <p className="font-normal">Please note:</p>
-            <p>
-              Changing your address will only apply to future orders. Any orders
-              that are currently being processed or have already been shipped
-              will be delivered to your previous address.
-            </p>
-          </div>
-        </div>
-      </div>
+      <AlertComponent title="Please note:">
+        Changing your address will only apply to future orders. Any orders that
+        are currently being processed or have already been shipped will be
+        delivered to your previous address.
+      </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}
