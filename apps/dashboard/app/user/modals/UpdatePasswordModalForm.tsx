@@ -425,8 +425,7 @@ export default function UpdatePasswordModalForm() {
               <div className="text-xs text-dark/20-600 space-y-1">
                 <p className="font-normal">Security tip:</p>
                 <p>
-                  After updating your password, you'll need to sign in again on
-                  all your devices for security purposes.
+                  It is highly recommended to change your password regularly.
                 </p>
               </div>
             </div>

@@ -16,7 +16,7 @@ import {
 
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
-import { Viewport } from "next";
+import { Metadata, Viewport } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
@@ -27,6 +27,20 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+};
+
+export const metadata: Metadata = {
+  title: "Omenai Dashboard",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+  manifest: "/site.webmanifest",
 };
 
 // Body font → work_sans
@@ -49,6 +63,11 @@ export default async function DashboardRootLayout({
           <head>
             <meta name="color-scheme" content="light" />
             <ColorSchemeScript defaultColorScheme="light" />
+
+            {/* Favicon fallback for localhost/dev */}
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="shortcut icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           </head>
           <body
             className={`${work_sans.variable} font-sans flex flex-col px-4 justify-center`}

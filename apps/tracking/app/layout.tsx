@@ -27,17 +27,24 @@ import "leaflet/dist/leaflet.css";
 import { Provider as RollbarProvider } from "@rollbar/react";
 import { clientConfig } from "@omenai/rollbar-config";
 
+export const metadata: Metadata = {
+  title: "Omenai Tracking",
+  description:
+    "Omenai Tracking - Track Your Delivery, Shipment, and Order Updates",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+};
+
 // Body font → work_sans
 const work_sans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-work_sans",
   display: "swap",
 });
-
-export const metadata: Metadata = {
-  title: "Omenai",
-  description: "Omenai Home",
-};
 
 export default async function RootLayout({
   children,
@@ -53,6 +60,11 @@ export default async function RootLayout({
           <head>
             <meta name="color-scheme" content="light" />
             <ColorSchemeScript defaultColorScheme="light" />
+
+            {/* Favicon fallback for localhost/dev */}
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="shortcut icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           </head>
           <body
             className={`${work_sans.variable} flex flex-col justify-center`}
