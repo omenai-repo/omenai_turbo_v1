@@ -165,7 +165,7 @@ export default function ProvideOrderRejectionModalForm() {
           </>
         ) : (
           <div className="space-y-4 mb-2 flex flex-col w-full">
-            <p className="text-gray-500 text-fluid-xxs mb-4">
+            <p className="text-slate-700 text-fluid-xxs mb-4">
               Please choose a reasons that best explain why you&apos;re
               declining this order.
             </p>

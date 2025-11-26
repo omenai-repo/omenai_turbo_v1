@@ -31,7 +31,7 @@ function ArtStyle() {
           exit={{ y: -100 }}
           transition={{ duration: 0.33 }}
         >
-          <div className="flex flex-wrap justify-center gap-y-3 gap-x-1">
+          <div className="flex flex-wrap justify-center my-6 gap-y-3 gap-x-1">
             {artTypes.map((art, index) => {
               return (
                 <Pill

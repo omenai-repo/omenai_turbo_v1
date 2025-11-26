@@ -157,7 +157,7 @@ export function OrdersGroupAccordion({
             <span className="text-fluid-xxs font-semibold">
               Order ID: #{order.order_id}
             </span>
-            <span className="text-fluid-xxs text-gray-500">
+            <span className="text-fluid-xxs text-slate-700">
               {order.artwork_data.title}
             </span>
           </div>

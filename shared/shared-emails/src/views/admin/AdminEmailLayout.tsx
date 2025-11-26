@@ -74,7 +74,7 @@ export default function AdminEmailLayout({
 
           {/* Help Section Outside Container */}
           <Container className="text-center mt-8 mb-4">
-            <Text className="text-gray-500 dark:text-gray-500 text-xs">
+            <Text className="text-slate-700 dark:text-slate-700 text-xs">
               Need help?{" "}
               <Link
                 href="mailto:support@omenai.com"

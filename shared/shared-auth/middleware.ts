@@ -18,6 +18,7 @@ const artistDashboardRegex = /\/artist\/app\/.*/;
 const adminDashboardRegex = /\/admin\/.*/;
 const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
+const artistOnboardingDashboardRegex = /\/artist\/onboarding\/.*/;
 
 export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname; // Get the current path
@@ -93,13 +94,13 @@ export default async function middleware(req: NextRequest) {
 
   const { userData } = userSessionData.user;
   const role = userData.role;
-
   const isUserDashboard = userDashboardRegex.test(pathname);
   const isGalleryDashboard = galleryDashboardRegex.test(pathname);
   const isPurchasePage = purchasePageRegex.test(pathname);
   const isPaymentPage = paymentPageRegex.test(pathname);
   const isArtistDashboard = artistDashboardRegex.test(pathname);
   const isAdminDashboard = adminDashboardRegex.test(pathname);
+  const isOnboarding = artistOnboardingDashboardRegex.test(pathname);
 
   // User role restrictions
   if (
@@ -159,6 +160,14 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(
       new URL("/admin/requests/gallery", admin_url())
     ); // Redirect to their actual admin dashboard
+  }
+
+  // Other restriction
+  if (role === "artist" && isOnboarding) {
+    if (userData.isOnboardingCompleted)
+      return NextResponse.redirect(
+        new URL("/artist/app/overview", dashboard_url())
+      ); // Redirect to their actual artist dashboard
   }
 
   // If no specific rule blocks access, allow the req to proceed

@@ -38,18 +38,35 @@ export default function ArticleWrapper() {
     );
 
   return (
-    <div className="flex flex-col space-y-6 pb-10">
-      <h1 className="text-fluid-xl font-semibold">Editorials</h1>
-      <div className="flex gap-4 flex-wrap">
-        {editorials?.map((editorial: any) => {
-          return (
-            // <React.Fragment key={editorial.slug}>
-            <EditorialItemCard key={editorial.slug} editorial={editorial} />
-            // <EditorialItemCard key={editorial.slug} editorial={editorial} />
-            // <EditorialItemCard key={editorial.slug} editorial={editorial} />
-            // </React.Fragment>
-          );
-        })}
+    <div className="min-h-screen pb-5">
+      {/* --- Enterprise-Grade Hero/Header Section --- */}
+      <header className="max-w-full mx-auto mb-4 pb-4 border-b border-gray-200">
+        <h1 className="text-fluid-2xl font-extrabold tracking-tight text-slate-900 mb-4">
+          The OMENAI Editorial
+        </h1>
+        <p className="text-fluid-base text-slate-600 max-w-3xl">
+          Dive into our curated collection of insights on art, digital
+          ownership, and the future of human-AI collaboration in creativity.
+        </p>
+      </header>
+
+      {/* --- Main Content and Grid --- */}
+      <div className="max-w-full mx-auto">
+        <div className="flex flex-col space-y-8">
+          {/* Section Title (Moved below the hero) */}
+          <h2 className="text-fluid-xl font-semibold text-slate-800">
+            Latest Publications
+          </h2>
+
+          {/* Editorial Grid: Responsive and professional gap spacing */}
+          <div className="flex gap-8 flex-wrap justify-start">
+            {editorials?.map((editorial) => {
+              return (
+                <EditorialItemCard key={editorial.slug} editorial={editorial} />
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

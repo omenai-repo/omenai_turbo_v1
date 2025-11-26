@@ -115,7 +115,7 @@ export default function TrackingPage() {
 
       {/* Footer */}
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 text-center">
-        <p className="text-fluid-xxs text-gray-500">
+        <p className="text-fluid-xxs text-slate-700">
           Powered by DHL Express • {new Date().getFullYear()} Omenai
         </p>
       </div>

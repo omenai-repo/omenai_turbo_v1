@@ -59,6 +59,16 @@ export default {
         "billing-card": "url('/images/curve.jpg')",
         "curated-bg": "url('/images/gloss_black.jpg')",
       },
+
+      keyframes: {
+        "background-move": {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "100px 100px" }, // subtle diagonal movement
+        },
+      },
+      animation: {
+        "background-move": "background-move 60s linear infinite",
+      },
     },
   },
   plugins: [require("flowbite/plugin")],

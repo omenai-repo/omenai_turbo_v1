@@ -3,6 +3,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { IState, ICity, ICountry, State, City } from "country-state-city";
 import { ChangeEvent } from "react";
 
@@ -84,27 +85,7 @@ export default function AddressSelectInput({
           required={true}
           onChange={handleChange}
           value={selectValue()}
-          className="
-        appearance-none
-            w-full
-            px-4
-            py-3
-            bg-white
-            border border-slate-300
-            rounded-md
-            text-slate-900
-            text-sm
-            placeholder:text-slate-400
-            transition-all duration-200
-            focus:outline-none
-            focus:border-[#0F172A]
-            focus:ring-0
-            hover:border-slate-400
-            disabled:bg-slate-50
-            disabled:text-slate-500
-            disabled:border-slate-200
-            disabled:cursor-not-allowed
-      "
+          className={SELECT_CLASS}
         >
           <option value="" className="text-slate-400">
             Select {labelText}

@@ -18,11 +18,46 @@ export default function ArtistOnboarding() {
     toast_notif("Signing you out... please wait", "info");
   };
   return (
-    <div>
-      <div className="relative min-h-screen w-full flex items-center justify-center bg-gray-100">
-        <div className="bg-white shadow-xl rounded p-8 max-w-lg">
-          <div className="w-ful my-5">
-            <IndividualLogo />
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-gray-100">
+      <div
+        className="absolute inset-0 z-0 opacity-90"
+        style={{
+          // Uses a subtle CSS background image for the dot mesh effect
+          backgroundImage: `radial-gradient(circle, #d4d4d4 1px, transparent 1px)`,
+          backgroundSize: "20px 20px",
+        }}
+      />
+      <div className="relatiev z-10 bg-white shadow-xl rounded p-8 max-w-lg">
+        <div className="w-ful my-5">
+          <IndividualLogo />
+        </div>
+
+        <h1 className="text-fluid-md font-bold text-gray-900">
+          One last step before you begin… 🎨✨
+        </h1>
+        <p className="text-gray-600 mt-3 text-fluid-xxs">
+          To ensure a high standard of artistry and credibility on our platform,
+          we need to learn more about your artistic journey.
+        </p>
+
+        <div className="mt-6 space-y-3 text-fluid-xxs text-left">
+          <div className="flex items-center space-x-3">
+            <BriefcaseIcon className="w-6 h-6 text-blue-600" />
+            <span className="text-dark">Your art style and background</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <AcademicCapIcon className="w-6 h-6 text-green-600" />
+            <span className="text-dark">Your education and exhibitions</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <BuildingLibraryIcon className="w-6 h-6 text-purple-600" />
+            <span className="text-dark">
+              Museum collections featuring your work
+            </span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <DocumentTextIcon className="w-6 h-6 text-red-600" />
+            <span className="text-dark">Your CV and credentials</span>
           </div>
 
           <h1 className="text-fluid-md font-bold text-gray-900">

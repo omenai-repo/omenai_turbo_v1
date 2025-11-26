@@ -12,7 +12,7 @@ export default function GallerySignUpStepOne() {
     updateGallerySignupData(fieldName, e.target.value);
   }
   return (
-    <>
+    <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-6">
         {gallery_signup_step_one.map((form_step, index) => {
           return (
@@ -31,6 +31,6 @@ export default function GallerySignUpStepOne() {
         })}
       </div>
       <ActionButtons />
-    </>
+    </div>
   );
 }

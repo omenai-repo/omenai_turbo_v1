@@ -34,7 +34,7 @@ export function GalleryInfoModal({
         {icon}
       </div>
       <div className="flex-1 text-left">
-        <p className="text-fluid-xxs text-gray-500 font-medium">{label}</p>
+        <p className="text-fluid-xxs text-slate-700 font-medium">{label}</p>
         <p className="text-fluid-xxs text-gray-900 font-semibold">{value}</p>
       </div>
     </div>
@@ -73,7 +73,7 @@ export function GalleryInfoModal({
             {/* Close button */}
             <button
               onClick={close}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-slate-700 hover:bg-gray-50 hover:text-gray-700 transition-all duration-200 shadow-sm hover:shadow-md"
             >
               <span className="text-xl leading-none">×</span>
             </button>

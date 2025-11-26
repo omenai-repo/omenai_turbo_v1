@@ -3,7 +3,6 @@ import { IndividualLogo } from "../logo/Logo";
 import LoginModalFormActions from "./LoginModalFormActions";
 
 import { useState, ChangeEvent, FormEvent } from "react";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { useRouter } from "next/navigation";
@@ -14,7 +13,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { H } from "@highlight-run/next/client";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-
+import { INPUT_CLASS } from "../styles/inputClasses";
 export default function LoginModalForm() {
   const queryClient = useQueryClient();
 
@@ -116,7 +115,7 @@ export default function LoginModalForm() {
             type="email"
             name="email"
             value={form.email}
-            className="focus:ring text-fluid-xs ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded w-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+            className={INPUT_CLASS}
             required
             placeholder="e.g john@doe.examplemail.com"
             onChange={handleChange}
@@ -131,7 +130,7 @@ export default function LoginModalForm() {
             name="password"
             value={form.password}
             placeholder="********"
-            className="focus:ring ring-1 text-fluid-xs border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded w-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+            className={INPUT_CLASS}
             required
             onChange={handleChange}
           />

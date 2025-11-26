@@ -14,7 +14,7 @@ const pointsStructure: {
   museum_collection: { yes: 25, no: 0 },
   biennale: {
     venice: 40,
-    other: 15,
+    "other recognized biennale events": 15,
     none: 0,
   },
   museum_exhibition: { yes: 40, no: 0 },
@@ -89,7 +89,7 @@ function isAnswers(
     typeof obj.group === "number" &&
     (obj.museum_collection === "yes" || obj.museum_collection === "no") &&
     (obj.biennale === "venice" ||
-      obj.biennale === "other" ||
+      obj.biennale === "other recognized biennale events" ||
       obj.biennale === "none") &&
     (obj.museum_exhibition === "yes" || obj.museum_exhibition === "no") &&
     (obj.art_fair === "yes" || obj.art_fair === "no")

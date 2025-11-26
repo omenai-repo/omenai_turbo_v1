@@ -82,7 +82,7 @@ export default function TrackingMap({
         {/* Details Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 p-4 md:p-6 bg-gray-50">
           <div className="bg-white rounded p-4 shadow-sm">
-            <p className="text-fluid-xxs md:text-fluid-base text-gray-500 mb-1 font-medium">
+            <p className="text-fluid-xxs md:text-fluid-base text-slate-700 mb-1 font-medium">
               From
             </p>
             <p className="text-fluid-xxs md:text-fluid-base font-semibold text-[#0f172a]">
@@ -94,7 +94,7 @@ export default function TrackingMap({
             </p>
           </div>
           <div className="bg-white rounded p-4 shadow-sm">
-            <p className="text-fluid-xxs md:text-fluid-base text-gray-500 mb-1 font-medium">
+            <p className="text-fluid-xxs md:text-fluid-base text-slate-700 mb-1 font-medium">
               To
             </p>
             <p className="text-fluid-xxs md:text-fluid-base font-semibold text-[#0f172a]">

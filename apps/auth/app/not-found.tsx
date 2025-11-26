@@ -36,7 +36,7 @@ export default function NotFoundPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.6 }}
-        className="mt-4 text-gray-500 max-w-md"
+        className="mt-4 text-slate-700 max-w-md"
       >
         The page you’re looking for doesn’t exist or may have been moved. Let’s
         get you back on track.

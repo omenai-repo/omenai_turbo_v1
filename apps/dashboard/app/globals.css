@@ -162,3 +162,16 @@ body {
 .mantine-DateTimePicker-label {
   font-size: 12px;
 }
+
+@keyframes background-move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px; /* subtle diagonal movement */
+  }
+}
+
+.animate-background-move {
+  animation: background-move 60s linear infinite;
+}
