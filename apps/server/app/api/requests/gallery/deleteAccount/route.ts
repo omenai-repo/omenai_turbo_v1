@@ -21,6 +21,7 @@ import {
 } from "../../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
+import { createErrorRollbarReport } from "../../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -127,7 +128,11 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
     } catch (error) {
       console.log(error);
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "gallery: delete account",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

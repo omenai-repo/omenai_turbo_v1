@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { BsShieldLock } from "react-icons/bs";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 export default function NoVerificationBlock({
   gallery_name,
 }: {
@@ -13,6 +14,7 @@ export default function NoVerificationBlock({
   const { csrf } = useAuth();
 
   const [loading, setLoading] = useState(false);
+  const rollbar = useRollbar();
   async function handleRequestGalleryVerification() {
     setLoading(true);
     try {
@@ -36,6 +38,11 @@ export default function NoVerificationBlock({
           className: "class",
         });
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description: "Something wwent wrong. Please try again",
         style: {

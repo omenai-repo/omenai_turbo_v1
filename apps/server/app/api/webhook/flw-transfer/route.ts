@@ -15,6 +15,7 @@ import {
   verifyFlutterwaveTransaction,
 } from "../resource-global";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { createErrorRollbarReport } from "../../util";
 
 const SECRET_HASH = process.env.FLW_SECRET_HASH!;
 
@@ -90,6 +91,11 @@ async function checkAndHandleTransferStatus(
       }
     }
   } catch (error) {
+    createErrorRollbarReport(
+      "Flutterwave Transfer webhook processing -Transfer Webhook handler - End session",
+      error,
+      500
+    );
     return { isOk: false };
   }
 }
@@ -111,6 +117,12 @@ async function handleTransferPending(verified_transaction: any, session: any) {
     return { isOk: true };
   } catch (error) {
     session.abortTransaction();
+
+    createErrorRollbarReport(
+      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
+      error,
+      500
+    );
 
     console.log(error);
     return { isOk: false };
@@ -136,6 +148,11 @@ async function handleTransferSuccess(verified_transaction: any, session: any) {
     return { isOk: true };
   } catch (error) {
     session.abortTransaction();
+    createErrorRollbarReport(
+      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
+      error,
+      500
+    );
     console.log(error);
     return { isOk: false };
   } finally {
@@ -160,6 +177,11 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
     await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
+    createErrorRollbarReport(
+      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
+      error,
+      500
+    );
     await session.abortTransaction();
     return { isOk: false };
   } finally {
@@ -196,6 +218,11 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
     await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
+    createErrorRollbarReport(
+      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
+      error,
+      500
+    );
     await session.abortTransaction();
     return { isOk: false };
   } finally {
@@ -238,6 +265,11 @@ export const POST = withAppRouterHighlight(async function POST(
       if (result && result.isOk) return NextResponse.json({ status: 200 });
       else return NextResponse.json({ status: 400 });
     } catch (error) {
+      createErrorRollbarReport(
+        "Flutterwave Transfer webhook processing -Transfer Webhook handler",
+        error,
+        500
+      );
       return NextResponse.json({ status: 400 });
     }
   }

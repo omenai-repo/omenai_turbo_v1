@@ -1,12 +1,27 @@
+"use client";
 import PageTitle from "../../components/PageTitle";
 import UploadArtworkDetails from "./features/UploadArtworkDetails";
-export const dynamic = "force-dynamic";
-export default function page() {
+
+import { useHighRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
+import ArtworkUploadBlocker from "@omenai/shared-ui-components/components/blockers/upload/UploadBlockerScreen";
+export default function UploadArtwork() {
+  const { value: isArtworkUploadEnabled } = useHighRiskFeatureFlag(
+    "artwork_upload_enabled"
+  );
+
+  const { value: isArtworkPriceCalculationEnabled } = useHighRiskFeatureFlag(
+    "artwork_price_calculation_enabled"
+  );
   return (
     <div className="relative">
-      <PageTitle title="Upload an artwork" />
-
-      <UploadArtworkDetails />
+      {!isArtworkUploadEnabled || !isArtworkPriceCalculationEnabled ? (
+        <ArtworkUploadBlocker entity="artist" />
+      ) : (
+        <div>
+          <PageTitle title="Upload an artwork" />
+          <UploadArtworkDetails />
+        </div>
+      )}
     </div>
   );
 }

@@ -24,11 +24,13 @@ export default function FormController() {
 
   return (
     <>
-      {currentGallerySignupFormIndex === 0 && <GallerySignUpStepOne />}
-      {currentGallerySignupFormIndex === 1 && <GallerySignupStepTwo />}
-      {currentGallerySignupFormIndex === 2 && <GallerySignUpStepThree />}
-      {currentGallerySignupFormIndex === 3 && <GallerySignupStepfour />}
-      {currentGallerySignupFormIndex === 4 && <FormConfirm />}
+      <div className="max-w-full">
+        {currentGallerySignupFormIndex === 0 && <GallerySignUpStepOne />}
+        {currentGallerySignupFormIndex === 1 && <GallerySignupStepTwo />}
+        {currentGallerySignupFormIndex === 2 && <GallerySignUpStepThree />}
+        {currentGallerySignupFormIndex === 3 && <GallerySignupStepfour />}
+        {currentGallerySignupFormIndex === 4 && <FormConfirm />}
+      </div>
 
       <div className="flex justify-center w-full">
         <div className="mt-12 max-w-[300px] w-full">

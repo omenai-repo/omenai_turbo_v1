@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchWalletTransactions(
@@ -25,6 +26,7 @@ export async function fetchWalletTransactions(
       pageCount: result.pageCount,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

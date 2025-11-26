@@ -2,6 +2,7 @@ import { validateAddress } from "@omenai/shared-services/address_validation/vali
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { shouldDisableNext } from "@omenai/shared-utils/src/should_disable_next_button";
+import { useRollbar } from "@rollbar/react";
 import React, { useState } from "react";
 import { MdOutlineArrowForward } from "react-icons/md";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ export default function ({
   } = useIndividualAuthStore();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const rollbar = useRollbar();
 
   const validateAddressCapability = async () => {
     if (individualSignupData.phone === "") {
@@ -72,6 +74,11 @@ export default function ({
         handleClickNext();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description:
           "Something went wrong. Could be us, please contact support",
@@ -126,7 +133,7 @@ export default function ({
       <button
         className={`${
           currentSignupFormIndex > 0 ? "block" : "hidden"
-        }  bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
+        }  border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
         type={"button"}
         onClick={handleClickPrev}
       >

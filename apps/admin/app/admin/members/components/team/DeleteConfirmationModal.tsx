@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { deleteMember } from "@omenai/shared-services/admin/delete_member";
+import { useRollbar } from "@rollbar/react";
 interface DeleteConfirmationModalProps {
   opened: boolean;
   onClose: () => void;
@@ -23,6 +24,7 @@ export default function DeleteConfirmationModal({
   const queryClient = useQueryClient();
   const { csrf } = useAuth({ requiredRole: "admin" });
   const [loading, setLoading] = useState<boolean>(false);
+  const rollbar = useRollbar();
   const handleSubmit = async () => {
     setLoading(true);
     if (member_id) {
@@ -45,6 +47,11 @@ export default function DeleteConfirmationModal({
           onClose();
         }
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {

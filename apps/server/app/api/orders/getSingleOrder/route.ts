@@ -3,9 +3,10 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-
-export const POST = withAppRouterHighlight(async function POST(
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { createErrorRollbarReport } from "../../util";
+export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request
 ) {
   try {
@@ -13,7 +14,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const { order_id } = await request.json();
 
-    const order = await CreateOrder.findOne({ order_id });
+    const order = await CreateOrder.findOne({ order_id }).lean();
 
     if (!order) throw new ServerError("No order matching this id found");
 
@@ -26,7 +27,11 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "order: get single order",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

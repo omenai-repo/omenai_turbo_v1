@@ -5,6 +5,9 @@ import { DeletionRequest } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { createWorkflowTarget } from "../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../../util";
 
 export const GET = withAppRouterHighlight(async function GET(request: Request) {
   const BATCH_SIZE = 10;
@@ -64,83 +67,94 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
   successfulAllocations: number;
   failedWorkflowCreations: number;
 }> {
-  if (!tasks) return { successfulAllocations: 0, failedWorkflowCreations: 0 };
-  const workflowPromises: {
-    requestId: string;
-    fn: Promise<string | undefined>;
-  }[] = [];
+  try {
+    if (!tasks) return { successfulAllocations: 0, failedWorkflowCreations: 0 };
+    const workflowPromises: {
+      requestId: string;
+      fn: Promise<string | undefined>;
+    }[] = [];
 
-  // Queue all workflow tasks for creation
-  for (const task of tasks) {
-    const {
-      entityType,
-      targetId,
-      requestId,
-      services,
-      targetEmail,
-      gracePeriodUntil,
-      requestedAt,
-      initiatedBy,
-    } = task;
-
-    workflowPromises.push({
-      requestId,
-      fn: createWorkflowTarget({
+    // Queue all workflow tasks for creation
+    for (const task of tasks) {
+      const {
+        entityType,
         targetId,
         requestId,
-        entityType,
         services,
         targetEmail,
-        dataRetentionExpiry: gracePeriodUntil,
-        deletionRequestDate: requestedAt,
-        deletionInitiatedBy: initiatedBy,
-      }),
-    });
-  }
+        gracePeriodUntil,
+        requestedAt,
+        initiatedBy,
+      } = task;
 
-  const successfulBulkWriteOps: {
-    updateOne: {
-      filter: { requestId: string };
-      update: { $set: { status: string } };
-    };
-  }[] = [];
-
-  const failedWorkflowCreations: string[] = [];
-
-  // Execute all workflows in parallel
-  const results = await Promise.allSettled(
-    workflowPromises.map((workflow) => workflow.fn)
-  );
-
-  results.forEach((result, i) => {
-    const { requestId } = workflowPromises[i];
-
-    if (result.status === "fulfilled" && result.value) {
-      successfulBulkWriteOps.push({
-        updateOne: {
-          filter: { requestId },
-          update: { $set: { status: "in progress" } },
-        },
+      workflowPromises.push({
+        requestId,
+        fn: createWorkflowTarget({
+          targetId,
+          requestId,
+          entityType,
+          services,
+          targetEmail,
+          dataRetentionExpiry: gracePeriodUntil,
+          deletionRequestDate: requestedAt,
+          deletionInitiatedBy: initiatedBy,
+        }),
       });
-    } else {
-      failedWorkflowCreations.push(requestId);
-
-      if (result.status === "rejected") {
-        console.error(
-          `❌ Workflow creation failed for requestId=${requestId}:`,
-          result.reason
-        );
-      }
     }
-  });
 
-  // Perform a single batched update for all successful allocations
-  if (successfulBulkWriteOps.length > 0) {
-    await DeletionRequestModel.bulkWrite(successfulBulkWriteOps);
+    const successfulBulkWriteOps: {
+      updateOne: {
+        filter: { requestId: string };
+        update: { $set: { status: string } };
+      };
+    }[] = [];
+
+    const failedWorkflowCreations: string[] = [];
+
+    // Execute all workflows in parallel
+    const results = await Promise.allSettled(
+      workflowPromises.map((workflow) => workflow.fn)
+    );
+
+    results.forEach((result, i) => {
+      const { requestId } = workflowPromises[i];
+
+      if (result.status === "fulfilled" && result.value) {
+        successfulBulkWriteOps.push({
+          updateOne: {
+            filter: { requestId },
+            update: { $set: { status: "in progress" } },
+          },
+        });
+      } else {
+        failedWorkflowCreations.push(requestId);
+
+        if (result.status === "rejected") {
+          console.error(
+            `❌ Workflow creation failed for requestId=${requestId}:`,
+            result.reason
+          );
+        }
+      }
+    });
+
+    // Perform a single batched update for all successful allocations
+    if (successfulBulkWriteOps.length > 0) {
+      await DeletionRequestModel.bulkWrite(successfulBulkWriteOps);
+    }
+
+    return {
+      successfulAllocations: successfulBulkWriteOps.length,
+      failedWorkflowCreations: failedWorkflowCreations.length,
+    };
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "Cron: Deletion Task Allocation",
+      error,
+      error_response?.status
+    );
+
+    return { successfulAllocations: 0, failedWorkflowCreations: 0 };
   }
-
-  return {
-    successfulAllocations: successfulBulkWriteOps.length,
-    failedWorkflowCreations: failedWorkflowCreations.length,
-  };
 }

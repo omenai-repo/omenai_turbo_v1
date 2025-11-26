@@ -25,6 +25,7 @@
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
+    "@omenai/rollbar-config": "*",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "eslint": "^9",

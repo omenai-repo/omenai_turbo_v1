@@ -6,6 +6,7 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { createErrorRollbarReport } from "../../../util";
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
@@ -15,14 +16,10 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
     try {
       await connectMongoDB();
-      if (Number.isNaN(Number(page)))
-        throw new BadRequestError("Invalid page number");
-
-      const skip = (Number(page) - 1) * 20;
 
       const artist_data = await AccountArtist.findOne(
         { artist_id },
-        "logo name bio"
+        "logo name bio documentation"
       );
 
       if (!artist_data || artist_data.length === 0) {
@@ -34,9 +31,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const artworksForArtist = await Artworkuploads.find({
         author_id: artist_id,
       })
-        // .sort({ createdAt: -1 })
-        // .skip(skip)
-        // .limit(20)
+
         .exec();
 
       return NextResponse.json({
@@ -46,7 +41,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "artist: fetch Featured Artist data",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

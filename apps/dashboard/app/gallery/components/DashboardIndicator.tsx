@@ -1,72 +1,100 @@
 "use client";
-import { useState } from "react";
-import { toast } from "sonner";
-import { RiAdminLine } from "react-icons/ri";
+
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { verifyGalleryRequest } from "@omenai/shared-services/verification/verifyGalleryRequest";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
+import { useEffect, useState } from "react";
+import { RiAdminLine } from "react-icons/ri";
+
 type AppbarTypes = {
-  admin_name?: string;
-  gallery_name?: string;
-  gallery_verified?: boolean;
+  gallery_name: string;
+  admin_name: string;
+  gallery_verified: boolean;
 };
+
 export default function DashboardIndicator({
-  admin_name,
   gallery_name,
+  admin_name,
   gallery_verified,
 }: AppbarTypes) {
+  const [currentTime, setCurrentTime] = useState<string>("");
+  const [greeting, setGreeting] = useState<string>("");
   const { csrf } = useAuth();
   const [loading, setLoading] = useState(false);
+  const rollbar = useRollbar();
   async function handleRequestGalleryVerification() {
     setLoading(true);
     try {
       const response = await verifyGalleryRequest(gallery_name!, csrf || "");
       if (!response?.isOk)
-        toast.error("Error notification", {
-          description: response?.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(
+          response.message ||
+            "An error was encountered, please try again later or contact support",
+          "error"
+        );
       else
-        toast.success("Operation successful", {
-          description: response.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message || "Verification request sent", "success");
     } catch (error) {
-      toast.error("Error notification", {
-        description: "Something wwent wrong. Please try again",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
+      toast_notif(
+        "An error was encountered, please try again later or contact support",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
   }
+  useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date();
+
+      // Format time
+      const formatted = now.toLocaleString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+      setCurrentTime(formatted);
+
+      // Determine greeting
+      const hour = now.getHours();
+
+      if (hour >= 5 && hour < 12) {
+        setGreeting("Good morning");
+      } else if (hour >= 12 && hour < 17) {
+        setGreeting("Good afternoon");
+      } else if (hour >= 17 && hour < 21) {
+        setGreeting("Good evening");
+      } else {
+        setGreeting("Have a lovely night rest");
+      }
+    };
+
+    updateDateTime();
+    const interval = setInterval(updateDateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="w-full flex justify-between items-center">
-      <div className="text-fluid-xxs">
-        <p className="font-normal text-dark">
-          Welcome back, <strong>{gallery_name}</strong>
+      <div className="space-y-1">
+        <p className="text-fluid-xxs text-dark font-normal">
+          {greeting}, <strong>{gallery_name}</strong>
         </p>
 
-        <p className="text-dark">
-          <span className="font-normal capitalize text-dark">
-            {getFormattedDateTime()}
-          </span>
-        </p>
+        <p className="text-fluid-xxs font-medium text-dark/70">{currentTime}</p>
       </div>
-      {/* Request verification */}
       {!gallery_verified ? (
         <div className="space-y-1" id="gallery-verification">
           <button

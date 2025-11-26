@@ -8,3 +8,6 @@ export const RateLimitExceededError = createCustomErrorClass(
   "RateLimitExceededError"
 );
 export const BadRequestError = createCustomErrorClass("BadRequestError");
+export const ServiceUnavailableError = createCustomErrorClass(
+  "ServiceUnavailableError"
+);

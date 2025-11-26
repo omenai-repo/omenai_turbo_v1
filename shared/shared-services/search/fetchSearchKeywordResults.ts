@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchSearchKeyWordResults(searchTerm: string) {
@@ -15,6 +16,7 @@ export async function fetchSearchKeyWordResults(searchTerm: string) {
 
     return response;
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

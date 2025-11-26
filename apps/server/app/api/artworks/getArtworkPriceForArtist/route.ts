@@ -7,11 +7,14 @@ import {
 } from "@omenai/shared-lib/algorithms/priceGenerator";
 import {
   BadRequestError,
+  ForbiddenError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { redis } from "@omenai/upstash-config";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
@@ -27,12 +30,31 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       "category"
     ) as ArtistCategory;
     const currency = searchParams.get("currency") as string;
+
     try {
+      const isArtworkPriceEnabled = (await fetchConfigCatValue(
+        "artwork_price_calculation_enabled",
+        "high"
+      )) as boolean;
+
+      if (!isArtworkPriceEnabled)
+        throw new ForbiddenError(
+          "Artwork price calculation is currently disabled"
+        );
+
+      console.log(
+        `Calculating price for medium: ${medium}, height: ${height}, width: ${width}, category: ${category}, currency: ${currency}`
+      );
+
       if (!medium || !height || !width || !category) {
         throw new ServerError(
           "Missing required parameters (medium, height, width, category)"
         );
       }
+
+      console.log(
+        `Calculating price for medium: ${medium}, height: ${height}, width: ${width}, category: ${category}, currency: ${currency}`
+      );
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
       const price: ArtworkPricing = calculateArtworkPrice({
@@ -81,6 +103,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
               `Failed to WRITE to Redis for key ${cacheKey}:`,
               redisError
             );
+            createErrorRollbarReport(
+              "artwork: get Artwork price for artist- Failed to WRITE to Redis for key",
+              redisError,
+              500
+            );
           }
         }
       } catch (redisError) {
@@ -120,7 +147,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "artwork: get Artwork price for artist",
+        error,
+        error_response.status
+      );
       console.log(error);
       return NextResponse.json(
         { message: error_response?.message },

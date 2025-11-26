@@ -5,13 +5,16 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import { RouteIdentifier } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function RecoveryEmailInputField() {
   const [isLoading, setIsloading] = useState(false);
   const [email, setEmail] = useState("");
   const { recoveryModal, updateRecoveryModal } = actionStore();
+  const rollbar = useRollbar();
   const { csrf } = useAuth();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +33,11 @@ export default function RecoveryEmailInputField() {
         updateRecoveryModal(recoveryModal.type);
       } else toast_notif(data.body.message, "error");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error notification", {
         description:
           "Something went wrong, please try again or contact support",
@@ -48,7 +56,7 @@ export default function RecoveryEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded placeholder:text-dark/40 placeholder:text-fluid-xxs placeholder:font-medium text-fluid-xxs font-medium"
+        className={INPUT_CLASS}
         placeholder="Email address"
         value={email}
         onChange={(e) => setEmail(e.target.value)}

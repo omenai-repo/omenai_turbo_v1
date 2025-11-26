@@ -15,12 +15,8 @@ export default function UserLayout({
     <div className="2xl:px-12 xl:px-8">
       <NextTopLoader color="#0f172a" height={6} />
 
-      <DesktopNavbar />
-
       <main className="relative">
-        <div className="sticky top-20 left-0 bg-white z-20">
-          <NavigationChipTabs />
-        </div>
+        <NavigationChipTabs />
         <UpdatePasswordModal />
         <DeleteAccountConfirmationModal />
         <ConfirmOrderDeliveryModal />

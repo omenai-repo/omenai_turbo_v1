@@ -15,11 +15,12 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function UploadArtwork() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
-  const url = auth_uri();
   const router = useRouter();
 
   const { data: isConfirmed, isLoading } = useQuery({
@@ -27,7 +28,7 @@ export default function UploadArtwork() {
     queryFn: async () => {
       try {
         // Fetch account ID first, as it's required for the next call
-        const acc = await getAccountId(user.email as string, csrf || "");
+        const acc = await getAccountId(user.gallery_id as string, csrf || "");
         if (!acc?.isOk)
           throw new Error("Something went wrong, Please refresh the page");
 
@@ -47,6 +48,11 @@ export default function UploadArtwork() {
           isSubActive: sub_check?.data?.status === "active",
         };
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         console.error(error);
         handleError();
       }

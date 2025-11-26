@@ -6,6 +6,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
+import { createErrorRollbarReport } from "../../util";
 
 export const GET = async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
@@ -30,6 +31,11 @@ export const GET = async function GET(request: Request) {
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "admin: check admin activation",
+      error,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

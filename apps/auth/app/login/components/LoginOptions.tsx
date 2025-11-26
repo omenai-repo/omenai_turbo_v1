@@ -7,19 +7,19 @@ export default function LoginOptions() {
       <div className="grid grid-cols-2 grid-rows-3 font-medium w-full gap-4">
         <div className="grid xs:grid-cols-2 col-span-2 gap-2">
           <Link href={"/login/gallery"}>
-            <button className="hover:bg-dark hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
+            <button className="border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer">
               Login as Gallery
             </button>
           </Link>
           <Link href={"/login/artist"}>
-            <button className="hover:bg-dark hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
+            <button className="border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer">
               Login as Artist
             </button>
           </Link>
         </div>
 
         <Link href={"/login/user"} className="w-full items-center col-span-2">
-          <button className="hover:bg-dark hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
+          <button className="border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer">
             Login as Collector
           </button>
         </Link>

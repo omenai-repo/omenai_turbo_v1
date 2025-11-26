@@ -21,10 +21,10 @@ export const OrderReceivedModal = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white text-dark p-6 rounded w-full max-w-lg shadow-xl cursor-default relative h-auto"
+            className="bg-white text-dark p-6 rounded w-full max-w-lg shadow-xl cursor-default relative h-full max-h-[85vh]"
           >
             {/* Add modal form here */}
-            <div className="h-[500px] w-full grid place-items=center container">
+            <div className="overflow-y-auto h-full w-full grid place-items=center container">
               {/* <DesktopNavbar /> */}
               <OrderReceived />
             </div>

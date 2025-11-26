@@ -27,10 +27,10 @@ export type SessionData = {
 };
 
 export type CombinedConfig = {
-  limit: number;
-  window: number;
+  maxTokens: number;
+  refillRate: number;
+  keyGenerator: (request: Request, userId?: string) => Promise<string>;
   keyPrefix?: string;
-  keyGenerator?: (request: Request) => string;
   allowedRoles?: AccessRoleTypes[];
   allowedAdminAccessRoles?: AdminAccessRoleTypes[];
 };
@@ -88,7 +88,13 @@ export type ArtistDocumentationTypes = {
   socials?: { [key?: Socials]: string };
 };
 
-type Socials = "instagram" | "twitter" | "linkedin";
+type Socials =
+  | "instagram"
+  | "twitter"
+  | "linkedin"
+  | "behance"
+  | "tiktok"
+  | "facebook";
 
 export type GallerySchemaTypes = {
   name: string;
@@ -121,8 +127,7 @@ export type IndividualSchemaTypes = {
   preferences: string[];
   verified: boolean;
   role: AccessRoleTypes;
-  address?: AddressTypes;
-  clerkUserId?: string;
+  address: AddressTypes;
 };
 
 export type InputProps = {
@@ -821,7 +826,7 @@ export type ArtistCategorizationAnswerTypes = {
   solo: number;
   group: number;
   museum_collection: "yes" | "no";
-  biennale: "venice" | "other" | "none";
+  biennale: "venice" | "none" | "other recognized biennale events";
   museum_exhibition: "yes" | "no";
   art_fair: "yes" | "no";
 };
@@ -1138,3 +1143,19 @@ export type DeletionAuditLog = {
 
   signature: string; // HMAC signature to verify record integrity and authenticity. Generated with a signing key
 };
+
+// app/onboarding/types.ts
+
+export type QuestionType =
+  | "text"
+  | "select"
+  | "cv"
+  | "socials"
+  | "confirmation";
+
+export interface OnboardingQuestion {
+  question: string;
+  type: QuestionType;
+  label?: string;
+  options?: string[];
+}

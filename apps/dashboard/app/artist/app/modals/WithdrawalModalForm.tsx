@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 export default function WithdrawalModalForm() {
   const [amount_data, set_amount_data] = useState<{
     amount: number;
@@ -23,6 +24,7 @@ export default function WithdrawalModalForm() {
   const { user, csrf } = useAuth({ requiredRole: "artist" });
   const [wallet_pin, set_wallet_pin] = useState("");
   const [wallet_pin_error, set_wallet_pin_error] = useState<boolean>(false);
+  const rollbar = useRollbar();
 
   const handlePinChange = (value: string) => {
     set_wallet_pin(value);
@@ -68,6 +70,11 @@ export default function WithdrawalModalForm() {
         };
       });
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong while fetching the transfer rate. Please try again later.",
         "error"
@@ -105,6 +112,11 @@ export default function WithdrawalModalForm() {
       });
       setIsWithdrawalSuccessful(withdrawal_response.isOk);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong while processing your withdrawal. Please try again later.",
         "error"

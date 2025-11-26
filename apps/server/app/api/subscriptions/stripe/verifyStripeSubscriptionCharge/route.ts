@@ -23,6 +23,9 @@ import { z } from "zod";
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { ForbiddenError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../../util";
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -339,6 +342,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isSubscriptionEnabled = (await fetchConfigCatValue(
+      "subscription_creation_enabled",
+      "high"
+    )) as boolean;
+
+    if (!isSubscriptionEnabled)
+      throw new ForbiddenError("Subscriptions are currently disabled");
     await connectMongoDB();
 
     // Parse and validate request
@@ -432,6 +442,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.error("[subscription.verify] Uncaught error:", error);
+    createErrorRollbarReport(
+      "subscription: verify stripe subscription charge",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message ?? "Internal error" },
       { status: error_response?.status ?? 500 }

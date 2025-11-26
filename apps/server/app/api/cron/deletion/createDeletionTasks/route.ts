@@ -19,6 +19,9 @@ import {
   serviceMap,
 } from "../utils";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../../util";
 
 export type LeanDeletionRequest = Pick<
   DeletionRequest,
@@ -266,7 +269,12 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.error("Critical error in deletion task processing:", error);
+    createErrorRollbarReport(
+      "Cron: Deletion Task Creation",
+      error,
+      error_response?.status
+    );
+
     return NextResponse.json(
       {
         message: error_response?.message || "Internal Server Error",

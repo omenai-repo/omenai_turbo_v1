@@ -8,6 +8,7 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
+import { createErrorRollbarReport } from "../../../util";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -184,6 +185,11 @@ async function processOrder(order: any, dbConnection: any) {
       error instanceof Error ? error.message : "Unknown error";
     console.error(`✗ Failed to process order ${order.order_id}:`, errorMessage);
 
+    createErrorRollbarReport(
+      "Cron: Check shipment delivery status",
+      errorMessage,
+      50
+    );
     return {
       status: "failed",
       order_id: order.order_id,
@@ -340,6 +346,12 @@ Cron Job Summary:
   } catch (error) {
     console.error("Critical cron job error:", error);
     const errorResponse = handleErrorEdgeCases(error);
+
+    createErrorRollbarReport(
+      "Cron: Check shipment delivery status",
+      error,
+      errorResponse?.status
+    );
 
     return NextResponse.json(
       {

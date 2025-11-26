@@ -112,7 +112,7 @@ export function TransactionTable({
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               No transactions found
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-700">
               Your transaction history will appear here
             </p>
           </div>

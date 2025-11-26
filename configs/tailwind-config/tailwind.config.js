@@ -36,9 +36,6 @@ export default {
         "fluid-2xl": "clamp(1.602rem, 1.5vw + 1.3rem, 1.802rem)",
         "fluid-3xl": "clamp(1.802rem, 2vw + 1.4rem, 2.027rem)",
       },
-      gridTemplateColumns: {
-        "3cols": "repeat(3, minmax(0, 1fr))",
-      },
       screens: {
         xs: "460px",
         xxl: "400px",
@@ -54,10 +51,23 @@ export default {
       fontFamily: {
         sans: ["var(--font-work_sans), sans-serif"],
       },
+      gridTemplateColumns: {
+        "3cols": "repeat(3, minmax(0, 1fr))",
+      },
       backgroundImage: {
         "hero-image": "url('/images/home_bg.png')",
         "billing-card": "url('/images/curve.jpg')",
         "curated-bg": "url('/images/gloss_black.jpg')",
+      },
+
+      keyframes: {
+        "background-move": {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "100px 100px" }, // subtle diagonal movement
+        },
+      },
+      animation: {
+        "background-move": "background-move 60s linear infinite",
       },
     },
   },

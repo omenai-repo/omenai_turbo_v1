@@ -9,7 +9,7 @@ import { MdClear } from "react-icons/md";
 export default function FilterPill({ filter }: { filter: string }) {
   const { removeSingleFilterSelection, selectedFilters } = filterStore();
   const { currentPage } = artworkActionStore();
-  const { setArtworks, setPageCount } = artworkStore();
+  const { setArtworks, setPageCount, set_artwork_total } = artworkStore();
 
   async function handleRemoveSingleFilter() {
     if (selectedFilters.length === 1) {
@@ -23,6 +23,7 @@ export default function FilterPill({ filter }: { filter: string }) {
       if (response?.isOk) {
         setArtworks(response.data);
         setPageCount(response.count);
+        set_artwork_total(response.total);
       }
     } else {
       removeSingleFilterSelection(filter);

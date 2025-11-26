@@ -7,6 +7,9 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../util";
+import { redis } from "@omenai/upstash-config";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -19,6 +22,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
     const { customer } = await request.json();
+
     const account = await stripe.accounts.create({
       metadata: customer,
       email: customer.email,
@@ -54,9 +58,24 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       { $set: { connected_account_id: account.id } }
     );
 
-    if (!update_connected_id)
+    if (update_connected_id.modifiedCount === 0)
       throw new ServerError("Something went wrong. Contact Support");
 
+    // Set cache
+
+    try {
+      const accountData = {
+        connected_account_id: account.id,
+        gallery_verified: true,
+      };
+      await redis.del(`accountId:${customer.customer_id}`);
+      await redis.set(`accountId:${customer.customer_id}`, JSON.stringify(accountData));
+    } catch (error) {
+      rollbarServerInstance.error({
+        context: "Redis deletion: Connected account ID",
+        error,
+      });
+    }
     return NextResponse.json(
       {
         message: "Connected account created",
@@ -67,7 +86,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "stripe: create connected account",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

@@ -10,6 +10,7 @@ import {
   SHIPMENT_API_URL,
 } from "../utils";
 import {
+  ForbiddenError,
   NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -19,6 +20,9 @@ import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCa
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
 import { tracking_url } from "@omenai/url-config/src/config";
+import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 
 type Payload = {
   order_id: string;
@@ -42,7 +46,6 @@ async function callShipmentAPI(data: any): Promise<any> {
     clearTimeout(timeout);
 
     const result = await response.json();
-    console.log(result);
 
     if (!response.ok) {
       const errorResponse = await response.json();
@@ -151,11 +154,27 @@ export const { POST } = serve<Payload>(async (ctx) => {
           ).session(session);
 
           // TODO: Send email informing buyer and seller that shipment creation is scheduled for later
+          await sendShipmentScheduledEmail({
+            email: order.buyer_details.email,
+            name: order.buyer_details.name,
+            trackingCode: order.order_id,
+          });
+
+          await sendShipmentScheduledEmail({
+            email: order.seller_details.email,
+            name: order.seller_details.name,
+            trackingCode: order.order_id,
+          });
 
           session.commitTransaction();
           return true;
         } catch (error) {
           session.abortTransaction();
+          createErrorRollbarReport(
+            "Shipment creation workflow - Failed to abort MongoDB transaction",
+            error,
+            500
+          );
           throw new Error("Transaction error, session was aborted");
         } finally {
           session.endSession();
@@ -206,6 +225,11 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
       return true;
     } catch (error: any) {
+      createErrorRollbarReport(
+        "Shipment creation workflow - workflow error",
+        error,
+        500
+      );
       await handleWorkflowError(error, payload);
     }
   });

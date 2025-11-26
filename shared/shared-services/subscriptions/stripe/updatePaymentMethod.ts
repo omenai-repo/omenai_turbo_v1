@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function updatePaymentMethod(
@@ -27,6 +28,7 @@ export async function updatePaymentMethod(
       message: result.message,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

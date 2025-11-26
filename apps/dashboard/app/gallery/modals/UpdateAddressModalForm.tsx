@@ -15,6 +15,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
+import { useRollbar } from "@rollbar/react";
 
 export const address_inputs = [
   {
@@ -67,6 +68,7 @@ export default function UpdateAddressModalForm() {
     zip: "",
   });
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
   const router = useRouter();
   const handleAddressUpdate = async () => {
@@ -96,6 +98,11 @@ export default function UpdateAddressModalForm() {
         "success"
       );
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong, please try again or contact support",
         "error"

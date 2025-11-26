@@ -47,7 +47,7 @@ export default function NavigationItem({
             pathname.startsWith(url)
               ? "bg-dark text-white"
               : "bg-white text-dark"
-          } group flex items-center w-full hover:bg-dark rounded`}
+          } group flex items-center w-full hover:bg-dark rounded transition duration-300 ease-in-out`}
         >
           <IconWrapper
             className={` ${pathname.startsWith(url) ? "bg-white text-white" : "group"}`}

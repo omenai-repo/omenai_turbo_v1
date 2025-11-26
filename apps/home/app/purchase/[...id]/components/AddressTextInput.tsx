@@ -1,6 +1,6 @@
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 import { ChangeEvent, HTMLInputTypeAttribute } from "react";
-
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 export default function AddressTextInput({
   placeholder,
   label,
@@ -19,9 +19,11 @@ export default function AddressTextInput({
   disabled?: boolean;
 }) {
   const { setAddress } = orderStore();
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAddress(name, e.target.value);
   };
+
   return (
     <div className="w-full space-y-2">
       <label
@@ -40,33 +42,9 @@ export default function AddressTextInput({
           disabled={disabled}
           required={required}
           placeholder={placeholder}
+          defaultValue={defaultValue ?? ""}
           onChange={handleInputChange}
-          defaultValue={defaultValue !== undefined ? defaultValue : ""}
-          className="
-        w-full
-        px-4
-        py-3
-        bg-white
-        border
-        border-slate-300
-        rounded
-        text-slate-900
-        text-sm
-        font-normal
-        placeholder:text-slate-400
-        placeholder:text-sm
-        transition-all
-        duration-200
-        focus:border-slate-900
-        focus:ring-2
-        focus:ring-slate-900
-        focus:ring-offset-0
-        focus:outline-none
-        disabled:bg-slate-50
-        disabled:text-slate-500
-        disabled:cursor-not-allowed
-        disabled:border-slate-200
-      "
+          className={INPUT_CLASS}
         />
       </div>
     </div>

@@ -15,6 +15,7 @@ import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/er
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -71,6 +72,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       console.log(error);
+      createErrorRollbarReport(
+        "individual: verify resend",
+        error,
+        error_response.status
+      );
 
       return NextResponse.json(
         { message: error_response?.message },

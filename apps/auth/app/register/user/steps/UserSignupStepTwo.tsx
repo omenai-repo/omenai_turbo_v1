@@ -8,7 +8,7 @@ import { ICountry, IState, ICity } from "country-state-city";
 export default function UserSignupStepTwo() {
   return (
     <div className="flex flex-col space-y-6">
-      <>
+      <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
         {user_signup_step_two.map((form_step, index) => {
           return (
             <div key={index}>
@@ -33,7 +33,7 @@ export default function UserSignupStepTwo() {
             </div>
           );
         })}
-      </>
+      </div>
 
       <ActionButton />
     </div>

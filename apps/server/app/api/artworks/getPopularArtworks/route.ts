@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { createErrorRollbarReport } from "../../util";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -37,7 +38,11 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "artwork: get popular Artwork",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

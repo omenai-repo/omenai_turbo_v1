@@ -4,7 +4,9 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { NextResponse } from "next/server";
 import {
   ServerError,
@@ -12,40 +14,51 @@ import {
   BadRequestError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { getApiUrl } from "@omenai/url-config/src/config";
 import { getCurrentDate } from "@omenai/shared-utils/src/getCurrentDate";
-import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+import { generateDigit } from "@omenai/shared-utils/src/generateToken";
+import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   AddressTypes,
+  ArtworkSchemaTypes,
   CombinedConfig,
   CreateOrderModelTypes,
   NotificationPayload,
 } from "@omenai/shared-types";
-import { getApiUrl } from "@omenai/url-config/src/config";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
-import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
-import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
 
-// Helper to fetch seller data based on designation
+// Unified helper to fetch seller data
 const getSellerData = async (seller_id: string, designation: string) => {
   if (designation === "gallery") {
-    return await AccountGallery.findOne(
+    return AccountGallery.findOne(
       { gallery_id: seller_id },
-      "name email address phone"
-    ).exec();
+      "name email address phone address"
+    ).lean() as unknown as {
+      name: string;
+      email: string;
+      user_id: string;
+      phone: string;
+      address: AddressTypes;
+    };
   }
-
-  return await AccountArtist.findOne(
+  return AccountArtist.findOne(
     { artist_id: seller_id },
-    "name email phone address"
-  ).exec();
+    "name email address phone address"
+  ).lean() as unknown as {
+    name: string;
+    email: string;
+    user_id: string;
+    phone: string;
+    address: AddressTypes;
+  };
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
@@ -70,15 +83,32 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       designation: string;
     } = await request.json();
 
-    const buyerData = await AccountIndividual.findOne(
-      { user_id: buyer_id },
-      "name email user_id phone"
-    ).exec();
+    // Basic input validation
+    if (!buyer_id || !art_id || !seller_id) {
+      throw new BadRequestError("Missing required parameters.");
+    }
 
-    // Simplified seller data fetch
-    const seller_data = await getSellerData(seller_id, designation);
+    // Fetch buyer & seller data concurrently
+    const [buyerData, sellerData] = await Promise.all([
+      AccountIndividual.findOne(
+        { user_id: buyer_id },
+        "name email user_id phone address"
+      ).lean() as unknown as {
+        name: string;
+        email: string;
+        user_id: string;
+        phone: string;
+        address: AddressTypes;
+      },
+      getSellerData(seller_id, designation),
+    ]);
 
-    const response = await fetch(
+    if (!buyerData || !sellerData) {
+      throw new ServerError("Unable to retrieve user information.");
+    }
+
+    // Validate shipping address via DHL API
+    const validationResponse = await fetch(
       `${getApiUrl()}/api/shipment/address_validation`,
       {
         method: "POST",
@@ -97,34 +127,46 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       }
     );
 
-    const result = await response.json();
-
-    if (!response.ok)
+    const validationResult = await validationResponse.json();
+    if (!validationResponse.ok) {
       throw new BadRequestError(
-        result.message ||
-          "Oops! We can't ship to this address just yet 🚫. Double-check your address or try a different one!"
-      );
-
-    const artwork = await Artworkuploads.findOne(
-      { art_id },
-      `title artist pricing url art_id availaility role_access ${designation === "artist" && "exclusivity_status"} `
-    ).exec();
-
-    if (!buyerData || !artwork)
-      throw new ServerError("An error was encountered. Please try again");
-
-    const isOrderPresent = await CreateOrder.findOne({
-      "buyer_details.email": buyerData.email,
-      "artwork_data.art_id": artwork.art_id,
-    });
-
-    if (isOrderPresent && isOrderPresent.order_accepted.status !== "declined") {
-      throw new ForbiddenError(
-        "Order already exists and is being processed, Please be patient."
+        validationResult.message ||
+          "Oops! We can't ship to this address yet. Try another address."
       );
     }
 
-    // Create order (no else needed with early throw above)
+    // Fetch artwork details
+    const artwork = (await Artworkuploads.findOne(
+      { art_id },
+      "title artist pricing url art_id availability role_access exclusivity_status"
+    ).lean()) as unknown as Pick<
+      ArtworkSchemaTypes,
+      | "title"
+      | "artist"
+      | "pricing"
+      | "art_id"
+      | "availability"
+      | "role_access"
+      | "exclusivity_status"
+    >;
+
+    if (!artwork) {
+      throw new ServerError("Artwork not found.");
+    }
+
+    // Prevent duplicate order creation
+    const existingOrder = (await CreateOrder.findOne({
+      "buyer_details.email": buyerData.email,
+      "artwork_data.art_id": artwork.art_id,
+    }).lean()) as unknown as CreateOrderModelTypes;
+
+    if (existingOrder && existingOrder.order_accepted.status !== "declined") {
+      throw new ForbiddenError(
+        "Order already exists and is being processed. Please wait."
+      );
+    }
+
+    // Create order
     const createOrder: CreateOrderModelTypes = await CreateOrder.create({
       artwork_data: artwork,
       buyer_details: {
@@ -133,71 +175,27 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         id: buyerData.user_id,
         phone: buyerData.phone,
       },
+      seller_details: {
+        id: seller_id,
+        name: sellerData.name,
+        email: sellerData.email,
+        phone: sellerData.phone,
+      },
+      seller_designation: designation,
       shipping_details: {
         addresses: {
-          origin: seller_data.address,
+          origin: sellerData.address,
           destination: shipping_address,
         },
         delivery_confirmed: false,
-        additional_information: "",
         shipment_information: {
           carrier: "DHL",
-          shipment_product_code: "",
-
-          dimensions: {
-            length: 0,
-            weight: 0,
-            width: 0,
-            height: 0,
-          },
-          pickup: {
-            additional_information: "",
-            pickup_max_time: "",
-            pickup_min_time: "",
-          },
-          tracking: {
-            id: null,
-            link: null,
-            delivery_status: null,
-            delivery_date: null,
-          },
-          planned_shipping_date: "",
-          estimates: {
-            estimatedDeliveryDate: "",
-            estimatedDeliveryType: "",
-          },
-          quote: {
-            fees: "",
-            taxes: "",
-          },
-          waybill_document: "",
+          tracking: { id: null, link: null, delivery_status: null },
         },
       },
-      hold_status: null,
-      exhibition_status: null,
-      seller_details: {
-        id: seller_id,
-        name: seller_data.name,
-        email: seller_data.email,
-        phone: seller_data.phone,
-      },
-      seller_designation: designation,
-      payment_information: {
-        status: "pending",
-        transaction_value: 0,
-        transaction_date: "",
-        transaction_reference: "",
-      },
-      order_accepted: {
-        status: "",
-        reason: "",
-      },
+      payment_information: { status: "pending" },
+      order_accepted: { status: "", reason: "" },
     });
-
-    if (!createOrder)
-      throw new ServerError(
-        "An error was encountered while creating this order. Please try again"
-      );
 
     if (save_shipping_address) {
       await AccountIndividual.updateOne(
@@ -206,20 +204,25 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
     }
 
-    const buyer_push_token = await DeviceManagement.findOne(
-      { auth_id: createOrder.buyer_details.id },
-      "device_push_token"
-    );
-    const seller_push_token = await DeviceManagement.findOne(
-      { auth_id: createOrder.seller_details.id },
-      "device_push_token"
-    );
+    // Fetch both device tokens in one go
+    const deviceRecords = await DeviceManagement.find({
+      auth_id: { $in: [buyer_id, seller_id] },
+    })
+      .select("auth_id device_push_token")
+      .lean();
 
-    const notificationPromises = [];
+    const buyerToken = deviceRecords.find(
+      (d) => d.auth_id === buyer_id
+    )?.device_push_token;
+    const sellerToken = deviceRecords.find(
+      (d) => d.auth_id === seller_id
+    )?.device_push_token;
 
-    if (buyer_push_token?.device_push_token) {
-      const buyer_notif_payload: NotificationPayload = {
-        to: buyer_push_token.device_push_token,
+    const notificationTasks: Promise<any>[] = [];
+
+    if (buyerToken) {
+      const buyerPayload: NotificationPayload = {
+        to: buyerToken,
         title: "Order confirmed",
         body: "Your order request has been confirmed",
         data: {
@@ -229,53 +232,48 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             orderId: createOrder.order_id,
             date: toUTCDate(new Date()),
           },
-          userId: createOrder.buyer_details.id,
+          userId: buyer_id,
         },
       };
-
-      notificationPromises.push(
+      notificationTasks.push(
         createWorkflow(
           "/api/workflows/notification/pushNotification",
-          `notification_workflow_buyer_${createOrder.order_id}_${generateDigit(2)}`,
-          JSON.stringify(buyer_notif_payload)
-        ).catch((error) => {
-          console.error("Failed to send buyer notification:", error);
-        })
+          `notif_buyer_${createOrder.order_id}_${generateDigit(2)}`,
+          JSON.stringify(buyerPayload)
+        )
       );
     }
 
-    if (seller_push_token?.device_push_token) {
-      const seller_notif_payload: NotificationPayload = {
-        to: seller_push_token.device_push_token,
-        title: "New Order request",
+    if (sellerToken) {
+      const sellerPayload: NotificationPayload = {
+        to: sellerToken,
+        title: "New Order Request",
         body: "You have a new order request for your artwork",
         data: {
           type: "orders",
-          access_type: createOrder.seller_designation as "gallery" | "artist",
+          access_type: designation as "gallery" | "artist",
           metadata: {
             orderId: createOrder.order_id,
             date: toUTCDate(new Date()),
           },
-          userId: createOrder.seller_details.id,
+          userId: seller_id,
         },
       };
-
-      notificationPromises.push(
+      notificationTasks.push(
         createWorkflow(
           "/api/workflows/notification/pushNotification",
-          `notification_workflow_seller_${createOrder.order_id}_${generateDigit(2)}`,
-          JSON.stringify(seller_notif_payload)
-        ).catch((error) => {
-          console.error("Failed to send seller notification:", error);
-        })
+          `notif_seller_${createOrder.order_id}_${generateDigit(2)}`,
+          JSON.stringify(sellerPayload)
+        )
       );
     }
 
+    // Run all side effects concurrently
     const date = getCurrentDate();
     await Promise.all([
       sendOrderRequestToGalleryMail({
-        name: seller_data.name,
-        email: seller_data.email,
+        name: sellerData.name,
+        email: sellerData.email,
         buyer: buyerData.name,
         date,
         artwork_data: artwork,
@@ -286,19 +284,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         artwork_data: artwork,
         orderId: createOrder.order_id,
       }),
-      ...notificationPromises,
+      ...notificationTasks,
     ]);
 
     return NextResponse.json(
-      {
-        message: "Order created",
-      },
+      { message: "Order created successfully" },
       { status: 200 }
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
-    console.log(error);
+    createErrorRollbarReport(
+      "order: create order",
+      error,
+      error_response.status
+    );
+    console.error("Order creation error:", error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

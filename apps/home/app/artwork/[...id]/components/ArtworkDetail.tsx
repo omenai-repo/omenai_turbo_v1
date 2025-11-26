@@ -127,7 +127,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
 
       <div className="py-4 border-t border-gray-100">
         <div className="">
-          <p className="text-fluid-xxs text-gray-500 uppercase tracking-wide font-normal">
+          <p className="text-fluid-xxs text-slate-700 uppercase tracking-wide font-normal">
             Price
           </p>
           {!data.availability ? (

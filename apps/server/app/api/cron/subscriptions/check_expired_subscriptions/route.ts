@@ -7,6 +7,7 @@ import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema"
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import Stripe from "stripe";
 import pLimit from "p-limit"; // For concurrency control
+import { createErrorRollbarReport } from "../../../util";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -211,6 +212,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     );
   } catch (e) {
     console.error("[subscription-renewals] fatal error:", e);
+    createErrorRollbarReport(
+      "Cron: Subscription Renewals - Process expired subscriptions",
+      e as any,
+      500
+    );
     return NextResponse.json(
       {
         message: "Subscription renewal cron failed",

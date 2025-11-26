@@ -1,6 +1,7 @@
-"use client";
 import Image from "next/image";
 import AdminLoginForm from "./AdminLoginForm";
+
+export const dynamic = "force-dynamic";
 
 function Page() {
   return (

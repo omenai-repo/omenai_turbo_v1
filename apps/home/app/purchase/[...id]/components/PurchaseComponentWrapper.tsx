@@ -49,9 +49,8 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   return (
     <>
       <DesktopNavbar />
-
       <div className="lg:grid lg:place-items-center h-screen w-full">
-        <div className="relative h-full max-w-screen-xl">
+        <div className="relative h-full max-w-screen">
           <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 md:gap-x-8 lg:gap-x-16 gap-y-8">
             <div className="col-span-1 xl:col-span-2 border-1 border-dark/10">
               <AddressForm

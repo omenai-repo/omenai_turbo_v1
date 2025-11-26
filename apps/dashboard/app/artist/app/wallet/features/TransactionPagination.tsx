@@ -1,6 +1,7 @@
 import { Pagination } from "@mantine/core";
 import { fetchWalletTransactions } from "@omenai/shared-services/wallet/fetchWalletTransactions";
 import { walletTransactionStore } from "@omenai/shared-state-store/src/artist/wallet/WalletTransactionStateStore";
+import { useRollbar } from "@rollbar/react";
 import React, { useState } from "react";
 
 export default function TransactionPagination({
@@ -15,6 +16,7 @@ export default function TransactionPagination({
   const now = new Date().getFullYear().toString();
   const [year, setYear] = useState(now);
   const [page, setPage] = useState(1);
+  const rollbar = useRollbar();
   const handlePaginationChange = async (pageVal: number) => {
     try {
       setTransactionLoading(true);
@@ -36,6 +38,11 @@ export default function TransactionPagination({
 
       setTransactions(wallet_transaction_response.data);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       throw new Error("Error fetching transaction data");
     } finally {
       setTransactionLoading(false);

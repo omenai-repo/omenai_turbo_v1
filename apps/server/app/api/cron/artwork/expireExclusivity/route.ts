@@ -5,6 +5,9 @@ import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../../util";
 
 export const GET = withAppRouterHighlight(async function GET(request: Request) {
   try {
@@ -78,10 +81,16 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    const err = handleErrorEdgeCases(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    createErrorRollbarReport(
+      "Cron: Artwork Exclusivity Expiration",
+      error,
+      error_response?.status
+    );
     return NextResponse.json(
-      { message: err?.message },
-      { status: err?.status }
+      { message: error_response?.message },
+      { status: error_response?.status }
     );
   }
 });

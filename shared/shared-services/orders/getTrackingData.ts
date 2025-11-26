@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const getTrackingData = async (order_id: string) => {
@@ -21,6 +22,7 @@ export const getTrackingData = async (order_id: string) => {
       shipping_details: result.shipping_details,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function getTransferRate(
@@ -18,6 +19,7 @@ export async function getTransferRate(
 
     return { isOk: res.ok, message: result.message, data: result.data };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

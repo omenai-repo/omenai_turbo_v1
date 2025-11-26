@@ -50,7 +50,7 @@ const PaymentSuccessfulGalleryMail = (
             </Text>
             {/* Transaction Card */}
             <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
-              <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4 text-center">
+              <Text className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4 text-center">
                 Transaction Summary
               </Text>
 

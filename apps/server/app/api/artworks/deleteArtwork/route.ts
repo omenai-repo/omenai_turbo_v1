@@ -13,6 +13,7 @@ import { serverStorage } from "@omenai/appwrite-config";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { redis } from "@omenai/upstash-config";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -46,6 +47,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       })
       .catch(async (err) => {
         console.error(`❌ Failed to delete file ${artwork.url}:`, err.message);
+        createErrorRollbarReport(
+          "artwork: delete artwork-  failed to delete file",
+          err as any,
+          500
+        );
         await saveFailedJob({
           jobId: `artwork:${art_id}`,
           jobType: "delete_artwork_from_appwrite",
@@ -64,7 +70,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "artwork: delete artwork",
+      error,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response!.message },
       { status: error_response!.status }

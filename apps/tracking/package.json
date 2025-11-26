@@ -9,11 +9,13 @@
     "lint": "eslint"
   },
   "devDependencies": {
+    "@omenai/shared-lib": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-ui-components": "*",
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
     "@omenai/url-config": "*",
+    "@omenai/rollbar-config": "*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

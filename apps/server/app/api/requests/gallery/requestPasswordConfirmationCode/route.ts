@@ -4,14 +4,15 @@ import { VerificationCodes } from "@omenai/shared-models/models/auth/verificatio
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
 import {
-  ServerError,
   ConflictError,
+  NotFoundError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPasswordConfirmationCodeMail } from "@omenai/shared-emails/src/models/gallery/sendPasswordChangeConfirmationCode";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -28,7 +29,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const account = await AccountGallery.findOne({
       gallery_id: id,
     });
-    if (!account) throw new ServerError("Something went wrong");
+    if (!account) throw new NotFoundError("Gallery not found for given ID");
+
     const token = generateDigit(7);
 
     const check_code_existence = await VerificationCodes.findOne({
@@ -61,7 +63,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "gallery: request password confirmation",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

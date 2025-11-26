@@ -13,6 +13,8 @@ import {
   Eye,
   Clock4,
 } from "lucide-react";
+import { useRollbar } from "@rollbar/react";
+import type Rollbar from "rollbar";
 
 // Status configuration
 const STATUS_CONFIG = {
@@ -142,7 +144,7 @@ const ActionButtons = () => (
 );
 
 const SecurityBadge = () => (
-  <div className="flex items-center gap-2 text-fluid-xxs text-gray-500 pt-2">
+  <div className="flex items-center gap-2 text-fluid-xxs text-slate-700 pt-2">
     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
     <span>Secure SSL Encrypted Transaction</span>
   </div>
@@ -191,7 +193,11 @@ const SuccessState = ({
 };
 
 // Helper function
-const verifyTransaction = async (transactionId: string, apiUrl: string) => {
+const verifyTransaction = async (
+  transactionId: string,
+  apiUrl: string,
+  rollbar: Rollbar
+) => {
   try {
     const response = await fetch(
       `${apiUrl}/api/transactions/verify_FLW_transaction`,
@@ -214,6 +220,11 @@ const verifyTransaction = async (transactionId: string, apiUrl: string) => {
       success: result.success,
     };
   } catch (error) {
+    if (error instanceof Error) {
+      rollbar.error(error);
+    } else {
+      rollbar.error(new Error(String(error)));
+    }
     console.error("Error verifying transaction:", error);
     return { isOk: false };
   }
@@ -221,6 +232,7 @@ const verifyTransaction = async (transactionId: string, apiUrl: string) => {
 
 export default function VerifyTransactionWrapper() {
   const searchParams = useSearchParams();
+  const rollbar = useRollbar();
   const transaction_id = searchParams.get("transaction_id");
   const [showContent, setShowContent] = useState(false);
   const url = getApiUrl();
@@ -231,7 +243,7 @@ export default function VerifyTransactionWrapper() {
       if (!transaction_id) {
         throw new Error("Missing transaction id");
       }
-      return verifyTransaction(transaction_id, url);
+      return verifyTransaction(transaction_id, url, rollbar);
     },
     refetchOnWindowFocus: false,
   });

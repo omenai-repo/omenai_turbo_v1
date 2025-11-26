@@ -16,6 +16,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../util";
 const API_URL = `${DHL_API_URL_TEST}/rates`;
 
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
@@ -125,6 +126,11 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
+      createErrorRollbarReport(
+        "shipment: get rate",
+        error,
+        error_response.status
+      );
 
       return NextResponse.json(
         { message: error_response?.message },

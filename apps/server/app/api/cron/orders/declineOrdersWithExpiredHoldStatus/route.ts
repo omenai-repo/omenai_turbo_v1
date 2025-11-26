@@ -7,6 +7,7 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { createErrorRollbarReport } from "../../../util";
 
 // NOTE: Run every 5 minutes
 export const GET = withRateLimit(lenientRateLimit)(async function GET() {
@@ -88,6 +89,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
             `✅ Order ${order.order_id} marked as declined and email sent.`
           );
         } catch (mailErr) {
+          createErrorRollbarReport(
+            "Cron: Decline orders with expired hold status - send decline email",
+            mailErr as any,
+            500
+          );
           console.error(
             `❌ Failed to send decline email for order ${order.order_id}:`,
             mailErr
@@ -106,10 +112,16 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    const errorResponse = handleErrorEdgeCases(error);
+    const error_response = handleErrorEdgeCases(error);
+
+    createErrorRollbarReport(
+      "Cron: Decline orders with expired hold status",
+      error,
+      error_response?.status
+    );
     return NextResponse.json(
-      { message: errorResponse?.message },
-      { status: errorResponse?.status }
+      { message: error_response?.message },
+      { status: error_response?.status }
     );
   }
 });

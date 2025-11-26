@@ -103,7 +103,7 @@ export default function TrackingNotFound({
         </div>
 
         {/* Help Text */}
-        <p className="text-fluid-xxs text-gray-500 mt-8">
+        <p className="text-fluid-xxs text-slate-700 mt-8">
           Need help? Check your order confirmation email for the correct
           tracking number
         </p>

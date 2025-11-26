@@ -1,6 +1,7 @@
 "use client";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { GallerySignupData, AddressTypes } from "@omenai/shared-types";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { City, ICity, IState, State } from "country-state-city";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
@@ -27,7 +28,6 @@ export default function SelectInput({
     currentGallerySignupFormIndex,
     updateGallerySignupData,
     setIsFieldDirty,
-    isFieldDirty,
     selectedCityList,
     selectedStateList,
     setSelectedCityList,
@@ -89,7 +89,7 @@ export default function SelectInput({
                 (gallerySignupData.state === "" ||
                   gallerySignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-normal disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xxs placeholder:text-dark"
+            className={SELECT_CLASS}
           >
             <option value="" className="text-dark">
               Select {labelText}

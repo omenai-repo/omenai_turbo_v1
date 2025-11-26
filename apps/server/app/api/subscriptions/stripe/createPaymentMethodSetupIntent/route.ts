@@ -4,10 +4,16 @@ import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema"
 import { NextResponse } from "next/server";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ForbiddenError,
+  ServerError,
+  ServiceUnavailableError,
+} from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 
 import { CombinedConfig } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
@@ -16,12 +22,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isSubscriptionEnabled = (await fetchConfigCatValue(
+      "subscription_creation_enabled",
+      "high"
+    )) as boolean;
+
+    if (!isSubscriptionEnabled)
+      throw new ServiceUnavailableError("Subscriptions are currently disabled");
+
     await connectMongoDB();
     const { gallery_id, email } = await request.json();
-    const gallery = await AccountGallery.findOne(
+    const gallery = (await AccountGallery.findOne(
       { gallery_id },
       "stripe_customer_id"
-    );
+    ).lean()) as unknown as { stripe_customer_id: string };
     if (!gallery)
       throw new ServerError("Something went wrong. Please try again");
 
@@ -58,6 +72,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
+    createErrorRollbarReport(
+      "subscription: create payment method setup",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

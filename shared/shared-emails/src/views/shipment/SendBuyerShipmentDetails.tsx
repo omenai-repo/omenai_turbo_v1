@@ -102,7 +102,7 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
             <Text style={{ marginTop: "40px", fontSize: "16px" }}>
               Best regards,
               <br />
-              The [Your Platform Name] Team
+              The <strong>Omenai</strong> Team
             </Text>
           </Section>
         </Container>

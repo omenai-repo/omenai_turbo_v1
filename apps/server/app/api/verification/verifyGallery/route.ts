@@ -1,15 +1,14 @@
-import { getIp } from "@omenai/shared-lib/auth/getIp";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendVerifyGalleryMail } from "@omenai/shared-emails/src/models/verification/sendVerifyGalleryMail";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { fortKnoxRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
+import { createErrorRollbarReport } from "../../util";
+
+export const POST = withRateLimitHighlightAndCsrf(fortKnoxRateLimit)(
   async function POST(request: Request) {
     try {
       const { name } = await request.json();
-
-      const ip = await getIp();
 
       await sendVerifyGalleryMail({ name, email: "moses@omenai.net" });
 
@@ -19,7 +18,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "verification: verify gallery",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

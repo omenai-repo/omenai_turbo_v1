@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchWalletBalance(session_id: string) {
@@ -15,6 +16,7 @@ export async function fetchWalletBalance(session_id: string) {
     const result = await response.json();
     return { isOk: response.ok, data: result.balances };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

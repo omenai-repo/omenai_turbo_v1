@@ -1,11 +1,17 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
+import {
+  ForbiddenError,
+  ServerError,
+  ServiceUnavailableError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -16,6 +22,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isSubscriptionEnabled = (await fetchConfigCatValue(
+      "subscription_creation_enabled",
+      "high"
+    )) as boolean;
+
+    if (!isSubscriptionEnabled)
+      throw new ServiceUnavailableError("Subscriptions are currently disabled");
     await connectMongoDB();
     const { data, gallery_id, action } = await request.json();
 
@@ -46,7 +59,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
-
+    createErrorRollbarReport(
+      "subscription: update subscription plan",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

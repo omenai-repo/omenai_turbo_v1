@@ -7,6 +7,7 @@ import { OrderAcceptedStatusTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -16,6 +17,7 @@ export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
     actionStore();
   const { csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
   const queryClient = useQueryClient();
   const [accepted_status, setAcceptedStatus] =
     useState<OrderAcceptedStatusTypes>({
@@ -82,6 +84,11 @@ export default function ProvideOrderRejectionModalForm() {
         router.refresh();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong, please try again or contact support",
         "error"

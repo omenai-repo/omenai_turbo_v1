@@ -20,6 +20,7 @@ import {
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -53,6 +54,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const algorithm_result: ArtistCategorizationAlgorithmResult =
         calculateArtistRating(data.answers);
 
+      console.log(algorithm_result);
       if (algorithm_result.status !== "success")
         throw new ServerError(
           "Something went wrong while processing data, please contact support"
@@ -104,7 +106,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     } catch (error) {
       await session.abortTransaction();
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "auth: artist onboarding create categorization",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response!.message },
         { status: error_response!.status }

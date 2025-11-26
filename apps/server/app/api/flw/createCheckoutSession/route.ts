@@ -3,6 +3,12 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import {
+  ForbiddenError,
+  ServiceUnavailableError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -12,6 +18,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    const isFlwPaymentEnabled =
+      (await fetchConfigCatValue("flutterwave_payment_enabled", "high")) ??
+      false;
+    if (!isFlwPaymentEnabled) {
+      throw new ServiceUnavailableError(
+        "Flutterwave payment is currently disabled"
+      );
+    }
     const data = await request.json();
 
     const payload = {
@@ -42,7 +56,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "flutterwave: create checkout session",
+      error,
+      error_response.status
+    );
     console.log(error);
     return NextResponse.json(
       { message: error_response?.message },

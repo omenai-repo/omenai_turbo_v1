@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function loginArtist(payload: {
@@ -22,6 +23,7 @@ export async function loginArtist(payload: {
       signInToken: response.signInToken,
     };
   } catch (error) {
+    logRollbarServerError(error);
     return { isOk: false, message: "Something went wrong" };
   }
 }

@@ -5,6 +5,7 @@ import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 import pLimit from "p-limit";
+import { createErrorRollbarReport } from "../../../util";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -182,6 +183,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       concurrency: MAX_CONCURRENT_JOBS,
     });
   } catch (error) {
+    createErrorRollbarReport("Cron: Failed Job Retry - Shipments", error, 500);
     console.error("[failed-job-retry] Error:", error);
     return NextResponse.json(
       {

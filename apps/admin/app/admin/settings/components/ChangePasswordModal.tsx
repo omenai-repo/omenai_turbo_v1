@@ -6,6 +6,7 @@ import { Lock } from "lucide-react";
 import { updateAdminCredentials } from "@omenai/shared-services/admin/update_admin_credentials";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 interface ChangePasswordModalProps {
   opened: boolean;
@@ -19,6 +20,7 @@ export default function ChangePasswordModal({
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const rollbar = useRollbar();
   const [loading, setLoading] = useState(false);
   const { user, csrf } = useAuth({ requiredRole: "admin" });
   const handleSubmit = async () => {
@@ -40,6 +42,11 @@ export default function ChangePasswordModal({
           onClose();
         }
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         toast_notif("Something went wrong, please contact support", "error");
         return;
       } finally {
@@ -126,7 +133,7 @@ export default function ChangePasswordModal({
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.currentTarget.value)}
           leftSection={
-            <div className="text-gray-500">
+            <div className="text-slate-700">
               <Lock size={18} />
             </div>
           }
@@ -168,7 +175,7 @@ export default function ChangePasswordModal({
             value={newPassword}
             onChange={(e) => setNewPassword(e.currentTarget.value)}
             leftSection={
-              <div className="text-gray-500">
+              <div className="text-slate-700">
                 <Lock size={18} />
               </div>
             }
@@ -240,7 +247,7 @@ export default function ChangePasswordModal({
                     }`}
                   />
                 </div>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-slate-700">
                   {newPassword.length < 8
                     ? "Weak"
                     : newPassword.length < 12
@@ -257,7 +264,7 @@ export default function ChangePasswordModal({
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.currentTarget.value)}
           leftSection={
-            <div className="text-gray-500">
+            <div className="text-slate-700">
               <Lock size={18} />
             </div>
           }

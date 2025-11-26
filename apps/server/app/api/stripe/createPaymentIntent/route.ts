@@ -4,68 +4,92 @@ import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema"
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
 import {
-  ServerError,
   ForbiddenError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { SubscriptionModelSchemaTypes } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const isStripePaymentEnabled =
+        (await fetchConfigCatValue("stripe_payment_enabled", "high")) ?? false;
+      if (!isStripePaymentEnabled) {
+        throw new ServiceUnavailableError(
+          "Stripe payment is currently disabled"
+        );
+      }
       await connectMongoDB();
       const { amount, seller_id, meta } = await request.json();
-      const gallery = await AccountGallery.findOne(
-        { gallery_id: seller_id },
-        "connected_account_id"
+
+      const [gallery, active_subscription] = await Promise.all([
+        AccountGallery.findOne({ gallery_id: seller_id })
+          .select("connected_account_id")
+          .lean() as unknown as { connected_account_id: string },
+        Subscriptions.findOne({ "customer.gallery_id": seller_id })
+          .select("plan_details status")
+          .lean() as unknown as {
+          plan_details: SubscriptionModelSchemaTypes["plan_details"];
+          status: SubscriptionModelSchemaTypes["status"];
+        },
+      ]);
+
+      if (
+        !gallery ||
+        !active_subscription ||
+        active_subscription.status !== "active"
+      ) {
+        throw new ForbiddenError(
+          "Cannot proceed with this purchase at the moment. Please try again later or contact support if this persists"
+        );
+      }
+      // Determine commission rate by plan type
+      const planType = active_subscription.plan_details.type?.toLowerCase();
+
+      const rateMap: Record<string, number> = {
+        premium: 0.15,
+        pro: 0.2,
+        basic: 0.25,
+      };
+      const commissionRate = rateMap[planType] ?? rateMap.basic;
+
+      const commissionCents = Math.round(
+        (meta.unit_price * commissionRate +
+          meta.shipping_cost +
+          meta.tax_fees) *
+          100
       );
-      if (!gallery)
-        throw new ServerError("Something went wrong. Please try again");
-      // Use an existing Customer ID if this is a returning customer.
 
-      // Get current plan details to ascertain plan package
-
-      const active_subscription = await Subscriptions.findOne(
-        { "customer.gallery_id": seller_id },
-        "plan_details status"
-      );
-
-      // Calculate commision value based on plan package
-      if (!active_subscription || active_subscription.status !== "active")
-        throw new ForbiddenError("No active subscription for this user");
-
-      const commision_rate =
-        active_subscription.plan_details.type.toLowerCase() === "premium"
-          ? 0.15
-          : active_subscription.plan_details.type.toLowerCase() === "pro"
-            ? 0.2
-            : 0.25;
-
-      const commission = Math.round(
-        meta.unit_price * commision_rate * 100 +
-          meta.shipping_cost * 100 +
-          meta.tax_fees * 100
-      );
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(amount * 100),
         currency: "usd",
         metadata: {
           ...meta,
           seller_id,
-          commission: Math.round(meta.unit_price * commision_rate),
+          commission: Math.round(meta.unit_price * commissionRate),
           type: "purchase",
         },
-        // In the latest version of the API, specifying the `automatic_payment_methods` parameter
-        // is optional because Stripe enables its functionality by default.
+
         automatic_payment_methods: {
           enabled: true,
         },
-        application_fee_amount: commission,
+        application_fee_amount: commissionCents,
         transfer_data: {
           destination: gallery.connected_account_id,
         },
       });
+
+      console.log("Created payment intent:", paymentIntent);
+      console.log("Created Payment Intent ID:", paymentIntent.id);
+      console.log(
+        "Created Payment Intent Client Secret:",
+        paymentIntent.client_secret
+      );
 
       return NextResponse.json({
         paymentIntent: paymentIntent.client_secret,
@@ -74,6 +98,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       console.log(error);
+      createErrorRollbarReport(
+        "stripe: create payment intent",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

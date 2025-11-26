@@ -6,6 +6,7 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { createErrorRollbarReport } from "../../../util";
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
@@ -47,7 +48,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "gallery: fetch featured gallery data",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

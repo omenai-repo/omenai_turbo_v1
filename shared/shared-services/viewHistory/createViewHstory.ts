@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createViewHistory(
@@ -20,6 +21,7 @@ export async function createViewHistory(
 
     return { isOk: res.ok };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

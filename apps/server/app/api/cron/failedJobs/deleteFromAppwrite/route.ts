@@ -3,6 +3,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { serverStorage, storage } from "@omenai/appwrite-config";
+import { createErrorRollbarReport } from "../../../util";
 
 export async function GET() {
   try {
@@ -58,6 +59,11 @@ export async function GET() {
     return NextResponse.json({ message: fulfilledJobs, rejectedUpdates });
   } catch (error) {
     const errorResponse = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "Cron: Delete from Appwrite failed jobs",
+      error,
+      errorResponse?.status
+    );
     return NextResponse.json(
       { message: errorResponse?.message },
       { status: errorResponse?.status }

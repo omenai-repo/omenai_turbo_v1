@@ -5,6 +5,7 @@ import { fetchPopularArtworks } from "@omenai/shared-services/artworks/fetchPopu
 
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 export default function PopularArtworks() {
   const { user } = useAuth({ requiredRole: "artist" });
@@ -29,9 +30,7 @@ export default function PopularArtworks() {
           ) : (
             <>
               {popularArtworks.length === 0 ? (
-                <p className="text-dark text-fluid-xxs font-medium">
-                  No available data
-                </p>
+                <NotFoundData />
               ) : (
                 <div className="flex flex-col gap-3 w-full" id="tour-search">
                   {popularArtworks.map((artwork: any, index: number) => {

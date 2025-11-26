@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function retrieveBalance(account: string, token: string) {
@@ -17,6 +18,7 @@ export async function retrieveBalance(account: string, token: string) {
       data: result.data,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

@@ -8,7 +8,7 @@ import {
 } from "@omenai/shared-types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
-import { MdError, MdOutlineArrowForward } from "react-icons/md";
+import { MdError } from "react-icons/md";
 import {
   Country,
   State,
@@ -17,6 +17,7 @@ import {
   ICity,
   ICountry,
 } from "country-state-city";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type SelectInputProps = {
   label: string;
@@ -105,7 +106,7 @@ export default function SelectInput({
                 (individualSignupData.state === "" ||
                   individualSignupData.country === ""))
             }
-            className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-normal disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xxs placeholder:text-dark"
+            className={SELECT_CLASS}
           >
             <option value="" className="text-dark">
               Select {labelText}

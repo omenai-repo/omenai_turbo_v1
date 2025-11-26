@@ -1,7 +1,7 @@
 import Link from "next/link";
-import TokenBlock from "./components/TokenBlock";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { auth_uri } from "@omenai/url-config/src/config";
+import TokenBlock from "../../components/TokenBlock";
 // export const dynamicParams = false;
 
 export default async function VerifyEmail({
@@ -28,7 +28,7 @@ export default async function VerifyEmail({
       <div className="container lg:w-50% h-autp grid place-items-center">
         <hr className="bg-gray-400/20 my-8" />
         {/* Body */}
-        <TokenBlock token={slug} />
+        <TokenBlock token={slug} route="artist" />
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ type ArtistCategorizationAnswerTypes = {
   solo: number;
   group: number;
   museum_collection: "yes" | "no";
-  biennale: "venice" | "other" | "none";
+  biennale: "venice" | "other recognized biennale events" | "none";
   museum_exhibition: "yes" | "no";
   art_fair: "yes" | "no";
 };
@@ -85,12 +85,16 @@ function BadgeStat({
   value,
 }: {
   label: string;
-  value: "venice" | "other" | "none";
+  value: "venice" | "other recognized biennale events" | "none";
 }) {
   const map = {
     venice: { bg: "bg-purple-100", text: "text-purple-700", label: "Venice" },
-    other: { bg: "bg-blue-100", text: "text-blue-700", label: "Other" },
-    none: { bg: "bg-gray-200", text: "text-gray-500", label: "None" },
+    "other recognized biennale events": {
+      bg: "bg-blue-100",
+      text: "text-blue-700",
+      label: "Other",
+    },
+    none: { bg: "bg-gray-200", text: "text-white", label: "None" },
   };
 
   return (

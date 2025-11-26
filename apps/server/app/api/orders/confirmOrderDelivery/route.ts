@@ -7,6 +7,10 @@ import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendBuyerShipmentSuccessEmail";
+import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
+import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -25,12 +29,38 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       { $set: { "shipping_details.delivery_confirmed": confirm_delivery } }
     );
 
+    const order = await CreateOrder.findOne({ order_id });
+    if (!order) {
+      throw new ServerError(
+        "Cannot find order with provided orderID. Please try again"
+      );
+    }
+
     if (!updateOrders)
       throw new ServerError(
         "Delivery confirmation could not be updated. Please try again"
       );
 
     // TODO: Send mail to buyer and seller about the order delivery confirmation
+    await SendBuyerShipmentSuccessEmail({
+      email: order.buyer_details.email,
+      name: order.buyer_details.name,
+      trackingCode: order_id,
+    });
+
+    if (order.seller_designation === "artist") {
+      await SendArtistShipmentSuccessEmail({
+        email: order.seller_details.email,
+        name: order.seller_details.name,
+        trackingCode: order_id,
+      });
+    } else {
+      await SendGalleryShipmentSuccessEmail({
+        email: order.seller_details.email,
+        name: order.seller_details.name,
+        trackingCode: order_id,
+      });
+    }
 
     return NextResponse.json(
       {
@@ -40,7 +70,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "order: confirm order delivery",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

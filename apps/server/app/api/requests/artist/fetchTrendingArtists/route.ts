@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
+import { createErrorRollbarReport } from "../../../util";
 
 const config: CombinedConfig = {
   ...lenientRateLimit,
@@ -136,6 +137,11 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET() {
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.error(error);
+    createErrorRollbarReport(
+      "artist: fetch trending artist",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

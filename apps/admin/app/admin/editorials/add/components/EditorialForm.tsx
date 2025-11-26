@@ -11,9 +11,11 @@ import { createEditorialPiece } from "../../lib/createEditorial";
 import { useRouter } from "next/navigation";
 import { deleteEditorialImage } from "../../lib/deleteEditorialImage";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRollbar } from "@rollbar/react";
 export default function EditorialForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const rollbar = useRollbar();
   const [cover, setCover] = useState<File | null>(null);
   const [data, setData] = useState<{ headline: string; summary?: string }>({
     headline: "",
@@ -96,6 +98,11 @@ export default function EditorialForm() {
       });
       router.replace("/admin/editorials");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif("Something went wrong, please contact IT support", "error");
     } finally {
       setLoading(false);

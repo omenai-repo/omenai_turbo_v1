@@ -1,5 +1,6 @@
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
+import { logRollbarServerError } from "@omenai/rollbar-config";
 
 export async function getSalesActivityData(id: string, year: string) {
   try {
@@ -13,6 +14,7 @@ export async function getSalesActivityData(id: string, year: string) {
 
     return { isOk: res.ok, message: result.message, data: result.data };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

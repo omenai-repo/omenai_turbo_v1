@@ -1,0 +1,9 @@
+{
+  "name": "@omenai/rollbar-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "rollbar",
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}

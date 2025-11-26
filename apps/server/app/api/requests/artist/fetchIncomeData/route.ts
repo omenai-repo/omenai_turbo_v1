@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import { createErrorRollbarReport } from "../../../util";
 
 export const GET = withAppRouterHighlight(async function GET(
   request: Request,
@@ -74,7 +75,11 @@ export const GET = withAppRouterHighlight(async function GET(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     console.log(error);
-
+    createErrorRollbarReport(
+      "artist: fetch income data",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

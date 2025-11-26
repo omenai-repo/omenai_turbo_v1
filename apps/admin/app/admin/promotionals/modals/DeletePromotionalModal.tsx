@@ -9,6 +9,7 @@ import { deletePromotionalData } from "@omenai/shared-services/promotionals/dele
 import { ObjectId } from "mongoose";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRollbar } from "@rollbar/react";
 
 interface DeleteAdvertModalProps {
   advertTitle?: string;
@@ -21,6 +22,7 @@ export default function DeletePromotionalModal({
 }: DeleteAdvertModalProps) {
   const [opened, { open, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(false);
+  const rollbar = useRollbar();
   const { csrf } = useAuth({ requiredRole: "admin" });
 
   const queryClient = useQueryClient();
@@ -43,6 +45,11 @@ export default function DeletePromotionalModal({
 
       close();
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif("Something went wrong, please contact support", "error");
     } finally {
       setLoading(false);

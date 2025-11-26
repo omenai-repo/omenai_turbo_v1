@@ -6,6 +6,7 @@ import { validateAddress } from "@omenai/shared-services/address_validation/vali
 import { toast } from "sonner";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 const steps = {
   0: ["name", "email", "admin"],
   1: ["country", "address_line", "state", "city", "zip"],
@@ -23,6 +24,7 @@ export default function () {
   } = useGalleryAuthStore();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const rollbar = useRollbar();
 
   const validateAddressCapability = async () => {
     if (gallerySignupData.phone === "") {
@@ -66,6 +68,11 @@ export default function () {
         handleClickNext();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong. Could be us, please contact support",
         "error"
@@ -110,7 +117,7 @@ export default function () {
       <button
         className={`${
           currentGallerySignupFormIndex > 0 ? "block" : "hidden"
-        }   bg-dark hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
+        } border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowedfocus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
         type={"button"}
         onClick={handleClickPrev}
       >

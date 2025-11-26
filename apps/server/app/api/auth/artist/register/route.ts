@@ -5,17 +5,31 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse, NextResponse as res } from "next/server";
 import {
   ConflictError,
+  ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
   try {
+    const isArtistOnboardingEnabled =
+      (await fetchConfigCatValue("artistonboardingenabled", "low")) ?? false;
+
+    if (!isArtistOnboardingEnabled) {
+      throw new ServiceUnavailableError(
+        "Artist onboarding is currently disabled"
+      );
+    }
+
     await connectMongoDB();
 
     const data = await request.json();
@@ -79,7 +93,11 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "auth: artist register",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

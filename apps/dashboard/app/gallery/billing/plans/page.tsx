@@ -1,4 +1,5 @@
 "use client";
+
 import PageTitle from "../../components/PageTitle";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPlanData } from "@omenai/shared-services/subscriptions/getAllPlanData";
@@ -6,13 +7,20 @@ import PlanWrapper from "./PlanWrapper";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useHighRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
+import SubscriptionBillingBlocker from "@omenai/shared-ui-components/components/blockers/payments/SubscriptionDowntimeBlocker";
 
 export default function Plans() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const url = getApiUrl();
 
-  const { data, isLoading } = useQuery({
+  const { value: isSubscriptionBillingEnabled } = useHighRiskFeatureFlag(
+    "subscription_creation_enabled"
+  );
+
+  const query = useQuery({
     queryKey: ["get_all_plan_details"],
+    enabled: isSubscriptionBillingEnabled,
     queryFn: async () => {
       const plans = await getAllPlanData();
       const res = await fetch(`${url}/api/subscriptions/retrieveSubData`, {
@@ -28,6 +36,13 @@ export default function Plans() {
     },
     refetchOnWindowFocus: false,
   });
+
+  // Early return happens AFTER all hooks
+  if (!isSubscriptionBillingEnabled) {
+    return <SubscriptionBillingBlocker />;
+  }
+
+  const { data, isLoading } = query;
 
   return (
     <div>

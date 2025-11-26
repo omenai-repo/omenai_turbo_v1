@@ -1,7 +1,7 @@
 "use client";
 import { AddressTypes } from "@omenai/shared-types";
+import { SELECT_CLASS } from "../styles/inputClasses";
 import { City, ICity, IState, State } from "country-state-city";
-import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useEffect, useState } from "react";
 import { MdError } from "react-icons/md";
 
@@ -118,7 +118,7 @@ export default function SelectInput({
             (labelText === "state" && !address.country) ||
             (labelText === "city" && (!address.state || !address.country))
           }
-          className="border-0 ring-1 ring-dark/20 focus:ring text-fluid-xxs font-normal disabled:cursor-not-allowed disabled:bg-dark/10 focus:ring-dark px-6 py-2 sm:py-3 rounded placeholder:text-fluid-xxs placeholder:text-dark"
+          className={SELECT_CLASS}
         >
           <option value="" className="text-dark">
             Select {labelText}

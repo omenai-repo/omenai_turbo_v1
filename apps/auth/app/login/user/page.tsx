@@ -1,12 +1,9 @@
-"use client";
 import Image from "next/image";
-import React from "react";
-import { useLoginStore } from "@omenai/shared-state-store/src/auth/login/LoginStore";
 import IndividualLoginForm from "../features/individualForm/Form";
 
-function Page() {
-  const { current } = useLoginStore();
+export const dynamic = "force-dynamic";
 
+function Page() {
   return (
     <section className="h-[100vh] overflow-x-hidden">
       <div className="w-full h-full md:grid grid-cols-2">
@@ -21,10 +18,27 @@ function Page() {
           />
         </div>
 
-        {/* Form section */}
-        <div className="w-fit h-full container overflow-x-hidden">
-          <IndividualLoginForm />
-        </div>
+        <section className="overflow-hidden bg-white flex items-center justify-center relative">
+          {/* --- Background Mesh of Dots (Subtle and Unique) --- */}
+          <div
+            className="absolute inset-0 z-0 opacity-70"
+            style={{
+              // Uses a subtle CSS background image for the dot mesh effect
+              backgroundImage: `radial-gradient(circle, #d4d4d4 1px, transparent 1px)`,
+              backgroundSize: "20px 20px",
+            }}
+          />
+
+          {/* --- Centered Login Form --- */}
+          <div className="relative z-10 w-full max-w-lg p-4">
+            <IndividualLoginForm />
+          </div>
+
+          {/* --- Aesthetic Bottom Corner Branding (Subtle) --- */}
+          <div className="absolute bottom-6 right-6 text-xs text-slate-800 font-mono uppercase tracking-widest z-10 hidden sm:block">
+            OMENAI INC.
+          </div>
+        </section>
       </div>
     </section>
   );

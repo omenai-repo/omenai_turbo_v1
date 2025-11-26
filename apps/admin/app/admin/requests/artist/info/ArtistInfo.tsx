@@ -22,6 +22,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import error from "../../../../error";
+import { useRollbar } from "@rollbar/react";
 
 export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   const { artist, request } = data;
@@ -30,6 +31,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   );
   const [loading, setLoading] = useState(false);
   const { artist_id, name, email } = artist;
+  const rollbar = useRollbar();
   const queryClient = useQueryClient();
   const router = useRouter();
   const { csrf } = useAuth({ requiredRole: "admin" });
@@ -81,6 +83,11 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
       });
       router.replace("/admin/requests/artist");
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "An error was encountered, please try again later or contact support",
         "error"

@@ -7,12 +7,15 @@ import Preferences from "./Preferences";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 export const FormCard = () => {
   const { user, csrf } = useAuth({ requiredRole: "user" });
 
   const [isLoading, setIsLoading] = useState(false);
 
   const { updateData, clearData } = individualProfileUdateStore();
+
+  const rollbar = useRollbar();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +53,11 @@ export const FormCard = () => {
         clearData();
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif("Something went wrong, please contact support", "error");
     } finally {
       setIsLoading(false);

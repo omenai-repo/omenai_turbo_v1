@@ -7,17 +7,29 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
 import {
   ConflictError,
+  ForbiddenError,
   ServerError,
+  ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendGalleryMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryMail";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const isGalleryOnboardingEnabled =
+        (await fetchConfigCatValue("galleryonboardingenabled", "low")) ?? false;
+
+      if (!isGalleryOnboardingEnabled) {
+        throw new ServiceUnavailableError(
+          "Gallery onboarding is currently disabled"
+        );
+      }
       await connectMongoDB();
 
       const data = await request.json();
@@ -90,7 +102,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       console.log(error);
-
+      createErrorRollbarReport(
+        "auth: gallery register",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

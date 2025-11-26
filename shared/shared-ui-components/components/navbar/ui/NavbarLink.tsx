@@ -7,14 +7,8 @@ type NavbarLinkProps = {
   disabled: boolean;
   text: string;
   link: string;
-  onClick?: () => void;
 };
-export default function NavbarLink({
-  disabled,
-  text,
-  link,
-  onClick,
-}: NavbarLinkProps) {
+export default function NavbarLink({ disabled, text, link }: NavbarLinkProps) {
   const { updateOpenSideNav } = actionStore();
 
   return (
@@ -36,7 +30,7 @@ export default function NavbarLink({
           <Link href={link} onClick={() => updateOpenSideNav(false)}>
             {text}
           </Link>
-          <div className="h-0.5 bg-dark w-0 group-hover:w-full duration-300" />
+          <div className="h-1 bg-dark w-0 group-hover:w-full duration-300" />
         </li>
       )}
     </>

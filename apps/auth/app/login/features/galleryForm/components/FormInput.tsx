@@ -12,6 +12,7 @@ import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -27,16 +28,7 @@ const INPUT_CONFIG = {
 };
 
 const INPUT_CLASSES =
-  "w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xxs placeholder:text-fluid-xxs placeholder:text-dark/40 placeholder:font-medium font-medium";
-
-// Helper functions
-const identifyUser = (data: any) => {
-  H.identify(data.email, {
-    id: data.gallery_id as string,
-    name: data.name,
-    role: data.role,
-  });
-};
+  "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed";
 
 const shouldUseDefaultRedirect = (url: string | null) => {
   return url === "" || url === null;
@@ -63,6 +55,7 @@ export default function FormInput() {
 
   const { setIsLoading } = galleryLoginStore();
   const { signOut } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
   const [form, setForm] = useState<Form>({ email: "", password: "" });
 
   const handleUnverifiedGallery = async () => {
@@ -85,7 +78,6 @@ export default function FormInput() {
 
       if (shouldUseDefaultRedirect(url)) {
         set_redirect_uri("");
-        identifyUser(data);
         router.refresh();
         router.replace(`${dashboard_base_url}/gallery/overview`);
       } else {
@@ -93,6 +85,11 @@ export default function FormInput() {
         set_redirect_uri("");
       }
     } catch (clerkError) {
+      if (clerkError instanceof Error) {
+        rollbar.error(clerkError);
+      } else {
+        rollbar.error(new Error(String(clerkError)));
+      }
       console.error("Clerk sign-in error:", clerkError);
       throw clerkError;
     }
@@ -126,6 +123,11 @@ export default function FormInput() {
       const response = await loginGallery({ ...form });
       await processLoginResponse(response);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       console.error("Login error:", error);
       showErrorToast();
     } finally {
@@ -135,7 +137,7 @@ export default function FormInput() {
 
   return (
     <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <input
           type={INPUT_CONFIG.email.type}
           value={form.email}
@@ -147,7 +149,7 @@ export default function FormInput() {
         />
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <div className="w-full relative">
           <input
             value={form.password}

@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function validateAddress(payload: {
@@ -19,6 +20,7 @@ export async function validateAddress(payload: {
     const response = await result.json();
     return { isOk: result.ok, message: response.message, data: response.data };
   } catch (error) {
+    logRollbarServerError(error);
     return { isOk: false, message: "Something went wrong" };
   }
 }

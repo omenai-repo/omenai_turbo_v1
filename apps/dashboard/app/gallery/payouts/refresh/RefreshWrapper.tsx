@@ -11,6 +11,7 @@ import Load, {
   LoadSmall,
 } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function RefreshStripe() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
@@ -106,7 +107,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={user.name}
-                  className="h-[35px] p-5 rounded my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div className="relative w-full">
@@ -120,7 +121,7 @@ export default function RefreshStripe() {
                   disabled
                   type="text"
                   value={user.email}
-                  className="h-[35px] p-5 rounded my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                  className={INPUT_CLASS}
                 />
               </div>
             </div>

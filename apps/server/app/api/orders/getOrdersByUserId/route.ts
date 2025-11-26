@@ -9,6 +9,7 @@ import {
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../util";
 
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
@@ -19,6 +20,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const orders = await CreateOrder.find({ "buyer_details.id": id })
         .sort({ updatedAt: -1 })
+        .lean()
         .exec();
 
       if (!orders) throw new ServerError("No orders were found");
@@ -32,7 +34,11 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-
+      createErrorRollbarReport(
+        "order: get order by user id",
+        error,
+        error_response.status
+      );
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

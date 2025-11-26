@@ -1,51 +1,39 @@
-// Purpose: Middleware wrapper for rate limiting
-// ============================================================================
-
 import { NextResponse } from "next/server";
-import { getClientIP } from "../ip_extractor";
 import { checkRateLimit } from "../rate_limiter";
 
 interface RateLimitConfig {
-  limit: number;
-  window: number;
+  maxTokens: number;
+  refillRate: number;
+  keyGenerator: (request: Request, userId?: string) => Promise<string>;
   keyPrefix?: string;
-  keyGenerator?: (request: Request) => string;
 }
 
-/**
- * Rate limiting middleware wrapper
- * Apply this to your API handlers
- */
-export function withRateLimit(config: RateLimitConfig) {
+export function withRateLimit(config: RateLimitConfig, userId?: string) {
   return function rateLimitWrapper(
     handler: (request: Request) => Promise<Response>
   ) {
     return async function rateLimitedHandler(
       request: Request
     ): Promise<Response> {
-      // Generate unique identifier for rate limiting
-      const identifier = config.keyGenerator
-        ? config.keyGenerator(request)
-        : `${config.keyPrefix || "api"}:${getClientIP(request)}`;
+      const identifier = await config.keyGenerator(request, userId);
 
-      // Check rate limit
-      const result = await checkRateLimit({
+      const result = await checkRateLimit(
         identifier,
-        limit: config.limit,
-        window: config.window,
-      });
+        config.maxTokens,
+        config.refillRate
+      );
 
-      // If rate limited, return 429 error
       if (!result.success) {
         return NextResponse.json(
           {
-            message: "Too many requests. Please try again later.",
+            message:
+              "You have made too many requests. Please wait a while before trying again.",
             retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000),
           },
           {
             status: 429,
             headers: {
-              "X-RateLimit-Limit": config.limit.toString(),
+              "X-RateLimit-Limit": config.maxTokens.toString(),
               "X-RateLimit-Remaining": result.remaining.toString(),
               "X-RateLimit-Reset": result.resetTime.toString(),
               "Retry-After": Math.ceil(
@@ -56,12 +44,10 @@ export function withRateLimit(config: RateLimitConfig) {
         );
       }
 
-      // Call original handler
       const response = await handler(request);
 
-      // Add rate limit headers to response
       if (response instanceof NextResponse) {
-        response.headers.set("X-RateLimit-Limit", config.limit.toString());
+        response.headers.set("X-RateLimit-Limit", config.maxTokens.toString());
         response.headers.set(
           "X-RateLimit-Remaining",
           result.remaining.toString()

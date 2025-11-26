@@ -105,7 +105,7 @@ function Pagination<T extends any[]>({
               </button>
             </li>
           ) : (
-            <li key={index} className="px-3 py-1 text-gray-500">
+            <li key={index} className="px-3 py-1 text-slate-700">
               {page}
             </li>
           )

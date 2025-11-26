@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createPaymentMethodSetupIntent(
@@ -28,6 +29,7 @@ export async function createPaymentMethodSetupIntent(
       client_secret: result.setupIntent,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

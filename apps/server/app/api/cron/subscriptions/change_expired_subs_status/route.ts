@@ -6,6 +6,8 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createErrorRollbarReport } from "../../../util";
+import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -54,6 +56,13 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     });
   } catch (error) {
     console.error("[subscription-cancellation] Error:", error);
+    const error_response = handleErrorEdgeCases(error);
+
+    createErrorRollbarReport(
+      "Cron: Change expired subscriptions status",
+      error,
+      error_response?.status
+    );
     return NextResponse.json(
       {
         message: "Subscription cancellation failed",

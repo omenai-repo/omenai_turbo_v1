@@ -10,6 +10,8 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
+import { useRollbar } from "@rollbar/react";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function AccountInformation({ profile }: { profile: any }) {
   const queryClient = useQueryClient();
@@ -18,6 +20,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
     galleryActionStore();
   const [loading, setLoading] = useState(false);
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
   // Form state
   const [data, setData] = useState<any>({
@@ -56,6 +59,11 @@ export default function AccountInformation({ profile }: { profile: any }) {
 
       await queryClient.invalidateQueries({ queryKey: ["fetch_artist_info"] });
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "Something went wrong, please try again or contact support",
         "error"
@@ -112,9 +120,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
             disabled
             value={data.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0
-                     transition-all duration-300"
+            className={INPUT_CLASS}
             placeholder="Enter your artist name"
           />
         </div>
@@ -129,9 +135,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
             disabled
             value={profile.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0 
-                     transition-all duration-300"
+            className={INPUT_CLASS}
             placeholder="your@email.com"
           />
         </div>
@@ -144,9 +148,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
             type="text"
             value={data.admin}
             onChange={(e) => handleInputChange("admin", e.target.value)}
-            className="w-full px-4 py-3 bg-gray-800 border border-line disabled:cursor-not-allowed disabled:text-dark/30 rounded text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0 
-                     transition-all duration-300"
+            className={INPUT_CLASS}
             placeholder="Admin name"
           />
         </div>

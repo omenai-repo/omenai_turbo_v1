@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchArtistCredentials(id: string) {
@@ -19,6 +20,7 @@ export async function fetchArtistCredentials(id: string) {
       documentation: result.documentation,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

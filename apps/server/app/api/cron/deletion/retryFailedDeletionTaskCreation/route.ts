@@ -7,6 +7,9 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedDeletionTaskModel } from "@omenai/shared-models/models/deletion/FailedDeletionTaskSchema";
 import { createDeletionTaskPerService } from "../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { createErrorRollbarReport } from "../../../util";
 
 interface ReponseMetadata {
   entityId: string;
@@ -62,6 +65,11 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "Cron: Deletion task retry for failed creations",
+      error,
+      error_response?.status
+    );
 
     return NextResponse.json(
       { message: error_response.message },

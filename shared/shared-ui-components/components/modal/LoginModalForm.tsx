@@ -3,7 +3,6 @@ import { IndividualLogo } from "../logo/Logo";
 import LoginModalFormActions from "./LoginModalFormActions";
 
 import { useState, ChangeEvent, FormEvent } from "react";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { useRouter } from "next/navigation";
@@ -13,7 +12,8 @@ import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { H } from "@highlight-run/next/client";
-
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { INPUT_CLASS } from "../styles/inputClasses";
 export default function LoginModalForm() {
   const queryClient = useQueryClient();
 
@@ -39,28 +39,17 @@ export default function LoginModalForm() {
       const response = await loginUser({ ...form });
 
       if (!response.isOk) {
-        toast.error("Error notification ", {
-          description: response.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
+        toast_notif(response.message || "Login failed", "error");
       } else {
         const { data } = response;
 
         if (response.isOk && data.role === "user") {
           if (data.verified) {
             try {
-              toast.success("Operation successful", {
-                description: "Login successful... redirecting!",
-                style: {
-                  background: "green",
-                  color: "white",
-                },
-                className: "class",
-              });
+              toast_notif(
+                "Login successful! Refreshing page feed...",
+                "success"
+              );
               // Your redirect logic
               H.identify(data.email, {
                 id: data.user_id as string,
@@ -71,30 +60,24 @@ export default function LoginModalForm() {
               await queryClient.invalidateQueries();
               router.refresh();
               toggleLoginModal(false);
-            } catch (clerkError) {
-              console.error("Clerk sign-in error:", clerkError);
-              throw clerkError;
+            } catch (error) {
+              throw error;
             }
           } else {
             await signOut();
-            toast.info("Signing out...", {
-              description: "You will be redirected to verify your account",
-            });
-            router.replace(`${auth_uri()}/verify/gallery/${data.id}`);
+            toast_notif(
+              "Signing out... You will be redirected to verify your account",
+              "info"
+            );
+            router.replace(`${auth_uri()}/verify/individual/${data.id}`);
           }
         }
       }
     } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Error notification", {
-        description:
-          "Something went wrong, please try again or contact support",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Something went wrong, please try again or contact support",
+        "error"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -132,7 +115,7 @@ export default function LoginModalForm() {
             type="email"
             name="email"
             value={form.email}
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded w-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+            className={INPUT_CLASS}
             required
             placeholder="e.g john@doe.examplemail.com"
             onChange={handleChange}
@@ -147,7 +130,7 @@ export default function LoginModalForm() {
             name="password"
             value={form.password}
             placeholder="********"
-            className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded w-full placeholder:text-dark/40 placeholder:text-sx"
+            className={INPUT_CLASS}
             required
             onChange={handleChange}
           />

@@ -8,6 +8,7 @@ import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 export default function WalletPinModalForm() {
   const queryClient = useQueryClient();
@@ -17,6 +18,7 @@ export default function WalletPinModalForm() {
   const [error, setError] = useState({ isError: false, value: "" });
   const [loading, setLoading] = useState(false);
   const { toggleWalletPinPopup } = artistActionStore();
+  const rollbar = useRollbar();
 
   const updatePin = (value: string) => {
     setError({ isError: false, value: "" });
@@ -76,6 +78,11 @@ export default function WalletPinModalForm() {
       queryClient.invalidateQueries({ queryKey: ["fetch_wallet_screen"] });
       toggleWalletPinPopup(false);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast.error("Error Notification", {
         description:
           "Something went wrong, please try again or contact support",
@@ -109,7 +116,7 @@ export default function WalletPinModalForm() {
           <h2 className="text-2xl font-semibold text-gray-900">
             Create Wallet PIN
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-slate-700">
             Secure your wallet with a 4-digit PIN
           </p>
         </div>

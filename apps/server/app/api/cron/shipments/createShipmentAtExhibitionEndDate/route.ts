@@ -11,7 +11,6 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import {
@@ -20,6 +19,7 @@ import {
   CreateOrderModelTypes,
 } from "@omenai/shared-types";
 import { sendShipmentPickupReminderMail } from "@omenai/shared-emails/src/models/shipment/sendShipmentPickupReminderMail";
+import { createErrorRollbarReport } from "../../../util";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -165,6 +165,12 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     );
   } catch (error) {
     const errorResponse = handleErrorEdgeCases(error);
+
+    createErrorRollbarReport(
+      "Cron: Create shipment at exhibition end date",
+      error,
+      errorResponse?.status
+    );
     return NextResponse.json(
       { message: errorResponse?.message },
       { status: errorResponse?.status }

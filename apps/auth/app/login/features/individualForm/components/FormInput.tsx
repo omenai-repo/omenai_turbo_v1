@@ -11,6 +11,7 @@ import { auth_uri, base_url } from "@omenai/url-config/src/config";
 import { H } from "@highlight-run/next/client";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -26,7 +27,7 @@ const INPUT_CONFIG = {
 };
 
 const INPUT_CLASSES =
-  "focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded text-fluid-xxs placeholder:text-fluid-xxs placeholder:text-dark/40 placeholder:font-medium font-medium";
+  "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed";
 
 // Helper functions
 const identifyUser = (data: any) => {
@@ -61,6 +62,7 @@ export default function FormInput() {
   );
 
   const { signOut } = useAuth({ requiredRole: "user" });
+  const rollbar = useRollbar();
 
   const url = useReadLocalStorage("redirect_uri_on_login") as string;
   const [form, setForm] = useState<Form>({ email: "", password: "" });
@@ -93,6 +95,11 @@ export default function FormInput() {
         set_redirect_uri("");
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       console.error("Sign-in error:", error);
       throw error;
     }
@@ -126,6 +133,11 @@ export default function FormInput() {
       const response = await loginUser({ ...form });
       await processLoginResponse(response);
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       console.error("Login error:", error);
       showErrorToast();
     } finally {

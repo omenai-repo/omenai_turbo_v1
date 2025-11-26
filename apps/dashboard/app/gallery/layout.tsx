@@ -3,18 +3,18 @@ import NextTopLoader from "nextjs-toploader";
 import PageLayout from "./features/PageLayout";
 import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
-import NoMobileView from "../components/NoMobileView";
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
 import GetStartedWithStripe from "./modals/GetStartedWithStripe";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import { toast } from "sonner";
 import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
-import {UpdateLogoModal} from "./modals/UpdateLogoModal"
+import { UpdateLogoModal } from "./modals/UpdateLogoModal";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import NoMobileView from "../components/NoMobileView";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -26,17 +26,12 @@ export default function GalleryDashboardLayout({
   const { data: account, isLoading } = useQuery({
     queryKey: ["get_account_info"],
     queryFn: async () => {
-      const acc = await getAccountId(user.email as string, csrf || "");
-      if (!acc?.isOk) {
-        toast.error("Error notification", {
-          description: "Something went wrong, Please refresh the page",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      } else return acc.data;
+      const acc = await getAccountId(user.gallery_id as string, csrf || "");
+
+      console.log(acc);
+      if (!acc?.isOk)
+        toast_notif("Something went wrong, Please refresh the page", "error");
+      else return acc.data;
     },
     refetchOnWindowFocus: false,
   });

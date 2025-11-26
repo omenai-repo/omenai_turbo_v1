@@ -7,6 +7,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { createErrorRollbarReport } from "../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
@@ -29,7 +30,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   } catch (error) {
     console.log(error);
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "promotional: create promotional",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

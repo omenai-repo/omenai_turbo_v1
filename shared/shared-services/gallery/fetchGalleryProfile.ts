@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function fetchGalleryProfile(id: string) {
@@ -18,6 +19,7 @@ export async function fetchGalleryProfile(id: string) {
       gallery: result.gallery,
     };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

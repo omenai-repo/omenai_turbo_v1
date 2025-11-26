@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const releaseOrderLock = async (art_id: string, user_id: string) => {
@@ -13,6 +14,7 @@ export const releaseOrderLock = async (art_id: string, user_id: string) => {
     const result = await res.json();
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

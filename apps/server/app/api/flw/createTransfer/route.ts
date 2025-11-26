@@ -8,12 +8,15 @@ import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
+  ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -23,6 +26,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ): Promise<Response> {
   try {
+    const isWalletWithdrawalEnabled =
+      (await fetchConfigCatValue("wallet_withdrawal_enabled", "high")) ?? false;
+    if (!isWalletWithdrawalEnabled) {
+      throw new ServiceUnavailableError(
+        "Wallet withdrawal is currently disabled"
+      );
+    }
     const {
       amount,
       wallet_id,
@@ -131,7 +141,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "flutterwave: create transfert",
+      error,
+      error_response.status
+    );
     console.error(error);
     return NextResponse.json(
       { message: error_response?.message },

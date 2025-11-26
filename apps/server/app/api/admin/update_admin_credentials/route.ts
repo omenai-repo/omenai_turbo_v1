@@ -10,6 +10,7 @@ import {
 import { hashPassword } from "@omenai/shared-lib/hash/hashPassword";
 import bcrypt from "bcrypt";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -69,7 +70,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "admin: update admin credentials",
+      error,
+      error_response?.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

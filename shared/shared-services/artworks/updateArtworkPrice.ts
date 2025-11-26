@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { ArtworkPriceFilterData } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -21,6 +22,7 @@ export async function updateArtworkPrice(
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

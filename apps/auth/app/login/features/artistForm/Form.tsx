@@ -12,7 +12,7 @@ export default function ArtistLoginForm() {
         animate={{ x: 0, opacity: 1 }}
         exit={{ y: 100 }}
         transition={{ duration: 0.33 }}
-        className="w-full h-full flex items-center gap-x-8"
+        className="w-full h-full flex items-center gap-x-8 bg-white"
       >
         <div className="flex flex-col space-y-8 w-full ">
           <div className="text-fluid-xxs ">

@@ -6,12 +6,13 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { EditorialSchemaTypes } from "@omenai/shared-types";
 import EditorialItemCard from "./EditorialItemCard";
+import { useRollbar } from "@rollbar/react";
 export default function Editorials() {
   const { data: editorials, isLoading: loading } = useQuery({
     queryKey: ["fetch_admin_editorials"],
     queryFn: async () => {
       const response = await listEditorials();
-      console.log(response)
+      console.log(response);
 
       if (!response.isOk) {
         toast_notif(

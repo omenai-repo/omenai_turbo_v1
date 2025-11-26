@@ -9,11 +9,13 @@ import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/get
 import { toast } from "sonner";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRollbar } from "@rollbar/react";
 
 export default function ArtworkPriceInputGroup() {
   const { artworkUploadData, updateArtworkUploadData } =
     galleryArtworkUploadStore();
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const rollbar = useRollbar();
 
   const [conversionLoading, setConversionLoading] = useState(false);
 
@@ -42,6 +44,11 @@ export default function ArtworkPriceInputGroup() {
         );
       }
     } catch (error) {
+      if (error instanceof Error) {
+        rollbar.error(error);
+      } else {
+        rollbar.error(new Error(String(error)));
+      }
       toast_notif(
         "An error occurred while converting the currency. Please try again.",
         "error"

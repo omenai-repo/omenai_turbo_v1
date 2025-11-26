@@ -16,6 +16,7 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import TrendingArtistWrapper from "./features/trendingArtists/TrendingArtistWrapper";
 import Newsletter from "./Newsletter";
+
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
 

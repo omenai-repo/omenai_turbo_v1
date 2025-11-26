@@ -5,10 +5,8 @@ import { withAppRouterHighlight } from "../../highlight/app_router_highlight";
 import { withRateLimit } from "./rate_limit_middleware";
 import { validateCsrf } from "../validateCsrf";
 import { CombinedConfig, SessionData } from "@omenai/shared-types";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 
-/**
- * Middleware: Rate Limiting + Highlight.io + CSRF/Role (for mutative requests only)
- */
 export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
   return function combinedWrapper(
     handler: (
@@ -17,6 +15,7 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
       sessionData?: SessionData & { csrfToken: string }
     ) => Promise<Response | NextResponse>
   ) {
+    let sessionDataId: string | undefined = undefined;
     const wrapped = async (req: Request | NextRequest) => {
       const method = req.method.toUpperCase();
       const userAgent = req.headers.get("User-Agent");
@@ -45,6 +44,8 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
             throw new ForbiddenError(message);
           }
 
+          sessionDataId = sessionData?.userData.id;
+
           return handler(req, undefined, sessionData);
         }
 
@@ -53,6 +54,10 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
       } catch (error) {
         const error_response = handleErrorEdgeCases(error);
 
+        rollbarServerInstance.error(error_response.message, {
+          context: "With RateLimitHighlightAndCsrf Middleware",
+        });
+
         return NextResponse.json(
           { message: error_response!.message },
           { status: error_response!.status }
@@ -60,6 +65,8 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
       }
     };
 
-    return withAppRouterHighlight(withRateLimit(config)(wrapped));
+    return withAppRouterHighlight(
+      withRateLimit(config, sessionDataId)(wrapped)
+    );
   };
 }

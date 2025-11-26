@@ -5,7 +5,7 @@ import { useState, FormEvent } from "react";
 import { toast } from "sonner";
 import { LoadSmall } from "../loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-
+import { INPUT_CLASS } from "../styles/inputClasses";
 export default function RecoveryModalEmailInputField() {
   const [loading, setIsloading] = useState(false);
   const [email, setEmail] = useState("");
@@ -59,7 +59,7 @@ export default function RecoveryModalEmailInputField() {
     <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out h-[35px] p-5 rounded w-full placeholder:text-dark/40 placeholder:text-fluid-xxs"
+        className={INPUT_CLASS}
         placeholder="Email address"
         required
         onChange={(e) => setEmail(e.target.value)}

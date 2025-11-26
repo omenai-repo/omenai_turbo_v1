@@ -14,7 +14,9 @@ import "@mantine/dates/styles.css";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/tiptap/styles.css";
-import { Viewport } from "next";
+import { Metadata, Viewport } from "next";
+import { clientConfig } from "@omenai/rollbar-config";
+import { Provider as RollbarProvider } from "@rollbar/react";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -29,31 +31,43 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
+export const metadata: Metadata = {
+  title: "Omenai Admin",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+};
+
 export default function AdminDashboardRootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
-      <head>
-        <meta name="color-scheme" content="light" />
-        <ColorSchemeScript defaultColorScheme="light" />
-      </head>
-      <body className={`${work_sans.variable} flex flex-col justify-center`}>
-        <Toaster
-          position="top-right"
-          expand
-          visibleToasts={3}
-          closeButton
-          duration={7000}
-        />
-        <NextTopLoader color="#030303" height={6} />
+    <RollbarProvider config={clientConfig}>
+      <html lang="en" {...mantineHtmlProps}>
+        <head>
+          <meta name="color-scheme" content="light" />
+          <ColorSchemeScript defaultColorScheme="light" />
+        </head>
+        <body className={`${work_sans.variable} flex flex-col justify-center`}>
+          <Toaster
+            position="top-right"
+            expand
+            visibleToasts={3}
+            closeButton
+            duration={7000}
+          />
+          <NextTopLoader color="#030303" height={6} />
 
-        <MantineProvider defaultColorScheme="light" forceColorScheme="light">
-          <QueryProvider>{children}</QueryProvider>
-        </MantineProvider>
-      </body>
-    </html>
+          <MantineProvider defaultColorScheme="light" forceColorScheme="light">
+            <QueryProvider>{children}</QueryProvider>
+          </MantineProvider>
+        </body>
+      </html>
+    </RollbarProvider>
   );
 }

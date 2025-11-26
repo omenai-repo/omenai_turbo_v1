@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { RouteIdentifier } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
@@ -17,15 +18,26 @@ export async function sendPasswordResetLink(
         "Content-type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const data: { message: string; id: string } = await res.json();
-    const response = {
-      isOk: res.ok,
-      body: { message: data.message, id: data.id },
-    };
+  )
+    .then(async (res) => {
+      const data: { message: string; id: string } = await res.json();
+      const response = {
+        isOk: res.ok,
+        body: { message: data.message, id: data.id },
+      };
 
-    return response;
-  });
+      return response;
+    })
+    .catch((error) => {
+      logRollbarServerError(error);
+      return {
+        isOk: false,
+        body: {
+          message:
+            "An error was encountered, please try again later or contact support",
+        },
+      };
+    });
 
   return result;
 }

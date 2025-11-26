@@ -12,6 +12,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { getApiUrl } from "@omenai/url-config/src/config";
+import { createErrorRollbarReport } from "../../../util";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
@@ -68,7 +69,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-
+    createErrorRollbarReport(
+      "updates: artist address",
+      error,
+      error_response.status
+    );
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

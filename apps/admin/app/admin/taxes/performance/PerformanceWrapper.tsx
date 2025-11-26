@@ -100,7 +100,7 @@ const ProgressRing = ({
           <div className="text-fluid-lg font-bold text-gray-900">
             {isSales ? `$${(current / 1000).toFixed(1)}k` : current}
           </div>
-          <div className="text-fluid-xxs text-gray-500">
+          <div className="text-fluid-xxs text-slate-700">
             of {isSales ? `$${(threshold / 1000).toFixed(1)}k` : threshold}
           </div>
         </div>
@@ -129,7 +129,7 @@ const ThresholdStatus = ({
       </div>
     ) : (
       <div className="flex justify-between items-center text-fluid-xxs">
-        <span className="text-gray-500">Remaining</span>
+        <span className="text-slate-700">Remaining</span>
         <span className="text-gray-700">${difference.toLocaleString()}</span>
       </div>
     );
@@ -137,7 +137,7 @@ const ThresholdStatus = ({
 
   return (
     <div className="flex justify-between items-center text-fluid-xxs">
-      <span className="text-gray-500">Status</span>
+      <span className="text-slate-700">Status</span>
       {exceeded ? (
         <span className="text-red-600 font-medium">
           Exceeded threshold by {difference}
@@ -187,7 +187,7 @@ const ProgressSection = ({
   <div className="relative">
     <div className="flex items-center justify-between mb-6">
       <h4 className="text-fluid-xxs font-semibold text-gray-900">{title}</h4>
-      <span className="text-fluid-xxs text-gray-500">
+      <span className="text-fluid-xxs text-slate-700">
         {percentage.toFixed(1)}% of threshold
       </span>
     </div>

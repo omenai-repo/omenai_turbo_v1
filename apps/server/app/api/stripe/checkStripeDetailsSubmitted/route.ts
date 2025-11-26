@@ -4,6 +4,7 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
+import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -22,8 +23,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       details_submitted: account.details_submitted,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "stripe: check stripe details submitted",
+      error,
+      error_response.status
+    );
 
     return NextResponse.json(
       { message: error_response?.message },

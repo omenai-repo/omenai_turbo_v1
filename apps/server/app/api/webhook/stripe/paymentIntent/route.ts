@@ -38,6 +38,7 @@ import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema"
 import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentSuccessMail";
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
+import { createErrorRollbarReport } from "../../../util";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request,
@@ -68,6 +69,11 @@ export const POST = withAppRouterHighlight(async function POST(
       secretHash
     );
   } catch (err) {
+    createErrorRollbarReport(
+      "Stripe PaymentIntent webhook processing - Invalid webhook signature",
+      err as any,
+      500
+    );
     return NextResponse.json(
       { error: "Invalid webhook signature" },
       { status: 400 }
@@ -102,6 +108,11 @@ export const POST = withAppRouterHighlight(async function POST(
       expand: ["payment_method", "charges.data.balance_transaction"],
     });
   } catch (err) {
+    createErrorRollbarReport(
+      "Stripe PaymentIntent webhook processing - Payment not found",
+      err as any,
+      404
+    );
     return NextResponse.json(
       { error: "PaymentIntent not found" },
       { status: 404 }
@@ -133,6 +144,11 @@ export const POST = withAppRouterHighlight(async function POST(
       );
     }
   } catch (err) {
+    createErrorRollbarReport(
+      "Stripe PaymentIntent webhook processing - Internal server error",
+      err as any,
+      500
+    );
     console.error("Webhook handler error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -178,6 +194,11 @@ const handlePurchaseTransaction = async (
         artwork: order_info.artwork_data.title,
       });
     } catch (error) {
+      createErrorRollbarReport(
+        "Stripe PaymentIntent webhook processing - Failed to send payment pending email",
+        error,
+        500
+      );
       console.error("Failed to send payment pending email:", error);
     }
     return NextResponse.json({ status: 200 });
@@ -191,6 +212,11 @@ const handlePurchaseTransaction = async (
         artwork: order_info.artwork_data.title,
       });
     } catch (error) {
+      createErrorRollbarReport(
+        "Stripe PaymentIntent webhook processing - Failed to send payment failed email",
+        error,
+        500
+      );
       console.error("Failed to send payment failed email:", error);
     }
     return NextResponse.json({ status: 200 });
@@ -343,6 +369,11 @@ const handlePurchaseTransaction = async (
             `notification_workflow_buyer_${order_info.order_id}_${generateDigit(2)}`,
             JSON.stringify(buyer_notif_payload)
           ).catch((error) => {
+            createErrorRollbarReport(
+              "Stripe PaymentIntent webhook processing - Failed to send buyer notification",
+              error,
+              500
+            );
             console.error("Failed to send buyer notification:", error);
           })
         );
@@ -370,6 +401,11 @@ const handlePurchaseTransaction = async (
             `notification_workflow_seller_${order_info.order_id}_${generateDigit(2)}`,
             JSON.stringify(seller_notif_payload)
           ).catch((error) => {
+            createErrorRollbarReport(
+              "Stripe PaymentIntent webhook processing - Failed to send seller notification",
+              error,
+              500
+            );
             console.error("Failed to send seller notification:", error);
           })
         );
@@ -382,6 +418,11 @@ const handlePurchaseTransaction = async (
           `create_shipment_${generateDigit(6)}`,
           JSON.stringify({ order_id: order_info.order_id })
         ).catch((error) => {
+          createErrorRollbarReport(
+            "Stripe PaymentIntent webhook processing - Failed to create shipment workflow",
+            error,
+            500
+          );
           console.error("Failed to create shipment workflow:", error);
         }),
         createWorkflow(
@@ -406,6 +447,11 @@ const handlePurchaseTransaction = async (
 
       return NextResponse.json({ status: 200 });
     } catch (error) {
+      createErrorRollbarReport(
+        "Stripe PaymentIntent webhook processing - An error occurred during the purchase transaction",
+        error,
+        500
+      );
       console.error(
         "An error occurred during the purchase transaction:",
         error
@@ -472,6 +518,11 @@ const handleSubscriptionPayment = async (
       if (session.inTransaction()) {
         await session.abortTransaction();
       }
+      createErrorRollbarReport(
+        "Stripe PaymentIntent webhook processing - An error occurred during the purchase transaction",
+        error,
+        500
+      );
       console.error("Error processing payment_intent.processing:", error);
       return NextResponse.json({ status: 500 });
     } finally {
@@ -487,7 +538,7 @@ const handleSubscriptionPayment = async (
     const session = await client.startSession();
 
     try {
-      await session.startTransaction();
+      session.startTransaction();
 
       await SubscriptionTransactions.updateOne(
         { payment_ref: paymentIntent.id },
@@ -508,6 +559,11 @@ const handleSubscriptionPayment = async (
       if (session.inTransaction()) {
         await session.abortTransaction();
       }
+      createErrorRollbarReport(
+        "Stripe PaymentIntent webhook processing - Mongo transaction error",
+        error,
+        500
+      );
       console.error("Error processing payment_intent.payment_failed:", error);
       return NextResponse.json({ status: 500 });
     } finally {
@@ -655,6 +711,11 @@ const handleSubscriptionPayment = async (
       if (session.inTransaction()) {
         await session.abortTransaction();
       }
+      createErrorRollbarReport(
+        "Stripe PaymentIntent webhook processing - An error occurred during the purchase transaction",
+        error,
+        500
+      );
       console.error("Error processing payment_intent.succeeded:", error);
       return NextResponse.json({ status: 500 });
     } finally {
@@ -683,6 +744,11 @@ async function subscriptionIdempotencyCheck(
 
     return { isProcessed: false, existingPayment: null };
   } catch (error) {
+    createErrorRollbarReport(
+      "Stripe PaymentIntent webhook processing - Subscription idempotency check error",
+      error,
+      500
+    );
     console.error("Error in subscriptionIdempotencyCheck:", error);
     throw error;
   }

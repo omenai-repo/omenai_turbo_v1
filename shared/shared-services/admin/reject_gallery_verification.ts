@@ -1,3 +1,4 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function rejectGalleryVerification(
@@ -19,6 +20,7 @@ export async function rejectGalleryVerification(
 
     return { isOk: res.ok, message: result.message };
   } catch (error: any) {
+    logRollbarServerError(error);
     return {
       isOk: false,
       message:

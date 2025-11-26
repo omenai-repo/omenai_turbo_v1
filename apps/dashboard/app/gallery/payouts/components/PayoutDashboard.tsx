@@ -11,16 +11,18 @@ import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
 import PayoutSkeleton from "@omenai/shared-ui-components/components/skeletons/PayoutSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useRollbar } from "@rollbar/react";
 export default function PayoutDashboard() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
+  const rollbar = useRollbar();
   const { data: isConfirmed, isLoading } = useQuery({
     queryKey: ["fetch_payout_dataset"],
     queryFn: async () => {
       try {
         // Ensure user data exists
 
-        const acc = await getAccountId(user.email, csrf || "");
+        const acc = await getAccountId(user.gallery_id, csrf || "");
         if (!acc?.isOk) throw new Error("Failed to fetch account ID");
 
         const connectedAccountId = acc.data.connected_account_id;
@@ -45,6 +47,11 @@ export default function PayoutDashboard() {
           table_data: table.data,
         };
       } catch (error) {
+        if (error instanceof Error) {
+          rollbar.error(error);
+        } else {
+          rollbar.error(new Error(String(error)));
+        }
         console.error(error);
         throw new Error("Something went wrong, Please refresh the page");
       }
@@ -62,6 +69,7 @@ export default function PayoutDashboard() {
 
   if (!isConfirmed!.isSubmitted)
     router.replace(`/gallery/payouts/refresh?id=${isConfirmed!.id}`);
+
   return (
     <div>
       {!isConfirmed?.isSubmitted ? (
