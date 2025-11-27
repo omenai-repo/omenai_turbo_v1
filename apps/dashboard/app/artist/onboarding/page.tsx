@@ -60,35 +60,6 @@ export default function ArtistOnboarding() {
             <span className="text-dark">Your CV and credentials</span>
           </div>
 
-          <h1 className="text-fluid-md font-bold text-gray-900">
-            One last step before you begin… 🎨✨
-          </h1>
-          <p className="text-gray-600 mt-3 text-fluid-xxs">
-            To ensure a high standard of artistry and credibility on our
-            platform, we need to learn more about your artistic journey.
-          </p>
-
-          <div className="mt-6 space-y-3 text-fluid-xxs text-left">
-            <div className="flex items-center space-x-3">
-              <BriefcaseIcon className="w-6 h-6 text-blue-600" />
-              <span className="text-dark">Your art style and background</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <AcademicCapIcon className="w-6 h-6 text-green-600" />
-              <span className="text-dark">Your education and exhibitions</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <BuildingLibraryIcon className="w-6 h-6 text-purple-600" />
-              <span className="text-dark">
-                Museum collections featuring your work
-              </span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <DocumentTextIcon className="w-6 h-6 text-red-600" />
-              <span className="text-dark">Your CV and credentials</span>
-            </div>
-          </div>
-
           <div className="my-5">
             <p className="text-gray-600 mt-3 text-fluid-xxs">
               Once submitted, our team will review your information and verify
