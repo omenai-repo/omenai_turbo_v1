@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { MapPin } from "lucide-react";
+import { AlertCircle, MapPin } from "lucide-react";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import Input from "@omenai/shared-ui-components/components/artists/AddressInputHandler";
 import SelectInput from "@omenai/shared-ui-components/components/global/AddressSelectHandler";
@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { useRollbar } from "@rollbar/react";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 
 export const address_inputs = [
   {
@@ -159,6 +160,11 @@ export default function UpdateAddressModalForm() {
           );
         })}
       </div>
+      <AlertComponent title="Please note:">
+        Changing your address will only apply to future orders. Any orders that
+        are currently being processed or have already been shipped will be
+        delivered to your previous address.
+      </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}

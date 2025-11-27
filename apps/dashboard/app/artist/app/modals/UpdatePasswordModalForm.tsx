@@ -6,6 +6,8 @@ import { requestPasswordConfirmationCode } from "@omenai/shared-services/request
 import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { AlertCircle } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
@@ -277,6 +279,11 @@ export default function UpdatePasswordModalForm() {
               </div>
             </div>
           )}
+
+          <AlertComponent title="Security tip:">
+            After updating your password, you'll need to sign in again on all
+            your devices for security purposes.
+          </AlertComponent>
 
           {/* Submit Button */}
           <button
