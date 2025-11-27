@@ -2,6 +2,9 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Pill from "./Pill";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { individualProfileUdateStore } from "@omenai/shared-state-store/src/individual/individual_profile_update/IndividualProfileUpdateStore";
+import { useEffect } from "react";
 
 let artTypes = [
   "Photography",
@@ -13,6 +16,15 @@ let artTypes = [
   "Sculpture (Bronze/stone/metal)",
 ];
 export default function Preferences() {
+  const { user } = useAuth({ requiredRole: "user" });
+  const { updateData, setProfileUpdateData, setInitialPreferencesData } =
+    individualProfileUdateStore();
+  useEffect(
+    function () {
+      setInitialPreferencesData("preferences", user.preferences);
+    },
+    [user.preferences]
+  );
   return (
     <div className="w-full">
       <AnimatePresence>
