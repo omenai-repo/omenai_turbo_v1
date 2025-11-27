@@ -55,6 +55,7 @@ export default function CVUploadStep({
       <input
         type="file"
         hidden
+        accept="application/pdf"
         ref={imagePickerRef}
         onChange={(e) => {
           // Check if input is actaully a pdf document
