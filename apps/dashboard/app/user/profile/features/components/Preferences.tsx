@@ -17,8 +17,7 @@ let artTypes = [
 ];
 export default function Preferences() {
   const { user } = useAuth({ requiredRole: "user" });
-  const { updateData, setProfileUpdateData, setInitialPreferencesData } =
-    individualProfileUdateStore();
+  const { setInitialPreferencesData } = individualProfileUdateStore();
   useEffect(
     function () {
       setInitialPreferencesData("preferences", user.preferences);
