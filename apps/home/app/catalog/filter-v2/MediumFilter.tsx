@@ -1,10 +1,15 @@
 "use client";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import FilterOptionBox from "./FilterOptionBox";
-import { useState } from "react";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
-const options = [
+type Props = {
+  open: boolean;
+  toggleOpen: () => void;
+};
+
+const mediumOptions = [
   "Photography",
   "Works on paper",
   "Acrylic on canvas/linen/panel",
@@ -13,20 +18,20 @@ const options = [
   "Oil on canvas/panel",
   "Sculpture (Bronze/stone/metal)",
 ];
-const mediumFilterOptions = options.map((option) => ({
+
+const mediumFilterOptions = mediumOptions.map((option) => ({
   option: option,
   value: option,
 }));
 
-export default function MediumFilter() {
-  const [openDropdown, setOpenDropdown] = useState(false);
+export default function MediumFilter({ open, toggleOpen }: Props) {
   const { filterOptions } = filterStore();
 
   return (
-    <div className="p-2 md:relative w-full md:w-fit">
+    <div className="p-2 w-full">
       <div
-        onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 whitespace-nowrap rounded cursor-pointer ring-[#e0e0e0] font-normal text-fluid-xxs text-dark flex justify-between items-center px-3 h-[30px] hover:bg-[#FAFAFA] hover:ring-dark"
+        onClick={toggleOpen}
+        className={`${SELECT_CLASS} flex justify-between items-center`}
       >
         <p className="flex gap-x-2 items-center">
           <span className="text-fluid-xxs font-light">Medium</span>
@@ -38,12 +43,15 @@ export default function MediumFilter() {
             </span>
           )}
         </p>
-        <MdOutlineKeyboardArrowDown />
+        <MdOutlineKeyboardArrowDown
+          className={`${open ? "rotate-180" : ""} transition-transform`}
+        />
       </div>
+
       <FilterOptionBox
         filters={mediumFilterOptions}
-        label={"medium"}
-        open={openDropdown}
+        label="medium"
+        open={open}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { OrdersAccordion } from "../../../../components/OrdersAccordion";
+import { OrdersAccordion } from "../../../../artist/components/OrdersAccordion";
 
 export default function Orders() {
   const { user } = useAuth({ requiredRole: "gallery" });

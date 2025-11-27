@@ -5,7 +5,7 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
 import React, { useState } from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { OrdersAccordion } from "../../../../../components/OrdersAccordion";
+import { OrdersAccordion } from "../../../../components/OrdersAccordion";
 
 export default function Orders() {
   const { user } = useAuth({ requiredRole: "artist" });

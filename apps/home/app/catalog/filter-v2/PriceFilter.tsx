@@ -1,9 +1,14 @@
 "use client";
-
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import FilterOptionBox from "./FilterOptionBox";
-import { useState } from "react";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+
+type Props = {
+  open: boolean;
+  toggleOpen: () => void;
+};
+
 const priceFilterOptions = [
   { option: "$0 to $1000", value: { min: 0, max: 1000 } },
   { option: "$1001 to $10000", value: { min: 1001, max: 10000 } },
@@ -12,14 +17,15 @@ const priceFilterOptions = [
   { option: "$100001 to $500000", value: { min: 100001, max: 500000 } },
   { option: "$500000+", value: { min: 500001, max: 10000000000 } },
 ];
-export default function PriceFilter() {
-  const [openDropdown, setOpenDropdown] = useState(false);
+
+export default function PriceFilter({ open, toggleOpen }: Props) {
   const { filterOptions } = filterStore();
+
   return (
-    <div className="p-2 md:relative w-full md:w-fit">
+    <div className="p-2 w-full">
       <div
-        onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 rounded whitespace-nowrap cursor-pointer ring-[#e0e0e0] font-normal text-fluid-xxs text-dark flex justify-between items-center px-3 h-[30px] hover:bg-[#FAFAFA] hover:ring-dark"
+        onClick={toggleOpen}
+        className={`${SELECT_CLASS} flex justify-between items-center`}
       >
         <p className="flex gap-x-2 items-center">
           <span className="font-light">Price</span>
@@ -31,14 +37,12 @@ export default function PriceFilter() {
             </span>
           )}
         </p>
-        <MdOutlineKeyboardArrowDown />
+        <MdOutlineKeyboardArrowDown
+          className={`${open ? "rotate-180" : ""} transition-transform`}
+        />
       </div>
-      {/* Filter options */}
-      <FilterOptionBox
-        filters={priceFilterOptions}
-        label={"price"}
-        open={openDropdown}
-      />
+
+      <FilterOptionBox filters={priceFilterOptions} label="price" open={open} />
     </div>
   );
 }

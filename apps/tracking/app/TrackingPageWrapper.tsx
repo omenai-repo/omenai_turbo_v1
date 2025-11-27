@@ -13,14 +13,6 @@ export default function TrackingPageWrapper() {
   );
 
   if (!isTrackingEnabled)
-    return (
-      <Suspense>
-        <ShippingDowntimeBlocker trackingNumber={tracking_id} />;
-      </Suspense>
-    );
-  return (
-    <Suspense>
-      <TrackingPage />
-    </Suspense>
-  );
+    return <ShippingDowntimeBlocker trackingNumber={tracking_id} />;
+  return <TrackingPage />;
 }

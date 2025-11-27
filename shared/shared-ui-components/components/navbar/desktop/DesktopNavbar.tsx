@@ -57,7 +57,7 @@ const DesktopNavbar = () => {
     ${
       isScrolled
         ? "md:top-6 md:w-[96%] md:max-w-6xl md:mx-auto bg-white/90 shadow-2xl ring-1 ring-dark/10 rounded-xl backdrop-blur-lg" // LIGHT THEME FLOATING
-        : "w-full bg-white rounded-none" // LIGHT THEME FULL WIDTH
+        : "md:w-[96%] md:max-w-6xl md:mx-auto bg-white rounded-none"
     }
   `;
   const login_base_url = auth_uri();

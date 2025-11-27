@@ -40,7 +40,7 @@ export default function SearchResultDetails({
     <div>
       <div className="w-full h-full">
         <div className=" py-4">
-          <h1 className="text-fluid-base font-normal text-dark">
+          <h1 className="text-fluid-xs md:text-fluid-base font-normal text-dark">
             {data.length} result(s) found for term{" "}
             <span className="text-blue-600">&apos;{searchTerm}&apos;</span>
           </h1>

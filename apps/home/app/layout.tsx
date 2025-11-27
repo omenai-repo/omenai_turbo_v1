@@ -23,6 +23,9 @@ import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 
+import SmoothScroll from "@omenai/package-provider/ScrollProvider";
+import LenisProvider from "@omenai/package-provider/ScrollProvider";
+
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Discover, buy, and sell African contemporary art online.",
@@ -86,7 +89,9 @@ export default async function RootLayout({
                   <LoginModal />
                   <RecoveryModal />
                   <OrderReceivedModal />
-                  <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
+                  <LenisProvider>
+                    <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
+                  </LenisProvider>
                   <Analytics />
                 </MantineProvider>
               </QueryProvider>

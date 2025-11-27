@@ -1,8 +1,13 @@
 "use client";
-import React, { useState } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import FilterOptionBox from "./FilterOptionBox";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+
+type Props = {
+  open: boolean;
+  toggleOpen: () => void;
+};
 
 const rarityFilterOptions = [
   { option: "Unique", value: "Unique" },
@@ -10,15 +15,15 @@ const rarityFilterOptions = [
   { option: "Open edition", value: "Open edition" },
   { option: "Unknown edition", value: "Unknown edition" },
 ];
-export default function RarityFilter() {
-  const [openDropdown, setOpenDropdown] = useState(false);
+
+export default function RarityFilter({ open, toggleOpen }: Props) {
   const { filterOptions } = filterStore();
 
   return (
-    <div className="p-2 md:relative w-full md:w-fit">
+    <div className="p-2 w-full">
       <div
-        onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 whitespace-nowrap rounded cursor-pointer ring-[#e0e0e0] font-normal text-fluid-xxs text-dark flex justify-between items-center px-3 h-[30px] hover:bg-[#FAFAFA] hover:ring-dark"
+        onClick={toggleOpen}
+        className={`${SELECT_CLASS} flex justify-between items-center`}
       >
         <p className="flex gap-x-2 items-center">
           <span className="font-light">Rarity</span>
@@ -30,12 +35,15 @@ export default function RarityFilter() {
             </span>
           )}
         </p>
-        <MdOutlineKeyboardArrowDown />
+        <MdOutlineKeyboardArrowDown
+          className={`${open ? "rotate-180" : ""} transition-transform`}
+        />
       </div>
+
       <FilterOptionBox
         filters={rarityFilterOptions}
-        label={"rarity"}
-        open={openDropdown}
+        label="rarity"
+        open={open}
       />
     </div>
   );

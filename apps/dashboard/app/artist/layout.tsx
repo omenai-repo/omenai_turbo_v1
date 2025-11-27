@@ -1,7 +1,7 @@
 "use client";
 import { useWindowSize } from "usehooks-ts";
 import { OnboardingRequestCompleted } from "./modals/OnboardingRequestCompletedModal";
-import NoMobileView from "../components/NoMobileView";
+import NoMobileView from "./components/NoMobileView";
 
 export default function ArtistLayout({
   children,

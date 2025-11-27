@@ -33,13 +33,14 @@ export default function SearchInput({
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsMobileMenuOpen(false);
     const term = e.target.value;
     setSearchTerm(term);
     debouncedPrefetch(term);
   };
 
   const handleSearch = () => {
+    setIsMobileMenuOpen(false);
+
     if (!searchTerm.trim()) {
       toast.error("Please include a search term");
       return;

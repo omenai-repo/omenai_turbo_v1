@@ -2,20 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  font-size: 16px;
-}
-
-body {
-  /* box-sizing: border-box; */
-  scroll-behavior: smooth;
-}
-
-/* .custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #ff0101 #f0f0f0;
-} */
-
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
@@ -141,4 +127,10 @@ body {
   overflow: hidden;
   touch-action: none;
   text-align: left;
+}
+
+.drawer-scroll {
+  overflow-y: auto;
+  max-height: 100%;
+  overscroll-behavior: contain; /* prevents scroll chaining */
 }

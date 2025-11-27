@@ -1,8 +1,14 @@
 "use client";
-import React, { useState } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import FilterOptionBox from "./FilterOptionBox";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
+import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+
+type Props = {
+  open: boolean;
+  toggleOpen: () => void;
+};
+
 const yearFilterOptions = [
   { option: "2020s", value: { min: 2020, max: 2029 } },
   { option: "2010s", value: { min: 2010, max: 2019 } },
@@ -20,15 +26,15 @@ const yearFilterOptions = [
   { option: "19th century", value: { min: 1800, max: 1899 } },
   { option: "18th century & Earlier", value: { min: 0, max: 1799 } },
 ];
-export default function YearFilter() {
-  const [openDropdown, setOpenDropdown] = useState(false);
+
+export default function YearFilter({ open, toggleOpen }: Props) {
   const { filterOptions } = filterStore();
 
   return (
-    <div className="p-2 md:relative w-full md:w-fit">
+    <div className="p-2 w-full">
       <div
-        onClick={() => setOpenDropdown(!openDropdown)}
-        className="ring-1 rounded whitespace-nowrap cursor-pointer ring-[#e0e0e0] font-normal text-fluid-xxs text-dark flex justify-between items-center px-3 h-[30px] hover:bg-[#FAFAFA] hover:ring-dark"
+        onClick={toggleOpen}
+        className={`${SELECT_CLASS} flex justify-between items-center`}
       >
         <p className="flex gap-x-2 items-center">
           <span className="font-light">Year</span>
@@ -40,13 +46,12 @@ export default function YearFilter() {
             </span>
           )}
         </p>
-        <MdOutlineKeyboardArrowDown />
+        <MdOutlineKeyboardArrowDown
+          className={`${open ? "rotate-180" : ""} transition-transform`}
+        />
       </div>
-      <FilterOptionBox
-        filters={yearFilterOptions}
-        label={"year"}
-        open={openDropdown}
-      />
+
+      <FilterOptionBox filters={yearFilterOptions} label="year" open={open} />
     </div>
   );
 }
