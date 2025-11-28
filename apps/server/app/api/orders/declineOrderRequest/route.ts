@@ -226,6 +226,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         $set: {
           order_accepted: { status: data.status, reason: data.reason },
           status: "completed",
+          availability: false,
         },
       },
       { new: true, session }

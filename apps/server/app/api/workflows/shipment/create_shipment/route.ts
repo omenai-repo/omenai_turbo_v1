@@ -10,7 +10,6 @@ import {
   SHIPMENT_API_URL,
 } from "../utils";
 import {
-  ForbiddenError,
   NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -21,7 +20,6 @@ import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
 import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
-import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../../util";
 
 type Payload = {
@@ -158,12 +156,14 @@ export const { POST } = serve<Payload>(async (ctx) => {
             email: order.buyer_details.email,
             name: order.buyer_details.name,
             trackingCode: order.order_id,
+            artwork: order.artwork_data.title,
           });
 
           await sendShipmentScheduledEmail({
             email: order.seller_details.email,
             name: order.seller_details.name,
             trackingCode: order.order_id,
+            artwork: order.artwork_data.title,
           });
 
           session.commitTransaction();

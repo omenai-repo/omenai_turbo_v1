@@ -194,6 +194,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === null && null}
 
         {renderButtonAction({
@@ -202,6 +203,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "processing" && (
           <div className="flex gap-x-2 items-center">
             <p className="text-amber-700 text-fluid-xxs">
@@ -217,6 +219,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "awaiting_tracking" && (
           <div className="flex gap-x-2 items-center">
             <p className="text-green-700 text-fluid-xxs">
@@ -233,6 +236,24 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
+        }) === "awaiting_shipment_creation" && (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-green-700 text-fluid-xxs">
+              This artwork is currently on exhibition. Shipment will be arranged
+              once the exhibition concludes.
+            </p>
+            <ClipLoader size={15} className="text-amber-700" color="#2f855a" />
+          </div>
+        )}
+
+        {renderButtonAction({
+          status: order.status,
+          payment_status: order.payment_information.status,
+          tracking_status:
+            order.shipping_details.shipment_information.tracking.id,
+          order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "track" && (
           <div className="mt-6">
             <Link
@@ -250,6 +271,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "pay" && (
           <>
             <p className="text-red-700 text-fluid-xxs">
