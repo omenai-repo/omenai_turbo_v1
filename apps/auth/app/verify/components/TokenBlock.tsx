@@ -43,31 +43,35 @@ export default function TokenBlock({ token, route }: TokenProps) {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const error: string = validateStringCode(tokenValue);
 
-    if (error) {
-      toast_notif(error, "error");
-    } else {
-      toast.info("Verifying token");
-      setIsLoading(true);
-
-      const res = await verifyEmail(
-        { params: token, token: tokenValue },
-        route
-      );
-      if (!res.isOk) toast_notif(res.body.message, "error");
-      if (res.isOk) {
-        toast_notif(res.body.message, "success");
-        if (redirectTo) {
-          router.push(
-            `/login/${route === "individual" ? "user" : route}?redirect=${redirectTo}`
-          );
-        } else {
-          router.push(`/login/${route === "individual" ? "user" : route}`);
-        }
-      }
-      setIsLoading(false);
+    // Early return for validation
+    const validationError = validateStringCode(tokenValue);
+    if (validationError) {
+      toast_notif(validationError, "error");
+      return;
     }
+
+    // Verify token
+    toast.info("Verifying token");
+    setIsLoading(true);
+
+    const res = await verifyEmail({ params: token, token: tokenValue }, route);
+
+    // Handle response
+    const notifType = res.isOk ? "success" : "error";
+    toast_notif(res.body.message, notifType);
+
+    // Redirect on success
+    if (res.isOk) {
+      const userType = route === "individual" ? "user" : route;
+      const loginUrl = redirectTo
+        ? `/login/${userType}?redirect=${redirectTo}`
+        : `/login/${userType}`;
+
+      router.push(loginUrl);
+    }
+
+    setIsLoading(false);
   }
 
   const resendVerification = async () => {
