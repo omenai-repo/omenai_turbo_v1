@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import UpdateCredentialsModal from "./modals/UpdateCredentialsModal";
-import { Award, User, Building, Globe } from "lucide-react";
+import { Award, User, Building, Globe, Download } from "lucide-react";
 import { ArtistCategory } from "@omenai/shared-types";
+import { downloadFile } from "@omenai/shared-lib/storage/downloadFile";
 
 type ArtistCategorizationAnswerTypes = {
   graduate: "yes" | "no";
@@ -150,11 +151,22 @@ const categoryStyles: Record<
 export default function Credentials({
   credentials,
   categorization,
+  documentation,
 }: {
   credentials: ArtistCategorizationAnswerTypes;
   categorization: ArtistCategory;
+  documentation: { cv: string };
 }) {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  async function DownloadCV() {
+    const fileUrl = await downloadFile(documentation.cv);
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "CV.pdf";
+    document.body.appendChild(link);
+    link.click();
+    link.remove(); // ✅ Modern way
+  }
 
   return (
     <div className="space-y-4 animate-fadeIn">
@@ -167,6 +179,11 @@ export default function Credentials({
           A snapshot of your artistic journey and achievements
         </p>
       </div>
+      {showVerificationModal && (
+        <UpdateCredentialsModal
+          setShowVerificationModal={setShowVerificationModal}
+        />
+      )}
 
       {/* Credentials Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -235,14 +252,24 @@ export default function Credentials({
           </div>
         </div>
 
-        <button
-          onClick={() => setShowVerificationModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-dark text-white rounded font-normal text-fluid-xxs
+        <div className="flex items-center gap-4">
+          <button
+            onClick={DownloadCV}
+            className="flex items-center space-x-2 px-4 py-2 bg-white border border-dark text-dark rounded font-normal text-fluid-xxs
+                   hover:bg-dark/90 hover:text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <Download className="w-5 h-5" />
+            <span>Download CV</span>
+          </button>
+          {/* <button
+            onClick={() => setShowVerificationModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-dark text-white rounded font-normal text-fluid-xxs
                    hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-        >
-          <Award className="w-5 h-5" />
-          <span>Update Credentials</span>
-        </button>
+          >
+            <Award className="w-5 h-5" />
+            <span>Update Credentials</span>
+          </button> */}
+        </div>
       </div>
     </div>
   );
