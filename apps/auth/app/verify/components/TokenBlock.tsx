@@ -7,7 +7,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
@@ -23,6 +23,8 @@ export default function TokenBlock({ token, route }: TokenProps) {
   const [resendTokenLoading, setResentTokenLoading] = useState(false);
 
   const rollbar = useRollbar();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect");
 
   const router = useRouter();
 
@@ -56,7 +58,13 @@ export default function TokenBlock({ token, route }: TokenProps) {
       if (!res.isOk) toast_notif(res.body.message, "error");
       if (res.isOk) {
         toast_notif(res.body.message, "success");
-        router.push(`/login/${route}`);
+        if (redirectTo) {
+          router.push(
+            `/login/${route === "individual" ? "user" : route}?redirect=${redirectTo}`
+          );
+        } else {
+          router.push(`/login/${route === "individual" ? "user" : route}`);
+        }
       }
       setIsLoading(false);
     }
