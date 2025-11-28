@@ -52,34 +52,31 @@ export default function SearchResultDetails({
             ))}
         </div>
         {/* <hr className=" border-dark/10" /> */}
-        <div className="w-full mb-5 py-4">
-          <div className="flex flex-wrap gap-x-4 justify-center">
-            {arts.map((artworks: any[], index) => {
-              return (
-                <div className="flex-1 gap-4 space-y-12" key={index}>
-                  {artworks.map((art: any) => {
-                    return (
-                      <ArtworkCard
-                        key={art.art_id}
-                        image={art.url}
-                        name={art.title}
-                        artist={art.artist}
-                        art_id={art.art_id}
-                        pricing={art.pricing}
-                        impressions={art.impressions as number}
-                        likeIds={art.like_IDs as string[]}
-                        sessionId={sessionId}
-                        availability={art.availability}
-                        isDashboard={false}
-                        medium={art.medium}
-                        author_id={art.author_id}
-                      />
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
+        <div className="flex flex-wrap gap-x-4 justify-center">
+          {arts.map((artworks: any[], index) => {
+            return (
+              <div className="flex-1 gap-2 space-y-6" key={index}>
+                {artworks.map((art: any) => {
+                  return (
+                    <ArtworkCard
+                      key={art.art_id}
+                      image={art.url}
+                      name={art.title}
+                      artist={art.artist}
+                      art_id={art.art_id}
+                      pricing={art.pricing}
+                      impressions={art.impressions as number}
+                      likeIds={art.like_IDs as string[]}
+                      sessionId={sessionId}
+                      availability={art.availability}
+                      medium={art.medium}
+                      author_id={art.author_id}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
