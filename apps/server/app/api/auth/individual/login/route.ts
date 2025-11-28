@@ -18,6 +18,8 @@ import {
 import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createErrorRollbarReport } from "../../../util";
+import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 // SERVER SIDE - Generate a sign-in token/ticket
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request, response?: Response) {
@@ -72,6 +74,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             { status: 200 }
           );
         }
+      }
+
+      try {
+        await DeletionRequestModel.deleteOne({
+          targetId: user.user_id,
+          gracePeriodUntil: { $gt: toUTCDate(new Date()) },
+        });
+      } catch (error) {
+        createErrorRollbarReport(
+          "auth: Deletion request removal failed",
+          error,
+          500
+        );
       }
 
       const session = await getSessionFromCookie(cookieStore);

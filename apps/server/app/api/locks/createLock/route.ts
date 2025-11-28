@@ -32,6 +32,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!is_piece_still_available.availability)
       throw new ForbiddenError("Piece has been purchased by another collector");
+
     const checkIfLockActive = await LockMechanism.findOne({ art_id });
 
     if (checkIfLockActive) {
