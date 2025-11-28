@@ -80,6 +80,8 @@ export const POST = withAppRouterHighlight(async function POST(
     }
 
     const meta = checkoutSession.metadata;
+    console.log(meta);
+
     if (!meta?.buyer_email || !meta?.art_id) {
       console.error("Missing required metadata");
       return NextResponse.json({ status: 400 });
