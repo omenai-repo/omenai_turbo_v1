@@ -162,18 +162,13 @@ export default function Credentials({
 }) {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   async function DownloadCV() {
-    try {
-      const fileUrl = await downloadFile(documentation.cv);
-      const link = document.createElement("a");
-      link.href = fileUrl;
-      link.download = "CV.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      toast.error("");
-      toast_notif("Failed to download CV", "error");
-    }
+    const fileUrl = await downloadFile(documentation.cv);
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "CV.pdf";
+    document.body.appendChild(link);
+    link.click();
+    link.remove(); // ✅ Modern way
   }
 
   return (

@@ -1,7 +1,8 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { Dispatch, SetStateAction } from "react";
-import { motion } from "framer-motion";
-type Props = { setShowVerificationModal: Dispatch<SetStateAction<boolean>> };
+type Props = Readonly<{
+  setShowVerificationModal: Dispatch<SetStateAction<boolean>>;
+}>;
 
 export default function UpdateCredentialsModal({
   setShowVerificationModal,
