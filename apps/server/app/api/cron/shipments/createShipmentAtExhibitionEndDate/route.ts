@@ -45,7 +45,7 @@ async function sendReminderEmail(
     { $set: { reminderSent: true } }
   );
 
-  const daysLeft = days.toFixed(1);
+  const daysLeft = Math.floor(days).toString();
   await sendShipmentPickupReminderMail({
     name,
     email,

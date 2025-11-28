@@ -1,6 +1,6 @@
 "use client";
 import { individualLoginStore } from "@omenai/shared-state-store/src/auth/login/IndividualLoginStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
@@ -54,6 +54,8 @@ export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const base_uri = base_url();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect");
 
   const { setIsLoading } = individualLoginStore();
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
@@ -85,15 +87,15 @@ export default function FormInput() {
         "success"
       );
 
-      if (shouldUseDefaultRedirect(url)) {
+      if (redirectTo) {
+        router.replace(redirectTo);
+      } else {
         set_redirect_uri("");
         identifyUser(data);
         router.refresh();
         router.replace(base_uri);
-      } else {
-        router.replace(url);
-        set_redirect_uri("");
       }
+      identifyUser(data);
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);

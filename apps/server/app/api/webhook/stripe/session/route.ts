@@ -80,6 +80,8 @@ export const POST = withAppRouterHighlight(async function POST(
     }
 
     const meta = checkoutSession.metadata;
+    console.log(meta);
+
     if (!meta?.buyer_email || !meta?.art_id) {
       console.error("Missing required metadata");
       return NextResponse.json({ status: 400 });
@@ -99,6 +101,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const order_info = await CreateOrder.findOne({
       "buyer_details.email": meta.buyer_email,
       "artwork_data.art_id": meta.art_id,
+      "order_accepted.status": "accepted",
     });
 
     if (!order_info) {
@@ -124,7 +127,7 @@ export const POST = withAppRouterHighlight(async function POST(
     try {
       // Remove hold status BEFORE starting transaction (non-transactional)
       await CreateOrder.updateOne(
-        { order_id: order_info.order_id },
+        { order_id: order_info.order_id, "order_accepted.status": "accepted" },
         { $set: { hold_status: null } }
       );
 
@@ -144,6 +147,7 @@ export const POST = withAppRouterHighlight(async function POST(
         {
           "buyer_details.email": meta.buyer_email,
           "artwork_data.art_id": meta.art_id,
+          "order_accepted.status": "accepted",
         },
         {
           $set: {

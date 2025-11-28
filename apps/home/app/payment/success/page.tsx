@@ -1,4 +1,3 @@
-"use client";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { dashboard_url } from "@omenai/url-config/src/config";
 import Image from "next/image";

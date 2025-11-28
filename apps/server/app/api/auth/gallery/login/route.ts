@@ -14,6 +14,8 @@ import {
 import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createErrorRollbarReport } from "../../../util";
+import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -91,6 +93,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             { status: 200 }
           );
         }
+      }
+
+      try {
+        await DeletionRequestModel.deleteOne({
+          targetId: user.gallery_id,
+          gracePeriodUntil: { $gt: toUTCDate(new Date()) },
+        });
+      } catch (error) {
+        createErrorRollbarReport(
+          "Auth - Gallery: Deletion request removal failed",
+          error,
+          500
+        );
       }
 
       const cookieStore = await cookies();

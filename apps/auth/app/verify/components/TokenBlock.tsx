@@ -7,7 +7,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
@@ -23,6 +23,8 @@ export default function TokenBlock({ token, route }: TokenProps) {
   const [resendTokenLoading, setResentTokenLoading] = useState(false);
 
   const rollbar = useRollbar();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect");
 
   const router = useRouter();
 
@@ -41,25 +43,35 @@ export default function TokenBlock({ token, route }: TokenProps) {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const error: string = validateStringCode(tokenValue);
 
-    if (error) {
-      toast_notif(error, "error");
-    } else {
-      toast.info("Verifying token");
-      setIsLoading(true);
-
-      const res = await verifyEmail(
-        { params: token, token: tokenValue },
-        route
-      );
-      if (!res.isOk) toast_notif(res.body.message, "error");
-      if (res.isOk) {
-        toast_notif(res.body.message, "success");
-        router.push(`/login/${route}`);
-      }
-      setIsLoading(false);
+    // Early return for validation
+    const validationError = validateStringCode(tokenValue);
+    if (validationError) {
+      toast_notif(validationError, "error");
+      return;
     }
+
+    // Verify token
+    toast.info("Verifying token");
+    setIsLoading(true);
+
+    const res = await verifyEmail({ params: token, token: tokenValue }, route);
+
+    // Handle response
+    const notifType = res.isOk ? "success" : "error";
+    toast_notif(res.body.message, notifType);
+
+    // Redirect on success
+    if (res.isOk) {
+      const userType = route === "individual" ? "user" : route;
+      const loginUrl = redirectTo
+        ? `/login/${userType}?redirect=${redirectTo}`
+        : `/login/${userType}`;
+
+      router.push(loginUrl);
+    }
+
+    setIsLoading(false);
   }
 
   const resendVerification = async () => {

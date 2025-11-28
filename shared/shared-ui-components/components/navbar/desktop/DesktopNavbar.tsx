@@ -12,6 +12,7 @@ import {
   auth_uri,
   dashboard_url,
 } from "@omenai/url-config/src/config";
+import { usePathname } from "next/navigation";
 
 export const navigation = [
   { name: "Collect", href: "/catalog" },
@@ -51,7 +52,8 @@ const DesktopNavbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
-
+  const pathname = usePathname();
+  const fullUrl = `${window.location.origin}${pathname}`;
   const navClasses = `
     fixed z-30 top-0 left-0 right-0 transition-all duration-500 ease-in-out transform py-4 md:px-12
     ${
@@ -104,13 +106,13 @@ const DesktopNavbar = () => {
             ) : (
               <div className="hidden lg:flex space-x-3">
                 <Link
-                  href={`${login_base_url}/login`}
+                  href={`${login_base_url}/login/user?redirect=${encodeURIComponent(fullUrl)}`}
                   className="px-4 py-2 text-fluid-xs  font-normal text-slate-800 hover:text-slate-800/80 transition-colors duration-200 rounded shadow-sm shadow-slate-500/20 hover:shadow-slate-500/30"
                 >
                   Login
                 </Link>
                 <Link
-                  href={`${login_base_url}/register`}
+                  href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
                   className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 text-fluid-xxs font-normal rounded shadow-lg shadow-slate-500/30 transition-all duration-300 transform hover:scale-[1.02]"
                 >
                   Sign up

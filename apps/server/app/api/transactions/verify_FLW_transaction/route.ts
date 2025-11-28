@@ -103,6 +103,7 @@ async function processPurchaseTransaction(
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
   if (!order_info) {
@@ -116,6 +117,7 @@ async function processPurchaseTransaction(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -142,6 +144,7 @@ async function processPurchaseTransaction(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -206,7 +209,7 @@ async function processPurchaseTransaction(
 
     // Clear hold_status
     await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
+      { order_id: order_info.order_id, "order_accepted.status": "accepted" },
       { $set: { hold_status: null } }
     ).session(session);
 
@@ -265,11 +268,6 @@ async function processPurchaseTransaction(
       }
     );
 
-    const updateArtworkPromise = Artworkuploads.updateOne(
-      { art_id: meta.art_id },
-      { $set: { availability: false } }
-    ).session(session);
-
     const wallet_increment_amount = Math.round(
       Number(verified_transaction.data.amount) -
         (commission +
@@ -282,6 +280,7 @@ async function processPurchaseTransaction(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -294,6 +293,10 @@ async function processPurchaseTransaction(
           } as PaymentStatusTypes,
         },
       }
+    ).session(session);
+    const updateArtworkPromise = Artworkuploads.updateOne(
+      { art_id: meta.art_id },
+      { $set: { availability: false } }
     ).session(session);
 
     const { month, year } = getCurrentMonthAndYear();
