@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import Link from "next/link";
 export default function OrderReceived() {
   const { toggleOrderReceivedModal } = actionStore();
 
@@ -153,7 +154,7 @@ export default function OrderReceived() {
         transition={{ delay: 0.8 }}
         className="pt-4 mt-scroll border-t border-gray-50 bg-white z-10"
       >
-        <a
+        <Link
           onClick={(e) => {
             e.preventDefault();
             toggleOrderReceivedModal(false);
@@ -162,7 +163,7 @@ export default function OrderReceived() {
           className="group w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer"
         >
           <span>Continue Browsing</span>
-        </a>
+        </Link>
       </motion.div>
     </div>
   );
