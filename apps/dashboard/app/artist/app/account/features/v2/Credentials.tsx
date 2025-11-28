@@ -4,8 +4,6 @@ import UpdateCredentialsModal from "./modals/UpdateCredentialsModal";
 import { Award, User, Building, Globe, Download } from "lucide-react";
 import { ArtistCategory } from "@omenai/shared-types";
 import { downloadFile } from "@omenai/shared-lib/storage/downloadFile";
-import { toast } from "sonner";
-import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 type ArtistCategorizationAnswerTypes = {
   graduate: "yes" | "no";
