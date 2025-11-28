@@ -10,8 +10,6 @@ import { useSearchParams } from "next/navigation";
 import { dashboard_url } from "@omenai/url-config/src/config";
 import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
-
 export function OrderCanceledPage() {
   // const searchParams = useSearchParams();
   // const art_id_key = searchParams.get("a_id");
