@@ -174,6 +174,7 @@ const handlePurchaseTransaction = async (
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
   if (!order_info) {
@@ -241,7 +242,7 @@ const handlePurchaseTransaction = async (
     try {
       // Remove hold status before starting transaction (without session)
       await CreateOrder.updateOne(
-        { order_id: order_info.order_id },
+        { order_id: order_info.order_id, "order_accepted.status": "accepted" },
         { $set: { hold_status: null } }
       );
 
@@ -260,6 +261,7 @@ const handlePurchaseTransaction = async (
         {
           "buyer_details.email": meta.buyer_email,
           "artwork_data.art_id": meta.art_id,
+          "order_accepted.status": "accepted",
         },
         {
           $set: {

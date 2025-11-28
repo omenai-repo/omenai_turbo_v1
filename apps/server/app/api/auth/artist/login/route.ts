@@ -1,3 +1,4 @@
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { ServerError } from "./../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { ArtistSchemaTypes } from "@omenai/shared-types";
@@ -16,6 +17,7 @@ import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { createErrorRollbarReport } from "../../../util";
+import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -91,6 +93,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             { status: 200 }
           );
         }
+      }
+
+      try {
+        await DeletionRequestModel.deleteOne({
+          targetId: artist.artist_id,
+          gracePeriodUntil: { $gt: toUTCDate(new Date()) },
+        });
+      } catch (error) {
+        createErrorRollbarReport(
+          "Auth - Artist: Deletion request removal failed",
+          error,
+          500
+        );
       }
 
       const cookieStore = await cookies();

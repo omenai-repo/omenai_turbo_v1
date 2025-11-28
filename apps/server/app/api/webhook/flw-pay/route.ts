@@ -128,6 +128,7 @@ async function handlePurchaseTransaction(
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
   if (!order_info) {
@@ -197,7 +198,7 @@ async function handlePurchaseTransaction(
     // Clear hold_status (non-transactional operation)
 
     await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
+      { order_id: order_info.order_id, "order_accepted.status": "accepted" },
       { $set: { hold_status: null } }
     ).session(session);
 
@@ -282,15 +283,11 @@ async function handlePurchaseTransaction(
       session,
     });
 
-    const updateArtworkPromise = Artworkuploads.updateOne(
-      { art_id: meta.art_id },
-      { $set: { availability: false } }
-    ).session(session);
-
     const updateOrderPromise = CreateOrder.updateOne(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -305,6 +302,10 @@ async function handlePurchaseTransaction(
       }
     ).session(session);
 
+    const updateArtworkPromise = Artworkuploads.updateOne(
+      { art_id: meta.art_id },
+      { $set: { availability: false } }
+    ).session(session);
     const { month, year } = getCurrentMonthAndYear();
     const activity = {
       month,
