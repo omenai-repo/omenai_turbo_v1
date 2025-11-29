@@ -215,6 +215,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
           $exists: true,
           $ne: null,
         },
+        "order_accepted.status": "accepted",
         "shipping_details.shipment_information.estimates.estimatedDeliveryDate":
           {
             $exists: true,
@@ -258,15 +259,15 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     );
 
     if (eligibleOrders.length === 0) {
-      return NextResponse.json(
-        {
-          message: "No orders eligible for delivery validation",
-          total_processing: processingOrders.length,
-          eligible: 0,
-          execution_time_ms: Date.now() - startTime,
-        },
-        { status: 200 }
-      );
+      const res_payload = {
+        message: "No orders eligible for delivery validation",
+        total_processing: processingOrders.length,
+        eligible: 0,
+        execution_time_ms: Date.now() - startTime,
+      };
+
+      console.log(res_payload);
+      return NextResponse.json({ ...res_payload }, { status: 200 });
     }
 
     // Process all eligible orders in parallel with concurrency limit
