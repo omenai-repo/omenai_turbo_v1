@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent } from "react";
 import { toast } from "sonner";
 import FormController from "./FormController";
@@ -19,6 +19,8 @@ export default function FormInput() {
   } = useIndividualAuthStore();
 
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -78,7 +80,14 @@ export default function FormInput() {
         },
         className: "class",
       });
-      router.push(`/verify/individual/${response.body.data}`);
+      if (redirectTo) {
+        router.push(
+          `/verify/individual/${response.body.data}?redirect=${redirectTo}`
+        );
+      } else {
+        router.push(`/verify/individual/${response.body.data}`);
+      }
+
       clearData();
     } else {
       toast.error("Error notification", {

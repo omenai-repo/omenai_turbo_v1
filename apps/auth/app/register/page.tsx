@@ -1,10 +1,9 @@
-"use client";
 import Image from "next/image";
 
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { AnimatePresence, motion } from "framer-motion";
 import RegisterOptions from "./components/RegisterOptions";
-
+export const dynamic = "force-dynamic";
 function Page() {
   return (
     <section className="h-[100vh] w-full overflow-x-hidden">
