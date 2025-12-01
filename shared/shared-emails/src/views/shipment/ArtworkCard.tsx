@@ -24,47 +24,49 @@ export default function ArtworkCard({
       }}
     >
       <table style={{ width: "100%" }}>
-        <tr>
-          <td style={{ width: "120px", verticalAlign: "top" }}>
-            <Img
-              src={artworkImage}
-              width="120"
-              height="120"
-              alt="Omenai logo"
-              className="mx-auto my-10"
-            />
-          </td>
-          <td style={{ verticalAlign: "top", paddingLeft: "16px" }}>
-            <Text
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                marginBottom: "4px",
-                color: "#1a1a1a",
-              }}
-            >
-              {artwork}
-            </Text>
-            <Text
-              style={{
-                fontSize: "14px",
-                color: "#666",
-                marginBottom: "8px",
-              }}
-            >
-              by {artistName}
-            </Text>
-            <Text
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#1a1a1a",
-              }}
-            >
-              {formatPrice(artworkPrice)}
-            </Text>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td style={{ width: "120px", verticalAlign: "top" }}>
+              <Img
+                src={artworkImage}
+                width="120"
+                height="120"
+                alt="Omenai logo"
+                className="mx-auto my-10"
+              />
+            </td>
+            <td style={{ verticalAlign: "top", paddingLeft: "16px" }}>
+              <Text
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  marginBottom: "4px",
+                  color: "#1a1a1a",
+                }}
+              >
+                {artwork}
+              </Text>
+              <Text
+                style={{
+                  fontSize: "14px",
+                  color: "#666",
+                  marginBottom: "8px",
+                }}
+              >
+                by {artistName}
+              </Text>
+              <Text
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  color: "#1a1a1a",
+                }}
+              >
+                {formatPrice(artworkPrice)}
+              </Text>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </Section>
   );
