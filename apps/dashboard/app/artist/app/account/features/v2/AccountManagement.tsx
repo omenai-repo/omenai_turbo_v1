@@ -121,6 +121,7 @@ const AccountManagement = () => {
                 data?.credential_data.credentials.categorization
                   .artist_categorization as ArtistCategory
               }
+              documentation={data?.credential_data.documentation}
             />
           )}
           {activeTab === "settings" && <AccountSettings />}
