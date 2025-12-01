@@ -24,6 +24,42 @@ export default function ArtworkCard({
       }}
     >
       <table style={{ width: "100%" }}>
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              style={{
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                padding: 0,
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+            >
+              Artwork Image
+            </th>
+            <th
+              scope="col"
+              style={{
+                position: "absolute",
+                width: "1px",
+                height: "1px",
+                padding: 0,
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+            >
+              Artwork Details (Title, Artist, Price)
+            </th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
             <td style={{ width: "120px", verticalAlign: "top" }}>
