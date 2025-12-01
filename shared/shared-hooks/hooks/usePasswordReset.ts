@@ -99,10 +99,10 @@ export function usePasswordReset(role: UserRole) {
     setErrorList([]);
     const { success, errors } = validate(value, name, info.password);
 
-    if (!success) {
-      setErrorList(errors);
-    } else {
+    if (success) {
       setInfo((prev) => ({ ...prev, [name]: value }));
+    } else {
+      setErrorList(errors);
     }
   }
 
