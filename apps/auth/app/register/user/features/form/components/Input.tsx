@@ -6,9 +6,8 @@ import { IndividualSignupData, InputProps } from "@omenai/shared-types";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { EyeOff, Eye, AlertCircle } from "lucide-react";
-import { ChangeEvent, useState } from "react";
-import { MdError } from "react-icons/md";
-import { PiEyeSlashThin, PiEyeThin } from "react-icons/pi";
+import { ChangeEvent, useEffect, useState } from "react";
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 
 export default function Input({
   label,
@@ -44,6 +43,49 @@ export default function Input({
       setErrorList([]);
     }
   };
+  useEffect(() => {
+    // Only run validation for password-related fields
+    if (labelText !== "password" && labelText !== "confirmPassword") return;
+
+    const errors = validatePasswordFields({
+      password: individualSignupData.password,
+      confirmPassword: individualSignupData.confirmPassword,
+    });
+
+    // Only show errors for the current field
+    if (labelText === "password" && individualSignupData.password) {
+      const passwordErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("password") &&
+          !err.toLowerCase().includes("confirm")
+      );
+      if (passwordErrors.length > 0) {
+        setErrorList(passwordErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+
+    if (
+      labelText === "confirmPassword" &&
+      individualSignupData.confirmPassword
+    ) {
+      const confirmErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("match") ||
+          err.toLowerCase().includes("confirm")
+      );
+      if (confirmErrors.length > 0) {
+        setErrorList(confirmErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+  }, [
+    individualSignupData.password,
+    individualSignupData.confirmPassword,
+    labelText,
+  ]);
 
   return (
     <AnimatePresence key={`${id}-individual`}>
