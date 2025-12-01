@@ -31,6 +31,9 @@ async function sendReminderEmail(
   artwork: Pick<ArtworkSchemaTypes, "title" | "artist" | "art_id">,
   buyerName: string,
   pickupAddress: AddressTypes,
+  artistName: string,
+  artworkImage: string,
+  artworkPrice: number,
   estimatedPickupDate?: string
 ): Promise<void> {
   if (isReminded) {
@@ -55,6 +58,9 @@ async function sendReminderEmail(
     pickupAddress,
     daysLeft,
     estimatedPickupDate,
+    artistName,
+    artworkImage,
+    artworkPrice,
   });
 }
 
@@ -142,6 +148,9 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
               },
               order.buyer_details.name,
               order.shipping_details.addresses.origin,
+              order.seller_details.name,
+              order.artwork_data.url,
+              order.artwork_data.pricing.usd_price,
               order.shipping_details.shipment_information.planned_shipping_date
             );
             return;

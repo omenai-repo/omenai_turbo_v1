@@ -1,10 +1,15 @@
 import { Heading, Text } from "@react-email/components";
 import React from "react";
 import ShipmentLayout from "./ShipmentLayout";
+import ArtworkCard from "./ArtworkCard";
 
 export default function SendBuyerShipmentSuccess(
   trackingCode: string,
-  name: string
+  name: string,
+  artwork: string,
+  artworkImage: string,
+  artistName: string,
+  artworkPrice: number
 ) {
   return (
     <ShipmentLayout
@@ -55,6 +60,12 @@ export default function SendBuyerShipmentSuccess(
         <strong>{trackingCode}</strong> and has been delivered to the address
         provided during the order process.
       </Text>
+      <ArtworkCard
+        artistName={artistName}
+        artwork={artwork}
+        artworkImage={artworkImage}
+        artworkPrice={artworkPrice}
+      />
       <Text
         style={{
           fontSize: "16px",

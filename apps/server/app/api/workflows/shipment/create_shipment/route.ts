@@ -201,6 +201,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
             name: order.buyer_details.name,
             trackingCode: order.order_id,
             artwork: order.artwork_data.title,
+            artistName: order.seller_details.name,
+            artworkImage: order.artwork_data.url,
+            artworkPrice: order.artwork_data.pricing.usd_price,
           });
 
           await sendShipmentScheduledEmail({
@@ -208,6 +211,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
             name: order.seller_details.name,
             trackingCode: order.order_id,
             artwork: order.artwork_data.title,
+            artistName: order.seller_details.name,
+            artworkImage: order.artwork_data.url,
+            artworkPrice: order.artwork_data.pricing.usd_price,
           });
         }
 
@@ -254,7 +260,10 @@ export const { POST } = serve<Payload>(async (ctx) => {
         shipmentData.seller_details.fullname,
         shipmentData.seller_details.email,
         shipment.data.shipmentTrackingNumber,
-        shipment.data.documents[0].content
+        shipment.data.documents[0].content,
+        shipmentData.artwork_name,
+        order.artwork_data.url,
+        order.artwork_data.pricing.usd_price
       );
 
       await processWaybill(

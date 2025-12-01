@@ -165,6 +165,11 @@ async function processOrder(order: any, dbConnection: any) {
             await sendGalleryShipmentSuccessfulMail({
               name: seller_details.name,
               email: seller_details.email,
+              trackingCode: order.order_id,
+              artistName: order.seller_details.name,
+              artworkImage: order.artwork_data.url,
+              artwork: order.artwork_data.title,
+              artworkPrice: order.artwork_data.pricing.usd_price,
             });
           }
         }

@@ -1,4 +1,5 @@
 // components/emails/BuyerShipmentEmail.tsx
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Html,
   Head,
@@ -8,12 +9,17 @@ import {
   Section,
   Text,
   Heading,
+  Img,
 } from "@react-email/components";
+import ArtworkCard from "./ArtworkCard";
 
 export default function SendShipmentScheduled(
   trackingCode: string,
   name: string,
-  artwork: string
+  artwork: string,
+  artworkImage: string,
+  artistName: string,
+  artworkPrice: number
 ) {
   return (
     <Html>
@@ -74,6 +80,12 @@ export default function SendShipmentScheduled(
               created and prepared for dispatch, you will receive an automated
               update confirming the status change.
             </Text>
+            <ArtworkCard
+              artistName={artistName}
+              artwork={artwork}
+              artworkImage={artworkImage}
+              artworkPrice={artworkPrice}
+            />
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
               Please note that no further action is required at this stage. Our
               logistics system will automatically proceed with shipment creation
