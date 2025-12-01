@@ -1,65 +1,20 @@
 "use client";
-
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
-import { FormEvent } from "react";
 import { MdError } from "react-icons/md";
-import { toast } from "sonner";
 import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
 
 export default function UpdatePasswordModalForm() {
-  const { updatePasswordModalPopup } = artistActionStore();
-  const { user, csrf, signOut } = useAuth({ requiredRole: "artist" });
   const {
     loading,
-    setLoading,
     codeLoading,
     info,
     errorList,
     requestConfirmationCode,
+    handlePasswordUpdate,
     handleInputChange,
-  } = usePasswordReset("gallery");
+  } = usePasswordReset("artist");
 
-  async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    const response = await updatePassword(
-      info.password,
-      info.code,
-      "artist",
-      user.artist_id,
-      csrf || ""
-    );
-
-    if (response?.isOk) {
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      updatePasswordModalPopup(false);
-      toast.info("Signing out...", {
-        description: "You will be redirected to the login page",
-      });
-      await signOut();
-    } else {
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    }
-    setLoading(false);
-  }
   return (
     <div className="w-full overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
       {/* Design 1: Clean Card with Progress */}
