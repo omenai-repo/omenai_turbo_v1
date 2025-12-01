@@ -7,12 +7,12 @@ export default function ArtworkCard({
   artworkImage,
   artworkPrice,
   artistName,
-}: {
+}: Readonly<{
   artwork: string;
   artworkImage: string;
   artworkPrice: number;
   artistName: string;
-}) {
+}>) {
   return (
     <Section
       style={{

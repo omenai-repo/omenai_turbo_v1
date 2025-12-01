@@ -1,5 +1,3 @@
-// components/emails/BuyerShipmentEmail.tsx
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Html,
   Head,
@@ -9,7 +7,6 @@ import {
   Section,
   Text,
   Heading,
-  Img,
 } from "@react-email/components";
 import ArtworkCard from "./ArtworkCard";
 

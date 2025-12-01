@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { testRollbar } from "@omenai/shared-services/test/test";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 export async function GET() {
-  // await testRollbar();
   await sendShipmentScheduledEmail({
     email: "moses@omenai.net",
     name: "Test User",
