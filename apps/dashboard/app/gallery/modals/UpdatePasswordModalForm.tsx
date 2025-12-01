@@ -6,11 +6,11 @@ import { requestPasswordConfirmationCode } from "@omenai/shared-services/request
 import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { AlertCircle } from "lucide-react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 
 export default function UpdatePasswordModalForm() {
   const { updatePasswordModalPopup } = actionStore();
@@ -66,6 +66,9 @@ export default function UpdatePasswordModalForm() {
         return { ...prev, [name]: value };
       });
   }
+  useEffect(() => {
+    setErrorList(validatePasswordFields(info));
+  }, [info.password, info.confirmPassword]);
 
   async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

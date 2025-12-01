@@ -4,13 +4,9 @@ import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
-import { MdError } from "react-icons/md";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { auth_uri } from "@omenai/url-config/src/config";
 import {
   Eye,
   EyeOff,
@@ -21,6 +17,7 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 
 export default function UpdatePasswordModalForm() {
   const { updatePasswordModalPopup } = actionStore();
@@ -75,7 +72,6 @@ export default function UpdatePasswordModalForm() {
       description: "You will be redirected to the login page",
     });
     await signOut();
-    // router.replace(`${auth_uri}/login`);
   }
 
   async function requestConfirmationCode() {
@@ -106,7 +102,6 @@ export default function UpdatePasswordModalForm() {
     setCodeLoading(false);
     setCodeRequested(true);
   }
-  const router = useRouter();
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -120,6 +115,9 @@ export default function UpdatePasswordModalForm() {
       return { ...prev, [name]: value };
     });
   }
+  useEffect(() => {
+    setErrorList(validatePasswordFields(info));
+  }, [info.password, info.confirmPassword]);
 
   async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
