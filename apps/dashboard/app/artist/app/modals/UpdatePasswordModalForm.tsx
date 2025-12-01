@@ -1,74 +1,27 @@
 "use client";
 
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { validate } from "@omenai/shared-lib/validations/validatorGroup";
-import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
 import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { FormEvent } from "react";
 import { MdError } from "react-icons/md";
 import { toast } from "sonner";
-import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
+import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
 
 export default function UpdatePasswordModalForm() {
   const { updatePasswordModalPopup } = artistActionStore();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [codeLoading, setCodeLoading] = useState<boolean>(false);
-  const [info, setInfo] = useState({
-    password: "",
-    confirmPassword: "",
-    code: "",
-  });
-
-  const [errorList, setErrorList] = useState<string[]>([]);
-  const { user, csrf } = useAuth({ requiredRole: "artist" });
-
-  async function requestConfirmationCode() {
-    setCodeLoading(true);
-    const response = await requestPasswordConfirmationCode(
-      "artist",
-      user.artist_id,
-      csrf || ""
-    );
-    if (response?.isOk)
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-    else
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    setCodeLoading(false);
-  }
-
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    const name = e.target.name;
-
-    setErrorList([]);
-    const { success, errors }: { success: boolean; errors: string[] | [] } =
-      validate(value, name, info.password);
-    if (!success) setErrorList(errors);
-    else
-      setInfo((prev) => {
-        return { ...prev, [name]: value };
-      });
-  }
-  useEffect(() => {
-    setErrorList(validatePasswordFields(info));
-  }, [info.password, info.confirmPassword]);
+  const { user, csrf, signOut } = useAuth({ requiredRole: "artist" });
+  const {
+    loading,
+    setLoading,
+    codeLoading,
+    info,
+    errorList,
+    requestConfirmationCode,
+    handleInputChange,
+  } = usePasswordReset("gallery");
 
   async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -91,6 +44,10 @@ export default function UpdatePasswordModalForm() {
         className: "class",
       });
       updatePasswordModalPopup(false);
+      toast.info("Signing out...", {
+        description: "You will be redirected to the login page",
+      });
+      await signOut();
     } else {
       toast.error("Error notification", {
         description: response?.message,
