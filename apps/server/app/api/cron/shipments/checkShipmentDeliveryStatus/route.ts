@@ -9,6 +9,7 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
 import { createErrorRollbarReport } from "../../../util";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -151,7 +152,7 @@ async function processOrder(order: any, dbConnection: any) {
           console.log(
             `✓ Order ${order.order_id}: Released ${wallet_increment_amount} to seller ${seller_details.id}`
           );
-
+          const artworkImage = getImageFileView(order.artwork_data.url, 120);
           // TODO: Send notification emails
           if (seller_designation === "artist") {
             // - Artist: Notify about fund unlock
@@ -167,7 +168,7 @@ async function processOrder(order: any, dbConnection: any) {
               email: seller_details.email,
               trackingCode: order.order_id,
               artistName: order.seller_details.name,
-              artworkImage: order.artwork_data.url,
+              artworkImage,
               artwork: order.artwork_data.title,
               artworkPrice: order.artwork_data.pricing.usd_price,
             });

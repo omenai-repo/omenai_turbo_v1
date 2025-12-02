@@ -20,6 +20,7 @@ import {
 } from "@omenai/shared-types";
 import { sendShipmentPickupReminderMail } from "@omenai/shared-emails/src/models/shipment/sendShipmentPickupReminderMail";
 import { createErrorRollbarReport } from "../../../util";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -49,6 +50,7 @@ async function sendReminderEmail(
   );
 
   const daysLeft = Math.floor(days).toString();
+  const artworkImageUrl = getImageFileView(artworkImage, 120);
   await sendShipmentPickupReminderMail({
     name,
     email,
@@ -59,7 +61,7 @@ async function sendReminderEmail(
     daysLeft,
     estimatedPickupDate,
     artistName,
-    artworkImage,
+    artworkImage: artworkImageUrl,
     artworkPrice,
   });
 }
