@@ -1,105 +1,19 @@
 "use client";
-
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { validate } from "@omenai/shared-lib/validations/validatorGroup";
-import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
-import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { AlertCircle } from "lucide-react";
-import { ChangeEvent, FormEvent, useState } from "react";
 import { MdError } from "react-icons/md";
-import { toast } from "sonner";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
 
 export default function UpdatePasswordModalForm() {
-  const { updatePasswordModalPopup } = actionStore();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [codeLoading, setCodeLoading] = useState<boolean>(false);
-  const [info, setInfo] = useState({
-    password: "",
-    confirmPassword: "",
-    code: "",
-  });
-
-  const [errorList, setErrorList] = useState<string[]>([]);
-  const { user, csrf } = useAuth({ requiredRole: "gallery" });
-
-  async function requestConfirmationCode() {
-    setCodeLoading(true);
-    const response = await requestPasswordConfirmationCode(
-      "gallery",
-      user.gallery_id,
-      csrf || ""
-    );
-    if (response?.isOk)
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-    else
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    setCodeLoading(false);
-  }
-
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    const name = e.target.name;
-
-    setErrorList([]);
-    const { success, errors }: { success: boolean; errors: string[] | [] } =
-      validate(value, name, info.password);
-    if (!success) setErrorList(errors);
-    else
-      setInfo((prev) => {
-        return { ...prev, [name]: value };
-      });
-  }
-
-  async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    const response = await updatePassword(
-      info.password,
-      info.code,
-      "gallery",
-      user.gallery_id,
-      csrf || ""
-    );
-
-    if (response?.isOk) {
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      updatePasswordModalPopup(false);
-    } else {
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    }
-    setLoading(false);
-  }
+  const {
+    loading,
+    codeLoading,
+    info,
+    errorList,
+    requestConfirmationCode,
+    handlePasswordUpdate,
+    handleInputChange,
+  } = usePasswordReset("gallery");
   return (
     <div className="w-full max-h-[85vh] overflow-y-auto h-auto">
       {/* Design 1: Clean Card with Progress */}
