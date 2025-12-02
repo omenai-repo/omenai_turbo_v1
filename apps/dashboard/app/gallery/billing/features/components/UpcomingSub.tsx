@@ -20,7 +20,7 @@ export default function UpcomingSub({
   return (
     <div className="w-full">
       {/* Design 1: Clean Status-Based Card */}
-      <div className="bg-white rounded shadow-sm border border-slate-200 h-[250px] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 h-[250px] overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
           <div className="flex items-center justify-between">
@@ -73,7 +73,7 @@ export default function UpcomingSub({
                 </p>
               </div>
               <Link href="/gallery/billing/plans?plan_action=reactivation">
-                <button className="px-6 py-2.5 bg-slate-900 text-white text-sm font-medium rounded shadow-sm transition-all transform active:scale-95 hover:bg-slate-800">
+                <button className="px-6 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-full shadow-sm transition-all transform active:scale-95 hover:bg-slate-800">
                   Reactivate Subscription
                 </button>
               </Link>
@@ -96,13 +96,13 @@ export default function UpcomingSub({
                     <h4 className="font-semibold text-slate-900">
                       Omenai {sub_data.next_charge_params.type}
                     </h4>
-                    <p className="text-sm text-slate-600 capitalize">
+                    <p className="text-fluid-xs text-slate-600 capitalize">
                       {sub_data.next_charge_params.interval} billing
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-fluid-md font-bold text-slate-900">
+                  <p className="text-fluid-sm font-semibold text-slate-900">
                     {formatPrice(
                       sub_data.next_charge_params.value,
                       currency_symbol
@@ -112,7 +112,7 @@ export default function UpcomingSub({
               </div>
 
               {/* Billing Period */}
-              <div className="bg-blue-50 rounded p-4 border border-blue-200">
+              <div className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
                 <div className="flex items-center gap-3">
                   <svg
                     className="w-5 h-5 text-blue-600 flex-shrink-0"

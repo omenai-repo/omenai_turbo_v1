@@ -78,14 +78,14 @@ export default function SubDetail({
 
   const currency_symbol = getCurrencySymbol(sub_data.plan_details.currency);
   return (
-    <div className=" bg-white rounded shadow-sm border border-slate-200 p-5 max-h-[300px]">
+    <div className=" bg-white rounded-2xl shadow-sm border border-slate-200 p-5 max-h-[300px]">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-fluid-xxs font-semibold text-slate-900">
           Your Subscription
         </h3>
         {sub_data.status === "active" && (
           <div
-            className={`px-3 py-1 rounded text-fluid-xxs font-semibold bg-green-100 text-green-700`}
+            className={`px-3 py-1 rounded-full text-fluid-xxs font-semibold bg-green-100 text-green-700`}
           >
             {sub_data.status.toUpperCase()}
           </div>
@@ -93,13 +93,13 @@ export default function SubDetail({
         {(sub_data.status === "expired" ||
           sub_data.status === "incomplete") && (
           <div
-            className={`px-3 py-1 rounded text-fluid-xxs font-semibold bg-red-100 text-red-700`}
+            className={`px-3 py-1 rounded-full text-fluid-xxs font-semibold bg-red-100 text-red-700`}
           >
             {sub_data.status.toUpperCase()}
           </div>
         )}
         {sub_data.status === "canceled" && (
-          <div className="px-3 py-1 rounded text-fluid-xxs text-[#a86a41] font-semibold bg-[#fbf1c6]">
+          <div className="px-3 py-1 rounded-full text-fluid-xxs text-[#a86a41] font-semibold bg-[#fbf1c6]">
             {" "}
             Active &#183; ends in {daysLeft(sub_data.expiry_date)} days
           </div>
@@ -107,8 +107,7 @@ export default function SubDetail({
       </div>
 
       <div className="space-y-4">
-        {/* Timeline Progress */}
-        <div className="relative">
+        <div className="relative border p-4 border-slate-200 rounded-2xl">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Image
@@ -197,7 +196,7 @@ export default function SubDetail({
         {/* Actions */}
         <div className="pt-2 flex gap-2">
           {sub_data.status === "canceled" && (
-            <div className="text-fluid-xxs text-[#a86a41] font-medium bg-[#fefbea] px-4 py-2 rounded border-[#fef2c5] border-2">
+            <div className="text-fluid-xxs text-[#a86a41] font-medium bg-[#fefbea] px-4 py-2 rounded-full border-[#fef2c5] border-2">
               <span className="font-bold uppercase">Note:</span> Your
               subscription cancellation will take effect after your current
               billing cycle.
@@ -208,7 +207,7 @@ export default function SubDetail({
               href="/gallery/billing/plans?plan_action=reactivation"
               className="w-full"
             >
-              <button className="w-full px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded transition-all hover:bg-blue-700">
+              <button className="w-full px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-full transition-all hover:bg-blue-700">
                 Reactivate
               </button>
             </Link>
@@ -216,13 +215,13 @@ export default function SubDetail({
           {sub_data.status === "active" && (
             <>
               <Link href="/gallery/billing/plans" className="flex-1">
-                <button className="w-full px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded transition-all hover:bg-slate-200">
+                <button className="w-full px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full transition-all hover:bg-slate-200">
                   Manage
                 </button>
               </Link>
               <button
                 onClick={() => updateOpenModal()}
-                className="px-3 py-2 text-red-600 text-sm font-medium rounded transition-all hover:bg-red-50"
+                className="px-3 py-2 text-red-600 text-sm font-medium rounded-full transition-all hover:bg-red-50"
               >
                 Cancel
               </button>

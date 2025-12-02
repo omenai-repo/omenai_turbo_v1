@@ -95,7 +95,7 @@ const PremiumIcon = ({ planName }: { planName: string }) => {
   if (planName !== "Premium") return null;
 
   return (
-    <div className="p-2 bg-purple-100 rounded">
+    <div className="p-2 bg-purple-100 rounded-full">
       <svg
         className="w-5 h-5 text-purple-600"
         fill="none"
@@ -214,7 +214,7 @@ export default function Plan({
         <PlanBadge planName={name} />
 
         <div
-          className={`bg-white rounded shadow-lg overflow-hidden ${cardRingClass}`}
+          className={`bg-white rounded-3xl shadow-lg overflow-hidden ${cardRingClass}`}
         >
           {/* Header Section */}
           <div className="p-8 pb-6">
@@ -249,7 +249,7 @@ export default function Plan({
               >
                 <button
                   disabled={isDisabled}
-                  className={`w-full py-3 px-6 rounded font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${buttonClass} disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                  className={`w-full py-3 px-6 rounded-full font-medium text-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 ${buttonClass} disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                 >
                   {buttonText}
                 </button>

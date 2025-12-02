@@ -8,14 +8,14 @@ export default function FullArtworkDetails({ data }: FullArtworkDetailsType) {
   return (
     <div className="my-8 w-full">
       {/* Header Section */}
-      <div className="py-5 px-8 bg-slate-50 w-full rounded border border-slate-100">
+      <div className="py-5 px-8 bg-slate-100 w-full rounded-full border border-slate-100">
         <h3 className="text-slate-800 font-normal text-fluid-xxs tracking-wide">
           Additional details about this artwork
         </h3>
       </div>
 
       {/* Details Grid */}
-      <div className="w-full mt-6 bg-white border border-slate-200 rounded shadow-sm overflow-hidden">
+      <div className="w-full mt-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
         <div className="divide-y divide-slate-100">
           {/* Materials */}
           <div className="grid grid-cols-12 px-4 py-3 hover:bg-slate-25 transition-colors duration-200">

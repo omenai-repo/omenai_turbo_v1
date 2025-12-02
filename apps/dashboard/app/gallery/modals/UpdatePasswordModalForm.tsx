@@ -3,6 +3,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { MdError } from "react-icons/md";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function UpdatePasswordModalForm() {
   const {
@@ -17,7 +18,7 @@ export default function UpdatePasswordModalForm() {
   return (
     <div className="w-full max-h-[85vh] overflow-y-auto h-auto">
       {/* Design 1: Clean Card with Progress */}
-      <div className="bg-white rounded shadow-lg border border-slate-200 overflow-hidden">
+      <div className="bg-white shadow-lg border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="bg-slate-50 px-6 py-5 border-b border-slate-200">
           <div className="flex items-center gap-3">
@@ -65,7 +66,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Enter your new password"
-                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
+                  className={INPUT_CLASS}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -99,7 +100,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Confirm your new password"
-                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
+                  className={INPUT_CLASS}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {info.confirmPassword &&
@@ -152,7 +153,7 @@ export default function UpdatePasswordModalForm() {
                 type="text"
                 required
                 placeholder="Enter 6-digit code"
-                className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
+                className={INPUT_CLASS}
               />
               <button
                 type="button"
@@ -164,7 +165,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-3 w-full bg-dark text-white font-normal rounded hover:bg-slate-700 hover:text-white transition-colors disabled:bg-dark/10 disabled:cursor-not-allowed  focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs grid place-items-center"
+                className="px-4 py-3 w-full bg-dark text-white font-normal rounded-full hover:bg-slate-700 hover:text-white transition-colors disabled:bg-dark/10 disabled:cursor-not-allowed  focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs grid place-items-center"
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>
@@ -206,7 +207,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-dark text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-0 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+            className="w-full py-3 px-6 bg-dark text-white font-normal rounded-full shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-0 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

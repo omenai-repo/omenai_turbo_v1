@@ -76,16 +76,16 @@ export default function AccountInformation({ profile }: { profile: any }) {
   const image_url = getGalleryLogoFileView(profile.logo, 200);
 
   return (
-    <div className="space-y-4 animate-fadeIn p-4">
+    <div className="space-y-4 animate-fadeIn p-4 max-w-3xl">
       {/* Logo Section */}
-      <div className="flex items-start pb-4 space-x-4 border-line">
+      <div className="flex items-center pb-4 space-x-4 border-line">
         <div className="relative group">
           <Image
             src={image_url}
             alt="Artist Logo"
-            className="rounded object-fit"
-            height={120}
-            width={120}
+            className="w-[100px] h-[100px] rounded-full object-cover"
+            height={100}
+            width={100}
           />
           <div className="absolute inset-0 mx-4 bg-dark/60 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
             <button
@@ -158,7 +158,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
           <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
             Gallery Address
           </label>
-          <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded">
+          <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded-2xl">
             <div className="flex items-start space-x-3">
               <MapPin className="w-5 h-5 text-dark/50 mt-1" />
               <div>
@@ -173,7 +173,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
             </div>
             <button
               onClick={() => updateAddressModalPopup(true)}
-              className="px-4 py-2 bg-dark  rounded hover:bg-dark/80 text-white 
+              className="px-4 py-2 bg-dark  rounded-full hover:bg-dark/80 text-white 
                        transition-all duration-300 text-fluid-xxs font-normal"
             >
               Update Address
@@ -189,8 +189,8 @@ export default function AccountInformation({ profile }: { profile: any }) {
           <textarea
             value={data.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
-            rows={4}
-            className="w-full px-4 py-3 bg-gray-800 border border-line rounded text-fluid-xxs text-dark 
+            rows={6}
+            className="w-full px-4 py-3 bg-gray-800 border border-line rounded-2xl text-fluid-xxs text-dark 
                      focus:border-dark focus:outline-none focus:ring-0 
                      transition-all duration-300 resize-none"
             placeholder="Tell us a little about the gallery"
@@ -203,7 +203,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
         <button
           onClick={handleSave}
           disabled={!hasChanges || loading}
-          className={`flex items-center space-x-2 px-4 py-2 rounded font-normal text-fluid-xxs
+          className={`flex items-center space-x-2 px-4 py-2 rounded-full font-normal text-fluid-xxs
                     transition-all duration-300 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-dark/30 ${
                       hasChanges
                         ? "bg-dark text-white hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"

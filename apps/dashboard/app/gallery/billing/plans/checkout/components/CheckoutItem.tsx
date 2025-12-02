@@ -9,8 +9,8 @@ export default function CheckoutItem({
   interval: string;
 }) {
   return (
-    <div className="bg-white shadow-lg">
-      <div className="w-full p-8 bg-dark rounded text-white">
+    <div className="bg-white shadow-lg w-full">
+      <div className="w-full p-8 bg-dark rounded-2xl text-white">
         <h1 className="text-fluid-base font-semibold">
           Omenai {plan.name} subscription
         </h1>
@@ -19,10 +19,10 @@ export default function CheckoutItem({
         </p>
       </div>
 
-      <div className="p-5 my-4 rounded">
+      <div className="p-5 my-4 rounded-2xl">
         <div className="flex justify-between items-center">
-          <p className="text-fluid-xxs font-bold">Due today</p>
-          <p className="text-fluid-xxs font-bold">
+          <p className="text-fluid-xxs font-semibold">Due today</p>
+          <p className="text-fluid-xxs font-semibold">
             {interval === "monthly"
               ? `$${plan.pricing.monthly_price}`
               : `$${plan.pricing.annual_price}`}{" "}

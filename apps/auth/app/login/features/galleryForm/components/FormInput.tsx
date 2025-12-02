@@ -13,6 +13,7 @@ import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -26,9 +27,6 @@ const INPUT_CONFIG = {
     placeholder: "Enter your Password",
   },
 };
-
-const INPUT_CLASSES =
-  "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed";
 
 const shouldUseDefaultRedirect = (url: string | null) => {
   return url === "" || url === null;
@@ -143,7 +141,7 @@ export default function FormInput() {
           value={form.email}
           name={INPUT_CONFIG.email.name}
           placeholder={INPUT_CONFIG.email.placeholder}
-          className={INPUT_CLASSES}
+          className={INPUT_CLASS}
           onChange={handleChange}
           required
         />
@@ -156,7 +154,7 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name={INPUT_CONFIG.password.name}
             placeholder={INPUT_CONFIG.password.placeholder}
-            className={INPUT_CLASSES}
+            className={INPUT_CLASS}
             onChange={handleChange}
             required
           />

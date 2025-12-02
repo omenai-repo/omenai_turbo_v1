@@ -13,9 +13,16 @@ export default function CatalogWrapper() {
   return (
     <main className="relative" suppressHydrationWarning>
       <DesktopNavbar />
-      <div className="">
+      <>
+        <h1 className="text-fluid-base sm:text-fluid-sm md:text-fluid-lg font-medium mt-6 text-black tracking-tight">
+          Curate creativity and design in the digital realm.
+        </h1>
+
+        <hr className="w-full border border-dark/10 my-4" />
+      </>
+      {/* <div className="">
         <Collections isCatalog={true} />
-      </div>
+      </div> */}
 
       {/* <Hero /> */}
       <div className="">

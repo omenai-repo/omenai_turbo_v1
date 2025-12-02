@@ -21,7 +21,7 @@ export default function NavigationItem({
     <>
       {title === "Sign out" ? (
         <li
-          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
+          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded-xl cursor-pointer`}
         >
           <button
             onClick={onClick}
@@ -29,7 +29,9 @@ export default function NavigationItem({
             role="container"
             className="flex items-center"
           >
-            <IconWrapper className=" hover:text-dark group">{icon}</IconWrapper>
+            <IconWrapper className="rounded-xl hover:text-dark group">
+              {icon}
+            </IconWrapper>
             <p className={`text-fluid-xxs p-2 font-normal`}>{title}</p>
           </button>
         </li>
@@ -47,7 +49,7 @@ export default function NavigationItem({
             pathname.startsWith(url)
               ? "bg-dark text-white"
               : "bg-white text-dark"
-          } group flex items-center w-full hover:bg-dark rounded transition duration-300 ease-in-out`}
+          } group flex items-center w-full hover:bg-dark rounded-xl transition duration-300 ease-in-out`}
         >
           <IconWrapper
             className={` ${pathname.startsWith(url) ? "bg-white text-white" : "group"}`}

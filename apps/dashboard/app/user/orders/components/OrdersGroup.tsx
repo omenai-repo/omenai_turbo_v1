@@ -42,7 +42,7 @@ export default function OrdersGroup({
     <>
       <div className="w-full">
         {/* Design 1: Modern Card-based Tabs */}
-        <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
           <Tabs
             color="#3b82f6"
             variant="default"
@@ -64,9 +64,9 @@ export default function OrdersGroup({
                 <Tabs.List className="space-y-2">
                   <Tabs.Tab
                     value="pending"
-                    className="w-full px-4 py-3 rounded flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
+                    className="w-full px-4 py-3 rounded-full flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
                   >
-                    <div className="p-2 rounded bg-amber-100 flex gap-x-2 items-center data-[active]:bg-amber-500">
+                    <div className="p-2 rounded-full bg-amber-100 flex gap-x-2 items-center data-[active]:bg-amber-500">
                       <PackageMinus
                         size={20}
                         className="text-amber-600 data-[active]:text-white"
@@ -83,9 +83,9 @@ export default function OrdersGroup({
 
                   <Tabs.Tab
                     value="completed"
-                    className="w-full px-4 py-3 rounded flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-green-600 hover:bg-white/50"
+                    className="w-full px-4 py-3 rounded-full flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-green-600 hover:bg-white/50"
                   >
-                    <div className="p-2 rounded bg-green-100 flex items-center gap-x-1 data-[active]:bg-green-500">
+                    <div className="p-2 rounded-full bg-green-100 flex items-center gap-x-1 data-[active]:bg-green-500">
                       <PackageCheck
                         size={20}
                         className="text-green-600 data-[active]:text-white"
@@ -104,7 +104,7 @@ export default function OrdersGroup({
 
               {/* Summary Stats */}
               <div className="px-6 pb-6">
-                <div className="bg-white rounded p-4 border border-slate-200">
+                <div className="bg-white rounded-2xl p-4 border border-slate-200">
                   <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">
                     Overview
                   </p>

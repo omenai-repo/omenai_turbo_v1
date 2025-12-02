@@ -34,7 +34,7 @@ const ProgressDots = () => (
 );
 
 const LoadingState = () => (
-  <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
+  <div className="bg-white/80 backdrop-blur-xl rounded-full-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
     <div className="flex flex-col items-center justify-center space-y-8">
       <LoadIcon />
       <div className="text-center space-y-3">
@@ -85,7 +85,7 @@ const ActionButton = ({ isSuccess }: { isSuccess: boolean }) => {
   return (
     <Link
       href="/gallery/billing"
-      className={`group relative overflow-hidden h-12 px-4 rounded w-full flex items-center justify-center gap-3 font-medium text-white transition-all duration-300 transform hover:scale-101 text-fluid-xxs hover:shadow-xl ${buttonClass}`}
+      className={`group relative overflow-hidden h-12 px-4 rounded-full w-full flex items-center justify-center gap-3 font-medium text-white transition-all duration-300 transform hover:scale-101 text-fluid-xxs hover:shadow-xl ${buttonClass}`}
     >
       <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
       {isSuccess ? (
@@ -118,7 +118,7 @@ const ResultCard = ({
   showContent: boolean;
 }) => (
   <div
-    className={`bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
+    className={`bg-white/90 backdrop-blur-xl rounded-full-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
       showContent ? "scale-100 opacity-100" : "scale-95 opacity-0"
     }`}
   >

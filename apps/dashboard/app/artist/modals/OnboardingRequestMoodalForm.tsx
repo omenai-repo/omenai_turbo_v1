@@ -65,7 +65,7 @@ export default function OnboardingRequestModalForm() {
               damping: 15,
               delay: 0.1,
             }}
-            className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 ring-4 ring-green-50/50"
+            className="w-14 h-14 bg-green-50 rounded flex items-center justify-center mx-auto mb-3 ring-4 ring-green-50/50"
           >
             <CircleCheckBig
               className="w-7 h-7 text-green-600"
@@ -111,7 +111,7 @@ export default function OnboardingRequestModalForm() {
                 variants={itemVariants}
                 className="relative flex gap-4 group"
               >
-                <div className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-gray-300 group-hover:scale-110 transition-all duration-300">
+                <div className="relative z-10 flex-shrink-0 w-8 h-8 rounded bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-gray-300 group-hover:scale-110 transition-all duration-300">
                   <step.icon
                     className="w-4 h-4 text-gray-600"
                     strokeWidth={1.5}

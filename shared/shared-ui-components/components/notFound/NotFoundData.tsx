@@ -55,7 +55,7 @@ export default function NotFoundData({
         </motion.div>
 
         {/* Title */}
-        <h3 className="text-fluid-sm font-semibold text-slate-800 dark:text-white">
+        <h3 className="text-fluid-base font-semibold text-slate-800 dark:text-white">
           {title}
         </h3>
 

@@ -13,6 +13,7 @@ import {
   HighRiskProvider,
   LowRiskProvider,
 } from "@omenai/package-provider/ConfigCatProvider";
+import LenisProvider from "@omenai/package-provider/ScrollProvider";
 
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
@@ -77,7 +78,9 @@ export default async function DashboardRootLayout({
                 defaultColorScheme="light"
                 forceColorScheme="light"
               >
-                <LayoutWrapper children={children} />
+                <LenisProvider>
+                  <LayoutWrapper children={children} />
+                </LenisProvider>
               </MantineProvider>
             </SessionProvider>
             <Analytics />

@@ -18,12 +18,12 @@ export default function FormActions() {
         <button
           disabled={isLoading}
           type="submit"
-          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
+          className="h-[35px] p-5 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
         >
           {isLoading ? <LoadSmall /> : "Login to your account"}{" "}
         </button>
         <Link href={"/register"}>
-          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
+          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded-full h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
             Create an account
           </button>
         </Link>

@@ -38,7 +38,7 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="bg-white border border-gray-100 rounded p-8 w-full max-w-md shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-3xl p-8 w-full max-w-md shadow-sm">
       <div className="flex flex-col items-center space-y-6 text-center">
         {/* Header */}
         <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center">
@@ -56,13 +56,13 @@ export default function BalanceBox({
           <p className="text-fluid-xxs font-medium text-gray-600 mb-2">
             Balance on Stripe
           </p>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-fluid-md font-semibold text-gray-900">
             {formatPrice(balance.pending[0].amount / 100, currency)}
           </h1>
         </div>
 
         {/* Pending Balance */}
-        <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded">
+        <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded-2xl">
           <p className="text-fluid-xxs text-amber-800">
             Balance on stripe is automatically credited to your bank account.
           </p>
@@ -73,7 +73,7 @@ export default function BalanceBox({
           <button
             onClick={generateLoginLink}
             disabled={generatingLoginLink}
-            className="w-full h-12 bg-gray-900 text-white text-fluid-xxs font-semibold rounded transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
+            className="w-full h-12 bg-gray-900 text-white text-fluid-xxs font-normal rounded-full transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
           >
             {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
           </button>

@@ -2,6 +2,7 @@ import { validatePasswordFields } from "@omenai/shared-lib/validations/validateP
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { EyeOff, Eye, AlertCircle } from "lucide-react";
@@ -11,6 +12,8 @@ import {
   useEffect,
   useState,
 } from "react";
+import { MdError, MdOutlineArrowForward } from "react-icons/md";
+import { PiEyeSlashThin, PiEyeThin } from "react-icons/pi";
 export type InputProps = {
   label: string;
   labelText: string;
@@ -131,7 +134,7 @@ export default function Input({
           {labelText === "description" ? (
             <>
               <textarea
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed
+                className={`${INPUT_CLASS}
                 
                 ${
                   errorList.length > 0
@@ -153,7 +156,7 @@ export default function Input({
             <div className="relative group">
               <input
                 type={type === "password" ? (show ? "text" : type) : type}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed
+                className={`${INPUT_CLASS}
                 
                 ${
                   errorList.length > 0

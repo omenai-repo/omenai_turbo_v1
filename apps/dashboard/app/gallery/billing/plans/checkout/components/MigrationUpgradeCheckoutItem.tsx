@@ -88,68 +88,79 @@ export default function MigrationUpgradeCheckoutItem({
   );
 
   return (
-    <div className="max-w-lg space-y-6 p-4">
-      {/* Main Subscription Card */}
-      <div className="bg-white border border-gray-100 rounded overflow-hidden shadow-sm">
-        {/* Header Section */}
-        <div className="bg-gray-900 p-6 text-white">
-          <p className="text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">
+    <div className="max-w-full w-full mx-auto gap-x-8 p-4 grid grid-cols-2">
+      <div className="bg-white/90 border border-slate-200 rounded-2xl shadow-lg overflow-hidden">
+        {/* Header */}
+        <div className="relative p-6 bg-dark text-white">
+          <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_top_left,white,transparent_70%)]"></div>
+
+          <p className="relative text-xs font-medium text-gray-300 uppercase tracking-widest mb-1">
             Subscription {plan_change_params.action}
           </p>
-          <h1 className="text-xl font-bold mb-2">
-            Omenai {plan.name} subscription
+
+          <h1 className="relative text-lg font-semibold leading-tight">
+            Omenai {plan.name} Subscription
           </h1>
-          <p className="text-sm text-gray-300 font-medium">Billed {interval}</p>
+
+          <p className="relative text-sm text-gray-300 font-medium mt-1">
+            Billed {interval}
+          </p>
         </div>
 
-        {/* Content Section */}
-        <div className="p-6">
-          <div className="space-y-4">
-            {/* Current Plan Usage */}
-            <div className="flex justify-between items-center pb-4 border-b border-gray-100">
-              <span className="text-sm font-medium text-gray-600">
+        {/* Body */}
+        <div className="p-6 space-y-6">
+          {/* Current Plan Usage */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-slate-200">
+            <div className="flex items-center justify-between">
+              <span className="text-fluid-xs font-normal text-gray-600">
                 Current plan usage
               </span>
               <span className="text-sm font-semibold text-gray-900">
                 {days_left} day(s) left
               </span>
             </div>
+          </div>
 
-            {/* Price Breakdown */}
-            <div className="space-y-3">
+          {/* Price Breakdown */}
+          <div className="space-y-4">
+            <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
               <PriceDisplay label="Plan cost" value={upgradeCost} />
-              <PriceDisplay
-                label="Prorated cost"
-                value={plan_change_params.shouldCharge ? proratedPrice : 0}
-                showMinus={plan_change_params.shouldCharge}
-              />
 
-              {/* Total Amount - Highlighted */}
-              <div className="pt-3 border-t border-gray-100">
-                <div className="flex justify-between items-center">
-                  <span className="text-base font-semibold text-gray-900">
-                    Due today
-                  </span>
-                  <span className="text-lg font-bold text-gray-900">
-                    $
-                    {plan_change_params.shouldCharge
-                      ? grandTotal.toFixed(2)
-                      : "0.00"}
-                  </span>
-                </div>
+              <div className="mt-3">
+                <PriceDisplay
+                  label="Prorated cost"
+                  value={plan_change_params.shouldCharge ? proratedPrice : 0}
+                  showMinus={plan_change_params.shouldCharge}
+                />
+              </div>
+
+              {/* Divider */}
+              <div className="my-4 border-t border-slate-200" />
+
+              {/* Total */}
+              <div className="flex items-center justify-between">
+                <span className="text-base font-semibold text-gray-900">
+                  Due today
+                </span>
+                <span className="text-xl font-bold text-gray-900">
+                  $
+                  {plan_change_params.shouldCharge
+                    ? grandTotal.toFixed(2)
+                    : "0.00"}
+                </span>
               </div>
             </div>
-
-            {/* Notice */}
-            {!plan_change_params.shouldCharge && (
-              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded">
-                <p className="text-sm font-medium text-amber-800">
-                  <span className="font-semibold">Note:</span> Your plan change
-                  will take effect at the end of your current billing cycle.
-                </p>
-              </div>
-            )}
           </div>
+
+          {/* Notice */}
+          {!plan_change_params.shouldCharge && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl shadow-sm">
+              <p className="text-sm text-amber-900 leading-relaxed">
+                <span className="font-semibold">Note:</span> Your plan change
+                will take effect at the end of your current billing cycle.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

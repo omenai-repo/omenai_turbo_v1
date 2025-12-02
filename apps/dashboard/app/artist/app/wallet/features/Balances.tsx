@@ -39,7 +39,7 @@ export default function Balances({
     toggleWithdrawalFormPopup(true);
   };
   return (
-    <div className="bg-dark text-white rounded shadow-xl overflow-hidden">
+    <div className="bg-dark text-white rounded-3xl shadow-xl overflow-hidden">
       {/* Header Section */}
       <div className="p-6 border-b border-slate-800">
         <div className="flex justify-between items-center">
@@ -74,7 +74,7 @@ export default function Balances({
               <p className="text-fluid-xxs text-slate-400">Available Balance</p>
               <button
                 onClick={() => setShowBalance(!showBalance)}
-                className="p-1 rounded transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600"
+                className="p-1 rounded-full transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600"
                 aria-label={showBalance ? "Hide balance" : "Show balance"}
               >
                 {showBalance ? (
@@ -103,24 +103,9 @@ export default function Balances({
           <div>
             <button
               onClick={toggleForm}
-              className="px-4 py-2 bg-white text-dark font-normal rounded shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-fluid-xxs"
+              className="px-4 py-2 bg-white text-dark font-normal rounded-full shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-fluid-xxs"
             >
-              <span className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7 11l5-5m0 0l5 5m-5-5v12"
-                  />
-                </svg>
-                Withdraw Funds
-              </span>
+              <span className="flex items-center gap-2">Withdraw Funds</span>
             </button>
           </div>
         </div>
@@ -144,7 +129,7 @@ export default function Balances({
                 transitionProps={{ duration: 200 }}
                 label="Once the piece is delivered, these funds will be ready for withdrawal."
               >
-                <button className="p-1 rounded transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600">
+                <button className="p-1 rounded-full transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600">
                   <Info
                     size={16}
                     strokeWidth={1.5}

@@ -89,11 +89,11 @@ export default function DeleteAccountConfirmationModalForm() {
           onClick={() => updateDeleteUserAccountModalPopup(false)}
         />
 
-        <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto p-6 md:p-8 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+        <div className="relative bg-white dark:bg-slate-800 rounded  shadow-2xl w-full max-w-3xl mx-auto p-6 md:p-8 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
           <div className="flex gap-4 items-start">
             <div className="flex-shrink-0">
               {/* Sad icon */}
-              <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
+              <div className="w-14 h-14 rounded bg-red-50 flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-red-600"
                   fill="none"

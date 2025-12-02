@@ -160,7 +160,10 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
 
     console.log("✅ Scheduled shipment batch check completed.");
     return NextResponse.json(
-      { message: "Scheduled shipment batch check completed." },
+      {
+        message: "Scheduled shipment batch check completed.",
+        shipmentsCreated: shipments.length,
+      },
       { status: 200 }
     );
   } catch (error) {

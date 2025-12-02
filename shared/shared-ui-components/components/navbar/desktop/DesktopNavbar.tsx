@@ -58,7 +58,7 @@ const DesktopNavbar = () => {
     fixed z-30 top-0 left-0 right-0 transition-all duration-500 ease-in-out transform py-4 md:px-12
     ${
       isScrolled
-        ? "md:top-6 md:w-[96%] md:max-w-6xl md:mx-auto bg-white/90 shadow-2xl ring-1 ring-dark/10 rounded-xl backdrop-blur-lg" // LIGHT THEME FLOATING
+        ? "md:top-6 md:w-[96%] md:max-w-6xl md:mx-auto bg-white/90 shadow-2xl ring-1 ring-dark/10 rounded-full backdrop-blur-lg" // LIGHT THEME FLOATING
         : "md:w-[96%] md:max-w-6xl md:mx-auto bg-white rounded-none"
     }
   `;
@@ -107,13 +107,13 @@ const DesktopNavbar = () => {
               <div className="hidden lg:flex space-x-3">
                 <Link
                   href={`${login_base_url}/login/user?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="px-4 py-2 text-fluid-xs  font-normal text-slate-800 hover:text-slate-800/80 transition-colors duration-200 rounded shadow-sm shadow-slate-500/20 hover:shadow-slate-500/30"
+                  className="px-4 py-2 text-fluid-xs  font-normal text-slate-800 hover:text-slate-800/80 transition-colors duration-200 rounded-full shadow-sm shadow-slate-500/20 hover:shadow-slate-500/30"
                 >
                   Login
                 </Link>
                 <Link
                   href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 text-fluid-xxs font-normal rounded shadow-lg shadow-slate-500/30 transition-all duration-300 transform hover:scale-[1.02]"
+                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 text-fluid-xxs font-normal rounded-full shadow-lg shadow-slate-500/30 transition-all duration-300 transform hover:scale-[1.02]"
                 >
                   Sign up
                 </Link>
@@ -160,13 +160,13 @@ const DesktopNavbar = () => {
               <div className="pt-4 flex flex-row space-x-2">
                 <Link
                   href={`${login_base_url}/login`}
-                  className="w-full text-center px-3 py-2 text-fluid-xs font-normal text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-sm border border-slate-300 shadow-sm transition"
+                  className="w-full text-center px-3 py-2 text-fluid-xs font-normal text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-2xl border border-slate-300 shadow-sm transition"
                 >
                   Login
                 </Link>
                 <Link
                   href={`${login_base_url}/register`}
-                  className="w-full text-center bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 text-fluid-xs font-normal rounded-sm shadow-lg"
+                  className="w-full text-center bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 text-fluid-xs font-normal rounded-2xl shadow-lg"
                 >
                   Sign up
                 </Link>

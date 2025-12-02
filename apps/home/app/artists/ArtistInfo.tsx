@@ -43,7 +43,7 @@ export default function ArtistInfo({
                   src={image_href}
                   alt={`${info.name} portrait`}
                   onLoad={() => setImageLoaded(true)}
-                  className={`w-full h-full object-cover rounded transition-all duration-500 ${
+                  className={`w-full h-full object-cover rounded-2xl transition-all duration-500 ${
                     imageLoaded ? "opacity-100" : "opacity-0"
                   }`}
                 />

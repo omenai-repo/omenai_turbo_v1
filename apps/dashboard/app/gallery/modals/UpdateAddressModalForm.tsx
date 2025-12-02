@@ -162,8 +162,8 @@ export default function UpdateAddressModalForm() {
       </div>
       <AlertComponent title="Please note:">
         Changing your address will only apply to future orders. Any orders that
-        are currently being processed or have already been shipped will be
-        delivered to your previous address.
+        are currently being processed will be picked up from your current
+        Address.
       </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button

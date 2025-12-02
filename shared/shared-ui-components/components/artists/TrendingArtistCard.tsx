@@ -25,29 +25,34 @@ export function TrendingArtistCard({
   const image_href = getOptimizedImage(url, "thumbnail", 40);
   const base_uri = base_url();
   return (
-    <div className="group relative mt-8">
+    <div
+      className="        group relative
+        rounded-2xl overflow-hidden
+        transition-all duration-700
+        cursor-pointer"
+    >
       <Link
         href={`${base_uri}/artists/?id=${artist_id}&url=${url}&artist=${artist}`}
         className="block"
       >
         <article className="relative">
           {/* Image with Aspect Ratio */}
-          <div className="relative aspect-[4/3] w-[350px] w-full overflow-hidden rounded bg-slate-100">
+          <div className="relative aspect-[4/3] w-[300px] w-full overflow-hidden rounded bg-slate-100">
             <Image
               src={image_href}
               alt={artist + " image"}
-              height={250}
-              width={350}
+              height={200}
+              width={300}
               loading="lazy"
               quality={100}
               placeholder="blur"
               blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
-              className="rounded w-[350px] h-full object-cover object-center cursor-pointer"
+              className="rounded w-[300px] h-full object-cover object-center cursor-pointer"
             />
           </div>
 
           {/* Info Below Image */}
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-2 px-2">
             <h3 className="text-fluid-base font-semibold  text-slate-900 leading-tight">
               {artist}
             </h3>

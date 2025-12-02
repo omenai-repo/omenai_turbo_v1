@@ -18,7 +18,7 @@ export const UpdateAddressModal = () => {
           onClick={() => {
             updateAddressModalPopup(false);
           }}
-          className="bg-slate-900/20 backdrop-blur p-2 fixed inset-0 z-50 grid place-items-center cursor-pointer"
+          className="bg-slate-900/20 backdrop-blur p-2 fixed inset-0 z-50 grid place-items-center"
         >
           <motion.div
             initial={{ scale: 0, rotate: "12.5deg" }}
@@ -28,7 +28,7 @@ export const UpdateAddressModal = () => {
             className=" text-dark p-6 rounded w-full max-w-lg cursor-default relative h-auto"
           >
             {/* Add modal form here */}
-            <div className="h-auto w-full">
+            <div className="h-auto w-full overflow-y-auto">
               <UpdateAddressModalForm />
             </div>
           </motion.div>

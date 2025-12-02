@@ -65,7 +65,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth />
           Awaiting payment
         </span>
@@ -78,7 +78,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1.5} absoluteStrokeWidth />
           Payment completed
         </span>
@@ -91,7 +91,7 @@ export function OrdersGroupAccordion({
       tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Truck strokeWidth={1.5} absoluteStrokeWidth />
           Delivery in progress
         </span>
@@ -104,7 +104,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth />
           Action required
         </span>
@@ -113,11 +113,11 @@ export function OrdersGroupAccordion({
     if (order_accepted === "declined") {
       return (
         <div className="flex flex-col gap-y-2">
-          <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
+          <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
             <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
             Order declined
           </span>
-          <span className=" rounded text-fluid-xxs font-normal text-red-600 flex items-center w-fit">
+          <span className=" rounded-full text-fluid-xxs font-normal text-red-600 flex items-center w-fit">
             Reason: {order_decline_reason}
           </span>
         </div>
@@ -126,7 +126,7 @@ export function OrdersGroupAccordion({
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1.5} absoluteStrokeWidth />
           Order has been fulfilled
         </span>
@@ -138,7 +138,7 @@ export function OrdersGroupAccordion({
     <Accordion.Item
       key={order.order_id}
       value={order.order_id}
-      className="p-5 mb-5"
+      className=" mb-5"
     >
       <Accordion.Control>
         <div className="flex gap-x-2 items-center">
@@ -150,7 +150,7 @@ export function OrdersGroupAccordion({
             alt={`${order.artwork_data.title} image`}
             width="50"
             height="50"
-            className="object-fill object-center h-[50px] w-[50px] rounded"
+            className="object-fill object-center h-[50px] w-[50px] rounded-full"
             loading="lazy"
           />
           <div className="flex flex-col">
@@ -228,7 +228,7 @@ export function OrdersGroupAccordion({
             <Link
               href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
             >
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
             </Link>
@@ -250,7 +250,7 @@ export function OrdersGroupAccordion({
                   order.seller_designation
                 )
               }
-              className="flex items-center justify-center gap-2 px-5 py-2 rounded text-fluid-xxs font-normal
+              className="flex items-center justify-center gap-2 px-5 py-2 rounded-full text-fluid-xxs font-normal
                  text-white bg-red-600 hover:bg-red-700 active:bg-red-800
                  transition-all duration-200 shadow-sm hover:shadow-md
                  focus:outline-none focus:ring-2 focus:ring-red-400 disabled:opacity-50"
@@ -259,7 +259,7 @@ export function OrdersGroupAccordion({
             </button>
             <Link href={`/gallery/orders/quote/${order.order_id}`}>
               <button
-                className="flex items-center justify-center gap-2 px-5 py-2 rounded text-fluid-xxs font-normal
+                className="flex items-center justify-center gap-2 px-5 py-2 rounded-full text-fluid-xxs font-normal
                    text-white bg-green-600 hover:bg-green-700 active:bg-green-800
                    transition-all duration-200 shadow-sm hover:shadow-md
                    focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50"
@@ -274,7 +274,7 @@ export function OrdersGroupAccordion({
   ));
 
   return (
-    <Accordion variant="separated" radius={"md"} className="w-full">
+    <Accordion variant="separated" radius={"xl"} className="w-full">
       {items}
     </Accordion>
   );

@@ -23,7 +23,6 @@ import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 
-import SmoothScroll from "@omenai/package-provider/ScrollProvider";
 import LenisProvider from "@omenai/package-provider/ScrollProvider";
 
 export const metadata: Metadata = {

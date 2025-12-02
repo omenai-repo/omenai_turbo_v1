@@ -9,7 +9,7 @@ export default function Highlight() {
         return (
           <div
             key={`dark-${item.title}`}
-            className="relative bg-slate-900 rounded shadow-lg overflow-hidden group"
+            className="relative bg-slate-900 rounded-xl shadow-lg overflow-hidden group"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
@@ -23,9 +23,14 @@ export default function Highlight() {
             </div>
 
             {/* Content */}
-            <div className="relative px-4 py-3">
+            <div className="relative px-5 py-3.5">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex-1 space-y-1">
+                  {/* {item.tag && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                      {item.title.toUpperCase()}
+                    </span>
+                  )} */}
                   <p className="text-fluid-xxs font-medium text-slate-400 uppercase tracking-wide">
                     {item.title}
                   </p>
@@ -36,11 +41,6 @@ export default function Highlight() {
                       tag={item.tag}
                     />
                   </div>
-                  {/* {item.tag && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-                      {item.tag.toUpperCase()}
-                    </span>
-                  )} */}
                 </div>
 
                 <div className="flex-shrink-0">

@@ -97,11 +97,11 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
       </div>
       {/* Medium and Rarity */}
       <div className="flex items-center space-x-2 text-fluid-xxs font-normal text-gray-700">
-        <span className="px-3 py-1 bg-gray-50 rounded border border-dark">
+        <span className="px-3 py-1 bg-gray-50 rounded-full border border-dark/10">
           {data.medium}
         </span>
         <div className="w-px h-4 bg-gray-300" />
-        <span className="px-3 py-1 bg-gray-50 rounded border border-dark">
+        <span className="px-3 py-1 bg-gray-50 rounded-full border border-dark/10">
           {data.rarity}
         </span>
       </div>
@@ -110,12 +110,12 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
       {/* Certificates and Features */}
       <div className="flex flex-wrap gap-3">
         {data.certificate_of_authenticity === "Yes" && (
-          <div className="inline-flex items-center gap-2 px-4 py-1 bg-emerald-50 text-emerald-700 rounded text-fluid-xxs font-normal border border-emerald-200">
+          <div className="inline-flex items-center gap-2 px-4 py-1 bg-emerald-50 text-emerald-700 rounded-full text-fluid-xxs font-normal border border-emerald-200">
             <GrCertificate className="w-4 h-4" />
             <span>Certificate of authenticity</span>
           </div>
         )}
-        <div className="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded text-fluid-xxs font-normal border border-blue-200">
+        <div className="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full text-fluid-xxs font-normal border border-blue-200">
           <PiFrameCornersThin className="w-4 h-4" />
           <span>
             {data.framing === "Framed"
@@ -125,13 +125,13 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         </div>
       </div>
 
-      <div className="py-4 border-t border-gray-100">
+      <div className="py-4 border-t border-gray-100 text-fluid-xs">
         <div className="">
           <p className="text-fluid-xxs text-slate-700 uppercase tracking-wide font-normal">
             Price
           </p>
           {!data.availability ? (
-            <div className="inline-flex items-center px-3 py-1 bg-red-50 text-red-700 rounded border border-red-200 font-normal">
+            <div className="inline-flex items-center px-3 py-1 text-fluid-xs bg-red-50 text-red-700 rounded-full border border-red-200 font-normal">
               Sold Out
             </div>
           ) : (
@@ -148,7 +148,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         <button
           disabled={loading || !data.availability || purchase_click_loading}
           onClick={handleBuyButtonClick}
-          className="w-full bg-dark py-2 px-4 rounded text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
+          className="w-full bg-dark py-2 px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
         >
           {loading || purchase_click_loading ? (
             <LoadSmall />
@@ -169,7 +169,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           (sessionId && !likedState.ids.includes(sessionId))) && (
           <button
             onClick={() => handleLike(true)}
-            className="w-full py-2 px-4 justify-center rounded flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark ring-1 ring-dark/50 duration-300 group"
+            className="w-full py-2 px-4 justify-center rounded-full flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark border border-dark/10 duration-300 group"
           >
             <span>Save artwork</span>
             <IoHeartOutline />
@@ -178,7 +178,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {sessionId && likedState.ids.includes(sessionId) && (
           <button
             onClick={() => handleLike(false)}
-            className="w-full py-2 px-4 rounded ring-1 flex justify-center items-center gap-2 hover:bg-dark/5 duration-200 ring-dark text-dark text-fluid-xxs group"
+            className="w-full py-2 px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/5 duration-200 ring-dark text-dark text-fluid-xxs group"
           >
             <span>Remove from saved</span>
             <GiCheckMark />

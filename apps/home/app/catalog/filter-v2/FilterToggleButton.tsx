@@ -11,7 +11,7 @@ export default function FilterToggleButton() {
   return (
     <button
       onClick={openDrawer}
-      className="flex items-center gap-2 px-4 py-2 border border-gray-500 rounded transparent hover:bg-slate-50 shadow-sm"
+      className="flex items-center gap-2 px-4 py-2 border border-gray-500 rounded-full transparent hover:bg-slate-50 shadow-sm"
     >
       <SlidersVertical size={16} strokeWidth={1} absoluteStrokeWidth />
       <span className="text-fluid-xxs font-normal">Filters</span>

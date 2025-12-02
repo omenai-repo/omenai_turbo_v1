@@ -68,7 +68,7 @@ export default function SearchInput({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder="Search artworks, artists..."
-        className="w-full py-2 pl-4 pr-10 bg-slate-800 border border-slate-700 rounded text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 placeholder:text-fluid-xxs placeholder:text-white"
+        className="w-full py-2 pl-4 pr-10 bg-slate-800 border border-slate-700 rounded-full text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 placeholder:text-fluid-xxs placeholder:text-white"
       />
 
       {/* Search Button with spinner inside */}

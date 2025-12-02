@@ -120,7 +120,7 @@ export default function UpdateAddressModalForm() {
   };
 
   return (
-    <div className="bg-white rounded max-w-lg w-full p-6 shadow-2xl animate-slideUp  max-h-[85vh] overflow-y-scroll h-auto">
+    <div className="bg-white rounded max-w-lg w-full p-6 shadow-2xl animate-slideUp  max-h-[90vh] overflow-y-auto h-auto">
       <h3 className="text-fluid-sm font-semibold text-dark mb-6">
         Update Address
       </h3>
@@ -164,8 +164,8 @@ export default function UpdateAddressModalForm() {
       </div>
       <AlertComponent title="Please note:">
         Changing your address will only apply to future orders. Any orders that
-        are currently being processed or have already been shipped will be
-        delivered to your previous address.
+        are currently being processed will be picked up from your current
+        Address.
       </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button

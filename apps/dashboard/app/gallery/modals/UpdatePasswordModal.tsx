@@ -26,7 +26,7 @@ export const UpdatePasswordModal = () => {
             className="bg-white text-dark rounded w-full max-w-lg shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
-            <div className="h-auto w-full">
+            <div className="h-auto w-full rounded-3xl">
               <UpdatePasswordModalForm />
             </div>
           </motion.div>

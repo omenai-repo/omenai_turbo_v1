@@ -102,7 +102,7 @@ export default function ArtworkCard({
 
   return (
     <FadeUpCard>
-      <div className="group relative bg-white rounded border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
+      <div className="group relative bg-white rounded-3xl border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
         <div className="relative">
           <Link
             href={`${base_uri}/artwork/${encoded_url}`}
@@ -141,7 +141,7 @@ export default function ArtworkCard({
               </button>
             ) : isDashboard && dashboard_type === "artist" ? null : (
               <Link href={`/collections/${encodeMediumForUrl(medium)}`}>
-                <button className="px-4 py-1 bg-white text-dark rounded hover:border hover:border-dark/80 duration-300">
+                <button className="px-4 py-1 bg-white text-dark rounded-full duration-300 backdrop-blur-xl bg-white/20 border border-white/30 rounded-full px-4 py-1.5 text-white shadow-sm">
                   <span className="font-normal text-fluid-xxs ">{medium}</span>
 
                   {/* Button glow effect */}
@@ -204,7 +204,7 @@ export default function ArtworkCard({
               {availability && !isDashboard && (
                 <Link
                   href={`${base_uri}/artwork/${encoded_url}`}
-                  className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark rounded px-8 py-1 text-fluid-xxs"
+                  className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,0.9)] group-hover:shadow-none duration-200 bg-white border border-dark/30 text-dark rounded-2xl px-8 py-1 text-fluid-xxs"
                 >
                   {pricing?.price && pricing.shouldShowPrice === "Yes"
                     ? "Purchase"

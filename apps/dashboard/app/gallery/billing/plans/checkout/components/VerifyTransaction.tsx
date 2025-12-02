@@ -72,9 +72,9 @@ export default function VerifyTransaction({
 
               {/* Progress indicator */}
               <div className="w-full max-w-xs mt-6">
-                <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
+                <div className="bg-gray-100 rounded h-2 overflow-hidden">
                   <div
-                    className="bg-gray-900 h-full rounded-full animate-pulse"
+                    className="bg-gray-900 h-full rounded animate-pulse"
                     style={{ width: "70%" }}
                   ></div>
                 </div>
@@ -85,11 +85,11 @@ export default function VerifyTransaction({
               {/* Status Icon */}
               <div className="mb-6">
                 {verified?.isOk ? (
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                  <div className="w-16 h-16 bg-green-100 rounded flex items-center justify-center">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
                 ) : (
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                  <div className="w-16 h-16 bg-red-100 rounded flex items-center justify-center">
                     <XCircle className="w-8 h-8 text-red-600" />
                   </div>
                 )}
