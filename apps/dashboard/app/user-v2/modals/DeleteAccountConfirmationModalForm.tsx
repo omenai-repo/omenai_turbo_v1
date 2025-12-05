@@ -21,7 +21,7 @@ const reasonsMap = [
 export default function DeleteAccountConfirmationModalForm() {
   const { updateDeleteUserAccountModalPopup, deleteUserAccountModal } =
     actionStore();
-  const { user, csrf, signOut } = useAuth({ requiredRole: "user" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
   const [reason, setReason] = useState<string>("");
   const [otherText, setOtherText] = useState("");
 
@@ -75,10 +75,6 @@ export default function DeleteAccountConfirmationModalForm() {
     } finally {
       setLoading(false);
     }
-  }
-
-  async function handleLogout() {
-    await signOut();
   }
 
   return (
@@ -171,8 +167,9 @@ export default function DeleteAccountConfirmationModalForm() {
                       — we’ll show what needs responseolving.
                     </li>
                     <li>
-                      Your account will be retained for <strong>30 days</strong>
-                      . You can log in to reactivate during this period.
+                      Your account will be retained for{" "}
+                      <strong>30 days.</strong> You can log in to reactivate
+                      during this period.
                     </li>
                     <li>
                       After the grace period, all data will be permanently

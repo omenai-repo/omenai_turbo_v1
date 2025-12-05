@@ -58,7 +58,7 @@ export default function DeleteAccountCommitmentModal({
                   <div>
                     <p className="text-fluid-xs font-semibold text-slate-800 dark:text-white">
                       {commitment.type
-                        .replaceAll(/_/g, " ")
+                        .replaceAll("_", " ")
                         .replaceAll(/\b\w/g, (char) => char.toUpperCase())}
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-300">

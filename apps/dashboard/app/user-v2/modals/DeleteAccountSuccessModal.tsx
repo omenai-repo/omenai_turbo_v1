@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
@@ -60,9 +59,8 @@ export default function DeleteAccountSuccessModal() {
             <p className="mt-4 text-fluid-xs font-normal text-slate-600 dark:text-slate-400">
               Redirecting you to login page in{" "}
               <span className="text-slate-900 dark:text-white">
-                {countdown}s
+                {countdown}s ...
               </span>
-              ...
             </p>
           </div>
         </div>
