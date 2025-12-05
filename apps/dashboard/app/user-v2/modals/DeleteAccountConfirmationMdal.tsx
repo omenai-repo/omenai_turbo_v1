@@ -18,6 +18,12 @@ export const DeleteAccountConfirmationModal = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+              }
+            }}
+            role="presentation"
             className="bg-white text-dark p-6 rounded w-full max-w-3xl shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
