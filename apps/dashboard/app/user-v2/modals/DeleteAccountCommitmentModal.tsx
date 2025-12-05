@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircleWarning, OctagonAlert } from "lucide-react";
+import { OctagonAlert } from "lucide-react";
 
 type Commitment = {
   type: string;
@@ -58,8 +58,8 @@ export default function DeleteAccountCommitmentModal({
                   <div>
                     <p className="text-fluid-xs font-semibold text-slate-800 dark:text-white">
                       {commitment.type
-                        .replace(/_/g, " ")
-                        .replace(/\b\w/g, (char) => char.toUpperCase())}
+                        .replaceAll(/_/g, " ")
+                        .replaceAll(/\b\w/g, (char) => char.toUpperCase())}
                     </p>
                     <p className="text-sm text-slate-600 dark:text-slate-300">
                       {commitment.description}

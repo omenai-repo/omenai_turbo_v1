@@ -196,7 +196,10 @@ export default function UpdatePasswordForm() {
         <form onSubmit={handlePasswordUpdate}>
           {/* Password Field */}
           <div className="mb-5">
-            <label className="block text-fluid-xxs font-normal text-dark/20-700 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-fluid-xxs font-normal text-dark/20-700 mb-2"
+            >
               New Password
             </label>
             <div className="relative">
@@ -273,7 +276,10 @@ export default function UpdatePasswordForm() {
 
           {/* Confirm Password Field */}
           <div className="mb-5">
-            <label className="block text-fluid-xxs font-normal text-dark/20-700 mb-2">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-fluid-xxs font-normal text-dark/20-700 mb-2"
+            >
               Confirm Password
             </label>
             <div className="relative">
@@ -311,7 +317,10 @@ export default function UpdatePasswordForm() {
 
           {/* Confirmation Code Field */}
           <div className="mb-6">
-            <label className="block text-fluid-xxs font-normal text-dark/20-700 mb-2">
+            <label
+              htmlFor="code"
+              className="block text-fluid-xxs font-normal text-dark/20-700 mb-2"
+            >
               Verification Code
             </label>
             <div className="relative">
