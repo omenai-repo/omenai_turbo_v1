@@ -1,8 +1,4 @@
 "use client";
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
-import { useEffect } from "react";
-import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 export default function Tour() {
   const steps = [
     {
@@ -49,26 +45,6 @@ export default function Tour() {
       },
     },
   ];
-
-  const [tour, setTour] = useLocalStorage("tour", "");
-  const isFinished = useReadLocalStorage("tour") ?? "";
-
-  useEffect(() => {
-    // Ensure this runs on client-side only
-    if (isFinished === "true") return;
-
-    // Initialize driver only if running on the client-side
-    if (typeof window !== "undefined") {
-      const driverObj = driver({
-        showProgress: true,
-        steps,
-        allowClose: false,
-      });
-
-      driverObj.drive();
-      setTour("true");
-    }
-  }, []);
 
   return null;
 }

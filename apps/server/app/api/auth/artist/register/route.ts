@@ -17,6 +17,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../../util";
+import { redis } from "@omenai/upstash-config";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
@@ -83,7 +84,17 @@ export const POST = withAppRouterHighlight(async function POST(
       email: saveData.email,
       token: email_token,
     });
+    const tourRedisKey = `tour:${artist_id}`;
 
+    try {
+      await redis.set(tourRedisKey, JSON.stringify([]));
+    } catch (error) {
+      createErrorRollbarReport(
+        "Artist Registeration: Error creating redis data for tours",
+        JSON.stringify(error),
+        500
+      );
+    }
     return res.json(
       {
         message: "Artist successfully registered",
