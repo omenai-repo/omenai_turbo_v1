@@ -20,6 +20,7 @@ import {
   EMAIL_COLORS,
   EMAIL_SIGNATURES,
 } from "../../constants/constants";
+import ArtworkCard from "./ArtworkCard";
 
 interface ShipmentPickupNotificationEmailProps {
   galleryName: string;
@@ -29,6 +30,9 @@ interface ShipmentPickupNotificationEmailProps {
   pickupAddress: AddressTypes;
   estimatedPickupDate?: string;
   daysLeft: string;
+  artistName: string;
+  artworkImage: string;
+  artworkPrice: number;
 }
 
 export const ShipmentPickupNotificationEmail = ({
@@ -39,6 +43,9 @@ export const ShipmentPickupNotificationEmail = ({
   pickupAddress,
   daysLeft,
   estimatedPickupDate = `In the next ${daysLeft} day(s)`,
+  artistName,
+  artworkImage,
+  artworkPrice,
 }: ShipmentPickupNotificationEmailProps) => {
   return (
     <Html>
@@ -85,6 +92,13 @@ export const ShipmentPickupNotificationEmail = ({
                 day(s). A courier will be scheduled to collect the piece from
                 your gallery address.
               </Text>
+
+              <ArtworkCard
+                artistName={artistName}
+                artwork={artwork.title}
+                artworkImage={artworkImage}
+                artworkPrice={artworkPrice}
+              />
 
               {/* Order Details */}
               <Section className="my-8 p-6 bg-gray-50 rounded">

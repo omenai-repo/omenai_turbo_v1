@@ -134,7 +134,10 @@ export async function sendShipmentEmailWorkflow(
   sellerName: string,
   sellerEmail: string,
   trackingCode: string,
-  fileContent: string
+  fileContent: string,
+  artwork: string,
+  artworkImage: string,
+  artworkPrice: number
 ) {
   await createWorkflow(
     "/api/workflows/emails/sendShipmentEmail",
@@ -146,6 +149,9 @@ export async function sendShipmentEmailWorkflow(
       sellerEmail,
       trackingCode,
       fileContent,
+      artwork,
+      artworkImage,
+      artworkPrice,
     })
   );
 }
