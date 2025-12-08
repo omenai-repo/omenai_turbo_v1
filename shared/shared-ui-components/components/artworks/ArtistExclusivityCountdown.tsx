@@ -99,8 +99,7 @@ export default function ArtistExclusivityCountdown({
               />
             </svg>
             <p className="text-amber-800 text-fluid-xxs leading-relaxed">
-              Exclusivity period has ended. You may now sell this artwork
-              outside the platform.
+              Artwork Exclusivity period has ended.
             </p>
           </div>
           <button
