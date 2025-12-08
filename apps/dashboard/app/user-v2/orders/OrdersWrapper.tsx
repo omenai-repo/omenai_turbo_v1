@@ -25,9 +25,5 @@ export default function Orders() {
       </div>
     );
   }
-  return (
-    <>
-      <OrdersGroup orders={orders} />
-    </>
-  );
+  return <OrdersGroup orders={orders} />;
 }

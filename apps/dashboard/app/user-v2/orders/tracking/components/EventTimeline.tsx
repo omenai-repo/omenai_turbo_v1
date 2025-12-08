@@ -1,10 +1,9 @@
 "use client";
-import { Timeline, Text, ScrollArea, Divider, Paper } from "@mantine/core";
+import { Timeline, Text, ScrollArea, Paper } from "@mantine/core";
 import {
-  getImageFileView,
   getOptimizedImage,
 } from "@omenai/shared-lib/storage/getImageFileView";
-import { MapPinCheckInside, PlaneTakeoff } from "lucide-react";
+import { MapPinCheckInside } from "lucide-react";
 import Image from "next/image";
 import { useWindowSize } from "usehooks-ts";
 
@@ -29,12 +28,12 @@ export default function EventTimeline({
   order_date,
   artwork_data,
   tracking_number,
-}: {
+}: Readonly<{
   events: any[];
   order_date: string;
   artwork_data: any;
   tracking_number: string;
-}) {
+}>) {
   const image_url = getOptimizedImage(artwork_data.url, "thumbnail", 20);
   const { width } = useWindowSize();
   return (

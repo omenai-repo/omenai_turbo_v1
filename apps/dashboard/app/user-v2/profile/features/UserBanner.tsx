@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { useContext } from "react";
 
 export const UserBanner = () => {
   const { user } = useAuth({ requiredRole: "user" });
@@ -14,10 +13,10 @@ export const UserBanner = () => {
             Status:{" "}
             <span
               className={`${
-                user && user.verified ? "text-green-600" : "text-red-600"
+                user.verified ? "text-green-600" : "text-red-600"
               } font-medium`}
             >
-              {user && user.verified ? "Verified" : "Not verified"}
+              {user.verified ? "Verified" : "Not verified"}
             </span>
           </p>
         </div>

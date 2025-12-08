@@ -3,8 +3,6 @@
 import {
   MapContainer,
   TileLayer,
-  Marker,
-  Popup,
   Polyline,
   useMap,
 } from "react-leaflet";
@@ -14,7 +12,6 @@ import { useEffect, useMemo } from "react";
 import arc from "arc";
 
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { MarkerWithOpenPopup } from "./MapMarker";
 
 // // Fix missing marker icons (optional but common)

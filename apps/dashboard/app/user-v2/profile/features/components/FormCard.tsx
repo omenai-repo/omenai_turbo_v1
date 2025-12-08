@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 import { InputCard } from "./InputCard";
 import { updateProfile } from "@omenai/shared-services/update/updateProfile";
 import { individualProfileUdateStore } from "@omenai/shared-state-store/src/individual/individual_profile_update/IndividualProfileUpdateStore";

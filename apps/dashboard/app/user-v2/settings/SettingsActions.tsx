@@ -3,7 +3,7 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import UpdatePasswordForm from "./UpdatePasswordForm";
 
 export default function SettingsAction() {
-  const { updateDeleteUserAccountModalPopup, userUpdatePasswordModalPopup } =
+  const { updateDeleteUserAccountModalPopup } =
     actionStore();
   return (
     <div className="w-full flex flex-col gap-8 lg:p-5">

@@ -33,21 +33,19 @@ export default function Tracking({ order_id }: { order_id: string }) {
 
   if (loading) return <TrackingLoader />;
   return (
-    <>
-      <div className="relative w-full h-[calc(100dvh-10rem)] mt-4 flex ">
-        <div className={`${width < 1280 && "absolute left-0 top-0 p-5"}`}>
-          <EventTimeline
-            events={tracking_data?.events}
-            order_date={tracking_data?.order_date}
-            artwork_data={tracking_data?.artwork_data}
-            tracking_number={tracking_data?.tracking_number}
-          />
-        </div>
-
-        <div className="w-full h-full pb-5">
-          <MapView />
-        </div>
+    <div className="relative w-full h-[calc(100dvh-10rem)] mt-4 flex ">
+      <div className={`${width < 1280 && "absolute left-0 top-0 p-5"}`}>
+        <EventTimeline
+          events={tracking_data?.events}
+          order_date={tracking_data?.order_date}
+          artwork_data={tracking_data?.artwork_data}
+          tracking_number={tracking_data?.tracking_number}
+        />
       </div>
-    </>
+
+      <div className="w-full h-full pb-5">
+        <MapView />
+      </div>
+    </div>
   );
 }

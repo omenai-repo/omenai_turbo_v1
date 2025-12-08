@@ -10,10 +10,10 @@ type Commitment = {
 export default function DeleteAccountCommitmentModal({
   commitments,
   setShowCommitments,
-}: {
+}: Readonly<{
   commitments: Commitment[];
   setShowCommitments: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}>) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 w-full h-full bg-dark/90">
       <div className="relative bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-xl px-6 py-12 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
@@ -47,7 +47,10 @@ export default function DeleteAccountCommitmentModal({
 
             <div className="mt-4 space-y-3">
               {commitments.map((commitment, i) => (
-                <div key={i} className="flex items-start gap-3">
+                <div
+                  key={commitment.description}
+                  className="flex items-start gap-3"
+                >
                   <div className="mt-1">
                     <OctagonAlert
                       size={20}

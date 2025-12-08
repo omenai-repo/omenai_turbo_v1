@@ -1,12 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { fetchUserSaveArtworks } from "@omenai/shared-services/artworks/fetchUserSavedArtworks";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-import { auth_uri } from "@omenai/url-config/src/config";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { userDashboardActionStore } from "@omenai/shared-state-store/src/dashboard/individual/userDashboardActionState";
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
@@ -75,13 +72,12 @@ export default function Saves() {
 
   return (
     <div className="pb-5">
-      <>
         <p className="text-fluid-xxs font-bold my-4">{arts.length} artworks:</p>
 
         <div className="flex flex-wrap gap-x-4 justify-center">
           {arts.map((artworks: any[], index) => {
             return (
-              <div className="flex-1 gap-2 space-y-6" key={index}>
+              <div className="flex-1 gap-2 space-y-6" key={artworks[index].art_id}>
                 {artworks.map((art: any) => {
                   return (
                     <ArtworkCard
@@ -105,7 +101,6 @@ export default function Saves() {
           })}
           {/* first */}
         </div>
-      </>
 
       <Pagination
         total={pageCount}

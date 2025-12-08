@@ -6,9 +6,9 @@ import Sidebar from "./LayoutDesign/Sidebar";
 
 export default function UserLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <div>
       <NextTopLoader color="#0f172a" height={6} />

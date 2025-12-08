@@ -128,7 +128,7 @@ export default function DeleteAccountConfirmationModalForm() {
                   </h4>
                   {reasonsMap.map((selectReason, k) => (
                     <label
-                      key={k}
+                      key={selectReason}
                       className="flex items-center gap-3 text-fluid-xs"
                     >
                       <input

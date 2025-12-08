@@ -6,11 +6,11 @@ export function MarkerWithOpenPopup({
   position,
   icon,
   message,
-}: {
+}: Readonly<{
   position: [number, number];
   icon?: L.Icon;
   message: string;
-}) {
+}>) {
   const markerRef = useRef<L.Marker>(null);
   const map = useMap();
 
