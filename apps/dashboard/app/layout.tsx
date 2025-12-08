@@ -79,9 +79,7 @@ export default async function DashboardRootLayout({
                 defaultColorScheme="light"
                 forceColorScheme="light"
               >
-                <LenisProvider>
-                  <LayoutWrapper children={children} />
-                </LenisProvider>
+                <LayoutWrapper children={children} />
               </MantineProvider>
             </SessionProvider>
             <Analytics />

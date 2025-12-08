@@ -105,7 +105,7 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
     const successfulBulkWriteOps: {
       updateOne: {
         filter: { requestId: string };
-        update: { $set: { status: string } };
+        update: { $set: { status: "in_progress" } };
       };
     }[] = [];
 
@@ -123,7 +123,7 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
         successfulBulkWriteOps.push({
           updateOne: {
             filter: { requestId },
-            update: { $set: { status: "in progress" } },
+            update: { $set: { status: "in_progress" as const } },
           },
         });
       } else {

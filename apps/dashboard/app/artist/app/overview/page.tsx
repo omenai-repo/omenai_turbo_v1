@@ -1,4 +1,3 @@
-import Tour from "../components/Tour";
 import Highlight from "./features/highlight/Highlight";
 import Orders from "./features/orders/Orders";
 import PopularArtworks from "./features/popular_artworks/PopularArtworks";
@@ -9,7 +8,6 @@ export const dynamic = "force-dynamic";
 export default function OverviewPage() {
   return (
     <div className="w-full">
-      <Tour />
       <PageTitle title={"Overview"} />
       <Highlight />
       <ActivityWrapper />

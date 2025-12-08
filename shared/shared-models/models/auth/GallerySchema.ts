@@ -73,7 +73,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
     },
     status: {
       type: String,
-      default: () => "active",
+      default: "active",
     },
     connected_account_id: {
       type: String,
