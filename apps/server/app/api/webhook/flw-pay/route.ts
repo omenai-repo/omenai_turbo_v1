@@ -30,6 +30,8 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createErrorRollbarReport } from "../../util";
+import {redis} from "@omenai/upstash-config";
+import {rollbarServerInstance} from "@omenai/rollbar-config";
 
 /* ----------------------------- Config & schemas --------------------------- */
 
@@ -302,10 +304,11 @@ async function handlePurchaseTransaction(
       }
     ).session(session);
 
-    const updateArtworkPromise = Artworkuploads.updateOne(
+    const updateArtworkPromise = Artworkuploads.findOneAndUpdate(
       { art_id: meta.art_id },
-      { $set: { availability: false } }
+      { $set: { availability: false } },{new: true}
     ).session(session);
+
     const { month, year } = getCurrentMonthAndYear();
     const activity = {
       month,
@@ -353,6 +356,12 @@ async function handlePurchaseTransaction(
     ]);
 
     await session.commitTransaction();
+
+      try {
+          await redis.set(`artwork:${meta.art_id}`, JSON.stringify(createTransactionResult[2]));
+      }catch (e) {
+          rollbarServerInstance.error({e, context: "Update cache after payment made"})
+      }
 
     const transaction_id =
       Array.isArray(createTransactionResult) &&

@@ -11,7 +11,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRollbar } from "@rollbar/react";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function AccountInformation({ profile }: any) {
   const queryClient = useQueryClient();
@@ -189,9 +189,7 @@ export default function AccountInformation({ profile }: any) {
             name="Biography"
             onChange={(e) => handleInputChange("bio", e.target.value)}
             rows={6}
-            className="w-full p-5 bg-gray-800 border border-line rounded-2xl text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0 
-                     transition-all duration-300 resize-none"
+            className={TEXTAREA_CLASS}
             placeholder="Tell us about your artistic journey..."
           />
         </div>

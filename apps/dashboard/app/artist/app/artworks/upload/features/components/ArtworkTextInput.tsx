@@ -4,7 +4,7 @@ import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_va
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useEffect, useState } from "react";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type ArtworkTextInputProps = {
   label: string;
@@ -81,7 +81,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className={INPUT_CLASS}
+          className={TEXTAREA_CLASS}
         />
       )}
       {errorList.length > 0 &&

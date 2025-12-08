@@ -12,6 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
+import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
@@ -115,7 +116,7 @@ export default function ProvideOrderRejectionModalForm() {
               required
               rows={3}
               placeholder="e.g Artwork has been sold"
-              className="w-full focus:ring ring-1 border-0 ring-dark/20 outline-none focus:outline-none focus:ring-dark transition-all duration-200 ease-in-out px-2 rounded placeholder:text-dark/40 text-fluid-xxs placeholder:text-fluid-xxs"
+              className={TEXTAREA_CLASS}
             />
           </div>
         </div>

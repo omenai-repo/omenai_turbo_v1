@@ -25,6 +25,7 @@ import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 export default function QuoteForm({ order_id }: { order_id: string }) {
   const { csrf } = useAuth({ requiredRole: "gallery" });
 
@@ -389,7 +390,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Add any special pickup instructions, handling requirements, or access details..."
                 rows={2}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xxs"
+                className={TEXTAREA_CLASS}
               />
             </div>
 

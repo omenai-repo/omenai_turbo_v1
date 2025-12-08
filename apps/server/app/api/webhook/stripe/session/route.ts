@@ -22,6 +22,8 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
 import { createErrorRollbarReport } from "../../../util";
+import {redis} from "@omenai/upstash-config";
+import {rollbarServerInstance} from "@omenai/rollbar-config";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -184,11 +186,16 @@ export const POST = withAppRouterHighlight(async function POST(
       transaction_id = create_transaction[0].trans_id;
 
       // Update artwork availability
-      await Artworkuploads.updateOne(
+      const updatedArtwork = await Artworkuploads.findOneAndUpdate(
         { art_id: meta.art_id },
-        { $set: { availability: false } },
-        { session }
+        { $set: { availability: false } }, {new: true},
       );
+
+        try {
+            await redis.set(`artwork:${meta.art_id}`, JSON.stringify(updatedArtwork));
+        }catch (e) {
+            rollbarServerInstance.error({e, context: "Update cache after payment made"})
+        }
 
       // Record sales activity
       const { month, year } = getCurrentMonthAndYear();

@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { useRollbar } from "@rollbar/react";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function AccountInformation({ profile }: { profile: any }) {
   const queryClient = useQueryClient();
@@ -190,9 +190,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
             value={data.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
             rows={6}
-            className="w-full px-4 py-3 bg-gray-800 border border-line rounded-2xl text-fluid-xxs text-dark 
-                     focus:border-dark focus:outline-none focus:ring-0 
-                     transition-all duration-300 resize-none"
+            className={TEXTAREA_CLASS}
             placeholder="Tell us a little about the gallery"
           />
         </div>

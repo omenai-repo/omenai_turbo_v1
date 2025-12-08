@@ -40,6 +40,7 @@ import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/mod
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 import { createErrorRollbarReport } from "../../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import {redis} from "@omenai/upstash-config";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request,
@@ -322,12 +323,16 @@ const handlePurchaseTransaction = async (
       transaction_id = create_transaction[0].trans_id;
 
       // Update Artwork Availability
-      await Artworkuploads.updateOne(
+      const updatedArtwork = await Artworkuploads.findOneAndUpdate(
         { art_id: meta.art_id },
         { $set: { availability: false } },
-        { session }
+        { new: true }
       );
-
+        try {
+            await redis.set(`artwork:${meta.art_id}`, JSON.stringify(updatedArtwork));
+        }catch (e) {
+            rollbarServerInstance.error({e, context: "Update cache after stripe payment made"})
+        }
       // Add to sales activity
       const { month, year } = getCurrentMonthAndYear();
       const activity = {

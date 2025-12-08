@@ -2,7 +2,7 @@ import { validatePasswordFields } from "@omenai/shared-lib/validations/validateP
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { EyeOff, Eye, AlertCircle } from "lucide-react";
@@ -134,7 +134,7 @@ export default function Input({
           {labelText === "description" ? (
             <>
               <textarea
-                className={`${INPUT_CLASS}
+                className={`${TEXTAREA_CLASS}
                 
                 ${
                   errorList.length > 0

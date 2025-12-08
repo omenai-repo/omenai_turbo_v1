@@ -21,6 +21,7 @@ export default function ArtistExclusivityCountdown({
     [expiresAt]
   );
 
+  console.log(expiresAt);
   const { seconds, minutes, hours, days, isRunning } = useTimer({
     expiryTimestamp: expiryDate,
     autoStart: true,
@@ -28,6 +29,8 @@ export default function ArtistExclusivityCountdown({
       onExpire?.();
     },
   });
+
+  console.log(days)
 
   useEffect(() => {
     console.log("Exclusivity countdown date:", expiryDate);

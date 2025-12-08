@@ -25,6 +25,7 @@ import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import WarningAlert from "./WarningAlert";
 import { Checkbox } from "@mantine/core";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function QuoteForm({ order_id }: { order_id: string }) {
   const { csrf } = useAuth({ requiredRole: "artist" });
@@ -323,7 +324,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 onChange={handleInputChange}
                 placeholder="Add any special pickup instructions, handling requirements, or notes..."
                 rows={4}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors resize-none placeholder:text-fluid-xxs"
+                className={TEXTAREA_CLASS}
               />
             </div>
 

@@ -3,6 +3,7 @@ import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_va
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useState } from "react";
+import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type ArtworkTextInputProps = {
   label: string;
@@ -78,7 +79,7 @@ export default function ArtworkTextInput({
           placeholder={placeholder}
           rows={3}
           onChange={(e) => handleChange(e.target.value, name)}
-          className="border px-2 ring-0 rounded  disabled:cursor-not-allowed disabled:bg-dark/10 border-[#E0E0E0] w-full py-2 focus:border-none focus:ring-dark placeholder:font-light text-fluid-xxs placeholder:text-[#858585] placeholder:text-fluid-xxs"
+          className={TEXTAREA_CLASS}
         />
       )}
       {errorList.length > 0 &&
