@@ -20,7 +20,7 @@ const purchasePageRegex = /\/purchase\/.*/;
 const paymentPageRegex = /\/payment\/.*/;
 const artistOnboardingDashboardRegex = /\/artist\/onboarding\/.*/;
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname; // Get the current path
 
   const app_auth_uri = auth_uri();

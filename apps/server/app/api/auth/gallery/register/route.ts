@@ -18,6 +18,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../../util";
+import { redis } from "@omenai/upstash-config";
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -91,6 +92,18 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         email: email,
         token: email_token,
       });
+
+      const tourRedisKey = `tour:${gallery_id}`;
+
+      try {
+        await redis.set(tourRedisKey, JSON.stringify([]));
+      } catch (error) {
+        createErrorRollbarReport(
+          "Gallery Registeration: Error creating redis data for tours",
+          JSON.stringify(error),
+          500
+        );
+      }
 
       return NextResponse.json(
         {

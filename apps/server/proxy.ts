@@ -24,7 +24,7 @@ const allowed_origins = [
 
 // ... (rest of your middleware code)
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const origin: string = req.headers.get("origin") ?? "";
   const userAgent: string = req.headers.get("User-Agent") ?? "";
   const authorization: string = req.headers.get("Authorization") ?? "";

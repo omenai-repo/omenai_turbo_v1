@@ -52,7 +52,6 @@ export default function Saves() {
   if (loading || isLoading) {
     return <ArtworksListingSkeletonLoader />;
   }
-  console.log(artworksArray);
 
   if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
     return (

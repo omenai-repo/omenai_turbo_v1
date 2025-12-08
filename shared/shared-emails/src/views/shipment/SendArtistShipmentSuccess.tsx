@@ -1,10 +1,15 @@
 import { Text, Heading, Link } from "@react-email/components";
 import { dashboard_url } from "@omenai/url-config/src/config";
 import ShipmentLayout from "./ShipmentLayout";
+import ArtworkCard from "./ArtworkCard";
 
 export default function SendArtistShipmentSuccess(
   trackingCode: string,
-  name: string
+  name: string,
+  artwork: string,
+  artworkImage: string,
+  artistName: string,
+  artworkPrice: number
 ) {
   return (
     <ShipmentLayout
@@ -52,6 +57,12 @@ export default function SendArtistShipmentSuccess(
       >
         <strong>Tracking Code : </strong> {trackingCode}
       </Text>
+      <ArtworkCard
+        artistName={artistName}
+        artwork={artwork}
+        artworkImage={artworkImage}
+        artworkPrice={artworkPrice}
+      />
 
       <Text
         style={{

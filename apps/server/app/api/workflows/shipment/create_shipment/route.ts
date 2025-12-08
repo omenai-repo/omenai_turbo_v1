@@ -21,6 +21,7 @@ import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShi
 import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 import { createErrorRollbarReport } from "../../../util";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 type Payload = {
   order_id: string;
@@ -194,6 +195,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
           await session.endSession();
         }
 
+        const artworkImage = getImageFileView(order.artwork_data.url, 120);
+
         // Send emails **after** successful commit
         if (shouldSendEmails) {
           await sendShipmentScheduledEmail({
@@ -201,6 +204,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
             name: order.buyer_details.name,
             trackingCode: order.order_id,
             artwork: order.artwork_data.title,
+            artistName: order.seller_details.name,
+            artworkImage,
+            artworkPrice: order.artwork_data.pricing.usd_price,
           });
 
           await sendShipmentScheduledEmail({
@@ -208,6 +214,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
             name: order.seller_details.name,
             trackingCode: order.order_id,
             artwork: order.artwork_data.title,
+            artistName: order.seller_details.name,
+            artworkImage,
+            artworkPrice: order.artwork_data.pricing.usd_price,
           });
         }
 
@@ -254,7 +263,10 @@ export const { POST } = serve<Payload>(async (ctx) => {
         shipmentData.seller_details.fullname,
         shipmentData.seller_details.email,
         shipment.data.shipmentTrackingNumber,
-        shipment.data.documents[0].content
+        shipment.data.documents[0].content,
+        shipmentData.artwork_name,
+        order.artwork_data.url,
+        order.artwork_data.pricing.usd_price
       );
 
       await processWaybill(

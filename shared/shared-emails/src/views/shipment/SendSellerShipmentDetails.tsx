@@ -9,8 +9,15 @@ import {
   Text,
   Heading,
 } from "@react-email/components";
+import ArtworkCard from "./ArtworkCard";
 
-export default function SellerShipmentEmail(name: string) {
+export default function SellerShipmentEmail(
+  name: string,
+  artwork: string,
+  artworkImage: string,
+  artistName: string,
+  artworkPrice: number
+) {
   return (
     <Html>
       <Head />
@@ -61,6 +68,12 @@ export default function SellerShipmentEmail(name: string) {
               courier service will reach out shortly to schedule a pickup from
               your location.
             </Text>
+            <ArtworkCard
+              artistName={artistName}
+              artwork={artwork}
+              artworkImage={artworkImage}
+              artworkPrice={artworkPrice}
+            />
             <Text
               style={{
                 fontSize: "16px",

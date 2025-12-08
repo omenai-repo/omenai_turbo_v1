@@ -22,6 +22,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
+import { redis } from "@omenai/upstash-config";
 
 export const viewport: Viewport = {
   width: "device-width",

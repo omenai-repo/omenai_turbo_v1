@@ -86,6 +86,10 @@ type ActionStoreTypes = {
   setOpenSeaDragonImageViewer: (value: boolean) => void;
   openOnboardingCompletedModal: boolean;
   setOpenOnboardingCompletedModal: (value: boolean) => void;
+  completed: string[];
+  hydrate: (pages: string[]) => void;
+  markCompleted: (page: string) => void;
+  isCompleted: (page: string) => boolean;
 };
 
 export const actionStore = create<ActionStoreTypes>((set, get) => ({
@@ -273,4 +277,14 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
   setOpenOnboardingCompletedModal: (value: boolean) => {
     set({ openOnboardingCompletedModal: value });
   },
+
+  completed: [],
+  hydrate: (pages: string[]) => set({ completed: pages }),
+  markCompleted: (page: string) =>
+    set((state) => ({
+      completed: state.completed.includes(page)
+        ? state.completed
+        : [...state.completed, page],
+    })),
+  isCompleted: (page: string) => get().completed.includes(page),
 }));
