@@ -71,7 +71,7 @@ export const UserMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-64 origin-top-right divide-y divide-slate-700 rounded-xl bg-dark shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
+        <div className="absolute right-0 z-[99] mt-3 w-64 origin-top-right divide-y divide-slate-700 rounded-xl bg-dark shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
           <div className="px-4 py-3">
             <p className="text-fluid-xs font-normal text-white">{user.name}</p>
             <p className="truncate text-fluid-xxs text-white/70">

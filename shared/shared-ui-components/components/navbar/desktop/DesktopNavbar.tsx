@@ -31,6 +31,7 @@ const loggedInRouteMap = {
 const DesktopNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [fullUrl, setFullUrl] = useState<string>("");
 
   const { user } = useAuth({ requiredRole: "user" });
 
@@ -52,8 +53,10 @@ const DesktopNavbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+  useEffect(function () {
+    setFullUrl(`${window.location.origin}${pathname}`);
+  }, []);
   const pathname = usePathname();
-  const fullUrl = `${window.location.origin}${pathname}`;
   const navClasses = `
     fixed z-30 top-0 left-0 right-0 transition-all duration-500 ease-in-out transform py-4 md:px-12
     ${
