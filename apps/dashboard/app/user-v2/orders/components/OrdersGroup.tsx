@@ -286,8 +286,8 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
             />
           </button>
           {isOpen && (
-            <div className="absolute right-0 mt-3 w-64 origin-top-right divide-y divide-slate-700 rounded-xl bg-dark shadow-2xl ring-1 ring-white/10 backdrop-blur-md">
-              <ul className="py-1">
+            <div className="absolute right-0 mt-3 w-64 origin-top-right divide-y divide-slate-700 rounded-xl bg-dark shadow-2xl ring-1 z-[9999999999] ring-white/10 backdrop-blur-md">
+              <ul className="py-1 ">
                 {filterList.map(({ Icon, title, value }) => {
                   return (
                     <li key={value}>
@@ -296,7 +296,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
                           setActiveFilter(value);
                           setIsOpen(!isOpen);
                         }}
-                        className="flex items-center px-4 py-2 text-fluid-xs text-slate-200 transition-colors duration-200 hover:bg-white hover:text-slate-800 group cursor-pointer"
+                        className="flex w-full items-center px-4 py-2 text-fluid-xs text-slate-200 transition-colors duration-200 hover:bg-white hover:text-slate-800 group cursor-pointer"
                       >
                         <Icon
                           strokeWidth={1.5}
