@@ -9,6 +9,6 @@
     "@omenai/shared-services": "*",
     "@omenai/shared-state-store": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/redis-config": "*"
+    "@omenai/upstash-config": "*"
   }
 }
