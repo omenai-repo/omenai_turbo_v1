@@ -36,33 +36,13 @@ export default function WaitlistForm() {
           </Link>
         </p>
 
-        <div className="flex flex-col mt-[1rem] gap-4 w-full">
-          <div className="flex flex-col w-full gap-y-4">
-            <button
-              type="submit"
-              className=" p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
-            >
-              Continue
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-y-2 my-6 justify-between items-center">
-            <div className="flex gap-x-6">
-              <p className="font-medium text-fluid-xxs text-dark ">
-                <Link href={`${auth_url}/register/user`} className="text-dark">
-                  Sign up as Collector{" "}
-                </Link>
-              </p>
-              <p className="font-medium text-fluid-xxs text-dark">
-                <Link
-                  href={`${auth_url}/register/artist`}
-                  className="text-dark"
-                >
-                  Sign up as Artist{" "}
-                </Link>
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col w-full gap-y-4">
+          <button
+            type="submit"
+            className=" p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
+          >
+            Continue
+          </button>
         </div>
       </form>
     </WaitlistFormLayout>
