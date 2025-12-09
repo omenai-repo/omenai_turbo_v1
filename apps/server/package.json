@@ -20,7 +20,8 @@
     "@omenai/shared-utils": "*",
     "@omenai/rollbar-config": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/cloudinary-config": "*"
+    "@omenai/cloudinary-config": "*",
+    "@omenai/upstash-config": "*"
   },
   "dependencies": {
     "cors": "^2.8.5",

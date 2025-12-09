@@ -1159,3 +1159,13 @@ export interface OnboardingQuestion {
   label?: string;
   options?: string[];
 }
+
+export type WaitListTypes = {
+    waitlistId: string;
+    name: string;
+    email: string;
+    inviteCode?: string;
+    isInvited?: boolean;
+    entity: Exclude<EntityType, "admin">;
+    referrerKey?: string;
+}

@@ -1,5 +1,5 @@
 import { GallerySchemaTypes } from "@omenai/shared-types";
-import mongoose, { Schema, model, models } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
 const gallerySignupSchema = new Schema<GallerySchemaTypes>(
