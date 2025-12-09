@@ -186,7 +186,7 @@ export default function SocialsStep({
               <button
                 onClick={() => removeLink(index)}
                 disabled={links.length === 1 && !link.type && !link.url}
-                className="p-2 rounded-full text-red-500 hover:bg-red-50 disabled:text-gray-300 transition duration-150"
+                className="p-2 rounded text-red-500 hover:bg-red-50 disabled:text-gray-300 transition duration-150"
                 title="Remove link"
               >
                 <Trash2 className="w-5 h-5" />

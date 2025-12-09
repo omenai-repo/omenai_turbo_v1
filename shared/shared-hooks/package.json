@@ -8,6 +8,7 @@
     "@omenai/shared-auth": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-state-store": "*",
-    "@omenai/typescript-config": "*"
+    "@omenai/typescript-config": "*",
+    "@omenai/upstash-config": "*"
   }
 }

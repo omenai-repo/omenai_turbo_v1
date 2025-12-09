@@ -49,12 +49,12 @@ export const PaymentMethodChangeForm = () => {
   };
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pb-4">
-      <div className="p-4 border rounded">
+      <div className="p-6 border border-slate-200 rounded-3xl">
         <PaymentElement />
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded text-red-600">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-full text-red-600">
           {error}
         </div>
       )}
@@ -62,7 +62,7 @@ export const PaymentMethodChangeForm = () => {
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
+        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded-full p-4 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
       >
         {isProcessing ? "Processing..." : `Update payment method`}
       </button>

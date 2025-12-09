@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import UpdateLogoModalForm from "./UpdateLogoModalForm";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 
-
 export const UpdateLogoModal = () => {
   const { updateLogoModalPopup, logoModalPopup } = galleryActionStore();
 

@@ -30,6 +30,8 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createErrorRollbarReport } from "../../util";
+import {redis} from "@omenai/upstash-config";
+import {rollbarServerInstance} from "@omenai/rollbar-config";
 
 /* ----------------------------- Config & schemas --------------------------- */
 
@@ -128,6 +130,7 @@ async function handlePurchaseTransaction(
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
   if (!order_info) {
@@ -197,7 +200,7 @@ async function handlePurchaseTransaction(
     // Clear hold_status (non-transactional operation)
 
     await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
+      { order_id: order_info.order_id, "order_accepted.status": "accepted" },
       { $set: { hold_status: null } }
     ).session(session);
 
@@ -282,15 +285,11 @@ async function handlePurchaseTransaction(
       session,
     });
 
-    const updateArtworkPromise = Artworkuploads.updateOne(
-      { art_id: meta.art_id },
-      { $set: { availability: false } }
-    ).session(session);
-
     const updateOrderPromise = CreateOrder.updateOne(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -303,6 +302,11 @@ async function handlePurchaseTransaction(
           } as PaymentStatusTypes,
         },
       }
+    ).session(session);
+
+    const updateArtworkPromise = Artworkuploads.findOneAndUpdate(
+      { art_id: meta.art_id },
+      { $set: { availability: false } },{new: true}
     ).session(session);
 
     const { month, year } = getCurrentMonthAndYear();
@@ -352,6 +356,12 @@ async function handlePurchaseTransaction(
     ]);
 
     await session.commitTransaction();
+
+      try {
+          await redis.set(`artwork:${meta.art_id}`, JSON.stringify(createTransactionResult[2]));
+      }catch (e) {
+          rollbarServerInstance.error({e, context: "Update cache after payment made"})
+      }
 
     const transaction_id =
       Array.isArray(createTransactionResult) &&

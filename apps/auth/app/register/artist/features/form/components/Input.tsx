@@ -3,8 +3,14 @@ import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register
 import { AddressTypes, ArtistSignupData } from "@omenai/shared-types";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChangeEvent, HTMLInputTypeAttribute, useState } from "react";
+import {
+  ChangeEvent,
+  HTMLInputTypeAttribute,
+  useEffect,
+  useState,
+} from "react";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 
 export type InputProps = {
   label: string;
@@ -63,6 +69,42 @@ export default function Input({
       );
     }
   };
+  useEffect(() => {
+    // Only run validation for password-related fields
+    if (labelText !== "password" && labelText !== "confirmPassword") return;
+
+    const errors = validatePasswordFields({
+      password: artistSignupData.password,
+      confirmPassword: artistSignupData.confirmPassword,
+    });
+
+    // Only show errors for the current field
+    if (labelText === "password" && artistSignupData.password) {
+      const passwordErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("password") &&
+          !err.toLowerCase().includes("confirm")
+      );
+      if (passwordErrors.length > 0) {
+        setErrorList(passwordErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+
+    if (labelText === "confirmPassword" && artistSignupData.confirmPassword) {
+      const confirmErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("match") ||
+          err.toLowerCase().includes("confirm")
+      );
+      if (confirmErrors.length > 0) {
+        setErrorList(confirmErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+  }, [artistSignupData.password, artistSignupData.confirmPassword, labelText]);
 
   return (
     <AnimatePresence key={`${currentArtistSignupFormIndex}-artist`}>

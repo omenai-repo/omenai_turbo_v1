@@ -54,7 +54,7 @@ export async function fetchArtworksFromCache(artIds: string[]) {
     });
   }
 
-  return artworks;
+  return [...artworks].reverse()
 }
 
 // Helper function to fetch gallery IDs with caching

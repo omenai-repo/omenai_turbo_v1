@@ -1,4 +1,5 @@
 import { TrendingArtistCard } from "@omenai/shared-ui-components/components/artists/TrendingArtistCard";
+import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
 import useEmblaCarousel from "embla-carousel-react";
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -49,20 +50,24 @@ export default function TrendingArtist({ artists }: { artists: any }) {
   return (
     <div>
       {artists.length > 0 ? (
-        <div className="flex gap-x-4">
-          {artists.map((artist: any) => {
-            return (
-              <TrendingArtistCard
-                key={artist.author_id}
-                artist={artist.artist}
-                likes={artist.totalLikes}
-                url={artist.mostLikedArtwork.url}
-                birthyear={artist.mostLikedArtwork.birthyear}
-                country={artist.mostLikedArtwork.country}
-                artist_id={artist.author_id}
-              />
-            );
-          })}
+        <div className="embla mb-6" ref={emblaRef}>
+          <div className="embla__container space-x-3">
+            {artists.map((artist: any, index: number) => {
+              return (
+                <div className="embla__slide" key={artist.author_id}>
+                  <TrendingArtistCard
+                    key={artist.author_id}
+                    artist={artist.artist}
+                    likes={artist.totalLikes}
+                    url={artist.mostLikedArtwork.url}
+                    birthyear={artist.mostLikedArtwork.birthyear}
+                    country={artist.mostLikedArtwork.country}
+                    artist_id={artist.author_id}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       ) : null}
 
@@ -77,13 +82,13 @@ export default function TrendingArtist({ artists }: { artists: any }) {
         <div className="flex items-center justify-center w-fit space-x-2">
           <button
             onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowLeft />
           </button>
           <button
             onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
+            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
           >
             <MdOutlineKeyboardArrowRight />
           </button>

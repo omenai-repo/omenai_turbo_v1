@@ -4,13 +4,9 @@ import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
-import { MdError } from "react-icons/md";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { auth_uri } from "@omenai/url-config/src/config";
 import {
   Eye,
   EyeOff,
@@ -21,6 +17,8 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function UpdatePasswordModalForm() {
   const { updatePasswordModalPopup } = actionStore();
@@ -75,7 +73,6 @@ export default function UpdatePasswordModalForm() {
       description: "You will be redirected to the login page",
     });
     await signOut();
-    // router.replace(`${auth_uri}/login`);
   }
 
   async function requestConfirmationCode() {
@@ -106,7 +103,6 @@ export default function UpdatePasswordModalForm() {
     setCodeLoading(false);
     setCodeRequested(true);
   }
-  const router = useRouter();
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -120,6 +116,9 @@ export default function UpdatePasswordModalForm() {
       return { ...prev, [name]: value };
     });
   }
+  useEffect(() => {
+    setErrorList(validatePasswordFields(info));
+  }, [info.password, info.confirmPassword]);
 
   async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -212,7 +211,7 @@ export default function UpdatePasswordModalForm() {
                 required
                 placeholder="Create a strong password"
                 value={info.password}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed ${
+                className={`${INPUT_CLASS} ${
                   focusedField === "password"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -246,7 +245,7 @@ export default function UpdatePasswordModalForm() {
                   {[1, 2, 3, 4].map((level) => (
                     <div
                       key={level}
-                      className="flex-1 h-1.5 rounded-full transition-all duration-300"
+                      className="flex-1 h-1.5 rounded transition-all duration-300"
                       style={{
                         backgroundColor:
                           passwordData &&
@@ -289,7 +288,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Re-enter your password"
                 required
                 value={info.confirmPassword}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed ${
+                className={`${INPUT_CLASS} ${
                   focusedField === "confirmPassword"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -327,7 +326,7 @@ export default function UpdatePasswordModalForm() {
                 placeholder="Enter 6-digit code"
                 required
                 value={info.code}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed ${
+                className={`${INPUT_CLASS} ${
                   focusedField === "code"
                     ? "border-dark/80 shadow-sm"
                     : "border-dark/40 hover:border-dark/80"
@@ -344,7 +343,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-normal transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
+                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded-full text-xs font-normal transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
                   loading ||
                   errorList.length > 0 ||
                   !info.confirmPassword ||
@@ -395,7 +394,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className={`w-full h-12 rounded text-fluid-xxs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`w-full h-12 rounded-full text-fluid-xxs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
               loading ||
               errorList.length > 0 ||
               !info.code ||
@@ -419,7 +418,7 @@ export default function UpdatePasswordModalForm() {
           </button>
 
           {/* Security Note */}
-          <div className="mt-6 p-4 bg-dark/20-50 rounded border border-dark/40">
+          <div className="mt-6 p-4 bg-dark/20-50 rounded-2xl border border-dark/40">
             <div className="flex gap-3">
               <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
               <div className="text-xs text-dark/20-600 space-y-1">

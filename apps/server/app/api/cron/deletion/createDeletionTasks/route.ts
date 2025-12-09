@@ -1,5 +1,5 @@
 // Note: Run this job every day in staging, and every 15 minutes in prod
-import { ObjectId } from "mongoose";
+import { ObjectId, Schema } from "mongoose";
 import {
   EntityType,
   DeletionTaskServiceType,
@@ -71,10 +71,14 @@ async function processBatch(
     }
 
     for (const service of services) {
-      const serviceTask = createDeletionTaskPerService(service, requestId, {
-        entityId: targetId,
-        entityType: key,
-      }) as Promise<ObjectId>;
+      const serviceTask = (await createDeletionTaskPerService(
+        service,
+        requestId,
+        {
+          entityId: targetId,
+          entityType: key,
+        }
+      )) as unknown as Promise<ObjectId>;
 
       taskCreationOps.push({
         task: serviceTask,
@@ -121,17 +125,31 @@ async function processBatch(
       groupedRequestIds[requestId].push(createdTaskId);
     }
 
-    const bulkOps = Object.entries(groupedRequestIds).map(
-      ([requestId, taskIds]) => ({
-        updateOne: {
-          filter: { requestId },
-          update: {
-            $push: { tasks: { $each: taskIds } },
-            $set: { status: "tasks_created" },
-          },
+    const bulkOps: {
+      updateOne: {
+        filter: {
+          requestId: string;
+        };
+        update: {
+          $push: {
+            tasks: {
+              $each: Schema.Types.ObjectId[];
+            };
+          };
+          $set: {
+            status: "tasks_created";
+          };
+        };
+      };
+    }[] = Object.entries(groupedRequestIds).map(([requestId, taskIds]) => ({
+      updateOne: {
+        filter: { requestId },
+        update: {
+          $push: { tasks: { $each: taskIds } },
+          $set: { status: "tasks_created" },
         },
-      })
-    );
+      },
+    }));
 
     if (bulkOps.length > 0) {
       await DeletionRequestModel.bulkWrite(bulkOps);

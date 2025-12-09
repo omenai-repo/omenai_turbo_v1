@@ -17,9 +17,9 @@ export default function StepWrapper({
         <div className="text-fluid-xs font-normal text-dark mb-2">
           Question {currentStepIndex + 1} of {totalSteps}
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2.5">
+        <div className="w-full bg-slate-200 rounded h-2.5">
           <div
-            className="bg-dark h-2.5 rounded-full transition-all duration-500 ease-out"
+            className="bg-dark h-2.5 rounded transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           ></div>
         </div>

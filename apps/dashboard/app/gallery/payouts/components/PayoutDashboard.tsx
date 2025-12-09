@@ -87,7 +87,7 @@ export default function PayoutDashboard() {
             account={isConfirmed.id}
             balance={isConfirmed.balance}
           />
-          <div className="mt-6">
+          <div className="my-6">
             <TransactionTable table={isConfirmed.table_data} />
           </div>
         </div>

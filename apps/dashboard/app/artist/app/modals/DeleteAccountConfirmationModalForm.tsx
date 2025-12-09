@@ -93,7 +93,7 @@ export default function DeleteAccountConfirmationModalForm() {
           <div className="flex gap-4 items-start">
             <div className="flex-shrink-0">
               {/* Sad icon */}
-              <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
+              <div className="w-14 h-14 rounded bg-red-50 flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-red-600"
                   fill="none"

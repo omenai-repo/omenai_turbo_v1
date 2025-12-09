@@ -84,8 +84,8 @@ export default function ExtendArtworkContractConfirmationModalForm() {
 
       {/* Notice Card */}
       <div className="relative bg-dark rounded-lg p-4 text-white shadow-lg overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded -mr-16 -mt-16" />
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded -ml-12 -mb-12" />
         <div className="relative flex items-start gap-2">
           <div className="flex-shrink-0 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
             <svg

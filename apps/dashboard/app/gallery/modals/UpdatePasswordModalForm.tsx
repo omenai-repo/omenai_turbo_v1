@@ -1,107 +1,24 @@
 "use client";
-
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { validate } from "@omenai/shared-lib/validations/validatorGroup";
-import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
-import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
-import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { ChangeEvent, FormEvent, useState } from "react";
 import { MdError } from "react-icons/md";
-import { toast } from "sonner";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function UpdatePasswordModalForm() {
-  const { updatePasswordModalPopup } = actionStore();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [codeLoading, setCodeLoading] = useState<boolean>(false);
-  const [info, setInfo] = useState({
-    password: "",
-    confirmPassword: "",
-    code: "",
-  });
-
-  const [errorList, setErrorList] = useState<string[]>([]);
-  const { user, csrf } = useAuth({ requiredRole: "gallery" });
-
-  async function requestConfirmationCode() {
-    setCodeLoading(true);
-    const response = await requestPasswordConfirmationCode(
-      "gallery",
-      user.gallery_id,
-      csrf || ""
-    );
-    if (response?.isOk)
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-    else
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    setCodeLoading(false);
-  }
-
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    const name = e.target.name;
-
-    setErrorList([]);
-    const { success, errors }: { success: boolean; errors: string[] | [] } =
-      validate(value, name, info.password);
-    if (!success) setErrorList(errors);
-    else
-      setInfo((prev) => {
-        return { ...prev, [name]: value };
-      });
-  }
-
-  async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    const response = await updatePassword(
-      info.password,
-      info.code,
-      "gallery",
-      user.gallery_id,
-      csrf || ""
-    );
-
-    if (response?.isOk) {
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      updatePasswordModalPopup(false);
-    } else {
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    }
-    setLoading(false);
-  }
+  const {
+    loading,
+    codeLoading,
+    info,
+    errorList,
+    requestConfirmationCode,
+    handlePasswordUpdate,
+    handleInputChange,
+  } = usePasswordReset("gallery");
   return (
     <div className="w-full max-h-[85vh] overflow-y-auto h-auto">
       {/* Design 1: Clean Card with Progress */}
-      <div className="bg-white rounded shadow-lg border border-slate-200 overflow-hidden">
+      <div className="bg-white shadow-lg border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="bg-slate-50 px-6 py-5 border-b border-slate-200">
           <div className="flex items-center gap-3">
@@ -149,7 +66,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Enter your new password"
-                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
+                  className={INPUT_CLASS}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg
@@ -183,7 +100,7 @@ export default function UpdatePasswordModalForm() {
                   type="password"
                   required
                   placeholder="Confirm your new password"
-                  className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
+                  className={INPUT_CLASS}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {info.confirmPassword &&
@@ -236,7 +153,7 @@ export default function UpdatePasswordModalForm() {
                 type="text"
                 required
                 placeholder="Enter 6-digit code"
-                className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed tracking-wider"
+                className={INPUT_CLASS}
               />
               <button
                 type="button"
@@ -248,7 +165,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-3 w-full bg-dark text-white font-normal rounded hover:bg-slate-700 hover:text-white transition-colors disabled:bg-dark/10 disabled:cursor-not-allowed  focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs grid place-items-center"
+                className="px-4 py-3 w-full bg-dark text-white font-normal rounded-full hover:bg-slate-700 hover:text-white transition-colors disabled:bg-dark/10 disabled:cursor-not-allowed  focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs grid place-items-center"
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>
@@ -275,6 +192,11 @@ export default function UpdatePasswordModalForm() {
             </div>
           )}
 
+          <AlertComponent title="Security tip:">
+            After updating your password, you'll need to sign in again on all
+            your devices for security purposes.
+          </AlertComponent>
+
           {/* Submit Button */}
           <button
             disabled={
@@ -285,7 +207,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-dark text-white font-normal rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-0 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+            className="w-full py-3 px-6 bg-dark text-white font-normal rounded-full shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-0 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

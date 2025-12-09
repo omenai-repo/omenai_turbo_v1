@@ -12,6 +12,8 @@ import {
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { createErrorRollbarReport } from "../../util";
+import {redis} from "@omenai/upstash-config";
+import {rollbarServerInstance} from "@omenai/rollbar-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -43,15 +45,25 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
 
     const future_exclusivity_date = addDaysToDate(90);
 
-    const updateArtworkExclusivity = await Artworkuploads.updateOne(
+    // Also update redis cache
+    const updateArtworkExclusivity = await Artworkuploads.findOneAndUpdate(
       { art_id },
       {
         $set: {
           "exclusivity_status.exclusivity_type": "exclusive",
           "exclusivity_status.exclusivity_end_date": future_exclusivity_date,
         },
-      }
+      }, {new: true}
     );
+
+    if (!updateArtworkExclusivity) throw new ServerError("Unable to update artwork exclusivity status at this time, please try again or contact support");
+    const cacheKey = `artwork:${art_id}`;
+
+    try {
+    await redis.set(cacheKey, JSON.stringify(updateArtworkExclusivity));
+    }catch (e) {
+        rollbarServerInstance.error({e, context: "Update cache after exclusivity update"})
+    }
 
     await CreateOrder.updateMany(
       {
@@ -65,6 +77,7 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
         },
       }
     );
+
 
     if (updateArtworkExclusivity.modifiedCount === 0) {
       throw new ServerError(

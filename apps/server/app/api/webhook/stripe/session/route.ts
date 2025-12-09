@@ -22,6 +22,8 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
 import { createErrorRollbarReport } from "../../../util";
+import {redis} from "@omenai/upstash-config";
+import {rollbarServerInstance} from "@omenai/rollbar-config";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
@@ -80,6 +82,8 @@ export const POST = withAppRouterHighlight(async function POST(
     }
 
     const meta = checkoutSession.metadata;
+    console.log(meta);
+
     if (!meta?.buyer_email || !meta?.art_id) {
       console.error("Missing required metadata");
       return NextResponse.json({ status: 400 });
@@ -99,6 +103,7 @@ export const POST = withAppRouterHighlight(async function POST(
     const order_info = await CreateOrder.findOne({
       "buyer_details.email": meta.buyer_email,
       "artwork_data.art_id": meta.art_id,
+      "order_accepted.status": "accepted",
     });
 
     if (!order_info) {
@@ -124,7 +129,7 @@ export const POST = withAppRouterHighlight(async function POST(
     try {
       // Remove hold status BEFORE starting transaction (non-transactional)
       await CreateOrder.updateOne(
-        { order_id: order_info.order_id },
+        { order_id: order_info.order_id, "order_accepted.status": "accepted" },
         { $set: { hold_status: null } }
       );
 
@@ -144,6 +149,7 @@ export const POST = withAppRouterHighlight(async function POST(
         {
           "buyer_details.email": meta.buyer_email,
           "artwork_data.art_id": meta.art_id,
+          "order_accepted.status": "accepted",
         },
         {
           $set: {
@@ -180,11 +186,16 @@ export const POST = withAppRouterHighlight(async function POST(
       transaction_id = create_transaction[0].trans_id;
 
       // Update artwork availability
-      await Artworkuploads.updateOne(
+      const updatedArtwork = await Artworkuploads.findOneAndUpdate(
         { art_id: meta.art_id },
-        { $set: { availability: false } },
-        { session }
+        { $set: { availability: false } }, {new: true},
       );
+
+        try {
+            await redis.set(`artwork:${meta.art_id}`, JSON.stringify(updatedArtwork));
+        }catch (e) {
+            rollbarServerInstance.error({e, context: "Update cache after payment made"})
+        }
 
       // Record sales activity
       const { month, year } = getCurrentMonthAndYear();

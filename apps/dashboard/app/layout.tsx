@@ -13,6 +13,7 @@ import {
   HighRiskProvider,
   LowRiskProvider,
 } from "@omenai/package-provider/ConfigCatProvider";
+import LenisProvider from "@omenai/package-provider/ScrollProvider";
 
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
@@ -21,6 +22,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
+import { redis } from "@omenai/upstash-config";
 
 export const viewport: Viewport = {
   width: "device-width",

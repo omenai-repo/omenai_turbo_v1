@@ -21,6 +21,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { City, State } from "country-state-city";
 import { useEffect, useState, FormEvent } from "react";
 import { toast } from "sonner";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 type AddressFormProps = {
   userAddress: AddressTypes;
@@ -98,9 +99,11 @@ export default function AddressForm({
     );
 
     if (!createdShippingOrder?.isOk) {
-      toast.error("Order Failed", {
-        description: createdShippingOrder.message,
-      });
+      toast_notif(
+        createdShippingOrder.message ||
+          "There was a problem placing this order request, please try again or contact support",
+        "error"
+      );
       return setLoading(false);
     }
 

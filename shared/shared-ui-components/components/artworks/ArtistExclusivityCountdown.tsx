@@ -21,6 +21,7 @@ export default function ArtistExclusivityCountdown({
     [expiresAt]
   );
 
+  console.log(expiresAt);
   const { seconds, minutes, hours, days, isRunning } = useTimer({
     expiryTimestamp: expiryDate,
     autoStart: true,
@@ -28,6 +29,8 @@ export default function ArtistExclusivityCountdown({
       onExpire?.();
     },
   });
+
+  console.log(days)
 
   useEffect(() => {
     console.log("Exclusivity countdown date:", expiryDate);
@@ -99,8 +102,7 @@ export default function ArtistExclusivityCountdown({
               />
             </svg>
             <p className="text-amber-800 text-fluid-xxs leading-relaxed">
-              Exclusivity period has ended. You may now sell this artwork
-              outside the platform.
+              Artwork Exclusivity period has ended.
             </p>
           </div>
           <button

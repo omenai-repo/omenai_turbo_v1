@@ -45,14 +45,14 @@ export default function SubscriptionCheckout() {
       <PageTitle title="Checkout" />
 
       {isLoading ? (
-        <div className="h-[50vh]w-full grid place-items-center">
+        <div className="h-[50vh] w-full grid place-items-center">
           <Load />
         </div>
       ) : (
         <>
-          <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-3 mt-4">
+          <div className="gap-3 mt-4">
             {action === "null" ? (
-              <div className="col-span-1">
+              <div className="">
                 {charge_type === "card_change" ? (
                   <CardChangeCheckoutItem />
                 ) : (
@@ -70,7 +70,7 @@ export default function SubscriptionCheckout() {
                 />
               </div>
             ) : (
-              <div className="col-span-1">
+              <div className="">
                 <MigrationUpgradeCheckout
                   plan={data?.plans}
                   interval={interval as "yearly" | "monthly"}

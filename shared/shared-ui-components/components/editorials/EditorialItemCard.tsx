@@ -11,7 +11,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
   return (
     // Card Container: Sleek floating effect with subtle shadow and rounded corners.
     <div
-      className="group relative bg-white rounded-xl transition-all duration-300 
+      className="group relative bg-white rounded-2xl transition-all duration-300 
                     transform  h-[420px] w-full max-w-[330px]  border border-slate-200 overflow-hidden"
     >
       {/* Image Section */}

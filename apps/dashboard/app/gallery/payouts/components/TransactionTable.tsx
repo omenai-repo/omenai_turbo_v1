@@ -47,9 +47,10 @@ export function TransactionTable({
     }
   );
   return (
-    <div className="h-full w-full overflow-auto">
+    // TODO: Paginate this table
+    <div className=" h-full w-full overflow-auto mb-4">
       <div className="bg-white border border-gray-100 rounded overflow-hidden shadow-sm">
-        <table className="w-full">
+        <table className="w-full table-auto">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               {TABLE_HEAD.map((head) => (
@@ -83,7 +84,7 @@ export function TransactionTable({
                   {data.commission}
                 </td> */}
                 <td className="px-6 py-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  <span className="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
                     {data.status}
                   </span>
                 </td>
@@ -94,7 +95,7 @@ export function TransactionTable({
 
         {transaction_table_data.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center mb-4">
               <svg
                 className="w-8 h-8 text-gray-400"
                 fill="none"

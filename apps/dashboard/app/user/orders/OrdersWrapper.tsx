@@ -4,8 +4,11 @@ import OrdersGroup from "./components/OrdersGroup";
 import { getOrdersForUser } from "@omenai/shared-services/orders/getOrdersForUser";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { useWindowSize } from "usehooks-ts";
+import OrdersMobileGroup from "./components/OrderMobileTab";
 
 export default function Orders() {
+  const { width } = useWindowSize();
   const { user } = useAuth({ requiredRole: "user" });
   const { data: orders, isLoading } = useQuery({
     queryKey: ["user_orders_page"],
@@ -27,7 +30,11 @@ export default function Orders() {
   }
   return (
     <>
-      <OrdersGroup orders={orders} />
+      {width > 768 ? (
+        <OrdersGroup orders={orders} />
+      ) : (
+        <OrdersMobileGroup orders={orders} />
+      )}
     </>
   );
 }

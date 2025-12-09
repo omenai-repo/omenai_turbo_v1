@@ -27,7 +27,7 @@ export default function DeleteAccountSuccessModal() {
       <div className="relative bg-white dark:bg-slate-800 rounded shadow-2xl w-full max-w-md px-6 py-8 z-10">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+            <div className="w-12 h-12 rounded bg-red-100 flex items-center justify-center">
               <svg
                 className="w-6 h-6 text-red-600"
                 viewBox="0 0 24 24"

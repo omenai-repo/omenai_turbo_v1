@@ -66,7 +66,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
 
   // Success Screen Component
   const SuccessScreen = () => (
-    <div className="bg-white rounded shadow-2xl max-w-md w-full mx-auto overflow-hidden">
+    <div className="bg-white rounded-full shadow-2xl max-w-md w-full mx-auto overflow-hidden">
       {/* Header with gradient */}
       <div className="bg-gradient-to-br from-green-500 to-emerald-600 px-8 pt-12 pb-8 text-white relative overflow-hidden">
         {/* Background pattern */}
@@ -129,9 +129,9 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
         }`}
       >
         {/* Generic payment confirmation */}
-        <div className="flex items-center justify-between mb-8 p-4 bg-gray-50 rounded">
+        <div className="flex items-center justify-between mb-8 p-4 bg-gray-50 rounded-full">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded flex items-center justify-center text-white shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg">
               <CreditCard size={24} />
             </div>
             <div>
@@ -173,7 +173,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
 
         {/* CTA Button */}
         <Link href={"/gallery/billing"}>
-          <button className="w-full bg-gradient-to-r text-fluid-xxs from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+          <button className="w-full bg-gradient-to-r text-fluid-xxs from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded-full transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
             <ArrowLeft size={18} />
             Back to billing page
           </button>
@@ -184,7 +184,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
 
   // Error Screen Component
   const ErrorScreen = () => (
-    <div className="bg-white rounded shadow-2xl max-w-md w-full mx-auto overflow-hidden">
+    <div className="bg-white rounded-full shadow-2xl max-w-md w-full mx-auto overflow-hidden">
       {/* Header with gradient */}
       <div className="bg-gradient-to-br from-red-500 to-red-600 px-8 pt-12 pb-8 text-white relative overflow-hidden">
         {/* Background pattern */}
@@ -247,8 +247,8 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
         }`}
       >
         {/* Error message */}
-        <div className="flex items-start gap-4 mb-8 p-4 bg-red-50 rounded border border-red-100">
-          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded flex items-center justify-center text-white shadow-lg flex-shrink-0">
+        <div className="flex items-start gap-4 mb-8 p-4 bg-red-50 rounded-full border border-red-100">
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-lg flex-shrink-0">
             <AlertTriangle size={24} />
           </div>
           <div className="flex-1">
@@ -288,13 +288,13 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
         <div className="space-y-3 flex flex-col">
           <button
             onClick={() => window.location.reload()}
-            className="w-full bg-gradient-to-r text-fluid-xxs from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r text-fluid-xxs from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-lg text-white font-semibold py-4 px-6 rounded-full transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
           >
             <RefreshCw size={18} />
             Try Again
           </button>
           <Link href={"/gallery/billing"}>
-            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-4 px-6 rounded transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-4 px-6 rounded-full transform transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
               <ArrowLeft size={18} />
               Back to billing page
             </button>
@@ -329,7 +329,7 @@ const PaymentSuccessDemo = () => {
           {!showSuccess && (
             <button
               onClick={() => setShowSuccess(true)}
-              className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded transition-colors"
+              className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded-full transition-colors"
             >
               Show Success Screen
             </button>
@@ -338,7 +338,7 @@ const PaymentSuccessDemo = () => {
 
         {!showSuccess && (
           <div className="text-center py-16">
-            <div className="bg-white rounded p-8 shadow-lg max-w-md mx-auto">
+            <div className="bg-white rounded-full p-8 shadow-lg max-w-md mx-auto">
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 Success screen closed
               </h3>
@@ -347,7 +347,7 @@ const PaymentSuccessDemo = () => {
               </p>
               <button
                 onClick={() => setShowSuccess(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full"
               >
                 Show Again
               </button>

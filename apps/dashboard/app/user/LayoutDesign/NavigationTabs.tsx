@@ -89,13 +89,13 @@ const Chip = ({
         <motion.span
           layoutId="pill-tab"
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="mt-1 w-10 h-1 rounded-full bg-dark"
+          className="mt-1 w-10 h-1 rounded bg-dark"
         />
       )}
 
       {/* Hover effect underline */}
       {!selectedTab && (
-        <span className="mt-1 w-0 h-1 rounded-full bg-slate-600 group-hover:w-10 transition-all duration-300"></span>
+        <span className="mt-1 w-0 h-1 rounded bg-slate-600 group-hover:w-10 transition-all duration-300"></span>
       )}
     </Link>
   );

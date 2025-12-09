@@ -42,7 +42,7 @@ export default function PaymentMethofChangeWrapper() {
       <PageTitle title="Change card" />
 
       <>
-        <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-3 my-4 items-baseline">
+        <div className="max-w-xl mx-auto gap-3 my-4 items-baseline">
           <div className="col-span-1 space-y-4">
             <CardChangeCheckoutItem />
             <Elements

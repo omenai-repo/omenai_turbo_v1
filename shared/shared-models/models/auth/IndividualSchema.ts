@@ -22,7 +22,7 @@ const individualSignupSchema = new Schema<IndividualSchemaTypes>(
       required: true,
     },
 
-    phone: { type: String, default: () => "" },
+    phone: { type: String, default: "" },
 
     user_id: {
       type: String,

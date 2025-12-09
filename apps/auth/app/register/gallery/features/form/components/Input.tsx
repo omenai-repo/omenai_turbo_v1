@@ -1,10 +1,17 @@
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
+import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { EyeOff, Eye, AlertCircle } from "lucide-react";
-import { ChangeEvent, HTMLInputTypeAttribute, useState } from "react";
+import {
+  ChangeEvent,
+  HTMLInputTypeAttribute,
+  useEffect,
+  useState,
+} from "react";
 import { MdError, MdOutlineArrowForward } from "react-icons/md";
 import { PiEyeSlashThin, PiEyeThin } from "react-icons/pi";
 export type InputProps = {
@@ -66,6 +73,46 @@ export default function Input({
       );
     }
   };
+  useEffect(() => {
+    // Only run validation for password-related fields
+    if (labelText !== "password" && labelText !== "confirmPassword") return;
+
+    const errors = validatePasswordFields({
+      password: gallerySignupData.password,
+      confirmPassword: gallerySignupData.confirmPassword,
+    });
+
+    // Only show errors for the current field
+    if (labelText === "password" && gallerySignupData.password) {
+      const passwordErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("password") &&
+          !err.toLowerCase().includes("confirm")
+      );
+      if (passwordErrors.length > 0) {
+        setErrorList(passwordErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+
+    if (labelText === "confirmPassword" && gallerySignupData.confirmPassword) {
+      const confirmErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("match") ||
+          err.toLowerCase().includes("confirm")
+      );
+      if (confirmErrors.length > 0) {
+        setErrorList(confirmErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+  }, [
+    gallerySignupData.password,
+    gallerySignupData.confirmPassword,
+    labelText,
+  ]);
 
   return (
     <AnimatePresence key={`${currentGallerySignupFormIndex}-gallery`}>
@@ -87,7 +134,7 @@ export default function Input({
           {labelText === "description" ? (
             <>
               <textarea
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed
+                className={`${TEXTAREA_CLASS}
                 
                 ${
                   errorList.length > 0
@@ -109,7 +156,7 @@ export default function Input({
             <div className="relative group">
               <input
                 type={type === "password" ? (show ? "text" : type) : type}
-                className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed
+                className={`${INPUT_CLASS}
                 
                 ${
                   errorList.length > 0

@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { StepComponentProps } from "../OnboardingContainer";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import React from "react";
 
@@ -43,7 +43,7 @@ export default function TextStep({
           value={isValueTextString ? currentValue : ""}
           onChange={handleChange}
           placeholder={placeholder || "Start typing your bio..."}
-          className={INPUT_CLASS}
+          className={TEXTAREA_CLASS}
         />
       ) : (
         <input

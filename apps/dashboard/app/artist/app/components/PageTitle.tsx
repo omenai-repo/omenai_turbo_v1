@@ -27,14 +27,14 @@ export default function PageTitle({ title }: { title: string }) {
         {ignoredRoutes.includes(capitalizedSegment.toLowerCase()) ? (
           <span>{capitalizedSegment}</span>
         ) : (
-          <a
+          <Link
             href={link}
             className={`${
               index === pathSegments.length - 1 && "text-green-600 font-medium"
             }`}
           >
             {capitalizedSegment}
-          </a>
+          </Link>
         )}
       </span>
     );
@@ -47,7 +47,7 @@ export default function PageTitle({ title }: { title: string }) {
       </div>
       {title === "My Artworks" && (
         <Link href={"/artist/app/artworks/upload"} className="w-fit">
-          <button className="h-[35px] p-4 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal whitespace-nowrap">
+          <button className="h-[35px] p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal whitespace-nowrap">
             <span>Upload Artwork</span>
             <IoAdd className="text-fluid-sm" />
           </button>

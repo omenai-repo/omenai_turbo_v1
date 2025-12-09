@@ -14,7 +14,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
 import { UpdateLogoModal } from "./modals/UpdateLogoModal";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import NoMobileView from "../components/NoMobileView";
+import NoMobileView from "../artist/components/NoMobileView";
 export default function GalleryDashboardLayout({
   children,
 }: {

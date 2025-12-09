@@ -28,6 +28,8 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createErrorRollbarReport } from "../../util";
+import {redis} from "@omenai/upstash-config";
+import {rollbarServerInstance} from "@omenai/rollbar-config";
 
 /* ----------------------------- Schemas & Types --------------------------- */
 
@@ -103,6 +105,7 @@ async function processPurchaseTransaction(
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
   if (!order_info) {
@@ -116,6 +119,7 @@ async function processPurchaseTransaction(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -142,6 +146,7 @@ async function processPurchaseTransaction(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -206,7 +211,7 @@ async function processPurchaseTransaction(
 
     // Clear hold_status
     await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
+      { order_id: order_info.order_id, "order_accepted.status": "accepted" },
       { $set: { hold_status: null } }
     ).session(session);
 
@@ -265,11 +270,6 @@ async function processPurchaseTransaction(
       }
     );
 
-    const updateArtworkPromise = Artworkuploads.updateOne(
-      { art_id: meta.art_id },
-      { $set: { availability: false } }
-    ).session(session);
-
     const wallet_increment_amount = Math.round(
       Number(verified_transaction.data.amount) -
         (commission +
@@ -282,6 +282,7 @@ async function processPurchaseTransaction(
       {
         "buyer_details.email": meta.buyer_email,
         "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
       },
       {
         $set: {
@@ -295,6 +296,10 @@ async function processPurchaseTransaction(
         },
       }
     ).session(session);
+    const updateArtworkPromise = Artworkuploads.findOneAndUpdate(
+      { art_id: meta.art_id },
+      { $set: { availability: false } }, {new: true}
+    ).session(session);
 
     const { month, year } = getCurrentMonthAndYear();
     const activity = {
@@ -305,11 +310,11 @@ async function processPurchaseTransaction(
       trans_ref: transactionData.trans_reference,
     };
 
-    const createSalesActivityPromise = SalesActivity.create([activity], {
+    const createSalesActivityPromise: Promise<any[]> = SalesActivity.create([activity], {
       session,
     });
 
-    const updateManyOrdersPromise = CreateOrder.updateMany(
+      const updateManyOrdersPromise = CreateOrder.updateMany(
       {
         "artwork_data.art_id": meta.art_id,
         "buyer_details.id": { $ne: meta.buyer_id },
@@ -344,6 +349,12 @@ async function processPurchaseTransaction(
 
     // Commit transaction
     await session.commitTransaction();
+
+      try {
+          await redis.set(`artwork:${meta.art_id}`, JSON.stringify(createTransactionResult[2]));
+      }catch (e) {
+          rollbarServerInstance.error({e, context: "Update cache after payment made"})
+      }
 
     const transaction_id =
       Array.isArray(createTransactionResult) &&

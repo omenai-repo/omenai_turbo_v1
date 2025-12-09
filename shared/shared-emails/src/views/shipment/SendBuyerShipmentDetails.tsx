@@ -11,8 +11,16 @@ import {
   Heading,
   Link,
 } from "@react-email/components";
+import ArtworkCard from "./ArtworkCard";
 
-export default function BuyerShipmentEmail(trackingCode: string, name: string) {
+export default function BuyerShipmentEmail(
+  trackingCode: string,
+  name: string,
+  artwork: string,
+  artworkImage: string,
+  artistName: string,
+  artworkPrice: number
+) {
   return (
     <Html>
       <Head />
@@ -66,6 +74,12 @@ export default function BuyerShipmentEmail(trackingCode: string, name: string) {
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
               <strong>Tracking Code:</strong> {trackingCode}
             </Text>
+            <ArtworkCard
+              artistName={artistName}
+              artwork={artwork}
+              artworkImage={artworkImage}
+              artworkPrice={artworkPrice}
+            />
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
               Open the Omenai App to track your shipment or visit your dashboard
               on the web

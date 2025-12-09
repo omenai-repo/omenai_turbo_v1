@@ -32,7 +32,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
   return (
     <div className="w-full">
       {/* Design 1: Modern Card-based Tabs */}
-      <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
         <Tabs
           color="#3b82f6"
           variant="default"
@@ -44,7 +44,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
           {/* Sidebar */}
           <div className="w-72 bg-slate-50 border-r border-slate-200">
             <div className="p-6">
-              <h2 className="text-fluid-base font-medium text-slate-900 mb-1">
+              <h2 className="text-fluid-base font-normal text-slate-900 mb-1">
                 Order Management
               </h2>
               <p className="text-fluid-xxs text-slate-600 mb-6">
@@ -54,9 +54,9 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
               <Tabs.List className="space-y-2">
                 <Tabs.Tab
                   value="pending"
-                  className="w-full px-4 py-3 rounded flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
+                  className="w-full px-4 py-3 rounded-full flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
                 >
-                  <div className="p-2 rounded bg-amber-100 flex gap-x-2 items-center data-[active]:bg-amber-500">
+                  <div className="p-2 rounded-full bg-amber-100 flex gap-x-2 items-center data-[active]:bg-amber-500">
                     <PackageMinus
                       size={20}
                       className="text-amber-600 data-[active]:text-white"
@@ -73,9 +73,9 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
 
                 <Tabs.Tab
                   value="processing"
-                  className="w-full px-4 py-3 rounded flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
+                  className="w-full px-4 py-3 rounded-full flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
                 >
-                  <div className="p-2 rounded bg-blue-100 flex gap-x-1 items-center data-[active]:bg-blue-500">
+                  <div className="p-2 rounded-full bg-blue-100 flex gap-x-1 items-center data-[active]:bg-blue-500">
                     <PackageSearch
                       size={20}
                       className="text-blue-600 data-[active]:text-white"
@@ -92,9 +92,9 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
 
                 <Tabs.Tab
                   value="completed"
-                  className="w-full px-4 py-3 rounded flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-green-600 hover:bg-white/50"
+                  className="w-full px-4 py-3 rounded-full flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-green-600 hover:bg-white/50"
                 >
-                  <div className="p-2 rounded bg-green-100 flex items-center gap-x-1 data-[active]:bg-green-500">
+                  <div className="p-2 rounded-full bg-green-100 flex items-center gap-x-1 data-[active]:bg-green-500">
                     <PackageCheck
                       size={20}
                       className="text-green-600 data-[active]:text-white"
@@ -113,13 +113,13 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
 
             {/* Summary Stats */}
             <div className="px-6 pb-6">
-              <div className="bg-white rounded p-4 border border-slate-200">
+              <div className="bg-white rounded-2xl p-4 border border-slate-200">
                 <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">
                   Overview
                 </p>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-fluid-xxs font-medium text-slate-600">
+                    <span className="text-fluid-xxs font-normal text-slate-600">
                       Total Orders
                     </span>
                     <span className="text-sm font-semibold text-slate-900">
@@ -128,14 +128,6 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
                         completed_orders.length}
                     </span>
                   </div>
-
-                  {/* DONE: comment this out */}
-                  {/* <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-600">This Month</span>
-                    <span className="text-sm font-semibold text-green-600">
-                      +12%
-                    </span>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -146,7 +138,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
             <Tabs.Panel value="pending">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-fluid-base font-medium text-slate-900">
+                  <h3 className="text-fluid-base font-normal text-slate-900">
                     Pending Orders
                   </h3>
                 </div>
@@ -157,7 +149,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
             <Tabs.Panel value="processing">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-fluid-base font-medium text-slate-900">
+                  <h3 className="text-fluid-base font-normal text-slate-900">
                     Orders in Progress
                   </h3>
                 </div>
@@ -168,7 +160,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
             <Tabs.Panel value="completed">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-fluid-base font-medium text-slate-900">
+                  <h3 className="text-fluid-base font-normal text-slate-900">
                     Completed Orders
                   </h3>
                 </div>

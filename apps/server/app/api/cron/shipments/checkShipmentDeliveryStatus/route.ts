@@ -9,6 +9,7 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
 import { createErrorRollbarReport } from "../../../util";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -151,7 +152,7 @@ async function processOrder(order: any, dbConnection: any) {
           console.log(
             `✓ Order ${order.order_id}: Released ${wallet_increment_amount} to seller ${seller_details.id}`
           );
-
+          const artworkImage = getImageFileView(order.artwork_data.url, 120);
           // TODO: Send notification emails
           if (seller_designation === "artist") {
             // - Artist: Notify about fund unlock
@@ -165,6 +166,11 @@ async function processOrder(order: any, dbConnection: any) {
             await sendGalleryShipmentSuccessfulMail({
               name: seller_details.name,
               email: seller_details.email,
+              trackingCode: order.order_id,
+              artistName: order.seller_details.name,
+              artworkImage,
+              artwork: order.artwork_data.title,
+              artworkPrice: order.artwork_data.pricing.usd_price,
             });
           }
         }
@@ -215,6 +221,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
           $exists: true,
           $ne: null,
         },
+        "order_accepted.status": "accepted",
         "shipping_details.shipment_information.estimates.estimatedDeliveryDate":
           {
             $exists: true,
@@ -258,15 +265,15 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     );
 
     if (eligibleOrders.length === 0) {
-      return NextResponse.json(
-        {
-          message: "No orders eligible for delivery validation",
-          total_processing: processingOrders.length,
-          eligible: 0,
-          execution_time_ms: Date.now() - startTime,
-        },
-        { status: 200 }
-      );
+      const res_payload = {
+        message: "No orders eligible for delivery validation",
+        total_processing: processingOrders.length,
+        eligible: 0,
+        execution_time_ms: Date.now() - startTime,
+      };
+
+      console.log(res_payload);
+      return NextResponse.json({ ...res_payload }, { status: 200 });
     }
 
     // Process all eligible orders in parallel with concurrency limit

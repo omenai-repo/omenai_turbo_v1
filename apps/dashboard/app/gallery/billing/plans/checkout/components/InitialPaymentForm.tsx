@@ -62,7 +62,7 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
 
   if (success) {
     return (
-      <div className="p-6 bg-green-50 rounded">
+      <div className="p-6 bg-green-50 rounded-3xl">
         <h3 className="text-green-800 font-semibold">Subscription Created!</h3>
         <p className="text-green-600">
           Your subscription has been successfully activated.
@@ -73,12 +73,12 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mb-4">
-      <div className="p-4 border rounded">
+      <div className="p-4 border ">
         <PaymentElement />
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded text-red-600">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-3xl text-red-600">
           {error}
         </div>
       )}
@@ -86,7 +86,7 @@ export function PaymentForm({ planId, amount }: SubscriptionFormProps) {
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer mb-4"
+        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded-full h-[35px] p-6 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer mb-4"
       >
         {isProcessing ? "Processing..." : `Subscribe for $${amount}`}
       </button>

@@ -11,6 +11,9 @@ type EmailData = {
   pickupAddress: AddressTypes;
   estimatedPickupDate?: string;
   daysLeft: string;
+  artistName: string;
+  artworkImage: string;
+  artworkPrice: number;
 };
 export const sendShipmentPickupReminderMail = async ({
   name,
@@ -21,6 +24,9 @@ export const sendShipmentPickupReminderMail = async ({
   pickupAddress,
   estimatedPickupDate,
   daysLeft,
+  artistName,
+  artworkImage,
+  artworkPrice,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai orders",
@@ -35,6 +41,9 @@ export const sendShipmentPickupReminderMail = async ({
       pickupAddress,
       estimatedPickupDate,
       daysLeft,
+      artistName,
+      artworkImage,
+      artworkPrice,
     }),
   });
 };

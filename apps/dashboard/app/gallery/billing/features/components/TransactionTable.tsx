@@ -33,12 +33,12 @@ export default function TransactionTable() {
 
   const reversedTransactions = transactions.slice().reverse();
   return (
-    <div className=" bg-white rounded shadow-sm border border-slate-200 p-6">
-      <h2 className="text-base font-semibold text-dark mb-6">
+    <div className=" bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <h2 className="text-fluid-xs font-medium text-dark mb-6">
         Recent Transaction Activity
       </h2>
 
-      <div className="max-h-[350px] overflow-y-auto pr-2 space-y-3">
+      <div className="max-h-full h-full overflow-y-auto pr-2 space-y-3">
         {reversedTransactions.length > 0 ? (
           <div className="relative">
             {/* Timeline Line */}
@@ -53,7 +53,7 @@ export default function TransactionTable() {
                 {/* Timeline Dot */}
                 <div className="relative z-10 flex-shrink-0">
                   <div className="w-10 h-10 bg-white border-2 border-slate-300 rounded-full flex items-center justify-center">
-                    <span className="text-fluid-xxs font-semibold text-slate-600">
+                    <span className="text-fluid-xxs font-medium text-slate-600">
                       {index + 1}
                     </span>
                   </div>
@@ -63,7 +63,7 @@ export default function TransactionTable() {
                 <div className="flex-1 bg-slate-50 rounded p-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-fluid-xxs font-semibold text-slate-500 mt-0.5">
+                      <p className="text-fluid-xxs font-medium text-slate-500 mt-0.5">
                         #{transaction.trans_id}
                       </p>
                       <p
@@ -85,7 +85,7 @@ export default function TransactionTable() {
                         {formatISODate(transaction.date)}
                       </p>
                     </div>
-                    <p className="font-semibold text-dark">
+                    <p className="font-semibold text-fluid-xs text-dark">
                       {formatPrice(transaction.amount, "USD")}
                     </p>
                   </div>

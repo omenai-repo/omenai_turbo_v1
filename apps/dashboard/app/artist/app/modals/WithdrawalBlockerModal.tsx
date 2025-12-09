@@ -21,12 +21,12 @@ export function WalletWithdrawalBlockerModal({
 
         {/* --- Central Art: The Vault Door --- */}
         <div className="mb-6 relative w-20 h-20 mx-auto">
-          <div className="absolute inset-0 bg-[#2A9EDF]/20 rounded-full blur-lg animate-pulse"></div>
-          <div className="relative w-full h-full bg-[#0f172a] border-4 border-[#2A9EDF] rounded-full flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#2A9EDF]/20 rounded blur-lg animate-pulse"></div>
+          <div className="relative w-full h-full bg-[#0f172a] border-4 border-[#2A9EDF] rounded flex items-center justify-center">
             {/* Inner Lock Icon */}
             <Lock className="w-8 h-8 text-[#2A9EDF]" />
             {/* Currency Symbol Overlay */}
-            <div className="absolute -bottom-1 -right-1 bg-[#0f172a] rounded-full p-1 border border-[#2A9EDF]">
+            <div className="absolute -bottom-1 -right-1 bg-[#0f172a] rounded p-1 border border-[#2A9EDF]">
               <DollarSign className="w-4 h-4 text-[#2A9EDF]" />
             </div>
           </div>

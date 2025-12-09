@@ -1,103 +1,20 @@
 "use client";
-
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { validate } from "@omenai/shared-lib/validations/validatorGroup";
-import { requestPasswordConfirmationCode } from "@omenai/shared-services/requests/requestPasswordConfirmationCode";
-import { updatePassword } from "@omenai/shared-services/requests/updatePassword";
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { ChangeEvent, FormEvent, useState } from "react";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 import { MdError } from "react-icons/md";
-import { toast } from "sonner";
+import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
 
 export default function UpdatePasswordModalForm() {
-  const { updatePasswordModalPopup } = artistActionStore();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [codeLoading, setCodeLoading] = useState<boolean>(false);
-  const [info, setInfo] = useState({
-    password: "",
-    confirmPassword: "",
-    code: "",
-  });
+  const {
+    loading,
+    codeLoading,
+    info,
+    errorList,
+    requestConfirmationCode,
+    handlePasswordUpdate,
+    handleInputChange,
+  } = usePasswordReset("artist");
 
-  const [errorList, setErrorList] = useState<string[]>([]);
-  const { user, csrf } = useAuth({ requiredRole: "artist" });
-
-  async function requestConfirmationCode() {
-    setCodeLoading(true);
-    const response = await requestPasswordConfirmationCode(
-      "artist",
-      user.artist_id,
-      csrf || ""
-    );
-    if (response?.isOk)
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-    else
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    setCodeLoading(false);
-  }
-
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    const name = e.target.name;
-
-    setErrorList([]);
-    const { success, errors }: { success: boolean; errors: string[] | [] } =
-      validate(value, name, info.password);
-    if (!success) setErrorList(errors);
-    else
-      setInfo((prev) => {
-        return { ...prev, [name]: value };
-      });
-  }
-
-  async function handlePasswordUpdate(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    const response = await updatePassword(
-      info.password,
-      info.code,
-      "artist",
-      user.artist_id,
-      csrf || ""
-    );
-
-    if (response?.isOk) {
-      toast.success("Operation successful", {
-        description: response.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      updatePasswordModalPopup(false);
-    } else {
-      toast.error("Error notification", {
-        description: response?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    }
-    setLoading(false);
-  }
   return (
     <div className="w-full overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
       {/* Design 1: Clean Card with Progress */}
@@ -277,6 +194,11 @@ export default function UpdatePasswordModalForm() {
               </div>
             </div>
           )}
+
+          <AlertComponent title="Security tip:">
+            After updating your password, you'll need to sign in again on all
+            your devices for security purposes.
+          </AlertComponent>
 
           {/* Submit Button */}
           <button

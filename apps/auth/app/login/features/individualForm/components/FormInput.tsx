@@ -1,6 +1,6 @@
 "use client";
 import { individualLoginStore } from "@omenai/shared-state-store/src/auth/login/IndividualLoginStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
@@ -12,6 +12,7 @@ import { H } from "@highlight-run/next/client";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 // Input field configuration
 const INPUT_CONFIG = {
@@ -25,9 +26,6 @@ const INPUT_CONFIG = {
     placeholder: "Enter your password",
   },
 };
-
-const INPUT_CLASSES =
-  "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed";
 
 // Helper functions
 const identifyUser = (data: any) => {
@@ -54,6 +52,8 @@ export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const base_uri = base_url();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect");
 
   const { setIsLoading } = individualLoginStore();
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
@@ -85,15 +85,15 @@ export default function FormInput() {
         "success"
       );
 
-      if (shouldUseDefaultRedirect(url)) {
+      if (redirectTo) {
+        router.replace(redirectTo);
+      } else {
         set_redirect_uri("");
         identifyUser(data);
         router.refresh();
         router.replace(base_uri);
-      } else {
-        router.replace(url);
-        set_redirect_uri("");
       }
+      identifyUser(data);
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
@@ -153,7 +153,7 @@ export default function FormInput() {
           value={form.email}
           name={INPUT_CONFIG.email.name}
           placeholder={INPUT_CONFIG.email.placeholder}
-          className={INPUT_CLASSES}
+          className={INPUT_CLASS}
           onChange={handleChange}
           required
         />
@@ -166,7 +166,7 @@ export default function FormInput() {
             type={show ? "text" : "password"}
             name={INPUT_CONFIG.password.name}
             placeholder={INPUT_CONFIG.password.placeholder}
-            className={`w-full ${INPUT_CLASSES}`}
+            className={`w-full ${INPUT_CLASS}`}
             onChange={handleChange}
             required
           />

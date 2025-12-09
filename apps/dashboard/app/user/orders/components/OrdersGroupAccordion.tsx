@@ -56,7 +56,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Awaiting payment
         </span>
@@ -69,7 +69,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Payment completed
         </span>
@@ -82,7 +82,7 @@ export function OrdersGroupAccordion({
       tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <Truck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Delivery in progress
         </span>
@@ -95,7 +95,7 @@ export function OrdersGroupAccordion({
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-amber-100 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order in review
         </span>
@@ -104,11 +104,11 @@ export function OrdersGroupAccordion({
     if (order_accepted === "declined") {
       return (
         <div className="flex flex-col gap-y-2">
-          <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
+          <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-red-200 flex gap-x-1 items-center w-fit">
             <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
             Order declined
           </span>
-          <span className=" rounded text-fluid-xxs font-normal text-red-600 flex items-center w-fit">
+          <span className=" rounded-full text-fluid-xxs font-normal text-red-600 flex items-center w-fit">
             Reason: {order_decline_reason}
           </span>
         </div>
@@ -117,7 +117,7 @@ export function OrdersGroupAccordion({
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order has been fulfilled
         </span>
@@ -141,7 +141,7 @@ export function OrdersGroupAccordion({
             alt={`${order.artwork_data.title} image`}
             width="50"
             height="50"
-            className="object-fill object-center h-[50px] w-[50px] rounded"
+            className="object-fill object-center h-[50px] w-[50px] rounded-full"
             loading="lazy"
           />
           <div className="flex flex-col">
@@ -194,6 +194,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === null && null}
 
         {renderButtonAction({
@@ -202,6 +203,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "processing" && (
           <div className="flex gap-x-2 items-center">
             <p className="text-amber-700 text-fluid-xxs">
@@ -217,6 +219,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "awaiting_tracking" && (
           <div className="flex gap-x-2 items-center">
             <p className="text-green-700 text-fluid-xxs">
@@ -233,12 +236,30 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
+        }) === "awaiting_shipment_creation" && (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-green-700 text-fluid-xxs">
+              This artwork is currently on exhibition. Shipment will be arranged
+              once the exhibition concludes.
+            </p>
+            <ClipLoader size={15} className="text-amber-700" color="#2f855a" />
+          </div>
+        )}
+
+        {renderButtonAction({
+          status: order.status,
+          payment_status: order.payment_information.status,
+          tracking_status:
+            order.shipping_details.shipment_information.tracking.id,
+          order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "track" && (
           <div className="mt-6">
             <Link
               href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
             >
-              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
+              <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
                 Track this shipment
               </button>
             </Link>
@@ -250,6 +271,7 @@ export function OrdersGroupAccordion({
           tracking_status:
             order.shipping_details.shipment_information.tracking.id,
           order_accepted: order.order_accepted.status,
+          exhibition_active: !!order.exhibition_status?.is_on_exhibition,
         }) === "pay" && (
           <>
             <p className="text-red-700 text-fluid-xxs">
@@ -277,7 +299,7 @@ export function OrdersGroupAccordion({
   ));
 
   return (
-    <Accordion variant="separated" radius="md" className="w-full">
+    <Accordion variant="separated" radius="xl" className="w-full">
       {items}
     </Accordion>
   );

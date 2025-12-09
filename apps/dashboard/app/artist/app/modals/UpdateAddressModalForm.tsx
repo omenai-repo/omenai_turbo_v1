@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { MapPin } from "lucide-react";
+import { AlertCircle, MapPin } from "lucide-react";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import Input from "@omenai/shared-ui-components/components/artists/AddressInputHandler";
 import SelectInput from "@omenai/shared-ui-components/components/global/AddressSelectHandler";
@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
 import { useRollbar } from "@rollbar/react";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 export const artist_signup_step_two = [
   {
     label: "Country of residence",
@@ -119,7 +120,7 @@ export default function UpdateAddressModalForm() {
   };
 
   return (
-    <div className="bg-white rounded max-w-lg w-full p-6 shadow-2xl animate-slideUp  max-h-[85vh] overflow-y-scroll h-auto">
+    <div className="bg-white rounded max-w-lg w-full p-6 shadow-2xl animate-slideUp  max-h-[90vh] overflow-y-auto h-auto">
       <h3 className="text-fluid-sm font-semibold text-dark mb-6">
         Update Address
       </h3>
@@ -161,6 +162,11 @@ export default function UpdateAddressModalForm() {
           );
         })}
       </div>
+      <AlertComponent title="Please note:">
+        Changing your address will only apply to future orders. Any orders that
+        are currently being processed will be picked up from your current
+        Address.
+      </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}

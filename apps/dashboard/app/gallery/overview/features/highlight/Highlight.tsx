@@ -9,7 +9,7 @@ export default function Highlight() {
         return (
           <div
             key={`dark-${item.title}`}
-            className="relative bg-slate-900 rounded shadow-lg overflow-hidden group"
+            className="relative bg-slate-900 rounded-xl shadow-lg overflow-hidden group"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
@@ -23,10 +23,10 @@ export default function Highlight() {
             </div>
 
             {/* Content */}
-            <div className="relative px-4 py-3">
-              <div className="flex items-start justify-between gap-4">
+            <div className="relative px-5 py-3.5">
+              <div className="flex items-center justify-between gap-4">
                 <div className="flex-1 space-y-1">
-                  <p className="text-fluid-xxs font-medium text-slate-400 uppercase tracking-wide">
+                  <p className="text-fluid-xxs font-normal text-slate-400 uppercase tracking-wide">
                     {item.title}
                   </p>
                   <div className="text-white">
@@ -36,11 +36,6 @@ export default function Highlight() {
                       tag={item.tag}
                     />
                   </div>
-                  {/* {item.tag && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-                      {item.tag.toUpperCase()}
-                    </span>
-                  )} */}
                 </div>
 
                 <div className="flex-shrink-0">
@@ -49,7 +44,7 @@ export default function Highlight() {
                       className="absolute inset-0 blur-xl opacity-40"
                       style={{ backgroundColor: item.color }}
                     />
-                    <div className="relative p-2 bg-slate-800 rounded border border-slate-700">
+                    <div className="relative">
                       <HighlightCardIcon icon={item.icon} color={item.color} />
                     </div>
                   </div>

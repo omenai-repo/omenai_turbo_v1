@@ -57,52 +57,87 @@ export const SalesActivityChart = ({
     <ResponsiveLine
       key={year}
       data={data}
-      margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
+      margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
         min: "auto",
         max: "auto",
-        stacked: true,
-        reverse: false,
+        stacked: false,
       }}
       yFormat=" >-$0,.1~f"
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
+        tickSize: 0,
+        tickPadding: 12,
         tickRotation: 0,
         legend: "Month",
         legendOffset: 36,
         legendPosition: "middle",
-        truncateTickAt: 0,
+        format: (value) => value.substring(0, 3), // prettier month labels
       }}
       axisLeft={{
-        tickSize: 5,
-        tickPadding: 5,
+        tickSize: 0,
+        tickPadding: 12,
         tickRotation: 0,
         legend: "Revenue ($)",
         legendOffset: -50,
         legendPosition: "middle",
-        truncateTickAt: 20,
-        tickValues: yTicks, // Use the calculated ticks
+        tickValues: yTicks,
+        format: (v) => `$${v.toLocaleString()}`,
       }}
-      pointSize={10}
-      pointColor={{ theme: "background" }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: "serieColor" }}
-      pointLabel="data.yFormatted"
-      pointLabelYOffset={-12}
-      enableTouchCrosshair={true}
-      useMesh={true}
+      enableGridX={false}
+      enableGridY={true}
+      gridYValues={yTicks}
+      theme={{
+        text: {
+          fill: "#0f172a", // slate-300
+        },
+        grid: {
+          line: {
+            stroke: "#0f172a", // slate-800
+            strokeDasharray: "4 6",
+          },
+        },
+        tooltip: {
+          container: {
+            background: "#0f172a", // slate-900
+            color: "white",
+            fontSize: "12px",
+            borderRadius: "8px",
+            padding: "10px 12px",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.4)",
+          },
+        },
+      }}
       curve="cardinal"
-      crosshairType="cross"
-      enableGridX={true}
-      enableGridY={false}
+      colors={["#0f172a"]}
+      lineWidth={0.6}
+      enableArea={true}
+      areaOpacity={0.15}
+      areaBaselineValue={minYValue}
+      defs={[
+        {
+          id: "gradientLine",
+          type: "linearGradient",
+          colors: [
+            { offset: 0, color: "#c7c7c7" }, // purple-500
+            { offset: 100, color: "#c7c7c7" }, // purple-700
+          ],
+        },
+      ]}
+      fill={[{ match: "*", id: "gradientLine" }]}
       motionConfig="gentle"
-      colors={["#666666"]}
-      lineWidth={1}
+      useMesh={true}
+      enableCrosshair={true}
+      crosshairType="bottom-left"
+      pointSize={8}
+      pointBorderWidth={2}
+      pointColor="#0f172a"
+      pointBorderColor="#c7c7c7"
+      pointLabelYOffset={-12}
+      pointLabel="data.yFormatted"
     />
   );
 };

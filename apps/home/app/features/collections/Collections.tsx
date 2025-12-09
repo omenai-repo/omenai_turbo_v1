@@ -60,45 +60,48 @@ export default function Collections({
     <div className="">
       {isCatalog ? (
         <>
-          <h1 className="text-fluid-base sm:text-fluid-sm md:text-fluid-lg font-normal  mt-5 text-[#000000]">
+          <h1 className="text-fluid-base sm:text-fluid-sm md:text-fluid-lg font-medium mt-6 text-black tracking-tight">
             Curate creativity and design in the digital realm.
           </h1>
-          <hr className="w-full border border-dark/10 my-2" />
+
+          <hr className="w-full border border-dark/10 my-4" />
         </>
       ) : (
-        <div className="flex md:flex-row flex-col gap-4 mb-5">
-          <div className="flex justify-between items-center w-full my-5">
-            <div>
-              <p className="ttext-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
+        <div className="flex md:flex-row flex-col gap-4 mb-8">
+          <div className="flex justify-between items-start w-full mt-6">
+            <div className="space-y-2">
+              <p className="text-fluid-xxs font-medium text-dark/60 border-b border-dark/10 pb-1 w-fit">
                 Art collections
               </p>
-              <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
+
+              <p className="text-fluid-base sm:text-fluid-md font-semibold text-black leading-snug max-w-lg">
                 Curated Visions: Explore Omenai's Art Collections
               </p>
             </div>
 
-            <div className="hidden sm:flex flex-col items-end">
-              <p className="text-fluid-base  font-bold">
+            <div className="hidden sm:flex flex-col items-end space-y-0.5 text-right">
+              <p className="text-fluid-base font-semibold text-black">
                 Curated Creativity, All in One Place:
               </p>
-              <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
+              <p className="font-normal text-fluid-xxs text-dark/70 leading-snug">
                 Dive Into Diverse Art Collections,
               </p>
-              <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
+              <p className="font-normal text-fluid-xxs text-dark/70 leading-snug">
                 Thoughtfully Curated for Your Exploration
               </p>
             </div>
           </div>
         </div>
       )}
+
       <div className="embla" ref={emblaRef}>
-        <div className="embla__container">
-          {/* <div className="embla__slide">
-          <DefaultHeroSlides />
-        </div> */}
+        <div className="embla__container flex gap-4 py-2">
           {collections.map((collection, index) => {
             return (
-              <div key={collection.title} className="mx-2">
+              <div
+                key={collection.title}
+                className="mx-2 transition-transform duration-300 hover:scale-[1.02]"
+              >
                 <ArtCollectionCard
                   isCatalog={isCatalog}
                   title={collection.title}
@@ -108,33 +111,33 @@ export default function Collections({
             );
           })}
         </div>
+      </div>
 
-        <div className="w-full flex gap-x-4 items-center my-3">
-          <div className=" w-full h-[1px] bg-[#fafafa]">
-            <div
-              className="h-full bg-dark "
-              style={{ width: `${scrollProgress * 100}%` }}
-            ></div>
-          </div>
-
-          <div className="flex items-center justify-center w-fit space-x-2">
-            <button
-              onClick={scrollPrev}
-              className="h-[35px] w-[40px] rounded border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
-            >
-              <MdOutlineKeyboardArrowLeft />
-            </button>
-            <button
-              onClick={scrollNext}
-              className="h-[35px] w-[40px] rounded border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
-            >
-              <MdOutlineKeyboardArrowRight />
-            </button>
-          </div>
+      <div className="w-full flex gap-x-4 items-center my-3">
+        <div className=" w-full h-[1px] bg-[#fafafa]">
+          <div
+            className="h-full bg-dark "
+            style={{ width: `${scrollProgress * 100}%` }}
+          ></div>
         </div>
 
-        {/* <div className="flex relative gap-x-4 overflow-x-scroll w-full"></div> */}
+        <div className="flex items-center justify-center w-fit space-x-2">
+          <button
+            onClick={scrollPrev}
+            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
+          >
+            <MdOutlineKeyboardArrowLeft />
+          </button>
+          <button
+            onClick={scrollNext}
+            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
+          >
+            <MdOutlineKeyboardArrowRight />
+          </button>
+        </div>
       </div>
+
+      {/* <div className="flex relative gap-x-4 overflow-x-scroll w-full"></div> */}
     </div>
   );
 }

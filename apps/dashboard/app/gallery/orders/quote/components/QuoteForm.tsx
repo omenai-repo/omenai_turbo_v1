@@ -24,6 +24,8 @@ import WarningAlert from "./WarningAlert";
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
 export default function QuoteForm({ order_id }: { order_id: string }) {
   const { csrf } = useAuth({ requiredRole: "gallery" });
 
@@ -99,15 +101,10 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
         length,
       })
     ) {
-      toast.error("Error notification", {
-        description:
-          "All mandatory form fields must be filled out before submission.",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "All mandatory form fields must be filled out before submission.",
+        "error"
+      );
       return;
     }
     setLoading(true);
@@ -117,27 +114,15 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       Number.isNaN(width) ||
       Number.isNaN(length)
     ) {
-      toast.error("Error notification", {
-        description: "Only numerical values are allowed for dimensions",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif("Only numerical values are allowed for dimensions", "error");
       return;
     }
 
     if (exhibition_status !== null && !exhibition_status.exhibition_end_date) {
-      toast.error("Error notification", {
-        description:
-          "Please input the date of the exhibition closure to proceed",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
+      toast_notif(
+        "Please input the date of the exhibition closure to proceed",
+        "error"
+      );
       return;
     }
     const numerical_dimensions: ShipmentDimensions = {
@@ -405,7 +390,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 name="specialInstructions"
                 placeholder="Add any special pickup instructions, handling requirements, or access details..."
                 rows={2}
-                className="w-full px-4 py-3 bg-white border border-slate-300 rounded text-dark placeholder:text-slate-400 placeholder:text-fluid-xxs focus:border-dark focus:ring-2 focus:ring-dark focus:outline-none transition-colors resize-none text-fluid-xxs"
+                className={TEXTAREA_CLASS}
               />
             </div>
 
@@ -445,7 +430,12 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
               <button
                 type="submit"
-                disabled={loading || !terms_checked}
+                disabled={
+                  loading ||
+                  !terms_checked ||
+                  (exhibition_status !== null &&
+                    !exhibition_status.exhibition_end_date)
+                }
                 className="w-full sm:w-auto px-4 py-2 bg-dark mb-4 text-white font-normal text-fluid-xxs rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
               >
                 {loading ? (

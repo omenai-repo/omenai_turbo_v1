@@ -96,10 +96,10 @@ async function processBatch(
       failedTaskCreation;
 
     //   Retry creation
-    const retryFn = createDeletionTaskPerService(service, requestId, {
+    const retryFn = await createDeletionTaskPerService(service, requestId, {
       entityId,
       entityType,
-    }) as Promise<ObjectId>;
+    }) as unknown as Promise<ObjectId>;
 
     const metadata = { requestId, service, entityId };
 

@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import UpdateCredentialsModal from "./modals/UpdateCredentialsModal";
-import { Award, User, Building, Globe } from "lucide-react";
+import { Award, User, Building, Globe, Download } from "lucide-react";
 import { ArtistCategory } from "@omenai/shared-types";
+import { downloadFile } from "@omenai/shared-lib/storage/downloadFile";
 
 type ArtistCategorizationAnswerTypes = {
   graduate: "yes" | "no";
@@ -40,7 +41,7 @@ function Card({
 
       {/* Header */}
       <div className="flex items-center space-x-3 mb-5 relative z-10">
-        <div className="w-10 h-10 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-inner">
+        <div className="w-10 h-10 rounded bg-white/70 backdrop-blur-sm flex items-center justify-center shadow-inner">
           {icon}
         </div>
         <h3 className="text-fluid-base font-semibold text-dark">{title}</h3>
@@ -73,7 +74,7 @@ function NumberStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex justify-between items-center">
       <span className="text-fluid-xxs text-dark/60">{label}</span>
-      <span className="px-3 py-1 bg-dark/10 text-dark rounded-full text-fluid-xxs font-semibold">
+      <span className="px-3 py-1 bg-dark/10 text-dark rounded text-fluid-xxs font-semibold">
         {value}
       </span>
     </div>
@@ -94,6 +95,11 @@ function BadgeStat({
       text: "text-blue-700",
       label: "Other",
     },
+    other: {
+      bg: "bg-blue-100",
+      text: "text-blue-700",
+      label: "Other",
+    },
     none: { bg: "bg-gray-200", text: "text-white", label: "None" },
   };
 
@@ -101,7 +107,7 @@ function BadgeStat({
     <div className="flex justify-between items-center">
       <span className="text-fluid-xxs text-dark/60">{label}</span>
       <span
-        className={`px-3 py-1 rounded text-fluid-xxs font-medium ${map[value].bg} ${map[value].text}`}
+        className={`px-3 py-1 rounded text-fluid-xxs font-medium ${map[value]?.bg || "bg-blue-100"} ${map[value].text}`}
       >
         {map[value].label}
       </span>
@@ -150,11 +156,22 @@ const categoryStyles: Record<
 export default function Credentials({
   credentials,
   categorization,
+  documentation,
 }: {
   credentials: ArtistCategorizationAnswerTypes;
   categorization: ArtistCategory;
+  documentation: { cv: string };
 }) {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  async function DownloadCV() {
+    const fileUrl = await downloadFile(documentation.cv);
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = "CV.pdf";
+    document.body.appendChild(link);
+    link.click();
+    link.remove(); // ✅ Modern way
+  }
 
   return (
     <div className="space-y-4 animate-fadeIn">
@@ -167,6 +184,11 @@ export default function Credentials({
           A snapshot of your artistic journey and achievements
         </p>
       </div>
+      {showVerificationModal && (
+        <UpdateCredentialsModal
+          setShowVerificationModal={setShowVerificationModal}
+        />
+      )}
 
       {/* Credentials Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -228,21 +250,31 @@ export default function Credentials({
             className={`mt-2 px-4 py-2 rounded shadow-sm border ${categoryStyles[categorization].bg} ${categoryStyles[categorization].border}`}
           >
             <span
-              className={`font-semibold text-fluid-base ${categoryStyles[categorization].text}`}
+              className={`font-medium text-fluid-xs ${categoryStyles[categorization].text}`}
             >
               {categorization}
             </span>
           </div>
         </div>
 
-        <button
-          onClick={() => setShowVerificationModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-dark text-white rounded font-normal text-fluid-xxs
-                   hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
-        >
-          <Award className="w-5 h-5" />
-          <span>Update Credentials</span>
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={DownloadCV}
+            className="flex items-center space-x-2 px-4 py-2 bg-white border border-dark text-dark rounded font-normal text-fluid-xxs
+                   hover:bg-dark/90 hover:text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <Download className="w-5 h-5" />
+            <span>Download CV</span>
+          </button>
+          {/* <button
+            onClick={() => setShowVerificationModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-slate-400 text-white rounded font-normal text-fluid-xxs
+                    shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <Award className="w-5 h-5" />
+            <span>Update Credentials (Coming soon)</span>
+          </button> */}
+        </div>
       </div>
     </div>
   );

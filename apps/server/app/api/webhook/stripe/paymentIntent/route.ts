@@ -39,6 +39,8 @@ import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 import { createErrorRollbarReport } from "../../../util";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import {redis} from "@omenai/upstash-config";
 
 export const POST = withAppRouterHighlight(async function POST(
   request: Request,
@@ -171,9 +173,34 @@ const handlePurchaseTransaction = async (
     return NextResponse.json({ status: 200 });
   }
 
+  if (!isProcessed) {
+    // Wait briefly for Checkout Session to complete (if it hasn't yet)
+    let attempts = 0;
+    const maxAttempts = 5;
+    const delayMs = 200;
+    let existingTransaction = null;
+
+    while (!existingTransaction && attempts < maxAttempts) {
+      await new Promise((res) => setTimeout(res, delayMs));
+      const result = await purchaseIdempotencyCheck(
+        paymentIntent.id,
+        paymentIntent.status
+      );
+      existingTransaction = result.existingPayment;
+      attempts++;
+    }
+
+    if (existingTransaction) {
+      console.log(
+        "Transaction already processed via Checkout Session, skipping PaymentIntent."
+      );
+      return NextResponse.json({ status: 200 });
+    }
+  }
   const order_info = await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
   if (!order_info) {
@@ -241,7 +268,7 @@ const handlePurchaseTransaction = async (
     try {
       // Remove hold status before starting transaction (without session)
       await CreateOrder.updateOne(
-        { order_id: order_info.order_id },
+        { order_id: order_info.order_id, "order_accepted.status": "accepted" },
         { $set: { hold_status: null } }
       );
 
@@ -260,6 +287,7 @@ const handlePurchaseTransaction = async (
         {
           "buyer_details.email": meta.buyer_email,
           "artwork_data.art_id": meta.art_id,
+          "order_accepted.status": "accepted",
         },
         {
           $set: {
@@ -295,12 +323,16 @@ const handlePurchaseTransaction = async (
       transaction_id = create_transaction[0].trans_id;
 
       // Update Artwork Availability
-      await Artworkuploads.updateOne(
+      const updatedArtwork = await Artworkuploads.findOneAndUpdate(
         { art_id: meta.art_id },
         { $set: { availability: false } },
-        { session }
+        { new: true }
       );
-
+        try {
+            await redis.set(`artwork:${meta.art_id}`, JSON.stringify(updatedArtwork));
+        }catch (e) {
+            rollbarServerInstance.error({e, context: "Update cache after stripe payment made"})
+        }
       // Add to sales activity
       const { month, year } = getCurrentMonthAndYear();
       const activity = {
@@ -497,7 +529,7 @@ const handleSubscriptionPayment = async (
     const session = await client.startSession();
 
     try {
-      await session.startTransaction();
+      session.startTransaction();
 
       await SubscriptionTransactions.updateOne(
         { payment_ref: paymentIntent.id },
@@ -767,6 +799,9 @@ async function purchaseIdempotencyCheck(paymentId: string, status: string) {
 
     return { isProcessed: false, existingPayment: null };
   } catch (error) {
+    rollbarServerInstance.error({
+      context: { message: "Purchase idempotency check - error", error },
+    });
     console.error("Error in purchaseIdempotencyCheck:", error);
     throw error;
   }

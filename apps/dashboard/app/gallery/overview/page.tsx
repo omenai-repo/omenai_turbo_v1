@@ -12,7 +12,7 @@ export default function OverviewPage() {
       <PageTitle title={"Overview"} />
       <Highlight />
       <ActivityWrapper />
-      <div className="grid lg:grid-cols-2 gap-x-[1rem] mt-[64px]">
+      <div className="grid lg:grid-cols-2 gap-x-[1rem] mt-[64px] pb-5">
         <Orders />
         <PopularArtworks />
       </div>

@@ -32,19 +32,19 @@ const art_sold = (
 
 export const highlightCardEl: HighlightCardElProps[] = [
   {
-    title: "Total net earned",
+    title: "net earred",
     icon: net,
     tag: "net",
     color: "bg-white",
   },
   {
-    title: "Total Revenue",
+    title: "Revenue",
     icon: sales_revenue,
     tag: "revenue",
     color: "bg-white",
   },
   {
-    title: "Total artworks",
+    title: "artworks",
     icon: total_artworks_icon,
     tag: "artworks",
     color: "bg-white",

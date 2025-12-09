@@ -1,26 +1,6 @@
-"use client";
-import AllArtworks from "./components/AllArtworks";
-import Collections from "../features/collections/Collections";
-import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
-import Footer from "@omenai/shared-ui-components/components/footer/Footer";
-import AppStoreAd from "../features/appStoreAd/AppStoreAd";
-import Filter from "./components/Filter";
-
+import React from "react";
+import CatalogWrapper from "./CatalogWrapper";
+export const dynamic = "force-dynamic";
 export default function page() {
-  return (
-    <main className="relative" suppressHydrationWarning>
-      <DesktopNavbar />
-      <div className="">
-        <Collections isCatalog={true} />
-      </div>
-
-      {/* <Hero /> */}
-      <div className="">
-        <Filter />
-        <AllArtworks />
-        <AppStoreAd />
-        <Footer />
-      </div>
-    </main>
-  );
+  return <CatalogWrapper />;
 }

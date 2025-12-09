@@ -12,6 +12,8 @@ import ArtworkCard from "@omenai/shared-ui-components/components/artworks/Artwor
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import StaggerWrapper from "@omenai/shared-ui-components/components/animations/StaggerWrapper";
+
 export default function AllArtworks() {
   const { currentPage, setCurrentPage } = artworkActionStore();
   const { user } = useAuth({ requiredRole: "user" });
@@ -97,7 +99,6 @@ export default function AllArtworks() {
             </div>
           );
         })}
-        {/* first */}
       </div>
 
       <Pagination

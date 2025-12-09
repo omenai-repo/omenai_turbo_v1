@@ -3,12 +3,12 @@
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import { IndividualSignupData, InputProps } from "@omenai/shared-types";
+import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { EyeOff, Eye, AlertCircle } from "lucide-react";
-import { ChangeEvent, useState } from "react";
-import { MdError } from "react-icons/md";
-import { PiEyeSlashThin, PiEyeThin } from "react-icons/pi";
+import { ChangeEvent, useEffect, useState } from "react";
+import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 
 export default function Input({
   label,
@@ -44,6 +44,49 @@ export default function Input({
       setErrorList([]);
     }
   };
+  useEffect(() => {
+    // Only run validation for password-related fields
+    if (labelText !== "password" && labelText !== "confirmPassword") return;
+
+    const errors = validatePasswordFields({
+      password: individualSignupData.password,
+      confirmPassword: individualSignupData.confirmPassword,
+    });
+
+    // Only show errors for the current field
+    if (labelText === "password" && individualSignupData.password) {
+      const passwordErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("password") &&
+          !err.toLowerCase().includes("confirm")
+      );
+      if (passwordErrors.length > 0) {
+        setErrorList(passwordErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+
+    if (
+      labelText === "confirmPassword" &&
+      individualSignupData.confirmPassword
+    ) {
+      const confirmErrors = errors.filter(
+        (err) =>
+          err.toLowerCase().includes("match") ||
+          err.toLowerCase().includes("confirm")
+      );
+      if (confirmErrors.length > 0) {
+        setErrorList(confirmErrors);
+      } else {
+        setErrorList([]);
+      }
+    }
+  }, [
+    individualSignupData.password,
+    individualSignupData.confirmPassword,
+    labelText,
+  ]);
 
   return (
     <AnimatePresence key={`${id}-individual`}>
@@ -67,7 +110,7 @@ export default function Input({
           <div className="relative group">
             <input
               type={type === "password" ? (show ? "text" : type) : type}
-              className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed
+              className={`${INPUT_CLASS}
                 
                 ${
                   errorList.length > 0

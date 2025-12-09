@@ -22,7 +22,7 @@ export default function ArtCollectionCard({
             alt={title + " image"}
             className="min-w-[300px] w-[300px] min-h-[250px] h-[250px] object-cover object-top cursor-pointer"
           />
-          <div className="bg-[#FAFAFA] flex flex-col p-4">
+          <div className="bg-[#FAFAFA] flex flex-col p-4 rounded-full">
             <p className="text-fluid-xxs font-normal">{title}</p>
           </div>
         </div>

@@ -1,4 +1,3 @@
-// components/emails/BuyerShipmentEmail.tsx
 import {
   Html,
   Head,
@@ -9,10 +8,15 @@ import {
   Text,
   Heading,
 } from "@react-email/components";
+import ArtworkCard from "./ArtworkCard";
 
 export default function SendShipmentScheduled(
   trackingCode: string,
-  name: string
+  name: string,
+  artwork: string,
+  artworkImage: string,
+  artistName: string,
+  artworkPrice: number
 ) {
   return (
     <Html>
@@ -61,13 +65,24 @@ export default function SendShipmentScheduled(
                 marginBottom: "16px",
               }}
             >
-              This is to inform you that the creation of the shipment for order{" "}
-              {trackingCode} has been scheduled for a later time. The processing
-              of this shipment is currently pending and will commence as soon as
+              This is to inform you that the creation of the shipment for your
+              order{" "}
+              <strong>
+                #{trackingCode} - {artwork}
+              </strong>{" "}
+              has been scheduled for a later time. The processing of this
+              shipment is currently pending due to the piece currently being on
+              exhibition at the gallery and shipment will commence as soon as
               the necessary conditions are met. Once the shipment has been
               created and prepared for dispatch, you will receive an automated
               update confirming the status change.
             </Text>
+            <ArtworkCard
+              artistName={artistName}
+              artwork={artwork}
+              artworkImage={artworkImage}
+              artworkPrice={artworkPrice}
+            />
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
               Please note that no further action is required at this stage. Our
               logistics system will automatically proceed with shipment creation
