@@ -7,9 +7,9 @@ import React from "react";
 
 export default function WaitlistFormLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   const auth_url = auth_uri();
   return (
     <AnimatePresence key={4}>
