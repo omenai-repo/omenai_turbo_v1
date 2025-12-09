@@ -51,15 +51,14 @@ export default function WaitlistSuccessContent() {
         >
           {[
             { Icon: Instagram, href: "https://instagram.com/omenaiofficial" },
-            { Icon: Twitter, href: "https://x.com" },
             { Icon: Facebook, href: "https://facebook.com/omenaiofficial" },
             {
               Icon: Linkedin,
               href: "https://linkedin.com/company/omenaiart",
             },
-          ].map(({ Icon, href }, i) => (
+          ].map(({ Icon, href }) => (
             <motion.a
-              key={i}
+              key={href}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
