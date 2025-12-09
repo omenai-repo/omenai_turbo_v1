@@ -1,8 +1,14 @@
 import React from "react";
-import ImageBlock from "../features/image/Image";
 import WaitlistForm from "./WaitlistForm";
+import ImageBlock from "../register/gallery/features/image/Image";
 
-export default function WaitlistPage() {
+export default async function WaitlistPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ entity: string | undefined }>;
+}) {
+  const entity = (await searchParams).entity;
+  if (!entity) return;
   return (
     <section className="h-[100vh] overflow-x-hidden">
       <div className="w-full h-full md:grid grid-cols-2">
@@ -24,7 +30,7 @@ export default function WaitlistPage() {
 
           {/* --- Centered waitlist Form --- */}
           <div className="relative z-10 w-full max-w-lg p-4">
-            <WaitlistForm />
+            <WaitlistForm entity={entity} />
           </div>
 
           {/* --- Aesthetic Bottom Corner Branding (Subtle) --- */}

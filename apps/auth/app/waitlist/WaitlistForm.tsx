@@ -5,34 +5,45 @@ import Link from "next/link";
 import React from "react";
 import WaitlistFormLayout from "./WaitlistFormLayout";
 
-export default function WaitlistForm() {
+export default function WaitlistForm({ entity }: { entity: string }) {
   const auth_url = auth_uri();
   return (
-    <WaitlistFormLayout>
+    <WaitlistFormLayout
+      title="Join our exclusive waitlist"
+      description="
+We're building something special, and we want you to be part of it from day one."
+    >
       <form className="flex flex-col gap-y-5">
         <div className="flex flex-col">
           <input
-            type={"email"}
-            placeholder={"Enter the gallery email address"}
-            required
+            type={"text"}
+            placeholder={
+              entity === "gallery"
+                ? "Enter the gallery name"
+                : "Enter your name"
+            }
             className={INPUT_CLASS}
+            required
           />
         </div>
-
         <div className="flex flex-col">
           <input
-            type={"text"}
-            placeholder={"Enter the gallery invite code"}
-            className={INPUT_CLASS}
+            type={"email"}
+            placeholder={
+              entity === "gallery"
+                ? "Enter the gallery email address"
+                : "Enter your email address"
+            }
             required
+            className={INPUT_CLASS}
           />
         </div>
         <p className="font-medium text-fluid-xxs  text-right text-dark ">
           <Link
-            href={`${auth_url}/register/gallery/waitlist/get-code`}
+            href={`${auth_url}/waitlist/invite?entity=${entity}`}
             className="text-dark hover:underline"
           >
-            I don't have an invite code
+            I have an invite code
           </Link>
         </p>
 
@@ -41,7 +52,7 @@ export default function WaitlistForm() {
             type="submit"
             className=" p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
           >
-            Continue
+            Join the waitlist
           </button>
         </div>
       </form>
