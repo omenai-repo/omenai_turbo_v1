@@ -1,7 +1,7 @@
 "use client";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import React from "react";
-import { Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
+import { Instagram, Facebook, Linkedin } from "lucide-react";
 import { base_url } from "@omenai/url-config/src/config";
 import { motion } from "framer-motion";
 

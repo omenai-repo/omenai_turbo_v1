@@ -5,7 +5,7 @@ import React from "react";
 import WaitlistFormLayout from "../WaitlistFormLayout";
 import { auth_uri } from "@omenai/url-config/src/config";
 
-export default function InviteForm({ entity }: { entity: string }) {
+export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
   return (
     <WaitlistFormLayout

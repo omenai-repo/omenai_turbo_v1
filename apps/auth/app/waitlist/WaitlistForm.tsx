@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import WaitlistFormLayout from "./WaitlistFormLayout";
 
-export default function WaitlistForm({ entity }: { entity: string }) {
+export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
   return (
     <WaitlistFormLayout

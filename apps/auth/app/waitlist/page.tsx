@@ -5,7 +5,7 @@ import PageLayout from "./PageLayout";
 export default async function WaitlistPage({
   searchParams,
 }: {
-  searchParams: Promise<{ entity: string | undefined }>;
+  searchParams: Readonly<Promise<{ entity: string | undefined }>>;
 }) {
   const entity = (await searchParams).entity;
   if (!entity) return;
