@@ -54,10 +54,22 @@ export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
     if (!data.email || data.email.trim() === "") {
       errors.email = "Email is required";
     } else {
-      // email regex pattern
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(data.email.trim())) {
-        errors.email = "Please enter a valid email address";
+      const email = data.email.trim();
+      if (email.length > 320) {
+        errors.email = "Email address is too long";
+      } else {
+        const atIndex = email.indexOf("@");
+        const lastDotIndex = email.lastIndexOf(".");
+
+        if (
+          atIndex < 1 ||
+          lastDotIndex < atIndex + 2 ||
+          lastDotIndex >= email.length - 1 ||
+          email.indexOf("@@") !== -1 ||
+          /\s/.test(email)
+        ) {
+          errors.email = "Please enter a valid email address";
+        }
       }
     }
 
