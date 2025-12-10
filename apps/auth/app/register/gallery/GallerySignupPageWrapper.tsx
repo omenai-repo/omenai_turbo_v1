@@ -12,11 +12,11 @@ export default function GallerySignupPageWrapper({
   referrerKey,
   email,
   inviteCode,
-}: {
+}: Readonly<{
   referrerKey: string | undefined;
   email: string | undefined;
   inviteCode: string | undefined;
-}) {
+}>) {
   const { value: collectorOnboardingEnabled } = useLowRiskFeatureFlag(
     "galleryonboardingenabled"
   );
@@ -30,10 +30,10 @@ export default function GallerySignupPageWrapper({
     queryKey: ["gallery_signup"],
     queryFn: async () => {
       return await validateInviteToken({
-        referrerKey: referrerKey!,
-        email: email!,
+        referrerKey: referrerKey as string,
+        email: email as string,
         entity: "gallery",
-        inviteCode: inviteCode!,
+        inviteCode: inviteCode as string,
       });
     },
     enabled: !!waitlistActivated,
