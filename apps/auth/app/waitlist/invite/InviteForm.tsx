@@ -4,9 +4,16 @@ import Link from "next/link";
 import React from "react";
 import WaitlistFormLayout from "../WaitlistFormLayout";
 import { auth_uri } from "@omenai/url-config/src/config";
+import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
+import { redirect } from "next/navigation";
 
 export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
+  const { value: waitlistActivated } = useLowRiskFeatureFlag(
+    "waitlistActivated",
+    true
+  );
+  if (!waitlistActivated) redirect(`/regiter/${entity}`);
   return (
     <WaitlistFormLayout
       title="Be the First to Experience Omenai"

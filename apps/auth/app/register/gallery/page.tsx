@@ -3,8 +3,14 @@ import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFe
 import OnboardingBlockerScreen from "@omenai/shared-ui-components/components/blockers/onboarding/OboardingBlockerScreen";
 import FormBlock from "./features/form/FormBlock";
 import ImageBlock from "./features/image/Image";
+import { redirect } from "next/navigation";
 
 export default function GallerySignup() {
+  const { value: waitlistActivated } = useLowRiskFeatureFlag(
+    "waitlistActivated",
+    true
+  );
+  if (waitlistActivated) redirect("/waitlist?entity=gallery");
   const { value: collectorOnboardingEnabled } = useLowRiskFeatureFlag(
     "galleryonboardingenabled"
   );
