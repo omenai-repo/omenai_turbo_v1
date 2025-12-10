@@ -30,10 +30,10 @@ export default function GallerySignupPageWrapper({
     queryKey: ["gallery_signup"],
     queryFn: async () => {
       return await validateInviteToken({
-        referrerKey: referrerKey as string,
-        email: email as string,
+        referrerKey: referrerKey ?? "",
+        email: email ?? "",
         entity: "gallery",
-        inviteCode: inviteCode as string,
+        inviteCode: inviteCode ?? "",
       });
     },
     enabled: !!waitlistActivated,
