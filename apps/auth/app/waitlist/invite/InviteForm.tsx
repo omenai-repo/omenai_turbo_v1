@@ -10,14 +10,17 @@ import { AlertCircle } from "lucide-react";
 import { PulseLoader } from "react-spinners";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { createInviteToken } from "@omenai/shared-services/auth/waitlist/createInviteToken";
+import {
+  validateInviteForm,
+  isFormValid,
+  ValidationErrors,
+  InviteFormData,
+} from "../FormValidation";
 export interface FormData {
   code: string;
   email: string;
 }
-export interface ValidationErrors {
-  code?: string;
-  email?: string;
-}
+
 export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
@@ -34,57 +37,17 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  function validateFormFields(data: FormData): ValidationErrors {
-    const errors: ValidationErrors = {};
-
-    // Validate name field
-    if (!data.code || data.code.trim() === "") {
-      errors.code = "Code is required";
-    } else if (data.code.trim().length < 2) {
-      errors.code = "Code must be at least 2 characters long";
-    } else if (data.code.trim().length > 100) {
-      errors.code = "Code must not exceed 100 characters";
-    }
-
-    // Validate email field
-    if (!data.email || data.email.trim() === "") {
-      errors.email = "Email is required";
-    } else {
-      const email = data.email.trim();
-      if (email.length > 320) {
-        errors.email = "Email address is too long";
-      } else {
-        const atIndex = email.indexOf("@");
-        const lastDotIndex = email.lastIndexOf(".");
-
-        if (
-          atIndex < 1 ||
-          lastDotIndex < atIndex + 2 ||
-          lastDotIndex >= email.length - 1 ||
-          email.includes("@@") ||
-          /\s/.test(email)
-        ) {
-          errors.email = "Please enter a valid email address";
-        }
-      }
-    }
-
-    return errors;
-  }
-  function isFormValid(errors: ValidationErrors): boolean {
-    return Object.keys(errors).length === 0;
-  }
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const data: FormData = {
+    const data: InviteFormData = {
       code: formData.get("code") as string,
       email: formData.get("email") as string,
     };
 
-    const errors = validateFormFields(data);
+    const errors = validateInviteForm(data);
 
     if (isFormValid(errors)) {
       setErrors({});

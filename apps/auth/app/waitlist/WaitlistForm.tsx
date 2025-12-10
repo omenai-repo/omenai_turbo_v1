@@ -10,11 +10,12 @@ import { AlertCircle } from "lucide-react";
 import { joinWaitlist } from "@omenai/shared-services/auth/waitlist/joinWaitlist";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { PulseLoader } from "react-spinners";
-
-export interface ValidationErrors {
-  name?: string;
-  email?: string;
-}
+import {
+  validateWaitlistForm,
+  isFormValid,
+  ValidationErrors,
+  WaitlistFormData,
+} from "./FormValidation";
 
 export interface FormData {
   name: string;
@@ -38,59 +39,17 @@ export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  function validateFormFields(data: FormData): ValidationErrors {
-    const errors: ValidationErrors = {};
-
-    // Validate name field
-    if (!data.name || data.name.trim() === "") {
-      errors.name = "Name is required";
-    } else if (data.name.trim().length < 2) {
-      errors.name = "Name must be at least 2 characters long";
-    } else if (data.name.trim().length > 100) {
-      errors.name = "Name must not exceed 100 characters";
-    }
-
-    // Validate email field
-    if (!data.email || data.email.trim() === "") {
-      errors.email = "Email is required";
-    } else {
-      const email = data.email.trim();
-      if (email.length > 320) {
-        errors.email = "Email address is too long";
-      } else {
-        const atIndex = email.indexOf("@");
-        const lastDotIndex = email.lastIndexOf(".");
-
-        if (
-          atIndex < 1 ||
-          lastDotIndex < atIndex + 2 ||
-          lastDotIndex >= email.length - 1 ||
-          email.includes("@@") ||
-          /\s/.test(email)
-        ) {
-          errors.email = "Please enter a valid email address";
-        }
-      }
-    }
-
-    return errors;
-  }
-
-  // Helper function to check if form is valid
-  function isFormValid(errors: ValidationErrors): boolean {
-    return Object.keys(errors).length === 0;
-  }
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const data: FormData = {
+    const data: WaitlistFormData = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
     };
 
-    const errors = validateFormFields(data);
+    const errors = validateWaitlistForm(data);
 
     if (isFormValid(errors)) {
       setErrors({});
