@@ -1,7 +1,7 @@
 "use client";
 import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import Link from "next/link";
-import React, { ChangeEvent, useState } from "react";
+import React from "react";
 import WaitlistFormLayout from "../WaitlistFormLayout";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
@@ -10,16 +10,12 @@ import { AlertCircle } from "lucide-react";
 import { PulseLoader } from "react-spinners";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { createInviteToken } from "@omenai/shared-services/auth/waitlist/createInviteToken";
+import { useWaitlistForm } from "../useWaitlistForm";
 import {
   validateInviteForm,
   isFormValid,
-  ValidationErrors,
   InviteFormData,
 } from "../FormValidation";
-export interface FormData {
-  code: string;
-  email: string;
-}
 
 export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
@@ -27,16 +23,15 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
     "waitlistActivated",
     true
   );
+
   if (!waitlistActivated) redirect(`/regiter/${entity}`);
-  const [form, setForm] = useState<{ email: string; code: string }>({
-    email: "",
-    code: "",
-  });
-  const [errors, setErrors] = useState<ValidationErrors>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+
+  const { errors, setErrors, isSubmitting, setIsSubmitting, handleChange } =
+    useWaitlistForm<{ email: string; code: string }>({
+      email: "",
+      code: "",
+    });
+
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsSubmitting(true);
@@ -47,9 +42,9 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
       email: formData.get("email") as string,
     };
 
-    const errors = validateInviteForm(data);
+    const validationErrors = validateInviteForm(data);
 
-    if (isFormValid(errors)) {
+    if (isFormValid(validationErrors)) {
       setErrors({});
       const result = await createInviteToken({
         email: data.email,
@@ -65,10 +60,11 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
         toast_notif(result.message, "error");
       }
     } else {
-      setErrors(errors);
+      setErrors(validationErrors);
     }
     setIsSubmitting(false);
   }
+
   return (
     <WaitlistFormLayout
       title="Be the First to Experience Omenai"
@@ -91,7 +87,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
           {errors?.email && (
             <div className="flex items-center gap-2 text-red-600">
               <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-              <p className="text-fluid-xxs">{errors?.email}</p>
+              <p className="text-fluid-xxs">{errors.email}</p>
             </div>
           )}
         </div>
@@ -111,11 +107,11 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
           {errors?.code && (
             <div className="flex items-center gap-2 text-red-600">
               <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-              <p className="text-fluid-xxs">{errors?.code}</p>
+              <p className="text-fluid-xxs">{errors.code}</p>
             </div>
           )}
         </div>
-        <p className="font-medium text-fluid-xxs  text-right text-dark ">
+        <p className="font-medium text-fluid-xxs text-right text-dark">
           <Link
             href={`${auth_url}/waitlist?entity=${entity}`}
             className="text-dark hover:underline"
@@ -127,7 +123,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
         <div className="flex flex-col w-full gap-y-4">
           <button
             type="submit"
-            className=" p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
+            className="p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
           >
             {isSubmitting ? (
               <PulseLoader size={5} color="#ffffff" />
