@@ -11,12 +11,12 @@ import { joinWaitlist } from "@omenai/shared-services/auth/waitlist/joinWaitlist
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { PulseLoader } from "react-spinners";
 
-interface ValidationErrors {
+export interface ValidationErrors {
   name?: string;
   email?: string;
 }
 
-interface FormData {
+export interface FormData {
   name: string;
   email: string;
 }
@@ -65,7 +65,7 @@ export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
           atIndex < 1 ||
           lastDotIndex < atIndex + 2 ||
           lastDotIndex >= email.length - 1 ||
-          email.indexOf("@@") !== -1 ||
+          email.includes("@@") ||
           /\s/.test(email)
         ) {
           errors.email = "Please enter a valid email address";
