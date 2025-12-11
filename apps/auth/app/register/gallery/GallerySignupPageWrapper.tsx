@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { validateInviteToken } from "@omenai/shared-services/auth/waitlist/validateInviteToken";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 
 export default function GallerySignupPageWrapper({
@@ -20,7 +20,6 @@ export default function GallerySignupPageWrapper({
   inviteCode: string | undefined;
 }>) {
   const router = useRouter();
-  const hasShownToast = useRef(false); // Prevent duplicate toasts
 
   const { value: collectorOnboardingEnabled } = useLowRiskFeatureFlag(
     "galleryonboardingenabled"
@@ -56,8 +55,7 @@ export default function GallerySignupPageWrapper({
 
   // Handle validation errors in useEffect
   useEffect(() => {
-    if (data && data.status !== 200 && !hasShownToast.current) {
-      hasShownToast.current = true;
+    if (data && data.status !== 200) {
       toast_notif(data.message, "error");
       router.replace("/waitlist?entity=gallery");
     }
