@@ -40,6 +40,7 @@ export default function GallerySignupPageWrapper({
       });
     },
     enabled: waitlistActivated && !!referrerKey,
+    refetchOnWindowFocus: false,
   });
 
   // Handle validation errors in useEffect

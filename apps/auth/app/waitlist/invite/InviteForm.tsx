@@ -66,7 +66,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
       inviteCode: data.code,
     });
 
-    if (result.isOk && result.referrerKey != null) {
+    if (result.isOk && result.referrerKey) {
       toast_notif(result.message, "success");
       const params = new URLSearchParams({
         referrerKey: result.referrerKey,
