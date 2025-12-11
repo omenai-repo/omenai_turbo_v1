@@ -29,13 +29,6 @@ export default function GallerySignupPageWrapper({
     true
   );
 
-  // Handle redirect in useEffect, not during render
-  useEffect(() => {
-    if (waitlistActivated && !referrerKey) {
-      router.replace("/waitlist?entity=gallery");
-    }
-  }, []);
-
   const { data, isLoading } = useQuery({
     queryKey: ["gallery_signup", referrerKey, email, inviteCode],
     queryFn: async () => {
@@ -47,14 +40,13 @@ export default function GallerySignupPageWrapper({
       });
     },
     enabled: waitlistActivated && !!referrerKey,
-    // Prevent excessive refetching
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
   });
 
   // Handle validation errors in useEffect
   useEffect(() => {
+    if (waitlistActivated && !referrerKey) {
+      router.replace("/waitlist?entity=gallery");
+    }
     if (data && data.status !== 200) {
       toast_notif(data.message, "error");
       router.replace("/waitlist?entity=gallery");

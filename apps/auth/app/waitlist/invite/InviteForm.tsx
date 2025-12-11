@@ -39,29 +39,6 @@ function validateForm(data: InviteFormData, setErrors: Function): boolean {
 }
 
 // Handle API call and navigation
-async function processInvite(
-  data: InviteFormData,
-  entity: string,
-  router: any
-): Promise<void> {
-  const result = await createInviteToken({
-    email: data.email,
-    entity,
-    inviteCode: data.code,
-  });
-
-  if (result.isOk) {
-    toast_notif(result.message, "success");
-    const params = new URLSearchParams({
-      referrerKey: result.referrerKey,
-      email: data.email,
-      inviteCode: data.code,
-    });
-    router.replace(`/register/${entity}?${params}`);
-  } else {
-    toast_notif(result.message, "error");
-  }
-}
 
 export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
@@ -79,6 +56,29 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
       code: "",
     });
 
+  async function processInvite(
+    data: InviteFormData,
+    entity: string
+  ): Promise<void> {
+    const result = await createInviteToken({
+      email: data.email,
+      entity,
+      inviteCode: data.code,
+    });
+
+    if (result.isOk && result.referrerKey != null) {
+      toast_notif(result.message, "success");
+      const params = new URLSearchParams({
+        referrerKey: result.referrerKey,
+        email: data.email,
+        inviteCode: data.code,
+      });
+      router.replace(`/register/${entity}?${params}`);
+    } else {
+      toast_notif(result.message, "error");
+    }
+  }
+
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (isSubmitting) return;
@@ -88,7 +88,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
       const data = getFormData(e.currentTarget);
 
       if (validateForm(data, setErrors)) {
-        await processInvite(data, entity, router);
+        await processInvite(data, entity);
       }
     } finally {
       setIsSubmitting(false);
