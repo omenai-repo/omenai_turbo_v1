@@ -37,7 +37,7 @@ export default function GallerySignupPageWrapper({
     }
   }, []);
 
-  const { data, isError, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["gallery_signup", referrerKey, email, inviteCode],
     queryFn: async () => {
       return await validateInviteToken({
