@@ -4,8 +4,15 @@ import React from "react";
 import { Instagram, Facebook, Linkedin } from "lucide-react";
 import { base_url } from "@omenai/url-config/src/config";
 import { motion } from "framer-motion";
+import { redirect } from "next/navigation";
+import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
 
 export default function WaitlistSuccessContent() {
+  const { value: waitlistActivated } = useLowRiskFeatureFlag(
+    "waitlistActivated",
+    true
+  );
+  if (!waitlistActivated) redirect("/regiter");
   return (
     <>
       <motion.div
