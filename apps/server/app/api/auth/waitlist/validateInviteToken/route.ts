@@ -53,7 +53,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
       throw new ConflictError("Parameter server mismatch");
 
     return NextResponse.json(
-      { message: "Successfully validated waitlist user" },
+      { message: "Successfully validated waitlist user", status: 200 },
       { status: 200 }
     );
   } catch (error: any) {
@@ -67,7 +67,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     if (process.env.NODE_ENV === "development") console.error(error);
 
     return NextResponse.json(
-      { message: errorResponse?.message },
+      { message: errorResponse?.message, status: errorResponse?.status },
       { status: errorResponse?.status }
     );
   }

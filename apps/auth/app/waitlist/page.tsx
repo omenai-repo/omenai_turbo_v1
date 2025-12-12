@@ -9,7 +9,8 @@ export default async function WaitlistPage({
   searchParams: Promise<{ entity: string | undefined }>;
 }>) {
   const entity = (await searchParams).entity;
-  if (!entity) redirect("/register");
+  if (!entity || (entity !== "artist" && entity !== "gallery"))
+    redirect("/register");
   return (
     <PageLayout>
       <WaitlistForm entity={entity} />

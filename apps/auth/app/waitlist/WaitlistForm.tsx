@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import WaitlistFormLayout from "./WaitlistFormLayout";
 import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { joinWaitlist } from "@omenai/shared-services/auth/waitlist/joinWaitlist";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
@@ -19,12 +19,13 @@ import {
 
 export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
+  const router = useRouter();
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
     true
   );
 
-  if (!waitlistActivated) redirect(`/regiter/${entity}`);
+  if (!waitlistActivated) router.replace(`/regiter/${entity}`);
 
   const { errors, setErrors, isSubmitting, setIsSubmitting, handleChange } =
     useWaitlistForm<{ email: string; name: string }>({
@@ -49,7 +50,7 @@ export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
       const result = await joinWaitlist({ ...data, entity });
       if (result.isOk) {
         toast_notif(result.message, "success");
-        redirect("/waitlist/success");
+        router.replace("/waitlist/success");
       } else {
         toast_notif(result.message, "error");
       }

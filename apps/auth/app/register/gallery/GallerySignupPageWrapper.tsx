@@ -3,20 +3,24 @@ import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFe
 import OnboardingBlockerScreen from "@omenai/shared-ui-components/components/blockers/onboarding/OboardingBlockerScreen";
 import FormBlock from "./features/form/FormBlock";
 import ImageBlock from "./features/image/Image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { validateInviteToken } from "@omenai/shared-services/auth/waitlist/validateInviteToken";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useEffect } from "react";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 
 export default function GallerySignupPageWrapper({
   referrerKey,
   email,
   inviteCode,
 }: Readonly<{
-  referrerKey: string | undefined;
-  email: string | undefined;
-  inviteCode: string | undefined;
+  referrerKey: string;
+  email: string;
+  inviteCode: string;
 }>) {
+  const router = useRouter();
+
   const { value: collectorOnboardingEnabled } = useLowRiskFeatureFlag(
     "galleryonboardingenabled"
   );
@@ -24,23 +28,39 @@ export default function GallerySignupPageWrapper({
     "waitlistActivated",
     true
   );
-  if (waitlistActivated && !referrerKey) redirect("/waitlist?entity=gallery");
 
-  const { data } = useQuery({
-    queryKey: ["gallery_signup"],
+  const { data, isLoading } = useQuery({
+    queryKey: ["gallery_signup", referrerKey, email, inviteCode],
     queryFn: async () => {
       return await validateInviteToken({
-        referrerKey: referrerKey ?? "",
-        email: email ?? "",
+        referrerKey,
+        email,
         entity: "gallery",
-        inviteCode: inviteCode ?? "",
+        inviteCode,
       });
     },
-    enabled: !!waitlistActivated,
+    enabled: waitlistActivated && !!referrerKey,
+    refetchOnWindowFocus: false,
   });
-  if (data?.status !== 200) {
-    toast_notif(data?.message, "error");
-    redirect("/waitlist?entity=gallery");
+
+  // Handle validation errors in useEffect
+  useEffect(() => {
+    if (waitlistActivated && !referrerKey) {
+      router.replace("/waitlist?entity=gallery");
+    }
+    if (data && data.status !== 200) {
+      toast_notif(data.message, "error");
+      router.replace("/waitlist?entity=gallery");
+    }
+  }, [data]);
+
+  // Show loading state while validating
+  if (waitlistActivated && isLoading) {
+    return (
+      <div className="w-full h-screen grid place-items-center">
+        <Load />
+      </div>
+    );
   }
 
   return (
