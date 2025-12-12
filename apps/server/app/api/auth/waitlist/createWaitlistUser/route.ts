@@ -12,6 +12,7 @@ import {
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { SendWaitlistRegistrationEmail } from "@omenai/shared-emails/src/models/waitlist/SendWaitlistRegistrationEmail";
 
 export const POST = withRateLimit(strictRateLimit)(async function POST(
   req: Request
@@ -34,11 +35,13 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     };
     const createWaitlistUser = await Waitlist.create(payload);
 
-    // TODO: Send a mail to this user informing them they've been added to the waitlist
     if (!createWaitlistUser)
       throw new ServerError(
         "An error occured while adding you to our waitlist, please try again or contact support"
       );
+
+    // TODO: Send a mail to this user informing them they've been added to the waitlist
+    await SendWaitlistRegistrationEmail({ email });
     return NextResponse.json(
       { message: "Successfully added to waitlist" },
       { status: 201 }
