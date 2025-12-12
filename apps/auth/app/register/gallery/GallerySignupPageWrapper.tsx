@@ -15,9 +15,9 @@ export default function GallerySignupPageWrapper({
   email,
   inviteCode,
 }: Readonly<{
-  referrerKey: string | undefined;
-  email: string | undefined;
-  inviteCode: string | undefined;
+  referrerKey: string;
+  email: string;
+  inviteCode: string;
 }>) {
   const router = useRouter();
 
@@ -33,10 +33,10 @@ export default function GallerySignupPageWrapper({
     queryKey: ["gallery_signup", referrerKey, email, inviteCode],
     queryFn: async () => {
       return await validateInviteToken({
-        referrerKey: referrerKey ?? "",
-        email: email ?? "",
+        referrerKey,
+        email,
         entity: "gallery",
-        inviteCode: inviteCode ?? "",
+        inviteCode,
       });
     },
     enabled: waitlistActivated && !!referrerKey,
