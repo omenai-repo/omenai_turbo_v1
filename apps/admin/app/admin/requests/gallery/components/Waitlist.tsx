@@ -4,7 +4,6 @@ import { Mail } from "lucide-react";
 import React, { useState } from "react";
 
 export default function Waitlist() {
-  const tab = "pending";
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -22,13 +21,6 @@ export default function Waitlist() {
       shadowColor: "shadow-amber-100/50",
       indicatorColor: "red",
       glowColor: "ring-amber-200/50",
-    },
-    rejected: {
-      borderColor: "border-red-200",
-      bgColor: "bg-gradient-to-r from-red-50/80 to-rose-50/60",
-      shadowColor: "shadow-red-100/50",
-      indicatorColor: "red",
-      glowColor: "ring-red-200/50",
     },
   };
 
