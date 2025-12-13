@@ -24,52 +24,22 @@ export default function Waitlist() {
     },
   };
 
+  const createGallery = (id: string, name: string, email: string) => ({
+    waitlistId: id,
+    name,
+    email,
+  });
+
   const galleries = [
-    {
-      waitlistId: "1",
-      name: "Visage of Beauty",
-      email: "dantereus1@gmail.com",
-    },
-    {
-      waitlistId: "2",
-      name: "Modern Art Gallery",
-      email: "contact@modernart.com",
-    },
-    {
-      waitlistId: "3",
-      name: "Gallery Nouveau",
-      email: "info@gallerynouveau.com",
-    },
-    {
-      waitlistId: "4",
-      name: "The Art Space",
-      email: "hello@theartspace.net",
-    },
-    {
-      waitlistId: "5",
-      name: "Contemporary Visions",
-      email: "admin@contemporaryvisions.com",
-    },
-    {
-      waitlistId: "6",
-      name: "Urban Canvas",
-      email: "contact@urbancanvas.org",
-    },
-    {
-      waitlistId: "7",
-      name: "Studio Gallery",
-      email: "info@studiogallery.com",
-    },
-    {
-      waitlistId: "8",
-      name: "Artisan Collective",
-      email: "team@artisancollective.com",
-    },
-    {
-      waitlistId: "9",
-      name: "Spectrum Gallery",
-      email: "hello@spectrumgallery.net",
-    },
+    createGallery("1", "Visage of Beauty", "dantereus1@gmail.com"),
+    createGallery("2", "Modern Art Gallery", "contact@modernart.com"),
+    createGallery("3", "Gallery Nouveau", "info@gallerynouveau.com"),
+    createGallery("4", "The Art Space", "hello@theartspace.net"),
+    createGallery("5", "Contemporary Visions", "admin@contemporaryvisions.com"),
+    createGallery("6", "Urban Canvas", "contact@urbancanvas.org"),
+    createGallery("7", "Studio Gallery", "info@studiogallery.com"),
+    createGallery("8", "Artisan Collective", "team@artisancollective.com"),
+    createGallery("9", "Spectrum Gallery", "hello@spectrumgallery.net"),
   ];
   const filteredGalleries = galleries.filter((gallery) =>
     gallery.email.toLowerCase().includes(searchQuery.toLowerCase())
