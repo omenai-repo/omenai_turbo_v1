@@ -9,7 +9,7 @@ export async function validateInviteToken(payload: {
 }) {
   try {
     const url = getApiUrl();
-    const result = await fetch(`${url}/api/auth/waitlist/createInviteToken`, {
+    const result = await fetch(`${url}/api/auth/waitlist/validateInviteToken`, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {

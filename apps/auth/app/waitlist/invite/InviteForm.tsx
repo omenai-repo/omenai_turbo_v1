@@ -5,7 +5,7 @@ import React from "react";
 import WaitlistFormLayout from "../WaitlistFormLayout";
 import { auth_uri } from "@omenai/url-config/src/config";
 import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { PulseLoader } from "react-spinners";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
@@ -17,14 +17,38 @@ import {
   InviteFormData,
 } from "../FormValidation";
 
+function getFormData(form: HTMLFormElement): InviteFormData {
+  const formData = new FormData(form);
+  return {
+    code: formData.get("code") as string,
+    email: formData.get("email") as string,
+  };
+}
+
+// Handle validation
+function validateForm(data: InviteFormData, setErrors: Function): boolean {
+  const validationErrors = validateInviteForm(data);
+
+  if (isFormValid(validationErrors)) {
+    setErrors({});
+    return true;
+  }
+
+  setErrors(validationErrors);
+  return false;
+}
+
+// Handle API call and navigation
+
 export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
     true
   );
+  const router = useRouter();
 
-  if (!waitlistActivated) redirect(`/regiter/${entity}`);
+  if (!waitlistActivated) router.replace(`/regiter/${entity}`);
 
   const { errors, setErrors, isSubmitting, setIsSubmitting, handleChange } =
     useWaitlistForm<{ email: string; code: string }>({
@@ -32,37 +56,43 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
       code: "",
     });
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setIsSubmitting(true);
+  async function processInvite(
+    data: InviteFormData,
+    entity: string
+  ): Promise<void> {
+    const result = await createInviteToken({
+      email: data.email,
+      entity,
+      inviteCode: data.code,
+    });
 
-    const formData = new FormData(e.currentTarget);
-    const data: InviteFormData = {
-      code: formData.get("code") as string,
-      email: formData.get("email") as string,
-    };
-
-    const validationErrors = validateInviteForm(data);
-
-    if (isFormValid(validationErrors)) {
-      setErrors({});
-      const result = await createInviteToken({
+    if (result.isOk && result.referrerKey) {
+      toast_notif(result.message, "success");
+      const params = new URLSearchParams({
+        referrerKey: result.referrerKey,
         email: data.email,
-        entity,
         inviteCode: data.code,
       });
-      if (result.isOk) {
-        toast_notif(result.message, "success");
-        redirect(
-          `/register/${entity}?referrerKey=${result.referrerKey}&email=${data.email}&inviteCode=${data.code}`
-        );
-      } else {
-        toast_notif(result.message, "error");
-      }
+      router.replace(`/register/${entity}?${params}`);
     } else {
-      setErrors(validationErrors);
+      toast_notif(result.message, "error");
     }
-    setIsSubmitting(false);
+  }
+
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const data = getFormData(e.currentTarget);
+
+      if (validateForm(data, setErrors)) {
+        await processInvite(data, entity);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -123,6 +153,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
         <div className="flex flex-col w-full gap-y-4">
           <button
             type="submit"
+            disabled={isSubmitting}
             className="p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
           >
             {isSubmitting ? (
