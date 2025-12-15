@@ -85,7 +85,7 @@ export type ArtistSignupData = {
 
 export type ArtistDocumentationTypes = {
   cv?: string;
-  socials?: { [key?: Socials]: string };
+  socials?: { [key: Socials]: string };
 };
 
 type Socials =
@@ -1168,4 +1168,9 @@ export type WaitListTypes = {
     isInvited?: boolean;
     entity: Exclude<EntityType, "admin">;
     referrerKey?: string;
+    discount: {
+      plan: 'pro',
+      active: boolean;
+      redeemed: boolean
+    }
 }

@@ -9,6 +9,7 @@ import { GallerySchemaTypes } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { canAccessRoute } from "../../../../utils/canAccessRoute";
 import ForbiddenPage from "../../../components/ForbiddenPage";
+import Waitlist from "./Waitlist";
 
 export type GalleryType = Pick<
   GallerySchemaTypes,
@@ -54,6 +55,7 @@ export function GalleryRequestWrapper() {
       <Tabs.List>
         <Tabs.Tab value="Pending">Pending Requests</Tabs.Tab>
         <Tabs.Tab value="Approved">Approved Galleries</Tabs.Tab>
+        <Tabs.Tab value="Waitlist">Waitlist</Tabs.Tab>
         {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
       </Tabs.List>
 
@@ -63,6 +65,10 @@ export function GalleryRequestWrapper() {
 
       <Tabs.Panel value="Approved" className="mt-4">
         <ApprovedGalleryRequests galleries={approved} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="Waitlist" className="mt-4">
+        <Waitlist />
       </Tabs.Panel>
 
       {/* <Tabs.Panel value="settings">
