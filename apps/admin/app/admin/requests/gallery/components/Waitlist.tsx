@@ -101,6 +101,7 @@ export default function Waitlist() {
         <label className="flex items-center gap-2 cursor-pointer group">
           <input
             type="checkbox"
+            disabled={filteredGalleries.length === 0}
             checked={allSelected}
             ref={(input) => {
               if (input) input.indeterminate = someSelected;
@@ -134,6 +135,7 @@ export default function Waitlist() {
             />
           </div>
           <Button
+            disabled={filteredGalleries.length === 0}
             variant="gradient"
             gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
             size="xs"
