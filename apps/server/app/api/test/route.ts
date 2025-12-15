@@ -22,6 +22,5 @@ export async function GET() {
   return NextResponse.json({
     message: "Successful",
     data,
-    error,
   });
 }
