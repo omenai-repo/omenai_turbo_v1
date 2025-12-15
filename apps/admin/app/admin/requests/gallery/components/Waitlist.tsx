@@ -1,19 +1,25 @@
 "use client";
 import { Button } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import React, { useState } from "react";
+import { fetchWaitlistUsers } from "@omenai/shared-services/admin/fetch_waitlist_users";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { WaitListTypes } from "@omenai/shared-types";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 const statusConfig = {
   selected: {
-    borderColor: "border-emerald-200",
+    borderColor: "transparent",
     bgColor: "bg-gradient-to-r from-emerald-50/80 to-green-50/60",
     shadowColor: "shadow-emerald-100/50",
     indicatorColor: "green",
     glowColor: "ring-emerald-200/50",
   },
   waitlisted: {
-    borderColor: "border-amber-200",
-    bgColor: "bg-gradient-to-r from-amber-50/80 to-orange-50/60",
+    borderColor: "border-dark",
+    bgColor: "white",
     shadowColor: "shadow-amber-100/50",
     indicatorColor: "red",
     glowColor: "ring-amber-200/50",
@@ -21,26 +27,34 @@ const statusConfig = {
 };
 
 export default function Waitlist() {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
+  const { data: galleries, isLoading: loading } = useQuery<WaitListTypes[]>({
+    queryKey: ["fetch_gallery_waitlist_users"],
+    queryFn: async () => {
+      const response = await fetchWaitlistUsers("gallery");
 
-  const createGallery = (id: string, name: string, email: string) => ({
-    waitlistId: id,
-    name,
-    email,
+      if (!response.isOk) throw new Error(response.message);
+      return response.data;
+    },
   });
 
-  const galleries = [
-    createGallery("1", "Visage of Beauty", "dantereus1@gmail.com"),
-    createGallery("2", "Modern Art Gallery", "contact@modernart.com"),
-    createGallery("3", "Gallery Nouveau", "info@gallerynouveau.com"),
-    createGallery("4", "The Art Space", "hello@theartspace.net"),
-    createGallery("5", "Contemporary Visions", "admin@contemporaryvisions.com"),
-    createGallery("6", "Urban Canvas", "contact@urbancanvas.org"),
-    createGallery("7", "Studio Gallery", "info@studiogallery.com"),
-    createGallery("8", "Artisan Collective", "team@artisancollective.com"),
-    createGallery("9", "Spectrum Gallery", "hello@spectrumgallery.net"),
-  ];
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [discountToggles, setDiscountToggles] = useState<Map<string, boolean>>(
+    new Map()
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  if (loading) {
+    return (
+      <div className="h-[50vh] w-full grid place-items-center">
+        <Load />
+      </div>
+    );
+  }
+
+  if (!galleries || galleries.length === 0) {
+    return <NotFoundData />;
+  }
+
   const filteredGalleries = galleries.filter(
     (gallery) =>
       gallery.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -63,6 +77,10 @@ export default function Waitlist() {
       newSelected.add(id);
     }
     setSelectedIds(newSelected);
+  };
+
+  const handleToggleDiscount = (id: string, checked: boolean) => {
+    setDiscountToggles(new Map(discountToggles.set(id, checked)));
   };
 
   const handleRowKeyDown = (e: React.KeyboardEvent, id: string) => {
@@ -142,6 +160,7 @@ export default function Waitlist() {
 
       {filteredGalleries.map((gallery) => {
         const isSelected = selectedIds.has(gallery.waitlistId);
+        const hasDiscount = discountToggles.get(gallery.waitlistId) || false;
         const currentStyle =
           statusConfig[isSelected ? "selected" : "waitlisted"];
         return (
@@ -157,13 +176,12 @@ export default function Waitlist() {
           backdrop-blur-sm transition-all duration-500 ${currentStyle.shadowColor}
           ${currentStyle.glowColor}
           transform-gpu cursor-pointer
-          ${isSelected ? "ring-2 ring-slate-400" : ""}
           focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2
           hover:shadow-lg
         `}
           >
             {/* Main content */}
-            <div className="relative z-10 flex justify-between items-center px-4 py-2 pointer-events-none">
+            <div className="relative z-10 grid grid-cols-4 px-4 py-2 pointer-events-none">
               <div className="pointer-events-auto">
                 <input
                   type="checkbox"
@@ -179,46 +197,41 @@ export default function Waitlist() {
                 />
               </div>
 
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-self-start">
                 <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300 ">
                   {gallery.name}
                 </h4>
               </div>
-              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-dark">
+              <div className="flex items-center justify-self-start gap-x-1.5 text-fluid-xxs text-dark">
                 <Mail size={18} />
                 <span className="font-medium text-fluid-xs">
                   {gallery.email}
                 </span>
               </div>
-              <Button
-                variant="gradient"
-                gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
-                size="xs"
-                radius="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Add your invite logic here
-                }}
-                className="
-                  font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
-                  transition-all duration-300 hover:scale-105 active:scale-95
-                  ring-1 ring-blue-200/50 hover:ring-blue-300/70
-                  transform-gpu pointer-events-auto
-                "
-                styles={{
-                  root: {
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                    },
-                  },
-                }}
-              >
-                Invite
-              </Button>
+              <div className="flex items-center justify-self-end gap-4 pointer-events-auto">
+                <span className="text-sm font-medium text-gray-700">
+                  Add discount
+                </span>
+                <label
+                  className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-black"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    className="peer sr-only"
+                    type="checkbox"
+                    checked={hasDiscount}
+                    onChange={(e) =>
+                      handleToggleDiscount(gallery.waitlistId, e.target.checked)
+                    }
+                  />
+                  <span className="absolute inset-y-0 start-0 m-1 h-[22px] w-[22px] rounded-full bg-white transition-all peer-checked:start-5"></span>
+                </label>
+              </div>
             </div>
           </div>
         );
       })}
+      {filteredGalleries.length === 0 && <NotFoundData />}
     </div>
   );
 }
