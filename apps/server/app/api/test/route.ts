@@ -1,16 +1,23 @@
 import { NextResponse } from "next/server";
-import { render } from "@react-email/render";
-import SubscriptionExpireAlert from "@omenai/shared-emails/src/views/subscription/SubscriptionExpireAlert";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY!);
+import { sendArtistFundsWithdrawalProcessingMail } from "@omenai/shared-emails/src/models/artist/sendArtistFundsWithdrawalProcessingMail";
+import { sendArtistFundsWithdrawalSuccessMail } from "@omenai/shared-emails/src/models/artist/sendArtistFundsWithdrawalSuccessMail";
+import { sendArtistFundsWithdrawalFailed } from "@omenai/shared-emails/src/models/artist/sendArtistFundsWithdrawalFailed";
 export async function GET() {
-  const html = await render(SubscriptionExpireAlert("Test user", `in 3 days`));
-  const { data, error } = await resend.emails.send({
-    from: "Onboarding <onboarding@omenai.app>",
-    to: "moses@omenai.net",
-    subject: "Your subscription expires in 3 days",
-    html,
+  const email = "moses@omenai.net";
+  sendArtistFundsWithdrawalProcessingMail({
+    amount: "$ 5,000",
+    email: email,
+    name: "Test user",
+  });
+  sendArtistFundsWithdrawalSuccessMail({
+    amount: "$ 5,000",
+    email: email,
+    name: "Test user",
+  });
+  sendArtistFundsWithdrawalFailed({
+    amount: "$ 5,000",
+    email: email,
+    name: "Test user",
   });
   return NextResponse.json({
     message: "Successful",
