@@ -28,7 +28,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     if (waitlistUserExists)
       throw new ConflictError("User previously added to wait list.");
 
-    const payload: Omit<WaitListTypes, "referrerKey" | "waitlistId"> = {
+    const payload: Omit<WaitListTypes, "referrerKey" | "waitlistId" | 'discount'> = {
       name,
       email,
       entity,
