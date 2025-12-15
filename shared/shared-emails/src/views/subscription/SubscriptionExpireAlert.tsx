@@ -34,13 +34,15 @@ export const SubscriptionExpireAlert = (name: string, day: string) => {
           </Text>
 
           <Text style={text}>
-            To ensure uninterrupted access to your account and all your
-            benefits, please renew your subscription before it expires.
+            Please ensure sufficient funds are available in your payment method
+            to avoid any interruption to your service. We'll process the payment{" "}
+            {day}.
           </Text>
 
           <Text style={text}>
-            If you’ve already renewed or have any questions about your plan, you
-            can safely ignore this message or contact us anytime.
+            If you need to update your payment information or have any questions
+            about your billing, please visit your account settings or contact
+            our support team.
           </Text>
 
           <Hr style={hr} />
