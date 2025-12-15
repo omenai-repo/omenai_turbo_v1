@@ -16,8 +16,10 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
   request: Request
 ) {
   try {
+      const body = await request.json();
+      const { email, inviteCode, entity } = body ?? {};
+      console.log(body)
     await connectMongoDB();
-    const { email, inviteCode, entity } = await request.json();
 
     if (!email || !inviteCode || !entity)
       throw new BadRequestError("Invalid parameters provided");

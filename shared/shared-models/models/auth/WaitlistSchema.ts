@@ -11,7 +11,8 @@ const waitlistSchema = new Schema<WaitListTypes>({
     isInvited: {type: Boolean, default: false},
     referrerKey: {type: String},
     waitlistId: {type: String, default: () => uuidv4()},
-    entity: {type: String, required: true}
+    entity: {type: String, required: true},
+    discount: {type: Schema.Types.Mixed, default: {plan: "pro", active: false, redeemed: false}}
 }, { timestamps: true });
 
 export const Waitlist =
