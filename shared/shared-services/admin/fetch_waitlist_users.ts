@@ -1,13 +1,15 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function fetchWaitlistUsers(entity: string) {
+export async function fetchWaitlistUsers(entity: string, token: string) {
   try {
     const url = getApiUrl();
     const res = await fetch(
       `${url}/api/admin/fetch_waitlist_users?entity=${entity}`,
       {
         method: "GET",
+        headers: { "x-csrf-token": token },
+        credentials: "include",
       }
     );
 

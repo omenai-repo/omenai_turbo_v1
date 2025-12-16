@@ -7,6 +7,7 @@ import { fetchWaitlistUsers } from "@omenai/shared-services/admin/fetch_waitlist
 import { WaitListTypes } from "@omenai/shared-types";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 const statusConfig = {
   selected: {
@@ -16,7 +17,7 @@ const statusConfig = {
     indicatorColor: "green",
     glowColor: "ring-emerald-200/50",
   },
-  waitlisted: {
+  default: {
     borderColor: "border-dark",
     bgColor: "white",
     shadowColor: "shadow-amber-100/50",
@@ -26,14 +27,16 @@ const statusConfig = {
 };
 
 export default function Waitlist() {
+  const { csrf } = useAuth({ requiredRole: "admin" });
   const { data: galleries, isLoading: loading } = useQuery<WaitListTypes[]>({
-    queryKey: ["fetch_gallery_waitlist_users"],
+    queryKey: ["fetch_gallery_waitlist_users", "gallery"],
     queryFn: async () => {
-      const response = await fetchWaitlistUsers("gallery");
+      const response = await fetchWaitlistUsers("gallery", csrf || "");
 
       if (!response.isOk) throw new Error(response.message);
       return response.data;
     },
+    refetchOnWindowFocus: true,
   });
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -43,11 +46,7 @@ export default function Waitlist() {
   const [searchQuery, setSearchQuery] = useState("");
 
   if (loading) {
-    return (
-      <div className="h-[50vh] w-full grid place-items-center">
-        <Load />
-      </div>
-    );
+    return <Load />;
   }
 
   if (!galleries || galleries.length === 0) {
@@ -162,8 +161,7 @@ export default function Waitlist() {
       {filteredGalleries.map((gallery) => {
         const isSelected = selectedIds.has(gallery.waitlistId);
         const hasDiscount = discountToggles.get(gallery.waitlistId) || false;
-        const currentStyle =
-          statusConfig[isSelected ? "selected" : "waitlisted"];
+        const currentStyle = statusConfig[isSelected ? "selected" : "default"];
         return (
           <div
             key={gallery.waitlistId}

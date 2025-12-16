@@ -14,6 +14,7 @@ export async function editMemberRole(
       headers: { "x-csrf-token": token },
       credentials: "include",
     });
+    console.log("first");
 
     const result = await res.json();
 
