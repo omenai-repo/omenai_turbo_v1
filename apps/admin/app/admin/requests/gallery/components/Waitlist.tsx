@@ -1,13 +1,17 @@
 "use client";
 import { Button } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import React, { useState } from "react";
 import { fetchWaitlistUsers } from "@omenai/shared-services/admin/fetch_waitlist_users";
+import { inviteWaitlistUsers } from "@omenai/shared-services/admin/invite_waitlist_users";
 import { WaitListTypes } from "@omenai/shared-types";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+import Load, {
+  LoadSmall,
+} from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 const statusConfig = {
   selected: {
@@ -39,12 +43,13 @@ export default function Waitlist() {
     refetchOnWindowFocus: false,
     enabled: user.access_role === "Admin" || user.access_role === "Owner",
   });
-
+  const queryClient = useQueryClient();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [discountToggles, setDiscountToggles] = useState<Map<string, boolean>>(
     new Map()
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [isInviting, setIsInviting] = useState(false);
 
   if (loading) {
     return <Load />;
@@ -94,6 +99,48 @@ export default function Waitlist() {
   const someSelected =
     selectedIds.size > 0 && selectedIds.size < galleries.length;
 
+  async function inviteGalleryUsers() {
+    if (selectedIds.size === 0) return;
+    if (!galleries) return;
+
+    setIsInviting(true);
+
+    // Build the array of users to invite
+    const usersToInvite: WaitListTypes[] = Array.from(selectedIds)
+      .map((id) => {
+        const gallery = galleries.find((g) => g.waitlistId === id);
+        if (!gallery) return null;
+
+        const hasDiscount = discountToggles.get(id) || false;
+
+        return {
+          waitlistId: gallery.waitlistId,
+          name: gallery.name,
+          email: gallery.email,
+          entity: gallery.entity,
+          discount: {
+            plan: "pro" as const,
+            active: hasDiscount,
+            redeemed: false,
+          },
+        };
+      })
+      .filter((user): user is NonNullable<typeof user> => user !== null);
+
+    //  API call
+    const response = await inviteWaitlistUsers(usersToInvite, csrf ?? "");
+    if (response.isOk) {
+      queryClient.invalidateQueries({
+        queryKey: ["fetch_gallery_waitlist_users", "gallery"],
+      });
+      setSelectedIds(new Set());
+      setDiscountToggles(new Map());
+    } else {
+      toast_notif(response.message, "error");
+    }
+    setIsInviting(false);
+  }
+
   return (
     <div className="w-full p-1 flex flex-col gap-6">
       {/* Select All Header */}
@@ -135,7 +182,8 @@ export default function Waitlist() {
             />
           </div>
           <Button
-            disabled={filteredGalleries.length === 0}
+            disabled={selectedIds.size === 0 || isInviting}
+            onClick={inviteGalleryUsers}
             variant="gradient"
             gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
             size="xs"
@@ -154,7 +202,11 @@ export default function Waitlist() {
               },
             }}
           >
-            Invite Selected
+            {isInviting ? (
+              <LoadSmall />
+            ) : (
+              `Invite Selected (${selectedIds.size})`
+            )}
           </Button>
         </div>
       </div>

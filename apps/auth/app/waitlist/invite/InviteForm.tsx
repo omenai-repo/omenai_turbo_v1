@@ -40,7 +40,15 @@ function validateForm(data: InviteFormData, setErrors: Function): boolean {
 
 // Handle API call and navigation
 
-export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
+export default function InviteForm({
+  entity,
+  email,
+  inviteCode,
+}: Readonly<{
+  entity: string;
+  email: string | undefined;
+  inviteCode: string | undefined;
+}>) {
   const auth_url = auth_uri();
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
@@ -52,8 +60,8 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
 
   const { errors, setErrors, isSubmitting, setIsSubmitting, handleChange } =
     useWaitlistForm<{ email: string; code: string }>({
-      email: "",
-      code: "",
+      email: email ?? "",
+      code: inviteCode ?? "",
     });
 
   async function processInvite(
@@ -113,6 +121,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
             name="email"
             onChange={handleChange}
             disabled={isSubmitting}
+            value={email ?? ""}
           />
           {errors?.email && (
             <div className="flex items-center gap-2 text-red-600">
@@ -133,6 +142,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
             name="code"
             onChange={handleChange}
             disabled={isSubmitting}
+            value={inviteCode ?? ""}
           />
           {errors?.code && (
             <div className="flex items-center gap-2 text-red-600">
