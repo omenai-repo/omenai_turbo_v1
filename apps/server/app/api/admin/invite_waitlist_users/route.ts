@@ -37,7 +37,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function GET(
     const inviteUserEmailPayload = await Promise.all(
       waitlistUsers.map(async (user) => {
         const html = await render(
-          InvitationEmail(user.name, user.inviteCode!, user.email, user.entity)
+          InvitationEmail(
+            user.name,
+            user.inviteCode ?? "",
+            user.email,
+            user.entity
+          )
         );
         return {
           from: "Team <omenai@omenai.app>",
@@ -50,7 +55,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function GET(
     await resend.batch.send(inviteUserEmailPayload);
     // update waitlis users
     for (const waitlistUser of waitlistUsers) {
-      const [selectedUser] = selectedUsers.filter(
+      const selectedUser = selectedUsers.find(
         (user: WaitListTypes) => user.waitlistId === waitlistUser.waitlistId
       );
       await Waitlist.updateOne(
