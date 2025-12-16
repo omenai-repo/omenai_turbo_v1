@@ -27,7 +27,7 @@ const statusConfig = {
 };
 
 export default function Waitlist() {
-  const { csrf } = useAuth({ requiredRole: "admin" });
+  const { user, csrf } = useAuth({ requiredRole: "admin" });
   const { data: galleries, isLoading: loading } = useQuery<WaitListTypes[]>({
     queryKey: ["fetch_gallery_waitlist_users", "gallery"],
     queryFn: async () => {
@@ -36,7 +36,8 @@ export default function Waitlist() {
       if (!response.isOk) throw new Error(response.message);
       return response.data;
     },
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
+    enabled: user.access_role === "Admin" || user.access_role === "Owner",
   });
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
