@@ -1,4 +1,5 @@
 import { Modal } from "@mantine/core";
+import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { Mail } from "lucide-react";
 
 interface SelectedGallery {
@@ -14,13 +15,13 @@ export function InviteGalleryModal({
   selectedGalleries,
   onConfirmInvite,
   isInviting,
-}: {
+}: Readonly<{
   opened: boolean;
   close: () => void;
   selectedGalleries: SelectedGallery[];
   onConfirmInvite: () => void;
   isInviting: boolean;
-}) {
+}>) {
   return (
     <Modal
       opened={opened}
@@ -118,9 +119,11 @@ export function InviteGalleryModal({
               disabled={selectedGalleries.length === 0 || isInviting}
               className="w-full bg-dark py-2 px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
             >
-              {isInviting
-                ? "Inviting..."
-                : `Invite ${selectedGalleries.length} ${selectedGalleries.length === 1 ? "Gallery" : "Galleries"}`}
+              {isInviting ? (
+                <LoadSmall />
+              ) : (
+                `Invite Selected (${selectedGalleries.length})`
+              )}
             </button>
           </div>
         </div>

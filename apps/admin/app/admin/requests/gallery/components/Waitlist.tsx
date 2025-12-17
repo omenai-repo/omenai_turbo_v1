@@ -281,7 +281,6 @@ export default function Waitlist() {
                 <label
                   aria-label={`Add discount for ${gallery.name}`}
                   className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-black"
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <input
                     className="peer sr-only"
@@ -290,6 +289,7 @@ export default function Waitlist() {
                     onChange={(e) =>
                       handleToggleDiscount(gallery.waitlistId, e.target.checked)
                     }
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <span className="absolute inset-y-0 start-0 m-1 h-[22px] w-[22px] rounded-full bg-white transition-all peer-checked:start-5"></span>
                 </label>

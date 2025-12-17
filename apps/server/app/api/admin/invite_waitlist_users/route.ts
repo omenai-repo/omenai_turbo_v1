@@ -143,7 +143,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     }));
 
     // Execute bulk write
-    const bulkWriteResult = await Waitlist.bulkWrite(bulkOps);
+    await Waitlist.bulkWrite(bulkOps);
 
     return NextResponse.json(
       {

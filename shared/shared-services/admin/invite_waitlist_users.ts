@@ -1,5 +1,4 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
-import { WaitListTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 export async function inviteWaitlistUsers(
   waitlistUsers: { waitlistId: string; discount: boolean }[],
