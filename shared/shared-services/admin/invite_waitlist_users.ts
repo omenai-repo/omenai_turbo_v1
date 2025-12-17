@@ -15,7 +15,11 @@ export async function inviteWaitlistUsers(
 
     const result = await res.json();
 
-    return { isOk: res.ok, message: result.message };
+    return {
+      isOk: res.ok,
+      message: result.message,
+      modifiedCount: result.modifiedCount,
+    };
   } catch (error: any) {
     logRollbarServerError(error);
     return {

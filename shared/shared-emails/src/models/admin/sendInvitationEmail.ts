@@ -14,10 +14,10 @@ export const sendInvitationEmail = async ({
   entity,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai Team",
-    from: "Team",
+    prefix: "Omenai Onboarding",
+    from: "Onboarding",
     to: email,
-    subject: "You've been personally invited to join Omenai",
+    subject: "Join Omenai: An Invitation for Your Gallery",
     react: InvitationEmail(name, inviteCode, email, entity),
   });
 };

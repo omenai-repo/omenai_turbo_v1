@@ -147,7 +147,10 @@ export default function Waitlist() {
       setSelectedIds(new Set());
       setDiscountToggles(new Map());
       setModalOpened(false);
-      toast_notif("Invitations sent successfully!", "success");
+      toast_notif(
+        `Invitations sent successfully! - ${response.modifiedCount} user invited`,
+        "success"
+      );
     } else {
       toast_notif(response.message, "error");
     }
