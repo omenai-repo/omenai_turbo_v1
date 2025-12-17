@@ -64,7 +64,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const bulkResult = await Waitlist.bulkWrite(bulkOps);
 
     // Validate bulk write results
-    const { matchedCount, modifiedCount } = bulkResult;
+    const { modifiedCount } = bulkResult;
     const bulkErrors = bulkResult.getWriteErrors();
 
     // Determine successfully updated users
