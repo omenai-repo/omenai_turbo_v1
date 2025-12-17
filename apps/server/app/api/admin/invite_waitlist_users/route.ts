@@ -101,16 +101,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
     }
 
-    // Check if all matched documents were actually modified
-    if (modifiedCount !== matchedCount) {
-      const unmodifiedCount = matchedCount - modifiedCount;
-      createErrorRollbarReport(
-        "admin: invite waitlist users - no modification needed",
-        new Error(`${unmodifiedCount} documents were already in target state`),
-        200
-      );
-    }
-
     // Send emails only to successfully updated users
     if (successfullyUpdatedUsers.length > 0) {
       const inviteUserEmailPayload = await Promise.all(
