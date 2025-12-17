@@ -5,7 +5,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { createErrorRollbarReport } from "../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { CombinedConfig, WaitListTypes } from "@omenai/shared-types";
+import { CombinedConfig } from "@omenai/shared-types";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import InvitationEmail from "@omenai/shared-emails/src/views/admin/InvitationEmail";
@@ -17,23 +17,88 @@ const config: CombinedConfig = {
 };
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const POST = withRateLimitHighlightAndCsrf(config)(async function GET(
+type WaitlistUserPayload = {
+  waitlistId: string;
+  discount: boolean;
+};
+
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
     const { waitlistUsers: selectedUsers } = await request.json();
-    // validate payload
-    if (!selectedUsers || selectedUsers.length === 0)
-      throw new BadRequestError("An array of waitlist user is required");
-    // retrieve ids of waitlist payload
-    const waitlistUserIds: string[] = selectedUsers.map(
-      (waitlistUser: WaitListTypes) => waitlistUser.waitlistId
+
+    // validation
+    if (!selectedUsers) {
+      throw new BadRequestError("waitlistUsers field is required");
+    }
+
+    if (!Array.isArray(selectedUsers)) {
+      throw new BadRequestError("waitlistUsers must be an array");
+    }
+
+    if (selectedUsers.length === 0) {
+      throw new BadRequestError("waitlistUsers array cannot be empty");
+    }
+
+    // Validate each user object
+    for (let i = 0; i < selectedUsers.length; i++) {
+      const user = selectedUsers[i];
+
+      if (!user || typeof user !== "object") {
+        throw new BadRequestError(
+          `Invalid user object at index ${i}: must be an object`
+        );
+      }
+
+      if (!user.waitlistId || typeof user.waitlistId !== "string") {
+        throw new BadRequestError(
+          `Invalid or missing waitlistId at index ${i}: must be a non-empty string`
+        );
+      }
+
+      if (user.waitlistId.trim().length === 0) {
+        throw new BadRequestError(
+          `Invalid waitlistId at index ${i}: cannot be empty or whitespace`
+        );
+      }
+
+      if (typeof user.discount !== "boolean") {
+        throw new BadRequestError(
+          `Invalid discount value at index ${i}: must be a boolean`
+        );
+      }
+    }
+
+    // Check for duplicate waitlistIds
+    const waitlistIds = selectedUsers.map(
+      (user: WaitlistUserPayload) => user.waitlistId
     );
-    // look for id in database
-    const waitlistUsers: WaitListTypes[] = await Waitlist.find({
-      waitlistId: { $in: waitlistUserIds },
-    });
-    // send email
+    const duplicates = waitlistIds.filter(
+      (id, index) => waitlistIds.indexOf(id) !== index
+    );
+
+    if (duplicates.length > 0) {
+      throw new BadRequestError(
+        `Duplicate waitlistIds found: ${[...new Set(duplicates)].join(", ")}`
+      );
+    }
+
+    // Look for waitlist users in database
+    const waitlistUsers = await Waitlist.find({
+      waitlistId: { $in: waitlistIds },
+    }).lean();
+
+    // Verify all requested users exist
+    if (waitlistUsers.length !== selectedUsers.length) {
+      const foundIds = waitlistUsers.map((u) => u.waitlistId);
+      const missingIds = waitlistIds.filter((id) => !foundIds.includes(id));
+      throw new BadRequestError(
+        `Waitlist users not found: ${missingIds.join(", ")}`
+      );
+    }
+
+    // Send email to each waitlist user
     const inviteUserEmailPayload = await Promise.all(
       waitlistUsers.map(async (user) => {
         const html = await render(
@@ -53,30 +118,43 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function GET(
       })
     );
     await resend.batch.send(inviteUserEmailPayload);
-    // update waitlis users
-    for (const waitlistUser of waitlistUsers) {
-      const selectedUser = selectedUsers.find(
-        (user: WaitListTypes) => user.waitlistId === waitlistUser.waitlistId
-      );
-      await Waitlist.updateOne(
-        { waitlistId: waitlistUser.waitlistId },
-        {
-          isInvited: true,
-          discount: { active: selectedUser.discount.active },
-        }
-      );
-    }
+
+    // Create a map for quick discount lookup
+    const discountMap = new Map(
+      selectedUsers.map((user: WaitlistUserPayload) => [
+        user.waitlistId,
+        user.discount,
+      ])
+    );
+
+    // Bulk write operations
+    const bulkOps = waitlistUsers.map((user) => ({
+      updateOne: {
+        filter: { waitlistId: user.waitlistId },
+        update: {
+          $set: {
+            isInvited: true,
+            discount: {
+              active: discountMap.get(user.waitlistId) || false,
+            },
+          },
+        },
+      },
+    }));
+
+    // Execute bulk write
+    const bulkWriteResult = await Waitlist.bulkWrite(bulkOps);
 
     return NextResponse.json(
       {
-        message: "Successfully fetched all waitlist users",
+        message: "Successfully invited waitlist users",
       },
       { status: 200 }
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
-      "admin: fetch waitlist user",
+      "admin: invite waitlist users",
       error,
       error_response?.status
     );

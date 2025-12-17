@@ -55,7 +55,7 @@ const InvitationEmail = (
             <ul>
               <li>
                 <Text className="text-dark text-fluid-xxs leading-[24px]">
-                  Click on the link below
+                  Click on the button below
                 </Text>
               </li>
               <li>
@@ -65,8 +65,7 @@ const InvitationEmail = (
               </li>
               <li>
                 <Text className="m-0 text-fluid-xxs leading-[28px] text-gray-900">
-                  Create your password, complete your profile and Start
-                  exploring!
+                  Complete registration and onboarding and Start exploring!
                 </Text>
               </li>
             </ul>
