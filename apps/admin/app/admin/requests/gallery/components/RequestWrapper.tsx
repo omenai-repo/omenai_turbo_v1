@@ -45,7 +45,6 @@ export function GalleryRequestWrapper() {
   const pending: GalleryType[] = galleries.filter(
     (gallery: GalleryType) => !gallery.gallery_verified
   );
-  console.log(pending);
 
   const approved: GalleryType[] = galleries.filter(
     (gallery: GalleryType) => gallery.gallery_verified
