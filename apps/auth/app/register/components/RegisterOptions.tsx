@@ -26,7 +26,11 @@ export default function RegisterOptions() {
               Signup as Gallery
             </button>
           </Link>
-          <Link href={"/register/artist"}>
+          <Link
+            href={
+              waitlistActivated ? "/waitlist?entity=artist" : "/register/artist"
+            }
+          >
             <button className="border border-slate-300   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded-full py-4 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer">
               Signup as Artist
             </button>
