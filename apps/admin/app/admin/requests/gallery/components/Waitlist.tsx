@@ -12,7 +12,7 @@ import Load, {
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { InviteGalleryModal } from "./InviteGalleryModal";
+import { InviteEntityModal } from "../../InviteEntityModal";
 
 const statusConfig = {
   selected: {
@@ -160,10 +160,10 @@ export default function Waitlist() {
   return (
     <div className="w-full p-1 flex flex-col gap-6">
       {/* Modal */}
-      <InviteGalleryModal
+      <InviteEntityModal
         opened={modalOpened}
         close={() => setModalOpened(false)}
-        selectedGalleries={selectedGalleries}
+        selectedEntity={selectedGalleries}
         onConfirmInvite={inviteGalleryUsers}
         isInviting={isInviting}
       />

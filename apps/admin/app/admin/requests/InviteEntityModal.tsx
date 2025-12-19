@@ -2,23 +2,23 @@ import { Modal } from "@mantine/core";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { Mail } from "lucide-react";
 
-interface SelectedGallery {
+interface SelectedEntity {
   waitlistId: string;
   name: string;
   email: string;
   discount: boolean;
 }
 
-export function InviteGalleryModal({
+export function InviteEntityModal({
   opened,
   close,
-  selectedGalleries,
+  selectedEntity,
   onConfirmInvite,
   isInviting,
 }: Readonly<{
   opened: boolean;
   close: () => void;
-  selectedGalleries: SelectedGallery[];
+  selectedEntity: SelectedEntity[];
   onConfirmInvite: () => void;
   isInviting: boolean;
 }>) {
@@ -72,22 +72,20 @@ export function InviteGalleryModal({
 
           {/* Content section - Scrollable */}
           <div className="flex-1 overflow-y-auto px-8 py-2 space-y-3">
-            {selectedGalleries.length === 0 ? (
+            {selectedEntity.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <p className="text-gray-500 text-fluid-xs">
-                  No galleries selected
-                </p>
+                <p className="text-gray-500 text-fluid-xs">No user selected</p>
               </div>
             ) : (
-              selectedGalleries.map((gallery) => (
+              selectedEntity.map((entity) => (
                 <div
-                  key={gallery.waitlistId}
+                  key={entity.waitlistId}
                   className="flex items-center space-x-4 p-3 rounded bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                 >
                   <div className="flex-1 text-left">
                     <p className="text-fluid-xxs text-gray-900 font-medium">
-                      {gallery.name}
-                      {gallery.discount && (
+                      {entity.name}
+                      {entity.discount && (
                         <span className="text-emerald-600 ml-2">
                           &middot; 100% discount applied
                         </span>
@@ -96,7 +94,7 @@ export function InviteGalleryModal({
                     <div className="flex items-center gap-1 mt-1">
                       <Mail size={14} className="text-slate-600" />
                       <p className="text-fluid-xxs text-slate-700 font-medium">
-                        {gallery.email}
+                        {entity.email}
                       </p>
                     </div>
                   </div>
@@ -116,13 +114,13 @@ export function InviteGalleryModal({
             </button>
             <button
               onClick={onConfirmInvite}
-              disabled={selectedGalleries.length === 0 || isInviting}
+              disabled={selectedEntity.length === 0 || isInviting}
               className="w-full bg-dark py-2 px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
             >
               {isInviting ? (
                 <LoadSmall />
               ) : (
-                `Invite Selected (${selectedGalleries.length})`
+                `Invite Selected (${selectedEntity.length})`
               )}
             </button>
           </div>

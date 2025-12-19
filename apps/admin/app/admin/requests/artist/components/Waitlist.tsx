@@ -12,7 +12,7 @@ import Load, {
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { InviteArtistModal } from "./InviteArtistModal";
+import { InviteEntityModal } from "../../InviteEntityModal";
 
 const statusConfig = {
   selected: {
@@ -60,6 +60,7 @@ export default function Waitlist() {
         waitlistId: g.waitlistId,
         name: g.name,
         email: g.email,
+        discount: false,
       }));
   }, [artists, selectedIds]);
 
@@ -138,10 +139,10 @@ export default function Waitlist() {
   return (
     <div className="w-full p-1 flex flex-col gap-6">
       {/* Modal */}
-      <InviteArtistModal
+      <InviteEntityModal
         opened={modalOpened}
         close={() => setModalOpened(false)}
-        SelectedArtists={SelectedArtists}
+        selectedEntity={SelectedArtists}
         onConfirmInvite={inviteArtistUsers}
         isInviting={isInviting}
       />
@@ -157,13 +158,7 @@ export default function Waitlist() {
               if (input) input.indeterminate = someSelected;
             }}
             onChange={handleSelectAll}
-            aria-label={
-              allSelected
-                ? "Deselect all items"
-                : someSelected
-                  ? "Select all items (some currently selected)"
-                  : "Select all items"
-            }
+            aria-label={allSelected ? "Deselect all items" : "Select all items"}
             className="w-5 h-5 rounded border border-black text-slate-900 
     focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
     cursor-pointer transition-all duration-200
@@ -218,7 +213,7 @@ export default function Waitlist() {
         const isSelected = selectedIds.has(artist.waitlistId);
         const currentStyle = statusConfig[isSelected ? "selected" : "default"];
         return (
-          <div
+          <button
             key={artist.waitlistId}
             onClick={() => handleSelectItem(artist.waitlistId)}
             className={`
@@ -231,12 +226,13 @@ export default function Waitlist() {
           >
             {/* Main content */}
             <div className="relative z-10 grid grid-cols-4 px-4 py-2">
-              <div onClick={(e) => e.stopPropagation()}>
+              <div>
                 <input
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => handleSelectItem(artist.waitlistId)}
                   aria-label={`Select ${artist.name}`}
+                  onClick={(e) => e.stopPropagation()}
                   className="w-5 h-5 rounded border border-black text-slate-900 
                     focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
                     cursor-pointer transition-all duration-200
@@ -256,7 +252,7 @@ export default function Waitlist() {
                 </span>
               </div>
             </div>
-          </div>
+          </button>
         );
       })}
       {filteredArtists.length === 0 && <NotFoundData />}

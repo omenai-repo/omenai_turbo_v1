@@ -28,9 +28,7 @@ export default function ArtistSignupPageWrapper({
   }
   return (
     <>
-      {!collectorOnboardingEnabled ? (
-        <OnboardingBlockerScreen />
-      ) : (
+      {collectorOnboardingEnabled ? (
         <section className="w-full h-screen lg:grid lg:grid-cols-2 overflow-hidden">
           {/* Side Image - hidden on small screens, fixed on large screens */}
           <div className="hidden lg:block fixed top-0 left-0 w-1/2 h-screen">
@@ -46,6 +44,8 @@ export default function ArtistSignupPageWrapper({
             </div>
           </div>
         </section>
+      ) : (
+        <OnboardingBlockerScreen />
       )}
     </>
   );
