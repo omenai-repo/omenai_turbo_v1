@@ -23,7 +23,7 @@ export function WaitlistHeader({
   onSelectAll,
   onSearchChange,
   onInviteClick,
-}: WaitlistHeaderProps) {
+}: Readonly<WaitlistHeaderProps>) {
   return (
     <div className="flex items-center justify-between gap-3 px-4">
       <label className="flex items-center gap-2 cursor-pointer group">
@@ -35,13 +35,7 @@ export function WaitlistHeader({
             if (input) input.indeterminate = someSelected;
           }}
           onChange={onSelectAll}
-          aria-label={
-            allSelected
-              ? "Deselect all items"
-              : someSelected
-                ? "Select all items (some currently selected)"
-                : "Select all items"
-          }
+          aria-label={allSelected ? "Deselect all users" : "Select all users"}
           className="w-5 h-5 rounded border border-black text-slate-900 
             focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
             cursor-pointer transition-all duration-200
