@@ -1,18 +1,16 @@
 "use client";
-import { Button } from "@mantine/core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import React, { useState, useMemo } from "react";
 import { fetchWaitlistUsers } from "@omenai/shared-services/admin/fetch_waitlist_users";
 import { inviteWaitlistUsers } from "@omenai/shared-services/admin/invite_waitlist_users";
 import { WaitListTypes } from "@omenai/shared-types";
-import Load, {
-  LoadSmall,
-} from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { InviteEntityModal } from "../../InviteEntityModal";
+import { WaitlistHeader } from "../../WaitlistHeader";
 
 const statusConfig = {
   selected: {
@@ -148,66 +146,17 @@ export default function Waitlist() {
       />
 
       {/* Select All Header */}
-      <div className="flex items-center justify-between gap-3 px-4">
-        <label className="flex items-center gap-2 cursor-pointer group">
-          <input
-            type="checkbox"
-            disabled={filteredArtists.length === 0}
-            checked={allSelected}
-            ref={(input) => {
-              if (input) input.indeterminate = someSelected;
-            }}
-            onChange={handleSelectAll}
-            aria-label={allSelected ? "Deselect all items" : "Select all items"}
-            className="w-5 h-5 rounded border border-black text-slate-900 
-    focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
-    cursor-pointer transition-all duration-200
-    group-hover:border-slate-400"
-          />
-          <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-            {allSelected ? "Deselect All" : "Select All"}
-          </span>
-        </label>
-        <div className="flex gap-8 items-center">
-          <div>
-            <input
-              type="text"
-              className={
-                "w-full bg-transparent border border-slate-300 focus:border-dark outline-none focus:ring-0 rounded-full transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 px-4 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed"
-              }
-              placeholder="Search by name or email"
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button
-            disabled={selectedIds.size === 0 || isInviting}
-            onClick={openInviteModal}
-            variant="gradient"
-            gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
-            size="xs"
-            radius="sm"
-            className="
-                  font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
-                  transition-all duration-300 hover:scale-105 active:scale-95
-                  ring-1 ring-blue-200/50 hover:ring-blue-300/70
-                  transform-gpu
-                "
-            styles={{
-              root: {
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                },
-              },
-            }}
-          >
-            {isInviting ? (
-              <LoadSmall />
-            ) : (
-              `Invite Selected (${selectedIds.size})`
-            )}
-          </Button>
-        </div>
-      </div>
+      <WaitlistHeader
+        allSelected={allSelected}
+        someSelected={someSelected}
+        filteredItemsLength={filteredArtists.length}
+        selectedCount={selectedIds.size}
+        isInviting={isInviting}
+        searchQuery={searchQuery}
+        onSelectAll={handleSelectAll}
+        onSearchChange={setSearchQuery}
+        onInviteClick={openInviteModal}
+      />
 
       {filteredArtists.map((artist) => {
         const isSelected = selectedIds.has(artist.waitlistId);
