@@ -3,28 +3,19 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import QueryProvider from "@omenai/package-provider/QueryProvider";
-import LoginModal from "@omenai/shared-ui-components/components/modal/LoginModal";
-import RecoveryModal from "@omenai/shared-ui-components/components/modal/RecoveryModal";
-import { OrderReceivedModal } from "@omenai/shared-ui-components/components/modal/OrderConfirmedModal";
 import { Toaster } from "sonner";
 import { Provider as RollbarProvider } from "@rollbar/react";
 import { clientConfig } from "@omenai/rollbar-config";
-import { Analytics } from "@vercel/analytics/react";
-import {
-  ColorSchemeScript,
-  MantineProvider,
-  mantineHtmlProps,
-} from "@mantine/core";
-import { SessionProvider } from "@omenai/package-provider";
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
-
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-
-import LenisProvider from "@omenai/package-provider/ScrollProvider";
-
+import {LayoutWrapper} from "./LayoutWrapper";
+import {
+  ColorSchemeScript,
+  mantineHtmlProps,
+} from "@mantine/core";
+import React from "react";
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Discover, buy, and sell African contemporary art online.",
@@ -48,11 +39,7 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
   const initialSessionData = await getServerSession();
 
   return (
@@ -67,6 +54,7 @@ export default async function RootLayout({
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" href="/favicon.ico" />
             <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+            <title>Omenai</title>
           </head>
           <body
             className={`${work_sans.variable} font-sans flex flex-col justify-center`}
@@ -79,22 +67,9 @@ export default async function RootLayout({
               closeButton
               duration={7000}
             />
-            <SessionProvider initialSessionData={initialSessionData}>
-              <QueryProvider>
-                <MantineProvider
-                  defaultColorScheme="light"
-                  forceColorScheme="light"
-                >
-                  <LoginModal />
-                  <RecoveryModal />
-                  <OrderReceivedModal />
-                  <LenisProvider>
-                    <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
-                  </LenisProvider>
-                  <Analytics />
-                </MantineProvider>
-              </QueryProvider>
-            </SessionProvider>
+            <LayoutWrapper sessionData={initialSessionData}>
+              {children}
+            </LayoutWrapper>
           </body>
         </html>
       </HighRiskProvider>

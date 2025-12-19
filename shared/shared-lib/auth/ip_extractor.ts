@@ -9,10 +9,12 @@ export async function getClientIdentifier(
   }
 
   const headers = request.headers;
+
   let ip = "unknown";
 
   // 2️⃣ Cloudflare headers (most trusted)
   const cfConnectingIP = headers.get("cf-connecting-ip");
+  
   const trueClientIP = headers.get("true-client-ip");
 
   if (cfConnectingIP && isValidIP(cfConnectingIP)) {

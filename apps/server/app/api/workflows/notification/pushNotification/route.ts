@@ -68,8 +68,7 @@ export const { POST } = serve<NotificationPayload>(async (ctx) => {
       // Check both succeeded
       if (
         !createNotificationHistory ||
-        !sendNotification ||
-        sendNotification.success !== true
+          sendNotification?.success !== true
       ) {
         throw new ServerError(
           `Notification failed: history=${!!createNotificationHistory}, send=${sendNotification?.success}`

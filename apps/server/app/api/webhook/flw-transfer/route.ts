@@ -8,17 +8,21 @@ import {
 } from "@omenai/shared-types";
 
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
-
 import { WalletTransaction } from "@omenai/shared-models/models/wallet/WalletTransactionSchema";
+
 import {
   verifyWebhookSignature,
   verifyFlutterwaveTransaction,
 } from "../resource-global";
+
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { createErrorRollbarReport } from "../../util";
 
-const SECRET_HASH = process.env.FLW_SECRET_HASH!;
+/* -------------------------------------------------------------------------- */
+/*                               DB CONNECTION                                */
+/* -------------------------------------------------------------------------- */
 
+const SECRET_HASH = process.env.FLW_SECRET_HASH!;
 let mongoClient: any;
 
 async function getMongoClient() {
@@ -28,169 +32,180 @@ async function getMongoClient() {
   return mongoClient;
 }
 
-const signatureCache = new Map();
+/* -------------------------------------------------------------------------- */
+/*                            SIGNATURE VALIDATION                             */
+/* -------------------------------------------------------------------------- */
+
+const signatureCache = new Map<string, boolean>();
 
 async function isSignatureValid(signature: string, secretHash: string) {
   if (signatureCache.has(signature)) {
-    return signatureCache.get(signature);
+    return signatureCache.get(signature)!;
   }
+
   const isValid = await verifyWebhookSignature(signature, secretHash);
   signatureCache.set(signature, isValid);
   return isValid;
 }
 
-async function handleStatusUtility(
-  status: WalletTransactionStatusTypes,
-  verified_transaction: any,
-  session: any
+/* -------------------------------------------------------------------------- */
+/*                         TRANSFER STATUS DISPATCHER                          */
+/* -------------------------------------------------------------------------- */
+
+async function dispatchTransferStatus(
+    status: WalletTransactionStatusTypes,
+    verified_transaction: any,
+    session: any
 ) {
-  if (status === "NEW") return { isOk: true };
-  if (status === "PENDING")
-    return await handleTransferPending(verified_transaction, session);
-  if (status === "SUCCESSFUL")
-    return await handleTransferSuccess(verified_transaction, session);
-  if (status === "FAILED")
-    return await handleTransferFailure(verified_transaction, session);
+  switch (status) {
+    case "NEW":
+      return { isOk: true };
+    case "PENDING":
+      return handleTransferPending(verified_transaction, session);
+    case "SUCCESSFUL":
+      return handleTransferSuccess(verified_transaction, session);
+    case "FAILED":
+      return handleTransferFailure(verified_transaction, session);
+    default:
+      return { isOk: true };
+  }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                    TRANSFER STATUS RESOLUTION LOGIC                          */
+/* -------------------------------------------------------------------------- */
+
 async function checkAndHandleTransferStatus(
-  verified_transaction: any,
-  session: any
+    verified_transaction: any,
+    session: any
 ) {
   const { id, status } = verified_transaction.data;
 
   try {
-    // Check DB
-    const fetchTransactionInDB = await WalletTransaction.findOne<
-      WalletTransactionModelSchemaTypes & {
-        createdAt: string;
-        updatedAt: string;
-      }
-    >({
-      trans_flw_ref_id: id,
-    });
-
-    if (!fetchTransactionInDB) {
-      return await handleTransferCreation(verified_transaction, session);
-    } else {
-      // Check status against webhook status
-
-      const transferStatusInDB = fetchTransactionInDB.trans_status;
-
-      if (transferStatusInDB === status) {
-        console.log(
-          `Duplicate webhook received for status ${status} — skipping`
-        );
-        return { isOk: true };
-      }
-
-      if (transferStatusInDB === "SUCCESSFUL" && status === "FAILED") {
-        // TODO: Log suspicious activity using robust logging systems to scale
-        return { isOk: true };
-      } else {
-        return await handleStatusUtility(status, verified_transaction, session);
-      }
+    const existing = await WalletTransaction.findOne<
+        WalletTransactionModelSchemaTypes & {
+      createdAt: string;
+      updatedAt: string;
     }
+    >({ trans_flw_ref_id: id });
+
+    if (!existing) {
+      return handleTransferCreation(verified_transaction, session);
+    }
+
+    if (existing.trans_status === status) {
+      console.log(`Duplicate webhook for status ${status} — skipping`);
+      return { isOk: true };
+    }
+
+    if (existing.trans_status === "SUCCESSFUL" && status === "FAILED") {
+      return { isOk: true };
+    }
+
+    return dispatchTransferStatus(status, verified_transaction, session);
   } catch (error) {
     createErrorRollbarReport(
-      "Flutterwave Transfer webhook processing -Transfer Webhook handler - End session",
-      error,
-      500
+        "Flutterwave Transfer webhook - status resolution error",
+        error,
+        500
     );
     return { isOk: false };
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                         TRANSFER STATUS HANDLERS                            */
+/* -------------------------------------------------------------------------- */
 
 async function handleTransferPending(verified_transaction: any, session: any) {
   try {
     session.startTransaction();
-    // Update DB
-    const update_wallet_transaction_status = await WalletTransaction.updateOne(
-      {
-        trans_flw_ref_id: verified_transaction.data.id,
-      },
-      { $set: { trans_status: "PENDING" } }
-    );
-    if (update_wallet_transaction_status.modifiedCount === 0)
-      throw new Error("Could not update wallet transaction collection");
 
-    session.commitTransaction();
+    const res = await WalletTransaction.updateOne(
+        { trans_flw_ref_id: verified_transaction.data.id },
+        { $set: { trans_status: "PENDING" } }
+    );
+
+    if (res.modifiedCount === 0) {
+      throw new Error("Failed to update wallet transaction");
+    }
+
+    await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
-    session.abortTransaction();
-
+    await session.abortTransaction();
     createErrorRollbarReport(
-      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error,
-      500
+        "Flutterwave Transfer webhook - PENDING handler error",
+        error,
+        500
     );
-
-    console.log(error);
     return { isOk: false };
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
+
 async function handleTransferSuccess(verified_transaction: any, session: any) {
   try {
     session.startTransaction();
-    // Update DB
-    const update_wallet_transaction_status = await WalletTransaction.updateOne(
-      {
-        trans_flw_ref_id: verified_transaction.data.id,
-      },
-      { $set: { trans_status: "SUCCESSFUL" } }
+
+    const res = await WalletTransaction.updateOne(
+        { trans_flw_ref_id: verified_transaction.data.id },
+        { $set: { trans_status: "SUCCESSFUL" } }
     );
 
-    if (update_wallet_transaction_status.modifiedCount === 0)
-      throw new Error("Could not update wallet transaction collection");
-    session.commitTransaction();
-    // Send mail - Defer it it job queue
+    if (res.modifiedCount === 0) {
+      throw new Error("Failed to update wallet transaction");
+    }
+
+    await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     createErrorRollbarReport(
-      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error,
-      500
+        "Flutterwave Transfer webhook - SUCCESS handler error",
+        error,
+        500
     );
-    console.log(error);
     return { isOk: false };
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
+
 async function handleTransferFailure(verified_transaction: any, session: any) {
   try {
     session.startTransaction();
 
     await Promise.all([
       WalletTransaction.updateOne(
-        { trans_flw_ref_id: verified_transaction.data.id },
-        { $set: { trans_status: "FAILED" } }
+          { trans_flw_ref_id: verified_transaction.data.id },
+          { $set: { trans_status: "FAILED" } }
       ),
       Wallet.updateOne(
-        { wallet_id: verified_transaction.data.meta.wallet_id },
-        { $inc: { available_balance: verified_transaction.data.amount } }
+          { wallet_id: verified_transaction.data.meta.wallet_id },
+          { $inc: { available_balance: verified_transaction.data.amount } }
       ),
     ]);
 
     await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
-    createErrorRollbarReport(
-      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error,
-      500
-    );
     await session.abortTransaction();
+    createErrorRollbarReport(
+        "Flutterwave Transfer webhook - FAILED handler error",
+        error,
+        500
+    );
     return { isOk: false };
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
 
 async function handleTransferCreation(verified_transaction: any, session: any) {
   const { amount, id, meta, status } = verified_transaction.data;
+
   try {
     session.startTransaction();
 
@@ -200,80 +215,83 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
       month: now.getMonth() + 1,
       day: now.getDate(),
     };
-    const wallet_transaction_payload = {
-      wallet_id: meta.wallet_id,
-      trans_amount: amount,
-      trans_status: status,
-      trans_date: date_obj,
-      trans_flw_ref_id: id,
-    };
+
     await Promise.all([
-      WalletTransaction.create({ ...wallet_transaction_payload }),
+      WalletTransaction.create({
+        wallet_id: meta.wallet_id,
+        trans_amount: amount,
+        trans_status: status,
+        trans_date: date_obj,
+        trans_flw_ref_id: id,
+      }),
       Wallet.updateOne(
-        { wallet_id: meta.wallet_id },
-        { $inc: { available_balance: -amount } }
+          { wallet_id: meta.wallet_id },
+          { $inc: { available_balance: -amount } }
       ),
     ]);
 
     await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
-    createErrorRollbarReport(
-      "Flutterwave Transfer webhook processing -Transfer Webhook handler - Mongo Transaction Error",
-      error,
-      500
-    );
     await session.abortTransaction();
+    createErrorRollbarReport(
+        "Flutterwave Transfer webhook - CREATION handler error",
+        error,
+        500
+    );
     return { isOk: false };
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                   ROUTE                                    */
+/* -------------------------------------------------------------------------- */
+
 export const POST = withAppRouterHighlight(async function POST(
-  request: Request,
-  context: { params: Promise<Record<string, string>> }
+    request: Request
 ): Promise<Response> {
   const signature = request.headers.get("verif-hash");
-  const isValid = await isSignatureValid(signature!, SECRET_HASH);
 
+  const isValid = await isSignatureValid(signature!, SECRET_HASH);
   if (!isValid) {
     return NextResponse.json(
-      { error: "Invalid webhook signature" },
-      { status: 403 }
+        { error: "Invalid webhook signature" },
+        { status: 403 }
     );
   }
 
   const req = await request.json();
 
-  if (req.event === "transfer.completed") {
-    // Verify transaction with flw api
-    try {
-      const key = process.env.FLW_TEST_SECRET_KEY;
-      if (!key) throw new Error("FLW secret key not configured");
-      const verified_transaction = await verifyFlutterwaveTransaction(
-        req,
-        `https://api.flutterwave.com/v3/transfers/${req.data.id}`
-      );
-
-      const client = await getMongoClient();
-
-      const session = await client.startSession();
-      const result: { isOk: boolean } | undefined =
-        await checkAndHandleTransferStatus(verified_transaction, session);
-
-      if (result && result.isOk) return NextResponse.json({ status: 200 });
-      else return NextResponse.json({ status: 400 });
-    } catch (error) {
-      createErrorRollbarReport(
-        "Flutterwave Transfer webhook processing -Transfer Webhook handler",
-        error,
-        500
-      );
-      return NextResponse.json({ status: 400 });
-    }
+  if (req.event !== "transfer.completed") {
+    return NextResponse.json({ status: 200 });
   }
 
-  // Always return a Response
-  return NextResponse.json({ status: 200 });
+  try {
+    const verified_transaction = await verifyFlutterwaveTransaction(
+        req,
+        `https://api.flutterwave.com/v3/transfers/${req.data.id}`
+    );
+
+    const client = await getMongoClient();
+    const session = await client.startSession();
+
+    const result = await checkAndHandleTransferStatus(
+        verified_transaction,
+        session
+    );
+
+    return NextResponse.json(
+        { status: result?.isOk ? 200 : 400 },
+        { status: result?.isOk ? 200 : 400 }
+    );
+  } catch (error) {
+    createErrorRollbarReport(
+        "Flutterwave Transfer webhook processing - fatal error",
+        error,
+        500
+    );
+    return NextResponse.json({ status: 400 });
+  }
 });

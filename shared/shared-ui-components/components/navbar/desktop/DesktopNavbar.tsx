@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { UserMenu } from "../ui/UserMenu";
 import { icons } from "../ui/icons";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -61,7 +61,7 @@ const DesktopNavbar = () => {
     fixed z-30 top-0 left-0 right-0 transition-all duration-500 ease-in-out transform py-4 md:px-12
     ${
       isScrolled
-        ? "md:top-6 md:w-[96%] md:max-w-6xl md:mx-auto bg-white/90 shadow-2xl ring-1 ring-dark/10 rounded-full backdrop-blur-lg" // LIGHT THEME FLOATING
+        ? "md:top-6 md:w-[96%] md:max-w-6xl md:mx-auto bg-white/90 shadow-2xl rounded md:rounded-full backdrop-blur-lg"
         : "md:w-[96%] md:max-w-6xl md:mx-auto bg-white rounded-none"
     }
   `;
@@ -142,7 +142,7 @@ const DesktopNavbar = () => {
         {/* Mobile Menu Content (Transitioning Drawer) */}
         <div
           id="mobile-menu"
-          className={`lg:hidden overflow-hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen ? "max-h-96 opacity-100 mt-4 border-t border-slate-700 pt-4" : "max-h-0 opacity-0"}`}
+          className={`lg:hidden overflow-hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen ? "max-h-96 opacity-100 mt-4 border-t border-slate-200 pt-4" : "max-h-0 opacity-0"}`}
         >
           <div className="space-y-2 px-2 pb-3">
             {navigation.map((item) => (

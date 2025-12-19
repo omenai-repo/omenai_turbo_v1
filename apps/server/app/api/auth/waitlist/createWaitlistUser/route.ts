@@ -8,55 +8,94 @@ import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import {
   BadRequestError,
   ConflictError,
-  NotFoundError,
+  ForbiddenError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { SendWaitlistRegistrationEmail } from "@omenai/shared-emails/src/models/waitlist/SendWaitlistRegistrationEmail";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 
-export const POST = withRateLimit(strictRateLimit)(async function POST(
-  req: Request
+/* ------------------ helpers ------------------ */
+
+function validatePayload(payload: any) {
+  const { name, email, entity } = payload;
+
+  if (!name || !email || !entity) {
+    throw new BadRequestError("Invalid parameters provided");
+  }
+
+  if (!["artist", "gallery"].includes(entity)) {
+    throw new BadRequestError("Invalid entity type");
+  }
+
+  return { name, email, entity };
+}
+
+async function checkIfUserExists(email: string, entity: string) {
+  const Model = entity === "artist" ? AccountArtist : AccountGallery;
+  const exists = await Model.exists({ email });
+
+  if (exists) {
+    throw new ForbiddenError(
+        "You're already part of the Omenai Experience, please login to continue your journey"
+    );
+  }
+}
+
+async function checkWaitlistConflict(name: string, email: string, entity: string) {
+  const exists = await Waitlist.exists({ name, email, entity });
+
+  if (exists) {
+    throw new ConflictError("User previously added to wait list.");
+  }
+}
+
+async function createWaitlistEntry(
+    payload: Omit<WaitListTypes, "referrerKey" | "waitlistId" | "discount">
 ) {
+  const created = await Waitlist.create(payload);
+
+  if (!created) {
+    throw new ServerError(
+        "An error occured while adding you to our waitlist, please try again or contact support"
+    );
+  }
+
+  return created;
+}
+
+/* ------------------ route ------------------ */
+
+export const POST = withRateLimit(strictRateLimit)(async function POST(req: Request) {
   try {
     await connectMongoDB();
-    const { name, email, entity } = await req.json();
-    if (!email || !name || !entity)
-      throw new BadRequestError("Invalid parameters provided");
 
-    const waitlistUserExists = await Waitlist.exists({ email, entity, name });
+    const body = await req.json();
+    const { name, email, entity } = validatePayload(body);
 
-    if (waitlistUserExists)
-      throw new ConflictError("User previously added to wait list.");
+    await checkIfUserExists(email, entity);
+    await checkWaitlistConflict(name, email, entity);
 
-    const payload: Omit<WaitListTypes, "referrerKey" | "waitlistId" | 'discount'> = {
-      name,
-      email,
-      entity,
-    };
-    const createWaitlistUser = await Waitlist.create(payload);
-
-    if (!createWaitlistUser)
-      throw new ServerError(
-        "An error occured while adding you to our waitlist, please try again or contact support"
-      );
-
-    // TODO: Send a mail to this user informing them they've been added to the waitlist
+    await createWaitlistEntry({ name, email, entity });
     await SendWaitlistRegistrationEmail({ email });
+
     return NextResponse.json(
-      { message: "Successfully added to waitlist" },
-      { status: 201 }
+        { message: "Successfully added to waitlist" },
+        { status: 201 }
     );
   } catch (error: any) {
     const errorResponse = handleErrorEdgeCases(error);
+
     createErrorRollbarReport(
-      "auth: Waitlist creation",
-      error,
-      errorResponse.status
+        "auth: Waitlist creation",
+        error,
+        errorResponse.status
     );
-    console.log(error);
+
     return NextResponse.json(
-      { message: errorResponse?.message },
-      { status: errorResponse?.status }
+        { message: errorResponse.message },
+        { status: errorResponse.status }
     );
   }
 });

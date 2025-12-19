@@ -7,68 +7,122 @@ import { hashPayloadToken } from "@omenai/shared-lib/encryption/encrypt_token";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import {
   BadRequestError,
+  ForbiddenError,
   NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 
-export const POST = withRateLimit(strictRateLimit)(async function POST(
-  request: Request
+/* ---------------- helpers ---------------- */
+
+function validatePayload(body: any) {
+  const { email, inviteCode, entity } = body ?? {};
+
+  if (!email || !inviteCode || !entity) {
+    throw new BadRequestError("Invalid parameters provided");
+  }
+
+  if (!["artist", "gallery"].includes(entity)) {
+    throw new BadRequestError("Invalid entity type");
+  }
+
+  return { email, inviteCode, entity };
+}
+
+async function ensureUserNotRegistered(email: string, entity: string) {
+  const Model = entity === "artist" ? AccountArtist : AccountGallery;
+  const exists = await Model.exists({ email });
+
+  if (exists) {
+    throw new ForbiddenError(
+        "You're already part of the Omenai Experience, please login to continue your journey"
+    );
+  }
+}
+
+async function ensureWaitlistUserExists(
+    email: string,
+    inviteCode: string,
+    entity: string
 ) {
-  try {
-      const body = await request.json();
-      const { email, inviteCode, entity } = body ?? {};
-      console.log(body)
-    await connectMongoDB();
+  const exists = await Waitlist.exists({ email, inviteCode, entity });
 
-    if (!email || !inviteCode || !entity)
-      throw new BadRequestError("Invalid parameters provided");
-
-    const waitlistUserExists = await Waitlist.exists({
-      email,
-      inviteCode,
-      entity,
-    });
-
-    if (!waitlistUserExists)
-      throw new NotFoundError(
+  if (!exists) {
+    throw new NotFoundError(
         "User does not exist, please sign up to our waitlist"
-      );
+    );
+  }
+}
 
-    const payload = { email, inviteCode, entity };
+function generateReferrerKey(payload: {
+  email: string;
+  inviteCode: string;
+  entity: string;
+}) {
+  const token = hashPayloadToken(payload);
 
-    const token = hashPayloadToken(payload);
-
-    if (!token)
-      throw new ServerError(
+  if (!token) {
+    throw new ServerError(
         "An error occured while performing this action, please try again or contact support"
-      );
+    );
+  }
 
-    const updateWaitlist = await Waitlist.updateOne(
+  return token;
+}
+
+async function saveReferrerKey(
+    email: string,
+    inviteCode: string,
+    entity: string,
+    token: string
+) {
+  const result = await Waitlist.updateOne(
       { email, inviteCode, entity },
       { $set: { referrerKey: token } }
-    );
+  );
 
-    if (updateWaitlist.modifiedCount === 0)
-      throw new ServerError(
+  if (result.modifiedCount === 0) {
+    throw new ServerError(
         "An error occured while performing this action, please try again or contact support"
-      );
+    );
+  }
+}
+
+/* ---------------- route ---------------- */
+
+export const POST = withRateLimit(strictRateLimit)(async function POST(
+    request: Request
+) {
+  try {
+    await connectMongoDB();
+
+    const body = await request.json();
+    const { email, inviteCode, entity } = validatePayload(body);
+
+    await ensureUserNotRegistered(email, entity);
+    await ensureWaitlistUserExists(email, inviteCode, entity);
+
+    const referrerKey = generateReferrerKey({ email, inviteCode, entity });
+    await saveReferrerKey(email, inviteCode, entity, referrerKey);
 
     return NextResponse.json(
-      { message: "Invite referrer key created", referrerKey: token },
-      { status: 201 }
+        { message: "Invite referrer key created", referrerKey },
+        { status: 201 }
     );
   } catch (error: any) {
     const errorResponse = handleErrorEdgeCases(error);
+
     createErrorRollbarReport(
-      "auth: Waitlist referrerKey error",
-      error,
-      errorResponse.status
+        "auth: Waitlist referrerKey error",
+        error,
+        errorResponse.status
     );
-    console.log(error);
+
     return NextResponse.json(
-      { message: errorResponse?.message },
-      { status: errorResponse?.status }
+        { message: errorResponse.message },
+        { status: errorResponse.status }
     );
   }
 });

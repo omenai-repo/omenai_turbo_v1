@@ -72,7 +72,7 @@ export async function validateCsrf({
     if ((allowedAdminAccessRoles?.length ?? 0) > 0) {
       const adminAccessRole = (
         sessionData.userData as unknown as AccountAdminSchemaTypes
-      ).access_role as AdminAccessRoleTypes;
+      ).access_role;
 
       if (
         !(allowedAdminAccessRoles as AdminAccessRoleTypes[]).includes(
