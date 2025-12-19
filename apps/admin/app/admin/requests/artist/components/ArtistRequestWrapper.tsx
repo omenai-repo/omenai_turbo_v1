@@ -10,6 +10,7 @@ import ApprovedArtistRequest from "./ApprovedArtistRequest";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { canAccessRoute } from "../../../../utils/canAccessRoute";
 import ForbiddenPage from "../../../components/ForbiddenPage";
+import Waitlist from "./Waitlist";
 
 export type ArtistType = Pick<
   ArtistSchemaTypes,
@@ -46,6 +47,7 @@ export function ArtistRequestWrapper() {
       <Tabs.List>
         <Tabs.Tab value="Pending">Pending Requests</Tabs.Tab>
         <Tabs.Tab value="Approved">Approved Artists</Tabs.Tab>
+        <Tabs.Tab value="Waitlist">Waitlist</Tabs.Tab>
         {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
       </Tabs.List>
 
@@ -55,6 +57,10 @@ export function ArtistRequestWrapper() {
 
       <Tabs.Panel value="Approved" className="mt-4">
         <ApprovedArtistRequest artists={approved} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="Waitlist" className="mt-4">
+        <Waitlist />
       </Tabs.Panel>
 
       {/* <Tabs.Panel value="settings">

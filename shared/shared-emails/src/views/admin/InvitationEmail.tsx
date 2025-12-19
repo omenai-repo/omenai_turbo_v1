@@ -70,9 +70,15 @@ const InvitationEmail = (
               </li>
             </ul>
 
-            <Text className="text-fluid-xxs leading-[24px]">
-              We look forward to seeing your beautiful creations!
-            </Text>
+            {entity === "artist" ? (
+              <Text className="text-fluid-xxs leading-[24px]">
+                We look forward to seeing your beautiful creations!
+              </Text>
+            ) : (
+              <Text className="text-fluid-xxs leading-[24px]">
+                We eagerly anticipate working alongside your gallery!
+              </Text>
+            )}
 
             <div style={{ textAlign: "center", margin: "30px 0" }}>
               <Link
