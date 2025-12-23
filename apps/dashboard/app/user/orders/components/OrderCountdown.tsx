@@ -6,29 +6,23 @@ import { base_url } from "@omenai/url-config/src/config";
 
 interface OrderCountdownProps {
   expiresAt: string | Date;
-  onExpire?: () => void;
   order_id: string;
   user_id: string;
 }
 
 export default function OrderCountdown({
   expiresAt,
-  onExpire,
   order_id,
   user_id,
-}: OrderCountdownProps) {
+}: Readonly<OrderCountdownProps>) {
   // Ensure `expiresAt` is a valid Date object
   const expiryDate =
     typeof expiresAt === "string" ? new Date(expiresAt) : expiresAt;
-  // const hasExpiredRef = useRef(false);
+
 
   const { seconds, minutes, hours, days, isRunning } = useTimer({
     expiryTimestamp: expiryDate,
     autoStart: true,
-    onExpire: async () => {
-      // Trigger the optional `onExpire` callback
-      onExpire?.();
-    },
   });
 
   // Utility function to format time with leading zeros

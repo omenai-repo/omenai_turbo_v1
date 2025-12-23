@@ -1,6 +1,5 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
 import {
-  HoldStatus,
   OrderArtworkExhibitionStatus,
   ShipmentDimensions,
 } from "@omenai/shared-types";
@@ -10,7 +9,6 @@ export const acceptOrderRequest = async (
   order_id: string,
   dimensions: ShipmentDimensions,
   exhibition_status: OrderArtworkExhibitionStatus | null,
-  hold_status: HoldStatus | null,
   token: string,
   specialInstructions?: string
 ) => {
@@ -22,7 +20,6 @@ export const acceptOrderRequest = async (
         order_id,
         dimensions,
         exhibition_status,
-        hold_status,
         specialInstructions,
       }),
       headers: { "x-csrf-token": token },

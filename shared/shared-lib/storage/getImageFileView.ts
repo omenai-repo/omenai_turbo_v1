@@ -1,8 +1,4 @@
-import {
-  appwrite_image_format,
-  appwrite_image_gravity,
-  storage,
-} from "@omenai/appwrite-config/appwrite";
+import {appwrite_image_format, appwrite_image_gravity, storage,} from "@omenai/appwrite-config/appwrite";
 
 // Define quality presets for different use cases
 const QUALITY_PRESETS = {
@@ -28,18 +24,16 @@ export const getImageFileView = (
   height?: number,
   quality: number = 70 // Default to 70 instead of 100
 ) => {
-  const fileData = storage.getFilePreview({
-    bucketId:process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-    fileId,
-    width, // width, will be resized using this value.
-    height: height|| 0, // height, ignored when 0
-    gravity:appwrite_image_gravity.Center, // crop center
-    quality, // slight compression
-    output:appwrite_image_format.Webp
-  }
+  return storage.getFilePreview({
+        bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+        fileId,
+        width, // width, will be resized using this value.
+        height: height || 0, // height, ignored when 0
+        gravity: appwrite_image_gravity.Center, // crop center
+        quality, // slight compression
+        output: appwrite_image_format.Webp
+      }
   );
-
-  return fileData;
 };
 
 // Convenience function with presets

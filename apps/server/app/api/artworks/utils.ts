@@ -54,7 +54,7 @@ export async function fetchArtworksFromCache(artIds: string[]) {
     });
   }
 
-  return [...artworks].reverse()
+  return [...artworks].reverse();
 }
 
 // Helper function to fetch gallery IDs with caching
@@ -136,4 +136,21 @@ export async function getCachedArtwork(art_id: string) {
   }
 
   return artworkJsonData;
+}
+
+export async function purgeArtworkCache() {
+  let cursor = 0;
+
+  do {
+    const result = await redis.scan(cursor, {
+      match: "artwork:*",
+      count: 100,
+    });
+
+    cursor = Number(result[0]);
+
+    if (result[1].length) {
+      await redis.del(...result[1]);
+    }
+  } while (cursor !== 0);
 }

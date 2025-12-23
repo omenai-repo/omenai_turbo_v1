@@ -105,6 +105,7 @@ async function verifyStripeWebhook(request: Request) {
     "payment_intent.succeeded",
   ];
 
+  console.log(event.type)
   if (!supportedTypes.includes(event.type)) {
     throw new Error("Unsupported event type");
   }

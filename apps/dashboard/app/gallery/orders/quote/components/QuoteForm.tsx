@@ -136,7 +136,6 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
       order_data!.data.order_id,
       numerical_dimensions,
       exhibition_status,
-      null,
       csrf || "",
       specialInstructions
     );

@@ -42,14 +42,14 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
           updateOne: {
             filter: {
               order_id: order.order_id,
-              "order_accepted.status": { $ne: "declined" }, // idempotency
+              "order_accepted.status": { $ne: "declined" },
             },
             update: {
               $set: {
+                status: "completed",
                 "order_accepted.status": "declined",
                 "order_accepted.reason":
                   "The payment period for this artwork has expired.",
-                status: "completed",
               },
             },
           },
