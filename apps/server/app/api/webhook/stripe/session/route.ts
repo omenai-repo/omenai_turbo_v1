@@ -31,7 +31,8 @@ import { rollbarServerInstance } from "@omenai/rollbar-config";
 
 async function verifyStripeWebhook(request: Request) {
   const secret = process.env.STRIPE_CHECKOUT_SESSION_WEBHOOK_SECRET;
-  if (!secret) throw new Error("Missing STRIPE_CHECKOUT_SESSION_WEBHOOK_SECRET");
+  if (!secret)
+    throw new Error("Missing STRIPE_CHECKOUT_SESSION_WEBHOOK_SECRET");
 
   const rawBody = await request.text();
   const signature = request.headers.get("stripe-signature");
@@ -48,8 +49,8 @@ async function handleCheckoutCompleted(event: any) {
   const sessionObj = event.data.object;
 
   if (
-      sessionObj.status !== "complete" ||
-      sessionObj.payment_status !== "paid"
+    sessionObj.status !== "complete" ||
+    sessionObj.payment_status !== "paid"
   ) {
     return NextResponse.json({ status: 400 });
   }
@@ -83,37 +84,25 @@ async function handleCheckoutCompleted(event: any) {
 /* -------------------------------------------------------------------------- */
 
 async function processStripePayment(
-    checkoutSession: any,
-    meta: any,
-    order_info: any
+  checkoutSession: any,
+  meta: any,
+  order_info: any
 ) {
   const client = await connectMongoDB();
   const session = await client.startSession();
 
-  const formatted_date = getFormattedDateTime();
   const date = toUTCDate(new Date());
   let transaction_id: string | undefined;
 
   try {
-    await CreateOrder.updateOne(
-        { order_id: order_info.order_id },
-        { $set: { hold_status: null } }
-    );
-
     session.startTransaction();
 
     const payment_information: PaymentStatusTypes = {
       status: "completed",
       transaction_value: checkoutSession.amount_total / 100,
-      transaction_date: formatted_date,
+      transaction_date: date,
       transaction_reference: checkoutSession.id,
     };
-
-    await CreateOrder.updateOne(
-        { order_id: order_info.order_id },
-        { $set: { payment_information } },
-        { session }
-    );
 
     const pricing: PurchaseTransactionPricing = {
       amount_total: Math.round(checkoutSession.amount_total / 100),
@@ -125,8 +114,8 @@ async function processStripePayment(
     };
 
     const transactionData: Omit<
-        PurchaseTransactionModelSchemaTypes,
-        "trans_id"
+      PurchaseTransactionModelSchemaTypes,
+      "trans_id"
     > = {
       trans_pricing: pricing,
       trans_date: date,
@@ -137,25 +126,41 @@ async function processStripePayment(
       status: "successful",
     };
 
-    const [tx] = await PurchaseTransactions.create([transactionData], {
-      session,
-    });
+    const [updateOrder, [tx]] = await Promise.all([
+      CreateOrder.updateOne(
+        { order_id: order_info.order_id },
+        { $set: { payment_information, hold_status: null } },
+        { session }
+      ),
+      PurchaseTransactions.create([transactionData], {
+        session,
+      }),
+    ]);
+
+    if (
+      (updateOrder.matchedCount > 0 && updateOrder.modifiedCount === 0) ||
+      !tx
+    ) {
+      throw new Error("Failed to update order with payment information");
+    }
+
     transaction_id = tx.trans_id;
 
-    const artwork = await Artworkuploads.findOneAndUpdate(
+    try {
+      const artwork = await Artworkuploads.findOneAndUpdate(
         { art_id: meta.art_id },
         { $set: { availability: false } },
         { new: true }
-    );
-
-    try {
+      );
       await redis.set(`artwork:${meta.art_id}`, JSON.stringify(artwork));
     } catch (e: any) {
       rollbarServerInstance.error(e);
     }
 
     const { month, year } = getCurrentMonthAndYear();
-    await SalesActivity.create(
+
+    await Promise.all([
+      SalesActivity.create(
         [
           {
             month,
@@ -166,26 +171,22 @@ async function processStripePayment(
           },
         ],
         { session }
-    );
-
-    await CreateOrder.updateMany(
+      ),
+      CreateOrder.updateMany(
         {
           "artwork_data.art_id": meta.art_id,
           "buyer_details.id": { $ne: meta.buyer_id },
         },
         { $set: { availability: false } },
         { session }
-    );
+      ),
+    ]);
 
     await session.commitTransaction();
 
     await releaseOrderLock(meta.art_id, meta.buyer_id);
 
-    await runPostPaymentWorkflows(
-        checkoutSession,
-        order_info,
-        transaction_id
-    );
+    await runPostPaymentWorkflows(checkoutSession, order_info, transaction_id);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
@@ -206,21 +207,21 @@ async function processStripePayment(
 /* -------------------------------------------------------------------------- */
 
 async function runPostPaymentWorkflows(
-    checkoutSession: any,
-    order_info: any,
-    transaction_id?: string
+  checkoutSession: any,
+  order_info: any,
+  transaction_id?: string
 ) {
   const currency = getCurrencySymbol(checkoutSession.currency.toUpperCase());
   const price = formatPrice(checkoutSession.amount_total / 100, currency);
 
   const [buyer_push, seller_push] = await Promise.all([
     DeviceManagement.findOne(
-        { auth_id: order_info.buyer_details.id },
-        "device_push_token"
+      { auth_id: order_info.buyer_details.id },
+      "device_push_token"
     ),
     DeviceManagement.findOne(
-        { auth_id: order_info.seller_details.id },
-        "device_push_token"
+      { auth_id: order_info.seller_details.id },
+      "device_push_token"
     ),
   ]);
 
@@ -243,11 +244,11 @@ async function runPostPaymentWorkflows(
     };
 
     jobs.push(
-        createWorkflow(
-            "/api/workflows/notification/pushNotification",
-            `notif_buyer_${order_info.order_id}_${generateDigit(2)}`,
-            JSON.stringify(payload)
-        )
+      createWorkflow(
+        "/api/workflows/notification/pushNotification",
+        `notif_buyer_${order_info.order_id}_${generateDigit(2)}`,
+        JSON.stringify(payload)
+      )
     );
   }
 
@@ -256,8 +257,8 @@ async function runPostPaymentWorkflows(
       to: seller_push.device_push_token,
       title: "Payment received",
       body: `A payment of ${formatPrice(
-          order_info.artwork_data.pricing.usd_price,
-          "USD"
+        order_info.artwork_data.pricing.usd_price,
+        "USD"
       )} has been made for your artpiece`,
       data: {
         type: "orders",
@@ -271,34 +272,34 @@ async function runPostPaymentWorkflows(
     };
 
     jobs.push(
-        createWorkflow(
-            "/api/workflows/notification/pushNotification",
-            `notif_seller_${order_info.order_id}_${generateDigit(2)}`,
-            JSON.stringify(payload)
-        )
+      createWorkflow(
+        "/api/workflows/notification/pushNotification",
+        `notif_seller_${order_info.order_id}_${generateDigit(2)}`,
+        JSON.stringify(payload)
+      )
     );
   }
 
   await Promise.all([
     createWorkflow(
-        "/api/workflows/shipment/create_shipment",
-        `create_shipment_${generateDigit(6)}`,
-        JSON.stringify({ order_id: order_info.order_id })
+      "/api/workflows/shipment/create_shipment",
+      `create_shipment_${generateDigit(6)}`,
+      JSON.stringify({ order_id: order_info.order_id })
     ),
     createWorkflow(
-        "/api/workflows/emails/sendPaymentSuccessMail",
-        `send_payment_success_mail_${generateDigit(6)}`,
-        JSON.stringify({
-          buyer_email: order_info.buyer_details.email,
-          buyer_name: order_info.buyer_details.name,
-          artwork_title: order_info.artwork_data.title,
-          order_id: order_info.order_id,
-          order_date: order_info.createdAt,
-          transaction_id,
-          price,
-          seller_email: order_info.seller_details.email,
-          seller_name: order_info.seller_details.name,
-        })
+      "/api/workflows/emails/sendPaymentSuccessMail",
+      `send_payment_success_mail_${generateDigit(6)}`,
+      JSON.stringify({
+        buyer_email: order_info.buyer_details.email,
+        buyer_name: order_info.buyer_details.name,
+        artwork_title: order_info.artwork_data.title,
+        order_id: order_info.order_id,
+        order_date: order_info.createdAt,
+        transaction_id,
+        price,
+        seller_email: order_info.seller_details.email,
+        seller_name: order_info.seller_details.name,
+      })
     ),
     ...jobs,
   ]);
@@ -316,9 +317,9 @@ async function handleCheckoutExpired(event: any) {
       await releaseOrderLock(meta.art_id, meta.buyer_id);
     } catch (error) {
       createErrorRollbarReport(
-          "Stripe checkout expired - release lock error",
-          error,
-          500
+        "Stripe checkout expired - release lock error",
+        error,
+        500
       );
     }
   }
@@ -331,7 +332,7 @@ async function handleCheckoutExpired(event: any) {
 /* -------------------------------------------------------------------------- */
 
 export const POST = withAppRouterHighlight(async function POST(
-    request: Request
+  request: Request
 ) {
   try {
     const event = await verifyStripeWebhook(request);
@@ -346,11 +347,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    createErrorRollbarReport(
-        "Stripe Checkout webhook processing",
-        error,
-        500
-    );
+    createErrorRollbarReport("Stripe Checkout webhook processing", error, 500);
     return NextResponse.json({ status: 400 });
   }
 });

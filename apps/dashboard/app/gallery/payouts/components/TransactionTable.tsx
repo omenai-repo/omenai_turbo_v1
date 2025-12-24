@@ -1,12 +1,8 @@
 "use client";
 import { PurchaseTransactionModelSchemaTypes } from "@omenai/shared-types";
-import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import { convertPriceStringToNumber } from "@omenai/shared-utils/src/priceStringToNumberConverter";
-import { FiArrowDownLeft } from "react-icons/fi";
-import { FiArrowUpRight } from "react-icons/fi";
 
 const TABLE_HEAD = [
   "Trans ID",

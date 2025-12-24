@@ -440,7 +440,7 @@ export type AddressTypes = {
 export type PaymentStatusTypes = {
   status: "pending" | "completed" | "processing" | "failed";
   transaction_value: number;
-  transaction_date: string;
+  transaction_date: Date;
   transaction_reference: string;
 };
 
@@ -1161,16 +1161,16 @@ export interface OnboardingQuestion {
 }
 
 export type WaitListTypes = {
-    waitlistId: string;
-    name: string;
-    email: string;
-    inviteCode?: string;
-    isInvited?: boolean;
-    entity: Exclude<EntityType, "admin">;
-    referrerKey?: string;
-    discount: {
-      plan: 'pro',
-      active: boolean;
-      redeemed: boolean
-    }
-}
+  waitlistId: string;
+  name: string;
+  email: string;
+  inviteCode?: string;
+  isInvited?: boolean;
+  entity: Exclude<EntityType, "admin">;
+  referrerKey?: string;
+  discount: {
+    plan: "pro";
+    active: boolean;
+    redeemed: boolean;
+  };
+};

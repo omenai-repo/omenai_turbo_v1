@@ -1,4 +1,4 @@
-// apps/server/app/api/webhooks/flutterwave/purchase/route.ts
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
@@ -6,7 +6,10 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
 import {
+  ArtistSchemaTypes,
+  CreateOrderModelTypes,
   NotificationPayload,
+  PaymentStatusTypes,
   PurchaseTransactionModelSchemaTypes,
   PurchaseTransactionPricing,
 } from "@omenai/shared-types";
@@ -27,10 +30,10 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
-import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createErrorRollbarReport } from "../../util";
 import { redis } from "@omenai/upstash-config";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 
 /* ----------------------------- Schema ------------------------------------- */
 
@@ -222,13 +225,23 @@ async function handlePurchaseTransaction(
     return NextResponse.json({ status: 200 });
   }
 
-  const order_info = await CreateOrder.findOne({
-    "buyer_details.email": meta.buyer_email,
-    "artwork_data.art_id": meta.art_id,
-    "order_accepted.status": "accepted",
-  });
+  const [order_info, artist]: [
+    CreateOrderModelTypes | null,
+    ArtistSchemaTypes | null,
+  ] = await Promise.all([
+    CreateOrder.findOne({
+      "buyer_details.email": meta.buyer_email,
+      "artwork_data.art_id": meta.art_id,
+      "order_accepted.status": "accepted",
+    }),
 
-  if (!order_info) return NextResponse.json({ status: 200 });
+    AccountArtist.findOne(
+      { artist_id: meta.seller_id },
+      "exclusivity_uphold_status"
+    ),
+  ]);
+
+  if (!order_info || !artist) return NextResponse.json({ status: 200 });
 
   const flwStatus = String(verified_transaction.data.status).toLowerCase();
 
@@ -249,20 +262,36 @@ async function handlePurchaseTransaction(
   const session = await client.startSession();
 
   try {
-    await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
-      { $set: { hold_status: null } }
-    ).session(session);
+    const nowUTC = toUTCDate(new Date());
 
-    const artist = await AccountArtist.findOne(
-      { artist_id: meta.seller_id },
-      "exclusivity_uphold_status"
-    ).session(session);
+    const payment_information: PaymentStatusTypes = {
+      status: "completed",
+      transaction_value: Math.round(Number(verified_transaction.data.amount)),
+      transaction_date: nowUTC,
+      transaction_reference: verified_transaction.data.id,
+    };
+
+    const updateOrder = await CreateOrder.updateOne(
+      { order_id: order_info.order_id },
+      { $set: { payment_information, hold_status: null } },
+      { session }
+    );
+
+    if (updateOrder.modifiedCount === 0) {
+      rollbarServerInstance.error({
+        context: "Flutterwave Webhook",
+        formatted_date: getFormattedDateTime(),
+        message: "Order update failed",
+      });
+      return NextResponse.json(
+        { message: "Order update unsuccessful" },
+        { status: 400 }
+      );
+    }
 
     session.startTransaction();
 
     const { penalty_fee, commission } = buildPricing(meta, artist);
-    const nowUTC = toUTCDate(new Date());
 
     const pricing: PurchaseTransactionPricing = {
       amount_total: Math.round(Number(verified_transaction.data.amount)),
@@ -293,7 +322,7 @@ async function handlePurchaseTransaction(
 
     const { month, year } = getCurrentMonthAndYear();
 
-    await Promise.all([
+    const [_purchase, wallet, _sales] = await Promise.all([
       PurchaseTransactions.create([transaction], { session }),
       Wallet.updateOne(
         { owner_id: meta.seller_id },
@@ -313,19 +342,25 @@ async function handlePurchaseTransaction(
       ),
     ]);
 
+    if (!wallet) {
+      throw new Error("Wallet not found");
+    }
+
     await session.commitTransaction();
 
-    const artwork = await Artworkuploads.findOneAndUpdate(
-      { art_id: meta.art_id },
-      { $set: { availability: false } },
-      { new: true }
-    );
+    // Update artwork availability and redis data
     try {
+      const artwork = await Artworkuploads.findOneAndUpdate(
+        { art_id: meta.art_id },
+        { $set: { availability: false } },
+        { new: true }
+      );
       await redis.set(`artwork:${meta.art_id}`, JSON.stringify(artwork));
     } catch (e: any) {
       rollbarServerInstance.error(e);
     }
 
+    // Create shipment workflow
     await fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
