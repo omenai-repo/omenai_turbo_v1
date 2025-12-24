@@ -260,6 +260,7 @@ async function processPurchaseTransaction(
     );
 
     try {
+      // TODO: FIX THIS, it's
       await redis.set(`artwork:${meta.art_id}`, JSON.stringify(artwork));
     } catch (e: any) {
       rollbarServerInstance.error(e);
