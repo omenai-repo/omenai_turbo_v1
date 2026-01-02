@@ -70,7 +70,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
     }
 
     const artist = (await AccountArtist.findOne(
-      { user_id: meta.seller_id },
+      { artist_id: meta.seller_id },
       "exclusivity_uphold_status"
     ).lean()) as { exclusivity_uphold_status: ExclusivityUpholdStatus } | null;
 

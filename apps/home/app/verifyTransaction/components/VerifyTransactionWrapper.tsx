@@ -25,13 +25,6 @@ const STATUS_CONFIG = {
     rippleColor: "bg-green-400",
     icon: CheckCircle,
   },
-  pending: {
-    bgColor: "bg-amber-100",
-    textColor: "text-amber-600",
-    titleColor: "text-amber-700",
-    rippleColor: "bg-amber-400",
-    icon: Clock4,
-  },
   failed: {
     bgColor: "bg-red-100",
     textColor: "text-red-600",
