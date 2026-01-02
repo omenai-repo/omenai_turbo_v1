@@ -1,40 +1,21 @@
-import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-
-import {
-  ArtistSchemaTypes,
-  CreateOrderModelTypes,
-  NotificationPayload,
-  PaymentStatusTypes,
-  PurchaseTransactionModelSchemaTypes,
-  PurchaseTransactionPricing,
-} from "@omenai/shared-types";
-
+import { NotificationPayload, PaymentStatusTypes } from "@omenai/shared-types";
 import { z } from "zod";
-
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
-import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
-
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
 import { createErrorRollbarReport } from "../../util";
-import { redis } from "@omenai/upstash-config";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
-
+import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 /* ----------------------------- Schema ------------------------------------- */
 
 const MetaSchema = z.object({
@@ -66,7 +47,7 @@ function verifyWebhookSignature(
   }
 }
 
-async function fireAndForget(p: Promise<unknown>) {
+export async function fireAndForget(p: Promise<unknown>) {
   try {
     await p;
   } catch (err) {
@@ -99,20 +80,7 @@ function shouldExitEarly(flwStatus: string, verified: any, body: any): boolean {
   );
 }
 
-function buildPricing(meta: any, artist: any) {
-  const { isBreached, incident_count } = artist.exclusivity_uphold_status;
-
-  const penalty_rate = (10 * Math.min(incident_count, 6)) / 100;
-  const penalty_fee = isBreached
-    ? penalty_rate * Number(meta.unit_price ?? 0)
-    : 0;
-
-  const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
-
-  return { penalty_fee, commission };
-}
-
-async function sendPushNotifications(order_info: any) {
+export async function sendPushNotifications(order_info: any) {
   const buyer_push = await DeviceManagement.findOne(
     { auth_id: order_info.buyer_details.id },
     "device_push_token"
@@ -201,6 +169,30 @@ async function sendPushNotifications(order_info: any) {
   }
 }
 
+export async function retry<T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delayMs = 100
+): Promise<T> {
+  let lastError;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+
+      if (attempt < retries) {
+        await new Promise(
+          (res) => setTimeout(res, delayMs * attempt) // simple backoff
+        );
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 /* ----------------------------- Core handler -------------------------------- */
 
 async function handlePurchaseTransaction(
@@ -212,37 +204,17 @@ async function handlePurchaseTransaction(
   );
   if (!metaParse.success) return NextResponse.json({ status: 400 });
 
+  await connectMongoDB();
+
   const meta = metaParse.data;
-  const existing = await PurchaseTransactions.findOne({
-    trans_reference: verified_transaction.data.id,
+
+  const order_info = await CreateOrder.findOne({
+    "buyer_details.email": meta.buyer_email,
+    "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
   });
 
-  if (existing) {
-    await PurchaseTransactions.updateOne(
-      { trans_reference: verified_transaction.data.id },
-      { $set: { webhookReceivedAt: new Date(), webhookConfirmed: true } }
-    );
-    return NextResponse.json({ status: 200 });
-  }
-
-  const [order_info, artist]: [
-    CreateOrderModelTypes | null,
-    ArtistSchemaTypes | null,
-  ] = await Promise.all([
-    CreateOrder.findOne({
-      "buyer_details.email": meta.buyer_email,
-      "artwork_data.art_id": meta.art_id,
-      "order_accepted.status": "accepted",
-    }),
-
-    AccountArtist.findOne(
-      { artist_id: meta.seller_id },
-      "exclusivity_uphold_status"
-    ),
-  ]);
-
-  if (!order_info || !artist) return NextResponse.json({ status: 200 });
-
+  if (!order_info) return NextResponse.json({ status: 200 });
   const flwStatus = String(verified_transaction.data.status).toLowerCase();
 
   if (shouldExitEarly(flwStatus, verified_transaction, reqBody)) {
@@ -257,126 +229,121 @@ async function handlePurchaseTransaction(
     }
     return NextResponse.json({ status: 200 });
   }
+  const existing = await PurchaseTransactions.findOne({
+    trans_reference: String(verified_transaction.data.id),
+  });
 
-  const client = await connectMongoDB();
-  const session = await client.startSession();
+  if (existing) {
+    await PurchaseTransactions.updateOne(
+      { trans_reference: String(verified_transaction.data.id) },
+      { $set: { webhookReceivedAt: new Date(), webhookConfirmed: true } }
+    );
+    return NextResponse.json({ status: 200 });
+  }
+
+  // Create an Idempotent payment entry ledger entry immediately
+  const paymentLedgerData = {
+    provider: "flutterwave",
+    provider_tx_id: String(verified_transaction.data.id),
+    status: String(verified_transaction.data.status),
+    payment_date: toUTCDate(new Date()),
+    payload: { meta },
+    amount: Math.round(Number(verified_transaction.data.amount)),
+    currency: String(verified_transaction.data.currency),
+    payment_fulfillment: {},
+  };
 
   try {
-    const nowUTC = toUTCDate(new Date());
-
-    const payment_information: PaymentStatusTypes = {
-      status: "completed",
-      transaction_value: Math.round(Number(verified_transaction.data.amount)),
-      transaction_date: nowUTC,
-      transaction_reference: verified_transaction.data.id,
-    };
-
-    const updateOrder = await CreateOrder.updateOne(
-      { order_id: order_info.order_id },
-      { $set: { payment_information, hold_status: null } },
-      { session }
-    );
-
-    if (updateOrder.modifiedCount === 0) {
-      rollbarServerInstance.error({
-        context: "Flutterwave Webhook",
-        formatted_date: getFormattedDateTime(),
-        message: "Order update failed",
-      });
-      return NextResponse.json(
-        { message: "Order update unsuccessful" },
-        { status: 400 }
-      );
-    }
-
-    session.startTransaction();
-
-    const { penalty_fee, commission } = buildPricing(meta, artist);
-
-    const pricing: PurchaseTransactionPricing = {
-      amount_total: Math.round(Number(verified_transaction.data.amount)),
-      unit_price: Math.round(Number(meta.unit_price ?? 0)),
-      shipping_cost: Math.round(Number(meta.shipping_cost ?? 0)),
-      commission,
-      tax_fees: Math.round(Number(meta.tax_fees ?? 0)),
-      currency: "USD",
-      penalty_fee: Math.round(penalty_fee),
-    };
-
-    const walletIncrement =
-      pricing.amount_total -
-      (commission + penalty_fee + pricing.tax_fees + pricing.shipping_cost);
-
-    const transaction: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
-      trans_pricing: pricing,
-      trans_date: nowUTC,
-      trans_recipient_id: meta.seller_id ?? "",
-      trans_initiator_id: meta.buyer_id ?? "",
-      trans_recipient_role: "artist",
-      trans_reference: verified_transaction.data.id,
-      status: verified_transaction.data.status,
-      createdBy: "webhook",
-      webhookReceivedAt: new Date(),
-      webhookConfirmed: true,
-    };
-
-    const { month, year } = getCurrentMonthAndYear();
-
-    const [_purchase, wallet, _sales] = await Promise.all([
-      PurchaseTransactions.create([transaction], { session }),
-      Wallet.updateOne(
-        { owner_id: meta.seller_id },
-        { $inc: { pending_balance: walletIncrement } }
-      ).session(session),
-      SalesActivity.create(
-        [
+    await retry(
+      () =>
+        PaymentLedger.updateOne(
           {
-            month,
-            year,
-            value: meta.unit_price,
-            id: meta.seller_id,
-            trans_ref: transaction.trans_reference,
+            provider: "flutterwave",
+            provider_tx_id: verified_transaction.data.id,
           },
-        ],
-        { session }
-      ),
-    ]);
+          {
+            $setOnInsert: paymentLedgerData,
+          },
+          { upsert: true }
+        ),
+      3,
+      150
+    );
+  } catch (error) {
+    rollbarServerInstance.error({
+      context: "Flutterwave Webhook",
+      formatted_date: getFormattedDateTime(),
+      message: "Payment ledger creation failed after retries",
+      error,
+      payment_reference: paymentLedgerData?.provider_tx_id,
+    });
 
-    if (!wallet) {
-      throw new Error("Wallet not found");
-    }
+    return NextResponse.json(
+      {
+        message:
+          "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
+      },
+      { status: 400 }
+    );
+  }
 
-    await session.commitTransaction();
+  // Update order with payment information before proceeding
+  const nowUTC = toUTCDate(new Date());
 
-    // Update artwork availability and redis data
-    try {
-      const artwork = await Artworkuploads.findOneAndUpdate(
-        { art_id: meta.art_id },
-        { $set: { availability: false } },
-        { new: true }
-      );
-      await redis.set(`artwork:${meta.art_id}`, JSON.stringify(artwork));
-    } catch (e: any) {
-      rollbarServerInstance.error(e);
-    }
+  const payment_information: PaymentStatusTypes = {
+    status: "completed",
+    transaction_value: Math.round(Number(verified_transaction.data.amount)),
+    transaction_date: nowUTC,
+    transaction_reference: verified_transaction.data.id,
+  };
 
+  // Update order with payment information
+  const updateOrder = await CreateOrder.updateOne(
+    { order_id: order_info.order_id },
+    { $set: { payment_information, hold_status: null } }
+  );
+
+  if (updateOrder.modifiedCount === 0) {
+    rollbarServerInstance.error({
+      context: "Flutterwave Webhook",
+      formatted_date: getFormattedDateTime(),
+      message: "Order update failed",
+    });
+    return NextResponse.json(
+      { message: "Order update unsuccessful" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Create DB update workflow
+
+    await fireAndForget(
+      createWorkflow(
+        "/api/workflows/payment/handleArtworkPaymentUpdatesByFlw",
+        `flw_payment_workflow_${verified_transaction.data.id}`,
+        JSON.stringify({
+          provider: "flutterwave",
+          meta,
+          verified_transaction,
+        })
+      )
+    );
     // Create shipment workflow
     await fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
-        `create_shipment_${generateDigit(6)}`,
+        `create_shipment_${order_info.order_id}`,
         JSON.stringify({ order_id: order_info.order_id })
       )
     );
 
+    // Send notifications
     await fireAndForget(sendPushNotifications(order_info));
 
     return NextResponse.json({ status: 200 });
   } catch {
-    await session.abortTransaction();
-    return NextResponse.json({ status: 200 });
-  } finally {
-    await session.endSession();
+    return NextResponse.json({ status: 400 });
   }
 }
 

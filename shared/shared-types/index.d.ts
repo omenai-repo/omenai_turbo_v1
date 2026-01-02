@@ -1,4 +1,5 @@
 import { Stripe } from "stripe";
+import z from "zod";
 // Create discriminated union with role as discriminator
 export type SessionDataType = (
   | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password" | "phone">)
@@ -444,6 +445,32 @@ export type PaymentStatusTypes = {
   transaction_reference: string;
 };
 
+export type PaymentLedgerTypes = {
+  provider: "stripe" | "flutterwave";
+  provider_tx_id: string;
+  status: string;
+  payment_date: Date;
+  amount: number;
+  currency: "USD";
+  payload: PaymentLedgerPayloadTypes;
+  payment_fulfillment: PaymentFulfillmentStatusTypes;
+  payment_fulfillment_checks_done: boolean;
+  retry_count: number;
+  next_retry_date?: Date;
+};
+
+export type PaymentLedgerPayloadTypes = {
+  meta: any;
+  pricing: PurchaseTransactionPricing;
+};
+
+export type PaymentFulfillmentStatusTypes = {
+  artwork_marked_sold: "done" | "failed" | "skipped";
+  seller_wallet_updated: "done" | "failed" | "skipped";
+  transaction_created: "done" | "failed" | "skipped";
+  sale_record_created: "done" | "failed" | "skipped";
+};
+
 export type LockModelTypes = {
   lock_id: string;
   user_id: string;
@@ -516,6 +543,7 @@ export type WalletModelSchemaTypes = {
   wallet_currency: string;
   base_currency: string;
   wallet_pin: string | null;
+  applied_payment_refs: string[];
 };
 export type WalletTransactionModelSchemaTypes = {
   wallet_id: string;

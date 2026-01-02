@@ -18,7 +18,7 @@ import type Rollbar from "rollbar";
 
 // Status configuration
 const STATUS_CONFIG = {
-  completed: {
+  successful: {
     bgColor: "bg-green-100",
     textColor: "text-green-600",
     titleColor: "text-green-700",
@@ -215,7 +215,7 @@ const verifyTransaction = async (
     const result = await response.json();
     return {
       message: result.message,
-      isOk: result.ok,
+      isOk: response.ok,
       status: result.status,
       success: result.success,
     };

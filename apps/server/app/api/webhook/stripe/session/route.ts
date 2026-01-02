@@ -16,7 +16,6 @@ import {
 } from "@omenai/shared-types";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
-import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
