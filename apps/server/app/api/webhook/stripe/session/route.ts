@@ -294,7 +294,7 @@ export async function runPostPaymentWorkflows(
       })
     ),
     createWorkflow(
-      "/api/workflows/payment/handleArtworkPaymentUpdatesByStripe",
+      "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
       `stripe_payment_workflow_${checkoutSession.id}`,
       JSON.stringify({
         provider: "stripe",

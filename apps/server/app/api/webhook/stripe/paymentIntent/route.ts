@@ -403,7 +403,7 @@ export async function runPurchasePostWorkflows(
     ),
 
     createWorkflow(
-      "/api/workflows/payment/handleArtworkPaymentUpdatesByStripe",
+      "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
       `stripe_payment_workflow_${paymentIntent.id}`,
       JSON.stringify({
         provider: "stripe",
