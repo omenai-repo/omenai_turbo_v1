@@ -32,7 +32,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
   try {
     const { payment_intent_id, checkout_session_id } = await request.json();
 
-    const paymentIntent = await resolvePaymentIntent({
+    const { paymentIntent, meta } = await resolvePaymentIntent({
       payment_intent_id,
       checkout_session_id,
     });
@@ -48,13 +48,13 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     }
 
     // 🔐 Safely parse metadata (Stripe metadata is string-only)
-    const meta = paymentIntent.metadata;
 
     await verifyStripeTransaction(paymentIntent, meta);
 
     return NextResponse.json(
       {
         message: "Successfully verified purchase transaction",
+        paymentIntent,
         success: true,
       },
       { status: 200 }
@@ -194,18 +194,29 @@ async function resolvePaymentIntent({
   checkout_session_id?: string;
 }) {
   if (payment_intent_id) {
-    return stripe.paymentIntents.retrieve(payment_intent_id);
+    const paymentIntent =
+      await stripe.paymentIntents.retrieve(payment_intent_id);
+    console.log(paymentIntent);
+
+    return { paymentIntent, meta: paymentIntent.metadata };
   }
 
   if (checkout_session_id) {
     const session =
       await stripe.checkout.sessions.retrieve(checkout_session_id);
 
+    console.log(session.payment_intent);
     if (!session.payment_intent) {
       throw new ServerError("Checkout session has no payment intent");
     }
 
-    return stripe.paymentIntents.retrieve(session.paymentIntent);
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      session.payment_intent
+    );
+    return {
+      paymentIntent,
+      meta: session.metadata,
+    };
   }
 
   throw new ServerError("No Stripe identifier provided");

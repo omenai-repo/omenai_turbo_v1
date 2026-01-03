@@ -95,6 +95,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           transfer_data: {
             destination: gallery.connected_account_id,
           },
+          metadata: {
+            seller_id,
+            type: "purchase",
+            commission: Math.round(meta.unit_price * commissionRate),
+            ...meta,
+          },
         },
         metadata: {
           seller_id,
