@@ -86,9 +86,11 @@ async function verifyStripeTransaction(
 ) {
   const date = toUTCDate(new Date());
 
-  if (!meta?.buyer_email || !meta?.art_id) {
-    throw new ServerError("Invalid metadata");
-  }
+  console.log(meta, paymentIntent);
+
+  // if (!meta?.buyer_email || !meta?.art_id) {
+  //   throw new ServerError("Invalid metadata");
+  // }
 
   // Idempotency guards
   const [existingTransaction, existingPaymentLedger] = await Promise.all([
@@ -196,16 +198,14 @@ async function resolvePaymentIntent({
   }
 
   if (checkout_session_id) {
-    const session = await stripe.checkout.sessions.retrieve(
-      checkout_session_id,
-      { expand: ["payment_intent"] }
-    );
+    const session =
+      await stripe.checkout.sessions.retrieve(checkout_session_id);
 
     if (!session.payment_intent) {
       throw new ServerError("Checkout session has no payment intent");
     }
 
-    return session.payment_intent;
+    return stripe.paymentIntents.retrieve(session.paymentIntent);
   }
 
   throw new ServerError("No Stripe identifier provided");
