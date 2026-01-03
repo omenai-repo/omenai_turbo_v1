@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import z from "zod";
 export async function verifyWebhookSignature(
   signature: string | null,
   secretHash: string
@@ -39,4 +40,28 @@ export async function verifyFlutterwaveTransaction(
   ) {
     return verified_transaction;
   } else throw new Error("Transaction could not be validated");
+}
+
+export async function retry<T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delayMs = 100
+): Promise<T> {
+  let lastError;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+
+      if (attempt < retries) {
+        await new Promise(
+          (res) => setTimeout(res, delayMs * attempt) // simple backoff
+        );
+      }
+    }
+  }
+
+  throw lastError;
 }

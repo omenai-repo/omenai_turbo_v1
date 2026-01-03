@@ -10,6 +10,7 @@ const paymentLedger = new Schema<PaymentLedgerTypes>(
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
     payload: { type: Schema.Types.Mixed, required: false },
+    order_id: { type: String, required: true, index: true },
     payment_fulfillment: {
       artwork_marked_sold: {
         type: String,
@@ -32,6 +33,11 @@ const paymentLedger = new Schema<PaymentLedgerTypes>(
         required: false,
       },
       sale_record_created: {
+        type: String,
+        enum: ["done", "failed"],
+        required: false,
+      },
+      mass_orders_updated: {
         type: String,
         enum: ["done", "failed"],
         required: false,

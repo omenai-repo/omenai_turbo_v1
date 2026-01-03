@@ -1,5 +1,4 @@
 import { serve } from "@upstash/workflow/nextjs";
-import { z } from "zod";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import {
   ExclusivityUpholdStatus,
@@ -18,27 +17,20 @@ import { redis } from "@omenai/upstash-config";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import { MetaSchema } from "@omenai/shared-types";
+import z from "zod";
 
-export const MetaSchema = z.object({
-  buyer_email: z.email(),
-  buyer_id: z.string().optional(),
-  seller_id: z.string().optional(),
-  seller_designation: z.string().optional(),
-  art_id: z.string().optional(),
-  unit_price: z.union([z.string(), z.number()]).optional(),
-  shipping_cost: z.union([z.string(), z.number()]).optional(),
-  tax_fees: z.union([z.string(), z.number()]).optional(),
-});
 // Map the payload of the expected data here
 type Payload = {
   provider: PaymentLedgerTypes["provider"];
-  meta: z.infer<typeof MetaSchema>;
+  meta: MetaSchema;
   verified_transaction: any;
 };
 
 type FulfillmentStepResult = {
   step: keyof PaymentLedgerTypes["payment_fulfillment"];
-  status: "done" | "skipped" | "failed";
+  status: "done" | "failed";
   reason?: string;
 };
 
@@ -51,56 +43,56 @@ export const { POST } = serve<Payload>(async (ctx) => {
   const transaction_status = payload.verified_transaction.data.status;
 
   // Implement your workflow logic within ctx.run
-  await ctx.run("handle_artwork_payment_update", async () => {
-    await connectMongoDB();
+  const update_run = await ctx.run(
+    "handle_artwork_payment_update_flw",
+    async () => {
+      await connectMongoDB();
 
-    const is_fulfillment_checked = (await PaymentLedger.findOne(
-      {
-        provider_tx_id: transaction_id,
-        provider: "flutterwave",
-      },
-      "payment_fulfillment_checks_done"
-    ).lean()) as { payment_fulfillment_checks_done: boolean } | null;
+      const is_fulfillment_checked = (await PaymentLedger.findOne(
+        {
+          provider_tx_id: transaction_id,
+          provider: "flutterwave",
+        },
+        "payment_fulfillment_checks_done"
+      ).lean()) as { payment_fulfillment_checks_done: boolean } | null;
 
-    if (is_fulfillment_checked?.payment_fulfillment_checks_done) {
-      return {
-        isCompleted: true,
-        status: "Workflow terminated - Fulfillment already processed",
-      };
+      if (is_fulfillment_checked?.payment_fulfillment_checks_done) {
+        return true;
+      }
+
+      const artist = (await AccountArtist.findOne(
+        { artist_id: meta.seller_id },
+        "exclusivity_uphold_status"
+      ).lean()) as {
+        exclusivity_uphold_status: ExclusivityUpholdStatus;
+      } | null;
+
+      if (!artist) {
+        rollbarServerInstance.error({
+          context: "Artist not found during payment fulfillment",
+          seller_id: meta.seller_id,
+        });
+
+        return true;
+      }
+      const exclusivity_uphold_status: ExclusivityUpholdStatus =
+        artist.exclusivity_uphold_status;
+      const response: boolean = await handlePaymentTransactionUpdates(
+        amount,
+        transaction_id,
+        exclusivity_uphold_status,
+        meta,
+        transaction_status
+      );
+
+      return response;
     }
-
-    const artist = (await AccountArtist.findOne(
-      { artist_id: meta.seller_id },
-      "exclusivity_uphold_status"
-    ).lean()) as { exclusivity_uphold_status: ExclusivityUpholdStatus } | null;
-
-    if (!artist) {
-      rollbarServerInstance.error({
-        context: "Artist not found during payment fulfillment",
-        seller_id: meta.seller_id,
-      });
-
-      return {
-        isCompleted: true,
-        status: "Workflow terminated - Artist not found",
-      };
-    }
-    const exclusivity_uphold_status: ExclusivityUpholdStatus =
-      artist.exclusivity_uphold_status;
-    const response: boolean = await handlePaymentTransactionUpdates(
-      amount,
-      transaction_id,
-      exclusivity_uphold_status,
-      meta,
-      transaction_status
-    );
-
-    return response;
-  });
+  );
+  return Boolean(update_run);
 });
 
 export function buildPricing(
-  meta: z.infer<typeof MetaSchema>,
+  meta: MetaSchema,
   exclusivity_uphold_status: ExclusivityUpholdStatus
 ) {
   const { isBreached, incident_count } = exclusivity_uphold_status;
@@ -119,10 +111,16 @@ async function handlePaymentTransactionUpdates(
   amount: number,
   transaction_id: string,
   exclusivity_uphold_status: ExclusivityUpholdStatus,
-  meta: z.infer<typeof MetaSchema>,
+  meta: MetaSchema,
   transaction_status: "failed" | "successful" | "processing"
 ) {
-  const paymentFulfillmentStatus: Record<string, string> = {};
+  const paymentFulfillmentStatus: PaymentLedgerTypes["payment_fulfillment"] = {
+    transaction_created: "failed",
+    sale_record_created: "failed",
+    artwork_marked_sold: "failed",
+    mass_orders_updated: "failed",
+    seller_wallet_updated: "failed",
+  };
   const nowUTC = toUTCDate(new Date());
 
   try {
@@ -164,12 +162,15 @@ async function handlePaymentTransactionUpdates(
         meta.seller_id ?? ""
       ),
       updateArtworkRecordAsSold(meta.art_id ?? ""),
+      updateMassOrderRecords(meta.art_id ?? "", meta.buyer_id ?? ""),
     ]);
 
     for (const result of updates) {
       if (result.status === "fulfilled") {
         const res = result.value;
-        paymentFulfillmentStatus[res.step] = res.status;
+        paymentFulfillmentStatus[
+          res.step as keyof PaymentLedgerTypes["payment_fulfillment"]
+        ] = res.status as "done" | "failed";
       } else {
         rollbarServerInstance.error({
           context: "Fulfillment promise rejected",
@@ -182,6 +183,9 @@ async function handlePaymentTransactionUpdates(
       meta,
       pricing,
     };
+    const isAllUpdatesDone = Object.values(paymentFulfillmentStatus).every(
+      (status) => status === "done"
+    );
 
     // Update the Payment Ledger with the fulfillment status
     const paymentLedgerUpdate = await PaymentLedger.updateOne(
@@ -190,6 +194,7 @@ async function handlePaymentTransactionUpdates(
         $set: {
           payload: paymentLedgerPayload,
           payment_fulfillment: paymentFulfillmentStatus,
+          payment_fulfillment_checks_done: isAllUpdatesDone,
         },
       }
     );
@@ -211,7 +216,7 @@ async function handlePaymentTransactionUpdates(
   }
 }
 
-async function handleWalletIncrement(
+export async function handleWalletIncrement(
   pricing: PurchaseTransactionPricing,
   seller_id: string,
   transaction_id: string
@@ -251,7 +256,7 @@ async function handleWalletIncrement(
     if (alreadyApplied) {
       return {
         step: "seller_wallet_updated",
-        status: "skipped",
+        status: "done",
         reason: "payment_already_applied",
       };
     }
@@ -286,7 +291,7 @@ async function handleWalletIncrement(
   }
 }
 
-async function createPurchaseTransactionEntry(
+export async function createPurchaseTransactionEntry(
   transaction: Omit<PurchaseTransactionModelSchemaTypes, "trans_id">
 ): Promise<FulfillmentStepResult> {
   try {
@@ -315,7 +320,7 @@ async function createPurchaseTransactionEntry(
   }
 }
 
-async function updateSalesRecord(
+export async function updateSalesRecord(
   tx_ref: string,
   unit_price: number,
   seller_id: string
@@ -355,7 +360,7 @@ async function updateSalesRecord(
   }
 }
 
-async function updateArtworkRecordAsSold(
+export async function updateArtworkRecordAsSold(
   art_id: string
 ): Promise<FulfillmentStepResult> {
   try {
@@ -392,7 +397,7 @@ async function updateArtworkRecordAsSold(
     if (alreadySold) {
       return {
         step: "artwork_marked_sold",
-        status: "skipped",
+        status: "done",
         reason: "already_sold",
       };
     }
@@ -417,6 +422,39 @@ async function updateArtworkRecordAsSold(
 
     return {
       step: "artwork_marked_sold",
+      status: "failed",
+      reason: "exception",
+    };
+  }
+}
+
+export async function updateMassOrderRecords(
+  art_id: string,
+  buyer_id: string
+): Promise<FulfillmentStepResult> {
+  try {
+    await CreateOrder.updateMany(
+      {
+        "artwork_data.art_id": art_id,
+        "buyer_details.id": { $ne: buyer_id },
+      },
+      { $set: { availability: false } }
+    );
+
+    return {
+      step: "mass_orders_updated",
+      status: "done",
+    };
+  } catch (error) {
+    rollbarServerInstance.error({
+      context: "Mass order update failed",
+      art_id,
+      buyer_id,
+      error,
+    });
+
+    return {
+      step: "mass_orders_updated",
       status: "failed",
       reason: "exception",
     };

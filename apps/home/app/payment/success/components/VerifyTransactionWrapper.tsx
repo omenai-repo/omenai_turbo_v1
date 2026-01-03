@@ -172,7 +172,7 @@ const SuccessState = ({
             Payment verification completed
           </h2>
           <p className="text-gray-600 text-fluid-xxs leading-relaxed">
-            {verified.message}
+            Result: {verified.message}
           </p>
         </div>
 
@@ -188,14 +188,19 @@ const verifyTransaction = async (
   transactionId: string,
   apiUrl: string,
   rollbar: Rollbar
-) => {
+): Promise<{
+  isOk: boolean;
+  status?: "successful" | "failed";
+  message?: string;
+  success?: boolean;
+}> => {
   try {
     const response = await fetch(
-      `${apiUrl}/api/transactions/verify_FLW_transaction`,
+      `${apiUrl}/api/stripe/verifyPaymentTransaction`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transaction_id: transactionId }),
+        body: JSON.stringify({ checkout_session_id: transactionId }),
       }
     );
 
@@ -205,10 +210,10 @@ const verifyTransaction = async (
 
     const result = await response.json();
     return {
+      isOk: true,
       message: result.message,
-      isOk: response.ok,
-      status: result.status,
       success: result.success,
+      status: result.success ? "successful" : "failed",
     };
   } catch (error) {
     if (error instanceof Error) {
@@ -224,15 +229,15 @@ const verifyTransaction = async (
 export default function VerifyTransactionWrapper() {
   const searchParams = useSearchParams();
   const rollbar = useRollbar();
-  const transaction_id = searchParams.get("transaction_id");
+  const transaction_id = searchParams.get("session_id");
   const [showContent, setShowContent] = useState(false);
   const url = getApiUrl();
 
   const { data: verified, isLoading } = useQuery({
-    queryKey: ["verify_transaction", transaction_id],
+    queryKey: ["verify_stripe_transaction", transaction_id],
     queryFn: async () => {
       if (!transaction_id) {
-        throw new Error("Missing transaction id");
+        throw new Error("Missing payment session id");
       }
       return verifyTransaction(transaction_id, url, rollbar);
     },
@@ -250,7 +255,17 @@ export default function VerifyTransactionWrapper() {
     if (isLoading) return <LoadingState />;
     if (!verified?.isOk) return <ErrorState />;
     return (
-      <SuccessState verified={verified as any} showContent={showContent} />
+      <SuccessState
+        verified={
+          verified as {
+            isOk: boolean;
+            status: "successful" | "failed";
+            message: string;
+            success: boolean;
+          }
+        }
+        showContent={showContent}
+      />
     );
   };
 

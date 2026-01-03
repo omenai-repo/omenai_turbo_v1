@@ -452,11 +452,26 @@ export type PaymentLedgerTypes = {
   payment_date: Date;
   amount: number;
   currency: "USD";
+  order_id: string;
   payload: PaymentLedgerPayloadTypes;
   payment_fulfillment: PaymentFulfillmentStatusTypes;
   payment_fulfillment_checks_done: boolean;
   retry_count: number;
   next_retry_date?: Date;
+};
+
+export type MetaSchema = {
+  buyer_id: string;
+  buyer_email: string;
+  seller_email: string;
+  seller_name: string;
+  seller_id: string;
+  artwork_name: string;
+  art_id: string;
+  shipping_cost: number;
+  unit_price: number;
+  tax_fees: number;
+  commission?: number;
 };
 
 export type PaymentLedgerPayloadTypes = {
@@ -465,10 +480,11 @@ export type PaymentLedgerPayloadTypes = {
 };
 
 export type PaymentFulfillmentStatusTypes = {
-  artwork_marked_sold: "done" | "failed" | "skipped";
-  seller_wallet_updated: "done" | "failed" | "skipped";
-  transaction_created: "done" | "failed" | "skipped";
-  sale_record_created: "done" | "failed" | "skipped";
+  artwork_marked_sold: "done" | "failed";
+  transaction_created: "done" | "failed";
+  sale_record_created: "done" | "failed";
+  mass_orders_updated: "done" | "failed";
+  seller_wallet_updated?: "done" | "failed";
 };
 
 export type LockModelTypes = {

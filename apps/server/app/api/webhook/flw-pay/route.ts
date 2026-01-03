@@ -12,22 +12,12 @@ import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, MetaSchema } from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
+import { retry } from "../resource-global";
 /* ----------------------------- Schema ------------------------------------- */
-
-const MetaSchema = z.object({
-  buyer_email: z.email(),
-  buyer_id: z.string().optional(),
-  seller_id: z.string().optional(),
-  seller_designation: z.string().optional(),
-  art_id: z.string().optional(),
-  unit_price: z.union([z.string(), z.number()]).optional(),
-  shipping_cost: z.union([z.string(), z.number()]).optional(),
-  tax_fees: z.union([z.string(), z.number()]).optional(),
-});
 
 /* ----------------------------- Utilities ---------------------------------- */
 
@@ -169,30 +159,6 @@ export async function sendPushNotifications(order_info: any) {
   }
 }
 
-export async function retry<T>(
-  fn: () => Promise<T>,
-  retries = 3,
-  delayMs = 100
-): Promise<T> {
-  let lastError;
-
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error;
-
-      if (attempt < retries) {
-        await new Promise(
-          (res) => setTimeout(res, delayMs * attempt) // simple backoff
-        );
-      }
-    }
-  }
-
-  throw lastError;
-}
-
 /* ----------------------------- Core handler -------------------------------- */
 
 async function handlePurchaseTransaction(
@@ -229,13 +195,22 @@ async function handlePurchaseTransaction(
     }
     return NextResponse.json({ status: 200 });
   }
-  const existing = await PurchaseTransactions.findOne({
-    trans_reference: String(verified_transaction.data.id),
-  });
 
-  if (existing) {
+  // Check idempotency: has this transaction been processed successfully before?
+  const [existingTransaction, existingPaymentLedger] = await Promise.all([
+    PurchaseTransactions.exists({
+      trans_reference: verified_transaction.data.id,
+    }),
+    PaymentLedger.exists({
+      provider: "flutterwave",
+      provider_tx_id: verified_transaction.data.id,
+      payment_fulfillment_checks_done: true,
+    }),
+  ]);
+
+  if (existingTransaction || existingPaymentLedger) {
     await PurchaseTransactions.updateOne(
-      { trans_reference: String(verified_transaction.data.id) },
+      { trans_reference: verified_transaction.data.id },
       { $set: { webhookReceivedAt: new Date(), webhookConfirmed: true } }
     );
     return NextResponse.json({ status: 200 });
@@ -247,6 +222,7 @@ async function handlePurchaseTransaction(
     provider_tx_id: String(verified_transaction.data.id),
     status: String(verified_transaction.data.status),
     payment_date: toUTCDate(new Date()),
+    order_id: order_info.order_id,
     payload: { meta },
     amount: Math.round(Number(verified_transaction.data.amount)),
     currency: String(verified_transaction.data.currency),
@@ -335,6 +311,26 @@ async function handlePurchaseTransaction(
         "/api/workflows/shipment/create_shipment",
         `create_shipment_${order_info.order_id}`,
         JSON.stringify({ order_id: order_info.order_id })
+      )
+    );
+
+    // Send email notifications
+
+    await fireAndForget(
+      createWorkflow(
+        "/api/workflows/emails/sendPaymentSuccessMail",
+        `send_payment_success_mail_${generateDigit(6)}`,
+        JSON.stringify({
+          buyer_email: order_info.buyer_details.email,
+          buyer_name: order_info.buyer_details.name,
+          artwork_title: order_info.artwork_data.title,
+          order_id: order_info.order_id,
+          order_date: order_info.createdAt,
+          transaction_id: verified_transaction.data.id,
+          price: verified_transaction.data.amount,
+          seller_email: order_info.seller_details.email,
+          seller_name: order_info.seller_details.name,
+        })
       )
     );
 

@@ -2,27 +2,26 @@ import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
-import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
 import {
+  CreateOrderModelTypes,
+  MetaSchema,
   NotificationPayload,
   PaymentStatusTypes,
-  PurchaseTransactionModelSchemaTypes,
-  PurchaseTransactionPricing,
 } from "@omenai/shared-types";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
-import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
 import { createErrorRollbarReport } from "../../../util";
-import { redis } from "@omenai/upstash-config";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
+import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
+import { retry } from "../../resource-global";
 
 /* -------------------------------------------------------------------------- */
 /*                            STRIPE VERIFICATION                              */
@@ -47,6 +46,8 @@ async function verifyStripeWebhook(request: Request) {
 async function handleCheckoutCompleted(event: any) {
   const sessionObj = event.data.object;
 
+  const date = toUTCDate(new Date());
+
   if (
     sessionObj.status !== "complete" ||
     sessionObj.payment_status !== "paid"
@@ -54,27 +55,113 @@ async function handleCheckoutCompleted(event: any) {
     return NextResponse.json({ status: 400 });
   }
 
-  const meta = sessionObj.metadata;
+  const meta: MetaSchema = sessionObj.metadata;
   if (!meta?.buyer_email || !meta?.art_id) {
     return NextResponse.json({ status: 400 });
   }
 
-  const existing = await PurchaseTransactions.findOne({
-    trans_reference: sessionObj.id,
-  });
+  // Check idempotency: has this transaction been processed successfully before?
+  const [existingTransaction, existingPaymentLedger] = await Promise.all([
+    PurchaseTransactions.exists({
+      trans_reference: sessionObj.id,
+    }),
+    PaymentLedger.exists({
+      provider: "stripe",
+      provider_tx_id: sessionObj.id,
+      payment_fulfillment_checks_done: true,
+    }),
+  ]);
 
-  if (existing) {
+  if (existingTransaction || existingPaymentLedger) {
+    await PurchaseTransactions.updateOne(
+      { trans_reference: sessionObj.id },
+      {
+        $set: {
+          webhookReceivedAt: toUTCDate(new Date()),
+          webhookConfirmed: true,
+        },
+      }
+    );
     return NextResponse.json({ status: 200 });
   }
 
-  const order = await CreateOrder.findOne({
+  const order = (await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
     "order_accepted.status": "accepted",
-  });
+  }).lean()) as unknown as CreateOrderModelTypes | null;
 
-  if (!order) return NextResponse.json({ status: 404 });
+  if (!order) return NextResponse.json({ status: 400 });
 
+  const paymentLedgerData = {
+    provider: "stripe",
+    provider_tx_id: String(sessionObj.id),
+    status: String(sessionObj.status === "complete" ? "successful" : "failed"),
+    payment_date: toUTCDate(new Date()),
+    order_id: order.order_id,
+    payload: { meta },
+    amount: Math.round(Number(sessionObj.amount_total / 100)),
+    currency: String("USD"),
+    payment_fulfillment: {},
+  };
+
+  try {
+    await retry(
+      () =>
+        PaymentLedger.updateOne(
+          {
+            provider: "stripe",
+            provider_tx_id: sessionObj.id,
+          },
+          {
+            $setOnInsert: paymentLedgerData,
+          },
+          { upsert: true }
+        ),
+      3,
+      150
+    );
+  } catch (error) {
+    rollbarServerInstance.error({
+      context: "Stripe Webhook",
+      formatted_date: getFormattedDateTime(),
+      message: "Payment ledger creation failed after retries",
+      error,
+      payment_reference: paymentLedgerData?.provider_tx_id,
+    });
+
+    return NextResponse.json(
+      {
+        message:
+          "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const payment_information: PaymentStatusTypes = {
+    status: "completed",
+    transaction_value: sessionObj.amount_total / 100,
+    transaction_date: date,
+    transaction_reference: sessionObj.id,
+  };
+
+  const updateOrder = await CreateOrder.updateOne(
+    { order_id: order.order_id },
+    { $set: { payment_information, hold_status: null } }
+  );
+
+  if (updateOrder.modifiedCount === 0) {
+    rollbarServerInstance.error({
+      context: "Stripe Webhook",
+      formatted_date: getFormattedDateTime(),
+      message: "Order update failed",
+    });
+    return NextResponse.json(
+      { message: "Order update unsuccessful" },
+      { status: 400 }
+    );
+  }
   return processStripePayment(sessionObj, meta, order);
 }
 
@@ -87,117 +174,23 @@ async function processStripePayment(
   meta: any,
   order_info: any
 ) {
-  const client = await connectMongoDB();
-  const session = await client.startSession();
-
-  const date = toUTCDate(new Date());
-  let transaction_id: string | undefined;
-
   try {
-    session.startTransaction();
-
-    const payment_information: PaymentStatusTypes = {
-      status: "completed",
-      transaction_value: checkoutSession.amount_total / 100,
-      transaction_date: date,
-      transaction_reference: checkoutSession.id,
-    };
-
-    const pricing: PurchaseTransactionPricing = {
-      amount_total: Math.round(checkoutSession.amount_total / 100),
-      unit_price: Math.round(+meta.unit_price),
-      shipping_cost: Math.round(+meta.shipping_cost),
-      commission: Math.round(+meta.commission),
-      tax_fees: Math.round(+meta.tax_fees),
-      currency: "USD",
-    };
-
-    const transactionData: Omit<
-      PurchaseTransactionModelSchemaTypes,
-      "trans_id"
-    > = {
-      trans_pricing: pricing,
-      trans_date: date,
-      trans_recipient_id: meta.seller_id,
-      trans_initiator_id: meta.buyer_id,
-      trans_recipient_role: "gallery",
-      trans_reference: checkoutSession.id,
-      status: "successful",
-    };
-
-    const [updateOrder, [tx]] = await Promise.all([
-      CreateOrder.updateOne(
-        { order_id: order_info.order_id },
-        { $set: { payment_information, hold_status: null } },
-        { session }
-      ),
-      PurchaseTransactions.create([transactionData], {
-        session,
-      }),
-    ]);
-
-    if (
-      (updateOrder.matchedCount > 0 && updateOrder.modifiedCount === 0) ||
-      !tx
-    ) {
-      throw new Error("Failed to update order with payment information");
-    }
-
-    transaction_id = tx.trans_id;
+    await runPostPaymentWorkflows(checkoutSession, order_info, meta);
 
     try {
-      const artwork = await Artworkuploads.findOneAndUpdate(
-        { art_id: meta.art_id },
-        { $set: { availability: false } },
-        { new: true }
-      );
-      await redis.set(`artwork:${meta.art_id}`, JSON.stringify(artwork));
-    } catch (e: any) {
-      rollbarServerInstance.error(e);
+      await releaseOrderLock(meta.art_id, meta.buyer_id);
+    } catch (error) {
+      rollbarServerInstance.error({
+        context: "Stripe checkout processing - release lock error",
+        error,
+      });
     }
-
-    const { month, year } = getCurrentMonthAndYear();
-
-    await Promise.all([
-      SalesActivity.create(
-        [
-          {
-            month,
-            year,
-            value: meta.unit_price,
-            id: meta.seller_id,
-            trans_ref: transactionData.trans_reference,
-          },
-        ],
-        { session }
-      ),
-      CreateOrder.updateMany(
-        {
-          "artwork_data.art_id": meta.art_id,
-          "buyer_details.id": { $ne: meta.buyer_id },
-        },
-        { $set: { availability: false } },
-        { session }
-      ),
-    ]);
-
-    await session.commitTransaction();
-
-    await releaseOrderLock(meta.art_id, meta.buyer_id);
-
-    await runPostPaymentWorkflows(checkoutSession, order_info, transaction_id);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
     createErrorRollbarReport("Stripe checkout processing error", error, 500);
 
-    if (session.inTransaction()) {
-      await session.abortTransaction();
-    }
-
     return NextResponse.json({ status: 500 });
-  } finally {
-    await session.endSession();
   }
 }
 
@@ -205,10 +198,10 @@ async function processStripePayment(
 /*                        POST-PAYMENT WORKFLOWS                               */
 /* -------------------------------------------------------------------------- */
 
-async function runPostPaymentWorkflows(
+export async function runPostPaymentWorkflows(
   checkoutSession: any,
   order_info: any,
-  transaction_id?: string
+  meta: any
 ) {
   const currency = getCurrencySymbol(checkoutSession.currency.toUpperCase());
   const price = formatPrice(checkoutSession.amount_total / 100, currency);
@@ -273,7 +266,7 @@ async function runPostPaymentWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_seller_${order_info.order_id}_${generateDigit(2)}`,
+        `notif_seller_${order_info.order_id}_${generateDigit(6)}`,
         JSON.stringify(payload)
       )
     );
@@ -294,10 +287,19 @@ async function runPostPaymentWorkflows(
         artwork_title: order_info.artwork_data.title,
         order_id: order_info.order_id,
         order_date: order_info.createdAt,
-        transaction_id,
+        transaction_id: checkoutSession.id,
         price,
         seller_email: order_info.seller_details.email,
         seller_name: order_info.seller_details.name,
+      })
+    ),
+    createWorkflow(
+      "/api/workflows/payment/handleArtworkPaymentUpdatesByStripe",
+      `stripe_payment_workflow_${checkoutSession.id}`,
+      JSON.stringify({
+        provider: "stripe",
+        meta,
+        checkoutSession,
       })
     ),
     ...jobs,
@@ -334,6 +336,7 @@ export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
   try {
+    await connectMongoDB();
     const event = await verifyStripeWebhook(request);
 
     if (event.type === "checkout.session.completed") {

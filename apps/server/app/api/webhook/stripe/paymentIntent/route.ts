@@ -1,21 +1,18 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 
-import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import {
+  CreateOrderModelTypes,
+  MetaSchema,
   NotificationPayload,
   PaymentStatusTypes,
-  PurchaseTransactionModelSchemaTypes,
-  PurchaseTransactionPricing,
   SubscriptionTransactionModelSchemaTypes,
 } from "@omenai/shared-types";
 
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
@@ -47,6 +44,9 @@ import { createErrorRollbarReport } from "../../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { redis } from "@omenai/upstash-config";
 import { NextResponse } from "next/server";
+import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
+import { retry } from "../../resource-global";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
 /*                               ROUTE ENTRY                                  */
@@ -156,7 +156,7 @@ async function handlePurchaseEvent({ event, pi, meta }: any) {
 
 async function handlePurchaseProcessing(meta: any) {
   const order = await findPurchaseOrder(meta);
-  if (!order) return NextResponse.json({ status: 404 });
+  if (!order) return NextResponse.json({ status: 400 });
 
   await sendPaymentPendingMail({
     email: meta.buyer_email,
@@ -181,6 +181,8 @@ async function handlePurchaseFailed(meta: any) {
 }
 
 async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
+  const date = toUTCDate(new Date());
+
   const { isProcessed } = await purchaseIdempotencyCheck(
     paymentIntent.id,
     "successful"
@@ -191,7 +193,79 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
   }
 
   const order = await findPurchaseOrder(meta);
-  if (!order) return NextResponse.json({ status: 404 });
+  if (!order) return NextResponse.json({ status: 400 });
+
+  const paymentLedgerData = {
+    provider: "stripe",
+    provider_tx_id: String(paymentIntent.id),
+    status: String(
+      paymentIntent.status === "complete" ? "successful" : "failed"
+    ),
+    payment_date: toUTCDate(new Date()),
+    order_id: order.order_id,
+    payload: { meta },
+    amount: Math.round(Number(paymentIntent.amount_total / 100)),
+    currency: String("USD"),
+    payment_fulfillment: {},
+  };
+
+  try {
+    await retry(
+      () =>
+        PaymentLedger.updateOne(
+          {
+            provider: "stripe",
+            provider_tx_id: paymentIntent.id,
+          },
+          {
+            $setOnInsert: paymentLedgerData,
+          },
+          { upsert: true }
+        ),
+      3,
+      150
+    );
+  } catch (error) {
+    rollbarServerInstance.error({
+      context: "Stripe Webhook",
+      formatted_date: getFormattedDateTime(),
+      message: "Payment ledger creation failed after retries",
+      error,
+      payment_reference: paymentLedgerData?.provider_tx_id,
+    });
+
+    return NextResponse.json(
+      {
+        message:
+          "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
+      },
+      { status: 400 }
+    );
+  }
+
+  const payment_information: PaymentStatusTypes = {
+    status: "completed",
+    transaction_value: paymentIntent.amount_total / 100,
+    transaction_date: date,
+    transaction_reference: paymentIntent.id,
+  };
+
+  const updateOrder = await CreateOrder.updateOne(
+    { order_id: order.order_id },
+    { $set: { payment_information, hold_status: null } }
+  );
+
+  if (updateOrder.modifiedCount === 0) {
+    rollbarServerInstance.error({
+      context: "Stripe Webhook",
+      formatted_date: getFormattedDateTime(),
+      message: "Order update failed",
+    });
+    return NextResponse.json(
+      { message: "Order update unsuccessful" },
+      { status: 400 }
+    );
+  }
 
   return processPurchaseTransaction(paymentIntent, meta, order);
 }
@@ -202,106 +276,29 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
 
 async function processPurchaseTransaction(
   paymentIntent: any,
-  meta: any,
+  meta: MetaSchema & { commission: string },
   order: any
 ) {
-  const client = await connectMongoDB();
-  const session = await client.startSession();
-
-  const date = toUTCDate(new Date());
-  let transaction_id: string | undefined;
-
   try {
-    session.startTransaction();
-
-    const payment_information: PaymentStatusTypes = {
-      status: "completed",
-      transaction_value: paymentIntent.amount_received / 100,
-      transaction_date: date,
-      transaction_reference: paymentIntent.id,
-    };
-
-    await CreateOrder.updateOne(
-      { order_id: order.order_id },
-      { $set: { payment_information, hold_status: null } },
-      { session }
-    );
-
-    const pricing: PurchaseTransactionPricing = {
-      amount_total: Math.round(paymentIntent.amount_total / 100),
-      unit_price: Math.round(+meta.unit_price),
-      shipping_cost: Math.round(+meta.shipping_cost),
-      commission: Math.round(+meta.commission),
-      tax_fees: Math.round(+meta.tax_fees),
-      currency: "USD",
-    };
-
-    const data: Omit<PurchaseTransactionModelSchemaTypes, "trans_id"> = {
-      trans_pricing: pricing,
-      trans_date: date,
-      trans_recipient_id: meta.seller_id,
-      trans_initiator_id: meta.buyer_id,
-      trans_recipient_role: "gallery",
-      trans_reference: paymentIntent.id,
-      status: "successful",
-    };
-
-    const [tx] = await PurchaseTransactions.create([data], { session });
-    transaction_id = tx.trans_id;
+    await runPurchasePostWorkflows(paymentIntent, order, meta);
 
     try {
-      const artwork = await Artworkuploads.findOneAndUpdate(
-        { art_id: meta.art_id },
-        { $set: { availability: false } },
-        { new: true }
-      );
-      await redis.set(`artwork:${meta.art_id}`, JSON.stringify(artwork));
-    } catch (e: any) {
-      rollbarServerInstance.error(e);
+      await releaseOrderLock(meta.art_id, meta.buyer_id);
+    } catch (error) {
+      rollbarServerInstance.error({
+        context: "Stripe checkout processing - release lock error",
+        error,
+      });
     }
-
-    const { month, year } = getCurrentMonthAndYear();
-    await SalesActivity.create(
-      [
-        {
-          month,
-          year,
-          value: meta.unit_price,
-          id: meta.seller_id,
-          trans_ref: data.trans_reference,
-        },
-      ],
-      { session }
-    );
-
-    await CreateOrder.updateMany(
-      {
-        "artwork_data.art_id": meta.art_id,
-        "buyer_details.id": { $ne: meta.buyer_id },
-      },
-      { $set: { availability: false } },
-      { session }
-    );
-
-    await session.commitTransaction();
-
-    await releaseOrderLock(meta.art_id, meta.buyer_id);
-
-    await runPurchasePostWorkflows(paymentIntent, order, transaction_id);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    if (session.inTransaction()) {
-      await session.abortTransaction();
-    }
     createErrorRollbarReport(
       "Stripe PaymentIntent purchase transaction error",
       error,
       500
     );
     return NextResponse.json({ status: 500 });
-  } finally {
-    await session.endSession();
   }
 }
 
@@ -309,10 +306,10 @@ async function processPurchaseTransaction(
 /*                         PURCHASE POST-WORK                                  */
 /* -------------------------------------------------------------------------- */
 
-async function runPurchasePostWorkflows(
+export async function runPurchasePostWorkflows(
   paymentIntent: any,
   order: any,
-  transaction_id?: string
+  meta: MetaSchema & { commission: string }
 ) {
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
   const price = formatPrice(paymentIntent.amount_received / 100, currency);
@@ -398,10 +395,20 @@ async function runPurchasePostWorkflows(
         artwork_title: order.artwork_data.title,
         order_id: order.order_id,
         order_date: order.createdAt,
-        transaction_id,
+        transaction_id: paymentIntent.id,
         price,
         seller_email: order.seller_details.email,
         seller_name: order.seller_details.name,
+      })
+    ),
+
+    createWorkflow(
+      "/api/workflows/payment/handleArtworkPaymentUpdatesByStripe",
+      `stripe_payment_workflow_${paymentIntent.id}`,
+      JSON.stringify({
+        provider: "stripe",
+        meta,
+        paymentIntent,
       })
     ),
     ...jobs,
@@ -619,12 +626,14 @@ async function updateSubscriptionStatus(
   }
 }
 
-async function findPurchaseOrder(meta: any) {
-  return CreateOrder.findOne({
+async function findPurchaseOrder(meta: MetaSchema & { commission: string }) {
+  const order = (await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
     "order_accepted.status": "accepted",
-  });
+  }).lean()) as unknown as CreateOrderModelTypes | null;
+
+  return order;
 }
 
 async function subscriptionIdempotencyCheck(
@@ -645,12 +654,29 @@ async function subscriptionIdempotencyCheck(
 }
 
 async function purchaseIdempotencyCheck(paymentId: string, status: string) {
-  const existingPayment = await PurchaseTransactions.findOne({
-    trans_reference: paymentId,
-  });
+  // Check idempotency: has this transaction been processed successfully before?
+  const [existingTransaction, existingPaymentLedger] = await Promise.all([
+    PurchaseTransactions.exists({
+      trans_reference: paymentId,
+    }),
+    PaymentLedger.exists({
+      provider: "stripe",
+      provider_tx_id: paymentId,
+      payment_fulfillment_checks_done: true,
+    }),
+  ]);
 
-  if (existingPayment?.status === status) {
-    return { isProcessed: true, existingPayment };
+  if (existingTransaction || existingPaymentLedger) {
+    await PurchaseTransactions.updateOne(
+      { trans_reference: paymentId },
+      {
+        $set: {
+          webhookReceivedAt: toUTCDate(new Date()),
+          webhookConfirmed: true,
+        },
+      }
+    );
+    return { isProcessed: true };
   }
 
   return { isProcessed: false, existingPayment: null };

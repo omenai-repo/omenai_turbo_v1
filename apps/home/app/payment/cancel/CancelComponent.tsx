@@ -1,9 +1,5 @@
 "use client";
-
-import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -11,35 +7,6 @@ import { dashboard_url } from "@omenai/url-config/src/config";
 import { Suspense } from "react";
 
 export function OrderCanceledPage() {
-  // const searchParams = useSearchParams();
-  // const art_id_key = searchParams.get("a_id");
-  // const user_id_key = searchParams.get("u_id");
-
-  // const { data: isLockReleased, isLoading } = useQuery({
-  //   queryKey: ["get_initial_lock_status"],
-  //   queryFn: async () => {
-  //     const release_lock_status = await releaseOrderLock(
-  //       art_id_key!,
-  //       user_id_key!
-  //     );
-
-  //     if (release_lock_status?.isOk) {
-  //       return true;
-  //     } else {
-  //       throw new Error("Something went wrong, please refresh your page");
-  //     }
-  //   },
-  //   refetchOnWindowFocus: false,
-  // });
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="h-[85vh] w-full grid place-items-center">
-  //       <Load />
-  //     </div>
-  //   );
-  // }
-
   const dashboard_uri: string = dashboard_url();
 
   return (
