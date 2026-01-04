@@ -20,7 +20,7 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 type Payload = {
   provider: PaymentLedgerTypes["provider"];
   meta: MetaSchema & { commission: string };
-  checkoutSession: any;
+  paymentIntent: any;
 };
 
 type FulfillmentStepResult = {
@@ -31,7 +31,7 @@ type FulfillmentStepResult = {
 
 export const { POST } = serve<Payload>(async (ctx) => {
   // Retrieve the payload here for use within your runs
-  const { meta, checkoutSession }: Payload = ctx.requestPayload;
+  const { meta, paymentIntent, provider }: Payload = ctx.requestPayload;
 
   // Implement your workflow logic within ctx.run
   const update_run = await ctx.run(
@@ -41,7 +41,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
       const is_fulfillment_checked = (await PaymentLedger.findOne(
         {
-          provider_tx_id: checkoutSession.id,
+          provider_tx_id: paymentIntent.id,
           provider: "stripe",
         },
         "payment_fulfillment_checks_done"
@@ -51,8 +51,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
         return true;
       }
       const response: boolean = await handlePaymentTransactionUpdatesByStripe(
-        checkoutSession,
-        meta
+        paymentIntent,
+        meta,
+        provider
       );
 
       return response;
@@ -233,9 +234,11 @@ async function updateMassOrderRecords(
 }
 
 async function handlePaymentTransactionUpdatesByStripe(
-  checkoutSession: any,
-  meta: MetaSchema & { commission: string }
+  paymentIntent: any,
+  meta: MetaSchema & { commission: string },
+  provider: PaymentLedgerTypes["provider"]
 ) {
+  const amount = paymentIntent.amount_received ?? paymentIntent.amount;
   const paymentFulfillmentStatus: PaymentLedgerTypes["payment_fulfillment"] = {
     transaction_created: "failed",
     sale_record_created: "failed",
@@ -246,11 +249,11 @@ async function handlePaymentTransactionUpdatesByStripe(
 
   try {
     const pricing: PurchaseTransactionPricing = {
-      amount_total: Math.round(checkoutSession.amount_total / 100),
-      unit_price: Math.round(+meta.unit_price),
-      shipping_cost: Math.round(+meta.shipping_cost),
-      commission: Math.round(+meta.commission),
-      tax_fees: Math.round(+meta.tax_fees),
+      amount_total: Math.round(amount / 100),
+      unit_price: Math.round(Number(meta.unit_price)),
+      shipping_cost: Math.round(Number(meta.shipping_cost)),
+      commission: Math.round(Number(meta.commission)),
+      tax_fees: Math.round(Number(meta.tax_fees)),
       currency: "USD",
     };
 
@@ -260,15 +263,16 @@ async function handlePaymentTransactionUpdatesByStripe(
       trans_recipient_id: meta.seller_id,
       trans_initiator_id: meta.buyer_id,
       trans_recipient_role: "gallery",
-      trans_reference: checkoutSession.id,
+      trans_reference: paymentIntent.id,
       status: "successful",
+      provider,
     };
 
     // Perform DB update operations in a single promise
     const updates = await Promise.allSettled([
       createPurchaseTransactionEntry(transaction),
       updateSalesRecord(
-        checkoutSession.id,
+        paymentIntent.id,
         pricing.unit_price,
         meta.seller_id ?? ""
       ),
@@ -299,7 +303,7 @@ async function handlePaymentTransactionUpdatesByStripe(
 
     // Update the Payment Ledger with the fulfillment status
     const paymentLedgerUpdate = await PaymentLedger.updateOne(
-      { provider_tx_id: checkoutSession.id, provider: "stripe" },
+      { provider_tx_id: paymentIntent.id, provider: "stripe" },
       {
         $set: {
           payload: paymentLedgerPayload,
@@ -311,7 +315,7 @@ async function handlePaymentTransactionUpdatesByStripe(
     if (paymentLedgerUpdate.modifiedCount === 0) {
       rollbarServerInstance.error({
         context: "Payment Ledger update failed",
-        transaction_id: checkoutSession.id,
+        transaction_id: paymentIntent.id,
       });
     }
 
@@ -319,7 +323,7 @@ async function handlePaymentTransactionUpdatesByStripe(
   } catch (error) {
     rollbarServerInstance.error({
       context: "Payment handling workflow crashed",
-      transaction_id: checkoutSession.id,
+      transaction_id: paymentIntent.id,
     });
 
     return false;

@@ -46,16 +46,43 @@ async function verifyStripeWebhook(request: Request) {
 async function handleCheckoutCompleted(event: any) {
   const sessionObj = event.data.object;
 
-  const date = toUTCDate(new Date());
+  const paymentIntentId =
+    typeof sessionObj.payment_intent === "string"
+      ? sessionObj.payment_intent
+      : sessionObj.payment_intent?.id;
 
-  if (
-    sessionObj.status !== "complete" ||
-    sessionObj.payment_status !== "paid"
-  ) {
+  if (!paymentIntentId) {
+    rollbarServerInstance.error({
+      context: "Stripe webhook: missing payment_intent on session",
+      session_id: sessionObj.id,
+    });
+
     return NextResponse.json({ status: 400 });
   }
 
-  const meta: MetaSchema = sessionObj.metadata;
+  let paymentIntent;
+  try {
+    paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+  } catch (error) {
+    rollbarServerInstance.error({
+      context: "Stripe webhook: failed to retrieve payment intent",
+      payment_intent_id: paymentIntentId,
+      error,
+    });
+
+    return NextResponse.json({ status: 400 });
+  }
+
+  const amount = paymentIntent.amount_received ?? paymentIntent.amount;
+
+  const date = toUTCDate(new Date());
+
+  if (paymentIntent.status !== "succeeded") {
+    // Send failed mail
+    return NextResponse.json({ status: 400 });
+  }
+
+  const meta: MetaSchema = paymentIntent.metadata;
   if (!meta?.buyer_email || !meta?.art_id) {
     return NextResponse.json({ status: 400 });
   }
@@ -63,18 +90,18 @@ async function handleCheckoutCompleted(event: any) {
   // Check idempotency: has this transaction been processed successfully before?
   const [existingTransaction, existingPaymentLedger] = await Promise.all([
     PurchaseTransactions.exists({
-      trans_reference: sessionObj.id,
+      trans_reference: paymentIntent.id,
     }),
     PaymentLedger.exists({
       provider: "stripe",
-      provider_tx_id: sessionObj.id,
+      provider_tx_id: paymentIntent.id,
       payment_fulfillment_checks_done: true,
     }),
   ]);
 
   if (existingTransaction || existingPaymentLedger) {
     await PurchaseTransactions.updateOne(
-      { trans_reference: sessionObj.id },
+      { trans_reference: paymentIntent.id },
       {
         $set: {
           webhookReceivedAt: toUTCDate(new Date()),
@@ -95,12 +122,14 @@ async function handleCheckoutCompleted(event: any) {
 
   const paymentLedgerData = {
     provider: "stripe",
-    provider_tx_id: String(sessionObj.id),
-    status: String(sessionObj.status === "complete" ? "successful" : "failed"),
+    provider_tx_id: String(paymentIntent.id),
+    status: String(
+      paymentIntent.status === "succeeded" ? "successful" : "failed"
+    ),
     payment_date: toUTCDate(new Date()),
     order_id: order.order_id,
     payload: { meta },
-    amount: Math.round(Number(sessionObj.amount_total / 100)),
+    amount: Math.round(Number(amount / 100)),
     currency: String("USD"),
     payment_fulfillment: {},
   };
@@ -111,7 +140,7 @@ async function handleCheckoutCompleted(event: any) {
         PaymentLedger.updateOne(
           {
             provider: "stripe",
-            provider_tx_id: sessionObj.id,
+            provider_tx_id: paymentIntent.id,
           },
           {
             $setOnInsert: paymentLedgerData,
@@ -141,9 +170,9 @@ async function handleCheckoutCompleted(event: any) {
 
   const payment_information: PaymentStatusTypes = {
     status: "completed",
-    transaction_value: sessionObj.amount_total / 100,
+    transaction_value: amount / 100,
     transaction_date: date,
-    transaction_reference: sessionObj.id,
+    transaction_reference: paymentIntent.id,
   };
 
   const updateOrder = await CreateOrder.updateOne(
@@ -162,7 +191,7 @@ async function handleCheckoutCompleted(event: any) {
       { status: 400 }
     );
   }
-  return processStripePayment(sessionObj, meta, order);
+  return processStripePayment(paymentIntent, meta, order);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -170,12 +199,12 @@ async function handleCheckoutCompleted(event: any) {
 /* -------------------------------------------------------------------------- */
 
 async function processStripePayment(
-  checkoutSession: any,
+  paymentIntent: any,
   meta: any,
   order_info: any
 ) {
   try {
-    await runPostPaymentWorkflows(checkoutSession, order_info, meta);
+    await runPostPaymentWorkflows(paymentIntent, order_info, meta);
 
     try {
       await releaseOrderLock(meta.art_id, meta.buyer_id);
@@ -199,12 +228,13 @@ async function processStripePayment(
 /* -------------------------------------------------------------------------- */
 
 export async function runPostPaymentWorkflows(
-  checkoutSession: any,
+  paymentIntent: any,
   order_info: any,
   meta: any
 ) {
-  const currency = getCurrencySymbol(checkoutSession.currency.toUpperCase());
-  const price = formatPrice(checkoutSession.amount_total / 100, currency);
+  const amount = paymentIntent.amount_received ?? paymentIntent.amount;
+  const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
+  const price = formatPrice(amount / 100, currency);
 
   const [buyer_push, seller_push] = await Promise.all([
     DeviceManagement.findOne(
@@ -287,7 +317,7 @@ export async function runPostPaymentWorkflows(
         artwork_title: order_info.artwork_data.title,
         order_id: order_info.order_id,
         order_date: order_info.createdAt,
-        transaction_id: checkoutSession.id,
+        transaction_id: paymentIntent.id,
         price,
         seller_email: order_info.seller_details.email,
         seller_name: order_info.seller_details.name,
@@ -295,11 +325,11 @@ export async function runPostPaymentWorkflows(
     ),
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
-      `stripe_payment_workflow_${checkoutSession.id}`,
+      `stripe_payment_workflow_${paymentIntent.id}`,
       JSON.stringify({
         provider: "stripe",
         meta,
-        checkoutSession,
+        paymentIntent,
       })
     ),
     ...jobs,

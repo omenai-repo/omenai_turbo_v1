@@ -56,7 +56,10 @@ export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ): Promise<Response> {
   try {
+    await connectMongoDB();
     const payload = await verifyStripeWebhook(request);
+
+    if (!payload) return NextResponse.json({ status: 200 });
 
     if (payload.meta.type === "purchase") {
       return handlePurchaseEvent(payload);
@@ -87,7 +90,9 @@ export const POST = withAppRouterHighlight(async function POST(
 /*                           STRIPE VERIFICATION                               */
 /* -------------------------------------------------------------------------- */
 
-async function verifyStripeWebhook(request: Request) {
+async function verifyStripeWebhook(
+  request: Request
+): Promise<{ event: any; pi: any; meta: any } | null> {
   const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET;
   if (!secretHash) {
     throw new Error("Webhook secret missing");
@@ -107,9 +112,8 @@ async function verifyStripeWebhook(request: Request) {
     "payment_intent.succeeded",
   ];
 
-  console.log(event.type);
   if (!supportedTypes.includes(event.type)) {
-    throw new Error("Unsupported event type");
+    return null;
   }
 
   const paymentIntent = event.data.object;
@@ -117,15 +121,11 @@ async function verifyStripeWebhook(request: Request) {
     throw new Error("Missing payment intent ID");
   }
 
-  const pi = await stripe.paymentIntents.retrieve(paymentIntent.id, {
-    expand: ["payment_method", "charges.data.balance_transaction"],
-  });
+  const pi = await stripe.paymentIntents.retrieve(paymentIntent.id);
 
   if (!pi.metadata?.type) {
-    throw new Error("Missing metadata type");
+    return null;
   }
-
-  await connectMongoDB();
 
   return { event, pi, meta: pi.metadata };
 }
@@ -183,6 +183,8 @@ async function handlePurchaseFailed(meta: any) {
 async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
   const date = toUTCDate(new Date());
 
+  const amount = paymentIntent.amount_received ?? paymentIntent.amount;
+
   const { isProcessed } = await purchaseIdempotencyCheck(
     paymentIntent.id,
     "successful"
@@ -199,12 +201,12 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     provider: "stripe",
     provider_tx_id: String(paymentIntent.id),
     status: String(
-      paymentIntent.status === "complete" ? "successful" : "failed"
+      paymentIntent.status === "succeeded" ? "successful" : "failed"
     ),
     payment_date: toUTCDate(new Date()),
     order_id: order.order_id,
     payload: { meta },
-    amount: Math.round(Number(paymentIntent.amount_total / 100)),
+    amount: Math.round(Number(amount / 100)),
     currency: String("USD"),
     payment_fulfillment: {},
   };
@@ -245,7 +247,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
 
   const payment_information: PaymentStatusTypes = {
     status: "completed",
-    transaction_value: paymentIntent.amount_total / 100,
+    transaction_value: amount / 100,
     transaction_date: date,
     transaction_reference: paymentIntent.id,
   };
@@ -312,7 +314,10 @@ export async function runPurchasePostWorkflows(
   meta: MetaSchema & { commission: string }
 ) {
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
-  const price = formatPrice(paymentIntent.amount_received / 100, currency);
+  const price = formatPrice(
+    paymentIntent.amount_received ?? paymentIntent.amount / 100,
+    currency
+  );
 
   const [buyerPush, sellerPush] = await Promise.all([
     DeviceManagement.findOne(
@@ -504,7 +509,8 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     const expiryDate = getSubscriptionExpiryDate(planInterval);
 
     const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
-      amount: Number(paymentIntent.amount) / 100,
+      amount:
+        Number(paymentIntent.amount_received ?? paymentIntent.amount) / 100,
       payment_ref: paymentIntent.id,
       date: nowUTC,
       gallery_id: meta.gallery_id,

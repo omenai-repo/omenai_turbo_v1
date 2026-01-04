@@ -3,14 +3,19 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { NotificationPayload } from "@omenai/shared-types";
+
+import { meta, paymentIntent } from "./p";
 
 export async function POST() {
   try {
     const workflowID = await createWorkflow(
-      "/api/workflows",
-      `test_workflow${generateDigit(2)}`
+      "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
+      `stripe_payment_workflow_${paymentIntent.id}`,
+      JSON.stringify({
+        provider: "stripe",
+        meta,
+        checkoutSession: paymentIntent,
+      })
     );
     if (!workflowID) throw new ServerError("Workflow failed");
 

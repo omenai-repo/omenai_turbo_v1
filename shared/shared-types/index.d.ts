@@ -446,7 +446,7 @@ export type PaymentStatusTypes = {
 };
 
 export type PaymentLedgerTypes = {
-  provider: "stripe" | "flutterwave";
+  provider: PurchaseTransactionModelSchemaTypes["provider"];
   provider_tx_id: string;
   status: string;
   payment_date: Date;
@@ -596,6 +596,7 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_date: Date;
   trans_recipient_role: "gallery" | "artist";
   status: "successful" | "processing" | "failed";
+  provider: "flutterwave" | "stripe";
   createdBy?: "webhook" | "verification"; // Who created this record
   verifiedAt?: Date; // When verification route processed it
   webhookReceivedAt?: Date; // When webhook received

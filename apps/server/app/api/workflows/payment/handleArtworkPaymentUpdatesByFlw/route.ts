@@ -36,11 +36,11 @@ type FulfillmentStepResult = {
 
 export const { POST } = serve<Payload>(async (ctx) => {
   // Retrieve the payload here for use within your runs
-  const payload: Payload = ctx.requestPayload;
-  const amount = payload.verified_transaction.data.amount;
-  const transaction_id = payload.verified_transaction.data.id;
-  const meta = payload.meta;
-  const transaction_status = payload.verified_transaction.data.status;
+  const { provider, meta, verified_transaction }: Payload = ctx.requestPayload;
+  const amount = verified_transaction.data.amount;
+  const transaction_id = verified_transaction.data.id;
+
+  const transaction_status = verified_transaction.data.status;
 
   // Implement your workflow logic within ctx.run
   const update_run = await ctx.run(
@@ -82,7 +82,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
         transaction_id,
         exclusivity_uphold_status,
         meta,
-        transaction_status
+        transaction_status,
+        provider
       );
 
       return response;
@@ -112,7 +113,8 @@ async function handlePaymentTransactionUpdates(
   transaction_id: string,
   exclusivity_uphold_status: ExclusivityUpholdStatus,
   meta: MetaSchema,
-  transaction_status: "failed" | "successful" | "processing"
+  transaction_status: "failed" | "successful" | "processing",
+  provider: PaymentLedgerTypes["provider"]
 ) {
   const paymentFulfillmentStatus: PaymentLedgerTypes["payment_fulfillment"] = {
     transaction_created: "failed",
@@ -150,6 +152,7 @@ async function handlePaymentTransactionUpdates(
       createdBy: "webhook",
       webhookReceivedAt: new Date(),
       webhookConfirmed: true,
+      provider,
     };
 
     // Perform DB update operations in a single promise
