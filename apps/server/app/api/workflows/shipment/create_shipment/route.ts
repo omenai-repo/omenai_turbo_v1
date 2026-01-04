@@ -37,10 +37,10 @@ type OrderWithTimestamps = CreateOrderModelTypes & {
 };
 
 type ShipmentAction =
-    | "ALREADY_COMPLETED"
-    | "RECOVER_WAYBILL"
-    | "SCHEDULE_SHIPMENT"
-    | "CREATE_SHIPMENT";
+  | "ALREADY_COMPLETED"
+  | "RECOVER_WAYBILL"
+  | "SCHEDULE_SHIPMENT"
+  | "CREATE_SHIPMENT";
 
 /* -------------------------------------------------------------------------- */
 /*                             SHIPMENT API CALL                               */
@@ -95,16 +95,16 @@ async function cleanupLock(order: OrderWithTimestamps) {
   });
 }
 
-async function handleCompletedShipment(order: OrderWithTimestamps, orderId: string) {
+async function handleCompletedShipment(
+  order: OrderWithTimestamps,
+  orderId: string
+) {
   await FailedJob.deleteOne({ jobId: orderId, jobType: "create_shipment" });
   await WaybillCache.deleteOne({ order_id: orderId });
 }
 
 async function handleWaybillRecovery(orderId: string) {
-  const cache = await WaybillCache.findOne(
-      { order_id: orderId },
-      "pdf_base64"
-  );
+  const cache = await WaybillCache.findOne({ order_id: orderId }, "pdf_base64");
 
   if (!cache) {
     throw new Error("Waybill missing. Contact support.");
@@ -114,18 +114,16 @@ async function handleWaybillRecovery(orderId: string) {
 }
 
 function resolveShipmentAction(order: OrderWithTimestamps): ShipmentAction {
-  const trackingId =
-      order.shipping_details.shipment_information.tracking.id;
+  const trackingId = order.shipping_details.shipment_information.tracking.id;
 
-  const waybill =
-      order.shipping_details.shipment_information.waybill_document;
+  const waybill = order.shipping_details.shipment_information.waybill_document;
 
   if (trackingId && waybill) return "ALREADY_COMPLETED";
   if (trackingId && !waybill) return "RECOVER_WAYBILL";
 
   if (
-      order.exhibition_status?.status === "pending" &&
-      order.exhibition_status.exhibition_end_date
+    order.exhibition_status?.status === "pending" &&
+    order.exhibition_status.exhibition_end_date
   ) {
     return "SCHEDULE_SHIPMENT";
   }
@@ -133,12 +131,11 @@ function resolveShipmentAction(order: OrderWithTimestamps): ShipmentAction {
   return "CREATE_SHIPMENT";
 }
 
-
 async function executeShipmentAction(
-    action: ShipmentAction,
-    order: OrderWithTimestamps,
-    orderId: string,
-    client: any
+  action: ShipmentAction,
+  order: OrderWithTimestamps,
+  orderId: string,
+  client: any
 ) {
   const actionMap: Record<ShipmentAction, () => Promise<void>> = {
     ALREADY_COMPLETED: async () => {
@@ -161,7 +158,6 @@ async function executeShipmentAction(
   await actionMap[action]();
 }
 
-
 async function scheduleShipment(order: OrderWithTimestamps, client: any) {
   const session = await client.startSession();
 
@@ -169,19 +165,19 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
     session.startTransaction();
 
     await ScheduledShipment.updateOne(
-        { order_id: order.order_id },
-        {
-          $set: {
-            order_id: order.order_id,
-            executeAt: toUTCDate(order.exhibition_status!.exhibition_end_date),
-          },
+      { order_id: order.order_id },
+      {
+        $set: {
+          order_id: order.order_id,
+          executeAt: toUTCDate(order.exhibition_status!.exhibition_end_date),
         },
-        { upsert: true }
+      },
+      { upsert: true }
     ).session(session);
 
     await CreateOrder.updateOne(
-        { order_id: order.order_id },
-        { $set: { "exhibition_status.status": "scheduled" } }
+      { order_id: order.order_id },
+      { $set: { "exhibition_status.status": "scheduled" } }
     ).session(session);
 
     await session.commitTransaction();
@@ -226,39 +222,39 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
 
   await ScheduledShipment.deleteOne({ order_id: order.order_id });
 
-  await WaybillCache.create({
-    order_id: orderId,
-    pdf_base64: shipment.data.documents[0].content,
-  });
+  await WaybillCache.updateOne(
+    { order_id: orderId },
+    { $setOnInsert: { pdf_base64: shipment.data.documents[0].content } },
+    { upsert: true }
+  );
 
   await CreateOrder.updateOne(
-      { order_id: orderId },
-      {
-        $set: {
-          "shipping_details.shipment_information.tracking.id":
+    { order_id: orderId },
+    {
+      $set: {
+        "shipping_details.shipment_information.tracking.id":
           shipment.data.shipmentTrackingNumber,
-          "shipping_details.shipment_information.tracking.link":
-              `${tracking_url()}?tracking_id=${shipment.data.shipmentTrackingNumber}`,
-          "shipping_details.shipment_information.estimates":
+        "shipping_details.shipment_information.tracking.link": `${tracking_url()}?tracking_id=${shipment.data.shipmentTrackingNumber}`,
+        "shipping_details.shipment_information.estimates":
           shipment.data.estimatedDeliveryDate,
-          "shipping_details.shipment_information.planned_shipping_date":
+        "shipping_details.shipment_information.planned_shipping_date":
           shipment.data.plannedShippingDateAndTime,
-          "shipping_details.shipment_information.tracking.delivery_status":
-              "In Transit",
-        },
-      }
+        "shipping_details.shipment_information.tracking.delivery_status":
+          "In Transit",
+      },
+    }
   );
 
   await sendShipmentEmailWorkflow(
-      shipmentData.receiver_data.fullname,
-      shipmentData.receiver_data.email,
-      shipmentData.seller_details.fullname,
-      shipmentData.seller_details.email,
-      shipment.data.shipmentTrackingNumber,
-      shipment.data.documents[0].content,
-      shipmentData.artwork_name,
-      order.artwork_data.url,
-      order.artwork_data.pricing.usd_price
+    shipmentData.receiver_data.fullname,
+    shipmentData.receiver_data.email,
+    shipmentData.seller_details.fullname,
+    shipmentData.seller_details.email,
+    shipment.data.shipmentTrackingNumber,
+    shipment.data.documents[0].content,
+    shipmentData.artwork_name,
+    order.artwork_data.url,
+    order.artwork_data.pricing.usd_price
   );
 
   await finalizeWaybill(orderId, shipment.data.documents[0].content);
@@ -292,9 +288,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
       return true;
     } catch (error: any) {
       createErrorRollbarReport(
-          "Shipment creation workflow — unexpected error",
-          error,
-          500
+        "Shipment creation workflow — unexpected error",
+        error,
+        500
       );
 
       return handleWorkflowError(error, { order_id });
