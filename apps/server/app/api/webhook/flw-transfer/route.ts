@@ -124,8 +124,6 @@ async function checkAndHandleTransferStatus(
 
 async function handleTransferPending(verified_transaction: any, session: any) {
   try {
-    session.startTransaction();
-
     const res = await WalletTransaction.updateOne(
       { trans_flw_ref_id: verified_transaction.data.id },
       { $set: { trans_status: "PENDING" } }
@@ -135,7 +133,6 @@ async function handleTransferPending(verified_transaction: any, session: any) {
       throw new Error("Failed to update wallet transaction");
     }
 
-    await session.commitTransaction();
     return { isOk: true };
   } catch (error) {
     await session.abortTransaction();
@@ -145,15 +142,11 @@ async function handleTransferPending(verified_transaction: any, session: any) {
       500
     );
     return { isOk: false };
-  } finally {
-    await session.endSession();
   }
 }
 
 async function handleTransferSuccess(verified_transaction: any, session: any) {
   try {
-    session.startTransaction();
-
     const res = await WalletTransaction.updateOne(
       { trans_flw_ref_id: verified_transaction.data.id },
       { $set: { trans_status: "SUCCESSFUL" } }
@@ -163,7 +156,6 @@ async function handleTransferSuccess(verified_transaction: any, session: any) {
       throw new Error("Failed to update wallet transaction");
     }
 
-    await session.commitTransaction();
     const artist = await AccountArtist.findOne({
       wallet_id: verified_transaction.data.meta.wallet_id,
     });
@@ -174,22 +166,17 @@ async function handleTransferSuccess(verified_transaction: any, session: any) {
     });
     return { isOk: true };
   } catch (error) {
-    await session.abortTransaction();
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - SUCCESS handler error",
       error,
       500
     );
     return { isOk: false };
-  } finally {
-    await session.endSession();
   }
 }
 
 async function handleTransferFailure(verified_transaction: any, session: any) {
   try {
-    session.startTransaction();
-
     await Promise.all([
       WalletTransaction.updateOne(
         { trans_flw_ref_id: verified_transaction.data.id },
@@ -201,7 +188,6 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
       ),
     ]);
 
-    await session.commitTransaction();
     const artist = await AccountArtist.findOne({
       wallet_id: verified_transaction.data.meta.wallet_id,
     });
@@ -212,15 +198,12 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
     });
     return { isOk: true };
   } catch (error) {
-    await session.abortTransaction();
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - FAILED handler error",
       error,
       500
     );
     return { isOk: false };
-  } finally {
-    await session.endSession();
   }
 }
 
@@ -228,8 +211,6 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
   const { amount, id, meta, status } = verified_transaction.data;
 
   try {
-    session.startTransaction();
-
     const now = toUTCDate(new Date());
     const date_obj = {
       year: now.getFullYear(),
@@ -238,20 +219,26 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
     };
 
     await Promise.all([
-      WalletTransaction.create({
-        wallet_id: meta.wallet_id,
-        trans_amount: amount,
-        trans_status: status,
-        trans_date: date_obj,
-        trans_flw_ref_id: id,
-      }),
+      WalletTransaction.updateOne(
+        { wallet_id: meta.wallet_id, transaction_flw_ref_id: id },
+        {
+          $setOnInsert: {
+            wallet_id: meta.wallet_id,
+            trans_amount: amount,
+            trans_status: status,
+            trans_date: date_obj,
+            trans_flw_ref_id: id,
+          },
+        },
+        { upsert: true }
+      ),
+
       Wallet.updateOne(
         { wallet_id: meta.wallet_id },
         { $inc: { available_balance: -amount } }
       ),
     ]);
 
-    await session.commitTransaction();
     const artist = await AccountArtist.findOne({
       wallet_id: verified_transaction.data.meta.wallet_id,
     });
@@ -262,15 +249,12 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
     });
     return { isOk: true };
   } catch (error) {
-    await session.abortTransaction();
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - CREATION handler error",
       error,
       500
     );
     return { isOk: false };
-  } finally {
-    await session.endSession();
   }
 }
 

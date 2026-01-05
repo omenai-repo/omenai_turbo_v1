@@ -122,11 +122,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         trans_flw_ref_id: result.data.id,
       };
 
-      await WalletTransaction.create({ ...wallet_transaction_payload });
+      await WalletTransaction.updateOne(
+        { wallet_id, trans_flw_ref_id: result.data.id },
+        { $setOnInsert: wallet_transaction_payload },
+        { upsert: true }
+      );
+
       await Wallet.updateOne(
         { wallet_id },
         { $inc: { available_balance: -result.data.amount } }
       );
+
+      //
 
       return NextResponse.json({
         message: "Transfer initiated successfully",

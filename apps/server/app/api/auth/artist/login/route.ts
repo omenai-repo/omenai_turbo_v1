@@ -80,7 +80,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           if (device_push_token)
             await DeviceManagement.updateOne(
               { auth_id: sessionPayload.artist_id },
-              { $set: { device_push_token } },
+              { $setOnInsert: { device_push_token } },
               { upsert: true }
             );
 

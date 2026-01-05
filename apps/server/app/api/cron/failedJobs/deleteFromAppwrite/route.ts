@@ -17,6 +17,7 @@ export async function GET() {
       return NextResponse.json({ message: "No Failed appwrite uploads found" });
 
     const taskPromise: { payload: any; fn: Promise<void | {}> }[] = [];
+
     for (const job of failed_appwrite_jobs) {
       const { payload } = job;
 
@@ -55,6 +56,8 @@ export async function GET() {
         }
       });
     }
+
+    // TODO: Delete fulfilled jobs from DB
 
     return NextResponse.json({ message: fulfilledJobs, rejectedUpdates });
   } catch (error) {
