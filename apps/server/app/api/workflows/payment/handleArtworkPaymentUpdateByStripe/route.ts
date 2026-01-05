@@ -205,17 +205,32 @@ async function updateMassOrderRecords(
   buyer_id: string
 ): Promise<FulfillmentStepResult> {
   try {
-    await CreateOrder.updateMany(
+    const result = await CreateOrder.updateMany(
       {
         "artwork_data.art_id": art_id,
         "buyer_details.id": { $ne: buyer_id },
+
+        // 🔐 idempotency guard
+        availability: { $ne: false },
       },
-      { $set: { availability: false } }
+      {
+        $set: { availability: false },
+      }
     );
 
+    // Case 1: We actually updated some records
+    if (result.modifiedCount > 0) {
+      return {
+        step: "mass_orders_updated",
+        status: "done",
+      };
+    }
+
+    // Case 2: Already updated in a previous run (idempotent success)
     return {
       step: "mass_orders_updated",
       status: "done",
+      reason: "already_updated",
     };
   } catch (error) {
     rollbarServerInstance.error({
@@ -296,6 +311,8 @@ async function handlePaymentTransactionUpdatesByStripe(
     const paymentLedgerPayload: PaymentLedgerPayloadTypes = {
       meta,
       pricing,
+      paymentObj: paymentIntent,
+      provider: "stripe",
     };
     const isAllUpdatesDone = Object.values(paymentFulfillmentStatus).every(
       (status) => status === "done"
@@ -309,6 +326,7 @@ async function handlePaymentTransactionUpdatesByStripe(
           payload: paymentLedgerPayload,
           payment_fulfillment: paymentFulfillmentStatus,
           payment_fulfillment_checks_done: isAllUpdatesDone,
+          needs_manual_review: isAllUpdatesDone && false,
         },
       }
     );

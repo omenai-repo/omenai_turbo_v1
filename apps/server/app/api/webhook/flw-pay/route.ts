@@ -12,11 +12,10 @@ import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
-import { createErrorRollbarReport, MetaSchema } from "../../util";
+import { createErrorRollbarReport, MetaSchema, retry } from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
-import { retry } from "../resource-global";
 /* ----------------------------- Schema ------------------------------------- */
 
 /* ----------------------------- Utilities ---------------------------------- */
@@ -216,6 +215,11 @@ async function handlePurchaseTransaction(
     return NextResponse.json({ status: 200 });
   }
 
+  const paymentObj = {
+    status: verified_transaction.data.status,
+    amount: verified_transaction.data.amount,
+    id: verified_transaction.data.id,
+  };
   // Create an Idempotent payment entry ledger entry immediately
   const paymentLedgerData = {
     provider: "flutterwave",
@@ -223,10 +227,16 @@ async function handlePurchaseTransaction(
     status: String(verified_transaction.data.status),
     payment_date: toUTCDate(new Date()),
     order_id: order_info.order_id,
-    payload: { meta },
+    payload: { provider: "flutterwave", meta, paymentObj },
     amount: Math.round(Number(verified_transaction.data.amount)),
     currency: String(verified_transaction.data.currency),
-    payment_fulfillment: {},
+    payment_fulfillment: {
+      transaction_created: "failed",
+      sale_record_created: "failed",
+      artwork_marked_sold: "failed",
+      mass_orders_updated: "failed",
+      seller_wallet_updated: "failed",
+    },
   };
 
   try {
@@ -297,11 +307,11 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/payment/handleArtworkPaymentUpdatesByFlw",
-        `flw_payment_workflow_${verified_transaction.data.id}`,
+        `flw_payment_workflow_${paymentObj.id}`,
         JSON.stringify({
           provider: "flutterwave",
           meta,
-          verified_transaction,
+          verified_transaction: paymentObj,
         })
       )
     );

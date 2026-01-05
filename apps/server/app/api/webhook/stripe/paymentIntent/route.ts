@@ -45,7 +45,7 @@ import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { redis } from "@omenai/upstash-config";
 import { NextResponse } from "next/server";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
-import { retry } from "../../resource-global";
+import { retry } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
@@ -197,6 +197,17 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
   const order = await findPurchaseOrder(meta);
   if (!order) return NextResponse.json({ status: 400 });
 
+  const paymentObj: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  } = {
+    amount: paymentIntent.amount,
+    amount_received: paymentIntent.amount_received,
+    id: paymentIntent.id,
+    currency: paymentIntent.currency,
+  };
   const paymentLedgerData = {
     provider: "stripe",
     provider_tx_id: String(paymentIntent.id),
@@ -205,10 +216,15 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     ),
     payment_date: toUTCDate(new Date()),
     order_id: order.order_id,
-    payload: { meta },
+    payload: { meta, provider: "stripe", paymentObj },
     amount: Math.round(Number(amount / 100)),
     currency: String("USD"),
-    payment_fulfillment: {},
+    payment_fulfillment: {
+      transaction_created: "failed",
+      sale_record_created: "failed",
+      artwork_marked_sold: "failed",
+      mass_orders_updated: "failed",
+    },
   };
 
   try {
@@ -269,7 +285,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     );
   }
 
-  return processPurchaseTransaction(paymentIntent, meta, order);
+  return processPurchaseTransaction(paymentObj, meta, order);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -277,7 +293,12 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
 /* -------------------------------------------------------------------------- */
 
 async function processPurchaseTransaction(
-  paymentIntent: any,
+  paymentIntent: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  },
   meta: MetaSchema & { commission: string },
   order: any
 ) {
@@ -309,7 +330,12 @@ async function processPurchaseTransaction(
 /* -------------------------------------------------------------------------- */
 
 export async function runPurchasePostWorkflows(
-  paymentIntent: any,
+  paymentIntent: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  },
   order: any,
   meta: MetaSchema & { commission: string }
 ) {

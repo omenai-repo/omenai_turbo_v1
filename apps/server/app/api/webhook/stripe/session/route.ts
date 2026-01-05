@@ -21,7 +21,7 @@ import { createErrorRollbarReport } from "../../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
-import { retry } from "../../resource-global";
+import { retry } from "../../../util";
 
 /* -------------------------------------------------------------------------- */
 /*                            STRIPE VERIFICATION                              */
@@ -120,6 +120,18 @@ async function handleCheckoutCompleted(event: any) {
 
   if (!order) return NextResponse.json({ status: 400 });
 
+  const paymentObj: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  } = {
+    amount: paymentIntent.amount,
+    amount_received: paymentIntent.amount_received,
+    id: paymentIntent.id,
+    currency: paymentIntent.currency,
+  };
+
   const paymentLedgerData = {
     provider: "stripe",
     provider_tx_id: String(paymentIntent.id),
@@ -128,10 +140,15 @@ async function handleCheckoutCompleted(event: any) {
     ),
     payment_date: toUTCDate(new Date()),
     order_id: order.order_id,
-    payload: { meta },
+    payload: { meta, provider: "stripe", paymentObj },
     amount: Math.round(Number(amount / 100)),
-    currency: String("USD"),
-    payment_fulfillment: {},
+    currency: String(paymentIntent.currency.toUpperCase()),
+    payment_fulfillment: {
+      transaction_created: "failed",
+      sale_record_created: "failed",
+      artwork_marked_sold: "failed",
+      mass_orders_updated: "failed",
+    },
   };
 
   try {
@@ -191,7 +208,7 @@ async function handleCheckoutCompleted(event: any) {
       { status: 400 }
     );
   }
-  return processStripePayment(paymentIntent, meta, order);
+  return processStripePayment(paymentObj, meta, order);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -199,7 +216,12 @@ async function handleCheckoutCompleted(event: any) {
 /* -------------------------------------------------------------------------- */
 
 async function processStripePayment(
-  paymentIntent: any,
+  paymentIntent: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  },
   meta: any,
   order_info: any
 ) {
@@ -228,7 +250,12 @@ async function processStripePayment(
 /* -------------------------------------------------------------------------- */
 
 export async function runPostPaymentWorkflows(
-  paymentIntent: any,
+  paymentIntent: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  },
   order_info: any,
   meta: any
 ) {

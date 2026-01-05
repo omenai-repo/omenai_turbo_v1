@@ -17,7 +17,7 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { retry } from "../../webhook/resource-global";
+import { retry } from "../../util";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
@@ -121,6 +121,17 @@ async function verifyStripeTransaction(
   if (!order) {
     throw new ServerError("Order not found");
   }
+  const paymentObj: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  } = {
+    amount: paymentIntent.amount,
+    amount_received: paymentIntent.amount_received,
+    id: paymentIntent.id,
+    currency: paymentIntent.currency,
+  };
 
   // ✅ Correct PaymentIntent amount handling
   const amount = paymentIntent.amount_received ?? paymentIntent.amount ?? 0;
@@ -131,10 +142,15 @@ async function verifyStripeTransaction(
     status: "successful",
     payment_date: date,
     order_id: order.order_id,
-    payload: { meta },
+    payload: { meta, provider: "stripe", paymentObj },
     amount: Math.round(amount / 100),
     currency: paymentIntent.currency.toUpperCase(),
-    payment_fulfillment: {},
+    payment_fulfillment: {
+      transaction_created: "failed",
+      sale_record_created: "failed",
+      artwork_marked_sold: "failed",
+      mass_orders_updated: "failed",
+    },
   };
 
   await retry(
@@ -172,7 +188,7 @@ async function verifyStripeTransaction(
     throw new ServerError("Order update failed");
   }
 
-  await runPurchasePostWorkflows(paymentIntent, order, meta);
+  await runPurchasePostWorkflows(paymentObj, order, meta);
 
   try {
     await releaseOrderLock(meta.art_id, meta.buyer_id);
@@ -225,7 +241,12 @@ async function resolvePaymentIntent({
 /* ----------------------- Post-payment workflows ------------------------ */
 
 async function runPurchasePostWorkflows(
-  paymentIntent: any,
+  paymentIntent: {
+    amount: number;
+    amount_received: number;
+    id: string;
+    currency: string;
+  },
   order: CreateOrderModelTypes,
   meta: MetaSchema & { commission: string }
 ) {

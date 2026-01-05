@@ -19,7 +19,6 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { MetaSchema } from "@omenai/shared-types";
-import z from "zod";
 
 // Map the payload of the expected data here
 type Payload = {
@@ -37,10 +36,10 @@ type FulfillmentStepResult = {
 export const { POST } = serve<Payload>(async (ctx) => {
   // Retrieve the payload here for use within your runs
   const { provider, meta, verified_transaction }: Payload = ctx.requestPayload;
-  const amount = verified_transaction.data.amount;
-  const transaction_id = verified_transaction.data.id;
+  const amount = verified_transaction.amount;
+  const transaction_id = verified_transaction.id;
 
-  const transaction_status = verified_transaction.data.status;
+  const transaction_status = verified_transaction.status;
 
   // Implement your workflow logic within ctx.run
   const update_run = await ctx.run(
@@ -83,7 +82,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
         exclusivity_uphold_status,
         meta,
         transaction_status,
-        provider
+        provider,
+        verified_transaction
       );
 
       return response;
@@ -114,7 +114,8 @@ async function handlePaymentTransactionUpdates(
   exclusivity_uphold_status: ExclusivityUpholdStatus,
   meta: MetaSchema,
   transaction_status: "failed" | "successful" | "processing",
-  provider: PaymentLedgerTypes["provider"]
+  provider: PaymentLedgerTypes["provider"],
+  verifiedTransaction: any
 ) {
   const paymentFulfillmentStatus: PaymentLedgerTypes["payment_fulfillment"] = {
     transaction_created: "failed",
@@ -185,6 +186,8 @@ async function handlePaymentTransactionUpdates(
     const paymentLedgerPayload: PaymentLedgerPayloadTypes = {
       meta,
       pricing,
+      paymentObj: verifiedTransaction,
+      provider: "flutterwave",
     };
     const isAllUpdatesDone = Object.values(paymentFulfillmentStatus).every(
       (status) => status === "done"
@@ -431,22 +434,37 @@ export async function updateArtworkRecordAsSold(
   }
 }
 
-export async function updateMassOrderRecords(
+async function updateMassOrderRecords(
   art_id: string,
   buyer_id: string
 ): Promise<FulfillmentStepResult> {
   try {
-    await CreateOrder.updateMany(
+    const result = await CreateOrder.updateMany(
       {
-        "artwork_data.art_id": art_id,
+        artwork_art_id: art_id,
         "buyer_details.id": { $ne: buyer_id },
+
+        // 🔐 idempotency guard
+        availability: { $ne: false },
       },
-      { $set: { availability: false } }
+      {
+        $set: { availability: false },
+      }
     );
 
+    // Case 1: We actually updated some records
+    if (result.modifiedCount > 0) {
+      return {
+        step: "mass_orders_updated",
+        status: "done",
+      };
+    }
+
+    // Case 2: Already updated in a previous run (idempotent success)
     return {
       step: "mass_orders_updated",
       status: "done",
+      reason: "already_updated",
     };
   } catch (error) {
     rollbarServerInstance.error({

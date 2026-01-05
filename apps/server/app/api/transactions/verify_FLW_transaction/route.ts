@@ -260,12 +260,18 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       );
     }
 
+    const paymentObj = {
+      status: verified_transaction.data.status,
+      amount: verified_transaction.data.amount,
+      id: verified_transaction.data.id,
+    };
+
     const paymentLedgerData = {
       provider: "flutterwave",
       provider_tx_id: String(verified_transaction.data.id),
       status: flwStatus,
       payment_date: toUTCDate(new Date()),
-      payload: { meta },
+      payload: { meta, provider: "flutterwave", paymentObj },
       amount: Math.round(Number(verified_transaction.data.amount)),
       currency: String(verified_transaction.data.currency),
       payment_fulfillment: {},

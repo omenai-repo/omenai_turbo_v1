@@ -48,8 +48,17 @@ const paymentLedger = new Schema<PaymentLedgerTypes>(
       required: true,
       default: false,
     },
-    retry_count: { type: Number, required: true, default: 0 },
-    next_retry_date: { type: Date, required: false },
+    reconciliation_attempts: {
+      type: Number,
+      default: 0,
+    },
+    last_reconciliation_at: {
+      type: Date,
+    },
+    needs_manual_review: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

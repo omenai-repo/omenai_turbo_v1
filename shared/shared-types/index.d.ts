@@ -456,8 +456,9 @@ export type PaymentLedgerTypes = {
   payload: PaymentLedgerPayloadTypes;
   payment_fulfillment: PaymentFulfillmentStatusTypes;
   payment_fulfillment_checks_done: boolean;
-  retry_count: number;
-  next_retry_date?: Date;
+  reconciliation_attempts: number;
+  needs_manual_review: boolean;
+  last_reconciliation_at?: Date;
 };
 
 export type MetaSchema = {
@@ -476,6 +477,8 @@ export type MetaSchema = {
 
 export type PaymentLedgerPayloadTypes = {
   meta: any;
+  paymentObj: any;
+  provider: PaymentLedgerTypes["provider"];
   pricing: PurchaseTransactionPricing;
 };
 
