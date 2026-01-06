@@ -1,3 +1,4 @@
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Html,
   Head,
@@ -16,16 +17,18 @@ interface Props {
   name: string;
   artwork: string;
   amount: string;
-  transactionId: string;
-  date: string;
+  order_id: string;
+  order_date: string;
+  transaction_id: string;
 }
 
 export const PaymentSuccessMailArtist = ({
   name,
   artwork,
   amount,
-  transactionId,
-  date,
+  order_date,
+  order_id,
+  transaction_id,
 }: Props) => {
   return (
     <Html>
@@ -42,8 +45,9 @@ export const PaymentSuccessMailArtist = ({
 
           <Section style={section}>
             <Text style={text}>
-              The payment has been processed and the funds have been added to
-              your <strong>pending balance</strong> in your wallet.
+              The payment of <strong> {formatPrice(amount, "USD")}</strong> has
+              been processed and the funds have been added to your{" "}
+              <strong>pending balance</strong> in your wallet.
             </Text>
             <Text style={text}>
               A <strong>shipment will be created</strong> and a{" "}
@@ -54,32 +58,55 @@ export const PaymentSuccessMailArtist = ({
               shipment.
             </Text>
             <Text style={text}>
-              Further shipping instructions and the waybill will be sent to you
-              via email.
+              Further shipping instructions and the waybill details will be sent
+              to you via email.
             </Text>
           </Section>
 
           <Hr style={hr} />
+          <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
+            <Text className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4 text-center">
+              Transaction Summary
+            </Text>
 
-          <Heading style={subHeading}>🧾 Payment Receipt</Heading>
-          <Section style={receiptSection}>
-            <div style={receiptRow}>
-              <span style={label}>Artwork:</span> <span>{artwork}</span>
-            </div>
-            <div style={receiptRow}>
-              <span style={label}>Amount:</span> <span>{amount}</span>
-            </div>
-            <div style={receiptRow}>
-              <span style={label}>Transaction ID:</span>{" "}
-              <span>{transactionId}</span>
-            </div>
-            <div style={receiptRow}>
-              <span style={label}>Date:</span> <span>{date}</span>
-            </div>
-          </Section>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Artwork</Text>
+                <Text className="text-gray-900 font-medium text-sm">
+                  {artwork}
+                </Text>
+              </div>
 
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Sale Amount</Text>
+                <Text className="text-gray-900 font-semibold text-sm">
+                  {amount}
+                </Text>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Order ID</Text>
+                <Text className="text-gray-900 font-mono text-sm">
+                  #{order_id}
+                </Text>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Transaction ID</Text>
+                <Text className="text-gray-900 font-mono text-sm">
+                  {transaction_id}
+                </Text>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Date</Text>
+                <Text className="text-gray-900 font-medium text-sm">
+                  {order_date}
+                </Text>
+              </div>
+            </div>
+          </div>
           <Hr style={hr} />
-
           <Text style={text}>
             Once the buyer receives the piece, the funds will be{" "}
             <strong>unlocked</strong> and available for withdrawal.
@@ -154,7 +181,7 @@ const label = {
   fontWeight: "bold",
 } as const;
 
-const hr = {
+export const hr = {
   border: "none",
   borderTop: "1px solid #EAEAEA",
   margin: "20px 0",

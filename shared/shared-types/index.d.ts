@@ -1,3 +1,4 @@
+import { InvoiceLineItemsData } from "./../../node_modules/@omenai/shared-types/index.d";
 import { Stripe } from "stripe";
 import z from "zod";
 // Create discriminated union with role as discriminator
@@ -1221,4 +1222,42 @@ export type WaitListTypes = {
     active: boolean;
     redeemed: boolean;
   };
+};
+
+export type InvoiceTypes = {
+  invoiceNumber: string;
+  recipient: {
+    userId: string;
+    name: string;
+    email: string;
+    address: AddressTypes;
+  };
+  orderId: string;
+  currency: string;
+  lineItems: InvoiceLineItemsData[];
+  pricing: InvoicePriceData;
+  paidAt: Date;
+  storage: InvoiceStorageData;
+  document_created: boolean;
+  receipt_sent: boolean;
+};
+
+export type InvoicePriceData = {
+  taxes: number;
+  shipping: number;
+  unitPrice: number;
+  total: number;
+  discount?: number;
+};
+
+export type InvoiceLineItemsData = {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+};
+
+export type InvoiceStorageData = {
+  provider: "appwrite";
+  fileId: string;
+  url?: string;
 };

@@ -12,6 +12,7 @@ type EmailPayload = {
   attachments?: {
     filename: string;
     content: string;
+    contentType?: string;
   }[];
 };
 

@@ -7,6 +7,7 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import {
   CreateOrderModelTypes,
+  InvoiceTypes,
   MetaSchema,
   NotificationPayload,
   PaymentStatusTypes,
@@ -256,6 +257,47 @@ async function runPurchasePostWorkflows(
     currency
   );
 
+  const buyerAddress = order.shipping_details.addresses.destination;
+  const buyerName = order.buyer_details.name;
+  const buyerEmail = order.buyer_details.email;
+  const buyerId = order.buyer_details.id;
+  const { tax_fees, unit_price, shipping_cost } = meta;
+
+  const invoice: Omit<
+    InvoiceTypes,
+    "storage" | "document_created" | "receipt_sent"
+  > = {
+    invoiceNumber: `OMENAI-INV-${order.order_id}`,
+    recipient: {
+      address: buyerAddress,
+      name: buyerName,
+      email: buyerEmail,
+      userId: buyerId,
+    },
+    orderId: order.order_id,
+    currency: paymentIntent.currency.toUpperCase(),
+    lineItems: [
+      {
+        description: order.artwork_data.title,
+        quantity: 1,
+        unitPrice: Math.round(Number(unit_price)),
+      },
+      {
+        description: "Certificate of Authenticity",
+        quantity: 1,
+        unitPrice: 0,
+      },
+    ],
+    pricing: {
+      taxes: Math.round(Number(tax_fees)),
+      shipping: Math.round(Number(shipping_cost)),
+      unitPrice: Math.round(Number(unit_price)),
+      total: (paymentIntent.amount_received ?? paymentIntent.amount) / 100,
+      discount: 0,
+    },
+    paidAt: toUTCDate(new Date()),
+  };
+
   const [buyerPush, sellerPush] = await Promise.all([
     DeviceManagement.findOne(
       { auth_id: order.buyer_details.id },
@@ -288,7 +330,7 @@ async function runPurchasePostWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_buyer_${order.order_id}`,
+        `notif_buyer_${order.order_id}_${toUTCDate(new Date())}`,
         JSON.stringify(payload)
       )
     );
@@ -316,7 +358,7 @@ async function runPurchasePostWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_seller_${order.order_id}`,
+        `notif_seller_${order.order_id}_${toUTCDate(new Date())}`,
         JSON.stringify(payload)
       )
     );
@@ -330,7 +372,7 @@ async function runPurchasePostWorkflows(
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
-      `send_payment_success_mail_${order.order_id}`,
+      `send_payment_success_mail_${order.order_id}_${toUTCDate(new Date())}`,
       JSON.stringify({
         buyer_email: order.buyer_details.email,
         buyer_name: order.buyer_details.name,
@@ -341,15 +383,23 @@ async function runPurchasePostWorkflows(
         price,
         seller_email: order.seller_details.email,
         seller_name: order.seller_details.name,
+        seller_entity: "gallery",
       })
     ),
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
-      `stripe_payment_workflow_${paymentIntent.id}`,
+      `stripe_payment_workflow_${paymentIntent.id}_${toUTCDate(new Date())}`,
       JSON.stringify({
         provider: "stripe",
         meta,
         paymentIntent,
+      })
+    ),
+    createWorkflow(
+      "/api/workflows/emails/sendPaymentInvoice",
+      `send_payment_invoice${invoice.invoiceNumber}_${toUTCDate(new Date())}`,
+      JSON.stringify({
+        invoice,
       })
     ),
     ...jobs,

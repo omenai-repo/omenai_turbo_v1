@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { NotificationPayload, PaymentStatusTypes } from "@omenai/shared-types";
+import {
+  InvoiceTypes,
+  NotificationPayload,
+  PaymentStatusTypes,
+} from "@omenai/shared-types";
 import { z } from "zod";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
@@ -101,7 +105,7 @@ export async function sendPushNotifications(order_info: any) {
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notification_workflow_buyer_${order_info.order_id}_${generateDigit(2)}`,
+        `notification_workflow_buyer_${order_info.order_id}_${toUTCDate(new Date())}`,
         JSON.stringify(buyerPayload)
       ).catch((err) => {
         createErrorRollbarReport(
@@ -135,7 +139,7 @@ export async function sendPushNotifications(order_info: any) {
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notification_workflow_seller_${order_info.order_id}_${generateDigit(2)}`,
+        `notification_workflow_seller_${order_info.order_id}_${toUTCDate(new Date())}`,
         JSON.stringify(sellerPayload)
       ).catch((err) => {
         createErrorRollbarReport(
@@ -301,13 +305,54 @@ async function handlePurchaseTransaction(
     );
   }
 
+  const buyerAddress = order_info.shipping_details.addresses.destination;
+  const buyerName = order_info.buyer_details.name;
+  const buyerEmail = order_info.buyer_details.email;
+  const buyerId = order_info.buyer_details.id;
+  const { tax_fees, unit_price, shipping_cost } = meta;
+
+  const invoice: Omit<
+    InvoiceTypes,
+    "storage" | "document_created" | "receipt_sent"
+  > = {
+    invoiceNumber: `OMENAI-INV-${order_info.order_id}`,
+    recipient: {
+      address: buyerAddress,
+      name: buyerName,
+      email: buyerEmail,
+      userId: buyerId,
+    },
+    orderId: order_info.order_id,
+    currency: "USD",
+    lineItems: [
+      {
+        description: order_info.artwork_data.title,
+        quantity: 1,
+        unitPrice: Math.round(Number(unit_price)),
+      },
+      {
+        description: "Certificate of Authenticity",
+        quantity: 1,
+        unitPrice: 0,
+      },
+    ],
+    pricing: {
+      taxes: Math.round(Number(tax_fees)),
+      shipping: Math.round(Number(shipping_cost)),
+      unitPrice: Math.round(Number(unit_price)),
+      total: Math.round(Number(verified_transaction.data.amount)),
+      discount: 0,
+    },
+    paidAt: toUTCDate(new Date()),
+  };
+
   try {
     // Create DB update workflow
 
     await fireAndForget(
       createWorkflow(
         "/api/workflows/payment/handleArtworkPaymentUpdatesByFlw",
-        `flw_payment_workflow_${paymentObj.id}`,
+        `flw_payment_workflow_${paymentObj.id}_${toUTCDate(new Date())}`,
         JSON.stringify({
           provider: "flutterwave",
           meta,
@@ -319,8 +364,18 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
-        `create_shipment_${order_info.order_id}`,
+        `create_shipment_${order_info.order_id}_${toUTCDate(new Date())}`,
         JSON.stringify({ order_id: order_info.order_id })
+      )
+    );
+
+    await fireAndForget(
+      createWorkflow(
+        "/api/workflows/emails/sendPaymentInvoice",
+        `send_payment_invoice${invoice.invoiceNumber}_${toUTCDate(new Date())}`,
+        JSON.stringify({
+          invoice,
+        })
       )
     );
 
@@ -329,7 +384,7 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/emails/sendPaymentSuccessMail",
-        `send_payment_success_mail_${generateDigit(6)}`,
+        `send_payment_success_mail_${order_info.order_id}_${toUTCDate(new Date())}`,
         JSON.stringify({
           buyer_email: order_info.buyer_details.email,
           buyer_name: order_info.buyer_details.name,
@@ -337,9 +392,10 @@ async function handlePurchaseTransaction(
           order_id: order_info.order_id,
           order_date: order_info.createdAt,
           transaction_id: verified_transaction.data.id,
-          price: verified_transaction.data.amount,
+          price: formatPrice(Math.round(Number(meta.unit_price)), "USD"),
           seller_email: order_info.seller_details.email,
           seller_name: order_info.seller_details.name,
+          seller_entity: "artist",
         })
       )
     );

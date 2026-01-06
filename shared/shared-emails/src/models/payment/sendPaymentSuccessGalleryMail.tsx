@@ -8,7 +8,7 @@ type EmailData = {
   price: string;
   order_id: string;
   order_date: string;
-  transaction_Id: string;
+  transaction_id: string;
 };
 export const sendPaymentSuccessGalleryMail = async ({
   email,
@@ -17,10 +17,10 @@ export const sendPaymentSuccessGalleryMail = async ({
   price,
   order_id,
   order_date,
-  transaction_Id,
+  transaction_id,
 }: EmailData) => {
   // Set up resend here instead
-  await sendMailVerification({
+  const { data, error } = await sendMailVerification({
     prefix: "Omenai orders",
     from: "transactions",
     to: email,
@@ -31,7 +31,19 @@ export const sendPaymentSuccessGalleryMail = async ({
       price,
       order_id,
       order_date,
-      transaction_Id
+      transaction_id
     ),
   });
+
+  if (error)
+    return {
+      error: true,
+      message: "Error sending email",
+    };
+  else {
+    return {
+      error: false,
+      message: "Email sent successfully",
+    };
+  }
 };

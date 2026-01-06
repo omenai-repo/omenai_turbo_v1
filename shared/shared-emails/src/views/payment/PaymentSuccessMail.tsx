@@ -11,14 +11,13 @@ import {
   Img,
   Link,
 } from "@react-email/components";
-import * as React from "react";
 
 interface Props {
   name: string;
   artwork: string;
   amount: string;
-  transactionId: string;
-  date: string;
+  transaction_id: string;
+  order_date: string;
   order_id: string;
 }
 
@@ -26,8 +25,8 @@ export const PurchaseConfirmationEmail = ({
   name,
   artwork,
   amount,
-  transactionId,
-  date,
+  transaction_id,
+  order_date,
   order_id,
 }: Props) => {
   return (
@@ -60,27 +59,54 @@ export const PurchaseConfirmationEmail = ({
             <Text style={text}>
               Please keep an eye on your inbox for further instructions.
             </Text>
+            <Text style={text}>
+              A payment receipt will be sent to you shortly.
+            </Text>
           </Section>
 
           <Hr style={hr} />
+          <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
+            <Text className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4 text-center">
+              Transaction Summary
+            </Text>
 
-          <Heading style={subHeading}>🧾 Purchase Receipt</Heading>
-          <Section style={receiptSection}>
-            <div style={receiptRow}>
-              <span style={label}>Artwork:</span> <span>{artwork}</span>
-            </div>
-            <div style={receiptRow}>
-              <span style={label}>Amount:</span> <span>{amount}</span>
-            </div>
-            <div style={receiptRow}>
-              <span style={label}>Transaction ID:</span>{" "}
-              <span>{transactionId}</span>
-            </div>
-            <div style={receiptRow}>
-              <span style={label}>Date:</span> <span>{date}</span>
-            </div>
-          </Section>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Artwork</Text>
+                <Text className="text-gray-900 font-medium text-sm">
+                  {artwork}
+                </Text>
+              </div>
 
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Unit Price</Text>
+                <Text className="text-gray-900 font-semibold text-sm">
+                  {amount}
+                </Text>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Order ID</Text>
+                <Text className="text-gray-900 font-mono text-sm">
+                  #{order_id}
+                </Text>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Transaction ID</Text>
+                <Text className="text-gray-900 font-mono text-sm">
+                  {transaction_id}
+                </Text>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <Text className="text-gray-600 text-sm">Date</Text>
+                <Text className="text-gray-900 font-medium text-sm">
+                  {order_date}
+                </Text>
+              </div>
+            </div>
+          </div>
           <Hr style={hr} />
 
           <Text style={text}>
