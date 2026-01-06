@@ -10,7 +10,7 @@ export async function createWorkflow(
 ) {
   try {
     const { workflowRunId } = await client.trigger({
-      url: `https://76ae9b452a5e.ngrok-free.app${task_route}`,
+      url: `${getApiUrl()}${task_route}`,
       body: params,
       workflowRunId: workflowRun_id,
       headers: { Origin: "https://omenai.app" },
