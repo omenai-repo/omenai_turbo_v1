@@ -1,25 +1,39 @@
 import { InvoiceTypes } from "@omenai/shared-types";
 
-import { chromium } from "playwright";
+import { chromium as playwrightChromium } from "playwright-core";
+import chromium from "@sparticuz/chromium";
+
 import { renderInvoiceHTML } from "./invoiceTemplate";
-import { uploadInvoicePdf } from "./uploadInvoicePdf";
 
 export async function generateInvoicePdf(
   invoice: Omit<InvoiceTypes, "storage" | "document_created" | "receipt_sent">
 ) {
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  chromium.setGraphicsMode = false;
 
-  await page.setContent(renderInvoiceHTML(invoice), {
-    waitUntil: "networkidle",
+  const browser = await playwrightChromium.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: true,
   });
 
-  const buffer = await page.pdf({
-    format: "A4",
-    printBackground: true,
-  });
+  try {
+    const page = await browser.newPage();
 
-  await browser.close();
+    await page.setContent(renderInvoiceHTML(invoice), {
+      waitUntil: "networkidle",
+    });
 
-  return buffer; // ✅ REAL Buffer
+    return await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "24px",
+        bottom: "24px",
+        left: "24px",
+        right: "24px",
+      },
+    });
+  } finally {
+    await browser.close();
+  }
 }

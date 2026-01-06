@@ -1,5 +1,4 @@
 import { serve } from "@upstash/workflow/nextjs";
-import { NextResponse } from "next/server";
 import { InvoiceTypes } from "@omenai/shared-types";
 import { uploadInvoicePdf } from "@omenai/shared-lib/invoice/uploadInvoicePdf";
 import { generateInvoicePdf } from "@omenai/shared-lib/invoice/generateInvoice";
