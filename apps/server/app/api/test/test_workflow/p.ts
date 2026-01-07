@@ -96,8 +96,8 @@ export const mockInvoice: Omit<
     },
 
     userId: "user_8f93kdk29sl",
-    name: "Aniebiet Philip Umana",
-    email: "dantereus1@gmail.com",
+    name: "Moses Omenai",
+    email: "moses@omenai.net",
   },
 
   orderId: "order_20260115_9876",
