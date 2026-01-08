@@ -444,6 +444,7 @@ export type PaymentStatusTypes = {
   transaction_value: number;
   transaction_date: Date;
   transaction_reference: string;
+  invoice_reference: string;
 };
 
 export type PaymentLedgerTypes = {
@@ -601,6 +602,7 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_recipient_role: "gallery" | "artist";
   status: "successful" | "processing" | "failed";
   provider: "flutterwave" | "stripe";
+  invoice_reference?: string;
   createdBy?: "webhook" | "verification"; // Who created this record
   verifiedAt?: Date; // When verification route processed it
   webhookReceivedAt?: Date; // When webhook received
@@ -947,6 +949,7 @@ export type ShipmentRequestDataTypes = {
     fullname: string;
   };
   invoice_number: string;
+  artwork_price: number;
 };
 
 type ShipmentDeliveryValidation = {

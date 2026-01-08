@@ -6,6 +6,8 @@ import { sendPurchaseInvoice } from "@omenai/shared-emails/src/models/invoice/se
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { Invoice } from "@omenai/shared-models/models/invoice/InvoiceSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 type Payload = {
   invoice: Omit<InvoiceTypes, "storage" | "document_created" | "receipt_sent">;
 };
@@ -89,6 +91,16 @@ export const { POST } = serve<Payload>(async (ctx) => {
         );
       }
       console.log("This is step 5 and it ran");
+
+      await CreateOrder.updateOne(
+        { order_id: invoice.orderId },
+        {
+          $set: {
+            "payment_information.invoice_reference": invoice.invoiceNumber,
+          },
+        }
+      );
+      await PurchaseTransactions.updateOne({});
       return true;
     } catch (error) {
       rollbarServerInstance.error({

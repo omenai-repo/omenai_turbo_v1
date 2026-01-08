@@ -83,17 +83,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         email: saveData.email,
         token: email_token,
       });
-      const tourRedisKey = `tour:${user_id}`;
-
-      try {
-        await redis.set(tourRedisKey, JSON.stringify([]));
-      } catch (error) {
-        createErrorRollbarReport(
-          "Collector Registeration: Error creating redis data for tours",
-          JSON.stringify(error),
-          500
-        );
-      }
 
       return res.json(
         {

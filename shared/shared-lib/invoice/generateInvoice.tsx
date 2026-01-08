@@ -102,10 +102,10 @@ export async function generateInvoicePdf(
   drawTextBlock(
     page,
     [
-      "Omenai Art Marketplace Ltd.",
-      "12 Victoria Island Way",
-      "Lagos, Nigeria",
-      "support@omenai.app",
+      "Omenai Inc.",
+      "2035 S State St",
+      "Illinois, US 60616",
+      "contact@omenai.app",
     ],
     leftMargin,
     addressY - 20,

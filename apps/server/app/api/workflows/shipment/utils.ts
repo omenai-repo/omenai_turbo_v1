@@ -36,7 +36,10 @@ export async function handleWorkflowError(error: any, payload: Payload) {
 
 import { Buffer } from "buffer";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { CreateOrderModelTypes } from "@omenai/shared-types";
+import {
+  CreateOrderModelTypes,
+  ShipmentRequestDataTypes,
+} from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import {
   generateAlphaDigit,
@@ -66,9 +69,11 @@ export async function getMongoClient() {
 
 export function buildShipmentData(
   order: CreateOrderModelTypes & { createdAt: string; updatedAt: string }
-) {
+): Omit<ShipmentRequestDataTypes, "originCountryCode"> {
   return {
-    specialInstructions: order.shipping_details.additional_information,
+    specialInstructions:
+      order.shipping_details.additional_information ??
+      "Please contact me to confirm availability",
     artwork_name: order.artwork_data.title,
     seller_details: {
       address: order.shipping_details.addresses.origin,
@@ -85,7 +90,8 @@ export function buildShipmentData(
       phone: order.buyer_details.phone,
       fullname: order.buyer_details.name,
     },
-    invoice_number: order.order_id,
+    invoice_number: `OMENAI-INV-${order.order_id}`,
+    artwork_price: Number(order.artwork_data.pricing.usd_price),
   };
 }
 
