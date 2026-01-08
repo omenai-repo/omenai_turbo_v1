@@ -11,7 +11,7 @@ export async function POST() {
   try {
     const workflowID = await createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
-      `send_payment_invoice_${mockInvoice.invoiceNumber}_${toUTCDate(new Date())}`,
+      `send_payment_invoice_${mockInvoice.invoiceNumber}_workflow`,
       JSON.stringify({
         invoice: mockInvoice,
       })

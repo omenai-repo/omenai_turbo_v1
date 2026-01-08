@@ -105,7 +105,7 @@ export async function sendPushNotifications(order_info: any) {
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notification_workflow_buyer_${order_info.order_id}_${toUTCDate(new Date())}`,
+        `notification_workflow_buyer_${order_info.order_id}_workflow`,
         JSON.stringify(buyerPayload)
       ).catch((err) => {
         createErrorRollbarReport(
@@ -139,7 +139,7 @@ export async function sendPushNotifications(order_info: any) {
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notification_workflow_seller_${order_info.order_id}_${toUTCDate(new Date())}`,
+        `notification_workflow_seller_${order_info.order_id}_workflow`,
         JSON.stringify(sellerPayload)
       ).catch((err) => {
         createErrorRollbarReport(
@@ -352,7 +352,7 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/payment/handleArtworkPaymentUpdatesByFlw",
-        `flw_payment_workflow_${paymentObj.id}_${toUTCDate(new Date())}`,
+        `flw_payment_workflow_${paymentObj.id}_workflow`,
         JSON.stringify({
           provider: "flutterwave",
           meta,
@@ -364,7 +364,7 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
-        `create_shipment_${order_info.order_id}_${toUTCDate(new Date())}`,
+        `create_shipment_${order_info.order_id}_workflow`,
         JSON.stringify({ order_id: order_info.order_id })
       )
     );
@@ -372,7 +372,7 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/emails/sendPaymentInvoice",
-        `send_payment_invoice${invoice.invoiceNumber}_${toUTCDate(new Date())}`,
+        `send_payment_invoice${invoice.invoiceNumber}_workflow`,
         JSON.stringify({
           invoice,
         })
@@ -384,7 +384,7 @@ async function handlePurchaseTransaction(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/emails/sendPaymentSuccessMail",
-        `send_payment_success_mail_${order_info.order_id}_${toUTCDate(new Date())}`,
+        `send_payment_success_mail_${order_info.order_id}_workflow`,
         JSON.stringify({
           buyer_email: order_info.buyer_details.email,
           buyer_name: order_info.buyer_details.name,

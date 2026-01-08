@@ -415,7 +415,7 @@ export async function runPurchasePostWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_buyer_${order.order_id}_${toUTCDate(new Date())}`,
+        `notif_buyer_${order.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -443,7 +443,7 @@ export async function runPurchasePostWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_seller_${order.order_id}_${toUTCDate(new Date())}`,
+        `notif_seller_${order.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -452,12 +452,12 @@ export async function runPurchasePostWorkflows(
   await Promise.all([
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
-      `create_shipment_${order.order_id}_${toUTCDate(new Date())}`,
+      `create_shipment_${order.order_id}_workflow`,
       JSON.stringify({ order_id: order.order_id })
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
-      `send_payment_success_mail_${order.order_id}_${toUTCDate(new Date())}`,
+      `send_payment_success_mail_${order.order_id}_workflow`,
       JSON.stringify({
         buyer_email: order.buyer_details.email,
         buyer_name: order.buyer_details.name,
@@ -474,7 +474,7 @@ export async function runPurchasePostWorkflows(
 
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
-      `stripe_payment_workflow_${paymentIntent.id}_${toUTCDate(new Date())}`,
+      `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
         meta,
@@ -483,7 +483,7 @@ export async function runPurchasePostWorkflows(
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
-      `send_payment_invoice${invoice.invoiceNumber}_${toUTCDate(new Date())}`,
+      `send_payment_invoice${invoice.invoiceNumber}_workflow`,
       JSON.stringify({
         invoice,
       })

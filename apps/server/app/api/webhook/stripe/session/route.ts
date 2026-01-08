@@ -336,7 +336,7 @@ export async function runPostPaymentWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_buyer_${order_info.order_id}_${toUTCDate(new Date())}`,
+        `notif_buyer_${order_info.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -364,7 +364,7 @@ export async function runPostPaymentWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_seller_${order_info.order_id}_${toUTCDate(new Date())}`,
+        `notif_seller_${order_info.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -373,12 +373,12 @@ export async function runPostPaymentWorkflows(
   await Promise.all([
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
-      `create_shipment_${order_info.order_id}_${toUTCDate(new Date())}`,
+      `create_shipment_${order_info.order_id}_workflow`,
       JSON.stringify({ order_id: order_info.order_id })
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
-      `send_payment_success_mail_${order_info.order_id}_${toUTCDate(new Date())}`,
+      `send_payment_success_mail_${order_info.order_id}_workflow`,
       JSON.stringify({
         buyer_email: order_info.buyer_details.email,
         buyer_name: order_info.buyer_details.name,
@@ -394,7 +394,7 @@ export async function runPostPaymentWorkflows(
     ),
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
-      `stripe_payment_workflow_${paymentIntent.id}_${toUTCDate(new Date())}`,
+      `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
         meta,
@@ -403,7 +403,7 @@ export async function runPostPaymentWorkflows(
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
-      `send_payment_invoice${invoice.invoiceNumber}_${toUTCDate(new Date())}`,
+      `send_payment_invoice${invoice.invoiceNumber}_workflow`,
       JSON.stringify({
         invoice,
       })
