@@ -95,15 +95,15 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const tourRedisKey = `tour:${gallery_id}`;
 
-      try {
-        await redis.set(tourRedisKey, JSON.stringify([]));
-      } catch (error) {
-        createErrorRollbarReport(
-          "Gallery Registeration: Error creating redis data for tours",
-          JSON.stringify(error),
-          500
-        );
-      }
+      // try {
+      //   await redis.set(tourRedisKey, JSON.stringify([]));
+      // } catch (error) {
+      //   createErrorRollbarReport(
+      //     "Gallery Registeration: Error creating redis data for tours",
+      //     JSON.stringify(error),
+      //     500
+      //   );
+      // }
 
       return NextResponse.json(
         {

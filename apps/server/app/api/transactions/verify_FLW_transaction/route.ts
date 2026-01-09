@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { PaymentStatusTypes, NotificationPayload } from "@omenai/shared-types";
+import {
+  PaymentStatusTypes,
+  NotificationPayload,
+  InvoiceTypes,
+} from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
@@ -90,7 +94,7 @@ async function sendNotifications(order_info: any) {
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notification_buyer_${order_info.order_id}_${generateDigit(2)}`,
+        `notification_buyer_${order_info.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -118,7 +122,7 @@ async function sendNotifications(order_info: any) {
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notification_seller_${order_info.order_id}_${generateDigit(2)}`,
+        `notification_seller_${order_info.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -341,11 +345,52 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       );
     }
 
+    const buyerAddress = order_info.shipping_details.addresses.destination;
+    const buyerName = order_info.buyer_details.name;
+    const buyerEmail = order_info.buyer_details.email;
+    const buyerId = order_info.buyer_details.id;
+    const { tax_fees, unit_price, shipping_cost } = meta;
+
+    const invoice: Omit<
+      InvoiceTypes,
+      "storage" | "document_created" | "receipt_sent"
+    > = {
+      invoiceNumber: `OMENAI-INV-${order_info.order_id}`,
+      recipient: {
+        address: buyerAddress,
+        name: buyerName,
+        email: buyerEmail,
+        userId: buyerId,
+      },
+      orderId: order_info.order_id,
+      currency: "USD",
+      lineItems: [
+        {
+          description: order_info.artwork_data.title,
+          quantity: 1,
+          unitPrice: Math.round(Number(unit_price)),
+        },
+        {
+          description: "Certificate of Authenticity",
+          quantity: 1,
+          unitPrice: 0,
+        },
+      ],
+      pricing: {
+        taxes: Math.round(Number(tax_fees)),
+        shipping: Math.round(Number(shipping_cost)),
+        unitPrice: Math.round(Number(unit_price)),
+        total: Math.round(Number(verified_transaction.data.amount)),
+        discount: 0,
+      },
+      paidAt: toUTCDate(new Date()),
+    };
+
     /* 6️⃣ Trigger fulfillment workflow (wallet, artwork, sales, etc.) */
     await fireAndForget(
       createWorkflow(
         "/api/workflows/payment/handleArtworkPaymentUpdatesByFlw",
-        `flw_payment_workflow_${verified_transaction.data.id}`,
+        `flw_payment_workflow_${verified_transaction.data.id}_workflow`,
         JSON.stringify({
           provider: "flutterwave",
           meta,
@@ -358,8 +403,37 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     await fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
-        `create_shipment_${order_info.order_id}`,
+        `create_shipment_${order_info.order_id}_workflow`,
         JSON.stringify({ order_id: order_info.order_id })
+      )
+    );
+
+    await fireAndForget(
+      createWorkflow(
+        "/api/workflows/emails/sendPaymentSuccessMail",
+        `send_payment_success_mail_${order_info.order_id}_workflow`,
+        JSON.stringify({
+          buyer_email: order_info.buyer_details.email,
+          buyer_name: order_info.buyer_details.name,
+          artwork_title: order_info.artwork_data.title,
+          order_id: order_info.order_id,
+          order_date: order_info.createdAt,
+          transaction_id: verified_transaction.data.id,
+          price: verified_transaction.data.amount,
+          seller_email: order_info.seller_details.email,
+          seller_name: order_info.seller_details.name,
+          seller_entity: "artist",
+        })
+      )
+    );
+
+    await fireAndForget(
+      createWorkflow(
+        "/api/workflows/emails/sendPaymentInvoice",
+        `send_payment_invoice${invoice.invoiceNumber}_workflow`,
+        JSON.stringify({
+          invoice,
+        })
       )
     );
 

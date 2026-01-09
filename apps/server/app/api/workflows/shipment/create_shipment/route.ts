@@ -16,7 +16,10 @@ import {
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
-import { CreateOrderModelTypes } from "@omenai/shared-types";
+import {
+  CreateOrderModelTypes,
+  ShipmentRequestDataTypes,
+} from "@omenai/shared-types";
 import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShipmentSchedule";
 import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
@@ -46,7 +49,9 @@ type ShipmentAction =
 /*                             SHIPMENT API CALL                               */
 /* -------------------------------------------------------------------------- */
 
-async function callShipmentAPI(data: any): Promise<any> {
+async function callShipmentAPI(
+  data: Omit<ShipmentRequestDataTypes, "originCountryCode">
+): Promise<any> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 

@@ -5,6 +5,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import {
   CreateOrderModelTypes,
+  InvoiceTypes,
   MetaSchema,
   NotificationPayload,
   PaymentStatusTypes,
@@ -336,14 +337,51 @@ export async function runPurchasePostWorkflows(
     id: string;
     currency: string;
   },
-  order: any,
+  order: CreateOrderModelTypes,
   meta: MetaSchema & { commission: string }
 ) {
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
-  const price = formatPrice(
-    paymentIntent.amount_received ?? paymentIntent.amount / 100,
-    currency
-  );
+  const price = formatPrice(Math.round(Number(meta.unit_price)), currency);
+  const buyerAddress = order.shipping_details.addresses.destination;
+  const buyerName = order.buyer_details.name;
+  const buyerEmail = order.buyer_details.email;
+  const buyerId = order.buyer_details.id;
+  const { tax_fees, unit_price, shipping_cost } = meta;
+
+  const invoice: Omit<
+    InvoiceTypes,
+    "storage" | "document_created" | "receipt_sent"
+  > = {
+    invoiceNumber: `OMENAI-INV-${order.order_id}`,
+    recipient: {
+      address: buyerAddress,
+      name: buyerName,
+      email: buyerEmail,
+      userId: buyerId,
+    },
+    orderId: order.order_id,
+    currency: paymentIntent.currency.toUpperCase(),
+    lineItems: [
+      {
+        description: order.artwork_data.title,
+        quantity: 1,
+        unitPrice: Math.round(Number(unit_price)),
+      },
+      {
+        description: "Certificate of Authenticity",
+        quantity: 1,
+        unitPrice: 0,
+      },
+    ],
+    pricing: {
+      taxes: Math.round(Number(tax_fees)),
+      shipping: Math.round(Number(shipping_cost)),
+      unitPrice: Math.round(Number(unit_price)),
+      total: (paymentIntent.amount_received ?? paymentIntent.amount) / 100,
+      discount: 0,
+    },
+    paidAt: toUTCDate(new Date()),
+  };
 
   const [buyerPush, sellerPush] = await Promise.all([
     DeviceManagement.findOne(
@@ -377,7 +415,7 @@ export async function runPurchasePostWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_buyer_${order.order_id}_${generateDigit(2)}`,
+        `notif_buyer_${order.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -405,7 +443,7 @@ export async function runPurchasePostWorkflows(
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_seller_${order.order_id}_${generateDigit(2)}`,
+        `notif_seller_${order.order_id}_workflow`,
         JSON.stringify(payload)
       )
     );
@@ -414,12 +452,12 @@ export async function runPurchasePostWorkflows(
   await Promise.all([
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
-      `create_shipment_${generateDigit(6)}`,
+      `create_shipment_${order.order_id}_workflow`,
       JSON.stringify({ order_id: order.order_id })
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
-      `send_payment_success_mail_${generateDigit(6)}`,
+      `send_payment_success_mail_${order.order_id}_workflow`,
       JSON.stringify({
         buyer_email: order.buyer_details.email,
         buyer_name: order.buyer_details.name,
@@ -430,16 +468,24 @@ export async function runPurchasePostWorkflows(
         price,
         seller_email: order.seller_details.email,
         seller_name: order.seller_details.name,
+        seller_entity: "gallery",
       })
     ),
 
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
-      `stripe_payment_workflow_${paymentIntent.id}`,
+      `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
         meta,
         paymentIntent,
+      })
+    ),
+    createWorkflow(
+      "/api/workflows/emails/sendPaymentInvoice",
+      `send_payment_invoice${invoice.invoiceNumber}_workflow`,
+      JSON.stringify({
+        invoice,
       })
     ),
     ...jobs,

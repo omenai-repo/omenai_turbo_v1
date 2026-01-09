@@ -86,15 +86,15 @@ export const POST = withAppRouterHighlight(async function POST(
     });
     const tourRedisKey = `tour:${artist_id}`;
 
-    try {
-      await redis.set(tourRedisKey, JSON.stringify([]));
-    } catch (error) {
-      createErrorRollbarReport(
-        "Artist Registeration: Error creating redis data for tours",
-        JSON.stringify(error),
-        500
-      );
-    }
+    // try {
+    //   await redis.set(tourRedisKey, JSON.stringify([]));
+    // } catch (error) {
+    //   createErrorRollbarReport(
+    //     "Artist Registeration: Error creating redis data for tours",
+    //     JSON.stringify(error),
+    //     500
+    //   );
+    // }
     return res.json(
       {
         message: "Artist successfully registered",

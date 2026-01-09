@@ -24,7 +24,8 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     receiver_data,
     invoice_number,
     artwork_name,
-  }: ShipmentRequestDataTypes = await request.json();
+    artwork_price,
+  }: Omit<ShipmentRequestDataTypes, "originCountryCode"> = await request.json();
   if (
     !seller_details ||
     !shipment_product_code ||
@@ -32,7 +33,8 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     !receiver_address ||
     !receiver_data ||
     !invoice_number ||
-    !artwork_name
+    !artwork_name ||
+    !artwork_price
   ) {
     return NextResponse.json(
       {
@@ -43,21 +45,13 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     );
   }
 
-  const plannedShippingDateAndTime = await getFutureShipmentDate(
-    3,
-    true,
-    seller_details.address.countryCode,
-    {
+  const [plannedShippingDateAndTime, invoiceDate] = await Promise.all([
+    getFutureShipmentDate(3, true, seller_details.address.countryCode, {
       hours: "12",
       minutes: "00",
-    }
-  );
-
-  const invoiceDate = await getFutureShipmentDate(
-    0,
-    false,
-    seller_details.address.countryCode
-  );
+    }),
+    getFutureShipmentDate(0, false, seller_details.address.countryCode),
+  ]);
 
   const shipmentPayloadData = {
     plannedShippingDateAndTime,
@@ -179,14 +173,14 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
       ],
       isCustomsDeclarable:
         seller_details.address.countryCode !== receiver_address.countryCode,
-      declaredValue: 200,
+      declaredValue: artwork_price,
       declaredValueCurrency: "USD",
       exportDeclaration: {
         lineItems: [
           {
             number: 1,
             description: `Artpiece: ${artwork_name}`,
-            price: 200,
+            price: artwork_price,
             quantity: {
               value: 1,
               unitOfMeasurement: "BOX",
@@ -252,6 +246,12 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
       error,
       error_response.status
     );
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    return NextResponse.json(
+      {
+        message: "Error occured while creating shipment, contact support",
+        error,
+      },
+      { status: 500 }
+    );
   }
 });

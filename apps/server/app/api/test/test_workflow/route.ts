@@ -4,17 +4,16 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 
-import { meta, paymentIntent } from "./p";
+import { mockInvoice } from "./p";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 export async function POST() {
   try {
     const workflowID = await createWorkflow(
-      "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
-      `stripe_payment_workflow_${paymentIntent.id}`,
+      "/api/workflows/emails/sendPaymentInvoice",
+      `send_payment_invoice_${mockInvoice.invoiceNumber}_workflow`,
       JSON.stringify({
-        provider: "stripe",
-        meta,
-        checkoutSession: paymentIntent,
+        invoice: mockInvoice,
       })
     );
     if (!workflowID) throw new ServerError("Workflow failed");

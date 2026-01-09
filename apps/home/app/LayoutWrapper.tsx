@@ -10,7 +10,6 @@ import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "@omenai/package-provider";
 import LenisProvider from "@omenai/package-provider/ScrollProvider";
 import { ClientSessionData } from "@omenai/shared-types";
-import { Snowfall } from "react-snowfall";
 
 export const LayoutWrapper = ({
   sessionData,

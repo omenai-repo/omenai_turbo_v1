@@ -1,3 +1,5 @@
+import { InvoiceTypes } from "@omenai/shared-types";
+
 export const meta = {
   art_id: "ddb13ea2-8ff8-416a-b1bb-46106d3c0169",
   artwork_name: "All by myself",
@@ -75,4 +77,53 @@ export const paymentIntent = {
   status: "succeeded",
   transfer_data: { destination: "acct_1SRvKVGpRw7Ix0VI" },
   transfer_group: "group_py_3Slc5JGdH9BZcJwp1y15Ig5f",
+};
+
+export const mockInvoice: Omit<
+  InvoiceTypes,
+  "storage" | "document_created" | "receipt_sent"
+> = {
+  invoiceNumber: "OMENAI-INV-000042",
+  recipient: {
+    address: {
+      state: "Lagos",
+      country: "Nigeria",
+      countryCode: "NG",
+      stateCode: "LA",
+      city: "Ajah",
+      zip: "1234565",
+      address_line: "21, Ashela Royal Estate, Ogombo, Ajah",
+    },
+
+    userId: "user_8f93kdk29sl",
+    name: "Moses Omenai",
+    email: "moses@omenai.net",
+  },
+
+  orderId: "order_20260115_9876",
+
+  currency: "USD",
+
+  lineItems: [
+    {
+      description: "Original Artwork — “Ethereal Forms” (Oil on Canvas)",
+      quantity: 1,
+      unitPrice: 1200,
+    },
+    {
+      description: "Certificate of Authenticity",
+      quantity: 1,
+      unitPrice: 0,
+    },
+  ],
+
+  pricing: {
+    unitPrice: 1200,
+    shipping: 85,
+    taxes: 60,
+    discount: 100,
+    total: 1245,
+  },
+
+  paidAt: new Date("2026-01-15T14:32:00Z"),
 };
