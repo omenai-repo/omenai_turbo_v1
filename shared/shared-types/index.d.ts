@@ -1222,3 +1222,16 @@ export type WaitListTypes = {
     redeemed: boolean;
   };
 };
+
+export type DeletePromise = Promise<
+  | {
+      success: boolean;
+      jobId: string;
+      error?: undefined;
+    }
+  | {
+      success: boolean;
+      jobId: string;
+      error: string;
+    }
+>;
