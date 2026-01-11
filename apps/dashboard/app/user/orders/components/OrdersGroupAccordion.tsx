@@ -74,7 +74,7 @@ function renderOrderStatus({
   order_decline_reason?: string;
 }) {
   const base =
-    "inline-flex items-center gap-x-1 rounded-full px-3 py-1 text-fluid-xxs font-medium";
+    "inline-flex items-center gap-x-1 rounded-full px-3 py-1 text-fluid-xxs font-normal";
 
   if (order_accepted === "declined") {
     return (
@@ -257,13 +257,15 @@ export function OrdersGroupAccordion({
                 )}
 
                 {actionType === "track" && (
-                  <Link
-                    href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
-                  >
-                    <button className="w-fit rounded-full bg-dark px-5 py-2 text-fluid-xxs font-medium text-white hover:opacity-90 transition">
-                      Track shipment
-                    </button>
-                  </Link>
+                  <div className="flex justify-between items-center">
+                    <Link
+                      href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
+                    >
+                      <button className="w-fit rounded-full bg-dark px-5 py-2 text-fluid-xxs font-normal text-white hover:opacity-90 transition">
+                        Track shipment
+                      </button>
+                    </Link>
+                  </div>
                 )}
 
                 {actionType === "pay" && (
@@ -286,6 +288,16 @@ export function OrdersGroupAccordion({
                       user_id={user.id}
                     />
                   </>
+                )}
+
+                {order.payment_information.invoice_reference && (
+                  <Link
+                    href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
+                  >
+                    <p className="w-fit underline text-fluid-xxs font-normal text-dark hover:opacity-90 transition">
+                      View receipt invoice
+                    </p>
+                  </Link>
                 )}
               </div>
             </Accordion.Panel>

@@ -13,6 +13,7 @@ import {
 } from "@omenai/shared-types";
 
 import { useSessionContext } from "@omenai/package-provider";
+import { useSession } from "./useSession";
 
 // Define the type for the data fetched from /api/session
 
@@ -60,21 +61,6 @@ type AuthReturn<T extends UserRole | undefined> = {
 };
 
 // Function to fetch session data from your API route
-async function fetchSessionData(): Promise<ClientSessionData> {
-  const res = await fetch(`${getApiUrl()}/api/auth/session/user`, {
-    headers: {
-      "Content-Type": "application/json",
-      Origin: base_url(),
-    },
-    credentials: "include",
-  });
-  if (!res.ok) {
-    console.error("Failed to fetch session data:", res.status, res.statusText);
-    return { isLoggedIn: false, user: null, csrfToken: "" };
-  }
-  const { user, csrfToken } = await res.json();
-  return { isLoggedIn: true, user: user.userData, csrfToken };
-}
 
 export function useAuth<T extends UserRole | undefined = undefined>(
   options: UseAuthOptions<T> = {}
@@ -85,32 +71,12 @@ export function useAuth<T extends UserRole | undefined = undefined>(
   const { initialSessionData: contextSessionData } = useSessionContext();
   const serverSessionData = contextSessionData;
 
-  // Use useQuery to fetch session data with initial data support
-  const {
-    data: sessionData,
-    isLoading: isLoadingQuery,
-    isSuccess,
-    isPending,
-  } = useQuery<ClientSessionData, Error>({
-    queryKey: ["session"],
-    queryFn: fetchSessionData,
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    retry: 1,
-    // Use initialData to immediately provide session data if available from SSR
-    initialData: serverSessionData || undefined,
-    // Only refetch if we don't have initial data or if it's stale
-    refetchOnMount: !serverSessionData,
+  const { sessionData, isLoadingQuery, isPending } = useSession({
+    initialData: serverSessionData,
   });
 
   // Determine authentication status based on fetched data
-  const isLoggedIn = useMemo(() => {
-    // If we have initial data, use it immediately; otherwise wait for query success
-    if (serverSessionData) {
-      return sessionData?.isLoggedIn || false;
-    }
-    return isSuccess && (sessionData?.isLoggedIn || false);
-  }, [isSuccess, sessionData?.isLoggedIn, serverSessionData]);
+  const isLoggedIn = sessionData?.isLoggedIn === true;
 
   // Loading state management with initial data consideration
   const isLoading = useMemo(() => {
@@ -162,7 +128,7 @@ export function useAuth<T extends UserRole | undefined = undefined>(
           "password" | "phone" | "clerkUserId" | "art_style" | "documentation"
         > & { id: string };
       default:
-        return baseUser as SessionDataType;
+        return baseUser.user as SessionDataType;
     }
   }, [id, role, isLoggedIn, sessionData]);
 

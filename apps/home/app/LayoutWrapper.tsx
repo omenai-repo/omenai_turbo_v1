@@ -10,6 +10,7 @@ import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "@omenai/package-provider";
 import LenisProvider from "@omenai/package-provider/ScrollProvider";
 import { ClientSessionData } from "@omenai/shared-types";
+import { AuthGuard } from "@omenai/package-provider/AuthGuard";
 
 export const LayoutWrapper = ({
   sessionData,

@@ -9,20 +9,16 @@ import {
 } from "@mantine/core";
 import { Work_Sans } from "next/font/google";
 
-import {
-  HighRiskProvider,
-  LowRiskProvider,
-} from "@omenai/package-provider/ConfigCatProvider";
-import LenisProvider from "@omenai/package-provider/ScrollProvider";
+import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 
 import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { SessionProvider } from "@omenai/package-provider";
+import { AuthGuard } from "@omenai/package-provider/AuthGuard";
 import { Metadata, Viewport } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
-import { redis } from "@omenai/upstash-config";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -79,7 +75,10 @@ export default async function DashboardRootLayout({
                 defaultColorScheme="light"
                 forceColorScheme="light"
               >
-                <LayoutWrapper children={children} />
+                <LayoutWrapper
+                  children={children}
+                  initialSessionData={initialSessionData}
+                />
               </MantineProvider>
             </SessionProvider>
             <Analytics />
