@@ -53,7 +53,7 @@ export default function Plans() {
         </div>
       ) : (
         <>
-          <div className="mt-10 text-center">
+          <div className=" text-center">
             <p className="text-fluid-base leading-4 text-[#858585] ">
               Choose your plan
             </p>

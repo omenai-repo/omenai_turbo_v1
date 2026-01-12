@@ -1,97 +1,58 @@
+// types/sidebar.ts
+import { LucideIcon } from "lucide-react";
+
+export type SidebarSection = "core" | "finance" | "account";
+
+export type SidebarItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  section: SidebarSection;
+};
+
+// config/sidebar.ts
 import {
-  ImageUp,
-  Kanban,
-  LogOut,
-  Settings,
-  ShoppingBasket,
-  UserRoundPen,
+  LayoutDashboard,
+  Package,
+  Image,
+  CreditCard,
   Wallet,
+  User,
+  Settings,
+  LogOut,
 } from "lucide-react";
-const overview = (
-  <Kanban
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const order = (
-  <ShoppingBasket
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
 
-// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
-const wallet = (
-  <Wallet
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const profile = (
-  <UserRoundPen
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const settings = (
-  <Settings
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const logout = (
-  <LogOut
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const artworks = (
-  <ImageUp
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
+export const sidebarItems: SidebarItem[] = [
+  {
+    label: "Overview",
+    href: "/artist/app/overview",
+    icon: LayoutDashboard,
+    section: "core",
+  },
+  {
+    label: "Orders",
+    href: "/artist/app/orders",
+    icon: Package,
+    section: "core",
+  },
+  {
+    label: "My Artworks",
+    href: "/artist/app/artworks",
+    icon: Image,
+    section: "core",
+  },
 
-export const navMockData: NavMockData = {
-  general: [
-    { title: "Overview", icon: overview, url: "/artist/app/overview" },
-    { title: "Orders", icon: order, url: "/artist/app/orders" },
-    {
-      title: "My artworks",
-      icon: artworks,
-      url: "/artist/app/artworks",
-    },
-    {
-      title: "Wallet",
-      icon: wallet,
-      url: "/artist/app/wallet",
-    },
-  ],
-  account: [
-    {
-      title: "Account management",
-      icon: profile,
-      url: "/artist/app/account",
-    },
+  {
+    label: "Wallet",
+    href: "/artist/app/wallet",
+    icon: Wallet,
+    section: "finance",
+  },
 
-    { title: "Sign out", icon: logout, url: "/" },
-  ],
-};
-
-type NavMockData = {
-  general: NavMockDataItem[];
-  account: NavMockDataItem[];
-};
-
-type NavMockDataItem = {
-  title: string;
-  icon: React.ReactNode;
-  url: string;
-};
+  {
+    label: "Account Management",
+    href: "/artist/app/account",
+    icon: User,
+    section: "account",
+  },
+];

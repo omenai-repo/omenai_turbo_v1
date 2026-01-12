@@ -11,7 +11,7 @@ type HightlightCardProps = {
   icon: React.ReactNode;
   tag: string;
 };
-export default function HighlightCard({ tag }: HightlightCardProps) {
+export default function HighlightCard({ tag, title }: HightlightCardProps) {
   const { user } = useAuth({ requiredRole: "gallery" });
   const { data, isLoading } = useQuery({
     queryKey: [`highlight`, tag],
@@ -23,14 +23,26 @@ export default function HighlightCard({ tag }: HightlightCardProps) {
   });
 
   return (
-    <div className="flex flex-col">
-      {isLoading ? (
-        <div className="mt-2">
-          <Loader color="rgba(255, 255, 255, 1)" size="xs" type="bars" />
+    <>
+      <div className="rounded-2xl bg-white p-5 shadow-sm">
+        <p className="text-fluid-xxs text-neutral-500">{title.toUpperCase()}</p>
+
+        <div className="mt-2 flex items-baseline justify-between">
+          {isLoading ? (
+            <Loader color="#0f172a " size="xs" type="bars" />
+          ) : (
+            <h3 className="text-fluid-sm font-semibold tracking-tight">
+              {data}
+            </h3>
+          )}
+
+          {/* {item.delta && (
+              <span className="text-sm font-medium text-emerald-600">
+                {item.delta}
+              </span>
+            )} */}
         </div>
-      ) : (
-        <h1 className="font-medium text-fluid-base text-white">{data}</h1>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

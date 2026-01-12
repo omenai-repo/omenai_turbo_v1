@@ -2,7 +2,6 @@
 
 import { galleryModalStore } from "@omenai/shared-state-store/src/gallery/gallery_modals/GalleryModals";
 import { SubscriptionModelSchemaTypes } from "@omenai/shared-types";
-import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Image from "next/image";
@@ -23,53 +22,26 @@ export default function SubDetail({
     uploadCount: number,
     uploadLimit: number
   ): number {
-    // Handle unlimited plans (MAX_SAFE_INTEGER)
-    if (uploadLimit === Number.MAX_SAFE_INTEGER) {
-      return 0; // Always show empty for unlimited plans
-    }
-
-    // Calculate percentage used
+    if (uploadLimit === Number.MAX_SAFE_INTEGER) return 0;
     const percentageUsed = (uploadCount / uploadLimit) * 100;
-
-    // Ensure minimum 5% visibility when there's any usage, max 100%
     return uploadCount > 0 ? Math.max(5, Math.min(100, percentageUsed)) : 0;
   }
 
-  function getUsageDisplayText(
-    uploadCount: number,
-    uploadLimit: number
-  ): string {
-    if (uploadLimit === Number.MAX_SAFE_INTEGER) {
-      return `${uploadCount} uploads used`;
-    }
-    return `${uploadCount} / ${uploadLimit} uploads used`;
-  }
-
-  // Utility function to determine progress bar color based on usage
   function getProgressBarColor(
     uploadCount: number,
     uploadLimit: number
   ): string {
-    if (uploadLimit === Number.MAX_SAFE_INTEGER) {
-      return "bg-green-500"; // Green for unlimited
-    }
-
+    if (uploadLimit === Number.MAX_SAFE_INTEGER) return "bg-emerald-500";
     const percentageUsed = (uploadCount / uploadLimit) * 100;
-
-    if (percentageUsed >= 90) return "bg-red-500"; // Red when almost full
-    if (percentageUsed >= 70) return "bg-orange-500"; // Orange when getting full
-    if (percentageUsed >= 50) return "bg-yellow-500"; // Yellow when half full
-    return "bg-green-500"; // Green when plenty left
+    if (percentageUsed >= 90) return "bg-rose-500";
+    if (percentageUsed >= 70) return "bg-amber-500";
+    return "bg-slate-900";
   }
 
   const usagePercentage = calculateUploadUsagePercentage(
     sub_data.upload_tracker.upload_count,
     sub_data.upload_tracker.limit
   );
-  const remainingUploads =
-    sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER
-      ? "Unlimited"
-      : sub_data.upload_tracker.limit - sub_data.upload_tracker.upload_count;
 
   const progressBarColor = getProgressBarColor(
     sub_data.upload_tracker.upload_count,
@@ -77,157 +49,128 @@ export default function SubDetail({
   );
 
   const currency_symbol = getCurrencySymbol(sub_data.plan_details.currency);
-  return (
-    <div className=" bg-white rounded-2xl shadow-sm border border-slate-200 p-5 max-h-[300px]">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-fluid-xxs font-semibold text-slate-900">
-          Your Subscription
-        </h3>
-        {sub_data.status === "active" && (
-          <div
-            className={`px-3 py-1 rounded-full text-fluid-xxs font-semibold bg-green-100 text-green-700`}
-          >
-            {sub_data.status.toUpperCase()}
-          </div>
-        )}
-        {(sub_data.status === "expired" ||
-          sub_data.status === "incomplete") && (
-          <div
-            className={`px-3 py-1 rounded-full text-fluid-xxs font-semibold bg-red-100 text-red-700`}
-          >
-            {sub_data.status.toUpperCase()}
-          </div>
-        )}
-        {sub_data.status === "canceled" && (
-          <div className="px-3 py-1 rounded-full text-fluid-xxs text-[#a86a41] font-semibold bg-[#fbf1c6]">
-            {" "}
-            Active &#183; ends in {daysLeft(sub_data.expiry_date)} days
-          </div>
-        )}
-      </div>
+  const daysRemaining = daysLeft(sub_data.expiry_date);
+  const isUnlimited = sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER;
 
-      <div className="space-y-4">
-        <div className="relative border p-4 border-slate-200 rounded-2xl">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Image
-                src="/omenai_logo_cut.png"
-                width={20}
-                height={20}
-                alt="Omenai"
-              />
-              <span className="font-medium text-slate-900">
-                {sub_data.plan_details.type} Plan
+  return (
+    <div className="h-full bg-slate-900 rounded-3xl p-8 flex flex-col justify-between text-white shadow-xl relative overflow-hidden">
+      {/* Decorative Background Blur */}
+      <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-32 h-32 bg-green-500/20 rounded-full blur-2xl" />
+
+      {/* Top Section: Header & Price */}
+      <div className="relative z-10">
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center justify-center p-1 bg-white/10 rounded-md backdrop-blur-sm">
+                <Image
+                  src="/omenai_logo_cut.png"
+                  width={14}
+                  height={14}
+                  alt="Omenai"
+                  className="invert brightness-0"
+                />
+              </span>
+              <span className="text-sm font-medium text-green-400 tracking-wide">
+                Current Plan
               </span>
             </div>
-            <span className="text-lg font-bold text-slate-900">
+            <h2 className="text-fluid-md font-bold tracking-tight">
+              OMENAI {sub_data.plan_details.type} Plan
+            </h2>
+          </div>
+          <div className="text-right">
+            <h3 className="text-2xl font-bold">
               {formatPrice(
                 sub_data.plan_details.interval === "monthly"
                   ? +sub_data.plan_details.value.monthly_price
                   : +sub_data.plan_details.value.annual_price,
                 currency_symbol
               )}
+            </h3>
+            <span className="text-xs text-slate-400 font-medium">
+              / {sub_data.plan_details.interval}
             </span>
           </div>
-
-          {(sub_data.status === "active" || sub_data.status === "canceled") && (
-            <>
-              <div className="mt-3">
-                <div className="flex justify-between text-fluid-xxs text-slate-600 mb-1">
-                  <span>Period progress</span>
-                  <span>{daysLeft(sub_data.expiry_date)} days left</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div
-                    className="bg-dark h-2 rounded-full transition-all"
-                    style={{
-                      width: `${Math.max(5, 100 - (daysLeft(sub_data.expiry_date) / 30) * 100)}%`,
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="mt-3">
-                {/* Usage stats */}
-                <div className="flex justify-between text-fluid-xxs text-slate-500 mb-2">
-                  <span>
-                    {getUsageDisplayText(
-                      sub_data.upload_tracker.upload_count,
-                      sub_data.upload_tracker.limit
-                    )}
-                  </span>
-
-                  <div className="flex items-center gap-x-1">
-                    <span>
-                      {sub_data.upload_tracker.limit === Number.MAX_SAFE_INTEGER
-                        ? "Unlimited"
-                        : `${remainingUploads} remaining`}
-                    </span>
-
-                    {/* Optional: Usage percentage display */}
-                    {sub_data.upload_tracker.limit !==
-                      Number.MAX_SAFE_INTEGER && (
-                      <div className="text-right text-fluid-xxs text-slate-600">
-                        (
-                        {Math.round(
-                          (sub_data.upload_tracker.upload_count /
-                            sub_data.upload_tracker.limit) *
-                            100
-                        )}
-                        % used)
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Progress bar */}
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full transition-all duration-300 ${progressBarColor}`}
-                    style={{
-                      width: `${usagePercentage}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            </>
-          )}
         </div>
 
-        {/* Actions */}
-        <div className="pt-2 flex gap-2">
-          {sub_data.status === "canceled" && (
-            <div className="text-fluid-xxs text-[#a86a41] font-medium bg-[#fefbea] px-4 py-2 rounded-full border-[#fef2c5] border-2">
-              <span className="font-bold uppercase">Note:</span> Your
-              subscription cancellation will take effect after your current
-              billing cycle.
+        {/* Status Badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/5 backdrop-blur-md">
+          <div
+            className={`w-2 h-2 rounded-full ${sub_data.status === "active" ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" : "bg-red-400"}`}
+          />
+          <span className="text-xs font-semibold uppercase tracking-wide text-slate-200">
+            {sub_data.status}
+          </span>
+        </div>
+      </div>
+
+      {/* Middle: Usage Stats */}
+      <div className="relative z-10 space-y-6 mt-6">
+        {/* Uploads Tracker */}
+        <div>
+          <div className="flex justify-between text-xs font-medium text-slate-400 mb-2">
+            <span>Upload Capacity Usage</span>
+            <span>
+              {isUnlimited
+                ? "Unlimited"
+                : `${sub_data.upload_tracker.upload_count} / ${sub_data.upload_tracker.limit}`}
+            </span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${isUnlimited ? "bg-emerald-400 w-full" : progressBarColor}`}
+              style={{ width: isUnlimited ? "100%" : `${usagePercentage}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Days Tracker */}
+        {(sub_data.status === "active" || sub_data.status === "canceled") && (
+          <div>
+            <div className="flex justify-between text-xs font-medium text-slate-400 mb-2">
+              <span>Billing Cycle</span>
+              <span>{daysRemaining} days left</span>
             </div>
-          )}
-          {sub_data.status === "expired" && (
-            <Link
-              href="/gallery/billing/plans?plan_action=reactivation"
-              className="w-full"
-            >
-              <button className="w-full px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-full transition-all hover:bg-blue-700">
-                Reactivate
+            <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+              <div
+                className="bg-green-400 h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${Math.max(5, 100 - (daysRemaining / 30) * 100)}%`,
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom: Actions */}
+      <div className="relative z-10 pt-6 mt-4 border-t border-white/10 flex gap-3">
+        {sub_data.status === "active" ? (
+          <>
+            <Link href="/gallery/billing/plans" className="flex-1">
+              <button className="w-full py-2.5 px-4 bg-white text-slate-900 text-xs font-bold rounded-xl hover:bg-slate-100 transition-colors">
+                Manage Plan
               </button>
             </Link>
-          )}
-          {sub_data.status === "active" && (
-            <>
-              <Link href="/gallery/billing/plans" className="flex-1">
-                <button className="w-full px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full transition-all hover:bg-slate-200">
-                  Manage
-                </button>
-              </Link>
-              <button
-                onClick={() => updateOpenModal()}
-                className="px-3 py-2 text-red-600 text-sm font-medium rounded-full transition-all hover:bg-red-50"
-              >
-                Cancel
-              </button>
-            </>
-          )}
-        </div>
+            <button
+              onClick={() => updateOpenModal()}
+              className="py-2.5 px-4 bg-white/5 text-red-600 border border-white/10 text-xs font-bold rounded-xl hover:bg-white/10 transition-colors"
+            >
+              Cancel Subscription
+            </button>
+          </>
+        ) : (
+          <Link
+            href="/gallery/billing/plans?plan_action=reactivation"
+            className="w-full"
+          >
+            <button className="w-full py-2.5 px-4 bg-green-500 text-white text-xs font-bold rounded-xl hover:bg-green-600 transition-colors shadow-lg shadow-green-500/25">
+              Reactivate Subscription
+            </button>
+          </Link>
+        )}
       </div>
     </div>
   );

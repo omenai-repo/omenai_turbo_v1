@@ -6,7 +6,7 @@ export default function Appbar() {
   const { user } = useAuth({ requiredRole: "artist" });
   return (
     <>
-      <div className="flex justify-between items-center w-full pt-4 sticky top-0 z-10 bg-white ">
+      <div className="flex justify-between items-center w-full pb-4 top-0 z-10">
         <DashboardIndicator
           artist_name={user && user.role === "artist" ? user.name : ""}
         />

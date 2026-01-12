@@ -38,46 +38,47 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-8 w-full max-w-md shadow-sm">
-      <div className="flex flex-col items-center space-y-6 text-center">
+    <div className="transition-all duration-500 ease-out animate-[fadeUp_0.6s] relative w-full max-w-md rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
+      {/* Subtle texture */}
+      <div className="absolute inset-0 rounded-3xl opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
+
+      <div className="relative flex flex-col gap-8">
         {/* Header */}
-        <div className="w-12 h-12 bg-blue-50 rounded flex items-center justify-center">
-          <svg
-            className="w-6 h-6 text-blue-600"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z" />
-          </svg>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-white/60">
+              Payout balance
+            </p>
+            <h1 className="mt-1 text-3xl font-semibold">
+              {formatPrice(balance.pending[0].amount / 100, currency)}
+            </h1>
+          </div>
+
+          <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
+            <svg
+              className="w-5 h-5 text-white"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z" />
+            </svg>
+          </div>
         </div>
 
-        {/* Available Balance */}
-        <div>
-          <p className="text-fluid-xxs font-medium text-gray-600 mb-2">
-            Balance on Stripe
-          </p>
-          <h1 className="text-fluid-md font-semibold text-gray-900">
-            {formatPrice(balance.pending[0].amount / 100, currency)}
-          </h1>
+        {/* Info */}
+        <div className="rounded-2xl bg-white/5 p-4 text-sm text-white/80">
+          Balance on Stripe is automatically transferred to your connected bank
+          account.
         </div>
 
-        {/* Pending Balance */}
-        <div className="w-full p-4 bg-amber-50 border border-amber-100 rounded-2xl">
-          <p className="text-fluid-xxs text-amber-800">
-            Balance on stripe is automatically credited to your bank account.
-          </p>
-        </div>
-
-        {/* Action Button */}
-        <div className="w-full pt-2">
-          <button
-            onClick={generateLoginLink}
-            disabled={generatingLoginLink}
-            className="w-full h-12 bg-gray-900 text-white text-fluid-xxs font-normal rounded-full transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-dark/90 focus:ring-4 focus:ring-gray-100 flex items-center justify-center gap-3"
-          >
-            {generatingLoginLink ? <LoadSmall /> : "View Stripe Dashboard"}
-          </button>
-        </div>
+        {/* Action */}
+        <button
+          onClick={generateLoginLink}
+          disabled={generatingLoginLink}
+          className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-medium text-slate-900 transition hover:bg-white/90 disabled:opacity-60"
+        >
+          {generatingLoginLink ? <LoadSmall /> : "Open Stripe dashboard"}
+        </button>
       </div>
     </div>
   );

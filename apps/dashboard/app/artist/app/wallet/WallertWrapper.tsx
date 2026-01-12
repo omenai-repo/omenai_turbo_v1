@@ -93,7 +93,7 @@ export default function Wallet() {
 
           <div className="col-span-1 relative">
             <TransactionTable />
-            <div className="absolute bottom-0 flex w-full justify-center mb-4">
+            <div className="absolute bottom-10 flex w-full justify-center mb-4">
               <TransactionPagination
                 wallet_id={wallet_data?.wallet.wallet_id}
                 pageCount={wallet_data?.transaction_page_count}

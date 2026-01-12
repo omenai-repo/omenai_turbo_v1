@@ -34,11 +34,7 @@ export default function ActivityWrapper() {
   );
 
   return (
-    <div className="h-[350px] mt-4 relative">
-      <div className="flex justify-between items-center">
-        <h1 className="font-medium">Sales Revenue</h1>
-        <Dropdown />
-      </div>
+    <div className="flex flex-col space-y-3 h-[350px] mt-4 relative">
       <div className="h-full w-full grid place-items-center">
         {isLoading ? (
           <ChartSkeleton />

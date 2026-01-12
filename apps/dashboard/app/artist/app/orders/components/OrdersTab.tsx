@@ -1,18 +1,16 @@
 "use client";
 import { Tabs } from "@mantine/core";
 import { PackageCheck, PackageMinus, PackageSearch, Pause } from "lucide-react";
-import CompletedOrders from "./CompletedOrders";
-import PendingOrders from "./PendingOrders";
-import ProcessingOrders from "./ProcessingOrders";
+
 import { CreateOrderModelTypes } from "@omenai/shared-types";
+import { OrderCardList } from "./OrdersCardList";
 
 export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
-  const pending_orders: any = [];
-  const processing_orders: any = [];
-  const completed_orders: any = [];
+  const pending_orders: CreateOrderModelTypes[] = [];
+  const processing_orders: CreateOrderModelTypes[] = [];
+  const completed_orders: CreateOrderModelTypes[] = [];
 
-  // Loop through orders once to classify them
-  orders.forEach((order: any) => {
+  orders.forEach((order) => {
     if (order.order_accepted.status === "") {
       pending_orders.push(order);
     } else if (
@@ -29,155 +27,126 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
       completed_orders.push(order);
     }
   });
+
+  const allOrdersCount =
+    pending_orders.length + processing_orders.length + completed_orders.length;
+
   return (
-    <div className="w-full">
-      {/* Design 1: Modern Card-based Tabs */}
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-        <Tabs
-          color="#3b82f6"
-          variant="default"
-          radius="xl"
-          orientation="vertical"
-          defaultValue="pending"
-          className="flex min-h-[600px]"
-        >
-          {/* Sidebar */}
-          <div className="w-72 bg-slate-50 border-r border-slate-200">
-            <div className="p-6">
-              <h2 className="text-fluid-base font-medium text-slate-900 mb-1">
-                Order Management
-              </h2>
-              <p className="text-fluid-xxs text-slate-600 mb-6">
-                Track and manage your orders
-              </p>
-
-              <Tabs.List className="space-y-2">
-                <Tabs.Tab
-                  value="pending"
-                  className="w-full px-4 py-3 rounded-2xl flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
-                >
-                  <div className="p-2 rounded-2xl bg-amber-100 flex gap-x-2 items-center data-[active]:bg-amber-500">
-                    <PackageMinus
-                      size={20}
-                      className="text-amber-600 data-[active]:text-white"
-                      strokeWidth={1.5}
-                    />
-                    <p className="font-normal text-dark text-fluid-xxs flex items-center gap-x-2">
-                      <span>Pending Orders </span>
-                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-2xl-full">
-                        {pending_orders.length}
-                      </span>
-                    </p>
-                  </div>
-                </Tabs.Tab>
-
-                <Tabs.Tab
-                  value="processing"
-                  className="w-full px-4 py-3 rounded-2xl flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-blue-600 hover:bg-white/50"
-                >
-                  <div className="p-2 rounded-2xl bg-blue-100 flex gap-x-1 items-center data-[active]:bg-blue-500">
-                    <PackageSearch
-                      size={20}
-                      className="text-blue-600 data-[active]:text-white"
-                      strokeWidth={1.5}
-                    />
-                    <p className="font-normal text-dark text-fluid-xxs flex items-center gap-x-2">
-                      <span>In progress </span>
-                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-2xl-full">
-                        {processing_orders.length}
-                      </span>
-                    </p>
-                  </div>
-                </Tabs.Tab>
-
-                <Tabs.Tab
-                  value="completed"
-                  className="w-full px-4 py-3 rounded-2xl flex items-center gap-3 text-left transition-all data-[active]:bg-white data-[active]:shadow-sm data-[active]:text-green-600 hover:bg-white/50"
-                >
-                  <div className="p-2 rounded-2xl bg-green-100 flex items-center gap-x-1 data-[active]:bg-green-500">
-                    <PackageCheck
-                      size={20}
-                      className="text-green-600 data-[active]:text-white"
-                      strokeWidth={1.5}
-                    />
-                    <p className="font-normal text-dark text-fluid-xxs flex items-center gap-x-2">
-                      <span>Completed Orders </span>
-                      <span className="text-fluid-xxs font-normal text-white grid place-items-center h-5 w-5  bg-dark rounded-2xl-full">
-                        {completed_orders.length}
-                      </span>
-                    </p>
-                  </div>
-                </Tabs.Tab>
-              </Tabs.List>
-            </div>
-
-            {/* Summary Stats */}
-            <div className="px-6 pb-6">
-              <div className="bg-white rounded-3xl p-5 border border-slate-200">
-                <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">
-                  Overview
-                </p>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-fluid-xxs font-medium text-slate-600">
-                      Total Orders
-                    </span>
-                    <span className="text-sm font-semibold text-slate-900">
-                      {pending_orders.length +
-                        processing_orders.length +
-                        completed_orders.length}
-                    </span>
-                  </div>
-
-                  {/* DONE: comment this out */}
-                  {/* <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-600">This Month</span>
-                    <span className="text-sm font-semibold text-green-600">
-                      +12%
-                    </span>
-                  </div> */}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Content Area */}
-          <div className="flex-1 p-8">
-            <Tabs.Panel value="pending">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-fluid-base font-medium text-slate-900">
-                    Pending Orders
-                  </h3>
-                </div>
-                <PendingOrders orders={pending_orders} />
-              </div>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="processing">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-fluid-base font-medium text-slate-900">
-                    Orders in Progress
-                  </h3>
-                </div>
-                <ProcessingOrders orders={processing_orders} />
-              </div>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="completed">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-fluid-base font-medium text-slate-900">
-                    Completed Orders
-                  </h3>
-                </div>
-                <CompletedOrders orders={completed_orders} />
-              </div>
-            </Tabs.Panel>
-          </div>
-        </Tabs>
+    <div className="w-full max-w-full mx-auto space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-normal text-slate-900">
+            Order Management
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Overview of your sales pipeline
+          </p>
+        </div>
+        <div className="flex items-center gap-x-3 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            Total Orders
+          </span>
+          <span className="h-4 w-[1px] bg-slate-200"></span>
+          <span className="text-sm font-bold text-slate-900">
+            {allOrdersCount}
+          </span>
+        </div>
       </div>
+
+      {/* Tabs Section */}
+      <Tabs
+        defaultValue="pending"
+        variant="pills"
+        radius="md"
+        classNames={{
+          root: "w-full",
+          list: "flex flex-wrap gap-2 mb-8",
+          tab: "data-[active]:bg-dark data-[active]:text-white bg-white border border-slate-200 text-slate-600 font-normal px-5 h-10 hover:bg-slate-50 transition-all",
+        }}
+      >
+        <Tabs.List>
+          <Tabs.Tab value="pending">
+            <TabLabel
+              icon={<PackageMinus size={16} />}
+              label="Pending"
+              count={pending_orders.length}
+              color="amber"
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value="processing">
+            <TabLabel
+              icon={<PackageSearch size={16} />}
+              label="In Progress"
+              count={processing_orders.length}
+              color="blue"
+            />
+          </Tabs.Tab>
+          <Tabs.Tab value="completed">
+            <TabLabel
+              icon={<PackageCheck size={16} />}
+              label="Completed"
+              count={completed_orders.length}
+              color="emerald"
+            />
+          </Tabs.Tab>
+        </Tabs.List>
+
+        {/* Content Area */}
+        <div className="min-h-[400px]">
+          <Tabs.Panel value="pending">
+            <OrderCardList
+              orders={pending_orders}
+              emptyLabel="No pending orders"
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="processing">
+            <OrderCardList
+              orders={processing_orders}
+              emptyLabel="No orders in progress"
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="completed">
+            <OrderCardList
+              orders={completed_orders}
+              emptyLabel="No completed orders history"
+            />
+          </Tabs.Panel>
+        </div>
+      </Tabs>
+    </div>
+  );
+}
+
+// Helper for Tab Label styling
+function TabLabel({
+  icon,
+  label,
+  count,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  count: number;
+  color: string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      {icon}
+      <span>{label}</span>
+      {count > 0 && (
+        <span
+          className={`ml-1 flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ring-1 ring-inset ${
+            color === "amber"
+              ? "bg-amber-50 text-amber-700 ring-amber-600/20"
+              : color === "blue"
+                ? "bg-blue-50 text-blue-700 ring-blue-600/20"
+                : "bg-emerald-50 text-emerald-700 ring-emerald-600/20"
+          }`}
+        >
+          {count}
+        </span>
+      )}
     </div>
   );
 }

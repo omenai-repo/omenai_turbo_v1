@@ -55,7 +55,7 @@ const AccountManagement = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-6xl">
+      <div className="max-w-full">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-fluid-sm font-bold text-dark mb-2">

@@ -1,7 +1,5 @@
 "use client";
 import NextTopLoader from "nextjs-toploader";
-import PageLayout from "./features/PageLayout";
-import Appbar from "./components/Appbar";
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
 import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
@@ -24,6 +22,11 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
 import { UpdateLogoModal } from "./modals/UpdateLogoModal";
 import { ExtendArtworkContractModal } from "./modals/ExtendArtworkContractModal";
+import NoMobileView from "../components/NoMobileView";
+import { MainContent } from "./features/MainContent";
+import { MobileSidebar } from "./features/MobileLayout";
+import { DesktopSidebar } from "./features/Sidebar";
+import { useWindowSize } from "usehooks-ts";
 
 export default function ArtistDashboardLayout({
   children,
@@ -33,6 +36,7 @@ export default function ArtistDashboardLayout({
   const router = useRouter();
   const { user } = useAuth({ requiredRole: "artist" });
 
+  const { width } = useWindowSize();
   const { data, isLoading: loading } = useQuery({
     queryKey: ["check_onboarding_completion"],
     queryFn: async () => {
@@ -71,33 +75,40 @@ export default function ArtistDashboardLayout({
 
   return (
     <>
-      <div className=" w-full h-full">
-        <NextTopLoader color="#0f172a" height={6} />
-        <VerificationBlockerModal
-          open={user && user.role === "artist" && !data?.isArtistVerified}
-        />
-        <main className="flex h-full">
-          <PageLayout />
+      {width < 1280 ? (
+        <NoMobileView />
+      ) : (
+        <div className="flex h-screen overflow-hidden">
+          <NextTopLoader color="#0f172a" height={6} />
+          <VerificationBlockerModal
+            open={user && user.role === "artist" && !data?.isArtistVerified}
+          />
 
-          <div
-            className={`w-full xl:ml-[19rem] md:ml-[15rem]  rounded relative duration-200`}
-          >
-            <Appbar />
-            <div className="h-auto rounded relative my-5">
-              <UploadOrderRejectionReason />
-              <UpdatePasswordModal />
-              <DeleteAccountConfirmationModal />
-              <WithdrawalModal />
-              <WalletPinModal />
-              <UpdateAddressModal />
-              <UpdateLogoModal />
-              <ExtendArtworkContractModal />
+          <div className="flex flex-1 flex-col md:ml-16">
+            <DesktopSidebar />
+            {/* Mobile header */}
+            <header className="flex items-center gap-x-4 border-b bg-white px-4 py-3 md:hidden">
+              <MobileSidebar />
+              <span className="text-sm font-medium">Dashboard</span>
+            </header>
 
-              {children}
-            </div>
+            <MainContent>
+              <div className="h-auto rounded relative my-5">
+                <UploadOrderRejectionReason />
+                <UpdatePasswordModal />
+                <DeleteAccountConfirmationModal />
+                <WithdrawalModal />
+                <WalletPinModal />
+                <UpdateAddressModal />
+                <UpdateLogoModal />
+                <ExtendArtworkContractModal />
+
+                {children}
+              </div>
+            </MainContent>
           </div>
-        </main>
-      </div>
+        </div>
+      )}
     </>
   );
 }

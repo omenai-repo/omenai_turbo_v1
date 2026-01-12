@@ -9,7 +9,6 @@ export default function QuoteFormWrapper(props: { params: Params }) {
   const order_id = param_data.id;
   return (
     <div>
-      <PageTitle title={"Orders"} />
       <QuoteForm order_id={order_id} />
     </div>
   );
