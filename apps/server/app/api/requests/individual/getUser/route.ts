@@ -1,45 +1,57 @@
-import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
-import { NextResponse } from "next/server";
-import { NotFoundError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+import {
+  BadRequestError,
+  NotFoundError,
+} from "../../../../../custom/errors/dictionary/errorDictionary";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { IndividualSchemaTypes } from "@omenai/shared-types";
 import { createErrorRollbarReport } from "../../../util";
+import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
-) {
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const user_id = searchParams.get("id");
+
   try {
+    if (!user_id || typeof user_id !== "string")
+      throw new BadRequestError("Invalid ID parameter provided");
     await connectMongoDB();
 
-    const { accountId } = await request.json();
+    const user = await AccountIndividual.findOne<IndividualSchemaTypes>({
+      user_id,
+    }).exec();
 
-    const user = await AccountIndividual.findOne(
-      { user_id: accountId },
-      "address"
-    );
+    if (!user) throw new NotFoundError("user data not found");
 
-    if (!user) throw new NotFoundError("User account does not exist");
+    const { name, address, email, preferences, verified, phone } = user;
 
+    const payload = {
+      name,
+      email,
+      address,
+      preferences,
+      verified,
+      phone,
+    };
     return NextResponse.json(
       {
-        message: "Successful",
-        data: user,
+        message: "Profile retrieved successfully",
+        user: payload,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
-      "individual: get user",
+      "user: fetch profile",
       error,
       error_response.status
     );
-
+    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }
     );
   }
-});
+}

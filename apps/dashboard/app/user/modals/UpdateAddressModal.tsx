@@ -2,10 +2,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 import UpdateAddressModalForm from "./UpdateAddressModalForm";
-import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
+import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 
 export const UpdateAddressModal = () => {
-  const { updateAddressModalPopup, addressModalPopup } = galleryActionStore();
+  const { updateAddressModalPopup, addressModalPopup } = actionStore();
 
   return (
     <AnimatePresence key={8}>

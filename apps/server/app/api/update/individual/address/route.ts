@@ -1,52 +1,70 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { NextResponse } from "next/server";
 import {
   BadRequestError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
-import { getApiUrl } from "@omenai/url-config/src/config";
-import { Country, ICountry } from "country-state-city";
 
+import { CombinedConfig } from "@omenai/shared-types";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { createErrorRollbarReport } from "../../../util";
+import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
-
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
     await connectMongoDB();
 
-    const data = await request.json();
+    const { user_id, address } = await request.json();
+    if (!user_id || !address)
+      throw new BadRequestError("Invalid input parameters");
 
-    // Check phone validity
+    const payload = {
+      type: "delivery",
+      countryCode: address.countryCode,
+      postalCode: address.zip,
+      cityName: address.state,
+      countyName: address.city,
+    };
+    const response = await fetch(
+      `${getApiUrl()}/api/shipment/address_validation`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://omenai.app",
+        },
+      }
+    );
+    const result = await response.json();
+
+    if (!response.ok) throw new BadRequestError(result.message);
+
     const updatedData = await AccountIndividual.updateOne(
-      { user_id: data.id },
-      { $set: { ...data } }
+      { user_id },
+      { $set: { address } }
     );
 
     if (!updatedData) throw new ServerError("An unexpected error has occured.");
 
     return NextResponse.json(
       {
-        message: "Profile data updated",
+        message: "Address information updated successfully",
       },
       { status: 200 }
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
-      "updates: user profile",
+      "updates: Collector address",
       error,
       error_response.status
     );

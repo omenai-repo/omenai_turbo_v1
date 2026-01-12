@@ -71,7 +71,7 @@ export const IndividualLogo = ({ className }: LogoProps) => {
           }
           alt="omenai logo"
           width={130}
-          height={30}
+          height={50}
           priority={true}
         />
       </Link>

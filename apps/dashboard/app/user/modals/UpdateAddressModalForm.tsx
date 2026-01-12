@@ -1,22 +1,20 @@
 "use client";
 import React, { useState } from "react";
-import { AlertCircle, MapPin } from "lucide-react";
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
+import { MapPin } from "lucide-react";
 import Input from "@omenai/shared-ui-components/components/artists/AddressInputHandler";
 import SelectInput from "@omenai/shared-ui-components/components/global/AddressSelectHandler";
-import { artist_countries_codes_currency } from "@omenai/shared-json/src/artist_onboarding_countries";
 import { AddressTypes } from "@omenai/shared-types";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { updateAddress } from "@omenai/shared-services/update/gallery/updateAddress";
+import { updateAddress } from "@omenai/shared-services/update/updateAddress";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRouter } from "next/navigation";
-import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
-import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { useRollbar } from "@rollbar/react";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { Country, ICountry } from "country-state-city";
+import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 
 export const address_inputs = [
   {
@@ -24,7 +22,7 @@ export const address_inputs = [
     type: "select",
     placeholder: "Select option",
     labelText: "country",
-    items: country_codes,
+    items: Country.getAllCountries() as ICountry[],
   },
   {
     label: "State",
@@ -57,7 +55,7 @@ export const address_inputs = [
 
 export default function UpdateAddressModalForm() {
   const queryClient = useQueryClient();
-  const { updateAddressModalPopup } = galleryActionStore();
+  const { updateAddressModalPopup } = actionStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [address, setAddress] = useState<AddressTypes>({
     address_line: "",
@@ -68,7 +66,7 @@ export default function UpdateAddressModalForm() {
     stateCode: "",
     zip: "",
   });
-  const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  const { user, csrf } = useAuth({ requiredRole: "user" });
   const rollbar = useRollbar();
 
   const router = useRouter();
@@ -81,7 +79,7 @@ export default function UpdateAddressModalForm() {
       }
 
       const updateAddressResponse = await updateAddress(
-        user.gallery_id,
+        user.user_id,
         address,
         csrf || ""
       );
@@ -98,9 +96,9 @@ export default function UpdateAddressModalForm() {
         `${updateAddressResponse.message || "Address information updated successfully"}`,
         "success"
       );
+
       await queryClient.invalidateQueries({
-        queryKey: ["fetch_gallery_info"],
-        exact: false,
+        queryKey: ["fetch_user_info"],
       });
       router.refresh();
     } catch (error) {
@@ -131,12 +129,7 @@ export default function UpdateAddressModalForm() {
               {form_step.type === "select" ? (
                 <SelectInput
                   label={form_step.label}
-                  items={
-                    form_step.items as {
-                      name: string;
-                      code: string;
-                    }[]
-                  }
+                  items={form_step.items as ICountry[]}
                   name={form_step.label}
                   required={false}
                   labelText={form_step.labelText}
@@ -161,8 +154,7 @@ export default function UpdateAddressModalForm() {
       </div>
       <AlertComponent title="Please note:">
         Changing your address will only apply to future orders. Any orders that
-        are currently being processed will be picked up from your current
-        Address.
+        are currently being processed will be delivered to your current Address.
       </AlertComponent>
       <div className="flex space-x-3 pt-2 mt-4">
         <button

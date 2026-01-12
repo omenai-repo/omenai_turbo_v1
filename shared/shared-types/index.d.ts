@@ -511,6 +511,7 @@ export type GalleryProfileUpdateData = {
 export type IndividualProfileUpdateData = {
   name?: string;
   preferences?: string[];
+  phone?: string;
 };
 
 export type ArtistProfileUpdateData = {
