@@ -10,12 +10,8 @@ import { getServerSession } from "@omenai/shared-lib/session/getServerSession";
 import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import {LayoutWrapper} from "./LayoutWrapper";
-import {
-  ColorSchemeScript,
-  mantineHtmlProps,
-} from "@mantine/core";
-import React from "react";
+import { LayoutWrapper } from "./LayoutWrapper";
+import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Discover, buy, and sell African contemporary art online.",
@@ -39,7 +35,9 @@ const work_sans = Work_Sans({
   display: "swap",
 });
 
-export default async function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
+export default async function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const initialSessionData = await getServerSession();
 
   return (

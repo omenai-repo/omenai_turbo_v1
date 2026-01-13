@@ -20,80 +20,75 @@ export function TransactionTable({
     updatedAt: string;
   })[];
 }) {
-  const transaction_table_data = table.map(
-    (
-      transaction: PurchaseTransactionModelSchemaTypes & {
-        createdAt: string;
-        updatedAt: string;
-      }
-    ) => {
-      const table = {
-        id: transaction.trans_id,
-        date: formatIntlDateTime(transaction.trans_date),
-        gross: formatPrice(transaction.trans_pricing.unit_price),
-        net: formatPrice(
-          transaction.trans_pricing.unit_price -
-            transaction.trans_pricing.commission
-        ),
-        commission: formatPrice(transaction.trans_pricing.commission),
-        status: "Completed",
-      };
+  const transaction_table_data = table.map((transaction) => ({
+    id: transaction.trans_id,
+    date: formatIntlDateTime(transaction.trans_date),
+    gross: formatPrice(transaction.trans_pricing.unit_price),
+    net: formatPrice(
+      transaction.trans_pricing.unit_price -
+        transaction.trans_pricing.commission
+    ),
+    status: "Completed",
+  }));
 
-      return table;
-    }
-  );
   return (
-    // TODO: Paginate this table
-    <div className=" h-full w-full overflow-auto mb-4">
-      <div className="bg-white border border-gray-100 rounded overflow-hidden shadow-sm">
-        <table className="w-full table-auto">
-          <thead className="bg-gray-50 border-b border-gray-100">
-            <tr>
-              {TABLE_HEAD.map((head) => (
-                <th
-                  key={head}
-                  className="px-6 py-4 text-left text-sm font-semibold text-gray-900 whitespace-nowrap"
-                >
-                  {head}
-                </th>
-              ))}
-            </tr>
-          </thead>
+    <div className="w-full rounded-3xl bg-white p-6 shadow-sm">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-sm font-medium text-slate-900">
+          Transaction history
+        </h2>
+        <span className="text-xs text-slate-500">
+          {transaction_table_data.length} records
+        </span>
+      </div>
 
-          <tbody className="divide-y divide-gray-100">
-            {transaction_table_data.map((data, index) => (
-              <tr
-                key={data.id}
-                className="hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-              >
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {data.id}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">{data.date}</td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {data.gross}
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {data.net}
-                </td>
-                {/* <td className="px-6 py-4 text-sm text-gray-600">
-                  {data.commission}
-                </td> */}
-                <td className="px-6 py-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
-                    {data.status}
-                  </span>
-                </td>
+      {/* Scroll container */}
+      <div className="relative max-h-[500px] overflow-y-auto pr-2">
+        {transaction_table_data.length > 0 ? (
+          <table className="w-full border-separate border-spacing-y-2">
+            <thead className="sticky top-0 z-10 bg-white">
+              <tr className="text-left text-xs uppercase tracking-wide text-slate-500">
+                {["ID", "Date", "Gross", "Net", "Status"].map((head) => (
+                  <th key={head} className="px-4 pb-2">
+                    {head}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
 
-        {transaction_table_data.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16">
-            <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center mb-4">
+            <tbody>
+              {transaction_table_data.map((data) => (
+                <tr
+                  key={data.id}
+                  className="rounded-xl bg-slate-50 hover:bg-slate-100 transition"
+                >
+                  <td className="px-4 py-3 text-sm font-medium text-slate-900">
+                    #{data.id}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-slate-600">
+                    {data.date}
+                  </td>
+                  <td className="px-4 py-3 text-sm font-medium text-slate-900">
+                    {data.gross}
+                  </td>
+                  <td className="px-4 py-3 text-sm font-medium text-slate-900">
+                    {data.net}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                      {data.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="flex flex-col items-center py-20 text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="h-6 w-6 text-slate-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -106,11 +101,11 @@ export function TransactionTable({
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No transactions found
-            </h3>
-            <p className="text-sm text-slate-700">
-              Your transaction history will appear here
+            <p className="text-sm font-medium text-slate-900">
+              No transactions yet
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Completed payouts will appear here
             </p>
           </div>
         )}

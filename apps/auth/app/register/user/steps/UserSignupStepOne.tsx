@@ -8,8 +8,6 @@ import Preferences from "../features/preferences/Preferences";
 import TC from "../features/TC/TC";
 
 export default function UserSignupStepOne() {
-  const { currentSignupFormIndex, updateSignUpData } = useIndividualAuthStore();
-
   return (
     <div className="flex flex-col space-y-6">
       <>

@@ -444,6 +444,7 @@ export type PaymentStatusTypes = {
   transaction_value: number;
   transaction_date: Date;
   transaction_reference: string;
+  invoice_reference?: string;
 };
 
 export type PaymentLedgerTypes = {
@@ -510,6 +511,7 @@ export type GalleryProfileUpdateData = {
 export type IndividualProfileUpdateData = {
   name?: string;
   preferences?: string[];
+  phone?: string;
 };
 
 export type ArtistProfileUpdateData = {

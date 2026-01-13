@@ -1,7 +1,10 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { NextResponse } from "next/server";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import {
+  BadRequestError,
+  ServerError,
+} from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import {
   standardRateLimit,
@@ -10,6 +13,8 @@ import {
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { createErrorRollbarReport } from "../../../util";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { Country, ICountry } from "country-state-city";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -24,7 +29,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const data = await request.json();
 
-    const updatedData = await AccountIndividual.findOneAndUpdate(
+    // Check phone validity
+    const updatedData = await AccountIndividual.updateOne(
       { user_id: data.id },
       { $set: { ...data } }
     );

@@ -127,7 +127,7 @@ export default function EditArtworkWrapper({
           className: "class",
         });
         queryClient.invalidateQueries({ queryKey: ["fetch_artworks_by_id"] });
-        router.replace("/gallery/artworks");
+        router.replace("/artist/app/artworks");
       }
       setLoading(false);
     }
@@ -158,7 +158,7 @@ export default function EditArtworkWrapper({
       queryClient.invalidateQueries({
         queryKey: ["fetch_artworks_by_id"],
       });
-      router.replace("/gallery/artworks");
+      router.replace("/artist/app/artworks");
     }
     setDeleteLoading(false);
   }

@@ -27,7 +27,7 @@ export default function PlanDurationTab({
         }  cursor-pointer `}
         onClick={() => setTab("yearly")}
       >
-        <p>Annually</p>
+        <p>Annual</p>
       </button>
     </div>
   );

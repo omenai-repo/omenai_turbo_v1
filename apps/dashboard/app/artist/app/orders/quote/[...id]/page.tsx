@@ -1,7 +1,7 @@
 "use client";
 import { use } from "react";
 import PageTitle from "../../../components/PageTitle";
-import QuoteForm from "../components/QuoteForm";
+import QuoteForm from "../components/QuoteFormV2";
 type Params = Promise<{ id: string }>;
 
 export default function QuoteFormWrapper(props: { params: Params }) {

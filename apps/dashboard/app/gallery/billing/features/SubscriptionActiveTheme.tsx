@@ -2,11 +2,9 @@
 import BillingCard from "./components/BillingCard";
 import BillingInfo from "./components/BillingInfo";
 import CancelSubscriptionModal from "./components/CancelSubscriptionModal";
-
 import TransactionTable from "./components/TransactionTable";
 import SubDetail from "./components/SubscriptionStatus";
 import UpcomingSub from "./components/UpcomingSub";
-
 import {
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
@@ -30,36 +28,43 @@ export default function SubscriptionActiveTheme({
   const { user } = useAuth({ requiredRole: "gallery" });
 
   return (
-    <div className="w-full h-full grid 2xl:grid-cols-3 gap-4 my-5">
-      {/* Card */}
-      <div className="flex flex-col gap-4 items-start w-full col-span-1 2xl:col-span-2">
-        <div className="grid grid-cols-2 items-center gap-3 w-full">
-          <div className="flex flex-col gap-y-2">
-            <BillingCard
-              paymentMethod={subscription_data.paymentMethod as PaymentMethod}
-              plan_id={subscription_plan.plan_id}
-              plan_interval={subscription_data.plan_details.interval}
-            />
-          </div>
-
+    <div className="w-full max-w-full py-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 auto-rows-[minmax(200px,auto)]">
+        {/* Row 1: Status (Hero) and Billing Method */}
+        <div className="lg:col-span-7 lg:row-span-2">
           <SubDetail sub_data={subscription_data} />
         </div>
 
-        <div className="grid grid-cols-2 items-center gap-3 w-full">
-          <UpcomingSub sub_data={subscription_data} />
-
-          <BillingInfo />
+        <div className="lg:col-span-5">
+          <BillingCard
+            paymentMethod={subscription_data.paymentMethod as PaymentMethod}
+            plan_id={subscription_plan.plan_id}
+            plan_interval={subscription_data.plan_details.interval}
+          />
         </div>
 
-        <CancelSubscriptionModal
-          sub_end={subscription_data.expiry_date}
-          id={user.gallery_id as string}
-        />
+        {/* Row 2: Smaller details */}
+        <div className="lg:col-span-5">
+          <BillingInfo />
+        </div>
+        <div className="lg:col-span-4 max-h-[300px]">
+          <UpcomingSub sub_data={subscription_data} />
+        </div>
+
+        {/* Row 3: Transactions (Full Height Side or Bottom depending on screen) */}
+        <div className="lg:col-span-8 lg:row-span-2 lg:-mt-[224px] xl:mt-0 xl:row-span-1 xl:col-span-8">
+          {/* Note: The negative margin on LG allows it to tuck under the Billing Card if space permits, 
+                otherwise standard grid behavior applies. For simplicity, standard grid: */}
+          <div className="h-full max-h-[650px]">
+            <TransactionTable />
+          </div>
+        </div>
       </div>
 
-      <div className="col-span-1 w-full">
-        <TransactionTable />
-      </div>
+      <CancelSubscriptionModal
+        sub_end={subscription_data.expiry_date}
+        id={user.gallery_id as string}
+      />
     </div>
   );
 }

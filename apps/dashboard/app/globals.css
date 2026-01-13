@@ -16,8 +16,8 @@ body {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 3px;
+  height: 1px;
 }
 
 /* Track */
@@ -27,7 +27,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #858585;
+  background: #0f172a;
 }
 
 /* Handle on hover */
@@ -173,4 +173,15 @@ body {
 
 .animate-background-move {
   animation: background-move 60s linear infinite;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

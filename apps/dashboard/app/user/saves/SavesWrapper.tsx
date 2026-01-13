@@ -75,6 +75,14 @@ export default function Saves() {
   return (
     <div className="pb-5">
       <>
+        <div className="my-5">
+          <h1 className="text-2xl font-normal text-slate-900">
+            Your Favorite Artworks
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Overview of your saved artworks
+          </p>
+        </div>
         <p className="text-fluid-xxs font-bold my-4">
           {artwork_total} artworks:
         </p>

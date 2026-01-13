@@ -90,6 +90,11 @@ type ActionStoreTypes = {
   hydrate: (pages: string[]) => void;
   markCompleted: (page: string) => void;
   isCompleted: (page: string) => boolean;
+  addressModalPopup: boolean;
+  updateAddressModalPopup: (value: boolean) => void;
+  address_temp: AddressTypes;
+  updateAddress: (key: keyof AddressTypes, value: string) => void;
+  clearAddress: () => void;
 };
 
 export const actionStore = create<ActionStoreTypes>((set, get) => ({
@@ -287,4 +292,39 @@ export const actionStore = create<ActionStoreTypes>((set, get) => ({
         : [...state.completed, page],
     })),
   isCompleted: (page: string) => get().completed.includes(page),
+
+  addressModalPopup: false,
+  updateAddressModalPopup: (value: boolean) => {
+    set({ addressModalPopup: value });
+  },
+  address_temp: {
+    address_line: "",
+    city: "",
+    country: "",
+    state: "",
+    countryCode: "",
+    stateCode: "",
+    zip: "",
+  },
+  updateAddress: (key: keyof AddressTypes, value: string) => {
+    const address_snapshot = get().address_temp;
+    const updatedAddress = {
+      ...address_snapshot,
+      [key]: value,
+    };
+    set({ address_temp: updatedAddress });
+  },
+  clearAddress: () => {
+    set({
+      address_temp: {
+        address_line: "",
+        city: "",
+        country: "",
+        state: "",
+        countryCode: "",
+        stateCode: "",
+        zip: "",
+      },
+    });
+  },
 }));

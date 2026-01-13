@@ -1,12 +1,13 @@
 "use client";
 import { AddressTypes } from "@omenai/shared-types";
 import { SELECT_CLASS } from "../styles/inputClasses";
-import { City, ICity, IState, State } from "country-state-city";
+import { City, ICity, ICountry, IState, State } from "country-state-city";
 import { ChangeEvent, useEffect, useState } from "react";
 import { MdError } from "react-icons/md";
 
 type CountryItem = {
   name: string;
+  isoCode?: string;
   alpha2?: string;
   alpha3?: string;
   code?: string;
@@ -126,7 +127,7 @@ export default function SelectInput({
 
           {labelText === "country" &&
             items.map((item) => {
-              const itemCode = item.alpha2 || item.code || "";
+              const itemCode = item.alpha2 || item.code || item.isoCode;
               return (
                 <option
                   key={itemCode}

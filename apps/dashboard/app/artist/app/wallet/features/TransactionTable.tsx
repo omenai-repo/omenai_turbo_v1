@@ -293,13 +293,13 @@ export default function TransactionTable() {
               </div>
             </div>
           ) : (
-            <div className="border border-slate-200 rounded-3xl p-4">
+            <div className="border  border-slate-200 rounded-3xl p-4">
               <div className=" flex items-center px-4 justify-between">
                 <h2 className="text-fluid-sm font-semibold text-dark">
                   Transaction History
                 </h2>
               </div>
-              <ScrollArea h={600} className="pr-4">
+              <ScrollArea h={550} className="pr-4">
                 <Accordion
                   variant="separated"
                   radius="md"

@@ -66,7 +66,7 @@ export const PaymentMethodSuccessScreen = ({ isVisible = true }) => {
 
   // Success Screen Component
   const SuccessScreen = () => (
-    <div className="bg-white rounded-full shadow-2xl max-w-md w-full mx-auto overflow-hidden">
+    <div className="bg-white rounded shadow-2xl max-w-md w-full mx-auto overflow-hidden">
       {/* Header with gradient */}
       <div className="bg-gradient-to-br from-green-500 to-emerald-600 px-8 pt-12 pb-8 text-white relative overflow-hidden">
         {/* Background pattern */}

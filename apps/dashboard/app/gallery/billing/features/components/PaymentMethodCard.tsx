@@ -8,16 +8,16 @@ export function PaymentMethodCard({ card }: { card: PaymentMethod.Card }) {
           <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
             Card Number
           </p>
-          <p className="text-lg font-semibold text-slate-900 font-mono">
+          <p className="text-lg font-semibold text-white font-mono">
             {card.brand.toUpperCase()} •••• {card.last4}
           </p>
         </div>
 
         <div>
-          <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+          <p className="text-xs text-white uppercase tracking-wide mb-1">
             Expires
           </p>
-          <p className="text-base font-medium text-slate-700">
+          <p className="text-base font-medium text-white">
             {card.exp_month}/{card.exp_year}
           </p>
         </div>
@@ -27,7 +27,7 @@ export function PaymentMethodCard({ card }: { card: PaymentMethod.Card }) {
         <img
           src={`/icons/${card.brand}.png`}
           alt={`${card.brand} card`}
-          className="h-8 w-auto object-contain"
+          className="h-5 w-auto object-contain"
         />
       </div>
     </div>
