@@ -16,6 +16,7 @@ import {
   User,
   MapPin,
   Calendar,
+  ExternalLink,
 } from "lucide-react";
 import { renderButtonAction } from "./construct_response";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
@@ -25,6 +26,7 @@ import { tracking_url } from "@omenai/url-config/src/config";
 import OrderCountdown from "./OrderCountdown";
 import { ClipLoader } from "react-spinners";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import InvoiceDrawer from "../../modals/InvoiceModal";
 
 // --------------------------------------------------------------------------
 // HELPERS (Preserved Logic)
@@ -193,6 +195,7 @@ export function OrderCardList({
 // --------------------------------------------------------------------------
 
 function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { toggleDeclineOrderModal, update_current_order_id } = actionStore();
 
@@ -357,13 +360,22 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
             )}
 
             {order.payment_information.invoice_reference && (
-              <Link
-                href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
-              >
-                <p className="w-fit underline text-fluid-xxs font-normal text-dark hover:opacity-90 transition">
-                  View receipt invoice
-                </p>
-              </Link>
+              <div className="w-full flex justify-start lg:justify-end">
+                <button
+                  onClick={() => setIsDrawerOpen(true)}
+                  className="flex items-center gap-x-2 hover:underline bg-slate-100 px-4 py-2 rounded-full"
+                >
+                  <span className="w-fit text-fluid-xs font-normal text-dark hover:opacity-90 transition">
+                    View receipt invoice
+                  </span>
+                  <ExternalLink size={14} strokeWidth={1.75} />
+                </button>
+                <InvoiceDrawer
+                  isDrawerOpen={isDrawerOpen}
+                  setIsDrawerOpen={setIsDrawerOpen}
+                  invoiceNumber={order.payment_information.invoice_reference}
+                />
+              </div>
             )}
           </div>
         </div>

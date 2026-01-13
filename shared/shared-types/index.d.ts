@@ -1240,7 +1240,7 @@ export type InvoiceTypes = {
   currency: string;
   lineItems: InvoiceLineItemsData[];
   pricing: InvoicePriceData;
-  paidAt: Date;
+  paidAt: Date | string;
   storage: InvoiceStorageData;
   document_created: boolean;
   receipt_sent: boolean;
@@ -1251,7 +1251,7 @@ export type InvoicePriceData = {
   shipping: number;
   unitPrice: number;
   total: number;
-  discount?: number;
+  discount: number;
 };
 
 export type InvoiceLineItemsData = {
