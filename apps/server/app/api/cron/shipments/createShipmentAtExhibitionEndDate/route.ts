@@ -35,6 +35,7 @@ async function sendReminderEmail(
   artistName: string,
   artworkImage: string,
   artworkPrice: number,
+  requestDate: string,
   estimatedPickupDate?: string
 ): Promise<void> {
   if (isReminded) {
@@ -60,9 +61,8 @@ async function sendReminderEmail(
     pickupAddress,
     daysLeft,
     estimatedPickupDate,
-    artistName,
     artworkImage: artworkImageUrl,
-    artworkPrice,
+    requestDate,
   });
 }
 
@@ -153,6 +153,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
               order.seller_details.name,
               order.artwork_data.url,
               order.artwork_data.pricing.usd_price,
+              order.createdAt,
               order.shipping_details.shipment_information.planned_shipping_date
             );
             return;

@@ -15,8 +15,8 @@ export default function SellerShipmentEmail(
   name: string,
   artwork: string,
   artworkImage: string,
-  artistName: string,
-  artworkPrice: number
+  buyerName: string,
+  requestDate: string
 ) {
   return (
     <Html>
@@ -69,10 +69,10 @@ export default function SellerShipmentEmail(
               your location.
             </Text>
             <ArtworkCard
-              artistName={artistName}
               artwork={artwork}
               artworkImage={artworkImage}
-              artworkPrice={artworkPrice}
+              buyerName={buyerName}
+              requestDate={requestDate}
             />
             <Text
               style={{

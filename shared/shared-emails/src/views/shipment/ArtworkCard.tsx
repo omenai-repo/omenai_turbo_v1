@@ -5,104 +5,81 @@ import React from "react";
 export default function ArtworkCard({
   artwork,
   artworkImage,
-  artworkPrice,
-  artistName,
+  buyerName,
+  requestDate,
 }: Readonly<{
   artwork: string;
   artworkImage: string;
-  artworkPrice: number;
-  artistName: string;
+  buyerName: string;
+  requestDate: string;
 }>) {
   return (
-    <Section
-      style={{
-        border: "1px solid #e5e5e5",
-        borderRadius: "8px",
-        padding: "16px",
-        marginBottom: "20px",
-        backgroundColor: "#fafafa",
-      }}
-    >
-      <table style={{ width: "100%" }}>
-        <thead>
-          <tr>
-            <th
-              scope="col"
-              style={{
-                position: "absolute",
-                width: "1px",
-                height: "1px",
-                padding: 0,
-                margin: "-1px",
-                overflow: "hidden",
-                clip: "rect(0, 0, 0, 0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
+    <Section className="my-8 p-6 bg-gray-50 rounded">
+      <div className="text-center">
+        <Img
+          src={artworkImage}
+          alt={artwork}
+          className="mx-auto rounded shadow-md"
+          style={{
+            maxWidth: "280px",
+            width: "100%",
+            height: "auto",
+            maxHeight: "320px",
+            objectFit: "cover",
+          }}
+        />
+      </div>
+
+      {/* Order Details */}
+      <table
+        className="w-full mt-6"
+        style={{ borderCollapse: "separate", borderSpacing: "0 8px" }}
+      >
+        <tr>
+          <td style={{ padding: "8px 0", width: "120px" }}>
+            <Text
+              className="text-sm font-semibold m-0"
+              style={{ color: "#4b5563" }}
             >
-              Artwork Image
-            </th>
-            <th
-              scope="col"
-              style={{
-                position: "absolute",
-                width: "1px",
-                height: "1px",
-                padding: 0,
-                margin: "-1px",
-                overflow: "hidden",
-                clip: "rect(0, 0, 0, 0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
+              Artwork:
+            </Text>
+          </td>
+          <td style={{ padding: "8px 0" }}>
+            <Text className="text-sm m-0" style={{ color: "#0f172a" }}>
+              {artwork}
+            </Text>
+          </td>
+        </tr>
+        <tr>
+          <td style={{ padding: "8px 0" }}>
+            <Text
+              className="text-sm font-semibold m-0"
+              style={{ color: "#4b5563" }}
             >
-              Artwork Details (Title, Artist, Price)
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style={{ width: "120px", verticalAlign: "top" }}>
-              <Img
-                src={artworkImage}
-                width="120"
-                height="120"
-                alt="Omenai logo"
-                className="mx-auto my-10"
-              />
-            </td>
-            <td style={{ verticalAlign: "top", paddingLeft: "16px" }}>
-              <Text
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  marginBottom: "4px",
-                  color: "#1a1a1a",
-                }}
-              >
-                {artwork}
-              </Text>
-              <Text
-                style={{
-                  fontSize: "14px",
-                  color: "#666",
-                  marginBottom: "8px",
-                }}
-              >
-                by {artistName}
-              </Text>
-              <Text
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  color: "#1a1a1a",
-                }}
-              >
-                {formatPrice(artworkPrice)}
-              </Text>
-            </td>
-          </tr>
-        </tbody>
+              Buyer:
+            </Text>
+          </td>
+          <td style={{ padding: "8px 0" }}>
+            <Text className="text-sm m-0" style={{ color: "#0f172a" }}>
+              {buyerName}
+            </Text>
+          </td>
+        </tr>
+        <tr>
+          <td style={{ padding: "8px 0" }}>
+            <Text
+              className="text-sm font-semibold m-0"
+              style={{ color: "#4b5563" }}
+            >
+              Request Date:
+            </Text>
+          </td>
+          <td style={{ padding: "8px 0" }}>
+            <Text className="text-sm m-0" style={{ color: "#0f172a" }}>
+              {requestDate}
+            </Text>
+          </td>
+        </tr>
       </table>
     </Section>
   );

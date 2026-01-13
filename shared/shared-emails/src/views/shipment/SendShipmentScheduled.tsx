@@ -11,17 +11,16 @@ import {
 import ArtworkCard from "./ArtworkCard";
 
 export default function SendShipmentScheduled(
-  trackingCode: string,
   name: string,
   artwork: string,
   artworkImage: string,
-  artistName: string,
-  artworkPrice: number
+  buyerName: string,
+  requestDate: string
 ) {
   return (
     <Html>
       <Head />
-      <Preview>Shipment Creation Scheduled for Later</Preview>
+      <Preview>Shipment Created - Prepare for Pickup</Preview>
       <Body
         style={{
           backgroundColor: "#ffffff",
@@ -46,7 +45,7 @@ export default function SendShipmentScheduled(
                 marginBottom: "20px",
               }}
             >
-              Shipment Creation Scheduled for Later
+              Shipment Created - Prepare for Pickup
             </Heading>
             <Text
               style={{
@@ -65,43 +64,38 @@ export default function SendShipmentScheduled(
                 marginBottom: "16px",
               }}
             >
-              This is to inform you that the creation of the shipment for your
-              order{" "}
-              <strong>
-                #{trackingCode} - {artwork}
-              </strong>{" "}
-              has been scheduled for a later time. The processing of this
-              shipment is currently pending due to the piece currently being on
-              exhibition at the gallery and shipment will commence as soon as
-              the necessary conditions are met. Once the shipment has been
-              created and prepared for dispatch, you will receive an automated
-              update confirming the status change.
+              A shipment has been successfully created for your piece. DHL's
+              courier will reach out shortly to schedule a pickup from your
+              location.
             </Text>
             <ArtworkCard
-              artistName={artistName}
               artwork={artwork}
               artworkImage={artworkImage}
-              artworkPrice={artworkPrice}
+              buyerName={buyerName}
+              requestDate={requestDate}
             />
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              Please note that no further action is required at this stage. Our
-              logistics system will automatically proceed with shipment creation
-              once scheduling criteria are fulfilled. If additional information
-              or documentation becomes necessary, our support team will reach
-              out directly.
+              Please make sure the artwork is securely packaged and ready for
+              pickup. we've attached a <strong>waybill document</strong> to this
+              email - kindly print it and attach to the package before pickup.{" "}
+              <strong>
+                Also kindly attach the certificate of authenticity to the
+                package or hand this over to the courrier to ensure smooth
+                delivery
+              </strong>
             </Text>
 
             <Text
               style={{ fontSize: "16px", lineHeight: "1.5", marginTop: "24px" }}
             >
               If you have any questions, feel free to contact our customer care
-              team.
+              team anytime.
             </Text>
 
             <Text style={{ marginTop: "40px", fontSize: "16px" }}>
               Best regards,
               <br />
-              The <strong>Omenai</strong> Team
+              <strong>Omenai</strong>
             </Text>
           </Section>
         </Container>

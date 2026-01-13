@@ -18,8 +18,8 @@ export default function BuyerShipmentEmail(
   name: string,
   artwork: string,
   artworkImage: string,
-  artistName: string,
-  artworkPrice: number
+  buyerName: string,
+  requestDate: string
 ) {
   return (
     <Html>
@@ -75,10 +75,10 @@ export default function BuyerShipmentEmail(
               <strong>Tracking Code:</strong> {trackingCode}
             </Text>
             <ArtworkCard
-              artistName={artistName}
               artwork={artwork}
               artworkImage={artworkImage}
-              artworkPrice={artworkPrice}
+              buyerName={buyerName}
+              requestDate={requestDate}
             />
             <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
               Open the Omenai App to track your shipment or visit your dashboard

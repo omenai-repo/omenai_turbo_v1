@@ -14,6 +14,7 @@ type Payload = {
   artwork: string;
   artworkImage: string;
   artworkPrice: number;
+  createdAt: string;
 };
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload: Payload = ctx.requestPayload;
@@ -25,10 +26,10 @@ export const { POST } = serve<Payload>(async (ctx) => {
         name: payload.sellerName,
         email: payload.sellerEmail,
         fileContent: payload.fileContent,
-        artistName: payload.sellerName,
         artwork: payload.artwork,
         artworkImage,
-        artworkPrice: payload.artworkPrice,
+        buyerName: payload.buyerName,
+        requestDate: payload.createdAt,
       });
     }),
     ctx.run("sendBuyerShipmentEmail", async () => {
@@ -40,6 +41,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
         artwork: payload.artwork,
         artworkImage,
         artworkPrice: payload.artworkPrice,
+        buyerName: payload.buyerName,
+        requestDate: payload.createdAt,
       });
     }),
   ]);

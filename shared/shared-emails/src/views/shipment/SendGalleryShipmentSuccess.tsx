@@ -8,8 +8,8 @@ export default function SendGalleryShipmentSuccess(
   trackingCode: string,
   artwork: string,
   artworkImage: string,
-  artistName: string,
-  artworkPrice: number
+  buyerName: string,
+  requestDate: string
 ) {
   return (
     <ShipmentLayout
@@ -58,10 +58,10 @@ export default function SendGalleryShipmentSuccess(
         </Text>
       )}
       <ArtworkCard
-        artistName={artistName}
         artwork={artwork}
         artworkImage={artworkImage}
-        artworkPrice={artworkPrice}
+        buyerName={buyerName}
+        requestDate={requestDate}
       />
       <Text
         style={{

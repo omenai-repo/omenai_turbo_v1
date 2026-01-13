@@ -7,8 +7,8 @@ type EmailData = {
   trackingCode: string;
   artwork: string;
   artworkImage: string;
-  artistName: string;
-  artworkPrice: number;
+  buyerName: string;
+  requestDate: string;
 };
 export const sendGalleryShipmentSuccessfulMail = async ({
   name,
@@ -16,8 +16,8 @@ export const sendGalleryShipmentSuccessfulMail = async ({
   trackingCode,
   artwork,
   artworkImage,
-  artistName,
-  artworkPrice,
+  buyerName,
+  requestDate,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai shippment",
@@ -29,8 +29,8 @@ export const sendGalleryShipmentSuccessfulMail = async ({
       trackingCode,
       artwork,
       artworkImage,
-      artistName,
-      artworkPrice
+      buyerName,
+      requestDate
     ),
   });
 };

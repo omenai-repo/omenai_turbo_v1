@@ -48,10 +48,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       email: order.buyer_details.email,
       name: order.buyer_details.name,
       trackingCode: order_id,
-      artistName: order.seller_details.name,
       artworkImage,
       artwork: order.artwork_data.title,
-      artworkPrice: order.artwork_data.pricing.usd_price,
+      buyerName: order.buyer_details.name,
+      requestDate: order.createdAt,
     });
 
     if (order.seller_designation === "artist") {
@@ -59,20 +59,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artistName: order.seller_details.name,
         artworkImage,
         artwork: order.artwork_data.title,
-        artworkPrice: order.artwork_data.pricing.usd_price,
+        buyerName: order.buyer_details.name,
+        requestDate: order.createdAt,
       });
     } else {
       await SendGalleryShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artistName: order.seller_details.name,
         artworkImage,
         artwork: order.artwork_data.title,
-        artworkPrice: order.artwork_data.pricing.usd_price,
+        buyerName: order.buyer_details.name,
+        requestDate: order.createdAt,
       });
     }
 
