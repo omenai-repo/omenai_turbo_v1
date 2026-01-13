@@ -35,6 +35,44 @@ export default function ArtworkCard({
         className="w-full mt-6"
         style={{ borderCollapse: "separate", borderSpacing: "0 8px" }}
       >
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              style={{
+                position: "absolute",
+                display: "none",
+                width: "1px",
+                height: "1px",
+                padding: 0,
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+            >
+              Artwork Image
+            </th>
+            <th
+              scope="col"
+              style={{
+                position: "absolute",
+                display: "none",
+                width: "1px",
+                height: "1px",
+                padding: 0,
+                margin: "-1px",
+                overflow: "hidden",
+                clip: "rect(0, 0, 0, 0)",
+                whiteSpace: "nowrap",
+                border: 0,
+              }}
+            >
+              Artwork Details (Title, Artist, Price)
+            </th>
+          </tr>
+        </thead>
         <tr>
           <td style={{ padding: "8px 0", width: "120px" }}>
             <Text
