@@ -1,10 +1,10 @@
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import {
-  anonymizeUserId,
   createFailedTaskJob,
   DeletionReturnType,
   validateTargetId,
 } from "../utils";
+import { anonymizeUserId } from "../../../util";
 
 interface AnonymizationSummary {
   anonymized: number;

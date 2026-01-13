@@ -1,7 +1,7 @@
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { FailedCronJobTypes } from "@omenai/shared-types";
 import { processFailedJobs, handleUpdateWithRetry } from "./utils";
-import { anonymizeUsername } from "../../../../workflows/deletion/utils";
+import { anonymizeUsername } from "../../../../util";
 
 async function anonymizeSubscription(job: FailedCronJobTypes) {
   const { targetId } = job.payload;

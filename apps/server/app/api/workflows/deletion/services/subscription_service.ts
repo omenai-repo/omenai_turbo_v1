@@ -1,12 +1,12 @@
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import {
-  anonymizeUsername,
   createFailedTaskJob,
   DeletionReturnType,
   validateTargetId,
 } from "../utils";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import type { Stripe } from "stripe";
+import { anonymizeUsername } from "../../../util";
 
 /*
  * ====================================================================
@@ -84,7 +84,6 @@ export async function subscriptionDeletionProtocol(
         // 1. Find all payment methods for this customer
         const paymentMethods = await stripe.paymentMethods.list({
           customer: stripeCustomerId,
-          type: "card",
         });
 
         // 2. Detach all of them in parallel

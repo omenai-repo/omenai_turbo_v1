@@ -18,7 +18,6 @@ async function detachPaymentMethods(job: FailedCronJobTypes) {
     // Find all payment methods for this customer
     const paymentMethods = await stripe.paymentMethods.list({
       customer: stripeCustomerId,
-      type: "card",
     });
 
     // If no payment methods found, consider it successful

@@ -14,6 +14,8 @@ import { salesService } from "./services/salesService";
 import { stripePaymentMethodsService } from "./services/paymentService";
 import { subscriptionService } from "./services/subscriptionService";
 import { walletService } from "./services/wallet_service";
+import { flutterwaveService } from "./services/flutterwave_service";
+import { cloudinaryService } from "./services/cloudinary_service";
 
 type Job =
   | "anonymize_artist_account"
@@ -108,6 +110,8 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
       stripePaymentMethodsService(jobTypeGroups.detach_stripe_payment_methods),
       subscriptionService(jobTypeGroups.anonymize_subscription_data),
       walletService(jobTypeGroups.anonymize_wallet_data),
+      flutterwaveService(jobTypeGroups.delete_flutterwave_beneficiary_id),
+      cloudinaryService(jobTypeGroups.upload_artwork_to_cloudinary),
     ]);
     return NextResponse.json({ success: true });
   } catch (error) {

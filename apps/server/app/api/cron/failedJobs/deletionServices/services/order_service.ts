@@ -1,10 +1,7 @@
 import { FailedCronJobTypes } from "@omenai/shared-types";
 import { handleUpdateWithRetry, processFailedJobs } from "./utils";
-import {
-  anonymizeUserId,
-  anonymizeUsername,
-} from "../../../../workflows/deletion/utils";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import { anonymizeUserId, anonymizeUsername } from "../../../../util";
 
 export async function orderService(jobs: FailedCronJobTypes[]) {
   return processFailedJobs(jobs, (job) => {

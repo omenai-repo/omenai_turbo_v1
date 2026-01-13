@@ -191,7 +191,7 @@ async function processDeletionBatch(
   }
 }
 
-async function fetchImagesInParallel(fileIds: string[]) {
+export async function fetchImagesInParallel(fileIds: string[]) {
   if (!fileIds.length) return [];
   return fileIds.map((id) => ({
     id,

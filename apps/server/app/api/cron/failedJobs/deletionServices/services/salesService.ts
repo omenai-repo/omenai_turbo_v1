@@ -1,7 +1,7 @@
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { FailedCronJobTypes } from "@omenai/shared-types";
 import { processFailedJobs, handleUpdateWithRetry } from "./utils";
-import { anonymizeUserId } from "../../../../workflows/deletion/utils";
+import { anonymizeUserId } from "../../../../util";
 
 async function anonymizeSalesActivity(job: FailedCronJobTypes) {
   const targetId = job.payload.id;

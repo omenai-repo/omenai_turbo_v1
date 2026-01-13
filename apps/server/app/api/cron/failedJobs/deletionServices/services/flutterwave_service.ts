@@ -88,9 +88,7 @@ async function deleteBeneficiary(job: FailedCronJobTypes) {
   }
 }
 
-export async function flutterwaveBeneficiaryService(
-  jobs: FailedCronJobTypes[]
-) {
+export async function flutterwaveService(jobs: FailedCronJobTypes[]) {
   try {
     const promises = jobs.map((job) => deleteBeneficiary(job));
     const results = await Promise.allSettled(promises);

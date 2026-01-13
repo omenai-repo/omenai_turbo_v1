@@ -1,10 +1,10 @@
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import {
-  anonymizeUserId,
   createFailedTaskJob,
   DeletionReturnType,
   validateTargetId,
 } from "../utils";
+import { anonymizeUserId } from "../../../util";
 
 async function deleteFlutterwaveBeneficiary(
   beneficiary_id: string
