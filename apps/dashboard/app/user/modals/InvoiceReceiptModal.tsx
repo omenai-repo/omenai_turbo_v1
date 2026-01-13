@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -15,6 +15,8 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { ReceiptSkeleton } from "@omenai/shared-ui-components/components/skeletons/InvoiceSkeleton";
 import { fetchInvoice } from "@omenai/shared-services/invoice/fetchInvoice";
 import { useQuery } from "@tanstack/react-query";
+import { useRollbar } from "@rollbar/react";
+import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 interface ReceiptDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +35,8 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
   onClose,
   invoiceNumber,
 }) => {
-  // 1. Disable Background Scrolling
+  const [downloadReceiptLoading, setDownloadReceiptLoading] = useState(false);
+  const rollbar = useRollbar();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -65,22 +68,30 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
     const fileId = data?.storage?.fileId;
     if (!fileId) return;
 
-    const downloadUrl = downloadInvoiceFile(fileId);
+    setDownloadReceiptLoading(true);
 
-    if (!downloadUrl) {
-      toast_notif("Receipt file not found, please contact support", "error");
-      return;
+    try {
+      const downloadUrl = downloadInvoiceFile(fileId);
+
+      if (!downloadUrl) {
+        toast_notif("Receipt file not found, please contact support", "error");
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.target = "_blank";
+      link.download = `Invoice-${data.invoiceNumber}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      rollbar.error({ context: "Download purchase receipt error", error });
+    } finally {
+      setTimeout(() => {
+        setDownloadReceiptLoading(false);
+      }, 2000);
     }
-    // Constructing the download URL
-
-    // Logic to force download in browser
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.target = "_blank";
-    link.download = `Invoice-${data.invoiceNumber}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
   return (
     <>
@@ -266,10 +277,17 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
               </button>
               <button
                 onClick={handleDownload}
-                className="w-full py-2 px-4 rounded-md text-fluid-xs bg-dark text-white font-normal hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gray-200"
+                disabled={downloadReceiptLoading}
+                className="w-full py-2 px-4 rounded-md text-fluid-xs disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 bg-dark text-white font-normal hover:bg-slate-800 transition-all grid place-items-center gap-2 shadow-lg shadow-gray-200"
               >
-                <Download size={18} />
-                <span>Download PDF</span>
+                {downloadReceiptLoading ? (
+                  <LoadSmall />
+                ) : (
+                  <span className="flex items-center justify-center">
+                    <Download size={18} />
+                    <span>Download PDF</span>
+                  </span>
+                )}
               </button>
             </div>
           </div>
