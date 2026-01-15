@@ -16,8 +16,6 @@ export default function LatestArtworkWrapper({
     queryKey: ["latest"],
     queryFn: async () => {
       const data = await fetchAllArtworks(1);
-      console.log(data.data.length);
-      console.log(data.data);
       if (!data?.isOk) throw new Error("Something went wrong");
       else return data.data;
     },

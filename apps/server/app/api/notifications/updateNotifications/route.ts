@@ -66,7 +66,6 @@ export const PATCH = withRateLimit(standardRateLimit)(async function PATCH(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "notifications: update notification",
       error,

@@ -34,8 +34,6 @@ export default function SubscriptionCheckout() {
         retrieveSubscriptionDiscount(user.email as string, csrf || ""),
       ]);
 
-      console.log(discount_data);
-
       if (!plan?.isOk || !discount_data.isOk)
         throw new Error("Something went wrong");
 
@@ -55,7 +53,6 @@ export default function SubscriptionCheckout() {
     data?.discount.plan === data?.plan.name.toLowerCase() &&
     data?.discount.redeemed === false;
 
-  console.log(isEligibleForDiscount);
   return (
     <div>
       <PageTitle title="Checkout" />

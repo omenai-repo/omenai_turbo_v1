@@ -15,7 +15,6 @@ export const POST = withAppRouterHighlight(async function POST(
     await connectMongoDB();
 
     const { art_id } = await request.json();
-    console.log(art_id);
     const artwork = await getCachedArtwork(art_id);
 
     return NextResponse.json(

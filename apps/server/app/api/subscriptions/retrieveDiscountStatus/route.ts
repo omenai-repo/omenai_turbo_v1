@@ -50,7 +50,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json({
       message: "Discount Data retrieved",
-      discount: waitlistUserDiscount.discount,
+      discount: waitlistUserDiscount ? waitlistUserDiscount.discount : null,
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);

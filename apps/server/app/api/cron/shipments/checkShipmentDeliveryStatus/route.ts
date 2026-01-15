@@ -149,9 +149,6 @@ async function processOrder(order: any, dbConnection: any) {
             throw new Error("Wallet update failed - no changes made");
           }
 
-          console.log(
-            `✓ Order ${order.order_id}: Released ${wallet_increment_amount} to seller ${seller_details.id}`
-          );
           const artworkImage = getImageFileView(order.artwork_data.url, 120);
           // TODO: Send notification emails
           if (seller_designation === "artist") {
@@ -233,8 +230,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       "order_id shipping_details seller_designation payment_information seller_details"
     ).lean();
 
-    console.log(`Found ${processingOrders.length} orders in processing status`);
-
     // Filter orders where the estimated delivery date is at least two days past
     const eligibleOrders = processingOrders.filter((order) => {
       const estimatedDeliveryDateStr =
@@ -251,18 +246,12 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       try {
         const deliveryDate = toUTCDate(new Date(estimatedDeliveryDateStr));
 
-        console.log(deliveryDate);
-        console.log(isDateAtLeastTwoDaysPast(deliveryDate));
         return isDateAtLeastTwoDaysPast(deliveryDate);
       } catch (error) {
         console.error(`Order ${order.order_id}: Invalid delivery date format`);
         return false;
       }
     });
-
-    console.log(
-      `${eligibleOrders.length} orders eligible for validation (2+ days past delivery date)`
-    );
 
     if (eligibleOrders.length === 0) {
       const res_payload = {
@@ -272,7 +261,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         execution_time_ms: Date.now() - startTime,
       };
 
-      console.log(res_payload);
       return NextResponse.json({ ...res_payload }, { status: 200 });
     }
 
@@ -282,9 +270,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     for (let i = 0; i < eligibleOrders.length; i += BATCH_SIZE) {
       const batch = eligibleOrders.slice(i, i + BATCH_SIZE);
-      console.log(
-        `Processing batch ${Math.floor(i / BATCH_SIZE) + 1} (${batch.length} orders)`
-      );
 
       const batchPromises = batch.map((order) =>
         processOrder(order, dbConnection)
@@ -322,17 +307,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     );
 
     const executionTime = Date.now() - startTime;
-
-    console.log(`
-Cron Job Summary:
-- Total Processing Orders: ${processingOrders.length}
-- Eligible for Check: ${eligibleOrders.length}
-- Successfully Updated: ${successful.length}
-- Skipped (Not Delivered): ${skipped.length}
-- Failed: ${failed.length}
-- Total Funds Released: ${totalFundsReleased}
-- Execution Time: ${executionTime}ms
-    `);
 
     return NextResponse.json(
       {

@@ -59,8 +59,6 @@ export default function ArtworkCard({
 }) {
   const queryClient = useQueryClient();
 
-  console.log(image)
-
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
   const encoded_url = encodeURIComponent(art_id).replaceAll(/\//g, "%2F");

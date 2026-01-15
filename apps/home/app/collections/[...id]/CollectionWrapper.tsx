@@ -21,10 +21,8 @@ export default function CollectionWrapper({ id }: { id: string }) {
       return null;
     }
 
-    console.log("Decoded medium:", decodedMedium);
     return decodedMedium;
   };
-  console.log(pageTitleParser());
 
   let page_title = pageTitleParser() as ArtworkMediumTypes;
 

@@ -49,7 +49,6 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
         error,
         error_response.status
       );
-      console.log(error);
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

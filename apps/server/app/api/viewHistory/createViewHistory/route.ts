@@ -38,7 +38,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     return NextResponse.json({ status: 200 });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "viewhistory: create view history",
       error,

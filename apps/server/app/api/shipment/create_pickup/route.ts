@@ -127,7 +127,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const data = await response.json();
       return NextResponse.json({ message: "Success", data }, { status: 200 });
     } catch (error) {
-      console.log(error);
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "shipment: create pickup",

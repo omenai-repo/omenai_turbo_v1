@@ -99,7 +99,6 @@ async function checkAndHandleTransferStatus(
     }
 
     if (existing.trans_status === status) {
-      console.log(`Duplicate webhook for status ${status} — skipping`);
       return { isOk: true };
     }
 

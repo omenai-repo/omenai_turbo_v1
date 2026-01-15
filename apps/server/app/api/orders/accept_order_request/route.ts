@@ -80,12 +80,11 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-    request: Request
+  request: Request
 ) {
-await connectMongoDB();
+  await connectMongoDB();
 
   try {
-
     const data: {
       order_id: string;
       dimensions: ShipmentDimensions;
@@ -101,9 +100,9 @@ await connectMongoDB();
 
     const shipping_rate_data = await getShippingRate(order, data.dimensions);
     const shipment_information = await buildShipmentInformation(
-        order,
-        data.dimensions,
-        shipping_rate_data
+      order,
+      data.dimensions,
+      shipping_rate_data
     );
 
     const expiresAt = buildExpiryDate();
@@ -116,7 +115,6 @@ await connectMongoDB();
       expiresAt,
     });
 
-
     await notifyBuyer(order);
     await sendOrderAcceptedMail({
       name: order.buyer_details.name,
@@ -127,21 +125,20 @@ await connectMongoDB();
     });
 
     return NextResponse.json(
-        { message: "Order successfully accepted.", data: shipment_information },
-        { status: 200 }
+      { message: "Order successfully accepted.", data: shipment_information },
+      { status: 200 }
     );
   } catch (error) {
-
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
-        "order: accept order request",
-        error,
-        error_response.status
+      "order: accept order request",
+      error,
+      error_response.status
     );
 
     return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
+      { message: error_response?.message },
+      { status: error_response?.status }
     );
   }
 });
@@ -153,7 +150,7 @@ await connectMongoDB();
 function validatePayload(data: any) {
   if (!data?.order_id || !data?.dimensions) {
     throw new BadRequestError(
-        "Invalid params - Order ID or dimensions is missing"
+      "Invalid params - Order ID or dimensions is missing"
     );
   }
 }
@@ -170,27 +167,27 @@ async function validateSellerSubscription(order: CreateOrderModelTypes) {
   if (order.seller_designation !== "gallery") return;
 
   const active_subscription = await Subscriptions.findOne(
-      { "customer.gallery_id": order.seller_details.id },
-      "plan_details status"
+    { "customer.gallery_id": order.seller_details.id },
+    "plan_details status"
   );
 
   if (active_subscription?.status !== "active") {
     throw new ForbiddenError(
-        "Please activate a subscription to access this feature"
+      "Please activate a subscription to access this feature"
     );
   }
 }
 
 async function getShippingRate(
-    order: CreateOrderModelTypes,
-    dimensions: ShipmentDimensions
+  order: CreateOrderModelTypes,
+  dimensions: ShipmentDimensions
 ) {
   const payload: ShipmentRateRequestTypes = {
     originCountryCode: order.shipping_details.addresses.origin.countryCode,
     originCityName: order.shipping_details.addresses.origin.city,
     originPostalCode: order.shipping_details.addresses.origin.zip,
     destinationCountryCode:
-    order.shipping_details.addresses.destination.countryCode,
+      order.shipping_details.addresses.destination.countryCode,
     destinationCityName: order.shipping_details.addresses.destination.city,
     destinationPostalCode: order.shipping_details.addresses.destination.zip,
     weight: dimensions.weight,
@@ -198,10 +195,6 @@ async function getShippingRate(
     width: dimensions.width,
     height: dimensions.height,
   };
-
-  if (process.env.NODE_ENV !== "production") {
-    console.log(payload);
-  }
 
   try {
     const response = await fetch(`${API_URL}/api/shipment/get_rate`, {
@@ -220,27 +213,27 @@ async function getShippingRate(
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
-        "order: calculate shipping rate",
-        error,
-        error_response.status
+      "order: calculate shipping rate",
+      error,
+      error_response.status
     );
     throw error;
   }
 }
 
 async function buildShipmentInformation(
-    order: CreateOrderModelTypes,
-    dimensions: ShipmentDimensions,
-    rate: any
+  order: CreateOrderModelTypes,
+  dimensions: ShipmentDimensions,
+  rate: any
 ) {
   const origin = order.shipping_details.addresses.origin;
   const destination = order.shipping_details.addresses.destination;
 
   const taxes = await calculate_taxes(
-      origin,
-      destination,
-      order.artwork_data.pricing.usd_price,
-      Number(rate.chargeable_price_in_usd)
+    origin,
+    destination,
+    order.artwork_data.pricing.usd_price,
+    Number(rate.chargeable_price_in_usd)
   );
 
   return {
@@ -260,33 +253,42 @@ function buildExpiryDate() {
   return new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
 }
 
-async function updateOrder({order_id, exhibition_status, specialInstructions, shipment_information, expiresAt,}: {
+async function updateOrder({
+  order_id,
+  exhibition_status,
+  specialInstructions,
+  shipment_information,
+  expiresAt,
+}: {
   order_id: string;
   exhibition_status: OrderArtworkExhibitionStatus | null;
   specialInstructions?: string;
   shipment_information: any;
   expiresAt: string;
 }) {
-  if (!expiresAt) throw new Error ("Something went wrong. Please try again or contact support")
+  if (!expiresAt)
+    throw new Error(
+      "Something went wrong. Please try again or contact support"
+    );
   await CreateOrder.updateOne(
-      { order_id },
-      {
-        $set: {
-          exhibition_status: { ...exhibition_status, status: "pending" },
-          hold_status: { is_hold: true, hold_end_date: expiresAt },
-          "shipping_details.additional_information": specialInstructions || "",
-          "shipping_details.shipment_information": shipment_information,
-          "order_accepted.status": "accepted",
-          expiresAt,
-        },
+    { order_id },
+    {
+      $set: {
+        exhibition_status: { ...exhibition_status, status: "pending" },
+        hold_status: { is_hold: true, hold_end_date: expiresAt },
+        "shipping_details.additional_information": specialInstructions || "",
+        "shipping_details.shipment_information": shipment_information,
+        "order_accepted.status": "accepted",
+        expiresAt,
       },
+    }
   );
 }
 
 async function notifyBuyer(order: CreateOrderModelTypes) {
   const buyer_push_token = await DeviceManagement.findOne(
-      { auth_id: order.buyer_details.id },
-      "device_push_token"
+    { auth_id: order.buyer_details.id },
+    "device_push_token"
   );
 
   if (!buyer_push_token?.device_push_token) return;
@@ -307,14 +309,14 @@ async function notifyBuyer(order: CreateOrderModelTypes) {
   };
 
   await createWorkflow(
-      "/api/workflows/notification/pushNotification",
-      `notification_workflow_buyer_${order.order_id}_${generateDigit(2)}`,
-      JSON.stringify(payload)
+    "/api/workflows/notification/pushNotification",
+    `notification_workflow_buyer_${order.order_id}_${generateDigit(2)}`,
+    JSON.stringify(payload)
   ).catch((error) => {
     createErrorRollbarReport(
-        "order: failed to send buyer notification",
-        error,
-        500
+      "order: failed to send buyer notification",
+      error,
+      500
     );
   });
 }

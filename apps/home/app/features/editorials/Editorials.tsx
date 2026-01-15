@@ -17,8 +17,6 @@ export default function Editorials() {
         tableId: process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
       });
 
-      console.log(response);
-
       if (response?.rows) {
         return response.rows;
       } else throw new Error("Something went wrong");

@@ -42,7 +42,6 @@ export default function Saves() {
         setPageCount(response?.count);
       }
 
-      console.log(response);
       return response.data;
     },
     refetchOnWindowFocus: false,

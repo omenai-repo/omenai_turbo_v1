@@ -25,7 +25,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     ).lean();
 
     if (expiredContracts.length === 0) {
-      console.log("No artwork exclusivity contracts expired");
       return NextResponse.json(
         { message: "No expired contracts found" },
         { status: 200 }
@@ -67,10 +66,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       Artworkuploads.bulkWrite(updateArtworkOps),
       CreateOrder.bulkWrite(updateOrderOps),
     ]);
-
-    console.log(
-      `✅ Updated ${artworkResult.modifiedCount} artworks, ${orderResult.modifiedCount} orders`
-    );
 
     return NextResponse.json(
       {

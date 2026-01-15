@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: get order by seller id",

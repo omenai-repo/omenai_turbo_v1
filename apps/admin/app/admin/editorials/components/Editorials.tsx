@@ -12,7 +12,6 @@ export default function Editorials() {
     queryKey: ["fetch_admin_editorials"],
     queryFn: async () => {
       const response = await listEditorials();
-      console.log(response);
 
       if (!response.isOk) {
         toast_notif(
@@ -33,8 +32,6 @@ export default function Editorials() {
         <p>No editorials uploaded</p>
       </div>
     );
-
-  console.log(editorials);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 sm:gap-6 lg:gap-8 p-4">

@@ -116,7 +116,6 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
         error: `Unable to anonymize ${accountType} account`,
       };
     } else {
-      console.log(`Anonymize ${config.displayName} Account successful`);
       return {
         success: true,
         note: "Deletion protocol successfully completed",

@@ -27,7 +27,6 @@ export const POST = withAppRouterHighlight(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "viewHistory: get view history",
       error,

@@ -127,10 +127,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       });
     }
 
-    console.log(
-      `Processing ${jobsReadyForRetry.length} jobs with max concurrency: ${MAX_CONCURRENT_JOBS}`
-    );
-
     // Create concurrency limiter
     const limit = pLimit(MAX_CONCURRENT_JOBS);
 
@@ -163,14 +159,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         );
       }
     });
-
-    // Log summary
-    console.log(
-      `✅ Retry completed: ${successful} successful, ${failed} failed`
-    );
-    if (errors.length > 0) {
-      console.log("❌ Errors:", errors.slice(0, 5)); // Log first 5 errors
-    }
 
     return NextResponse.json({
       message: "Failed job retry completed",

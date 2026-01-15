@@ -5,7 +5,6 @@ type EmailData = {
   email: string;
 };
 export const sendTestMail = async ({ name, email }: EmailData) => {
-  console.log(process.env.RESEND_API_KEY!);
   const data = await sendMailVerification({
     prefix: "Omenai onboarding",
     from: "orders",

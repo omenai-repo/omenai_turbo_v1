@@ -8,7 +8,6 @@ export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
-    console.log("This has begun running");
     const fileUploaded = await storage.createFile({
       bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
       fileId: ID.unique(),

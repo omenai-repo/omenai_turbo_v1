@@ -49,7 +49,6 @@ export default function SelectInput({
   const stateList: IState[] = State.getStatesOfCountry(
     individualSignupData.countryCode
   );
-  // console.log(cityList);
   const [errorList, setErrorList] = useState<string[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {

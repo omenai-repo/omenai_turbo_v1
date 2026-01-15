@@ -74,8 +74,6 @@ export function PaymentForm({
       if (baseError) {
         // Show error to user
         setError(baseError.message || "Payment failed");
-      } else {
-        console.log("Payment successful");
       }
     } catch (err) {
       setError(

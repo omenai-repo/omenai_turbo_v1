@@ -22,7 +22,6 @@ export const GET = withAppRouterHighlight(async function GET() {
       data: get_promotionals,
     });
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "promotional: get promotional data",

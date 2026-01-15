@@ -32,8 +32,6 @@
 //         break;
 //       }
 
-//       console.log(`Processing batch ${batchNumber}`);
-
 //       const allFailedDeletionTaskCreation = await FailedDeletionTaskModel.find()
 //         .limit(10)
 //         .skip(10 * batchNumber)

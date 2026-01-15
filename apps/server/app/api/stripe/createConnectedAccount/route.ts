@@ -69,7 +69,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         gallery_verified: true,
       };
       await redis.del(`accountId:${customer.customer_id}`);
-      await redis.set(`accountId:${customer.customer_id}`, JSON.stringify(accountData));
+      await redis.set(
+        `accountId:${customer.customer_id}`,
+        JSON.stringify(accountData)
+      );
     } catch (error) {
       rollbarServerInstance.error({
         context: "Redis deletion: Connected account ID",
@@ -84,7 +87,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       { status: 201 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "stripe: create connected account",

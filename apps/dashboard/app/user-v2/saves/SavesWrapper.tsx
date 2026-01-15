@@ -39,7 +39,6 @@ export default function Saves() {
         setPageCount(response?.count);
       }
 
-      console.log(response);
       return response.data;
     },
     refetchOnWindowFocus: false,
@@ -49,7 +48,6 @@ export default function Saves() {
   if (loading || isLoading) {
     return <ArtworksListingSkeletonLoader />;
   }
-  console.log(artworksArray);
 
   if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
     return (
@@ -72,35 +70,38 @@ export default function Saves() {
 
   return (
     <div className="pb-5">
-        <p className="text-fluid-xxs font-bold my-4">{arts.length} artworks:</p>
+      <p className="text-fluid-xxs font-bold my-4">{arts.length} artworks:</p>
 
-        <div className="flex flex-wrap gap-x-4 justify-center">
-          {arts.map((artworks: any[], index) => {
-            return (
-              <div className="flex-1 gap-2 space-y-6" key={artworks[index].art_id}>
-                {artworks.map((art: any) => {
-                  return (
-                    <ArtworkCard
-                      key={art.art_id}
-                      image={art.url}
-                      name={art.title}
-                      artist={art.artist}
-                      art_id={art.art_id}
-                      pricing={art.pricing}
-                      impressions={art.impressions as number}
-                      likeIds={art.like_IDs as string[]}
-                      sessionId={user.id}
-                      availability={art.availability}
-                      medium={art.medium}
-                      author_id={art.author_id}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })}
-          {/* first */}
-        </div>
+      <div className="flex flex-wrap gap-x-4 justify-center">
+        {arts.map((artworks: any[], index) => {
+          return (
+            <div
+              className="flex-1 gap-2 space-y-6"
+              key={artworks[index].art_id}
+            >
+              {artworks.map((art: any) => {
+                return (
+                  <ArtworkCard
+                    key={art.art_id}
+                    image={art.url}
+                    name={art.title}
+                    artist={art.artist}
+                    art_id={art.art_id}
+                    pricing={art.pricing}
+                    impressions={art.impressions as number}
+                    likeIds={art.like_IDs as string[]}
+                    sessionId={user.id}
+                    availability={art.availability}
+                    medium={art.medium}
+                    author_id={art.author_id}
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
+        {/* first */}
+      </div>
 
       <Pagination
         total={pageCount}

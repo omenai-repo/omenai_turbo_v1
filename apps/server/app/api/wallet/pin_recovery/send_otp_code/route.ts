@@ -55,7 +55,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "wallet: pin recovery -> sent otp code",

@@ -26,12 +26,9 @@ export const { POST } = serve<Payload>(async (ctx) => {
       if (!dbInvoice) {
         throw new Error("Invoice upsert failed");
       }
-      console.log("This is step 1 and it ran");
 
       // Always generate PDF when needed (deterministic)
       const pdfBuffer = await generateInvoicePdf(invoice);
-
-      console.log("This is step 2 and it ran");
 
       if (!pdfBuffer || pdfBuffer.length === 0) {
         throw new Error("PDF generation failed");
@@ -44,7 +41,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
           { $set: { document_created: true } }
         );
       }
-      console.log("This is step 3 and it ran");
 
       // 2️⃣ Upload PDF (only once)
       if (!dbInvoice.storage?.fileId) {
@@ -68,7 +64,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
           }
         );
       }
-      console.log("This is step 4 and it ran");
 
       // 3️⃣ Send receipt (only once)
       if (!dbInvoice.receipt_sent) {
@@ -90,7 +85,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
           { $set: { receipt_sent: true } }
         );
       }
-      console.log("This is step 5 and it ran");
 
       await CreateOrder.updateOne(
         { order_id: invoice.orderId },

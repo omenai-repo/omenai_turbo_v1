@@ -29,7 +29,6 @@ export default function GalleryDashboardLayout({
     queryFn: async () => {
       const acc = await getAccountId(user.gallery_id as string, csrf || "");
 
-      console.log(acc);
       if (!acc?.isOk)
         toast_notif("Something went wrong, Please refresh the page", "error");
       else return acc.data;

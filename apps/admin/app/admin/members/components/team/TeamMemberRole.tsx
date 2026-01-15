@@ -31,7 +31,6 @@ export default function TeamMemberRow({ member }: TeamMemberRowProps) {
       (user.access_role === "Admin" &&
         ["Editor", "Viewer"].includes(member.access_role)));
 
-  console.log(member);
   return (
     <>
       <div className="grid grid-cols-12 gap-4 p-6 items-center">

@@ -71,7 +71,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-      console.log(error);
       createErrorRollbarReport(
         "individual: verify resend",
         error,

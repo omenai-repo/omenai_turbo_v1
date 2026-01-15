@@ -33,7 +33,6 @@ export default function EditArtwork() {
     );
   }
 
-  console.log(artwork);
   return (
     <Suspense>
       <PageTitle title="Edit artwork Price" />

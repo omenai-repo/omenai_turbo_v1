@@ -107,9 +107,6 @@ export default async function proxy(req: NextRequest) {
     role === "user" &&
     (isGalleryDashboard || isArtistDashboard || isAdminDashboard)
   ) {
-    console.log(
-      `[UI Middleware] User role '${role}' forbidden from ${pathname}. Redirecting to user's dashboard.`
-    );
     return NextResponse.redirect(new URL("/user/saves", dashboard_url())); // Redirect to their actual user dashboard
   }
 
@@ -122,9 +119,6 @@ export default async function proxy(req: NextRequest) {
       isPurchasePage ||
       isPaymentPage)
   ) {
-    console.log(
-      `[UI Middleware] Gallery role '${role}' forbidden from ${pathname}. Redirecting to gallery's dashboard.`
-    );
     return NextResponse.redirect(new URL("/gallery/overview", dashboard_url())); // Redirect to their actual gallery dashboard
   }
 
@@ -137,9 +131,6 @@ export default async function proxy(req: NextRequest) {
       isPurchasePage ||
       isPaymentPage)
   ) {
-    console.log(
-      `[UI Middleware] Artist role '${role}' forbidden from ${pathname}. Redirecting to artist's dashboard.`
-    );
     return NextResponse.redirect(
       new URL("/artist/app/overview", dashboard_url())
     ); // Redirect to their actual artist dashboard
@@ -154,9 +145,6 @@ export default async function proxy(req: NextRequest) {
       isPurchasePage ||
       isPaymentPage)
   ) {
-    console.log(
-      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to login`
-    );
     return NextResponse.redirect(
       new URL("/admin/requests/gallery", admin_url())
     ); // Redirect to their actual admin dashboard

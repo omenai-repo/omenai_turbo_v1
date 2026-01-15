@@ -38,10 +38,8 @@ async function sendReminderEmail(
   estimatedPickupDate?: string
 ): Promise<void> {
   if (isReminded) {
-    console.log(`🔁 Reminder already sent for order_id: ${orderId}, skipping.`);
     return;
   }
-  console.log(`🟡 Sending reminder email for order_id: ${orderId}`);
   // DONE: Implement actual email sending logic here
 
   await ScheduledShipment.updateOne(
@@ -81,7 +79,6 @@ async function updateShipmentStatus(
 }
 
 async function triggerShipmentWorkflow(orderId: string): Promise<void> {
-  console.log(`🚀 Triggering workflow for order_id: ${orderId}`);
   const workflowID = await createWorkflow(
     "/api/workflows/shipment/create_shipment",
     `test_workflow${generateDigit(2)}`,
@@ -105,7 +102,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     const nowUTC = toUTCDate(new Date());
     const shipments = await ScheduledShipment.find({ status: "scheduled" });
     if (!shipments.length) {
-      console.log("No scheduled shipments to process.");
       return NextResponse.json(
         { message: "No scheduled shipments." },
         { status: 200 }
@@ -169,7 +165,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       );
     }
 
-    console.log("✅ Scheduled shipment batch check completed.");
     return NextResponse.json(
       {
         message: "Scheduled shipment batch check completed.",

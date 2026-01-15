@@ -48,13 +48,10 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           "Duplicate request detected. Cannot fulfill request."
         );
 
-      console.log(data.answers);
-
       // Calculate new algorithm
       const algorithm_result: ArtistCategorizationAlgorithmResult =
         calculateArtistRating(data.answers);
 
-      console.log(algorithm_result);
       if (algorithm_result.status !== "success")
         throw new ServerError(
           "Something went wrong while processing data, please contact support"

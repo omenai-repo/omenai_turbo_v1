@@ -74,7 +74,6 @@ export const GET = withAppRouterHighlight(async function GET(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "artist: fetch income data",
       error,

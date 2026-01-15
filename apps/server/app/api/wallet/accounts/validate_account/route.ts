@@ -41,7 +41,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
     const result = await response.json();
 
-    console.log(result, bankCode, accountNumber);
     if (!response.ok) {
       return NextResponse.json(
         { message: result.message },
@@ -63,8 +62,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       error,
       error_response.status
     );
-    console.log(error);
-
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }
