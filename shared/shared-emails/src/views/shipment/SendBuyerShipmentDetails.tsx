@@ -1,10 +1,5 @@
-// components/emails/BuyerShipmentEmail.tsx
 import { tracking_url } from "@omenai/url-config/src/config";
 import {
-  Html,
-  Head,
-  Preview,
-  Body,
   Container,
   Section,
   Text,
@@ -12,6 +7,7 @@ import {
   Link,
 } from "@react-email/components";
 import ArtworkCard from "./ArtworkCard";
+import ShipmentLayout from "./ShipmentLayout";
 
 export default function BuyerShipmentEmail(
   trackingCode: string,
@@ -19,108 +15,87 @@ export default function BuyerShipmentEmail(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  artworkPrice: number
+  price: string
 ) {
   return (
-    <Html>
-      <Head />
-      <Preview>Your artwork is on the way. Track your shipment now.</Preview>
-      <Body
-        style={{
-          backgroundColor: "#ffffff",
-          color: "#0f172a",
-          fontFamily: "Helvetica, Arial, sans-serif",
-          padding: "40px 20px",
-        }}
-      >
-        <Container style={{ maxWidth: "600px", margin: "0 auto" }}>
-          <Section
+    <ShipmentLayout
+      preview="Your artwork is on the way. Track your shipment now."
+      name={name}
+    >
+      <Container style={{ maxWidth: "600px", margin: "0 auto" }}>
+        <Section>
+          <Heading
+            as="h2"
             style={{
-              border: "1px solid #eee",
-              borderRadius: "12px",
-              padding: "32px",
+              color: "#0f172a",
+              fontSize: "24px",
+              marginBottom: "20px",
             }}
           >
-            <Heading
-              as="h2"
+            Your Shipment is on the Way
+          </Heading>
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.5",
+              marginBottom: "16px",
+            }}
+          >
+            Hi {name},
+          </Text>
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.5",
+              marginBottom: "16px",
+            }}
+          >
+            Your artwork is currently being prepared for shipment. We’ve created
+            a shipment for your piece and it will soon be on its way.
+          </Text>
+          <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
+            <strong>Tracking Code:</strong> {trackingCode}
+          </Text>
+          <ArtworkCard
+            artwork={artwork}
+            artworkImage={artworkImage}
+            artistName={artistName}
+            price={price}
+          />
+          <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
+            Open the Omenai App to track your shipment or visit your dashboard
+            on the web
+          </Text>
+
+          <div style={{ textAlign: "center", margin: "30px 0" }}>
+            <Link
+              href={`${tracking_url()}?tracking_id=${trackingCode}`}
               style={{
-                color: "#0f172a",
-                fontSize: "24px",
-                marginBottom: "20px",
-              }}
-            >
-              Your Shipment is on the Way
-            </Heading>
-            <Text
-              style={{
+                display: "inline-block",
+                backgroundColor: "#0f172a",
+                color: "#ffffff",
+                padding: "12px 24px",
+                borderRadius: "8px",
+                textDecoration: "none",
                 fontSize: "16px",
-                lineHeight: "1.5",
-                marginBottom: "16px",
               }}
             >
-              Hi {name},
-            </Text>
+              Track Shipment
+            </Link>
+          </div>
 
-            <Text
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.5",
-                marginBottom: "16px",
-              }}
-            >
-              Your artwork is currently being prepared for shipment. We’ve
-              created a shipment for your piece and it will soon be on its way.
-            </Text>
-            <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              <strong>Tracking Code:</strong> {trackingCode}
-            </Text>
-            <ArtworkCard
-              artistName={artistName}
-              artwork={artwork}
-              artworkImage={artworkImage}
-              artworkPrice={artworkPrice}
-            />
-            <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              Open the Omenai App to track your shipment or visit your dashboard
-              on the web
-            </Text>
+          <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
+            You can also track your order directly from your dashboard.
+          </Text>
 
-            <div style={{ textAlign: "center", margin: "30px 0" }}>
-              <Link
-                href={`${tracking_url()}?tracking_id=${trackingCode}`}
-                style={{
-                  display: "inline-block",
-                  backgroundColor: "#0f172a",
-                  color: "#ffffff",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  fontSize: "16px",
-                }}
-              >
-                Track Shipment
-              </Link>
-            </div>
-
-            <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-              You can also track your order directly from your dashboard.
-            </Text>
-
-            <Text
-              style={{ fontSize: "16px", lineHeight: "1.5", marginTop: "24px" }}
-            >
-              If you have any questions, feel free to contact our customer care
-              team.
-            </Text>
-
-            <Text style={{ marginTop: "40px", fontSize: "16px" }}>
-              Best regards,
-              <br />
-              The <strong>Omenai</strong> Team
-            </Text>
-          </Section>
-        </Container>
-      </Body>
-    </Html>
+          <Text style={{ marginTop: "40px", fontSize: "16px" }}>
+            Best regards,
+            <br />
+            <strong>Omenai</strong>
+          </Text>
+        </Section>
+      </Container>
+    </ShipmentLayout>
   );
 }

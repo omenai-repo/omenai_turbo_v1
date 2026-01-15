@@ -7,6 +7,6 @@ export async function GET() {
   await SendWaitlistRegistrationEmail({ email: "moses@omenai.net" });
 
   return NextResponse.json({
-    message: "Successful",
-  });
+    message: "Successful"
+})
 }
