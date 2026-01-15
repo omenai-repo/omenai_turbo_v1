@@ -16,6 +16,7 @@ import NoMobileView from "../artist/components/NoMobileView";
 import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
+import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -37,7 +38,12 @@ export default function GalleryDashboardLayout({
   });
 
   if (isLoading) {
-    return <HomeLoad />;
+    return (
+      <div>
+        <DesktopSidebar />
+        <GalleryOverviewSkeleton />
+      </div>
+    );
   }
 
   const isNotStripeConnected = account.connected_account_id === null;

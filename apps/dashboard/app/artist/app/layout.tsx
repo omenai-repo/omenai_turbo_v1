@@ -27,6 +27,7 @@ import { MainContent } from "./features/MainContent";
 import { MobileSidebar } from "./features/MobileLayout";
 import { DesktopSidebar } from "./features/Sidebar";
 import { useWindowSize } from "usehooks-ts";
+import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
 
 export default function ArtistDashboardLayout({
   children,
@@ -65,7 +66,7 @@ export default function ArtistDashboardLayout({
     gcTime: 1000 * 60 * 10,
   });
 
-  if (loading) return <Load />;
+  if (loading) return <GalleryOverviewSkeleton />;
 
   if (!data || data.isOnboardingCompleted === null)
     router.replace(`${auth_uri()}/login`);

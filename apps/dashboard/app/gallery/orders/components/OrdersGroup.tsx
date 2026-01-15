@@ -1,26 +1,20 @@
 "use client";
-import { useState } from "react";
-
 import { useQuery } from "@tanstack/react-query";
-
 import { getOverviewOrders } from "@omenai/shared-services/orders/getOverviewOrders";
 import { OrdersTab } from "./OrdersTab";
-import { OrderSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrdersSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import { useRouter } from "next/navigation";
-import UploadArtworkDetails from "../../artworks/upload/features/UploadArtworkDetails";
 import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
 import NoVerificationBlock from "../../components/NoVerificationBlock";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { isSubscriptionExpired } from "@omenai/shared-utils/src/isSubscriptionExpired";
 import { useRollbar } from "@rollbar/react";
+import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
 export default function OrdersGroup() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
-  const [tab, setTab] = useState("pending");
   const router = useRouter();
   const rollbar = useRollbar();
 
@@ -65,7 +59,7 @@ export default function OrdersGroup() {
     refetchOnWindowFocus: false,
   });
   if (isLoading) {
-    return <OrderSkeleton />;
+    return <UsersOrdersTabSkeleton />;
   }
   if (!data?.isSubmitted)
     router.replace(`/gallery/payouts/refresh?id=${data!.id}`);
