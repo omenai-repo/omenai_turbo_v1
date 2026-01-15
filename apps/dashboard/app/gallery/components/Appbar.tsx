@@ -7,7 +7,7 @@ export default function Appbar() {
   const { user } = useAuth({ requiredRole: "gallery" });
   return (
     <>
-      <div className="flex justify-between items-center w-full pb-4 top-0 z-10  ">
+      <div className="flex justify-between items-center w-full pb-4 ">
         <DashboardIndicator
           admin_name={user.admin as string}
           gallery_name={user.name}

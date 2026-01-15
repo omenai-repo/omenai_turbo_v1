@@ -1,23 +1,22 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
-import { SubscriptionMetaData } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function createSubscriptionPaymentIntent(
-  amount: number,
-  gallery_id: string,
-  meta: SubscriptionMetaData,
+export async function verifyDiscountedSubscriptionCharge(
+  setupIntentId: string,
+  planId: string,
+  galleryId: string,
   token: string
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(
-      `${url}/api/subscriptions/stripe/createSubscriptionPaymentIntent`,
+      `${url}/api/subscriptions/stripe/verifyDiscountedSubscriptionCharge`,
       {
         method: "POST",
         body: JSON.stringify({
-          amount,
-          gallery_id,
-          meta,
+          setupIntentId,
+          planId,
+          galleryId,
         }),
         headers: { "x-csrf-token": token },
         credentials: "include",
@@ -29,7 +28,6 @@ export async function createSubscriptionPaymentIntent(
     return {
       isOk: res.ok,
       message: result.message,
-      client_secret: result.paymentIntent,
     };
   } catch (error: any) {
     logRollbarServerError(error);

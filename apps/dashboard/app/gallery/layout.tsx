@@ -50,7 +50,7 @@ export default function GalleryDashboardLayout({
       {width < 1280 ? (
         <NoMobileView />
       ) : (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-full overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
 
           <DesktopSidebar />

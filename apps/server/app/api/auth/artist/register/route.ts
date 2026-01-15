@@ -4,6 +4,7 @@ import { VerificationCodes } from "@omenai/shared-models/models/auth/verificatio
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse, NextResponse as res } from "next/server";
 import {
+  BadRequestError,
   ConflictError,
   ForbiddenError,
   ServerError,
@@ -18,6 +19,7 @@ import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../../util";
 import { redis } from "@omenai/upstash-config";
+import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 export const POST = withAppRouterHighlight(async function POST(
   request: Request
 ) {
@@ -31,9 +33,36 @@ export const POST = withAppRouterHighlight(async function POST(
       );
     }
 
+    const isWaitlistFeatureActive =
+      (await fetchConfigCatValue("waitlistActivated", "low")) ?? false;
+
     await connectMongoDB();
 
     const data = await request.json();
+
+    const { referrerKey, inviteCode } = data;
+
+    if (isWaitlistFeatureActive) {
+      if (!referrerKey || !inviteCode)
+        throw new BadRequestError(
+          "Invalid request parameters - Please try again or contact support"
+        );
+
+      // Check referrerKey and Invite code validity
+
+      const isWaitlistUserInvitedAndValidated = await Waitlist.exists({
+        referrerKey,
+        inviteCode,
+        email: data.email,
+        isInvited: true,
+        entity: "artist",
+      });
+
+      if (!isWaitlistUserInvitedAndValidated)
+        throw new ForbiddenError(
+          "Sign-up unavailable. Please join the waitlist or wait for an invite."
+        );
+    }
 
     const userAgent: string = request.headers.get("User-Agent") ?? "";
     const authorization: string = request.headers.get("Authorization") ?? "";

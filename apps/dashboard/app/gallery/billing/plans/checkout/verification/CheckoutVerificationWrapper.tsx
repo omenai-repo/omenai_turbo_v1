@@ -161,19 +161,30 @@ const processVerificationResponse = (response: any) => {
 export default function TransactionVerification() {
   const searchParams = useSearchParams();
   const paymentIntentId = searchParams.get("payment_intent");
+  const setupIntentId = searchParams.get("setup_intent");
+  const isDiscounted = searchParams.get("isDiscounted");
   const [showContent, setShowContent] = useState(false);
+  const planId = searchParams.get("planId") as string;
 
-  if (!paymentIntentId) notFound();
+  if (isDiscounted === "false" && !paymentIntentId) return notFound();
+  if (isDiscounted === "true" && !planId && !setupIntentId) return notFound();
 
-  const { csrf } = useAuth({ requiredRole: "gallery" });
+  const { csrf, user } = useAuth({ requiredRole: "gallery" });
 
   const { data: verified, isLoading } = useQuery({
     queryKey: ["verify_subscription_payment_on_redirect"],
     queryFn: async () => {
-      const response = await verifySubscriptionCharge(
-        paymentIntentId,
-        csrf || ""
-      );
+      const response = await handleVerificationApiCall({
+        isDiscounted: isDiscounted === "true",
+        payload: {
+          planId,
+          galleryId: user.gallery_id,
+          token: csrf || "",
+          paymentIntentId: isDiscounted
+            ? (setupIntentId as string)
+            : (paymentIntentId as string),
+        },
+      });
       return processVerificationResponse(response);
     },
     refetchOnWindowFocus: false,
@@ -200,4 +211,31 @@ export default function TransactionVerification() {
       </div>
     </>
   );
+}
+import { verifyDiscountedSubscriptionCharge } from "@omenai/shared-services/subscriptions/stripe/verifyDiscountedSubscription";
+async function handleVerificationApiCall({
+  isDiscounted,
+  payload,
+}: {
+  isDiscounted: boolean;
+  payload: {
+    galleryId: string;
+    planId: string;
+    paymentIntentId: string;
+    token: string;
+  };
+}) {
+  if (isDiscounted) {
+    return await verifyDiscountedSubscriptionCharge(
+      payload.paymentIntentId,
+      payload.planId,
+      payload.galleryId,
+      payload.token
+    );
+  } else {
+    return await verifySubscriptionCharge(
+      payload.paymentIntentId,
+      payload.token
+    );
+  }
 }

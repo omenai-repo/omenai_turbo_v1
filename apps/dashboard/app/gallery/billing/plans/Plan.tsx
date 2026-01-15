@@ -7,7 +7,9 @@ import { useSearchParams } from "next/navigation";
 import {
   SubscriptionPlanDataTypes,
   SubscriptionModelSchemaTypes,
+  WaitListTypes,
 } from "@omenai/shared-types";
+import React from "react";
 
 /* ----------------------------- CONFIG (unchanged) ----------------------------- */
 
@@ -79,7 +81,7 @@ const isButtonDisabled = (
   );
 };
 
-/* ----------------------------- UI ATOMS (visual only) ----------------------------- */
+/* ----------------------------- UI ATOMS (unchanged + additive) ----------------------------- */
 
 const PlanBadge = ({ planName }: { planName: string }) =>
   planName === "Pro" ? (
@@ -87,6 +89,25 @@ const PlanBadge = ({ planName }: { planName: string }) =>
       Most popular
     </div>
   ) : null;
+
+/* 🔹 ADDITIVE visual badge — does not replace existing UI */
+const DiscountBadge = () => (
+  <p className="text-xs font-medium text-dark">100% off · One time</p>
+);
+
+/* 🔹 ADDITIVE Forfeit Warning — Informs user they lose the discount */
+const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
+  <div className="mb-4 rounded-xl bg-amber-50 border border-amber-200 p-3">
+    <div className="flex gap-2">
+      <span className="text-amber-600">⚠️</span>
+      <p className="text-[11px] leading-relaxed font-medium text-amber-800">
+        Selecting this plan will <span className="font-bold">forfeit</span> your
+        one-time 100% discount on the monthly{" "}
+        <span className="capitalize font-bold">{targetPlan}</span> plan.
+      </p>
+    </div>
+  </div>
+);
 
 /* ----------------------------- COMPONENT ----------------------------- */
 
@@ -98,13 +119,12 @@ export default function Plan({
   plan_id,
   id,
   sub_data,
+  discount,
 }: SubscriptionPlanDataTypes & {
   tab: "monthly" | "yearly";
   id: ObjectId;
-  sub_data: SubscriptionModelSchemaTypes & {
-    created: string;
-    updatedAt: string;
-  };
+  sub_data: SubscriptionModelSchemaTypes;
+  discount: WaitListTypes["discount"];
 }) {
   const searchParams = useSearchParams();
   const plan_action = searchParams.get("plan_action");
@@ -115,6 +135,19 @@ export default function Plan({
 
   const isFeatured = name === "Pro";
 
+  /* -------------------- DISCOUNT CHECK (core logic) -------------------- */
+  const isEligibleForDiscount =
+    discount !== null &&
+    discount.plan === name.toLowerCase() &&
+    discount.redeemed === false &&
+    tab === "monthly";
+
+  const showForfeitWarning =
+    discount !== null && discount.redeemed === false && !isEligibleForDiscount;
+
+  const finalButtonText =
+    isEligibleForDiscount && !isDisabled ? "Activate free plan" : buttonText;
+
   return (
     <div className="relative mx-auto w-full max-w-sm">
       <div
@@ -124,7 +157,9 @@ export default function Plan({
             : "shadow-sm ring-1 ring-slate-200"
         }`}
       >
-        <PlanBadge planName={name} />
+        <div className="w-full flex justify-between items-center">
+          <PlanBadge planName={name} />
+        </div>
 
         {/* Header */}
         <div className="mb-6">
@@ -139,22 +174,35 @@ export default function Plan({
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-semibold text-slate-900">
               $
-              {tab === "monthly" ? pricing.monthly_price : pricing.annual_price}
+              {isEligibleForDiscount
+                ? "0"
+                : tab === "monthly"
+                  ? pricing.monthly_price
+                  : pricing.annual_price}
             </span>
-            <span className="text-sm text-slate-500">
-              /{tab === "monthly" ? "month" : "year"}
-            </span>
+
+            {!isEligibleForDiscount && (
+              <span className="text-sm text-slate-500">
+                /{tab === "monthly" ? "month" : "year"}
+              </span>
+            )}
           </div>
 
-          {tab === "yearly" && (
+          {isEligibleForDiscount ? (
             <p className="mt-1 text-xs font-medium text-emerald-600">
-              Save $
-              {calculateYearlySavings(
-                pricing.monthly_price,
-                pricing.annual_price
-              )}{" "}
-              yearly
+              100% off · Applied once to this plan
             </p>
+          ) : (
+            tab === "yearly" && (
+              <p className="mt-1 text-xs font-medium text-emerald-600">
+                Save $
+                {calculateYearlySavings(
+                  pricing.monthly_price,
+                  pricing.annual_price
+                )}{" "}
+                yearly
+              </p>
+            )
           )}
         </div>
 
@@ -169,6 +217,9 @@ export default function Plan({
             )
           )}
         </div>
+
+        {/* 🔹 ADDED: Forfeit Warning UI (only appears if they are about to lose their discount) */}
+        {showForfeitWarning && <ForfeitWarning targetPlan={discount.plan} />}
 
         {/* CTA */}
         <Link
@@ -186,7 +237,7 @@ export default function Plan({
               }
               disabled:cursor-not-allowed disabled:opacity-50`}
           >
-            {buttonText}
+            {finalButtonText}
           </button>
         </Link>
       </div>

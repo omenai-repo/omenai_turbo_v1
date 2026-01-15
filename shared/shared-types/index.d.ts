@@ -653,6 +653,14 @@ export type SubscriptionModelSchemaTypes = {
   upload_tracker: UploadTrackingTypes;
 };
 
+export type SubscriptionMetaData = {
+  name: string;
+  email: string;
+  gallery_id: string;
+  plan_id: string;
+  plan_interval: string;
+};
+
 export type UploadTrackingTypes = {
   limit: number;
   next_reset_date: Date | string;
@@ -1219,13 +1227,15 @@ export type WaitListTypes = {
   email: string;
   inviteCode?: string;
   isInvited?: boolean;
+  inviteAccepted: boolean;
   entity: Exclude<EntityType, "admin">;
+  entityId: string;
   referrerKey?: string;
   discount: {
     plan: "pro";
     active: boolean;
     redeemed: boolean;
-  };
+  } | null;
 };
 
 export type InvoiceTypes = {

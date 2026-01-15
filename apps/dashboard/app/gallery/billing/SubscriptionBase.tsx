@@ -13,6 +13,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import BillingSkeleton from "@omenai/shared-ui-components/components/skeletons/BillingSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
+import { WaitListTypes } from "@omenai/shared-types";
 
 export default function SubscriptionBase() {
   const router = useRouter();

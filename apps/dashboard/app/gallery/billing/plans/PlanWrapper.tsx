@@ -6,21 +6,17 @@ import { ObjectId } from "mongoose";
 import {
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
+  WaitListTypes,
 } from "@omenai/shared-types";
-
-interface NewSubscriptionPlanDataTypes extends SubscriptionPlanDataTypes {
-  _id: ObjectId;
-}
 
 export default function PlanWrapper({
   plans,
   sub_data,
+  discount,
 }: {
-  plans: NewSubscriptionPlanDataTypes[];
-  sub_data: SubscriptionModelSchemaTypes & {
-    created: string;
-    updatedAt: string;
-  };
+  plans: (SubscriptionPlanDataTypes & { _id: ObjectId })[];
+  sub_data: SubscriptionModelSchemaTypes;
+  discount: WaitListTypes["discount"];
 }) {
   const [tab, setTab] = useState<"monthly" | "yearly">("monthly");
 
@@ -40,6 +36,7 @@ export default function PlanWrapper({
               currency={plan.currency}
               id={plan._id}
               sub_data={sub_data}
+              discount={discount}
             />
           );
         })}

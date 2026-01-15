@@ -66,7 +66,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
 
     return NextResponse.json({
-      message: "Card Change Intent created",
+      message: "Payment Method setup intent created",
       setupIntent: setupIntent.client_secret,
     });
   } catch (error) {

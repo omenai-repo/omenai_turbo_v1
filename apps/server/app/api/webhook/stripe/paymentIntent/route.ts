@@ -48,6 +48,7 @@ import { NextResponse } from "next/server";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { retry } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 
 /* -------------------------------------------------------------------------- */
 /*                               ROUTE ENTRY                                  */
@@ -563,7 +564,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     session.startTransaction();
 
     const planId = meta.plan_id ?? meta.planId;
-    const planInterval = meta.plan_interval ?? meta.planInterval;
+    const planInterval = meta.planInterval ?? meta.planInterval;
 
     if (!planId || !planInterval) {
       return NextResponse.json({ status: 400 });
@@ -612,6 +613,16 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
         currency: plan.currency,
         interval: planInterval,
       },
+      next_charge_params: {
+        value:
+          planInterval === "monthly"
+            ? +plan.pricing.monthly_price
+            : +plan.pricing.annual_price,
+        currency: "USD",
+        type: plan.name,
+        interval: planInterval,
+        id: plan.plan_id,
+      },
       upload_tracker: {
         limit: getUploadLimitLookup(plan.name, planInterval),
         next_reset_date: expiryDate.toISOString(),
@@ -619,15 +630,11 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       },
     };
 
-    if (existingSubscription) {
-      await Subscriptions.updateOne(
-        { stripe_customer_id: customer },
-        { $set: subPayload },
-        { session }
-      );
-    } else {
-      await Subscriptions.create([subPayload], { session });
-    }
+    await Subscriptions.updateOne(
+      { stripe_customer_id: customer },
+      { $setOnInsert: subPayload },
+      { upsert: true }
+    ).session(session);
 
     await AccountGallery.updateOne(
       { gallery_id: meta.gallery_id },
@@ -635,6 +642,10 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       { session }
     );
 
+    await Waitlist.updateOne(
+      { entityId: meta.gallery_id, entity: "gallery" },
+      { $set: { discount: null } }
+    ).session(session);
     await session.commitTransaction();
 
     await sendSubscriptionPaymentSuccessfulMail({
