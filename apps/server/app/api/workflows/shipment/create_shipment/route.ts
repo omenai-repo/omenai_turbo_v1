@@ -25,6 +25,7 @@ import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
@@ -209,8 +210,9 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
       name: order.seller_details.name,
       artwork: order.artwork_data.title,
       artworkImage,
-      buyerName: order.buyer_details.name,
-      requestDate: order.createdAt,
+      artistname: order.artwork_data.artist,
+      artworkId: order.artwork_data.art_id,
+      price: formatPrice(order.artwork_data.pricing.usd_price),
     }),
   ]);
 }
