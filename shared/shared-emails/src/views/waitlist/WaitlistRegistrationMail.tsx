@@ -12,6 +12,7 @@ import {
   Text,
 } from "@react-email/components";
 import React from "react";
+import EmailFooter from "../../components/Footer";
 
 export default function WaitlistRegistrationMail(email: string) {
   return (
@@ -29,13 +30,7 @@ export default function WaitlistRegistrationMail(email: string) {
         }}
       >
         <Container style={{ maxWidth: "600px", margin: "0 auto" }}>
-          <Section
-            style={{
-              border: "1px solid #eee",
-              borderRadius: "12px",
-              padding: "32px",
-            }}
-          >
+          <Section>
             <Heading
               as="h2"
               style={{
@@ -64,10 +59,12 @@ export default function WaitlistRegistrationMail(email: string) {
                 marginBottom: "16px",
               }}
             >
-              We'll keep your spot reserved and send you an email as soon as
-              we're ready to welcome you. In the meantime, you can expect
-              updates about our progress and be among the first to know when we
-              launch.
+              Thanks for joining the waitlist We're excited to have you here.
+              Right now, we're testing with a limited group to make sure
+              everything works as it should. Once we're ready to expand, you'll
+              be first in line for an invite. We'll keep you posted along the
+              way with updates on our progress and let you know as soon as we're
+              ready to bring you in.
             </Text>
 
             <div style={{ textAlign: "center", margin: "30px 0" }}>
@@ -99,20 +96,7 @@ export default function WaitlistRegistrationMail(email: string) {
               The <strong>Omenai</strong> Team
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-black">{email} </span>. In the event that
-              you were not anticipating the receipt of this email, we
-              respectfully request that you refrain from taking any action based
-              on its contents. This communication may contain confidential and
-              legally privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+            <EmailFooter recipientName={email} />
           </Section>
         </Container>
       </Body>
