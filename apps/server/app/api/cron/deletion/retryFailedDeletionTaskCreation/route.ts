@@ -35,8 +35,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         break;
       }
 
-      console.log(`Processing batch ${batchNumber}`);
-
       const allFailedDeletionTaskCreation = await FailedDeletionTaskModel.find()
         .limit(10)
         .skip(10 * batchNumber)
@@ -96,10 +94,10 @@ async function processBatch(
       failedTaskCreation;
 
     //   Retry creation
-    const retryFn = await createDeletionTaskPerService(service, requestId, {
+    const retryFn = (await createDeletionTaskPerService(service, requestId, {
       entityId,
       entityType,
-    }) as unknown as Promise<ObjectId>;
+    })) as unknown as Promise<ObjectId>;
 
     const metadata = { requestId, service, entityId };
 

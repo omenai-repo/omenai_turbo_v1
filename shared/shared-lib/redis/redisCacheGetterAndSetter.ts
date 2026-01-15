@@ -10,7 +10,6 @@ export async function getSetCacheData(
 
   if (cachedData) {
     // CACHE HIT: Return the data instantly
-    console.log(`Cache Hit for key: ${key}`);
     // Upstash often returns JSON objects as strings, so you may need to parse it.
     return JSON.parse(cachedData as string);
   }
