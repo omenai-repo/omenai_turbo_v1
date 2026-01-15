@@ -25,6 +25,7 @@ import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
@@ -196,23 +197,22 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
   const artworkImage = getImageFileView(order.artwork_data.url, 120);
 
   await Promise.all([
-    sendShipmentScheduledEmail({
-      email: order.buyer_details.email,
-      name: order.buyer_details.name,
-      trackingCode: order.order_id,
-      artwork: order.artwork_data.title,
-      artistName: order.seller_details.name,
-      artworkImage,
-      artworkPrice: order.artwork_data.pricing.usd_price,
-    }),
+    // sendShipmentScheduledEmail({
+    //   email: order.buyer_details.email,
+    //   name: order.buyer_details.name,
+    //   artwork: order.artwork_data.title,
+    //   artworkImage,
+    //   buyerName: order.buyer_details.name,
+    //   requestDate: order.createdAt,
+    // }),
     sendShipmentScheduledEmail({
       email: order.seller_details.email,
       name: order.seller_details.name,
-      trackingCode: order.order_id,
       artwork: order.artwork_data.title,
-      artistName: order.seller_details.name,
       artworkImage,
-      artworkPrice: order.artwork_data.pricing.usd_price,
+      artistname: order.artwork_data.artist,
+      artworkId: order.artwork_data.art_id,
+      price: formatPrice(order.artwork_data.pricing.usd_price),
     }),
   ]);
 }
@@ -259,7 +259,8 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
     shipment.data.documents[0].content,
     shipmentData.artwork_name,
     order.artwork_data.url,
-    order.artwork_data.pricing.usd_price
+    order.artwork_data.pricing.usd_price,
+    order.createdAt
   );
 
   await finalizeWaybill(orderId, shipment.data.documents[0].content);
