@@ -43,8 +43,8 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
             Overview of your sales pipeline
           </p>
         </div>
-        <div className="flex items-center gap-x-3 px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+        <div className="flex items-center gap-x-3 px-4 py-2 w-fit bg-white border border-slate-200 rounded-full shadow-sm">
+          <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
             Total Orders
           </span>
           <span className="h-4 w-[1px] bg-slate-200"></span>
@@ -65,7 +65,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
           tab: "data-[active]:bg-dark data-[active]:text-white bg-white border border-slate-200 text-slate-600 font-normal px-5 h-10 hover:bg-slate-50 transition-all",
         }}
       >
-        <Tabs.List>
+        <Tabs.List className="w-full">
           <Tabs.Tab value="pending">
             <TabLabel
               icon={<PackageMinus size={16} />}
@@ -131,7 +131,7 @@ function TabLabel({
   color: string;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 w-full">
       {icon}
       <span>{label}</span>
       {count > 0 && (

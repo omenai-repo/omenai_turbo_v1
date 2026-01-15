@@ -8,8 +8,8 @@ export default function SendArtistShipmentSuccess(
   name: string,
   artwork: string,
   artworkImage: string,
-  buyerName: string,
-  requestDate: string
+  artistName: string,
+  price: string
 ) {
   return (
     <ShipmentLayout
@@ -60,8 +60,8 @@ export default function SendArtistShipmentSuccess(
       <ArtworkCard
         artwork={artwork}
         artworkImage={artworkImage}
-        buyerName={buyerName}
-        requestDate={requestDate}
+        artistName={artistName}
+        price={price}
       />
 
       <Text

@@ -21,6 +21,7 @@ import {
 import { sendShipmentPickupReminderMail } from "@omenai/shared-emails/src/models/shipment/sendShipmentPickupReminderMail";
 import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -62,7 +63,8 @@ async function sendReminderEmail(
     daysLeft,
     estimatedPickupDate,
     artworkImage: artworkImageUrl,
-    requestDate,
+    artistName,
+    price: formatPrice(artworkPrice),
   });
 }
 

@@ -6,8 +6,8 @@ type EmailData = {
   fileContent: string;
   artwork: string;
   artworkImage: string;
-  buyerName: string;
-  requestDate: string;
+  artistName: string;
+  price: string;
 };
 export const sendSellerShipmentEmail = async ({
   name,
@@ -15,21 +15,15 @@ export const sendSellerShipmentEmail = async ({
   fileContent,
   artwork,
   artworkImage,
-  buyerName,
-  requestDate,
+  artistName,
+  price,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai orders",
     from: "orders",
     to: email,
-    subject: "Your shipment has been created and is ready for pickup",
-    react: SellerShipmentEmail(
-      name,
-      artwork,
-      artworkImage,
-      buyerName,
-      requestDate
-    ),
+    subject: "Shipment created - Prepare for pickup",
+    react: SellerShipmentEmail(name, artwork, artworkImage, artistName, price),
     attachments: [
       {
         filename: "waybill.pdf",

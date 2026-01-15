@@ -8,15 +8,14 @@ export default function SendGalleryShipmentSuccess(
   trackingCode: string,
   artwork: string,
   artworkImage: string,
-  buyerName: string,
-  requestDate: string
+  artistName: string,
+  price: string
 ) {
   return (
     <ShipmentLayout
       preview="Shipment delivery completed and verified successfully."
       name={name}
     >
-      {" "}
       <Heading
         as="h2"
         style={{
@@ -60,8 +59,8 @@ export default function SendGalleryShipmentSuccess(
       <ArtworkCard
         artwork={artwork}
         artworkImage={artworkImage}
-        buyerName={buyerName}
-        requestDate={requestDate}
+        artistName={artistName}
+        price={price}
       />
       <Text
         style={{
@@ -100,6 +99,10 @@ export default function SendGalleryShipmentSuccess(
       >
         Thank you for being part of the Omenai community. We appreciate your
         commitment to delivering exceptional art experiences!
+      </Text>
+      <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
+        Best regards, <br />
+        <strong>Omenai</strong>
       </Text>
     </ShipmentLayout>
   );

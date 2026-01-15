@@ -1,17 +1,16 @@
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Img, Section, Text } from "@react-email/components";
 import React from "react";
 
 export default function ArtworkCard({
   artwork,
   artworkImage,
-  buyerName,
-  requestDate,
+  artistName,
+  price,
 }: Readonly<{
   artwork: string;
   artworkImage: string;
-  buyerName: string;
-  requestDate: string;
+  artistName: string;
+  price: string;
 }>) {
   return (
     <Section className="my-8 p-6 bg-gray-50 rounded">
@@ -21,104 +20,99 @@ export default function ArtworkCard({
           alt={artwork}
           className="mx-auto rounded shadow-md"
           style={{
-            maxWidth: "280px",
+            maxWidth: "480px",
             width: "100%",
             height: "auto",
-            maxHeight: "320px",
+            maxHeight: "420px",
             objectFit: "cover",
           }}
         />
       </div>
 
       {/* Order Details */}
-      <table
-        className="w-full mt-6"
-        style={{ borderCollapse: "separate", borderSpacing: "0 8px" }}
-      >
-        <thead>
-          <tr>
-            <th
-              scope="col"
-              style={{
-                position: "absolute",
-                display: "none",
-                width: "1px",
-                height: "1px",
-                padding: 0,
-                margin: "-1px",
-                overflow: "hidden",
-                clip: "rect(0, 0, 0, 0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
-            >
-              Artwork Image
-            </th>
-            <th
-              scope="col"
-              style={{
-                position: "absolute",
-                display: "none",
-                width: "1px",
-                height: "1px",
-                padding: 0,
-                margin: "-1px",
-                overflow: "hidden",
-                clip: "rect(0, 0, 0, 0)",
-                whiteSpace: "nowrap",
-                border: 0,
-              }}
-            >
-              Artwork Details (Title, Artist, Price)
-            </th>
-          </tr>
-        </thead>
-        <tr>
-          <td style={{ padding: "8px 0", width: "120px" }}>
-            <Text
-              className="text-sm font-semibold m-0"
-              style={{ color: "#4b5563" }}
-            >
-              Artwork:
-            </Text>
-          </td>
-          <td style={{ padding: "8px 0" }}>
-            <Text className="text-sm m-0" style={{ color: "#0f172a" }}>
-              {artwork}
-            </Text>
-          </td>
-        </tr>
-        <tr>
-          <td style={{ padding: "8px 0" }}>
-            <Text
-              className="text-sm font-semibold m-0"
-              style={{ color: "#4b5563" }}
-            >
-              Buyer:
-            </Text>
-          </td>
-          <td style={{ padding: "8px 0" }}>
-            <Text className="text-sm m-0" style={{ color: "#0f172a" }}>
-              {buyerName}
-            </Text>
-          </td>
-        </tr>
-        <tr>
-          <td style={{ padding: "8px 0" }}>
-            <Text
-              className="text-sm font-semibold m-0"
-              style={{ color: "#4b5563" }}
-            >
-              Request Date:
-            </Text>
-          </td>
-          <td style={{ padding: "8px 0" }}>
-            <Text className="text-sm m-0" style={{ color: "#0f172a" }}>
-              {requestDate}
-            </Text>
-          </td>
-        </tr>
-      </table>
+      <div style={{ marginTop: "24px", width: "100%" }}>
+        <div
+          style={{
+            marginBottom: "10px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              color: "#4b5563",
+              fontSize: "16px",
+              fontWeight: 600,
+              margin: 0,
+              width: "200px",
+              display: "inline-block",
+            }}
+          >
+            Artwork:
+          </Text>
+          <Text
+            style={{
+              color: "#0f172a",
+              fontSize: "14px",
+              margin: 0,
+              display: "inline-block",
+            }}
+          >
+            {artwork}
+          </Text>
+        </div>
+
+        <div style={{ marginBottom: "10px", display: "flex" }}>
+          <Text
+            style={{
+              color: "#4b5563",
+              fontSize: "16px",
+              fontWeight: 600,
+              margin: 0,
+              width: "200px",
+              display: "inline-block",
+            }}
+          >
+            Artist:
+          </Text>
+          <Text
+            style={{
+              color: "#0f172a",
+              fontSize: "14px",
+              margin: 0,
+              display: "inline-block",
+            }}
+          >
+            {artistName}
+          </Text>
+        </div>
+
+        <div style={{ marginBottom: "10px", display: "flex" }}>
+          <Text
+            style={{
+              color: "#4b5563",
+              fontSize: "16px",
+              fontWeight: 600,
+              margin: 0,
+              width: "200px",
+              display: "inline-block",
+            }}
+          >
+            Price:
+          </Text>
+          <Text
+            style={{
+              color: "#0f172a",
+              fontSize: "14px",
+              margin: 0,
+              display: "inline-block",
+            }}
+          >
+            {price}
+          </Text>
+        </div>
+      </div>
     </Section>
   );
 }

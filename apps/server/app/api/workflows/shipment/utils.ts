@@ -144,7 +144,7 @@ export async function sendShipmentEmailWorkflow(
   artwork: string,
   artworkImage: string,
   artworkPrice: number,
-  createdAt: string
+  artistName: string
 ) {
   await createWorkflow(
     "/api/workflows/emails/sendShipmentEmail",
@@ -159,7 +159,7 @@ export async function sendShipmentEmailWorkflow(
       artwork,
       artworkImage,
       artworkPrice,
-      createdAt,
+      artistName,
     })
   );
 }

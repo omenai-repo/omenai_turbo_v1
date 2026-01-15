@@ -3,9 +3,10 @@ import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shi
 
 export async function GET() {
   await sendShipmentScheduledEmail({
-    artwork: "Ave maria",
-    buyerName: "Paul Atreides",
-    requestDate: "2026-01-13",
+    artwork: "She's a real Gem",
+    artworkId: "acc7f9e2-df5c-45a2-b5c4-6b6654ca11ec",
+    artistname: "Benjamin Niyomugabo",
+    price: "$ 23 456.77",
     email: "rodolphe@omenai.net",
     name: "Moses",
     artworkImage:

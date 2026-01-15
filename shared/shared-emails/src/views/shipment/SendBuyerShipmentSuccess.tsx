@@ -8,8 +8,8 @@ export default function SendBuyerShipmentSuccess(
   name: string,
   artwork: string,
   artworkImage: string,
-  buyerName: string,
-  requestDate: string
+  artistName: string,
+  price: string
 ) {
   return (
     <ShipmentLayout
@@ -63,8 +63,8 @@ export default function SendBuyerShipmentSuccess(
       <ArtworkCard
         artwork={artwork}
         artworkImage={artworkImage}
-        buyerName={buyerName}
-        requestDate={requestDate}
+        artistName={artistName}
+        price={price}
       />
       <Text
         style={{
@@ -89,6 +89,10 @@ export default function SendBuyerShipmentSuccess(
         }}
       >
         Thank you for being part of the Omenai community.
+      </Text>
+      <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
+        Best regards, <br />
+        <strong>Omenai</strong>
       </Text>
     </ShipmentLayout>
   );

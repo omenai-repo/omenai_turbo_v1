@@ -1,6 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import OrdersGroup from "./components/OrdersGroup";
 import { getOrdersForUser } from "@omenai/shared-services/orders/getOrdersForUser";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -28,14 +27,5 @@ export default function Orders() {
       </div>
     );
   }
-  return (
-    <>
-      <OrdersTab orders={orders} />
-      {/* {width > 768 ? (
-        <OrdersGroup orders={orders} />
-      ) : (
-        <OrdersMobileGroup orders={orders} />
-      )} */}
-    </>
-  );
+  return <OrdersTab orders={orders} />;
 }

@@ -11,7 +11,8 @@ type EmailData = {
   estimatedPickupDate?: string;
   daysLeft: string;
   artworkImage: string;
-  requestDate: string;
+  artistName: string;
+  price: string;
 };
 export const sendShipmentPickupReminderMail = async ({
   name,
@@ -23,13 +24,14 @@ export const sendShipmentPickupReminderMail = async ({
   estimatedPickupDate,
   daysLeft,
   artworkImage,
-  requestDate,
+  artistName,
+  price,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai orders",
     from: "orders",
     to: email,
-    subject: "Your shipment has been created and is ready for pickup",
+    subject: "Shipment created - Prepare for pickup",
     react: ShipmentPickupNotificationEmail({
       galleryName: name,
       artwork,
@@ -39,7 +41,8 @@ export const sendShipmentPickupReminderMail = async ({
       estimatedPickupDate,
       daysLeft,
       artworkImage,
-      requestDate,
+      artistName,
+      price,
     }),
   });
 };

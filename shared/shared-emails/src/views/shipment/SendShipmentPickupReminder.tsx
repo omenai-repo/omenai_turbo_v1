@@ -29,7 +29,8 @@ interface ShipmentPickupNotificationEmailProps {
   estimatedPickupDate?: string;
   daysLeft: string;
   artworkImage: string;
-  requestDate: string;
+  artistName: string;
+  price: string;
 }
 
 export const ShipmentPickupNotificationEmail = ({
@@ -41,7 +42,8 @@ export const ShipmentPickupNotificationEmail = ({
   daysLeft,
   estimatedPickupDate = `In the next ${daysLeft} day(s)`,
   artworkImage,
-  requestDate,
+  artistName,
+  price,
 }: ShipmentPickupNotificationEmailProps) => {
   return (
     <Html>
@@ -92,8 +94,8 @@ export const ShipmentPickupNotificationEmail = ({
               <ArtworkCard
                 artwork={artwork.title}
                 artworkImage={artworkImage}
-                buyerName={buyerName}
-                requestDate={requestDate}
+                artistName={artistName}
+                price={price}
               />
 
               {/* Order Details */}

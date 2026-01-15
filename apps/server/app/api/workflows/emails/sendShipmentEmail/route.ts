@@ -2,6 +2,7 @@ import { sendBuyerShipmentEmail } from "@omenai/shared-emails/src/models/shipmen
 import { sendSellerShipmentEmail } from "@omenai/shared-emails/src/models/shipment/sendSellerShipmentEmail";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { serve } from "@upstash/workflow/nextjs";
 
 type Payload = {
@@ -14,7 +15,7 @@ type Payload = {
   artwork: string;
   artworkImage: string;
   artworkPrice: number;
-  createdAt: string;
+  artistName: string;
 };
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload: Payload = ctx.requestPayload;
@@ -28,8 +29,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
         fileContent: payload.fileContent,
         artwork: payload.artwork,
         artworkImage,
-        buyerName: payload.buyerName,
-        requestDate: payload.createdAt,
+        artistName: payload.artistName,
+        price: formatPrice(payload.artworkPrice),
       });
     }),
     ctx.run("sendBuyerShipmentEmail", async () => {
@@ -37,12 +38,10 @@ export const { POST } = serve<Payload>(async (ctx) => {
         name: payload.buyerName,
         email: payload.buyerEmail,
         trackingCode: payload.trackingCode,
-        artistName: payload.sellerName,
+        artistName: payload.artistName,
         artwork: payload.artwork,
         artworkImage,
-        artworkPrice: payload.artworkPrice,
-        buyerName: payload.buyerName,
-        requestDate: payload.createdAt,
+        artworkPrice: formatPrice(payload.artworkPrice),
       });
     }),
   ]);

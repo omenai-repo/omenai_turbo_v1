@@ -11,6 +11,7 @@ import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { createErrorRollbarReport } from "../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -50,8 +51,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       trackingCode: order_id,
       artworkImage,
       artwork: order.artwork_data.title,
-      buyerName: order.buyer_details.name,
-      requestDate: order.createdAt,
+      artistName: order.artwork_data.artist,
+      price: formatPrice(order.artwork_data.pricing.usd_price),
     });
 
     if (order.seller_designation === "artist") {
@@ -61,8 +62,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         trackingCode: order_id,
         artworkImage,
         artwork: order.artwork_data.title,
-        buyerName: order.buyer_details.name,
-        requestDate: order.createdAt,
+        artistName: order.artwork_data.artist,
+        price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     } else {
       await SendGalleryShipmentSuccessEmail({
@@ -71,8 +72,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         trackingCode: order_id,
         artworkImage,
         artwork: order.artwork_data.title,
-        buyerName: order.buyer_details.name,
-        requestDate: order.createdAt,
+        artistName: order.artwork_data.artist,
+        price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     }
 
