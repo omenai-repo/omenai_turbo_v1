@@ -48,9 +48,6 @@ export default function Saves() {
   if (loading || isLoading) {
     return <UsersSavedArtworksSkeleton />;
   }
-  // if (true) {
-  //   return <UsersSavedArtworksSkeleton />;
-  // }
 
   if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
     return (
