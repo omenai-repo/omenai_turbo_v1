@@ -15,25 +15,13 @@ export const UsersSavedArtworksSkeleton = () => {
       {/* Artworks Grid */}
       <div className="flex flex-wrap gap-x-4 justify-center">
         {/* Column 1 */}
-        <div className="flex-1 gap-2 space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <ArtworkCardSkeleton key={`col1-${i}`} />
-          ))}
-        </div>
+        <Column />
 
         {/* Column 2 */}
-        <div className="flex-1 gap-2 space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <ArtworkCardSkeleton key={`col2-${i}`} />
-          ))}
-        </div>
+        <Column />
 
         {/* Column 3  */}
-        <div className="flex-1 gap-2 space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <ArtworkCardSkeleton key={`col2-${i}`} />
-          ))}
-        </div>
+        <Column />
       </div>
 
       {/* Pagination Skeleton */}
@@ -47,3 +35,13 @@ export const UsersSavedArtworksSkeleton = () => {
     </div>
   );
 };
+
+function Column() {
+  return (
+    <div className="flex-1 gap-2 space-y-6">
+      {[...Array(3)].map((_, i) => (
+        <ArtworkCardSkeleton key={`col1-${i}`} />
+      ))}
+    </div>
+  );
+}
