@@ -1,9 +1,9 @@
 "use client";
+
 import { Loader } from "@mantine/core";
 import ProfileSection from "./ProfileSection";
-import DangerZone from "./DangerZone";
 import SecuritySection from "./SecuritySection";
-import { SessionData, SessionDataType, TeamMember } from "@omenai/shared-types";
+import DangerZone from "./DangerZone";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 export default function SettingsContainer() {
@@ -11,34 +11,44 @@ export default function SettingsContainer() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader color="gray" />
+      <div className="flex items-center justify-center h-[60vh]">
+        <Loader size="sm" color="gray" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-fluid-lg 2xl:text-fluid-xl font-semibold text-dark mb-2">
-          Settings
+    <section className="max-w-4xl mx-auto space-y-8">
+      {/* Page header */}
+      <header className="space-y-1">
+        <h1 className="text-fluid-lg 2xl:text-fluid-xl font-semibold text-slate-900">
+          Account settings
         </h1>
-        <p className="text-dark text-fluid-xxs">
-          Manage your account settings and preferences
+        <p className="text-fluid-xxs text-slate-600 max-w-2xl">
+          Manage your profile information, security preferences, and account
+          controls.
         </p>
-      </div>
+      </header>
 
+      {/* Main content */}
       <div className="space-y-6">
-        {/* Profile Section */}
-        <ProfileSection />
+        {/* Profile */}
+        <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
+          <ProfileSection />
+        </section>
 
-        {/* Security Section */}
-        <SecuritySection />
+        {/* Security */}
+        <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
+          <SecuritySection />
+        </section>
 
-        {/* Danger Zone - Only for Admins */}
-        {/* {user.access_role === "Owner" && <DangerZone />} */}
+        {/* Danger zone */}
+        {user.access_role === "Owner" && (
+          <section className="rounded-xl border border-red-200 bg-red-50/40">
+            <DangerZone />
+          </section>
+        )}
       </div>
-    </div>
+    </section>
   );
 }

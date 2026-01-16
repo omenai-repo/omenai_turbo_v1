@@ -1,7 +1,8 @@
 "use client";
-import { Input, Image } from "@mantine/core";
+
+import { Input } from "@mantine/core";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { Ban } from "lucide-react";
+import { Image as ImageIcon, X } from "lucide-react";
 import React, { ChangeEvent, useRef, useState } from "react";
 
 export default function EditorialCover({
@@ -12,93 +13,94 @@ export default function EditorialCover({
   cover: File | null;
 }) {
   const imagePickerRef = useRef<HTMLInputElement>(null);
-  const [errorList, setErrorList] = useState<string[]>([]);
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
-  const MAX_SIZE_MB = 5; // e.g., 5MB
-  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Check if input is actaully an image
+  const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file?.type.startsWith("image/")) return;
-    const type = file.type.split("/");
+    if (!file || !file.type.startsWith("image/")) return;
+
+    const ext = file.type.split("/")[1];
+    if (!acceptedFileTypes.includes(ext)) {
+      toast_notif("Unsupported file type. Use JPG or PNG images.", "error");
+      return;
+    }
 
     if (file.size > MAX_SIZE_BYTES) {
-      toast_notif("Image file size exceeds the maximum limit of 5MB.", "error");
+      toast_notif("Image must be under 5MB.", "error");
       return;
     }
 
-    if (!acceptedFileTypes.includes(type[1])) {
-      toast_notif(
-        "File type unsupported. Supported file types are: JPEG, JPG, and PNG",
-        "error"
-      );
-
-      return;
-    }
-    setCover(e.target.files![0]);
-
-    setErrorList([]);
+    setCover(file);
     e.target.value = "";
   };
 
   return (
-    <div>
-      <Input.Label className="text-fluid-xxs font-normal">
-        Select a cover for this editorial
+    <div className="space-y-2">
+      <Input.Label className="text-sm font-medium text-neutral-900">
+        Cover image
       </Input.Label>
-      <div className="flex flex-col space-y-6 w-full">
-        <div className="w-[350px] h-[250px]">
-          {cover ? (
+
+      <p className="text-sm text-neutral-500">
+        This image will be used as the hero visual for the editorial.
+      </p>
+
+      <div
+        className="
+          relative h-[240px] w-full max-w-xl
+          overflow-hidden rounded-lg
+          border border-dashed border-neutral-300
+          bg-neutral-50
+          transition hover:border-neutral-400
+        "
+      >
+        {cover ? (
+          <>
+            <img
+              src={URL.createObjectURL(cover)}
+              alt="Editorial cover preview"
+              className="h-full w-full object-cover"
+            />
+
             <button
-              onClick={() => {
-                setCover(null);
-              }}
-            >
-              <img
-                src={URL.createObjectURL(cover as File)}
-                alt="Editorial cover"
-                width={350}
-                height={250}
-                className="w-[350px] h-[250px] object-cover object-center mt-2 filter hover:grayscale transition-all duration-200 rounded cursor-not-allowed"
-              />
-            </button>
-          ) : (
-            <button
+              onClick={() => setCover(null)}
               type="button"
-              className="w-full h-full border text-fluid-xxs grid place-items-center duration-300 border-dark/50 rounded outline-none focus-visible:ring-2 focus-visible:ring-dark focus-visible:ring-offset-2 hover:border-dark"
-              onClick={() => {
-                imagePickerRef.current?.click();
-              }}
+              className="
+                absolute right-3 top-3
+                rounded-md bg-white/90 p-1
+                text-neutral-600
+                shadow-sm
+                hover:bg-white
+              "
+              aria-label="Remove cover image"
             >
-              <Image className="text-fluid-2xl" />
+              <X size={16} />
             </button>
-          )}
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={() => imagePickerRef.current?.click()}
+            className="
+              flex h-full w-full flex-col items-center justify-center gap-2
+              text-neutral-500
+              hover:text-neutral-700
+            "
+          >
+            <ImageIcon size={28} />
+            <span className="text-sm">Click to upload cover image</span>
+            <span className="text-xs text-neutral-400">
+              JPG or PNG • max 5MB
+            </span>
+          </button>
+        )}
 
-          <input
-            type="file"
-            hidden
-            ref={imagePickerRef}
-            onChange={handleFileChange}
-          />
-        </div>
-
-        {errorList.length > 0 &&
-          errorList.map((error, index) => {
-            return (
-              <div
-                key={`${index}-error_list`}
-                className="flex items-center gap-x-2"
-              >
-                <Ban
-                  size={20}
-                  color="#ff0000"
-                  strokeWidth={1.5}
-                  absoluteStrokeWidth
-                />
-                <p className="text-red-600 text-fluid-xxs">{error}</p>
-              </div>
-            );
-          })}
+        <input
+          ref={imagePickerRef}
+          type="file"
+          hidden
+          onChange={handleFileChange}
+        />
       </div>
     </div>
   );

@@ -194,18 +194,20 @@ export default function RoleDropdown({
           data={availableOptions}
           styles={{
             input: {
-              backgroundColor: "#2a2a2a",
-              border: "1px solid #3a3a3a",
-              color: "white",
+              backgroundColor: "#fafafa",
+              border: "1px solid #e2e8f0",
+              color: "black",
               "&:focus": {
-                borderColor: "#4a4a4a",
+                borderColor: "#e2e8f0",
               },
+              fontSize: "12px",
             },
             dropdown: {
               backgroundColor: "white",
-              border: "1px solid #3a3a3a",
+              border: "1px solid #e2e8f0",
             },
             option: {
+              fontSize: "12px",
               color: "#0f172a",
               "&[dataHovered]": {
                 backgroundColor: "#f5f5f5",

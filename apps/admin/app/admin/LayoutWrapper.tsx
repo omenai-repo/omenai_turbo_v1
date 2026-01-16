@@ -1,9 +1,10 @@
 "use client";
 import { useWindowSize } from "usehooks-ts";
 
-import PageLayout from "../layout/PageLayout";
-import Appbar from "../layout/Appbar";
 import MobileBlockScreen from "../layout/NoMobileView";
+import { DesktopSidebar } from "../layout/features/Sidebar";
+import { MobileSidebar } from "../layout/features/MobileLayout";
+import { MainContent } from "../layout/features/MainContent";
 export default function LayoutWrapper({
   children,
 }: {
@@ -18,10 +19,15 @@ export default function LayoutWrapper({
         ) : (
           <div className=" w-full h-screen">
             <main className="flex h-full">
-              <PageLayout />
-              <div className="w-full xl:ml-[20rem] md:ml-[15rem] px-5 rounded relative duration-200">
-                <Appbar />
-                <div className="h-auto rounded relative my-5">{children}</div>
+              <DesktopSidebar />
+              <div className="flex flex-1 flex-col md:ml-16">
+                {/* Mobile header */}
+                <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
+                  <MobileSidebar />
+                  <span className="text-sm font-medium">Dashboard</span>
+                </header>
+
+                <MainContent>{children}</MainContent>
               </div>
             </main>
           </div>

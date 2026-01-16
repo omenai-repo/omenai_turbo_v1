@@ -7,9 +7,9 @@ export default function Appbar() {
   const { user } = useAuth({ requiredRole: "admin" });
   return (
     <>
-      <div className="flex justify-between items-center w-full pt-5 sticky top-0 z-10 bg-white ">
+      <div className="flex justify-between items-center w-full pb-4 ">
         <DashboardIndicator
-          admin_name={user.name}
+          admin_name={user.name as string}
           access_role={user.access_role}
         />
       </div>

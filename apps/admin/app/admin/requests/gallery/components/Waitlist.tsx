@@ -1,48 +1,36 @@
 "use client";
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import React, { useState, useMemo } from "react";
+
 import { fetchWaitlistUsers } from "@omenai/shared-services/admin/fetch_waitlist_users";
 import { inviteWaitlistUsers } from "@omenai/shared-services/admin/invite_waitlist_users";
 import { WaitListTypes } from "@omenai/shared-types";
+
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+
 import { InviteEntityModal } from "../../InviteEntityModal";
 import { WaitlistHeader } from "../../WaitlistHeader";
 
-const statusConfig = {
-  selected: {
-    borderColor: "transparent",
-    bgColor: "bg-gradient-to-r from-emerald-50/80 to-green-50/60",
-    shadowColor: "shadow-emerald-100/50",
-    indicatorColor: "green",
-    glowColor: "ring-emerald-200/50",
-  },
-  default: {
-    borderColor: "border-dark",
-    bgColor: "white",
-    shadowColor: "shadow-amber-100/50",
-    indicatorColor: "red",
-    glowColor: "ring-amber-200/50",
-  },
-};
-
 export default function Waitlist() {
   const { user, csrf } = useAuth({ requiredRole: "admin" });
-  const { data: galleries, isLoading: loading } = useQuery<WaitListTypes[]>({
+  const queryClient = useQueryClient();
+
+  const { data: galleries, isLoading } = useQuery<WaitListTypes[]>({
     queryKey: ["fetch_gallery_waitlist_users", "gallery"],
     queryFn: async () => {
       const response = await fetchWaitlistUsers("gallery", csrf || "");
-
       if (!response.isOk) throw new Error(response.message);
       return response.data;
     },
-    refetchOnWindowFocus: false,
     enabled: user.access_role === "Admin" || user.access_role === "Owner",
+    refetchOnWindowFocus: false,
   });
-  const queryClient = useQueryClient();
+
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [discountToggles, setDiscountToggles] = useState<Map<string, boolean>>(
     new Map()
@@ -51,10 +39,8 @@ export default function Waitlist() {
   const [isInviting, setIsInviting] = useState(false);
   const [modalOpened, setModalOpened] = useState(false);
 
-  // Prepare selected galleries data for modal
   const selectedGalleries = useMemo(() => {
     if (!galleries) return [];
-
     return galleries
       .filter((g) => selectedIds.has(g.waitlistId))
       .map((g) => ({
@@ -65,51 +51,40 @@ export default function Waitlist() {
       }));
   }, [galleries, selectedIds, discountToggles]);
 
-  if (loading) {
-    return <Load />;
-  }
-
-  if (!galleries || galleries.length === 0) {
-    return <NotFoundData />;
-  }
+  if (isLoading) return <Load />;
+  if (!galleries || galleries.length === 0) return <NotFoundData />;
 
   const filteredGalleries = galleries.filter(
-    (gallery) =>
-      gallery.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      gallery.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (g) =>
+      g.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      g.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSelectAll = () => {
-    if (selectedIds.size === filteredGalleries.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filteredGalleries.map((g) => g.waitlistId)));
-    }
+    setSelectedIds(
+      selectedIds.size === filteredGalleries.length
+        ? new Set()
+        : new Set(filteredGalleries.map((g) => g.waitlistId))
+    );
   };
 
   const handleSelectItem = (id: string) => {
-    const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-      // Remove discount toggle when deselecting user
-      const newDiscountToggles = new Map(discountToggles);
-      newDiscountToggles.delete(id);
-      setDiscountToggles(newDiscountToggles);
+    const next = new Set(selectedIds);
+    if (next.has(id)) {
+      next.delete(id);
+      const discounts = new Map(discountToggles);
+      discounts.delete(id);
+      setDiscountToggles(discounts);
     } else {
-      newSelected.add(id);
-      // Don't modify discount toggle when selecting - keep existing state
+      next.add(id);
     }
-    setSelectedIds(newSelected);
+    setSelectedIds(next);
   };
 
   const handleToggleDiscount = (id: string, checked: boolean) => {
     setDiscountToggles(new Map(discountToggles.set(id, checked)));
-
-    // If toggling discount ON, automatically select the user
     if (checked && !selectedIds.has(id)) {
-      const newSelected = new Set(selectedIds);
-      newSelected.add(id);
-      setSelectedIds(newSelected);
+      setSelectedIds(new Set(selectedIds).add(id));
     }
   };
 
@@ -119,25 +94,16 @@ export default function Waitlist() {
   const someSelected =
     selectedIds.size > 0 && selectedIds.size < filteredGalleries.length;
 
-  const openInviteModal = () => {
-    if (selectedIds.size === 0) return;
-    setModalOpened(true);
-  };
-
   async function inviteGalleryUsers() {
     if (selectedIds.size === 0) return;
-
     setIsInviting(true);
 
-    // Build payload with waitlistId and discount
-    const invitePayload: { waitlistId: string; discount: boolean }[] =
-      Array.from(selectedIds).map((id) => ({
-        waitlistId: id,
-        discount: discountToggles.get(id) || false,
-      }));
+    const payload = Array.from(selectedIds).map((id) => ({
+      waitlistId: id,
+      discount: discountToggles.get(id) || false,
+    }));
 
-    // API call with simplified payload
-    const response = await inviteWaitlistUsers(invitePayload, csrf ?? "");
+    const response = await inviteWaitlistUsers(payload, csrf ?? "");
     if (response.isOk) {
       queryClient.invalidateQueries({
         queryKey: ["fetch_gallery_waitlist_users", "gallery"],
@@ -146,18 +112,18 @@ export default function Waitlist() {
       setDiscountToggles(new Map());
       setModalOpened(false);
       toast_notif(
-        `Invitations sent successfully! - ${response.modifiedCount} user invited`,
+        `Invitations sent — ${response.modifiedCount} invited`,
         "success"
       );
     } else {
       toast_notif(response.message, "error");
     }
+
     setIsInviting(false);
   }
 
   return (
-    <div className="w-full p-1 flex flex-col gap-6">
-      {/* Modal */}
+    <section className="space-y-4">
       <InviteEntityModal
         opened={modalOpened}
         close={() => setModalOpened(false)}
@@ -166,85 +132,101 @@ export default function Waitlist() {
         isInviting={isInviting}
       />
 
-      {/* Select All Header */}
-      <WaitlistHeader
-        allSelected={allSelected}
-        someSelected={someSelected}
-        filteredItemsLength={filteredGalleries.length}
-        selectedCount={selectedIds.size}
-        isInviting={isInviting}
-        searchQuery={searchQuery}
-        onSelectAll={handleSelectAll}
-        onSearchChange={setSearchQuery}
-        onInviteClick={openInviteModal}
+      <div className="rounded-xl border border-neutral-200 bg-white shadow-sm">
+        <div className="border-b border-neutral-100 px-4 py-3">
+          <WaitlistHeader
+            allSelected={allSelected}
+            someSelected={someSelected}
+            filteredItemsLength={filteredGalleries.length}
+            selectedCount={selectedIds.size}
+            isInviting={isInviting}
+            searchQuery={searchQuery}
+            onSelectAll={handleSelectAll}
+            onSearchChange={setSearchQuery}
+            onInviteClick={() => setModalOpened(true)}
+          />
+        </div>
+
+        <div className="divide-y divide-neutral-100">
+          {filteredGalleries.map((gallery) => (
+            <WaitlistRow
+              key={gallery.waitlistId}
+              gallery={gallery}
+              isSelected={selectedIds.has(gallery.waitlistId)}
+              hasDiscount={discountToggles.get(gallery.waitlistId) || false}
+              onSelect={() => handleSelectItem(gallery.waitlistId)}
+              onToggleDiscount={(checked) =>
+                handleToggleDiscount(gallery.waitlistId, checked)
+              }
+            />
+          ))}
+        </div>
+
+        {filteredGalleries.length === 0 && (
+          <div className="p-6">
+            <NotFoundData />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function WaitlistRow({
+  gallery,
+  isSelected,
+  hasDiscount,
+  onSelect,
+  onToggleDiscount,
+}: {
+  gallery: WaitListTypes;
+  isSelected: boolean;
+  hasDiscount: boolean;
+  onSelect: () => void;
+  onToggleDiscount: (checked: boolean) => void;
+}) {
+  return (
+    <div
+      className={`
+        relative flex items-center gap-4 px-4 py-3
+        transition
+        ${isSelected ? "bg-emerald-50/60" : "hover:bg-neutral-50"}
+      `}
+    >
+      {isSelected && (
+        <div className="absolute left-0 top-0 h-full w-1 bg-emerald-500" />
+      )}
+
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={onSelect}
+        className="h-4 w-4 rounded border-neutral-300"
       />
 
-      {filteredGalleries.map((gallery) => {
-        const isSelected = selectedIds.has(gallery.waitlistId);
-        const hasDiscount = discountToggles.get(gallery.waitlistId) || false;
-        const currentStyle = statusConfig[isSelected ? "selected" : "default"];
-        return (
-          <div
-            key={gallery.waitlistId}
-            className={`
-          group relative rounded border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
-          backdrop-blur-sm transition-all duration-500 ${currentStyle.shadowColor}
-          ${currentStyle.glowColor}
-          transform-gpu
-          hover:shadow-lg
-        `}
-          >
-            {/* Main content */}
-            <div className="relative z-10 grid grid-cols-4 px-4 py-2">
-              <div>
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={() => handleSelectItem(gallery.waitlistId)}
-                  aria-label={`Select ${gallery.name}`}
-                  className="w-5 h-5 rounded border border-black text-slate-900 
-                    focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
-                    cursor-pointer transition-all duration-200
-                    hover:border-slate-400"
-                />
-              </div>
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-sm font-medium text-neutral-900 truncate">
+          {gallery.name}
+        </span>
+        <span className="flex items-center gap-1.5 text-xs text-neutral-500 truncate">
+          <Mail size={13} />
+          {gallery.email}
+        </span>
+      </div>
 
-              <div className="flex flex-col justify-self-start">
-                <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300 ">
-                  {gallery.name}
-                </h4>
-              </div>
-              <div className="flex items-center justify-self-start gap-x-1.5 text-fluid-xxs text-dark">
-                <Mail size={18} />
-                <span className="font-medium text-fluid-xs">
-                  {gallery.email}
-                </span>
-              </div>
-              <div className="flex items-center justify-self-end gap-4">
-                <span className="text-sm font-medium text-gray-700">
-                  Add discount
-                </span>
-                <label
-                  aria-label={`Add discount for ${gallery.name}`}
-                  className="relative inline-block h-[30px] w-[50px] cursor-pointer rounded-full bg-neutral-600 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-black"
-                >
-                  <input
-                    className="peer sr-only"
-                    type="checkbox"
-                    checked={hasDiscount}
-                    onChange={(e) =>
-                      handleToggleDiscount(gallery.waitlistId, e.target.checked)
-                    }
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <span className="absolute inset-y-0 start-0 m-1 h-[22px] w-[22px] rounded-full bg-white transition-all peer-checked:start-5"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-      {filteredGalleries.length === 0 && <NotFoundData />}
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-neutral-600">Discount</span>
+        <label className="relative inline-flex h-5 w-9 cursor-pointer items-center">
+          <input
+            type="checkbox"
+            checked={hasDiscount}
+            onChange={(e) => onToggleDiscount(e.target.checked)}
+            className="peer sr-only"
+          />
+          <span className="absolute inset-0 rounded-full bg-neutral-300 transition peer-checked:bg-neutral-900" />
+          <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition peer-checked:translate-x-4" />
+        </label>
+      </div>
     </div>
   );
 }
