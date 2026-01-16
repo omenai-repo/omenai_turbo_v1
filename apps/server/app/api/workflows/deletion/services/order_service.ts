@@ -2,11 +2,10 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { EntityType } from "@omenai/shared-types";
 import {
   validateTargetId,
-  anonymizeUserId,
-  anonymizeUsername,
   createFailedTaskJob,
   DeletionReturnType,
 } from "../utils";
+import { anonymizeUserId, anonymizeUsername } from "../../../util";
 
 export async function orderDeletionServiceProtocol(
   targetId: string,
