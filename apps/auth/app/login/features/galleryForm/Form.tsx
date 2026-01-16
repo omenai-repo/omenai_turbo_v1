@@ -2,26 +2,23 @@
 import { AnimatePresence, motion } from "framer-motion";
 import FormInput from "./components/FormInput";
 import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
-
+export const transitionValues = {
+  duration: 0.6,
+  ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for a "fluid" feel
+};
 export default function GalleryLoginForm() {
   return (
-    <AnimatePresence key={3}>
+    <AnimatePresence mode="wait">
       <motion.div
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ y: 100 }}
-        transition={{ duration: 0.33 }}
-        className="w-full h-full flex items-center gap-x-8 bg-white"
+        key="login-form-stage" // Unique key for AnimatePresence
+        initial={{ opacity: 0, y: 10, scale: 0.99 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10, scale: 0.99 }}
+        transition={transitionValues}
+        className="w-full relative"
       >
-        <div className="flex flex-col space-y-8 w-full ">
-          <div className="text-fluid-xxs ">
-            <GalleryLogo />
-          </div>
-          <div className="flex flex-col space-y-10 w-full">
-            <h1 className="text-fluid-sm sm:text-fluid-md font-bold">
-              Login to your gallery account.
-            </h1>
-
+        <div className="flex flex-col w-full space-y-10">
+          <div className="w-full">
             <FormInput />
           </div>
         </div>

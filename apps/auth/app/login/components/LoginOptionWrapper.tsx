@@ -1,29 +1,36 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import LoginOptions from "./LoginOptions";
+import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 
 export default function LoginOptionWrapper() {
   return (
-    <AnimatePresence key={94}>
+    <AnimatePresence mode="wait">
       <motion.div
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ y: 100 }}
-        transition={{ duration: 0.33 }}
-        className="w-full h-full flex items-center justify-center gap-x-8"
+        key="login-option-selector"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{
+          duration: 0.6,
+          ease: [0.22, 1, 0.36, 1], // Premium fluid easing
+        }}
+        className="w-full flex flex-col items-center md:items-start"
       >
-        <div className="flex justify-center w-full">
-          <div className="w-full h-full flex flex-col max-w-[500px] px-4 gap-y-8 overflow-x-hidden">
-            <div className="flex flex-col space-y-6">
-              <IndividualLogo />
-              <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
-                Login & experience art.
-              </h1>
-            </div>
+        <div className="w-full max-w-[500px]">
+          {/* Options Grid/List */}
+          <div className="w-full">
             <LoginOptions />
           </div>
+
+          {/* Subtle Help Text */}
+          {/* TODO: Add mailto */}
+          <p className="mt-12 text-[10px] text-slate-400 uppercase tracking-[0.2em] font-medium text-center md:text-left">
+            Need assistance?{" "}
+            <span className="text-black cursor-pointer border-b border-black pb-0.5">
+              Contact Concierge
+            </span>
+          </p>
         </div>
       </motion.div>
     </AnimatePresence>
