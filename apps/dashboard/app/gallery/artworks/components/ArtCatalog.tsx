@@ -1,6 +1,4 @@
 "use client";
-
-import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import { getAllArtworksById } from "@omenai/shared-services/artworks/fetchAllArtworksById";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +7,7 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { GalleryArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/GalleryArtworksSkeleton";
 
 export default function ArtCatalog() {
   const { user } = useAuth({ requiredRole: "gallery" });
@@ -30,7 +29,7 @@ export default function ArtCatalog() {
   });
 
   if (isLoading) {
-    return <ArtworksListingSkeletonLoader />;
+    return <GalleryArtworksSkeleton />;
   }
 
   const reversedArtworks = [...artworks].reverse();

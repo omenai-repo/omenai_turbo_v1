@@ -1,12 +1,12 @@
-'use client'
+"use client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchGalleryProfile } from "@omenai/shared-services/gallery/fetchGalleryProfile";
-import { AccountManagementSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { GalleryProfileSkeleton } from "@omenai/shared-ui-components/components/skeletons/GalleryProfileSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import AccountInformation from "./AccountInformation";
 
 export const AccountInformationWrapper = () => {
-   const { user } = useAuth({ requiredRole: "gallery" });
+  const { user } = useAuth({ requiredRole: "gallery" });
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["fetch_gallery_info", user.gallery_id],
@@ -18,7 +18,6 @@ export const AccountInformationWrapper = () => {
 
         return {
           profile: profile.gallery,
-
         };
       } catch (err) {
         console.error("Failed to fetch gallery info:", err);
@@ -30,7 +29,7 @@ export const AccountInformationWrapper = () => {
     enabled: !!user.gallery_id,
   });
 
-  if (isLoading) return <AccountManagementSkeleton />;
+  if (isLoading) return <GalleryProfileSkeleton />;
 
-  return <AccountInformation profile={data?.profile} />
-}
+  return <AccountInformation profile={data?.profile} />;
+};

@@ -8,6 +8,7 @@ import { OrdersTab } from "./OrdersTab";
 import { OrderSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrdersSkeleton";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersOrdersTabSkeleton";
 export default function OrdersGroup() {
   const { user } = useAuth({ requiredRole: "artist" });
   const [tab, setTab] = useState("pending");
@@ -31,7 +32,7 @@ export default function OrdersGroup() {
   return (
     <>
       <div className="w-full mt-4">
-        {isLoading ? <OrderSkeleton /> : <OrdersTab orders={orders} />}
+        {isLoading ? <UsersOrdersTabSkeleton /> : <OrdersTab orders={orders} />}
       </div>
     </>
   );

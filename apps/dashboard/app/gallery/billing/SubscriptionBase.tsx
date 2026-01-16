@@ -2,22 +2,15 @@
 import NoSubscriptionTheme from "./features/NoSubscriptionTheme";
 import SubscriptionActiveTheme from "./features/SubscriptionActiveTheme";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
-import { useContext } from "react";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { auth_uri } from "@omenai/url-config/src/config";
 import BillingSkeleton from "@omenai/shared-ui-components/components/skeletons/BillingSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
-import { WaitListTypes } from "@omenai/shared-types";
 
 export default function SubscriptionBase() {
-  const router = useRouter();
-  const url = auth_uri();
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const rollbar = useRollbar();
 
