@@ -1,7 +1,7 @@
 import { storage, identifier } from "@omenai/appwrite-config";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 
-const uploadImage = async (file: File, timeout = 10000) => {
+const uploadImage = async (file: File, timeout = 60000) => {
   if (!file) return;
 
   // Create a timeout promise

@@ -91,6 +91,7 @@ export default function ArtworkPricing() {
       setLoading(true);
 
       // 1 ─ Upload image
+      console.log(image);
       const fileUploaded = await uploadImage(image);
       if (!fileUploaded) throw new Error("Image upload failed");
 
@@ -109,7 +110,7 @@ export default function ArtworkPricing() {
           currency: pricing?.currency,
         },
         file.fileId,
-        (user.artist_id as string) ?? "",
+        user.artist_id ?? "",
         {
           role: "artist",
           designation: user.categorization,
