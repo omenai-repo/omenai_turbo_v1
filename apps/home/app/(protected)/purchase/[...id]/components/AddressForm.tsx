@@ -41,11 +41,8 @@ export default function AddressForm({
   const { address, set_address_on_order } = orderStore();
 
   const {
-    selectedCityList,
     setSelectedStateList,
-    selectedStateList,
     setSelectedCityList,
-    selectedCountry,
     setSelectedCountry,
     toggleOrderReceivedModal,
   } = actionStore();
@@ -88,7 +85,7 @@ export default function AddressForm({
     }
 
     const createdShippingOrder = await createShippingOrder(
-      user?.user_id,
+      user.user_id,
       art_id,
       author_id,
       saveShippingAddress,

@@ -164,10 +164,10 @@ async function processOrder(order: any, dbConnection: any) {
               name: seller_details.name,
               email: seller_details.email,
               trackingCode: order.order_id,
-              artistName: order.seller_details.name,
               artworkImage,
               artwork: order.artwork_data.title,
-              artworkPrice: order.artwork_data.pricing.usd_price,
+              buyerName: order.buyer_details.name,
+              requestDate: order.createdAt,
             });
           }
         }

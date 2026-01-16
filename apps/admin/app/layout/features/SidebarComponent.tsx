@@ -9,17 +9,13 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { SidebarLogout } from "./SidebarLogout";
-import { sidebarItems } from "../data/navigations";
+import { SidebarItem, sidebarItems } from "../navMockData";
+import NavigationItem from "../NavigationItem";
+import { canAccessRoute } from "../../utils/canAccessRoute";
 
-export function SidebarContent({
-  expanded,
-  handleClick,
-}: {
-  expanded: boolean;
-  handleClick?: () => void;
-}) {
+export function SidebarContent({ expanded }: { expanded: boolean }) {
   const pathname = usePathname();
-  const { signOut } = useAuth({ requiredRole: "gallery" });
+  const { signOut, user } = useAuth({ requiredRole: "admin" });
 
   async function handleSignOut() {
     toast.info("Signing out...", {
@@ -36,41 +32,30 @@ export function SidebarContent({
       </div>
 
       <nav className="flex flex-1 flex-col gap-8 px-3">
-        {["core", "account"].map((section) => (
+        {["actions", "activity", "management", "account"].map((section) => (
           <div key={section}>
-            {/* {expanded && (
+            {expanded && (
               <p className="mb-3 px-2 text-[11px] uppercase tracking-wider text-neutral-400">
                 {section}
               </p>
-            )} */}
+            )}
 
             <ul className="space-y-3">
               {sidebarItems
-                .filter((item) => item.section === section)
-                .map((item) => {
+                .filter((item: SidebarItem) => item.section === section)
+                .map((item: SidebarItem) => {
                   const active = pathname.startsWith(item.href);
                   const Icon = item.icon;
 
                   return (
-                    <li key={item.href} onClick={handleClick}>
-                      <Link
-                        href={item.href}
-                        className={clsx(
-                          "flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors",
-                          active
-                            ? "bg-dark text-white"
-                            : "text-neutral-600 hover:bg-neutral-100"
-                        )}
-                      >
-                        <Icon className="h-4 w-4 shrink-0" />
-
-                        {expanded && (
-                          <span className="ml-3 whitespace-nowrap">
-                            {item.label}
-                          </span>
-                        )}
-                      </Link>
-                    </li>
+                    <NavigationItem
+                      key={item.label}
+                      item={item}
+                      active={active}
+                      icon={<Icon className="h-4 w-4 shrink-0" />}
+                      expanded={expanded}
+                      disabled={!canAccessRoute(user.access_role, item.key)}
+                    />
                   );
                 })}
             </ul>

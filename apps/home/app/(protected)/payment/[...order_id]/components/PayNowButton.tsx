@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CiLock } from "react-icons/ci";
 import { toast } from "sonner";
-
 import { createStripeCheckoutSession } from "@omenai/shared-services/stripe/createCheckoutSession";
 import { createFlwCheckoutSession } from "@omenai/shared-services/flw/createCheckout";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { base_url } from "@omenai/url-config/src/config";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+
 export default function PayNowButton({
   art_id,
   artwork,
@@ -101,71 +101,97 @@ export default function PayNowButton({
           checkout_session_response = checkout_session;
         }
         if (!checkout_session_response?.isOk) {
-          toast.error("Error notification", {
+          toast.error("Payment Initiation Failed", {
             description:
               "Something went wrong, please try again or contact support",
-            style: {
-              background: "red",
-              color: "white",
-            },
-            className: "class",
           });
         } else {
-          toast.info("Checkout session initiated...Redirecting!");
+          toast.info("Secure checkout initiated. Redirecting...");
           router.replace(checkout_session_response.url);
         }
       } else {
-        toast.error("Error notification", {
+        toast.error("Checkout Unavailable", {
           description: get_purchase_lock.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
         });
       }
     }
-
     setLoading(false);
   }
 
   return (
-    <div className="w-full grid place-items-center h-full">
-      <div className="space-y-8 text-center w-full flex flex-col items-center">
-        <div className="w-fit relative">
-          <Tooltip
-            content={
-              "Another user has initiated a payment transaction on this artwork. Please refresh your page in a few minutes to confirm the availability of this artwork."
-            }
-            style="dark"
-            animation="duration-500"
-            trigger="hover"
-            className={`w-[400px] bg-dark text-fluid-xxs text-white p-2 relative ${
-              !lock_status && "hidden"
-            }`}
+    <div className="w-full flex flex-col items-center space-y-6">
+      <div className="w-full grid place-items-center">
+        <Tooltip
+          content="Another transaction is in progress for this artwork. Please refresh in a few minutes."
+          style="dark"
+          animation="duration-300"
+          trigger="hover"
+          // Using 'block' and 'w-full' on the Tooltip itself often targets the trigger wrapper
+          className={`max-w-[300px] text-xs p-3 leading-relaxed ${!lock_status && "hidden"}`}
+        >
+          <button
+            onClick={handleClickPayNow}
+            disabled={lock_status || loading}
+            className={`
+        w-full h-[48px] px-8 rounded-md flex items-center justify-center gap-3 transition-all duration-300
+        text-sm font-medium tracking-wide 
+        ${
+          lock_status
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+            : "bg-black text-white hover:bg-gray-900 active:scale-[0.98] shadow-lg shadow-black/10"
+        }
+        ${loading && "opacity-80 pointer-events-none"}
+      `}
           >
-            <button
-              onClick={handleClickPayNow}
-              disabled={lock_status || loading}
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
-            >
-              {loading ? <LoadSmall /> : "Proceed to payment"}
-            </button>
-          </Tooltip>
-          {lock_status && (
-            <CiLock className="absolute right-[-15px] top-[-5px]" />
-          )}
-        </div>
+            {loading ? (
+              <div className="flex items-center gap-3">
+                <LoadSmall />
+                <span className="animate-pulse">Securing Session...</span>
+              </div>
+            ) : (
+              <>
+                {lock_status && <CiLock className="text-xl" />}
+                <span>
+                  {lock_status ? "Currently Locked" : "Complete Purchase"}
+                </span>
+              </>
+            )}
+          </button>
+        </Tooltip>
+      </div>
 
-        <p className="font-normal text-red-600 w-full mt-6 leading-6">
-          <span className="text-fluid-base font-semibolduppercase underline">
-            Please note:
-          </span>
-          <br /> To protect your purchase and prevent duplicate transactions, we
-          use a secure queuing system, allowing one buyer to complete payment at
-          a time. If you experience issues accessing the payment portal, refresh
-          the page. We&apos;ll notify you if the artwork is still available.
-        </p>
+      {/* Modernized Disclaimer Box */}
+      <div className="w-full bg-blue-50/50 rounded-xl p-4 border border-blue-100">
+        <div className="flex gap-3">
+          <svg
+            className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <div className="space-y-1">
+            <h4 className="text-sm font-bold text-blue-900 uppercase tracking-tight">
+              Purchase Protection
+            </h4>
+            <p className="text-xs text-blue-800/80 leading-relaxed">
+              We use a secure queuing system to prevent duplicate transactions.
+              Only one buyer can initiate payment at a time to ensure your
+              purchase is unique and uninterrupted.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Trust Signals / Footer notes */}
+      <div className="flex justify-center gap-6 text-slate-400 opacity-70">
+        <p className="text-xs text-green-400">Secure SSL Encryption</p>
       </div>
     </div>
   );

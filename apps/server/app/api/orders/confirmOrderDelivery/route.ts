@@ -11,6 +11,7 @@ import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { createErrorRollbarReport } from "../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -48,10 +49,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       email: order.buyer_details.email,
       name: order.buyer_details.name,
       trackingCode: order_id,
-      artistName: order.seller_details.name,
       artworkImage,
       artwork: order.artwork_data.title,
-      artworkPrice: order.artwork_data.pricing.usd_price,
+      artistName: order.artwork_data.artist,
+      price: formatPrice(order.artwork_data.pricing.usd_price),
     });
 
     if (order.seller_designation === "artist") {
@@ -59,20 +60,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artistName: order.seller_details.name,
         artworkImage,
         artwork: order.artwork_data.title,
-        artworkPrice: order.artwork_data.pricing.usd_price,
+        artistName: order.artwork_data.artist,
+        price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     } else {
       await SendGalleryShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artistName: order.seller_details.name,
         artworkImage,
         artwork: order.artwork_data.title,
-        artworkPrice: order.artwork_data.pricing.usd_price,
+        artistName: order.artwork_data.artist,
+        price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     }
 

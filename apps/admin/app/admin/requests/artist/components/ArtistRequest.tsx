@@ -1,161 +1,114 @@
-import { Indicator, Avatar, Button } from "@mantine/core";
+"use client";
+
+import { Avatar, Badge, Button } from "@mantine/core";
 import { getGalleryLogoFileView } from "@omenai/shared-lib/storage/getGalleryLogoFileView";
-import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { ArtistType } from "./ArtistRequestWrapper";
-import { Eye, Shield, Palette, Mail } from "lucide-react";
+import { Eye, Shield, Mail } from "lucide-react";
 
 interface SingleArtistRequestType {
   artist: ArtistType;
   tab: "approved" | "pending";
 }
 
+const STATUS_STYLES = {
+  approved: {
+    label: "Approved",
+    badgeColor: "green",
+    accent: "bg-emerald-500",
+  },
+  pending: {
+    label: "Pending review",
+    badgeColor: "orange",
+    accent: "bg-amber-500",
+  },
+};
+
 export default function ArtistRequest({
   artist,
   tab,
 }: SingleArtistRequestType) {
-  const image_href = getGalleryLogoFileView(artist.logo as string, 200);
-
-  // Status styling configuration
-  const statusConfig = {
-    approved: {
-      bgColor: "bg-gradient-to-r from-emerald-50/80 to-green-50/60",
-      shadowColor: "shadow-emerald-100/50",
-      indicatorColor: "green",
-      glowColor: "ring-emerald-200/50",
-      badgeStyle: "bg-emerald-100 text-emerald-800",
-      dotStyle: "bg-emerald-500",
-    },
-    pending: {
-      bgColor: "bg-gradient-to-r from-amber-50/80 to-orange-50/60",
-      shadowColor: "shadow-amber-100/50",
-      indicatorColor: "red",
-      glowColor: "ring-amber-200/50",
-      badgeStyle: "bg-amber-100 text-amber-800",
-      dotStyle: "bg-amber-500 animate-pulse",
-    },
-  };
-
-  const currentStyle = statusConfig[tab];
+  const imageHref = getGalleryLogoFileView(artist.logo as string, 200);
+  const status = STATUS_STYLES[tab];
 
   return (
-    <div className="w-full p-1">
+    <div className="relative group">
+      {/* Status accent */}
       <div
-        className={`
-        group relative rounded ${currentStyle.bgColor} 
-        backdrop-blur-sm transition-all duration-500
-        transform-gpu 2xl:py-3 py-2
-      `}
+        className={`absolute left-0 top-0 h-full w-1 rounded-l-lg ${status.accent}`}
+      />
+
+      <div
+        className="
+          flex items-center justify-between gap-6
+          rounded-lg border border-neutral-200 bg-white
+          px-5 py-4 pl-6
+          transition
+          hover:border-neutral-300 hover:shadow-sm
+        "
       >
-        {/* Main content */}
-        <div className="relative z-10 flex justify-between items-center px-4 py-2">
-          {/* Left section - Avatar and Info */}
-          <div className="flex gap-x-4 items-center">
-            <div className="relative">
-              <div className="relative">
-                <Avatar
-                  size="md"
-                  radius="md"
-                  src={image_href}
-                  className="transition-all duration-300 group-hover:shadow-lg ring-2 ring-white group-hover:ring-4"
-                />
-              </div>
-            </div>
+        {/* Left: Avatar + Info */}
+        <div className="flex items-center gap-4 min-w-0">
+          <Avatar src={imageHref} radius="md" size={44} className="shrink-0" />
 
-            <div className="flex flex-col">
-              <div className="flex gap-x-2 items-center">
-                <h4 className="text-fluid-xxs font-medium text-gray-900 transition-colors duration-300flex items-center gap-x-2">
-                  {artist.name}
-                </h4>
-                {/* Status badge */}
-                <div className="flex items-center">
-                  <span
-                    className={`
-                  inline-flex items-center rounded px-2 text-fluid-xxs font-medium capitalize
-                  ${currentStyle.badgeStyle}
-                  transition-all duration-300 group-hover:shadow-sm
-                `}
-                  >
-                    <div
-                      className={`w-1.5 h-1.5 rounded mr-1.5 ${currentStyle.dotStyle}`}
-                    />
-                    {tab}
-                  </span>
-                </div>
-              </div>
+          <div className="flex flex-col min-w-0 gap-1">
+            <div className="flex items-center gap-2">
+              <h3 className="truncate text-sm font-medium text-neutral-900">
+                {artist.name}
+              </h3>
 
-              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-gray-600 transition-colors duration-300 group-hover:text-slate-700">
-                <Mail size={14} />
-                <span className="font-medium text-fluid-xxs">
-                  {artist.email}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right section - Actions */}
-          <div className="flex gap-x-3 items-center">
-            {tab === "approved" ? (
-              <Button
-                variant="gradient"
-                gradient={{ from: "red", to: "pink", deg: 45 }}
+              <Badge
                 size="xs"
+                color={status.badgeColor}
+                variant="light"
                 radius="sm"
-                leftSection={<Shield size={16} />}
-                className="
-                  font-medium text-fluid-xxs px-6 py-2.5 shadow-lg
-                  transition-all duration-300 
-                  ring-1 ring-red-200/50 hover:ring-red-300/70
-                  transform-gpu
-                "
-                styles={{
-                  root: {
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                    },
-                  },
-                }}
               >
-                Block Artist
-              </Button>
-            ) : (
-              <Link
-                href={`/admin/requests/artist/info?id=${artist.artist_id}`}
-                className="transition-all duration-300 hover:scale-105"
-              >
-                <Button
-                  variant="gradient"
-                  gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
-                  size="xs"
-                  radius="sm"
-                  leftSection={<Eye size={16} />}
-                  className="
-                    font-medium text-fluid-xxs px-6 py-2.5 shadow-lg
-                    transition-all duration-300 
-                    ring-1 ring-blue-200/50 hover:ring-blue-300/70
-                    transform-gpu
-                  "
-                  styles={{
-                    root: {
-                      "&:hover": {
-                        transform: "translateY(-2px)",
-                      },
-                    },
-                  }}
-                >
-                  View Details
-                </Button>
-              </Link>
-            )}
+                {status.label}
+              </Badge>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+              <Mail size={13} />
+              <span className="truncate">{artist.email}</span>
+            </div>
           </div>
         </div>
 
-        {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-12 h-12 rounded bg-white/10 opacity-0 group-hover:opacity-30 transition-all duration-500 transform group-hover:scale-110" />
-        <div className="absolute bottom-4 right-8 w-6 h-6 rounded bg-white/5 opacity-0 group-hover:opacity-50 transition-all duration-700" />
-
-        {/* Bottom shine effect */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        {/* Right: Actions */}
+        <div className="flex items-center gap-3 shrink-0">
+          {tab === "approved" ? (
+            <Button
+              size="xs"
+              variant="subtle"
+              radius="sm"
+              color="red"
+              leftSection={<Shield size={14} />}
+              className="
+                text-red-600
+                hover:bg-red-50
+                transition
+              "
+            >
+              Block
+            </Button>
+          ) : (
+            <Link href={`/admin/requests/artist/info?id=${artist.artist_id}`}>
+              <Button
+                size="xs"
+                variant="subtle"
+                radius="sm"
+                leftSection={<Eye size={14} />}
+                className="
+                  text-neutral-700
+                  hover:bg-neutral-100
+                  transition
+                "
+              >
+                View
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

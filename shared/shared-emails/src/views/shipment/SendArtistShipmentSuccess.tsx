@@ -9,7 +9,7 @@ export default function SendArtistShipmentSuccess(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  artworkPrice: number
+  price: string
 ) {
   return (
     <ShipmentLayout
@@ -58,10 +58,10 @@ export default function SendArtistShipmentSuccess(
         <strong>Tracking Code : </strong> {trackingCode}
       </Text>
       <ArtworkCard
-        artistName={artistName}
         artwork={artwork}
         artworkImage={artworkImage}
-        artworkPrice={artworkPrice}
+        artistName={artistName}
+        price={price}
       />
 
       <Text

@@ -25,58 +25,74 @@ export function WaitlistHeader({
   onInviteClick,
 }: Readonly<WaitlistHeaderProps>) {
   return (
-    <div className="flex items-center justify-between gap-3 px-4">
-      <label className="flex items-center gap-2 cursor-pointer group">
-        <input
-          type="checkbox"
-          disabled={filteredItemsLength === 0}
-          checked={allSelected}
-          ref={(input) => {
-            if (input) input.indeterminate = someSelected;
-          }}
-          onChange={onSelectAll}
-          aria-label={allSelected ? "Deselect all users" : "Select all users"}
-          className="w-5 h-5 rounded border border-black text-slate-900 
-            focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
-            cursor-pointer transition-all duration-200
-            group-hover:border-slate-400"
-        />
-        <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-          {allSelected ? "Deselect All" : "Select All"}
-        </span>
-      </label>
-
-      <div className="flex gap-8 items-center">
-        <div>
+    <div className="flex items-center justify-between gap-4">
+      {/* Left: Selection */}
+      <div className="flex items-center gap-3">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
-            type="text"
-            value={searchQuery}
-            className="w-full bg-transparent border border-slate-300 focus:border-dark outline-none focus:ring-0 rounded-full transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 px-4 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed"
-            placeholder="Search by name or email"
-            onChange={(e) => onSearchChange(e.target.value)}
+            type="checkbox"
+            disabled={filteredItemsLength === 0}
+            checked={allSelected}
+            ref={(input) => {
+              if (input) input.indeterminate = someSelected;
+            }}
+            onChange={onSelectAll}
+            aria-label={allSelected ? "Deselect all" : "Select all"}
+            className="
+              h-4 w-4 rounded
+              border border-neutral-300
+              text-neutral-900
+              transition
+              focus:ring-2 focus:ring-neutral-400 focus:ring-offset-0
+              disabled:opacity-50 disabled:cursor-not-allowed
+            "
           />
-        </div>
+
+          <span className="text-sm text-neutral-700">
+            {allSelected ? "Deselect all" : "Select all"}
+          </span>
+        </label>
+
+        {selectedCount > 0 && (
+          <span className="text-sm text-neutral-500">
+            {selectedCount} selected
+          </span>
+        )}
+      </div>
+
+      {/* Right: Search + Action */}
+      <div className="flex items-center gap-3">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search name or email"
+          className="
+            h-9 w-64
+            rounded-full
+            border border-neutral-200
+            bg-white
+            px-4 text-sm
+            text-neutral-900
+            placeholder:text-neutral-400
+            transition
+            focus:border-neutral-400 focus:outline-none
+          "
+        />
 
         <Button
           disabled={selectedCount === 0 || isInviting}
           onClick={onInviteClick}
-          variant="gradient"
-          gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
-          size="xs"
-          radius="sm"
-          className="font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
-            transition-all duration-300 hover:scale-105 active:scale-95
-            ring-1 ring-blue-200/50 hover:ring-blue-300/70
-            transform-gpu"
-          styles={{
-            root: {
-              "&:hover": {
-                transform: "translateY(-2px)",
-              },
-            },
-          }}
+          size="sm"
+          radius="md"
+          className="
+            bg-neutral-900 text-white
+            hover:bg-neutral-800
+            disabled:bg-neutral-200 disabled:text-neutral-500
+            transition
+          "
         >
-          {isInviting ? <LoadSmall /> : `Invite Selected (${selectedCount})`}
+          {isInviting ? <LoadSmall /> : `Invite (${selectedCount})`}
         </Button>
       </div>
     </div>

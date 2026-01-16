@@ -1,69 +1,58 @@
-"use client";
-import IconWrapper from "./IconWrapper";
+import React from "react";
+import { SidebarItem } from "./navMockData";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { clsx } from "clsx";
+import { Lock } from "lucide-react";
 
-type ItemProps = {
-  title: string;
-  icon: React.ReactNode;
-  url: string;
-  mobile: boolean;
-  onClick?: () => void;
-  disabled: boolean;
-};
 export default function NavigationItem({
-  title,
+  item,
+  active,
   icon,
-  url,
-  mobile,
-  onClick,
+  expanded,
   disabled,
-}: ItemProps) {
-  const pathname = usePathname();
+}: {
+  item: SidebarItem;
+  active: boolean;
+  icon: React.ReactNode;
+  expanded: boolean;
+  disabled: boolean;
+}) {
   return (
-    <>
-      {title === "Sign out" ? (
-        <li
-          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
+    <li key={item.href}>
+      {disabled ? (
+        <div
+          aria-disabled="true"
+          className={clsx(
+            "flex cursor-not-allowed items-center rounded-lg px-3 py-2.5 text-sm text-neutral-400",
+            "bg-neutral-50"
+          )}
         >
-          <button type="button" onClick={onClick}>
-            <IconWrapper className="hover:bg-white hover:text-dark group">
-              {icon}
-            </IconWrapper>
-            <p className={`text-fluid-xxs font-normal`}>{title}</p>
-          </button>
-        </li>
-      ) : disabled ? (
-        <Link
-          onClick={onClick}
-          href={url}
-          className={`px-3 py-1 ${
-            pathname.startsWith(url)
-              ? "bg-dark text-white"
-              : "bg-white text-dark"
-          } group flex items-center w-full hover:bg-dark rounded`}
-        >
-          <IconWrapper
-            className={` ${pathname.startsWith(url) ? "bg-white text-white" : "group"}`}
-          >
-            {icon}
-          </IconWrapper>
-          <p
-            className={`text-fluid-xxs p-2 font-normal group-hover:text-white`}
-          >
-            {title}
-          </p>
-        </Link>
+          {icon}
+
+          {expanded && (
+            <span className="ml-3 flex items-center gap-2 whitespace-nowrap">
+              {item.label}
+              <Lock className="h-3.5 w-3.5 opacity-70" />
+            </span>
+          )}
+        </div>
       ) : (
-        <>
-          <div className="opacity-50 flex items-center bg-white p-2 text-dark cursor-not-allowed">
-            <IconWrapper className="hover:bg-white hover:text-dark group">
-              {icon}
-            </IconWrapper>
-            {title}
-          </div>
-        </>
+        <Link
+          href={item.href}
+          className={clsx(
+            "flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors",
+            active
+              ? "bg-dark text-white"
+              : "text-neutral-600 hover:bg-neutral-100"
+          )}
+        >
+          {icon}
+
+          {expanded && (
+            <span className="ml-3 whitespace-nowrap">{item.label}</span>
+          )}
+        </Link>
       )}
-    </>
+    </li>
   );
 }

@@ -9,6 +9,7 @@ import { Resend } from "resend";
 import { render } from "@react-email/render";
 import InvitationEmail from "@omenai/shared-emails/src/views/admin/InvitationEmail";
 import { inviteWaitlistUserValidator } from "./InviteWaitlistUserValidator";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -26,6 +27,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    await connectMongoDB();
     const { waitlistUsers: selectedUsers } = await request.json();
     // validate payload
     inviteWaitlistUserValidator(selectedUsers);

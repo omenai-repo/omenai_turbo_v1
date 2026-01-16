@@ -35,7 +35,6 @@ export default function ProfileSection() {
         } else {
           toast_notif(response.message, "success");
           setIsEditing(false);
-          toast_notif("Logging you out, please wait", "info");
           await signOut();
         }
       } catch (error) {

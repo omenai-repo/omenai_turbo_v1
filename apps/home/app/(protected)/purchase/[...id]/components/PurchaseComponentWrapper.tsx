@@ -19,8 +19,11 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   const { data: artwork, isLoading: loading } = useQuery({
     queryKey: ["fetch_artwork_on purchase"],
     queryFn: async () => {
-      const userData = await fetchUserData(user.id);
-      const artwork = await fetchSingleArtworkOnPurchase(slug);
+      const [userData, artwork] = await Promise.all([
+        fetchUserData(user.id),
+        fetchSingleArtworkOnPurchase(slug),
+      ]);
+
       if (!userData?.isOk || !artwork?.isOk) {
         toast.error("Error notification", {
           description: "Something went wrong, please try again later",
