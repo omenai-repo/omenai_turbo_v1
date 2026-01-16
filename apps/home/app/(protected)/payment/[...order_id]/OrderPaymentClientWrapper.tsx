@@ -50,8 +50,6 @@ export default function OrderPaymentClientWrapper({
     } else {
       setIsLoggedIn(true);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <ComponentWrapper order_id={order_id} isLoggedIn={isLoggedIn} />;
