@@ -8,7 +8,7 @@ import ArtworkCard from "@omenai/shared-ui-components/components/artworks/Artwor
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { ArtworkMediumTypes, ArtworkSchemaTypes } from "@omenai/shared-types";
-import { UsersSavedArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { UsersSavedArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersSavedArtworksSkeleton";
 
 export default function ArtCatalog() {
   const { user } = useAuth({ requiredRole: "artist" });

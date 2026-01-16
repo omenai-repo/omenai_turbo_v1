@@ -7,7 +7,7 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { GalleryArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { GalleryArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/GalleryArtworksSkeleton";
 
 export default function ArtCatalog() {
   const { user } = useAuth({ requiredRole: "gallery" });

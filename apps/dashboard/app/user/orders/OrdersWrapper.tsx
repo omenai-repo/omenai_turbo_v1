@@ -4,7 +4,7 @@ import { getOrdersForUser } from "@omenai/shared-services/orders/getOrdersForUse
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useWindowSize } from "usehooks-ts";
 import { OrdersTab } from "./components/OrdersTab";
-import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersOrdersTabSkeleton";
 
 export default function Orders() {
   const { width } = useWindowSize();

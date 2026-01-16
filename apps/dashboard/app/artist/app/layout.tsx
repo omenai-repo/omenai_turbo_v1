@@ -27,7 +27,7 @@ import { MainContent } from "./features/MainContent";
 import { MobileSidebar } from "./features/MobileLayout";
 import { DesktopSidebar } from "./features/Sidebar";
 import { useWindowSize } from "usehooks-ts";
-import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/GalleryOverviewSkeleton";
 
 export default function ArtistDashboardLayout({
   children,

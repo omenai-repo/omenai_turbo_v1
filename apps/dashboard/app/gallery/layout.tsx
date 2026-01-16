@@ -16,7 +16,7 @@ import NoMobileView from "../artist/components/NoMobileView";
 import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
-import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/GalleryOverviewSkeleton";
 export default function GalleryDashboardLayout({
   children,
 }: {

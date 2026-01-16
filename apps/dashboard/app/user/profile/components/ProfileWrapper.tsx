@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchUserData } from "@omenai/shared-services/requests/fetchUserData";
-import { UserProfileSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { UserProfileSkeleton } from "@omenai/shared-ui-components/components/skeletons/UserProfileSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import UserProfile from "./ProfilePage";

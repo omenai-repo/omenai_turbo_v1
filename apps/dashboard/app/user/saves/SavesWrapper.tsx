@@ -10,7 +10,7 @@ import Pagination from "@omenai/shared-ui-components/components/pagination/Pagin
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { FilterOptions } from "@omenai/shared-types";
-import { UsersSavedArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { UsersSavedArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersSavedArtworksSkeleton";
 
 export default function Saves() {
   const {

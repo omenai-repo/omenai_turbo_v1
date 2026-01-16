@@ -12,7 +12,7 @@ import NoVerificationBlock from "../../components/NoVerificationBlock";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
 import { isSubscriptionExpired } from "@omenai/shared-utils/src/isSubscriptionExpired";
 import { useRollbar } from "@rollbar/react";
-import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersOrdersTabSkeleton";
 export default function OrdersGroup() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();

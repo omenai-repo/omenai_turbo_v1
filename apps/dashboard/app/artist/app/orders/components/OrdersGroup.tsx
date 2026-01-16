@@ -8,7 +8,7 @@ import { OrdersTab } from "./OrdersTab";
 import { OrderSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrdersSkeleton";
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersOrdersTabSkeleton";
 export default function OrdersGroup() {
   const { user } = useAuth({ requiredRole: "artist" });
   const [tab, setTab] = useState("pending");
