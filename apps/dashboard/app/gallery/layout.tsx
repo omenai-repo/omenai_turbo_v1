@@ -7,7 +7,7 @@ import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
 import GetStartedWithStripe from "./modals/GetStartedWithStripe";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
 import { UpdateLogoModal } from "./modals/UpdateLogoModal";
@@ -16,7 +16,6 @@ import NoMobileView from "../artist/components/NoMobileView";
 import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
-import { GalleryOverviewSkeleton } from "@omenai/shared-ui-components/components/skeletons/GalleryOverviewSkeleton";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -38,12 +37,7 @@ export default function GalleryDashboardLayout({
   });
 
   if (isLoading) {
-    return (
-      <div>
-        <DesktopSidebar />
-        <GalleryOverviewSkeleton />
-      </div>
-    );
+    return <Load />;
   }
 
   const isNotStripeConnected = account.connected_account_id === null;

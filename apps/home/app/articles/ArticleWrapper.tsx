@@ -2,7 +2,7 @@
 import { listEditorials } from "@omenai/shared-lib/editorials/getEditorials";
 import { useQuery } from "@tanstack/react-query";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { EditorialSkeleton } from "@omenai/shared-ui-components/components/skeletons/EditorialSkeleton";
 import ArticleCard from "./components/ArticleCard";
 import EditorialItemCard from "@omenai/shared-ui-components/components/editorials/EditorialItemCard";
 export default function ArticleWrapper() {
@@ -27,7 +27,7 @@ export default function ArticleWrapper() {
     refetchOnWindowFocus: false,
     refetchOnMount: false, // Don't refetch if we have cached data
   });
-  if (isLoading) return <Load />;
+  if (isLoading) return <EditorialSkeleton />;
 
   const editorials = Array.isArray(data) ? data : [];
   if (editorials && editorials.length === 0)

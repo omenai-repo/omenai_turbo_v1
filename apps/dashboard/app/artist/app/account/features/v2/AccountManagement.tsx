@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchArtistProfile } from "@omenai/shared-services/artist/fetchArtistProfile";
 import { fetchArtistCredentials } from "@omenai/shared-services/artist/fetchArtistCredentials";
-import { AccountManagementSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { ArtistProfileSkeleton } from "@omenai/shared-ui-components/components/skeletons/ArtistProfileSkeleton";
 import {
   ArtistCategorizationAnswerTypes,
   ArtistCategory,
@@ -51,7 +51,7 @@ const AccountManagement = () => {
     enabled: !!user.artist_id,
   });
 
-  if (isLoading) return <AccountManagementSkeleton />;
+  if (isLoading) return <ArtistProfileSkeleton />;
 
   return (
     <div className="min-h-screen">
