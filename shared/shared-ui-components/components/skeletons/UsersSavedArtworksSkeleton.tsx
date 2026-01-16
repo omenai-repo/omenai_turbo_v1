@@ -39,7 +39,7 @@ export const UsersSavedArtworksSkeleton = () => {
 function Column() {
   return (
     <div className="flex-1 gap-2 space-y-6">
-      {[...Array(3)].map((_, i) => (
+      {Array.from({ length: 3 }).map((_, i) => (
         <ArtworkCardSkeleton key={`col1-${i}`} />
       ))}
     </div>
