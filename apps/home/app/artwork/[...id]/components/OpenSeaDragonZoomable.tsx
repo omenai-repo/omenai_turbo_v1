@@ -129,7 +129,7 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
       </div>
 
       {/* Zoom slider */}
-      <div className="flex translate-x-[-50%] absolute bottom-[30px] left-[50%] max-h-[100%]">
+      <div className="flex translate-x-[-50%] z-[60] absolute bottom-[30px] left-[50%] max-h-[100%]">
         <div className="w-[240px] h-[35px] rounded-[2px] bg-dark/60 flex justify-center items-center">
           <div className="relative align-middle flex">
             <input
