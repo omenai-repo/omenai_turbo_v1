@@ -71,7 +71,7 @@ export function TabsDropdown({ catalogue }: TabDropdownTypes) {
       <div className={`${catalogue ? "hidden" : "block"}`}>
         <Link
           href={"/catalog"}
-          className="flex items-center gap-x-2 text-fluid-xxs rounded-full"
+          className="flex items-center gap-x-2 text-fluid-xxs rounded"
         >
           <span>See more</span>
           <MdArrowRightAlt />

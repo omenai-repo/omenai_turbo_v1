@@ -30,10 +30,10 @@ const VerifyGalleryEmail = (gallery_name?: string) => {
               className="mx-auto my-10"
             />
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Dear Admin,
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               You have received a new gallery verification request from the
               following user on the platform: <strong>{gallery_name}.</strong>
               Please take the necessary steps to review and verify the gallery
@@ -44,7 +44,7 @@ const VerifyGalleryEmail = (gallery_name?: string) => {
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
-              <span className="text-black">the Omenai Inc admin </span>. In the
+              <span className="text-dark">the Omenai Inc admin </span>. In the
               event that you were not anticipating the receipt of this email, we
               respectfully request that you refrain from taking any action based
               on its contents. This communication may contain confidential and

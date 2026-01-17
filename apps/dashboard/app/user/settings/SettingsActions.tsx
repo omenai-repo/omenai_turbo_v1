@@ -19,7 +19,7 @@ export default function SettingsAction() {
       </div>
 
       {/* ===== SECURITY ACTIONS ===== */}
-      <div className="w-full rounded-3xl bg-white border border-slate-200 shadow-sm">
+      <div className="w-full rounded bg-white border border-slate-200 shadow-sm">
         <div className="px-6 py-5 sm:px-8 border-b border-slate-200">
           <h2 className="text-fluid-xxs font-semibold text-slate-900">
             Account Security
@@ -45,7 +45,7 @@ export default function SettingsAction() {
               onClick={() => userUpdatePasswordModalPopup(true)}
               className="
                 inline-flex items-center justify-center
-                rounded-full bg-slate-900 px-5 py-2.5
+                rounded bg-slate-900 px-5 py-2.5
                 text-fluid-xxs font-medium text-white
                 transition hover:bg-slate-800
                 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2
@@ -63,7 +63,7 @@ export default function SettingsAction() {
           Danger zone
         </h2>
 
-        <div className="w-full rounded-3xl border border-red-200 bg-red-50/60">
+        <div className="w-full rounded border border-red-200 bg-red-50/60">
           <div className="px-6 py-6 sm:px-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div className="flex-1">
               <h3 className="text-fluid-xxs font-semibold text-red-900">
@@ -78,7 +78,7 @@ export default function SettingsAction() {
               onClick={() => updateDeleteUserAccountModalPopup(true)}
               className="
                 inline-flex items-center justify-center
-                rounded-full border border-red-300 bg-white
+                rounded border border-red-300 bg-white
                 px-5 py-2.5 text-fluid-xxs font-medium text-red-600
                 transition hover:bg-red-50
                 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2

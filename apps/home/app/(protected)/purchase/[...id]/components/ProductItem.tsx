@@ -1,96 +1,84 @@
 "use client";
 
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Image from "next/image";
-
-/* eslint-disable @next/next/no-img-element */
 
 export default function ProductItem({
   artwork,
 }: {
   artwork: ArtworkSchemaTypes & { createdAt: string; updatedAt: string };
 }) {
-  const image_href = getOptimizedImage(artwork.url, "thumbnail", 40);
-  return (
-    // Artwork Checkout Component
-    <div className="w-full max-w-md mx-auto mb-5">
-      <div className="bg-white rounded shadow-lg overflow-hidden">
-        {/* Artwork Section */}
-        <div className="p-8">
-          <div className="flex flex-col items-center space-y-6">
-            {/* Image Container */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-slate-100 rounded blur-2xl opacity-30 scale-90"></div>
-              <div className="relative group w-full">
-                <div className="absolute inset-0 bg-gradient-to-tr from-slate-200 via-slate-100 to-slate-200 rounded-2xl blur-3xl opacity-30 scale-95"></div>
-                <Image
-                  src={image_href}
-                  alt={`${artwork.title} image`}
-                  width={280} // max width
-                  height={400} // max height
-                  className="relative rounded object-cover shadow-md transition-transform duration-300 transform group-hover:scale-105 cursor-pointer"
-                />
-              </div>
-            </div>
+  const image_href = getOptimizedImage(artwork.url, "medium", 90);
 
-            {/* Artwork Details */}
-            <div className="text-center space-y-2 w-full">
-              <h1 className="font-bold text-fluid-md text-dark tracking-tight">
-                {artwork.title}
-              </h1>
-              <p className="font-normal  text-fluid-xxs text-dark/60 italic">
-                {artwork.artist}
-              </p>
-            </div>
-          </div>
+  return (
+    <div className="w-full bg-neutral-50 border border-neutral-200 p-6">
+      {/* 1. ASSET HEADER */}
+      <div className="mb-6 flex items-center justify-between border-b border-neutral-200 pb-4">
+        <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-500">
+          Asset Reference
+        </span>
+        <span className="font-mono text-[9px] uppercase tracking-widest text-dark">
+          #{artwork.art_id.slice(-6)}
+        </span>
+      </div>
+
+      {/* 2. IMAGE PREVIEW (Reduced Size) */}
+      <div className="relative mb-6 w-full bg-white p-4 border border-neutral-100">
+        {/* Changed w-full to w-32 (128px) and added mx-auto to center it */}
+        <div className="relative aspect-[3/4] w-64 mx-auto overflow-hidden bg-neutral-100 shadow-sm">
+          <Image
+            src={image_href}
+            alt={artwork.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      {/* 3. METADATA */}
+      <div className="space-y-6">
+        <div className="text-center">
+          <h1 className="font-serif text-xl italic text-dark leading-tight">
+            {artwork.title}
+          </h1>
+          <p className="font-sans text-xs text-neutral-500 mt-1">
+            by {artwork.artist}
+          </p>
         </div>
 
-        {/* Pricing Section */}
-        <div className="bg-slate-50 px-8 py-6">
-          <div className="space-y-4">
-            {/* Price Row */}
-            <div className="flex justify-between items-center py-3 border-b border-slate-200">
-              <span className="text-dark/60 font-normaltext-fluid-xxs ">
-                Price
-              </span>
-              <span className="text-dark font-bold text-fluid-base">
-                {formatPrice(artwork.pricing.usd_price)}
-              </span>
-            </div>
+        {/* 4. FINANCIAL TABLE */}
+        <div className="border-t border-neutral-200 pt-6">
+          <div className="flex justify-between items-end mb-4">
+            <span className="font-mono text-xs uppercase tracking-wide text-neutral-500">
+              Acquisition Price
+            </span>
+            <span className="font-mono text-sm text-dark">
+              {formatPrice(artwork.pricing.usd_price)}
+            </span>
+          </div>
 
-            {/* Shipping Row */}
-            <div className="flex justify-between items-center py-3 border-b border-slate-200">
-              <span className="text-dark/60 font-normal text-fluid-xxs">
-                Shipping
-              </span>
-              <span className="text-slate-500 italic text-fluid-xxs">
-                To be calculated
-              </span>
-            </div>
+          <div className="flex justify-between items-end mb-4">
+            <span className="font-mono text-xs uppercase tracking-wide text-neutral-500">
+              Shipping
+            </span>
+            <span className="font-mono text-xs text-neutral-400 italic">
+              Calculated on review
+            </span>
+          </div>
 
-            {/* Total Section */}
-            <div className="pt-4 space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-dark font-bold text-fluid-sm">Total</span>
-                <div className="text-right">
-                  <p className="text-slate-500 text-fluid-xxs italic">
-                    Pending final calculation
-                  </p>
-                </div>
-              </div>
-
-              {/* Notice */}
-              <div className="bg-amber-50 rounded p-3 border border-amber-200">
-                <p className="text-amber-800 text-xs leading-relaxed">
-                  <span className="font-semibold">Note:</span> Additional duties
-                  and taxes may apply at import
-                </p>
-              </div>
+          <div className="mt-6 border-t border-black pt-4 flex justify-between items-end">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-dark">
+              Estimated Total
+            </span>
+            <div className="text-right">
+              <p className="font-mono text-lg text-dark">
+                {formatPrice(artwork.pricing.usd_price)}*
+              </p>
+              <p className="font-sans text-[10px] text-neutral-400 mt-1">
+                *Excluding duties & shipping
+              </p>
             </div>
           </div>
         </div>

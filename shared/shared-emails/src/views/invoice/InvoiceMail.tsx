@@ -22,7 +22,7 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
 
       <Tailwind>
         <Body className="bg-gray-50 font-sans">
-          <Container className="mx-auto my-12 max-w-[520px] rounded-lg bg-white px-8 py-10 shadow-sm">
+          <Container className="mx-auto my-12 max-w-[520px] rounded bg-white px-8 py-10 shadow-sm">
             {/* Logo */}
             <Section className="mb-10 text-center">
               <Img
@@ -55,7 +55,7 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
             </Text>
 
             {/* Receipt notice box */}
-            <Section className="rounded-md bg-gray-50 px-6 py-4">
+            <Section className="rounded bg-gray-50 px-6 py-4">
               <Text className="text-sm text-gray-600">
                 📎{" "}
                 <span className="font-medium text-gray-800">

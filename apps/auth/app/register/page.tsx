@@ -14,7 +14,7 @@ function Page() {
         <IndividualLogo />
 
         {/* The "Masterpiece Frame" - Using the gallery banner */}
-        <div className="relative w-full h-[70%] rounded-2xl overflow-hidden shadow-2xl border-[12px] border-white">
+        <div className="relative w-full h-[70%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
           <Image
             src="/gallery__banner.png"
             alt="Omenai Curator Space"
@@ -23,7 +23,7 @@ function Page() {
             className="object-cover transition-transform duration-[20s] ease-linear hover:scale-110"
           />
           {/* Lighter overlay for a more "inviting" feel compared to login */}
-          <div className="absolute inset-0 bg-black/10 hover:bg-transparent transition-colors duration-700" />
+          <div className="absolute inset-0 bg-dark/10 hover:bg-transparent transition-colors duration-700" />
         </div>
 
         {/* Side Footer Quote */}
@@ -75,10 +75,10 @@ function Page() {
         <div className="p-8 flex justify-between items-center text-[10px] text-slate-300 tracking-[0.3em] uppercase">
           <span>&copy; 2026 OMENAI INC.</span>
           <div className="flex gap-6">
-            <Link href="/terms" className="hover:text-black">
+            <Link href="/terms" className="hover:text-dark">
               Terms
             </Link>
-            <Link href="/privacy" className="hover:text-black">
+            <Link href="/privacy" className="hover:text-dark">
               Privacy
             </Link>
           </div>

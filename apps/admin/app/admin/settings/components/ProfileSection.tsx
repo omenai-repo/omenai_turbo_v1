@@ -69,7 +69,7 @@ export default function ProfileSection() {
         <div className="flex items-center gap-6">
           <Avatar
             size={80}
-            radius="xl"
+            radius="sm"
             styles={{
               root: {
                 border: "3px solid #2a2a2a",

@@ -164,7 +164,7 @@ export default function InviteForm({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
+            className="p-4 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
           >
             {isSubmitting ? (
               <PulseLoader size={5} color="#ffffff" />

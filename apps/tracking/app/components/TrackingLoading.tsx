@@ -49,12 +49,12 @@ export default function TrackingLoading() {
 
         {[1, 2, 3].map((i) => (
           <div key={i} className="relative flex gap-4 md:gap-6">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex-shrink-0"></div>
-            <div className="flex-1 bg-gray-100 rounded-xl p-4 md:p-6 space-y-3">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded bg-gray-300 flex-shrink-0"></div>
+            <div className="flex-1 bg-gray-100 rounded p-4 md:p-6 space-y-3">
               <div className="h-3 bg-gray-300 rounded w-32"></div>
               <div className="h-5 bg-gray-300 rounded w-48"></div>
               <div className="h-4 bg-gray-200 rounded w-full"></div>
-              <div className="h-12 bg-gray-200 rounded-lg"></div>
+              <div className="h-12 bg-gray-200 rounded"></div>
             </div>
           </div>
         ))}

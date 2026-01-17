@@ -17,7 +17,7 @@ const OnboardingBlockerScreen = ({ message }: FeatureBlockerProps) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="bg-white rounded-2xl shadow-lg max-w-lg w-full p-10 flex flex-col items-center text-center"
+        className="bg-white rounded shadow-lg max-w-lg w-full p-10 flex flex-col items-center text-center"
       >
         <motion.div
           animate={{ rotate: [0, 5, -5, 0] }}

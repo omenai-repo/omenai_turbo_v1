@@ -83,7 +83,7 @@ function construct_status({
   order_decline_reason,
 }: any) {
   const base =
-    "inline-flex items-center gap-x-1.5 rounded-full px-2.5 py-1 text-xs font-medium w-fit border";
+    "inline-flex items-center gap-x-1.5 rounded px-2.5 py-1 text-xs font-medium w-fit border";
 
   if (order_accepted === "declined") {
     return (
@@ -135,7 +135,7 @@ export function OrderCardList({
 }) {
   if (orders.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-300">
+      <div className="flex flex-col items-center justify-center py-20 bg-slate-50 rounded border border-dashed border-slate-300">
         <p className="text-slate-500 font-medium">{emptyLabel}</p>
       </div>
     );
@@ -188,7 +188,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
 
   return (
     <div
-      className={`group relative bg-white rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? "border-blue-200 shadow-md ring-1 ring-blue-100" : "border-slate-200 shadow-sm hover:border-slate-300"}`}
+      className={`group relative bg-white rounded border transition-all duration-300 overflow-hidden ${isOpen ? "border-blue-200 shadow-md ring-1 ring-blue-100" : "border-slate-200 shadow-sm hover:border-slate-300"}`}
     >
       {/* --- Card Header / Trigger --- */}
       <div
@@ -197,7 +197,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
       >
         <div className="flex gap-4 items-center">
           {/* Image */}
-          <div className="relative h-16 w-16 flex-shrink-0 rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
+          <div className="relative h-16 w-16 flex-shrink-0 rounded overflow-hidden border border-slate-100 bg-slate-50">
             <Image
               src={getImageUrl(
                 order.artwork_data.url,
@@ -249,7 +249,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
               {formatPrice(order.artwork_data.pricing.usd_price)}
             </p>
             <div
-              className={`h-8 w-8 rounded-full flex items-center justify-center bg-slate-50 text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180 bg-slate-100 text-slate-600" : ""}`}
+              className={`h-8 w-8 rounded flex items-center justify-center bg-slate-50 text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180 bg-slate-100 text-slate-600" : ""}`}
             >
               <ChevronDown size={18} />
             </div>
@@ -288,7 +288,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                 <Link
                   href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
                 >
-                  <button className="flex items-center gap-2 rounded-full bg-slate-900 px-6 py-2.5 text-xs font-medium text-white hover:bg-slate-800 transition shadow-sm hover:shadow-md">
+                  <button className="flex items-center gap-2 rounded bg-slate-900 px-6 py-2.5 text-xs font-medium text-white hover:bg-slate-800 transition shadow-sm hover:shadow-md">
                     <Truck size={14} /> Track Shipment
                   </button>
                 </Link>
@@ -301,12 +301,12 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                       e.stopPropagation();
                       handleDeclineOrderRequest();
                     }}
-                    className="rounded-full px-6 py-2.5 text-xs font-medium text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition"
+                    className="rounded px-6 py-2.5 text-xs font-medium text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition"
                   >
                     Decline Order
                   </button>
                   <Link href={`/artist/app/orders/quote/${order.order_id}`}>
-                    <button className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2.5 text-xs font-medium text-white hover:bg-blue-700 transition shadow-sm hover:shadow-blue-200">
+                    <button className="flex items-center gap-2 rounded bg-blue-600 px-6 py-2.5 text-xs font-medium text-white hover:bg-blue-700 transition shadow-sm hover:shadow-blue-200">
                       Accept Order
                     </button>
                   </Link>

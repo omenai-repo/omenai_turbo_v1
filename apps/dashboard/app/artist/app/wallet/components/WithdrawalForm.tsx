@@ -8,7 +8,7 @@ export default function WithdrawalForm() {
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col space-y-5">
         <p className="text-fluid-xxs font-medium">Enter withdrawal amount</p>
-        <Paper radius="lg" withBorder className="p-5 flex flex-col space-y-2">
+        <Paper radius="sm" withBorder className="p-5 flex flex-col space-y-2">
           <p className="text-fluid-xxs font-medium">You Send ($)</p>
           <input className={INPUT_CLASS} placeholder="0.0" />
         </Paper>
@@ -22,12 +22,12 @@ export default function WithdrawalForm() {
           </div>
         </div>
 
-        <Paper radius="lg" withBorder className="p-5 flex flex-col space-y-2">
+        <Paper radius="sm" withBorder className="p-5 flex flex-col space-y-2">
           <p className="text-fluid-xxs font-medium">You Get (FCFA)</p>
-          <Paper className="p-5" radius="lg" withBorder></Paper>
+          <Paper className="p-5" radius="sm" withBorder></Paper>
         </Paper>
 
-        <Paper radius="lg" withBorder className="p-5 flex flex-col space-y-2">
+        <Paper radius="sm" withBorder className="p-5 flex flex-col space-y-2">
           <p className="text-fluid-xxs font-medium">Enter wallet pin</p>
           <div className="flex flex-col space-y-4">
             <div className="w-full flex justify-center">

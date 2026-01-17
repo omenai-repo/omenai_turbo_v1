@@ -5,14 +5,14 @@ export default function BillingInfo() {
   const { user } = useAuth({ requiredRole: "gallery" });
 
   return (
-    <div className="h-full bg-white rounded-3xl border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] p-8 flex flex-col">
+    <div className="h-full bg-white rounded border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] p-8 flex flex-col">
       <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">
         Billing Contact
       </h3>
 
       <div className="space-y-6 flex-1">
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm">
+          <div className="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm">
             {user.name?.charAt(0) || "G"}
           </div>
           <div>
@@ -26,7 +26,7 @@ export default function BillingInfo() {
         </div>
 
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+          <div className="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-slate-500">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -50,7 +50,7 @@ export default function BillingInfo() {
                 {user.email}
               </p>
               <div
-                className="w-1.5 h-1.5 bg-emerald-500 rounded-full"
+                className="w-1.5 h-1.5 bg-emerald-500 rounded"
                 title="Verified"
               />
             </div>

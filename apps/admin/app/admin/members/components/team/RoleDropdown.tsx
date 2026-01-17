@@ -250,7 +250,7 @@ export default function RoleDropdown({
         centered
         size="sm"
       >
-        <Text size="sm" mb="lg">
+        <Text size="sm" mb="sm">
           Are you sure you want to change {memberName}'s role from{" "}
           <strong>{value}</strong> to <strong>{pendingRole}</strong>?
         </Text>

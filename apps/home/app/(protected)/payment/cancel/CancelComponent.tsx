@@ -14,7 +14,7 @@ export function OrderCanceledPage() {
       <DesktopNavbar />
       <Suspense>
         <div className="w-full min-h-[85vh] flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
-          <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center space-y-6 animate-fade-in">
+          <div className="bg-white shadow-lg rounded p-8 max-w-md w-full text-center space-y-6 animate-fade-in">
             {/* Cancel Icon */}
             <div className="flex justify-center">
               <Image
@@ -41,7 +41,7 @@ export function OrderCanceledPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-4">
               <Link
                 href="/"
-                className="h-[40px] px-5 rounded-lg flex items-center justify-center gap-2 bg-gray-800 text-dark text-sm font-medium shadow hover:bg-gray-700 hover:text-white transition-colors duration-200 w-full"
+                className="h-[40px] px-5 rounded flex items-center justify-center gap-2 bg-gray-800 text-dark text-sm font-medium shadow hover:bg-gray-700 hover:text-white transition-colors duration-200 w-full"
                 title="Return Home"
               >
                 Return Home
@@ -49,7 +49,7 @@ export function OrderCanceledPage() {
 
               <Link
                 href={`${dashboard_uri}/user/orders`}
-                className="h-[40px] px-5 rounded-lg flex items-center justify-center gap-2 bg-red-600 text-white text-sm font-medium shadow hover:bg-red-500 transition-colors duration-200 w-full"
+                className="h-[40px] px-5 rounded flex items-center justify-center gap-2 bg-red-600 text-white text-sm font-medium shadow hover:bg-red-500 transition-colors duration-200 w-full"
                 title="Return to dashboard"
               >
                 Go to Dashboard

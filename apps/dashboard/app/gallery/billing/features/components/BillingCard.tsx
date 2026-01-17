@@ -14,10 +14,10 @@ export default function BillingCard({
   plan_interval: string;
 }) {
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white">
+    <div className="rounded bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-sm font-medium tracking-wide">Payment Method</h3>
-        <span className="text-xs text-white bg-green-600 px-3 py-1 rounded-full">
+        <span className="text-xs text-white bg-green-600 px-3 py-1 rounded">
           Secure
         </span>
       </div>

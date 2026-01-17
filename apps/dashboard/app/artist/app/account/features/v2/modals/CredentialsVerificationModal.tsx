@@ -22,7 +22,7 @@ export default function CredentialsVerificationModal() {
           <div className="flex space-x-3">
             <button
               onClick={() => setShowVerificationModal(false)}
-              className="flex-1 px-4 py-2.5 bg-gray-300 text-dark rounded-lg hover:bg-gray-400 
+              className="flex-1 px-4 py-2.5 bg-gray-300 text-dark rounded hover:bg-gray-400 
                        transition-all duration-300 text-fluid-xs font-normal"
             >
               Cancel
@@ -33,7 +33,7 @@ export default function CredentialsVerificationModal() {
                 setShowCredentialsModal(true);
                 setTimeout(() => setShowCredentialsModal(false), 2000);
               }}
-              className="flex-1 px-4 py-2.5 bg-dark text-white rounded-lg hover:bg-dark/90 
+              className="flex-1 px-4 py-2.5 bg-dark text-white rounded hover:bg-dark/90 
                        transition-all duration-300 text-fluid-xs font-normal"
             >
               Confirm Update

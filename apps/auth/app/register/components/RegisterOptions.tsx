@@ -20,14 +20,14 @@ export default function RegisterOptions() {
 
   const CARD_STYLE = `
     group relative flex flex-col justify-between p-6 h-[160px] 
-    border border-slate-300 rounded-2xl bg-white 
+    border border-slate-300 rounded bg-white 
     transition-all duration-500 ease-in-out
     hover:border-black hover:shadow-2xl hover:shadow-black/5
   `;
 
   const ICON_STYLE = `
-    w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center 
-    text-slate-500 group-hover:bg-black group-hover:text-white 
+    w-10 h-10 rounded bg-slate-50 flex items-center justify-center 
+    text-slate-500 group-hover:bg-dark group-hover:text-white 
     transition-colors duration-300
   `;
 
@@ -51,7 +51,7 @@ export default function RegisterOptions() {
             </p>
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-bold tracking-tight">Gallery</h3>
-              <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+              <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:text-dark group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         </Link>
@@ -72,7 +72,7 @@ export default function RegisterOptions() {
             </p>
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-bold tracking-tight">Artist</h3>
-              <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+              <ChevronRightIcon className="w-4 h-4 text-slate-400 group-hover:text-dark group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         </Link>
@@ -100,7 +100,7 @@ export default function RegisterOptions() {
               <span className="text-[10px] uppercase font-bold tracking-tighter">
                 Start
               </span>
-              <ChevronRightIcon className="w-4 h-4 text-black group-hover:translate-x-1 transition-all" />
+              <ChevronRightIcon className="w-4 h-4 text-dark group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function RegisterOptions() {
           <p className="text-[9px] uppercase tracking-[0.3em] text-slate-400 font-medium">
             Already a member?
           </p>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-black font-semibold border-b border-black pb-0.5 group-hover:text-slate-500 group-hover:border-slate-500 transition-all">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-dark font-semibold border-b border-black pb-0.5 group-hover:text-slate-500 group-hover:border-slate-500 transition-all">
             Secure Login
           </span>
         </Link>

@@ -1,7 +1,7 @@
 import { Skeleton } from "@mantine/core";
 export const ArtworkCardSkeleton = () => {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+    <div className="bg-white border border-slate-200 rounded overflow-hidden shadow-sm">
       {/* Image Skeleton */}
       <Skeleton height={280} width="100%" radius={0} />
 
@@ -25,7 +25,7 @@ export const ArtworkCardSkeleton = () => {
             <Skeleton height={32} width={32} circle />
             <Skeleton height={16} width={40} radius="md" />
           </div>
-          <Skeleton height={36} width={100} radius="lg" />
+          <Skeleton height={36} width={100} radius="sm" />
         </div>
       </div>
     </div>

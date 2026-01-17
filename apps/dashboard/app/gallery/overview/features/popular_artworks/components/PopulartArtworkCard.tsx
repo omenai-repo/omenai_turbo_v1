@@ -36,24 +36,24 @@ function PopularArtworkCard({ url, title, artist, impressions, rank }: Props) {
   const styles = rankStyles[rank];
 
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+    <div className="flex items-center justify-between rounded bg-white p-4 shadow-sm">
       {/* Left */}
       <div className="flex items-center gap-4">
         {/* Rank */}
         <div
-          className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${styles.badge}`}
+          className={`flex h-7 w-7 items-center justify-center rounded text-xs font-semibold ${styles.badge}`}
         >
           {rank}
         </div>
 
         {/* Artwork */}
-        <div className={`rounded-xl ring-offset-2 ${styles.ring}`}>
+        <div className={`rounded ring-offset-2 ${styles.ring}`}>
           <Image
             src={image_url}
             alt={title}
             height={56}
             width={56}
-            className={`rounded-xl object-cover ${styles.image}`}
+            className={`rounded object-cover ${styles.image}`}
           />
         </div>
 

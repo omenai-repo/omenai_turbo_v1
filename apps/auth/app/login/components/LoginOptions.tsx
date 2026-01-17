@@ -11,14 +11,14 @@ import {
 export default function LoginOptions() {
   const CARD_STYLE = `
     group relative flex flex-col justify-between p-6 h-[140px] 
-    border border-slate-200 rounded-2xl bg-white 
+    border border-slate-200 rounded bg-white 
     transition-all duration-500 ease-in-out
     hover:border-black hover:shadow-xl hover:shadow-black/5
   `;
 
   const ICON_WRAPPER = `
-    w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center 
-    text-slate-500 group-hover:bg-black group-hover:text-white 
+    w-10 h-10 rounded bg-slate-50 flex items-center justify-center 
+    text-slate-500 group-hover:bg-dark group-hover:text-white 
     transition-colors duration-300
   `;
 
@@ -37,7 +37,7 @@ export default function LoginOptions() {
               </p>
               <h3 className="text-sm font-bold tracking-tight">Gallery</h3>
             </div>
-            <ArrowRightIcon className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+            <ArrowRightIcon className="w-4 h-4 text-slate-400 group-hover:text-dark group-hover:translate-x-1 transition-all" />
           </div>
         </Link>
 
@@ -52,7 +52,7 @@ export default function LoginOptions() {
               </p>
               <h3 className="text-sm font-bold tracking-tight">Artist</h3>
             </div>
-            <ArrowRightIcon className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+            <ArrowRightIcon className="w-4 h-4 text-slate-400 group-hover:text-dark group-hover:translate-x-1 transition-all" />
           </div>
         </Link>
       </div>
@@ -75,7 +75,7 @@ export default function LoginOptions() {
                 Login as Collector
               </h3>
             </div>
-            <ArrowRightIcon className="w-4 h-4 text-slate-400 group-hover:text-black group-hover:translate-x-1 transition-all" />
+            <ArrowRightIcon className="w-4 h-4 text-slate-400 group-hover:text-dark group-hover:translate-x-1 transition-all" />
           </div>
         </div>
       </Link>
@@ -86,9 +86,9 @@ export default function LoginOptions() {
           href="/register"
           className="group flex items-center justify-center w-full transition-colors"
         >
-          <p className="text-[9px] uppercase tracking-[0.25em] text-slate-500 group-hover:text-black transition-colors font-medium">
+          <p className="text-[9px] uppercase tracking-[0.25em] text-slate-500 group-hover:text-dark transition-colors font-medium">
             Don&apos;t have an account?{" "}
-            <span className="text-black border-b border-black ml-2">
+            <span className="text-dark border-b border-black ml-2">
               Join Omenai
             </span>
           </p>

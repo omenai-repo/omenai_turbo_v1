@@ -101,7 +101,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+        className="fixed inset-0 bg-dark/40 backdrop-blur-sm z-40"
       />
 
       <motion.div
@@ -127,7 +127,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-gray-200 transition-colors text-gray-500 hover:text-gray-900 text-fluid-xs"
+                className="p-2 rounded hover:bg-gray-200 transition-colors text-gray-500 hover:text-gray-900 text-fluid-xs"
               >
                 <X size={24} />
               </button>
@@ -135,8 +135,8 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {/* Status Badge */}
               {data.receipt_sent && (
-                <div className="bg-emerald-50 border border-emerald-100 rounded-md p-4 flex items-center gap-3">
-                  <div className="bg-emerald-100 p-2 rounded-full text-emerald-600">
+                <div className="bg-emerald-50 border border-emerald-100 rounded p-4 flex items-center gap-3">
+                  <div className="bg-emerald-100 p-2 rounded text-emerald-600">
                     <CheckCircle2 size={18} />
                   </div>
                   <div>
@@ -165,7 +165,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
                 <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   Billed To
                 </h3>
-                <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm space-y-3">
+                <div className="bg-white border border-gray-100 rounded p-4 shadow-sm space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="mt-1 text-slate-500">
                       <FileText size={16} />
@@ -230,7 +230,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
               </div>
 
               {/* Pricing Breakdown */}
-              <div className="bg-gray-50 rounded-xl p-6 space-y-3">
+              <div className="bg-gray-50 rounded p-6 space-y-3">
                 <div className="flex justify-between text-fluid-xxs text-gray-600">
                   <span>Subtotal</span>
                   <span>
@@ -271,14 +271,14 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
             <div className="p-6 border-t border-slate-100 bg-white grid grid-cols-2 gap-4">
               <button
                 onClick={onClose}
-                className="w-full py-2 px-4 rounded-md text-fluid-xs border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                className="w-full py-2 px-4 rounded text-fluid-xs border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
               >
                 Close
               </button>
               <button
                 onClick={handleDownload}
                 disabled={downloadReceiptLoading}
-                className="w-full py-2 px-4 rounded-md text-fluid-xs disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 bg-dark text-white font-normal hover:bg-slate-800 transition-all grid place-items-center gap-2 shadow-lg shadow-gray-200"
+                className="w-full py-2 px-4 rounded text-fluid-xs disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 bg-dark text-white font-normal hover:bg-slate-800 transition-all grid place-items-center gap-2 shadow-lg shadow-gray-200"
               >
                 {downloadReceiptLoading ? (
                   <LoadSmall />

@@ -98,7 +98,7 @@ export default function InviteTeamMemberModal({
       title="Invite team member"
       overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
     >
-      <Stack gap="lg">
+      <Stack gap="sm">
         <Text size="sm" c="dimmed">
           Invite a colleague to join your team and assign their access level.
         </Text>

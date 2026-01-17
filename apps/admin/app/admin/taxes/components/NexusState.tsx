@@ -13,7 +13,7 @@ export function NexusState({ flag_url, state, code }: StateFlagCardProps) {
     <div
       className="
         group relative
-        rounded-lg border border-slate-200
+        rounded border border-slate-200
         bg-white
         p-4
         transition

@@ -60,12 +60,12 @@ export default function DeleteEditorialModal({
         onClose={close}
         centered
         size="sm"
-        radius="lg"
+        radius="sm"
         withCloseButton={false}
         overlayProps={{ backgroundOpacity: 0.55, blur: 4 }}
         styles={{ body: { padding: 0 } }}
       >
-        <div className="flex flex-col overflow-hidden rounded-lg bg-white">
+        <div className="flex flex-col overflow-hidden rounded bg-white">
           {/* Header */}
           <div className="relative border-b border-neutral-100 px-6 py-5">
             <button
@@ -77,7 +77,7 @@ export default function DeleteEditorialModal({
             </button>
 
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 rounded-md bg-red-50 p-2">
+              <div className="mt-0.5 rounded bg-red-50 p-2">
                 <AlertTriangle size={18} className="text-red-600" />
               </div>
 
@@ -100,7 +100,7 @@ export default function DeleteEditorialModal({
               surfaces.
             </p>
 
-            <div className="rounded-md border border-amber-200 bg-amber-50 p-4">
+            <div className="rounded border border-amber-200 bg-amber-50 p-4">
               <p className="text-sm font-medium text-amber-800 mb-1">
                 Please note
               </p>
@@ -136,7 +136,7 @@ export default function DeleteEditorialModal({
         className="
           absolute -top-1 -right-1 z-30
           grid h-9 w-9 place-items-center
-          rounded-md bg-white
+          rounded bg-white
           border border-neutral-200
           text-red-600
           hover:bg-red-50

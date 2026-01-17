@@ -66,12 +66,12 @@ export default function DeleteConfirmationModal({
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-start gap-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+          <div className="flex h-10 w-10 items-center justify-center rounded bg-red-100">
             <TriangleAlert className="text-red-600" size={20} />
           </div>
 
           <div>
-            <Text fw={600} size="lg">
+            <Text fw={600} size="sm">
               Remove team member
             </Text>
             <Text size="sm" c="dimmed" mt={4}>
@@ -81,7 +81,7 @@ export default function DeleteConfirmationModal({
         </div>
 
         {/* Body */}
-        <div className="rounded-md bg-red-50 border border-red-200 p-4">
+        <div className="rounded bg-red-50 border border-red-200 p-4">
           <Text size="sm" c="red.9">
             You are about to remove{" "}
             <strong>{memberName || member_email}</strong> from your team.

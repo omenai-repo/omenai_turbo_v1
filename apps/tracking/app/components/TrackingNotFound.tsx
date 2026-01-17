@@ -18,10 +18,10 @@ export default function TrackingNotFound({
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-100 rounded-full flex items-center justify-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-100 rounded flex items-center justify-center">
               <PackageX className="w-10 h-10 md:w-12 md:h-12 text-red-600" />
             </div>
-            <div className="absolute -top-1 -right-1 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+            <div className="absolute -top-1 -right-1 w-8 h-8 bg-red-500 rounded flex items-center justify-center">
               <SearchX className="w-4 h-4 text-white" />
             </div>
           </div>

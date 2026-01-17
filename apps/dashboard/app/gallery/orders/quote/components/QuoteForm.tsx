@@ -257,9 +257,9 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
           <div className="lg:col-span-7 xl:col-span-8 space-y-8">
             <form onSubmit={handleSubmitQuoteFees} className="space-y-8">
               {/* Dimensions Card */}
-              <div className="bg-white rounded-2xl shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
                 <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/30 flex items-center gap-3">
-                  <div className="p-2 bg-white rounded-lg shadow-sm border border-gray-100">
+                  <div className="p-2 bg-white rounded shadow-sm border border-gray-100">
                     <RulerIcon className="w-5 h-5 text-indigo-600" />
                   </div>
                   <div>
@@ -303,7 +303,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                         >
                           {field.label}
                         </label>
-                        <div className="relative rounded-xl shadow-sm">
+                        <div className="relative rounded shadow-sm">
                           <input
                             onChange={handleInputChange}
                             name={field.name}
@@ -326,7 +326,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               </div>
 
               {/* Logistics & Pickup */}
-              <div className="bg-white rounded-2xl shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100 p-8 space-y-6">
+              <div className="bg-white rounded shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100 p-8 space-y-6">
                 <div>
                   <h3 className="text-fluid-sm font-medium text-gray-900 mb-6">
                     Logistics & Availability
@@ -347,7 +347,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                             "text-fluid-xxs font-normal text-gray-700 mb-1.5 block",
                           description: "text-xs text-gray-500 mb-3",
                           input:
-                            "w-full rounded-xl border-gray-200 py-3 text-gray-700 focus:border-dark focus:ring-dark",
+                            "w-full rounded border-gray-200 py-3 text-gray-700 focus:border-dark focus:ring-dark",
                         }}
                         onChange={(e) =>
                           handleChangeExhibitionStatus(e.target.value)
@@ -356,7 +356,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     </div>
 
                     {exhibition_status?.is_on_exhibition && (
-                      <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 animate-in fade-in slide-in-from-top-2">
+                      <div className="p-4 bg-amber-50 rounded border border-amber-100 animate-in fade-in slide-in-from-top-2">
                         <p className="text-sm text-amber-800 font-medium mb-3">
                           When does the exhibition end?
                         </p>
@@ -380,7 +380,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     name="specialInstructions"
                     placeholder="Add pickup notes, gate codes, or handling requirements..."
                     rows={3}
-                    className={`${TEXTAREA_CLASS} !rounded-xl !border-gray-200 focus:!border-dark focus:!ring-dark resize-none py-3 px-4 text-sm`}
+                    className={`${TEXTAREA_CLASS} !rounded !border-gray-200 focus:!border-dark focus:!ring-dark resize-none py-3 px-4 text-sm`}
                   />
                 </div>
               </div>
@@ -389,7 +389,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
               <div className="space-y-6 pt-2">
                 <WarningAlert />
 
-                <div className="flex items-start gap-3 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer bg-white">
+                <div className="flex items-start gap-3 p-4 rounded border border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer bg-white">
                   <div className="flex h-6 items-center">
                     <input
                       type="checkbox"
@@ -420,7 +420,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     (exhibition_status !== null &&
                       !exhibition_status.exhibition_end_date)
                   }
-                  className="w-full flex items-center justify-center gap-2 rounded-md bg-gray-900 px-8 py-4 text-fluid-xs font-normal text-white shadow-lg shadow-gray-900/10 hover:bg-dark/80 hover:shadow-gray-900/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
+                  className="w-full flex items-center justify-center gap-2 rounded bg-gray-900 px-8 py-4 text-fluid-xs font-normal text-white shadow-lg shadow-gray-900/10 hover:bg-dark/80 hover:shadow-gray-900/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
                 >
                   {loading ? (
                     <>
@@ -440,7 +440,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
           {/* Summary Section (Right Side - 4 Cols) */}
           <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-8">
-            <div className="bg-white rounded-lg shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden">
               {/* Card Header */}
               <div className="bg-dark px-6 py-6 text-white relative overflow-hidden">
                 <div className="relative z-10 flex items-center justify-between">
@@ -453,12 +453,12 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                   </span>
                 </div>
                 {/* Decorative circle */}
-                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded blur-2xl pointer-events-none" />
               </div>
 
               {/* Artwork Preview */}
               <div className="p-6">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-inner mb-6 group">
+                <div className="relative aspect-[4/3] rounded overflow-hidden bg-gray-100 shadow-inner mb-6 group">
                   <Image
                     src={image_url}
                     alt={order_data.data.artwork_data.title}
@@ -496,7 +496,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     </span>
                   </div>
 
-                  <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+                  <div className="bg-gray-50 rounded p-4 space-y-3">
                     <div>
                       <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">
                         Destination
@@ -525,8 +525,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 </div>
 
                 <div className="mt-6">
-                  <div className="flex items-center justify-center gap-2 w-full py-2.5 bg-amber-50 text-amber-700 text-sm font-medium rounded-lg border border-amber-100/50">
-                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <div className="flex items-center justify-center gap-2 w-full py-2.5 bg-amber-50 text-amber-700 text-sm font-medium rounded border border-amber-100/50">
+                    <div className="w-2 h-2 rounded bg-amber-500 animate-pulse" />
                     Status: Awaiting Dimensions
                   </div>
                 </div>

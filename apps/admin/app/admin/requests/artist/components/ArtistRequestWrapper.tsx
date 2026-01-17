@@ -56,8 +56,8 @@ export function ArtistRequestWrapper() {
       </header>
 
       {/* Tabs Container */}
-      <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
-        <Tabs defaultValue="pending" variant="pills" radius="xl">
+      <div className="rounded border border-neutral-200 bg-white p-4 shadow-sm">
+        <Tabs defaultValue="pending" variant="pills" radius="sm">
           <Tabs.List className="mb-4 flex gap-2">
             <Tabs.Tab value="pending">
               <div className="flex items-center gap-2">

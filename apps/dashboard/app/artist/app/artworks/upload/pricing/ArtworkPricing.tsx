@@ -183,7 +183,7 @@ export default function ArtworkPricing() {
         <>
           <h1 className="font-bold text-fluid-base">Proposed Artwork Price</h1>
           <Paper
-            radius="lg"
+            radius="sm"
             className="flex flex-col space-y-2 p-5 my-6"
             withBorder
           >
@@ -205,7 +205,7 @@ export default function ArtworkPricing() {
             <Alert
               variant="light"
               color="yellow"
-              radius="lg"
+              radius="sm"
               title="Exclusivity Agreement"
               icon={<TriangleAlert strokeWidth={1.5} />}
               className="font-medium"

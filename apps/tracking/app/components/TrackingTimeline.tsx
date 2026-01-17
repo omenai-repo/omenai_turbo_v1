@@ -48,12 +48,12 @@ export default function TrackingTimeline({
     <div className="w-full max-w-4xl mx-auto p-6">
       {/* Current Status Card */}
       <div className="relative mb-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded p-4 text-white shadow-2xl overflow-hidden">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16" />
+        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded -ml-16 -mb-16" />
 
         <div className="relative">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded flex items-center justify-center">
               <Package className="w-6 h-6" />
             </div>
             <h2 className="text-fluid-base font-medium">Current Status</h2>
@@ -95,7 +95,7 @@ export default function TrackingTimeline({
                 {/* Timeline Node */}
                 <div className="relative flex-shrink-0 z-10">
                   <div
-                    className={`w-12 h-12 rounded-full ${styles.bg} ${styles.ring} flex items-center justify-center shadow-sm group-hover:scale-110 transition-all duration-300`}
+                    className={`w-12 h-12 rounded ${styles.bg} ${styles.ring} flex items-center justify-center shadow-sm group-hover:scale-110 transition-all duration-300`}
                   >
                     {isLatest ? (
                       <CheckCircle2 className={`w-6 h-6 ${styles.icon}`} />
@@ -106,7 +106,7 @@ export default function TrackingTimeline({
                     )}
                   </div>
                   {isLatest && (
-                    <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-20" />
+                    <div className="absolute inset-0 rounded bg-emerald-500 animate-ping opacity-20" />
                   )}
                 </div>
 
@@ -146,7 +146,7 @@ export default function TrackingTimeline({
           <div className="flex justify-center pt-4">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="group flex items-center gap-2 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 rounded-xl px-6 py-3 text-fluid-xs font-medium text-slate-700 transition-all duration-300 shadow-sm hover:shadow-md"
+              className="group flex items-center gap-2 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 rounded px-6 py-3 text-fluid-xs font-medium text-slate-700 transition-all duration-300 shadow-sm hover:shadow-md"
             >
               <span>
                 {showAll

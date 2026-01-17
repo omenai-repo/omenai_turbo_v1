@@ -79,7 +79,7 @@ export default function ComponentWrapper({
 
   return (
     // Main Container: Flex column to manage Navbar + Content height
-    <div className="min-h-screen w-full  text-gray-900 font-sans selection:bg-black selection:text-white flex flex-col">
+    <div className="min-h-screen w-full  text-gray-900 font-sans selection:bg-dark selection:text-white flex flex-col">
       {isLoggedIn ? (
         <>
           <DesktopNavbar />

@@ -29,7 +29,7 @@ export const UserProfileSkeleton = () => {
             <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
               {/* Header */}
               <div className="flex items-center gap-3 mb-8">
-                <Skeleton height={36} width={36} radius="xl" />
+                <Skeleton height={36} width={36} radius="sm" />
                 <Skeleton height={24} width={150} radius="md" />
               </div>
 
@@ -42,7 +42,7 @@ export const UserProfileSkeleton = () => {
                     radius="md"
                     className="mb-2"
                   />
-                  <Skeleton height={56} radius="xl" />
+                  <Skeleton height={56} radius="sm" />
                 </div>
 
                 {/* Address Section */}
@@ -54,14 +54,14 @@ export const UserProfileSkeleton = () => {
                     className="mb-2"
                   />
                   <div className="space-y-3">
-                    <Skeleton height={56} radius="xl" />
+                    <Skeleton height={56} radius="sm" />
                     <div className="grid grid-cols-2 gap-3">
-                      <Skeleton height={56} radius="xl" />
-                      <Skeleton height={56} radius="xl" />
+                      <Skeleton height={56} radius="sm" />
+                      <Skeleton height={56} radius="sm" />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                      <Skeleton height={56} radius="xl" />
-                      <Skeleton height={56} radius="xl" />
+                      <Skeleton height={56} radius="sm" />
+                      <Skeleton height={56} radius="sm" />
                     </div>
                   </div>
                 </div>
@@ -90,7 +90,7 @@ export const UserProfileSkeleton = () => {
               {/* Grid of preference cards */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[...Array(9)].map((_, i) => (
-                  <Skeleton key={i} height={50} radius="xl" />
+                  <Skeleton key={i} height={50} radius="sm" />
                 ))}
               </div>
 

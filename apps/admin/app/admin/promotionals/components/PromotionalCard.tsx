@@ -22,7 +22,7 @@ export default function PromotionalCard({
     <section
       className="
         relative h-[220px] w-full
-        overflow-hidden rounded-xl
+        overflow-hidden rounded
         border border-neutral-200
         bg-neutral-900
         transition

@@ -1,4 +1,3 @@
-// components/ArticleRenderer.js
 import Image from "next/image";
 import { format } from "date-fns";
 import DOMPurify from "isomorphic-dompurify";
@@ -8,13 +7,44 @@ import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCov
 const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
   // Sanitize HTML content from TinyMCE
   const sanitizedContent = DOMPurify.sanitize(article.content);
+  const url = getEditorialFileView(article.cover, 1200);
 
-  const url = getEditorialFileView(article.cover, 1000);
   return (
-    <article className="max-w-4xl mx-auto pt-6 pb-10">
-      {/* Cover Image */}
+    <article className="w-full">
+      {/* 1. THE MASTHEAD (Header) */}
+      <header className="container mx-auto max-w-4xl px-6 text-center mb-16">
+        {/* Meta Data Row */}
+        <div className="mb-8 flex items-center justify-center gap-4 border-b border-black pb-6">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
+            {article.date
+              ? format(new Date(article.date), "MMMM d, yyyy")
+              : "Date Unknown"}
+          </span>
+          <span className="h-3 w-[1px] bg-neutral-300"></span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
+            Editorial
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 className="font-serif text-5xl md:text-7xl italic leading-[1.1] text-dark tracking-tight mb-8">
+          {article.headline}
+        </h1>
+
+        {/* Byline */}
+        <div className="flex justify-center">
+          <p className="font-mono text-xs uppercase tracking-widest text-dark">
+            Words by{" "}
+            <span className="border-b border-black pb-0.5">
+              {"Iyanuoluwa Adenle"}
+            </span>
+          </p>
+        </div>
+      </header>
+
+      {/* 2. CINEMATIC COVER IMAGE */}
       {article.cover && (
-        <div className="relative w-full h-[400px] md:h-[500px] mb-8 rounded overflow-hidden">
+        <div className="relative mb-20 h-[50vh] w-full overflow-hidden md:h-[70vh]">
           <Image
             src={url}
             alt={article.headline}
@@ -25,45 +55,41 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         </div>
       )}
 
-      {/* Article Header */}
-      <header className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
-          {article.headline}
-        </h1>
-
-        {/* Article Meta */}
-        <div className="flex items-center text-gray-600 text-sm mb-6">
-          <span>
-            By <span className="text-red-600">Iyanuoluwa Adenle</span>
-          </span>
-          <span className="mx-2">•</span>
-          <time
-            dateTime={
-              article.date ? new Date(article.date).toISOString() : undefined
-            }
-          >
-            {article.date
-              ? format(new Date(article.date), "MMMM d, yyyy")
-              : "Unknown date"}
-          </time>
-        </div>
-
-        {/* Optional Summary */}
+      {/* 3. THE MANUSCRIPT (Body) */}
+      <div className="container mx-auto max-w-3xl px-6">
+        {/* Abstract / Summary (The "Dek") */}
         {article.summary && (
-          <div className="bg-gray-50 border-l-4 border-blue-500 p-6 rounded-r-lg mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              Summary
-            </h2>
-            <p className="text-gray-700 leading-relaxed">{article.summary}</p>
+          <div className="mb-16 text-center">
+            <p className="font-serif text-xl md:text-2xl leading-relaxed text-neutral-600 italic">
+              {article.summary}
+            </p>
+            <div className="mx-auto mt-12 h-[1px] w-24 bg-dark"></div>
           </div>
         )}
-      </header>
 
-      {/* Article Content */}
-      <div
-        className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-blockquote:border-l-blue-500 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:rounded prose-img:shadow-lg"
-        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-      />
+        {/* Main Content */}
+        <div
+          className={`
+            prose prose-lg max-w-none 
+            prose-headings:font-serif prose-headings:font-normal prose-headings:italic prose-headings:text-dark
+            prose-p:font-sans prose-p:text-base prose-p:leading-8 prose-p:text-neutral-800
+            prose-a:text-dark prose-a:underline prose-a:underline-offset-4 prose-a:decoration-1 hover:prose-a:decoration-2
+            prose-strong:font-bold prose-strong:text-dark
+            prose-blockquote:border-l-2 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-2xl prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:text-neutral-900
+            prose-img:my-12 prose-img:w-full prose-img:shadow-none
+            prose-ul:list-disc prose-ul:pl-6
+            prose-ol:list-decimal prose-ol:pl-6
+          `}
+          dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+        />
+
+        {/* 4. FOOTER SIGN-OFF */}
+        <div className="mt-24 mb-12 flex justify-center">
+          <span className="font-serif text-3xl italic text-neutral-300">
+            Fin.
+          </span>
+        </div>
+      </div>
     </article>
   );
 };

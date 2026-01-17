@@ -133,12 +133,12 @@ export default function PayNowButton({
             onClick={handleClickPayNow}
             disabled={lock_status || loading}
             className={`
-        w-full h-[48px] px-8 rounded-md flex items-center justify-center gap-3 transition-all duration-300
+        w-full h-[48px] px-8 rounded flex items-center justify-center gap-3 transition-all duration-300
         text-sm font-medium tracking-wide 
         ${
           lock_status
             ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-            : "bg-black text-white hover:bg-gray-900 active:scale-[0.98] shadow-lg shadow-black/10"
+            : "bg-dark text-white hover:bg-gray-900 active:scale-[0.98] shadow-lg shadow-black/10"
         }
         ${loading && "opacity-80 pointer-events-none"}
       `}
@@ -161,7 +161,7 @@ export default function PayNowButton({
       </div>
 
       {/* Modernized Disclaimer Box */}
-      <div className="w-full bg-blue-50/50 rounded-xl p-4 border border-blue-100">
+      <div className="w-full bg-blue-50/50 rounded p-4 border border-blue-100">
         <div className="flex gap-3">
           <svg
             className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"

@@ -132,7 +132,7 @@ export default function Waitlist() {
         isInviting={isInviting}
       />
 
-      <div className="rounded-xl border border-neutral-200 bg-white shadow-sm">
+      <div className="rounded border border-neutral-200 bg-white shadow-sm">
         <div className="border-b border-neutral-100 px-4 py-3">
           <WaitlistHeader
             allSelected={allSelected}
@@ -223,8 +223,8 @@ function WaitlistRow({
             onChange={(e) => onToggleDiscount(e.target.checked)}
             className="peer sr-only"
           />
-          <span className="absolute inset-0 rounded-full bg-neutral-300 transition peer-checked:bg-neutral-900" />
-          <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition peer-checked:translate-x-4" />
+          <span className="absolute inset-0 rounded bg-neutral-300 transition peer-checked:bg-neutral-900" />
+          <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded bg-white transition peer-checked:translate-x-4" />
         </label>
       </div>
     </div>

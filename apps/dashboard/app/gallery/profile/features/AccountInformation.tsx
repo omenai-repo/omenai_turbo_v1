@@ -82,7 +82,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
     <div className=" animate-fadeIn">
       {/* Identity Header */}
       {/* ================= HERO ================= */}
-      <div className="relative mb-10 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white overflow-hidden">
+      <div className="relative mb-10 rounded bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
 
         <div className="relative flex items-center gap-8">
@@ -93,12 +93,12 @@ export default function AccountInformation({ profile }: { profile: any }) {
               alt="Gallery Logo"
               width={120}
               height={120}
-              className="h-[120px] w-[120px] rounded-2xl object-cover ring-4 ring-white/20"
+              className="h-[120px] w-[120px] rounded object-cover ring-4 ring-white/20"
             />
 
             <button
               onClick={() => updateLogoModalPopup(true)}
-              className="mx-4 absolute inset-0 flex items-center justify-center rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition"
+              className="mx-4 absolute inset-0 flex items-center justify-center rounded bg-dark/60 opacity-0 group-hover:opacity-100 transition"
             >
               <span className="flex items-center flex-col gap-2 rounded bg-white p-2 text-xs font-normal text-slate-900">
                 <Camera className="h-4 w-4" />
@@ -119,7 +119,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
       <div className="grid gap-4 grid-cols-12">
         <div className="lg:col-span-7 space-y-8">
           {/* About */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded bg-white p-6 shadow-sm">
             <h3 className="text-sm font-medium text-slate-900 mb-3">
               About the gallery
             </h3>
@@ -134,7 +134,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
           </div>
 
           {/* Address */}
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <div className="rounded bg-white p-6 shadow-sm">
             <h3 className="text-sm font-medium text-slate-900 mb-3">
               Location
             </h3>
@@ -153,7 +153,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
 
               <button
                 onClick={() => updateAddressModalPopup(true)}
-                className="rounded-full bg-slate-100 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-200"
+                className="rounded bg-slate-100 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-200"
               >
                 Edit Address information
               </button>
@@ -162,13 +162,13 @@ export default function AccountInformation({ profile }: { profile: any }) {
         </div>
 
         <div className="col-span-5 space-y-8">
-          <div className="rounded-2xl bg-white p-8 shadow-sm">
+          <div className="rounded bg-white p-8 shadow-sm">
             <h3 className="text-sm font-medium text-slate-900 mb-6">
               Account details
             </h3>
             {!hasChanges && (
               <div className="mb-6 flex justify-center">
-                <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs text-slate-600">
+                <span className="rounded bg-slate-100 px-4 py-1.5 text-xs text-slate-600">
                   You can start typing to edit your information
                 </span>
               </div>
@@ -207,14 +207,14 @@ export default function AccountInformation({ profile }: { profile: any }) {
       </div>
       {/* Floating Save Bar */}
       {hasChanges && (
-        <div className="fixed bottom-6 left-1/2 z-10 w-[90%] max-w-xl -translate-x-1/2 rounded-full bg-slate-900 px-6 py-3 shadow-xl">
+        <div className="fixed bottom-6 left-1/2 z-10 w-[90%] max-w-xl -translate-x-1/2 rounded bg-slate-900 px-6 py-3 shadow-xl">
           <div className="flex items-center justify-between text-white">
             <p className="text-sm">You have unsaved changes</p>
 
             <button
               onClick={handleSave}
               disabled={loading}
-              className="flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+              className="flex items-center gap-2 rounded bg-white px-5 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
             >
               {loading ? <LoadSmall /> : <Save className="h-4 w-4" />}
               Save changes

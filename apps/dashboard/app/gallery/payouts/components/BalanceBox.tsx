@@ -38,9 +38,9 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="transition-all duration-500 ease-out animate-[fadeUp_0.6s] relative w-full max-w-md rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
+    <div className="transition-all duration-500 ease-out animate-[fadeUp_0.6s] relative w-full max-w-md rounded bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
       {/* Subtle texture */}
-      <div className="absolute inset-0 rounded-3xl opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
+      <div className="absolute inset-0 rounded opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
 
       <div className="relative flex flex-col gap-8">
         {/* Header */}
@@ -54,7 +54,7 @@ export default function BalanceBox({
             </h1>
           </div>
 
-          <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center">
+          <div className="h-10 w-10 rounded bg-white/10 flex items-center justify-center">
             <svg
               className="w-5 h-5 text-white"
               viewBox="0 0 24 24"
@@ -66,7 +66,7 @@ export default function BalanceBox({
         </div>
 
         {/* Info */}
-        <div className="rounded-2xl bg-white/5 p-4 text-sm text-white/80">
+        <div className="rounded bg-white/5 p-4 text-sm text-white/80">
           Balance on Stripe is automatically transferred to your connected bank
           account.
         </div>
@@ -75,7 +75,7 @@ export default function BalanceBox({
         <button
           onClick={generateLoginLink}
           disabled={generatingLoginLink}
-          className="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-medium text-slate-900 transition hover:bg-white/90 disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded bg-white px-5 py-3 text-sm font-medium text-slate-900 transition hover:bg-white/90 disabled:opacity-60"
         >
           {generatingLoginLink ? <LoadSmall /> : "Open Stripe dashboard"}
         </button>

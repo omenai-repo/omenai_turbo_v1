@@ -44,10 +44,10 @@ export default function ActiveFilterPills() {
         <div
           key={filter.name}
           onClick={() => handleRemove(filter.name)}
-          className="px-3 py-1 bg-[#f7f7f7] text-fluid-xxs font-normal text-dark flex items-center gap-x-2 rounded cursor-pointer hover:bg-gray-200"
+          className="px-3 py-1 bg-white border border-neutral-200 text-[10px] font-bold uppercase tracking-widest text-dark flex items-center gap-x-3 cursor-pointer hover:border-black transition-colors group"
         >
           <span>{filter.name}</span>
-          <MdClear className="text-xs" />
+          <MdClear className="text-neutral-400 group-hover:text-red-500 transition-colors" />
         </div>
       ))}
     </div>

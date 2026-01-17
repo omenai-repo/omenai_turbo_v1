@@ -64,7 +64,7 @@ const NoThresholdMessage = ({
   type: string;
 }) => (
   <div className="flex flex-col space-y-2 w-full h-full">
-    <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
+    <div className="mx-auto w-20 h-20 bg-red-100 rounded flex items-center justify-center mb-6">
       <Ban className="w-10 h-10 text-red-600" />
     </div>
     <p className="text-fluid-xxs text-center">
@@ -158,9 +158,9 @@ const ProgressBar = ({
   percentage: number;
   isSales: boolean;
 }) => (
-  <div className="w-full bg-gray-200 rounded-full h-2">
+  <div className="w-full bg-gray-200 rounded h-2">
     <div
-      className="h-2 rounded-full transition-all duration-500"
+      className="h-2 rounded transition-all duration-500"
       style={{
         width: `${Math.min(percentage, 100)}%`,
         backgroundColor: isSales ? getProgressColor(percentage) : "#dc2626",
@@ -283,14 +283,14 @@ export const PerformanceWrapper = () => {
                   {thresholds?.state}
                 </h2>
                 <div
-                  className={`px-3 py-1 rounded-full text-fluid-xxs font-medium ${risk.bg} ${risk.color}`}
+                  className={`px-3 py-1 rounded text-fluid-xxs font-medium ${risk.bg} ${risk.color}`}
                 >
                   {risk.level} Risk
                 </div>
               </div>
               {hasBreachedNexus && (
                 <Badge
-                  size="lg"
+                  size="sm"
                   radius="md"
                   color="#dc2626"
                   leftSection={<AlertCircle size={16} />}

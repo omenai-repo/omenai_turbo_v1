@@ -16,7 +16,7 @@ function Page() {
         <IndividualLogo />
 
         {/* The "Gallery Frame" Concept */}
-        <div className="relative w-full h-[70%] rounded-2xl overflow-hidden shadow-2xl border-[12px] border-white">
+        <div className="relative w-full h-[70%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
           <Image
             src="/login_banner.png"
             alt="Omenai Portal"
@@ -57,7 +57,7 @@ function Page() {
           <div className="w-full max-w-[520px] animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Editorial Heading */}
             <div className="mb-12 text-center md:text-left">
-              <h1 className="text-xl md:text-2xl font-light tracking-tight text-slate-900 mb-4">
+              <h1 className="text-xl md:text-2xl font-normal tracking-tight text-slate-900 mb-4">
                 Identify your portal
               </h1>
               <p className="text-slate-500 text-sm tracking-wide font-light">
@@ -74,7 +74,7 @@ function Page() {
         <div className="p-8 flex justify-between items-center text-[10px] text-slate-300 tracking-[0.3em] uppercase">
           <span>&copy; 2026 OMENAI INC.</span>
           <div className="flex gap-4">
-            <Link href="/help" className="hover:text-black">
+            <Link href="/help" className="hover:text-dark">
               Support
             </Link>
           </div>

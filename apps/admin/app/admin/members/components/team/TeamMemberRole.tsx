@@ -39,7 +39,7 @@ export default function TeamMemberRow({ member }: TeamMemberRowProps) {
       >
         {/* Member */}
         <div className="col-span-5 flex items-center gap-3 min-w-0">
-          <Avatar size={36} radius="xl">
+          <Avatar size={36} radius="sm">
             {member.name?.charAt(0)}
           </Avatar>
 

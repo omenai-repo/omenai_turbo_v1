@@ -2,8 +2,6 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
-import { IndividualSchemaTypes } from "@omenai/shared-types";
-import { SELECT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { IState, ICity, ICountry, State, City } from "country-state-city";
 import { ChangeEvent } from "react";
 
@@ -15,12 +13,11 @@ type AddressSelectInputProps = {
   name: string;
   defaultValue?: string | undefined;
 };
+
 export default function AddressSelectInput({
   label,
   items,
-  onChange,
   name,
-  defaultValue,
   labelText,
 }: AddressSelectInputProps) {
   const {
@@ -33,7 +30,6 @@ export default function AddressSelectInput({
   } = actionStore();
 
   const { address, setAddress } = orderStore();
-  const { user } = useAuth({ requiredRole: "user" });
 
   const selectValue = () => {
     if (labelText === "country") return address.country;
@@ -69,11 +65,10 @@ export default function AddressSelectInput({
   };
 
   return (
-    // Beautiful Select Component
     <div className="w-full space-y-2">
       <label
         htmlFor={name}
-        className="block text-sm font-medium text-slate-700"
+        className="block font-mono text-[10px] uppercase tracking-widest text-neutral-500"
       >
         {label}
       </label>
@@ -85,9 +80,17 @@ export default function AddressSelectInput({
           required={true}
           onChange={handleChange}
           value={selectValue()}
-          className={SELECT_CLASS}
+          className={`
+            w-full bg-white px-4 py-3
+            font-sans text-sm text-dark
+            border border-neutral-300 
+            rounded-none
+            focus:border-black focus:ring-0 focus:outline-none
+            appearance-none
+            transition-colors duration-200
+          `}
         >
-          <option value="" className="text-slate-400">
+          <option value="" className="text-neutral-400">
             Select {labelText}
           </option>
 
@@ -97,7 +100,6 @@ export default function AddressSelectInput({
                 key={item.isoCode}
                 value={item.name}
                 data-code={item.isoCode}
-                className="text-slate-900 py-2"
               >
                 {item.name}
               </option>
@@ -109,7 +111,6 @@ export default function AddressSelectInput({
                 key={state.isoCode}
                 value={state.name}
                 data-code={state.isoCode}
-                className="text-slate-900 py-2"
               >
                 {state.name}
               </option>
@@ -117,16 +118,28 @@ export default function AddressSelectInput({
 
           {labelText === "city" &&
             selectedCityList.map((city: ICity) => (
-              <option
-                key={city.name}
-                value={city.name}
-                data-code={city.name}
-                className="text-slate-900 py-2"
-              >
+              <option key={city.name} value={city.name} data-code={city.name}>
                 {city.name}
               </option>
             ))}
         </select>
+
+        {/* Custom Arrow */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-neutral-500">
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   );

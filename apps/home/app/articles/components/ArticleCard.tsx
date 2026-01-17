@@ -4,8 +4,13 @@ import Image from "next/image";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { Button } from "@mantine/core";
 import Link from "next/link";
+import { Models } from "appwrite";
 
-export default function ArticleCard({ article }: { article: any }) {
+export default function ArticleCard({
+  article,
+}: {
+  article: Models.DefaultRow;
+}) {
   const url = getEditorialFileView(article.cover, 300);
 
   return (
@@ -25,7 +30,7 @@ export default function ArticleCard({ article }: { article: any }) {
       <div className="flex flex-col flex-grow p-4 space-y-3">
         {/* Date - Fixed height */}
         <p className="font-normal text-fluid-xxs text-gray-600 flex-shrink-0">
-          {formatISODate(article.created_at) || "27, February 2025"}
+          {article.date ? formatISODate(article.date) : "27, February 2025"}
         </p>
 
         {/* Title - Flexible height but contained */}

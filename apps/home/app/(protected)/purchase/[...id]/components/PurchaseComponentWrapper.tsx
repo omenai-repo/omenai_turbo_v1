@@ -1,7 +1,6 @@
 "use client";
 import { toast } from "sonner";
 import AddressForm from "./AddressForm";
-import DeliveryMethod from "./DeliveryMethod";
 import ProductItem from "./ProductItem";
 import { fetchUserData } from "@omenai/shared-services/requests/fetchUserData";
 import { ArtworkResultTypes } from "@omenai/shared-types";
@@ -30,8 +29,8 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
           style: {
             background: "red",
             color: "white",
+            borderRadius: "0px", // Sharp corners for errors
           },
-          className: "class",
         });
         throw new Error("Something went wrong");
       } else {
@@ -43,33 +42,47 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
 
   if (loading) {
     return (
-      <div className="h-[90vh] w-full grid place-items-center">
+      <div className="h-screen w-full grid place-items-center bg-white">
         <Load />
       </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-white text-dark">
       <DesktopNavbar />
-      <div className="lg:grid lg:place-items-center h-screen w-full">
-        <div className="relative h-full max-w-screen">
-          <div className="grid-cols-1 grid md:grid-cols-2 xl:grid-cols-3 md:gap-x-8 lg:gap-x-16 gap-y-8">
-            <div className="col-span-1 xl:col-span-2 border-1 border-dark/10">
-              <AddressForm
-                availability={(artwork as ArtworkResultTypes).availability}
-                userAddress={address}
-                author_id={(artwork as ArtworkResultTypes).author_id}
-                art_id={(artwork as ArtworkResultTypes).art_id}
-                role_access={(artwork as ArtworkResultTypes).role_access}
-              />
+
+      {/* LEDGER LAYOUT: Split screen with vertical divider */}
+      <div className="container mx-auto px-6 lg:px-12 pt-12 pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+          {/* LEFT COLUMN: THE CONTRACT (Address Form) */}
+          <div className="lg:col-span-7 lg:border-r lg:border-neutral-200 lg:pr-12">
+            <div className="mb-8">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-400">
+                Step 01 / 02
+              </span>
+              <h1 className="font-serif text-4xl italic text-dark mt-2">
+                Shipping & Acquisition Details.
+              </h1>
             </div>
-            <div className="cols-span-1">
+
+            <AddressForm
+              availability={(artwork as ArtworkResultTypes).availability}
+              userAddress={address}
+              author_id={(artwork as ArtworkResultTypes).author_id}
+              art_id={(artwork as ArtworkResultTypes).art_id}
+              role_access={(artwork as ArtworkResultTypes).role_access}
+            />
+          </div>
+
+          {/* RIGHT COLUMN: THE ASSET (Product Item) - Sticky on Desktop */}
+          <div className="lg:col-span-5">
+            <div className="sticky top-32">
               <ProductItem artwork={artwork as ArtworkResultTypes} />
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

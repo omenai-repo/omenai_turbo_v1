@@ -69,7 +69,7 @@ export function WaitlistHeader({
           placeholder="Search name or email"
           className="
             h-9 w-64
-            rounded-full
+            rounded
             border border-neutral-200
             bg-white
             px-4 text-sm

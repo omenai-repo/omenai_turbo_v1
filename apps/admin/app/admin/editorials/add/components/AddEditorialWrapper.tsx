@@ -25,7 +25,7 @@ export default function AddEditorialWrapper() {
       </header>
 
       {/* Form surface */}
-      <div className="rounded-xl border border-neutral-200 bg-white shadow-sm p-6">
+      <div className="rounded border border-neutral-200 bg-white shadow-sm p-6">
         <EditorialForm />
       </div>
     </section>

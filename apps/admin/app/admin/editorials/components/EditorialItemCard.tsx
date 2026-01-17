@@ -12,7 +12,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
   return (
     <article
       className="
-        relative overflow-hidden rounded-xl
+        relative overflow-hidden rounded
         border border-neutral-200 bg-white
         transition hover:shadow-md
       "

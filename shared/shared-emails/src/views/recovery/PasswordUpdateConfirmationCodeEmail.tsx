@@ -35,10 +35,10 @@ const PasswordUpdateConfirmationCodeEmail = (
               className="mx-auto my-10"
             />
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Dear {username},
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               We have received a request to update your password for your Omenai
               account. Below, you will find your Confirmation code. Please note
               that the validity of this code will expire in{" "}
@@ -46,12 +46,12 @@ const PasswordUpdateConfirmationCodeEmail = (
             </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-fluid-xxs font-bold leading-[24px]">
+              <Text className="text-dark text-fluid-xxs font-bold leading-[24px]">
                 {token}
               </Text>
             </Section>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               If you did not authorize this action. Please contact us
               immediately on{" "}
               <Link
@@ -65,7 +65,7 @@ const PasswordUpdateConfirmationCodeEmail = (
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
-              <span className="text-black">{username} </span>. In the event that
+              <span className="text-dark">{username} </span>. In the event that
               you were not anticipating the receipt of this email, we
               respectfully request that you refrain from taking any action based
               on its contents. This communication may contain confidential and

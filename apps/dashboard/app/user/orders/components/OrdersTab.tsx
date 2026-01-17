@@ -43,7 +43,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
             Overview of your sales pipeline
           </p>
         </div>
-        <div className="flex items-center gap-x-3 px-4 py-2 w-fit bg-white border border-slate-200 rounded-full shadow-sm">
+        <div className="flex items-center gap-x-3 px-4 py-2 w-fit bg-white border border-slate-200 rounded shadow-sm">
           <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
             Total Orders
           </span>
@@ -58,7 +58,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
       <Tabs
         defaultValue="pending"
         variant="pills"
-        radius="md"
+        radius="sm"
         classNames={{
           root: "w-full",
           list: "flex flex-wrap gap-2 mb-8",
@@ -136,7 +136,7 @@ function TabLabel({
       <span>{label}</span>
       {count > 0 && (
         <span
-          className={`ml-1 flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ring-1 ring-inset ${
+          className={`ml-1 flex h-5 min-w-[20px] items-center justify-center rounded px-1.5 text-[10px] font-bold ring-1 ring-inset ${
             color === "amber"
               ? "bg-amber-50 text-amber-700 ring-amber-600/20"
               : color === "blue"

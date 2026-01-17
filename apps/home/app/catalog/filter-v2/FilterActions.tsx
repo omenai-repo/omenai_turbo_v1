@@ -44,19 +44,19 @@ export default function FilterActions() {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-0 border-t border-neutral-100 pt-6">
       <button
         onClick={handleClear}
-        className="flex-1 px-4 py-2 bg-slate-100 text-gray-700 rounded text-fluid-xxs hover:bg-slate-200"
+        className="flex-1 px-4 py-4 bg-white text-neutral-400 text-[10px] uppercase tracking-[0.2em] font-bold hover:text-dark transition-colors"
       >
-        Clear All
+        Reset All
       </button>
       <button
         onClick={handleApply}
         disabled={selectedFilters.length === 0}
-        className="flex-1 px-4 py-2 bg-dark text-white rounded text-fluid-xxs hover:bg-black disabled:opacity-50"
+        className="flex-1 px-4 py-4 bg-dark text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 disabled:bg-neutral-200 transition-all"
       >
-        Apply
+        Show Results
       </button>
     </div>
   );

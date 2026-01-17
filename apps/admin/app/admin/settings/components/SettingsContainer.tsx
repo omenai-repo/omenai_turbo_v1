@@ -33,18 +33,18 @@ export default function SettingsContainer() {
       {/* Main content */}
       <div className="space-y-6">
         {/* Profile */}
-        <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <section className="rounded border border-gray-200 bg-white shadow-sm">
           <ProfileSection />
         </section>
 
         {/* Security */}
-        <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
+        <section className="rounded border border-gray-200 bg-white shadow-sm">
           <SecuritySection />
         </section>
 
         {/* Danger zone */}
         {user.access_role === "Owner" && (
-          <section className="rounded-xl border border-red-200 bg-red-50/40">
+          <section className="rounded border border-red-200 bg-red-50/40">
             <DangerZone />
           </section>
         )}

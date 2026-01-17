@@ -22,8 +22,8 @@ export function AddPromotionalModal() {
         opened={opened}
         onClose={close}
         centered
-        size="lg"
-        radius="lg"
+        size="sm"
+        radius="sm"
         styles={{
           header: { display: "none" },
           body: { padding: 0 },
@@ -183,7 +183,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
             className="
               relative flex h-[220px] cursor-pointer
               items-center justify-center
-              rounded-lg border border-dashed border-slate-300
+              rounded border border-dashed border-slate-300
               bg-slate-50
               transition hover:border-slate-400
             "
@@ -193,7 +193,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
               <img
                 src={URL.createObjectURL(cover)}
                 alt="Preview"
-                className="h-full w-full rounded-lg object-cover object-top"
+                className="h-full w-full rounded object-cover object-top"
               />
             ) : (
               <div className="flex flex-col items-center gap-2 text-slate-500">

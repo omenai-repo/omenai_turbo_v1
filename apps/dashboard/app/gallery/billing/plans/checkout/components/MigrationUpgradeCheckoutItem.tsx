@@ -75,7 +75,7 @@ export default function MigrationUpgradeCheckoutItem({
         <div className="space-y-6 p-8">
           {/* Brand Header */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-xl">
+            <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center font-bold text-xl">
               O
             </div>
             <span className="text-xl font-bold tracking-tight">OMENAI</span>
@@ -101,7 +101,7 @@ export default function MigrationUpgradeCheckoutItem({
           </div>
 
           {/* Usage Visualization */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+          <div className="bg-white/5 border border-white/10 rounded p-6 space-y-4">
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-400 uppercase tracking-widest font-semibold">
                 Current Cycle
@@ -110,9 +110,9 @@ export default function MigrationUpgradeCheckoutItem({
                 {days_left} days left
               </span>
             </div>
-            <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-white/10 rounded overflow-hidden">
               <div
-                className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                className="h-full bg-blue-500 rounded transition-all duration-1000"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -150,7 +150,7 @@ export default function MigrationUpgradeCheckoutItem({
               </span>
             </div>
             {!plan_change_params.shouldCharge && (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl shadow-sm">
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded shadow-sm">
                 <p className="text-sm text-amber-900 leading-relaxed">
                   <span className="font-semibold">Note:</span> Your plan change
                   will take effect at the end of your current billing cycle.
@@ -209,7 +209,7 @@ export default function MigrationUpgradeCheckoutItem({
             </p>
           </div>
 
-          <div className="bg-gray-50 p-1 rounded-2xl">
+          <div className="bg-gray-50 p-1 rounded">
             <CheckoutBillingCard
               sub_data={sub_data}
               interval={interval}
@@ -221,8 +221,8 @@ export default function MigrationUpgradeCheckoutItem({
 
           {/* Compliance & Trust badges */}
           <div className="space-y-6 pt-6">
-            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-start gap-4">
-              <div className="p-2 bg-white rounded-lg shadow-sm">🔒</div>
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded flex items-start gap-4">
+              <div className="p-2 bg-white rounded shadow-sm">🔒</div>
               <p className="text-xs text-gray-600 leading-relaxed">
                 <span className="font-bold block text-slate-800 mb-1 uppercase tracking-tighter">
                   PCI-DSS Compliant

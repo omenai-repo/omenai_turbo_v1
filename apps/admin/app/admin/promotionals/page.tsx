@@ -22,7 +22,7 @@ export default function Page() {
       </header>
 
       {/* Content surface */}
-      <div className="rounded-xl border border-neutral-200 bg-white shadow-sm">
+      <div className="rounded border border-neutral-200 bg-white shadow-sm">
         <div className="p-4">
           <PromotionalList />
         </div>

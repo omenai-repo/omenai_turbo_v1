@@ -43,7 +43,7 @@ export default function OrderCountdown({
 
           <div className="text-dark text-fluid-xxs flex gap-x-2 items-center font-medium">
             <p className="text-fluid-xxs">Order expires in:</p>
-            <div className="flex justify-center gap-2 text-black font-semibold text-fluid-xxs">
+            <div className="flex justify-center gap-2 text-dark font-semibold text-fluid-xxs">
               {days > 0 && <span>{formatTime(days)}d</span>}
               <span>{formatTime(hours)}h</span>
               <span>{formatTime(minutes)}m</span>

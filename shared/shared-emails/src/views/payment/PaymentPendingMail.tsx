@@ -32,16 +32,16 @@ const PaymentPendingMail = (name: string, artwork: string) => {
               className="mx-auto mt-10"
             />
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               <strong>Dear {name},</strong>
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Thank you for your recent order of ${artwork}! Your payment is
               currently being processed. You'll receive a confirmation email
               once your payment has been confirmed.
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               As always, if you have any questions, feedback, or concerns
               regarding your Order or any other aspect of our service, please
               feel free to reach out to us at{" "}
@@ -54,11 +54,11 @@ const PaymentPendingMail = (name: string, artwork: string) => {
               . Our dedicated customer support team is available to assist you
               and ensure your experience remains exceptional.{" "}
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Once again, thank you for choosing <strong>Omenai</strong> We
               appreciate your business and look forward to serving you.
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
@@ -66,7 +66,7 @@ const PaymentPendingMail = (name: string, artwork: string) => {
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
+              <span className="text-dark">{name} </span>. In the event that you
               were not anticipating the receipt of this email, we respectfully
               request that you refrain from taking any action based on its
               contents. This communication may contain confidential and legally

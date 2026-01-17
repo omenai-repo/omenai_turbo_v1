@@ -38,7 +38,7 @@ export default function CheckoutItem({
         <div className="space-y-4 p-8">
           {/* Brand Identity */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center font-bold text-xl shadow-lg shadow-emerald-900/20">
+            <div className="w-10 h-10 bg-emerald-600 rounded flex items-center justify-center font-bold text-xl shadow-lg shadow-emerald-900/20">
               O
             </div>
             <span className="text-xl font-bold tracking-tighter">OMENAI</span>
@@ -47,7 +47,7 @@ export default function CheckoutItem({
           {/* Welcome Messaging */}
           <div className="space-y-4">
             {discountEligible && (
-              <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded-full">
+              <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded">
                 Invite-Only Access
               </span>
             )}
@@ -91,7 +91,7 @@ export default function CheckoutItem({
           </ul>
 
           {/* Receipt Breakdown */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+          <div className="bg-white/5 border border-white/10 rounded p-6 space-y-4">
             <div className="flex justify-between text-sm text-gray-400">
               <span>
                 {plan.name} Plan ({interval})
@@ -127,7 +127,7 @@ export default function CheckoutItem({
 
         {/* Global Reassurances */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-8">
-          <div className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm space-y-2">
+          <div className="p-4 bg-white border border-gray-100 rounded shadow-sm space-y-2">
             <p className="text-xs font-bold text-gray-900 uppercase">
               PCI Compliance
             </p>
@@ -136,7 +136,7 @@ export default function CheckoutItem({
               touches our servers.
             </p>
           </div>
-          <div className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm space-y-2">
+          <div className="p-4 bg-white border border-gray-100 rounded shadow-sm space-y-2">
             <p className="text-xs font-bold text-gray-900 uppercase">
               Auto-Renewal
             </p>

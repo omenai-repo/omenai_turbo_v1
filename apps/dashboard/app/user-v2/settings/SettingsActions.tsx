@@ -3,8 +3,7 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import UpdatePasswordForm from "./UpdatePasswordForm";
 
 export default function SettingsAction() {
-  const { updateDeleteUserAccountModalPopup } =
-    actionStore();
+  const { updateDeleteUserAccountModalPopup } = actionStore();
   return (
     <div className="w-full flex flex-col gap-8 lg:p-5">
       <div className="flex flex-col gap-2">
@@ -16,14 +15,14 @@ export default function SettingsAction() {
         </p>
       </div>
       {/* Design 1: Security Settings Card */}
-      <div className="bg-white w-full  mx-auto rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white w-full  mx-auto rounded shadow-sm border border-slate-200 overflow-hidden">
         <div className=" p-4 lg:p-8">
           {/* Password Section */}
           <UpdatePasswordForm />
         </div>
       </div>
       {/* Danger Zone */}
-      <div className="bg-white w-full  mx-auto rounded-3xl shadow-sm border border-red-200 overflow-hidden">
+      <div className="bg-white w-full  mx-auto rounded shadow-sm border border-red-200 overflow-hidden">
         <div className="p-8">
           <div className="">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
@@ -53,7 +52,7 @@ export default function SettingsAction() {
               </div>
               <button
                 onClick={() => updateDeleteUserAccountModalPopup(true)}
-                className="px-4 py-2 w-full lg:w-auto bg-white border border-red-300 text-red-600 text-fluid-xxs font-medium rounded-full hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="px-4 py-2 w-full lg:w-auto bg-white border border-red-300 text-red-600 text-fluid-xxs font-medium rounded hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Delete Account
               </button>

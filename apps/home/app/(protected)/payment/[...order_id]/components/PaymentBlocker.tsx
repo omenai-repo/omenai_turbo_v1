@@ -18,23 +18,23 @@ function Blocker({
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(42,158,223,0.08)_0%,transparent_70%)]" />
 
       {/* Expanding Ripples */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-[#2A9EDF]/10 rounded-full animate-[ping_4s_linear_infinite]" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-[#2A9EDF]/10 rounded-full animate-[ping_4s_linear_infinite] delay-1000" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-[#2A9EDF]/10 rounded animate-[ping_4s_linear_infinite]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-[#2A9EDF]/10 rounded animate-[ping_4s_linear_infinite] delay-1000" />
 
       {/* --- Central Art: The Pulse --- */}
       <div className="relative z-10 mb-10">
         <div className="relative w-20 h-20 flex items-center justify-center">
           {/* Background Glow */}
-          <div className="absolute inset-0 bg-[#2A9EDF]/20 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute inset-0 bg-[#2A9EDF]/20 rounded blur-xl animate-pulse"></div>
 
           {/* The Icon Container */}
-          <div className="relative w-16 h-16 bg-[#0f172a] border border-[#2A9EDF]/50 rounded-full flex items-center justify-center shadow-lg z-10">
+          <div className="relative w-16 h-16 bg-[#0f172a] border border-[#2A9EDF]/50 rounded flex items-center justify-center shadow-lg z-10">
             <Activity className="w-8 h-8 text-[#2A9EDF]" />
           </div>
 
           {/* Orbital Dot */}
           <div className="absolute w-full h-full animate-[spin_4s_linear_infinite]">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#ffffff] rounded-full shadow-[0_0_10px_#fff]"></div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#ffffff] rounded shadow-[0_0_10px_#fff]"></div>
           </div>
         </div>
         <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.2em] text-[#47748E] font-semibold uppercase whitespace-nowrap">
@@ -87,7 +87,7 @@ function Blocker({
       )} */}
 
       {/* --- Footer Status --- */}
-      <div className="mt-10 flex items-center gap-2 px-4 py-1 rounded-full bg-[#2A9EDF]/5 border border-[#2A9EDF]/10">
+      <div className="mt-10 flex items-center gap-2 px-4 py-1 rounded bg-[#2A9EDF]/5 border border-[#2A9EDF]/10">
         <RefreshCw
           className="w-3 h-3 text-[#2A9EDF] animate-spin"
           style={{ animationDuration: "3s" }}

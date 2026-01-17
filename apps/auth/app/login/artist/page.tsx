@@ -14,7 +14,7 @@ function Page() {
         <IndividualLogo />
 
         {/* Framed Image Container */}
-        <div className="relative w-full h-[75%] rounded-2xl overflow-hidden shadow-2xl border-[12px] border-white">
+        <div className="relative w-full h-[75%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
           <Image
             src="/artist__banner.png"
             alt="Omenai Gallery Visual"
@@ -85,13 +85,10 @@ function Page() {
         <div className="p-8 flex justify-between items-center text-[10px] text-slate-300 tracking-[0.3em] uppercase">
           <span>&copy; 2026 OMENAI INC.</span>
           <div className="flex gap-6">
-            <Link
-              href="/privacy"
-              className="hover:text-black transition-colors"
-            >
+            <Link href="/privacy" className="hover:text-dark transition-colors">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-black transition-colors">
+            <Link href="/terms" className="hover:text-dark transition-colors">
               Terms
             </Link>
           </div>

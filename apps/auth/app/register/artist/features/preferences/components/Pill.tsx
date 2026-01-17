@@ -23,7 +23,7 @@ export default function Pill({ text, art_styles, logo }: PillProps) {
         relative
         px-4 
         py-2 
-        rounded-full 
+        rounded 
         font-normal 
         text-fluid-xs
         transition-all 
@@ -65,7 +65,7 @@ export default function Pill({ text, art_styles, logo }: PillProps) {
       {artistSignupData.art_style === text && (
         <motion.div
           layoutId={`pill-bg-${text}`}
-          className="absolute inset-0 bg-dark rounded-full"
+          className="absolute inset-0 bg-dark rounded"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

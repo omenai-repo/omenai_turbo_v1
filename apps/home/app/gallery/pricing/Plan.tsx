@@ -20,7 +20,7 @@ export default function Plan({
     <>
       <div className="relative z-10 w-fit my-12">
         <div className="mx-auto w-fit">
-          <div className="flex flex-col rounded-3xl bg-white shadow-xl ring-1 ring-[#E0E0E0]">
+          <div className="flex flex-col rounded bg-white shadow-xl ring-1 ring-[#E0E0E0]">
             <div className="p-8">
               <h3
                 className="text-fluid-sm font-semibold leading-4 tracking-tight text-dark"

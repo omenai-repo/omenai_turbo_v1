@@ -85,7 +85,7 @@ const isButtonDisabled = (
 
 const PlanBadge = ({ planName }: { planName: string }) =>
   planName === "Pro" ? (
-    <div className="absolute top-5 right-5 rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white">
+    <div className="absolute top-5 right-5 rounded bg-slate-900 px-3 py-1 text-xs font-medium text-white">
       Most popular
     </div>
   ) : null;
@@ -97,7 +97,7 @@ const DiscountBadge = () => (
 
 /* 🔹 ADDITIVE Forfeit Warning — Informs user they lose the discount */
 const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
-  <div className="mb-4 rounded-xl bg-amber-50 border border-amber-200 p-3">
+  <div className="mb-4 rounded bg-amber-50 border border-amber-200 p-3">
     <div className="flex gap-2">
       <span className="text-amber-600">⚠️</span>
       <p className="text-[11px] leading-relaxed font-medium text-amber-800">
@@ -151,7 +151,7 @@ export default function Plan({
   return (
     <div className="relative mx-auto w-full max-w-sm">
       <div
-        className={`relative rounded-3xl bg-white p-8 transition ${
+        className={`relative rounded bg-white p-8 transition ${
           isFeatured
             ? "shadow-xl ring-1 ring-slate-900"
             : "shadow-sm ring-1 ring-slate-200"
@@ -211,7 +211,7 @@ export default function Plan({
           {(tab === "monthly" ? benefits.monthly : benefits.annual).map(
             (benefit) => (
               <div key={benefit} className="flex gap-3 text-sm text-slate-600">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-slate-900" />
+                <span className="mt-1 h-1.5 w-1.5 rounded bg-slate-900" />
                 {benefit}
               </div>
             )
@@ -229,7 +229,7 @@ export default function Plan({
         >
           <button
             disabled={isDisabled}
-            className={`w-full rounded-full py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2
+            className={`w-full rounded py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2
               ${
                 isFeatured
                   ? "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900"

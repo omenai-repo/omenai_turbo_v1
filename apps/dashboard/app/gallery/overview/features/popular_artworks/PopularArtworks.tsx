@@ -21,7 +21,7 @@ export default function PopularArtworks() {
   });
 
   return (
-    <div className="p-4 min-h-[200px] flex flex-col bg-white shadow-sm rounded-2xl">
+    <div className="p-4 min-h-[200px] flex flex-col bg-white shadow-sm rounded">
       <div className="w-full h-full p-5 ">
         <h1 className="font-medium self-start">Popular artworks</h1>
         <div className="grid place-items-center w-full h-auto mt-4">

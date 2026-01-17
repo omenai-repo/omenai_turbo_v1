@@ -27,8 +27,8 @@ export function InviteEntityModal({
       opened={opened}
       onClose={close}
       centered
-      size="lg"
-      radius="lg"
+      size="sm"
+      radius="sm"
       overlayProps={{
         backgroundOpacity: 0.55,
         blur: 4,
@@ -38,7 +38,7 @@ export function InviteEntityModal({
         body: { padding: 0 },
       }}
     >
-      <div className="flex max-h-[80vh] flex-col overflow-hidden rounded-lg bg-white">
+      <div className="flex max-h-[80vh] flex-col overflow-hidden rounded bg-white">
         {/* Header */}
         <div className="border-b border-neutral-100 px-6 py-5">
           <h2 className="text-base font-semibold text-neutral-900">
@@ -60,7 +60,7 @@ export function InviteEntityModal({
               {selectedEntity.map((entity) => (
                 <li
                   key={entity.waitlistId}
-                  className="rounded-md border border-neutral-100 bg-neutral-50 px-4 py-3"
+                  className="rounded border border-neutral-100 bg-neutral-50 px-4 py-3"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
@@ -91,7 +91,7 @@ export function InviteEntityModal({
             onClick={close}
             disabled={isInviting}
             className="
-              rounded-md px-4 py-2 text-sm
+              rounded px-4 py-2 text-sm
               text-neutral-700
               hover:bg-neutral-100
               disabled:opacity-50
@@ -105,7 +105,7 @@ export function InviteEntityModal({
             disabled={selectedEntity.length === 0 || isInviting}
             className="
               inline-flex min-w-[160px] items-center justify-center
-              rounded-md bg-neutral-900 px-4 py-2
+              rounded bg-neutral-900 px-4 py-2
               text-sm font-medium text-white
               hover:bg-neutral-800
               disabled:bg-neutral-200 disabled:text-neutral-500

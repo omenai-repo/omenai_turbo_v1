@@ -27,7 +27,7 @@ export default function TransactionTable() {
 
   if (isLoading)
     return (
-      <div className="h-full bg-white rounded-3xl border border-slate-100 p-8 flex items-center justify-center">
+      <div className="h-full bg-white rounded border border-slate-100 p-8 flex items-center justify-center">
         <Load />
       </div>
     );
@@ -35,12 +35,12 @@ export default function TransactionTable() {
   const reversedTransactions = transactions?.slice().reverse() || [];
 
   return (
-    <div className="h-full  bg-white rounded-3xl border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
+    <div className="h-full  bg-white rounded border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
       <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
         <h2 className="text-lg font-semibold text-slate-900">
           Transaction History
         </h2>
-        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded">
           {reversedTransactions.length} Records
         </span>
       </div>
@@ -58,7 +58,7 @@ export default function TransactionTable() {
               >
                 {/* Timeline Dot */}
                 <div
-                  className={`absolute left-0 top-1 w-10 h-10 rounded-full border-4 border-white flex items-center justify-center z-10 shadow-sm transition-colors ${
+                  className={`absolute left-0 top-1 w-10 h-10 rounded border-4 border-white flex items-center justify-center z-10 shadow-sm transition-colors ${
                     transaction.status === "successful"
                       ? "bg-emerald-50 text-emerald-600"
                       : transaction.status === "failed"
@@ -67,7 +67,7 @@ export default function TransactionTable() {
                   }`}
                 >
                   <div
-                    className={`w-2.5 h-2.5 rounded-full ${
+                    className={`w-2.5 h-2.5 rounded ${
                       transaction.status === "successful"
                         ? "bg-emerald-500"
                         : transaction.status === "failed"
@@ -78,7 +78,7 @@ export default function TransactionTable() {
                 </div>
 
                 {/* Card Body */}
-                <div className="flex justify-between items-start p-4 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-sm transition-all">
+                <div className="flex justify-between items-start p-4 rounded border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-sm transition-all">
                   <div>
                     <p className="text-xs font-medium text-slate-400 mb-1">
                       {formatISODate(transaction.date)}
@@ -97,7 +97,7 @@ export default function TransactionTable() {
                       {formatPrice(transaction.amount, "USD")}
                     </p>
                     <span
-                      className={`text-[10px] font-medium px-2 py-0.5 rounded-full capitalize mt-1 inline-block ${
+                      className={`text-[10px] font-medium px-2 py-0.5 rounded capitalize mt-1 inline-block ${
                         transaction.status === "successful"
                           ? "bg-emerald-100 text-emerald-700"
                           : transaction.status === "failed"

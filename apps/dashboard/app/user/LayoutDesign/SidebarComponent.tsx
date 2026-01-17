@@ -56,7 +56,7 @@ export function SidebarContent({
                       <Link
                         href={item.href}
                         className={clsx(
-                          "flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors",
+                          "flex items-center rounded px-3 py-2.5 text-sm transition-colors",
                           active
                             ? "bg-dark text-white"
                             : "text-neutral-600 hover:bg-neutral-100"

@@ -223,12 +223,12 @@ export default function ChangePasswordModal({
               <div className="flex items-center gap-2 mb-1">
                 <div className="flex gap-1 flex-1">
                   <div
-                    className={`h-1 flex-1 rounded-full transition-colors ${
+                    className={`h-1 flex-1 rounded transition-colors ${
                       newPassword.length >= 8 ? "bg-green-500" : "bg-dark/20"
                     }`}
                   />
                   <div
-                    className={`h-1 flex-1 rounded-full transition-colors ${
+                    className={`h-1 flex-1 rounded transition-colors ${
                       newPassword.length >= 10 &&
                       /[A-Z]/.test(newPassword) &&
                       /[0-9]/.test(newPassword)
@@ -237,7 +237,7 @@ export default function ChangePasswordModal({
                     }`}
                   />
                   <div
-                    className={`h-1 flex-1 rounded-full transition-colors ${
+                    className={`h-1 flex-1 rounded transition-colors ${
                       newPassword.length >= 12 &&
                       /[A-Z]/.test(newPassword) &&
                       /[0-9]/.test(newPassword) &&

@@ -87,8 +87,8 @@ export default function OrderDetails({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
-          <span className="text-sm font-medium text-yellow-700 bg-yellow-50 px-3 py-1 rounded-full">
+          <span className="w-2 h-2 rounded bg-yellow-500 animate-pulse"></span>
+          <span className="text-sm font-medium text-yellow-700 bg-yellow-50 px-3 py-1 rounded">
             Payment Pending
           </span>
         </div>
@@ -99,12 +99,12 @@ export default function OrderDetails({
         {/* LEFT COLUMN: Context (Artwork & Logistics) */}
         <div className="lg:col-span-7 space-y-8">
           {/* Section 1: The Artwork */}
-          <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-300">
+          <section className="bg-white rounded p-6 shadow-sm border border-slate-300">
             <h2 className="text-fluid-base font-semibold text-dark mb-6 border-b border-slate-300 pb-4">
               Item Details
             </h2>
             <div className="flex flex-col sm:flex-row gap-6">
-              <div className="relative w-full sm:w-48 aspect-square flex-shrink-0 rounded-xl overflow-hidden bg-gray-50 border border-slate-300">
+              <div className="relative w-full sm:w-48 aspect-square flex-shrink-0 rounded overflow-hidden bg-gray-50 border border-slate-300">
                 <Image
                   src={image_href}
                   fill
@@ -124,7 +124,7 @@ export default function OrderDetails({
           </section>
 
           {/* Section 2: Logistics Grid */}
-          <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-300">
+          <section className="bg-white rounded p-6 shadow-sm border border-slate-300">
             <h2 className="text-fluid-base font-semibold text-dark mb-6 border-b border-slate-300 pb-4">
               Shipping & Delivery
             </h2>
@@ -154,7 +154,7 @@ export default function OrderDetails({
                   Carrier Method
                 </h3>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                  <div className="p-2 bg-blue-50 text-blue-600 rounded">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -190,7 +190,7 @@ export default function OrderDetails({
         <div className="lg:col-span-5 relative">
           <div className="sticky top-8 space-y-6">
             {/* Financial Summary Card */}
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-300 overflow-hidden">
+            <div className="bg-white rounded shadow-xl border border-slate-300 overflow-hidden">
               <div className="bg-gray-50 px-6 py-4 border-b border-slate-300">
                 <h2 className="text-fluid-base font-semibold text-dark">
                   Order Summary

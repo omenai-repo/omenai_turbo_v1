@@ -129,7 +129,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Awaiting payment
         </span>
@@ -142,7 +142,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Payment completed
         </span>
@@ -155,7 +155,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
           <Truck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Delivery in progress
         </span>
@@ -168,7 +168,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order in review
         </span>
@@ -178,11 +178,11 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       return (
         <>
           <div className="flex flex-col gap-y-2">
-            <span className="px-3 py-1 self-end rounded-full text-fluid-xxs font-normal text-red-600 bg-red-100 flex gap-x-1 items-center w-fit">
+            <span className="px-3 py-1 self-end rounded text-fluid-xxs font-normal text-red-600 bg-red-100 flex gap-x-1 items-center w-fit">
               <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
               Order declined
             </span>
-            <span className=" rounded-full text-fluid-xxs font-normal text-red-600 hidden lg:flex items-center w-fit">
+            <span className=" rounded text-fluid-xxs font-normal text-red-600 hidden lg:flex items-center w-fit">
               {order_decline_reason}
             </span>
           </div>
@@ -192,7 +192,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded-full text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order has been fulfilled
         </span>
@@ -271,7 +271,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center space-x-2 py-2 px-2 md:px-4 rounded-full transition-all duration-300 hover:bg-slate-400/20"
+            className="flex items-center space-x-2 py-2 px-2 md:px-4 rounded transition-all duration-300 hover:bg-slate-400/20"
             aria-expanded={isOpen}
           >
             <CurrentIcon size={20} absoluteStrokeWidth />
@@ -286,7 +286,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
             />
           </button>
           {isOpen && (
-            <div className="absolute right-0 mt-3 w-64 origin-top-right divide-y divide-slate-700 rounded-xl bg-dark shadow-2xl ring-1 z-[9999999999] ring-white/10 backdrop-blur-md">
+            <div className="absolute right-0 mt-3 w-64 origin-top-right divide-y divide-slate-700 rounded bg-dark shadow-2xl ring-1 z-[9999999999] ring-white/10 backdrop-blur-md">
               <ul className="py-1 ">
                 {filterList.map(({ Icon, title, value }) => {
                   return (
@@ -317,7 +317,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       </div>
       <div className="bg-white flex-1 w-full overflow-y-scroll">
         <ul className="flex flex-col gap-8">
-          {/* <li className="flex items-center gap-4 mx-auto rounded-3xl shadow-sm border border-slate-200 p-4 lg:p-8 w-full">
+          {/* <li className="flex items-center gap-4 mx-auto rounded shadow-sm border border-slate-200 p-4 lg:p-8 w-full">
             <Image
               src={get_image_url(
                 orders[0].artwork_data.url,
@@ -379,7 +379,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
             return (
               <li
                 key={order.order_id}
-                className="flex flex-col gap-4 mx-auto rounded-3xl shadow-sm border border-slate-200 p-4 lg:p-8 w-full"
+                className="flex flex-col gap-4 mx-auto rounded shadow-sm border border-slate-200 p-4 lg:p-8 w-full"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between">
                   <div className="flex flex-col ">
@@ -403,7 +403,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
                     <span className="text-gray-600 text-sm">
                       Ordered on {formatISODate(order.createdAt)}
                     </span>
-                    <span className=" rounded-full text-fluid-xxs font-normal text-red-600 lg:hidden items-center w-fit">
+                    <span className=" rounded text-fluid-xxs font-normal text-red-600 lg:hidden items-center w-fit">
                       {order.order_accepted.reason}
                     </span>
                   </div>
@@ -535,7 +535,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
                           <Link
                             href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
                           >
-                            <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded-full h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
+                            <button className="hover:bg-dark/70 hover:text-white focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none text-white focus:ring-dark rounded h-[35px] py-2 px-4 w-fit text-center text-fluid-xxs flex items-center justify-center bg-dark cursor-pointer">
                               Track this shipment
                             </button>
                           </Link>

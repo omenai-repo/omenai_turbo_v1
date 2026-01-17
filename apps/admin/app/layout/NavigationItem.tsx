@@ -23,7 +23,7 @@ export default function NavigationItem({
         <div
           aria-disabled="true"
           className={clsx(
-            "flex cursor-not-allowed items-center rounded-lg px-3 py-2.5 text-sm text-neutral-400",
+            "flex cursor-not-allowed items-center rounded px-3 py-2.5 text-sm text-neutral-400",
             "bg-neutral-50"
           )}
         >
@@ -40,7 +40,7 @@ export default function NavigationItem({
         <Link
           href={item.href}
           className={clsx(
-            "flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors",
+            "flex items-center rounded px-3 py-2.5 text-sm transition-colors",
             active
               ? "bg-dark text-white"
               : "text-neutral-600 hover:bg-neutral-100"

@@ -53,12 +53,16 @@ export default function LatestArtworks({
           {/* first */}
         </div>
       )}
-      <div className="h-[35vh] w-full absolute z-10 bottom-0 flex items-center justify-center">
-        <div className="absolute w-full h-full bg-gradient-to-t from-white from-10% via-white/70 via-60% to-transparent" />
-        <Link href={"/catalog"} className="group absolute bottom-16">
-          <button className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 z-20 rounded-full px-8 py-1 text-fluid-xxs">
-            See more
-            <IoIosArrowRoundForward />
+      <div className="absolute bottom-0 z-10 flex h-[35vh] w-full items-end justify-center pb-20">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
+
+        <Link href={"/catalog"} className="group relative z-20">
+          <button className="flex items-center gap-4 bg-white px-8 py-4 text-dark transition-all duration-500 ease-out hover:bg-dark hover:text-white border border-neutral-200 hover:border-black">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em]">
+              Enter Full Archive
+            </span>
+
+            <IoIosArrowRoundForward className="text-2xl transition-transform duration-300 group-hover:translate-x-2" />
           </button>
         </Link>
       </div>

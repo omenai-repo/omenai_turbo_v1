@@ -18,7 +18,7 @@ export default function UpcomingSub({
   const isActive = sub_data.status === "active";
 
   return (
-    <div className="h-full bg-white rounded-3xl border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] p-8 flex flex-col">
+    <div className="h-full bg-white rounded border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] p-8 flex flex-col">
       <h3 className="text-fluid-xs font-medium text-slate-500 uppercase tracking-wider mb-6">
         Upcoming Invoice
       </h3>
@@ -37,8 +37,8 @@ export default function UpcomingSub({
             </span>
           </p>
 
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex gap-4 items-center">
-            <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm text-slate-600">
+          <div className="p-4 bg-slate-50 rounded border border-slate-100 flex gap-4 items-center">
+            <div className="p-2 bg-white rounded border border-slate-100 shadow-sm text-slate-600">
               <svg
                 className="w-5 h-5"
                 fill="none"

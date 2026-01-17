@@ -155,7 +155,7 @@ export default function ArtistWaitlist() {
         isInviting={isInviting}
       />
 
-      <div className="rounded-xl border border-neutral-200 bg-white shadow-sm">
+      <div className="rounded border border-neutral-200 bg-white shadow-sm">
         <div className="border-b border-neutral-100 px-4 py-3">
           <WaitlistHeader
             allSelected={allSelected}

@@ -24,7 +24,7 @@ export default function HighlightCard({ tag, title }: HightlightCardProps) {
 
   return (
     <>
-      <div className="rounded-2xl bg-white p-5 shadow-sm">
+      <div className="rounded bg-white p-5 shadow-sm">
         <p className="text-fluid-xxs text-neutral-500">{title.toUpperCase()}</p>
 
         <div className="mt-2 flex items-baseline justify-between">

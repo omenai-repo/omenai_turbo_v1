@@ -10,7 +10,7 @@ export function WalletWithdrawalBlockerModal({
     // Fixed Modal Overlay
     <div className="fixed inset-0 z-50 bg-[#0f172a]/5 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
       {/* Modal Card */}
-      <div className="relative w-full max-w-md bg-[#0f172a] border border-[#47748E]/30 rounded-xl shadow-2xl p-8 text-center animate-in zoom-in duration-300">
+      <div className="relative w-full max-w-md bg-[#0f172a] border border-[#47748E]/30 rounded shadow-2xl p-8 text-center animate-in zoom-in duration-300">
         {/* Close Button Placeholder (Assuming a parent component handles actual closure) */}
         <button
           onClick={() => toggleWithdrawalFormPopup(false)}
@@ -47,7 +47,7 @@ export function WalletWithdrawalBlockerModal({
           <button
             // In a real app, this button might link to a status page or contact support.
             // For this example, it's just styled as a primary action.
-            className="w-full py-3 bg-[#2A9EDF] text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded-lg hover:bg-opacity-90 transition-all shadow-[0_4px_15px_rgba(42,158,223,0.4)]"
+            className="w-full py-3 bg-[#2A9EDF] text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded hover:bg-opacity-90 transition-all shadow-[0_4px_15px_rgba(42,158,223,0.4)]"
           >
             Review Security Status
           </button>

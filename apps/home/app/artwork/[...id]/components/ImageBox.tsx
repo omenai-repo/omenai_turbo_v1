@@ -1,13 +1,10 @@
 "use client";
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import ZoomableViewerModal from "../modals/ZoomableViewerModal";
+import { MdZoomIn } from "react-icons/md";
 
 type ImageBoxProps = {
   url: string;
@@ -16,12 +13,12 @@ type ImageBoxProps = {
 
 export default function ImageBox({ url, title }: ImageBoxProps) {
   const [loading, setLoading] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
   const { setOpenSeaDragonImageViewer, setSeaDragonZoomableImageViewerUrl } =
     actionStore();
 
-  const initialImageRender = getOptimizedImage(url, "medium", 40);
-  const highestQualityImage = getOptimizedImage(url, "large", 40);
+  // Use high quality for the main view
+  const initialImageRender = getOptimizedImage(url, "medium", 50);
+  const highestQualityImage = getOptimizedImage(url, "large", 100);
 
   const handleClick = () => {
     setSeaDragonZoomableImageViewerUrl(highestQualityImage);
@@ -31,33 +28,35 @@ export default function ImageBox({ url, title }: ImageBoxProps) {
   return (
     <>
       <ZoomableViewerModal fileUrl={highestQualityImage} />
+
+      {/* FRAME: No rounded corners, subtle border */}
       <div
-        className="relative w-full col-span-12 lg:col-span-8"
-        ref={containerRef}
+        className="group relative w-full overflow-hidden bg-neutral-50 border border-neutral-100 cursor-zoom-in"
+        onClick={handleClick}
       >
-        <div className="relative bg-white">
-          <div className="h-full flex justify-center items-center w-full">
-            <div className="aspect-auto h-full relative w-full overflow-hidden">
-              <div className="w-full h-full">
-                {loading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                    <Load />
-                  </div>
-                )}
-                <img
-                  src={initialImageRender}
-                  alt={`${title} image`}
-                  height={800}
-                  width={800}
-                  className={`h-auto w-full max-h-[800px] object-contain cursor-zoom-in transition-opacity duration-500 ${
-                    loading ? "opacity-0" : "opacity-100"
-                  }`}
-                  onLoad={() => setLoading(false)}
-                  onClick={handleClick}
-                />
-              </div>
-            </div>
+        {/* Loading State */}
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-neutral-50">
+            <Load />
           </div>
+        )}
+
+        {/* Main Image */}
+        <img
+          src={initialImageRender}
+          alt={`${title} - Omenai`}
+          className={`h-auto w-full object-contain transition-opacity duration-700 ${
+            loading ? "opacity-0" : "opacity-100"
+          }`}
+          onLoad={() => setLoading(false)}
+        />
+
+        {/* Hover Overlay: "Inspect" */}
+        <div className="absolute bottom-6 right-6 flex items-center gap-2 bg-white/90 backdrop-blur px-4 py-2 border border-neutral-200 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <MdZoomIn className="text-lg" />
+          <span className="font-mono text-[9px] uppercase tracking-widest text-dark">
+            Inspect Plate
+          </span>
         </div>
       </div>
     </>

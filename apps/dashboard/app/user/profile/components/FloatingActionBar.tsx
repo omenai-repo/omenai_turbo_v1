@@ -17,7 +17,7 @@ export default function FloatingActionBar({
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
-      <div className="flex items-center gap-2 p-2 pr-4 bg-slate-900/90 backdrop-blur-md text-white rounded-full shadow-2xl shadow-slate-900/20 border border-white/10">
+      <div className="flex items-center gap-2 p-2 pr-4 bg-slate-900/90 backdrop-blur-md text-white rounded shadow-2xl shadow-slate-900/20 border border-white/10">
         <button
           onClick={onReset}
           className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"

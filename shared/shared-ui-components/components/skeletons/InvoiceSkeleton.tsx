@@ -19,7 +19,7 @@ export const ReceiptSkeleton = () => {
       {/* --- Scrollable Content Skeleton --- */}
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
         {/* Status Badge */}
-        <div className="bg-gray-50 border border-gray-100 rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-gray-50 border border-gray-100 rounded p-4 flex items-center gap-3">
           <Skeleton height={32} width={32} circle />
           <div className="space-y-2">
             <Skeleton height={14} width={180} radius="sm" />
@@ -37,7 +37,7 @@ export const ReceiptSkeleton = () => {
         <div className="space-y-4">
           <Skeleton height={12} width={80} radius="sm" />{" "}
           {/* "BILLED TO" Label */}
-          <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm space-y-4">
+          <div className="bg-white border border-gray-100 rounded p-4 shadow-sm space-y-4">
             {/* Name Row */}
             <div className="flex items-center gap-3">
               <Skeleton height={16} width={16} radius="sm" /> {/* Icon */}
@@ -83,7 +83,7 @@ export const ReceiptSkeleton = () => {
         </div>
 
         {/* Pricing Breakdown */}
-        <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+        <div className="bg-gray-50 rounded p-6 space-y-4">
           <div className="flex justify-between">
             <Skeleton height={14} width={60} radius="sm" />
             <Skeleton height={14} width={80} radius="sm" />

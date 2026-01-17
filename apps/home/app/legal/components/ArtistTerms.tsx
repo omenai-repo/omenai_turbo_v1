@@ -17,7 +17,7 @@ export default function ArtistsTerms() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto py-8">
-        <div className="bg-white rounded-lg shadow-sm border border-dark/20 p-8">
+        <div className="bg-white rounded shadow-sm border border-dark/20 p-8">
           {/* Download Button */}
           <div className="flex flex-col sm:flex-row space-y-4 justify-start items-center sm:justify-between mb-6 pb-6 border-b border-dark/20">
             <div className="flex items-center text-sm text-gray-600">

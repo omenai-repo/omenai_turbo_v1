@@ -54,7 +54,7 @@ export default function GalleryRequest({
         <div
           className="
             flex items-center justify-between gap-6
-            rounded-lg border border-neutral-200 bg-white
+            rounded border border-neutral-200 bg-white
             px-5 py-4 pl-6
             transition-all duration-200
             hover:border-neutral-300 hover:shadow-sm

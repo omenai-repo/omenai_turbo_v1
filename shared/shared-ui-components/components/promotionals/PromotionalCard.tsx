@@ -1,11 +1,13 @@
 "use client";
 
-import { getPromotionalFileView } from "@omenai/shared-lib/storage/getPromotionalsFileView";
+import {
+  getPromotionalFileView,
+  getPromotionalOptimizedImage,
+} from "@omenai/shared-lib/storage/getPromotionalsFileView";
 import { PromotionalSchemaTypes } from "@omenai/shared-types";
-
 import Image from "next/image";
 import Link from "next/link";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import { MdArrowRightAlt } from "react-icons/md"; // Switched to MdArrow for consistency
 
 export default function PromotionalCard({
   headline,
@@ -13,153 +15,82 @@ export default function PromotionalCard({
   cta,
   image,
 }: PromotionalSchemaTypes) {
-  const image_url = getPromotionalFileView(image, 500, 300);
+  // High-res request for the hero slot
+  const image_url = getPromotionalOptimizedImage(image, "large", 1000);
 
   return (
-    <section
-      className="
-        group relative w-[300px] sm:w-[420px] h-[180px] md:h-[200px]
-        rounded-2xl overflow-hidden
-        transition-all duration-700
-        cursor-pointer
-      "
+    <Link
+      href={cta}
+      className="group block h-full w-full cursor-pointer relative"
     >
-      {/* ✨ Ambient glow ring */}
-      <div
-        className="
-          pointer-events-none absolute inset-0 rounded-2xl
-          ring-1 ring-white/10 group-hover:ring-white/30
-          transition-all duration-700
-        "
-      />
-
-      {/* ✨ Spotlight gradient */}
-      <div
-        className="
-          absolute inset-0 z-10
-          bg-gradient-to-br from-black/80 via-black/40 to-black/10
-          group-hover:from-black/70 group-hover:via-black/30
-          transition-all duration-700
-        "
-      />
-
-      {/* ✨ Image with cinematic parallax */}
-      <div
-        className="
-          absolute inset-0 z-0
-          scale-105
-          transition-transform duration-[1200ms]
-          group-hover:scale-110
-        "
-      >
-        <Image
-          src={image_url}
-          width={500}
-          height={300}
-          alt={headline}
-          className="w-full h-full object-cover"
-          priority
-        />
-      </div>
-
-      {/* ✨ Shimmer overlay */}
-      <div
-        className="
-          absolute inset-0 pointer-events-none
-          bg-gradient-to-r from-transparent via-white/10 to-transparent
-          opacity-0 group-hover:opacity-60
-          translate-x-[-100%] group-hover:translate-x-[100%]
-          transition-all duration-[1800ms]
-        "
-      />
-
-      {/* CONTENT */}
-      <div className="relative z-20 h-full p-5 flex flex-col justify-between">
-        {/* Headlines */}
-        <div className="space-y-2">
-          <h3
-            className="
-              text-white text-fluid-base font-semibold leading-tight
-              drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]
-              translate-y-1 group-hover:translate-y-0
-              transition-all duration-700
-            "
-          >
-            {headline}
-          </h3>
-
-          <p
-            className="
-              text-white/90 text-fluid-xs leading-relaxed
-              max-w-[85%]
-              opacity-80 group-hover:opacity-100
-              translate-y-1 group-hover:translate-y-0
-              transition-all duration-700 delay-75
-            "
-          >
-            {subheadline}
-          </p>
+      <article className="relative h-[65vh] min-h-[550px] w-full overflow-hidden bg-neutral-900">
+        {/* 1. IMAGE LAYER */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={image_url}
+            alt={headline}
+            fill
+            priority
+            className="object-cover object-top transition-transform duration-[2s] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 80vw"
+          />
+          {/* Noise/Grain Overlay (Kept as it adds texture) */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
 
-        {/* CTA */}
-        <Link href={cta} className="w-fit">
-          <button
-            className="
-              group/btn relative flex items-center gap-2
-              px-4 py-1.5 rounded-3xl
-              text-white text-fluid-xxs font-normal
-              bg-white/10 backdrop-blur-md
-              border border-white/20
-              transition-all duration-500
-              hover:bg-white hover:text-black
-              hover:border-white
-              hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]
-              active:scale-95
-              overflow-hidden
-            "
-          >
-            <span className="relative z-20">Explore</span>
+        {/* 2. GRADIENT OVERLAY - Sharper, more dramatic fade */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 transition-opacity duration-700 group-hover:opacity-80" />
 
-            <IoIosArrowRoundForward
-              className="
-                relative z-20 text-lg
-                transition-transform duration-500
-                group-hover/btn:translate-x-1
-              "
-            />
+        {/* 3. TOP BADGE (The "Catalog" Stamp) */}
+        <div className="absolute left-6 top-6 z-20 md:left-10 md:top-10">
+          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 border border-white/20">
+            <div className="h-1.5 w-1.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-white">
+              Featured Selection
+            </span>
+          </div>
+        </div>
 
-            {/* CTA Slide Shine */}
-            <div
-              className="
-                absolute inset-0 bg-gradient-to-r
-                from-white/30 to-transparent
-                opacity-0 group-hover/btn:opacity-100
-                transition-opacity duration-500
-              "
-            />
-          </button>
-        </Link>
-      </div>
+        {/* 4. CONTENT LAYER */}
+        <div className="absolute bottom-0 left-0 z-20 flex w-full flex-col justify-end p-6 md:p-12">
+          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            {/* Typography */}
+            <div className="max-w-3xl transform transition-transform duration-700 group-hover:-translate-y-2">
+              <h2 className="font-serif text-4xl font-light italic leading-[1.05] tracking-tight text-white md:text-5xl lg:text-6xl">
+                {headline}
+              </h2>
 
-      {/* Decorative glass orbs */}
-      <div
-        className="
-          absolute -top-6 -right-6 w-20 h-20
-          bg-white/10 backdrop-blur-xl
-          rounded-full opacity-20
-          transition-all duration-700
-          group-hover:opacity-40 group-hover:scale-125
-        "
-      />
-      <div
-        className="
-          absolute bottom-4 right-6 w-8 h-8
-          bg-white/10 backdrop-blur-xl
-          rounded-full opacity-30
-          transition-all duration-700
-          group-hover:opacity-60 group-hover:scale-110
-        "
-      />
-    </section>
+              <div className="mt-6 flex items-start gap-4">
+                <div className="mt-1.5 h-[1px] w-8 bg-white/50"></div>
+                <p className="max-w-lg font-sans text-sm leading-relaxed text-white/90 md:text-base">
+                  {subheadline}
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Button - Inverts on Hover */}
+            <div className="md:mb-2">
+              <span
+                className="
+                  inline-flex items-center gap-4 
+                  border border-white bg-white px-8 py-4 
+                  font-mono text-xs font-bold uppercase tracking-[0.2em] text-dark 
+                  transition-all duration-300 
+                  group-hover:bg-dark group-hover:text-white group-hover:border-black
+                "
+              >
+                View Exhibit
+                <MdArrowRightAlt className="text-xl transition-transform duration-300 group-hover:translate-x-2" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </Link>
   );
 }

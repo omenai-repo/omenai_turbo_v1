@@ -48,7 +48,7 @@ export default function EditorialCover({
       <div
         className="
           relative h-[240px] w-full max-w-xl
-          overflow-hidden rounded-lg
+          overflow-hidden rounded
           border border-dashed border-neutral-300
           bg-neutral-50
           transition hover:border-neutral-400
@@ -67,7 +67,7 @@ export default function EditorialCover({
               type="button"
               className="
                 absolute right-3 top-3
-                rounded-md bg-white/90 p-1
+                rounded bg-white/90 p-1
                 text-neutral-600
                 shadow-sm
                 hover:bg-white

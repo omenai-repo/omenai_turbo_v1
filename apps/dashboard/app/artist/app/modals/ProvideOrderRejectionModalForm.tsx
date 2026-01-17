@@ -151,7 +151,7 @@ export default function ProvideOrderRejectionModalForm() {
                 checked ? "max-h-40 opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
               }`}
             >
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+              <div className="bg-red-50 border border-red-200 rounded p-4 flex items-start gap-3">
                 <AlertTriangle className="text-red-600 w-5 h-5 mt-0.5 flex-shrink-0" />
                 {/* TODO: Add link to terms of use here */}
                 <p className="text-fluid-xxs text-red-600 leading-relaxed">
@@ -193,7 +193,7 @@ export default function ProvideOrderRejectionModalForm() {
               {/* Other Option */}
 
               {accepted_status.reason && (
-                <div className="mt-5 p-3 bg-red-50 border border-red-100 rounded-lg text-fluid-xxs text-red-700">
+                <div className="mt-5 p-3 bg-red-50 border border-red-100 rounded text-fluid-xxs text-red-700">
                   <strong>Client interpretation:</strong>{" "}
                   {accepted_status.reason}
                 </div>
