@@ -24,7 +24,7 @@ export default function SearchInput({ setIsMobileMenuOpen }: any) {
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         placeholder="SEARCH ARCHIVE..."
-        className="w-full py-1 bg-transparent border border-neutral-200 text-[10px] tracking-[0.1em] text-dark placeholder:text-neutral-400 focus:outline-none focus:ring-0 outline-none focus:border-black transition-colors"
+        className="w-full py-1 bg-transparent border border-neutral-300 text-[10px] tracking-[0.1em] text-dark placeholder:text-neutral-400 focus:outline-none focus:ring-0 outline-none focus:border-black transition-colors"
       />
       <button
         onClick={handleSearch}

@@ -17,8 +17,8 @@ export default function ImageBox({ url, title }: ImageBoxProps) {
     actionStore();
 
   // Use high quality for the main view
-  const initialImageRender = getOptimizedImage(url, "medium", 50);
-  const highestQualityImage = getOptimizedImage(url, "large", 100);
+  const initialImageRender = getOptimizedImage(url, "large", 90);
+  const highestQualityImage = getOptimizedImage(url, "xlarge", 90);
 
   const handleClick = () => {
     setSeaDragonZoomableImageViewerUrl(highestQualityImage);

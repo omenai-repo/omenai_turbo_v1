@@ -77,7 +77,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
     <div className="flex flex-col gap-8">
       {/* 1. HEADER: Title & Artist */}
       <div className="space-y-4">
-        <h1 className="font-serif text-5xl italic leading-[1] text-dark">
+        <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-6xl italic leading-[0.95] md:leading-[0.9] tracking-tight text-neutral-900 text-balance break-words hyphens-auto">
           {data.title}
         </h1>
         <h2 className="font-sans text-lg font-medium text-neutral-600">

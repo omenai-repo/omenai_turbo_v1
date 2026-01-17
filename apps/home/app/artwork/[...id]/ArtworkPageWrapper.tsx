@@ -41,7 +41,7 @@ export default function ArtworkPageWrapper({ param }: { param: string }) {
       <DesktopNavbar />
 
       {/* MAIN VIEWING ROOM LAYOUT */}
-      <main className="container mx-auto px-6 lg:px-12 pt-12 pb-24">
+      <main className="container mx-auto px-6 lg:px-12 pt-4 pb-24">
         {/* The ProductBox now handles the Split Layout internally for better cohesion */}
         <ProductBox
           data={artworkDetails}

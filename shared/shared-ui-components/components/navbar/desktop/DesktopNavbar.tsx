@@ -13,6 +13,8 @@ import {
   dashboard_url,
 } from "@omenai/url-config/src/config";
 import { usePathname } from "next/navigation";
+import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import MobileNavbar from "../mobile/MobileNavbar";
 
 export const navigation = [
   { name: "Collect", href: "/catalog" },
@@ -27,9 +29,9 @@ const loggedInRouteMap = {
 
 const DesktopNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [fullUrl, setFullUrl] = useState<string>("");
 
+  const { updateOpenSideNav } = actionStore();
   const { user } = useAuth({ requiredRole: "user" });
   const pathname = usePathname();
 
@@ -48,7 +50,7 @@ const DesktopNavbar = () => {
   return (
     <>
       <nav
-        className={`fixed z-[20] top-0 left-0 right-0 transition-all duration-700 ease-in-out border-b
+        className={`fixed z-[30] top-0 left-0 right-0 transition-all duration-700 ease-in-out border-b
           ${
             isScrolled
               ? "py-3 bg-white/90 backdrop-blur-md border-neutral-200 shadow-sm"
@@ -81,45 +83,44 @@ const DesktopNavbar = () => {
             </ul>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
             <div className="hidden md:block">
-              <SearchInput setIsMobileMenuOpen={setIsMobileMenuOpen} />
+              <SearchInput setIsMobileMenuOpen={updateOpenSideNav} />
             </div>
 
-            {user && user.role === "user" ? (
+            {user ? (
+              // VISIBLE ON ALL SCREENS
               <UserMenu />
             ) : (
               <div className="hidden lg:flex items-center gap-4">
                 <Link
                   href={`${login_base_url}/login/user?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-500 hover:text-dark transition-colors"
+                  className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-500 hover:text-black transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="bg-dark text-white px-6 py-2.5 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all"
+                  className="bg-black text-white px-6 py-2.5 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all"
                 >
                   Join Omenai
                 </Link>
               </div>
             )}
 
-            {/* Hamburger - Architectural style */}
+            {/* Hamburger - Only visible on Mobile/Tablet */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-dark"
+              onClick={() => updateOpenSideNav(true)}
+              className="lg:hidden p-2 text-black"
             >
-              {isMobileMenuOpen ? (
-                <icons.X strokeWidth={1.5} />
-              ) : (
-                <icons.Menu strokeWidth={1.5} />
-              )}
+              <icons.Menu strokeWidth={1.5} />
             </button>
           </div>
         </div>
       </nav>
-      {/* Spacer */}
+
+      <MobileNavbar />
+
       <div
         className={`transition-all duration-500 ${isScrolled ? "h-16" : "h-24"}`}
       />

@@ -2,8 +2,9 @@
 import { useState, useRef, useEffect } from "react";
 import { icons, UserRoundCheck } from "lucide-react";
 import Link from "next/link";
-import { dashboard_url } from "@omenai/url-config/src/config";
+import { base_url, dashboard_url } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 const userMenuItems = [
   { name: "Collection", href: `${dashboard_url()}/user/saves`, icon: "Heart" },
@@ -22,8 +23,15 @@ const userMenuItems = [
 export const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { user, signOut } = useAuth({ requiredRole: "user" });
+  const { user, signOut } = useAuth({
+    requiredRole: "user",
+    redirectUrl: `${base_url()}`,
+  });
 
+  async function handleSignOut() {
+    toast_notif("Signing you out, you'll be redirected in a moment", "info");
+    await signOut();
+  }
   useEffect(() => {
     const close = (e: MouseEvent) =>
       !dropdownRef.current?.contains(e.target as Node) && setIsOpen(false);
@@ -72,7 +80,7 @@ export const UserMenu = () => {
             })}
           </div>
           <button
-            onClick={() => signOut()}
+            onClick={handleSignOut}
             className="w-full flex items-center px-4 py-3 text-[10px] uppercase tracking-widest text-red-500 hover:bg-red-50 transition-colors border-t border-neutral-100"
           >
             <icons.LogOut className="mr-3 h-3 w-3" />
