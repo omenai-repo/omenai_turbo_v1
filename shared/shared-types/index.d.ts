@@ -1275,8 +1275,6 @@ export type InvoiceStorageData = {
   fileId: string;
   url?: string;
 };
-<<<<<<< HEAD
-=======
 
 export type BuyingFrequency = "frequently" | "regularly" | "rarely";
 
@@ -1346,4 +1344,3 @@ export type WaitlistCampaignDevice = {
     name: string; // 'Chrome', 'Safari'
   };
 };
->>>>>>> waitlist-lead
