@@ -1,9 +1,9 @@
 import { FailedCronJobTypes } from "@omenai/shared-types";
-import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
+import { handleDeleteWithRetry, processFailedJobs } from "./utils";
 
 async function deleteFlutterwaveBeneficiary(
   beneficiary_id: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; deletedCount: number }> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
 
@@ -26,13 +26,14 @@ async function deleteFlutterwaveBeneficiary(
     if (result.status !== "success") {
       return {
         success: false,
+        deletedCount: 0,
         error:
           result.message ??
           "Could not delete beneficiary account from Flutterwave",
       };
     }
 
-    return { success: true };
+    return { success: true, deletedCount: 1 };
   } catch (error) {
     clearTimeout(timeout);
     const message =
@@ -40,83 +41,14 @@ async function deleteFlutterwaveBeneficiary(
         ? "Request to Flutterwave timed out"
         : ((error as Error).message ??
           "Network error or non-JSON response from Flutterwave");
-    return { success: false, error: message };
-  }
-}
-
-async function deleteBeneficiary(job: FailedCronJobTypes) {
-  try {
-    const { beneficiary_id } = job.payload;
-
-    if (!beneficiary_id) {
-      return {
-        success: false,
-        jobId: job.jobId,
-        error: "Missing beneficiary_id in payload",
-      };
-    }
-
-    const result = await deleteFlutterwaveBeneficiary(beneficiary_id);
-
-    if (!result.success) {
-      await FailedJob.updateOne(
-        { jobId: job.jobId },
-        { $inc: { retryCount: 1 } }
-      );
-      return {
-        success: false,
-        jobId: job.jobId,
-        error: result.error || "Failed to delete beneficiary",
-      };
-    }
-
-    return {
-      success: true,
-      jobId: job.jobId,
-      note: "Beneficiary deleted successfully",
-    };
-  } catch (error) {
-    await FailedJob.updateOne(
-      { jobId: job.jobId },
-      { $inc: { retryCount: 1 } }
-    );
-    return {
-      success: false,
-      jobId: job.jobId,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return { success: false, error: message, deletedCount: 0 };
   }
 }
 
 export async function flutterwaveService(jobs: FailedCronJobTypes[]) {
-  try {
-    const promises = jobs.map((job) => deleteBeneficiary(job));
-    const results = await Promise.allSettled(promises);
-    const successfulJobIds: string[] = [];
-
-    results.forEach((result) => {
-      if (result.status === "fulfilled" && result.value.success) {
-        successfulJobIds.push(result.value.jobId);
-        console.log(
-          `Job ${result.value.jobId}: ${result.value.note || "Success"}`
-        );
-      } else if (result.status === "fulfilled") {
-        console.warn(`Job ${result.value.jobId} failed: ${result.value.error}`);
-      }
-    });
-
-    if (successfulJobIds.length > 0) {
-      await FailedJob.deleteMany({
-        jobId: { $in: successfulJobIds },
-      });
-      console.log(`Cleaned up ${successfulJobIds.length} successful jobs`);
-    }
-
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
-  }
+  return processFailedJobs(jobs, (job) =>
+    handleDeleteWithRetry(job.payload.beneficiary_id, () =>
+      deleteFlutterwaveBeneficiary(job.payload.beneficiary_id)
+    )
+  );
 }
