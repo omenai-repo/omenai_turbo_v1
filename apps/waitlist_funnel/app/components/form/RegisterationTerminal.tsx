@@ -114,9 +114,6 @@ export const RegistrationTerminal = () => {
           You're on the list! Thanks for signing up. We'll reach out with your
           access details as soon as we open the doors.
         </p>
-        <span className="font-sans text-[10px] uppercase tracking-widest text-slate-400">
-          Ref: {Math.random().toString(36).substring(7).toUpperCase()}
-        </span>
       </div>
     );
   }
