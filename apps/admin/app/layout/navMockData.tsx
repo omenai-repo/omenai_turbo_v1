@@ -7,8 +7,8 @@ import {
   Palette,
   Proportions,
   UserRoundPen,
+  ChartColumnBig,
 } from "lucide-react";
-
 // types/sidebar.ts
 import { LucideIcon } from "lucide-react";
 
@@ -22,17 +22,6 @@ export type SidebarItem = {
   key: KeyList;
 };
 
-// config/sidebar.ts
-import {
-  LayoutDashboard,
-  Package,
-  Image,
-  CreditCard,
-  Wallet,
-  User,
-  Settings,
-  LogOut,
-} from "lucide-react";
 import { KeyList } from "../utils/canAccessRoute";
 
 export const sidebarItems: SidebarItem[] = [
@@ -78,6 +67,13 @@ export const sidebarItems: SidebarItem[] = [
     href: "/admin/members",
     section: "management",
     key: "team",
+  },
+  {
+    label: "Mission Control",
+    icon: ChartColumnBig,
+    href: "/admin/analytics",
+    section: "management",
+    key: "analytics",
   },
   {
     label: "Settings",

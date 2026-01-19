@@ -35,6 +35,18 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     const parser = new UAParser(userAgentString);
     const result = parser.getResult();
 
+    let finalDeviceType = result.device.type;
+    let deviceType;
+
+    if (!finalDeviceType) {
+      // If it's empty, but the OS is Windows/Mac, it's a desktop
+      if (["Windows", "Mac OS", "Linux"].includes(result.os.name || "")) {
+        deviceType = `desktop - ${result.os.name}`;
+      } else {
+        deviceType = "unknown";
+      }
+    }
+
     // 4. Record the Visit
     // We use 'create' to insert a new row for every visit
     await CampaignVisit.create({
@@ -45,9 +57,9 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       referrer: referrer || "",
       country,
       device: {
-        type: result.device.type || "desktop",
-        vendor: result.device.vendor || "unknown",
-        model: result.device.model || "unknown",
+        type: deviceType, // 👈 Use our smarter variable
+        vendor: result.device.vendor || "Generic", // Desktops often don't have a "Vendor"
+        model: result.device.model || "PC",
       },
       os: {
         name: result.os.name || "unknown",
