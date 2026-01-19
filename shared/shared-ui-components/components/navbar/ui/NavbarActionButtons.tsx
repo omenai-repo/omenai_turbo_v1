@@ -1,34 +1,23 @@
 "use client";
-
 import Link from "next/link";
-import { GoHome } from "react-icons/go";
-import { BiUser } from "react-icons/bi";
 import { auth_uri } from "@omenai/url-config/src/config";
-import { LogIn } from "lucide-react";
 
 export default function NavbarActionButtons() {
   const login_base_url = auth_uri();
   return (
-    <div>
-      <Link href={`${login_base_url}/login`} className="w-fit lg:hidden block">
-        <BiUser className="text-fluid-sm" />
+    <div className="flex items-center gap-4">
+      <Link
+        href={`${login_base_url}/login`}
+        className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-500 hover:text-dark transition-colors px-4 py-2"
+      >
+        Login
       </Link>
-      <div className="hidden lg:flex flex-row sm:space-x-4 space-x-2 w-fit text-fluid-xxs sm:text-fluid-xxs ml-2">
-        <Link
-          href={`${login_base_url}/login`}
-          className="h-[35px] whitespace-nowrap rounded px-5 flex items-center gap-x-2 text-fluid-xxs font-normal hover:border-dark bg-white border border-dark/50 text-dark duration-200"
-        >
-          Login
-          {/* <LogIn size={16} strokeWidth={1.5} /> */}
-        </Link>
-
-        <Link
-          href={`${login_base_url}/register`}
-          className="h-[35px] whitespace-nowrap rounded grid place-items-center px-5 text-fluid-xxs font-normal bg-dark hover:bg-dark/80 text-white ring-1 ring-dark/10 duration-200"
-        >
-          Create an account
-        </Link>
-      </div>
+      <Link
+        href={`${login_base_url}/register`}
+        className="bg-dark text-white px-8 py-3 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all border border-black"
+      >
+        Register
+      </Link>
     </div>
   );
 }

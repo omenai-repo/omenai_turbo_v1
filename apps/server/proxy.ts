@@ -13,6 +13,7 @@ const allowed_origins = [
   "https://dashboard.omenai.app",
   "https://admin.omenai.app",
   "https://omenai.app",
+  "https://join.omenai.app",
   "https://api.omenai.app",
   "https://tracking.omenai.app",
   "http://localhost:3000",
@@ -20,6 +21,7 @@ const allowed_origins = [
   "http://localhost:4000",
   "http://localhost:5000",
   "http://localhost:3002",
+  "http://localhost:3003",
 ];
 
 // ... (rest of your middleware code)
@@ -99,7 +101,7 @@ export default async function proxy(req: NextRequest) {
       // If you're explicitly setting it here, ensure it's correct for your needs.
       response.headers.set(
         "Set-Cookie",
-        setCookieHeader + "; SameSite=None; Secure" // Remove "Secure" if using HTTP on localhost
+        setCookieHeader + "; SameSite=None; Secure", // Remove "Secure" if using HTTP on localhost
       );
     }
   }
@@ -109,7 +111,7 @@ export default async function proxy(req: NextRequest) {
 
 function isOriginAllowed(origin: string): boolean {
   return allowed_origins.some(
-    (allowedOrigin) => origin.startsWith(allowedOrigin) // Using startsWith for broader matching like "http://localhost:3000"
+    (allowedOrigin) => origin.startsWith(allowedOrigin), // Using startsWith for broader matching like "http://localhost:3000"
   );
 }
 
@@ -118,12 +120,12 @@ function setCorsHeaders(response: NextResponse, origin: string) {
   response.headers.set("Access-Control-Allow-Origin", origin);
   response.headers.set(
     "Access-Control-Allow-Methods",
-    "GET, DELETE, PATCH, POST, PUT, OPTIONS"
+    "GET, DELETE, PATCH, POST, PUT, OPTIONS",
   );
   response.headers.set(
     // *** THE CRITICAL FIX: ADD 'credentials' to this list! ***
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Content-Length, x-highlight-request, traceparent, x-csrf-token, X-Csrf-Token, credentials"
+    "Content-Type, Authorization, Content-Length, x-highlight-request, traceparent, x-csrf-token, X-Csrf-Token, credentials",
   );
 }
 

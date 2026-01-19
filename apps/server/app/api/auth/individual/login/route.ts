@@ -54,7 +54,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         request.headers.get("Authorization") || null;
 
       if (userAgent && userAgent === process.env.MOBILE_USER_AGENT) {
-        console.log("App user agent detected");
         if (
           authorization &&
           authorization === process.env.APP_AUTHORIZATION_SECRET
@@ -112,7 +111,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     } catch (error: any) {
       const errorResponse = handleErrorEdgeCases(error);
       createErrorRollbarReport("auth: user login", error, errorResponse.status);
-      console.log(error);
       return NextResponse.json(
         { message: errorResponse?.message },
         { status: errorResponse?.status }

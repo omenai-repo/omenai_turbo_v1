@@ -264,7 +264,7 @@ export default function UpdatePasswordForm() {
                         key={i}
                         className="text-xs text-dark/20-500 flex items-center gap-1 mt-1"
                       >
-                        <span className="w-1 h-1 bg-dark/60 text-fluid-xxs rounded-full"></span>
+                        <span className="w-1 h-1 bg-dark/60 text-fluid-xxs rounded"></span>
                         {tip}
                       </p>
                     ))}
@@ -350,7 +350,7 @@ export default function UpdatePasswordForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded-full text-xs font-normal transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
+                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-normal transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
                   loading ||
                   errorList.length > 0 ||
                   !info.confirmPassword ||
@@ -391,7 +391,7 @@ export default function UpdatePasswordForm() {
             </div>
           )}
           {/* Security Note */}
-          <div className=" p-4 bg-dark/20-50 rounded-2xl border border-dark/40">
+          <div className=" p-4 bg-dark/20-50 rounded border border-dark/40">
             <div className="flex gap-3">
               <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
               <div className="text-xs text-dark/20-600 space-y-1">
@@ -416,7 +416,7 @@ export default function UpdatePasswordForm() {
               info.password === ""
             }
             type="submit"
-            className={`w-full h-12 mt-6 rounded-full text-fluid-xxs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`w-full h-12 mt-6 rounded text-fluid-xxs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
               loading ||
               errorList.length > 0 ||
               !info.code ||

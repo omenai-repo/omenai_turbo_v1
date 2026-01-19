@@ -213,8 +213,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       batchNumber++;
 
-      console.log(`Processing batch ${batchNumber}...`);
-
       // Fetch next batch of expired requests
       const expiredRequests = (await pollExpiredDeletionRequests(
         BATCH_SIZE
@@ -222,7 +220,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       // No more requests to process
       if (expiredRequests.length === 0) {
-        console.log("No more expired deletion requests to process");
         break;
       }
 
@@ -238,9 +235,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         }
       );
 
-      console.log(
-        `Batch ${batchNumber}: Processing ${expiredRequests.length} requests`
-      );
       // Process this batch
       const batchResult = await processBatch(expiredRequests);
 
@@ -250,23 +244,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       totalFailedTasks += batchResult.failedTaskCreations;
       allFailedRequestIds.push(...batchResult.failedRequestIds);
 
-      console.log(
-        `Batch ${batchNumber} complete: ${batchResult.successfulTaskCreations} successful, ${batchResult.failedTaskCreations} failed`
-      );
-
       // If we got fewer requests than BATCH_SIZE, we've processed everything
       if (expiredRequests.length < BATCH_SIZE) {
-        console.log("Processed all available requests");
         break;
       }
     }
 
     const executionTime = Date.now() - startTime;
-
-    console.log(
-      `Deletion task processing complete in ${executionTime}ms: ` +
-        `${totalProcessedRequests} requests, ${totalSuccessfulTasks} successful tasks, ${totalFailedTasks} failed tasks`
-    );
 
     // Return appropriate status code
     const hasFailures = totalFailedTasks > 0;

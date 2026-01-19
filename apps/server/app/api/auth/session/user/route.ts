@@ -48,7 +48,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ user, csrfToken }, { status: 200 });
   } catch (error) {
     createErrorRollbarReport("auth: user session", error, 500);
-    console.log(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

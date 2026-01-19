@@ -14,19 +14,22 @@ export default function FilterSections() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <PriceFilter
         open={openSection === "price"}
         toggleOpen={() => handleToggle("price")}
       />
+      <div className="h-[1px] w-full bg-neutral-100" />
       <YearFilter
         open={openSection === "year"}
         toggleOpen={() => handleToggle("year")}
       />
+      <div className="h-[1px] w-full bg-neutral-100" />
       <MediumFilter
         open={openSection === "medium"}
         toggleOpen={() => handleToggle("medium")}
       />
+      <div className="h-[1px] w-full bg-neutral-100" />
       <RarityFilter
         open={openSection === "rarity"}
         toggleOpen={() => handleToggle("rarity")}

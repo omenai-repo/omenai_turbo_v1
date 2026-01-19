@@ -32,7 +32,6 @@ export async function GET() {
               `❌ Failed to delete file ${payload.appwriteId}:`,
               err.message
             );
-            console.log(`Bucked ID: ${process.env.APPWRITE_BUCKET_ID!}`);
           }),
 
         payload,

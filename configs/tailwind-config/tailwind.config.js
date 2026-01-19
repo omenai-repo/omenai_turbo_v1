@@ -50,6 +50,7 @@ export default {
       },
       fontFamily: {
         sans: ["var(--font-work_sans), sans-serif"],
+        serif: ["var(--font-pt_serif), serif"],
       },
       gridTemplateColumns: {
         "3cols": "repeat(3, minmax(0, 1fr))",

@@ -239,7 +239,6 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "shipment: create shipment",

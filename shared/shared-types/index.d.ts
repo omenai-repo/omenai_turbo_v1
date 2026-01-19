@@ -653,6 +653,14 @@ export type SubscriptionModelSchemaTypes = {
   upload_tracker: UploadTrackingTypes;
 };
 
+export type SubscriptionMetaData = {
+  name: string;
+  email: string;
+  gallery_id: string;
+  plan_id: string;
+  plan_interval: string;
+};
+
 export type UploadTrackingTypes = {
   limit: number;
   next_reset_date: Date | string;
@@ -1219,13 +1227,15 @@ export type WaitListTypes = {
   email: string;
   inviteCode?: string;
   isInvited?: boolean;
+  inviteAccepted: boolean;
   entity: Exclude<EntityType, "admin">;
+  entityId: string;
   referrerKey?: string;
   discount: {
     plan: "pro";
     active: boolean;
     redeemed: boolean;
-  };
+  } | null;
 };
 
 export type InvoiceTypes = {
@@ -1240,7 +1250,7 @@ export type InvoiceTypes = {
   currency: string;
   lineItems: InvoiceLineItemsData[];
   pricing: InvoicePriceData;
-  paidAt: Date;
+  paidAt: Date | string;
   storage: InvoiceStorageData;
   document_created: boolean;
   receipt_sent: boolean;
@@ -1251,7 +1261,7 @@ export type InvoicePriceData = {
   shipping: number;
   unitPrice: number;
   total: number;
-  discount?: number;
+  discount: number;
 };
 
 export type InvoiceLineItemsData = {
@@ -1264,6 +1274,75 @@ export type InvoiceStorageData = {
   provider: "appwrite";
   fileId: string;
   url?: string;
+};
+
+export type BuyingFrequency = "frequently" | "regularly" | "rarely";
+
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+// 1. Interface for Type Safety
+export interface IWaitlistLead extends Document {
+  email: string;
+  name: string;
+  country: string;
+  language: string;
+  entity: "artist" | "collector";
+  kpi: KpiMetrics;
+  marketing: Omit<ICampaignVisit, "createdAt">;
+  device: WaitlistCampaignDevice;
+  hasConvertedToPaid: boolean;
+  createdAt: Date;
+}
+
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+export interface ICampaignVisit extends Document {
+  source: string; // utm_source (e.g., 'twitter')
+  medium: string; // utm_medium (e.g., 'social')
+  campaign: string; // utm_campaign
+  referrer: string; // document.referrer
+  visitorId: string; // (Optional) To de-duplicate refeshes
+  device: WaitlistCampaignDevice;
+  createdAt: Date;
+}
+
+export type MarketingData = {
+  source: string; // utm_source (e.g., 'twitter')
+  medium: string; // utm_medium (e.g., 'social')
+  campaign: string; // utm_campaign
+  referrer: string; // document.referrer
+  visitorId: string; // (Optional) To de-duplicate refeshes
+};
+
+export interface WaitlistStateData extends Partial<KpiMetrics> {
+  name: string;
+  email: string;
+  language: string;
+  country: string;
+}
+
+export type KpiMetrics = {
+  collector_type: string | null;
+  years_of_collecting?: string | null;
+  buying_frequency?: BuyingFrequency;
+  age?: string;
+  years_of_practice?: string | null;
+  formal_education?: "degree" | "workshop" | "self-taught" | null;
+};
+
+export type WaitlistCampaignDevice = {
+  device: {
+    type: string; // 'mobile', 'tablet', 'console', 'smarttv', 'wearable', 'embedded'
+    vendor: string; // 'Apple', 'Samsung'
+    model: string; // 'iPhone', 'Galaxy S9'
+  };
+  os: {
+    name: string; // 'iOS', 'Android', 'Windows'
+    version: string; // '14.0', '10'
+  };
+  browser: {
+    name: string; // 'Chrome', 'Safari'
+  };
 };
 
 export type DeletePromise = Promise<

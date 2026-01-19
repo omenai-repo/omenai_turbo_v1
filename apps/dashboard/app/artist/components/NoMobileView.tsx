@@ -31,7 +31,7 @@ export default function MobileBlockScreen() {
         </div>
 
         {/* Value list */}
-        <ul className="text-left text-fluid-base text-dark space-y-3 rounded-xl border border-dark/10 p-5 bg-dark/5">
+        <ul className="text-left text-fluid-base text-dark space-y-3 rounded border border-dark/10 p-5 bg-dark/5">
           <li className="flex gap-2">
             <span>—</span>
             <span>Upload, curate, and manage artworks with ease</span>

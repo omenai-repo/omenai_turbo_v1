@@ -1,9 +1,7 @@
-import { artist } from "./../../../../../admin/app/layout/navMockData";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";

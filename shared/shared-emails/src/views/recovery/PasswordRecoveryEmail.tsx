@@ -37,22 +37,22 @@ const PasswordRecoveryEmail = (
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Dear {username},
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               We have received a request to reset your password. Below, you will
               find your verification link. Please note that the validity of this
               link will expire in <strong>10 minutes.</strong>
             </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-fluid-xxs font-normal leading-[24px]">
+              <Text className="text-dark text-fluid-xxs font-normal leading-[24px]">
                 <strong>{`${url}/reset/${route}/${token}`}</strong>
               </Text>
             </Section>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               If you did not authorize this action. Please contact us
               immediately on{" "}
               <Link
@@ -66,7 +66,7 @@ const PasswordRecoveryEmail = (
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
-              <span className="text-black">{username} </span>. In the event that
+              <span className="text-dark">{username} </span>. In the event that
               you were not anticipating the receipt of this email, we
               respectfully request that you refrain from taking any action based
               on its contents. This communication may contain confidential and

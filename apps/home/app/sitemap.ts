@@ -20,8 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const artworksRes = await fetchAllArtworksForSeo();
 
-  console.log(artworksRes);
-
   const artworkUrls =
     artworksRes.isOk && artworksRes.data.length > 0
       ? artworksRes.data.map((artwork: { art_id: string }) => ({

@@ -9,17 +9,20 @@ export default function FilterToggleButton() {
   const { selectedFilters } = filterStore();
 
   return (
-    <button
-      onClick={openDrawer}
-      className="flex items-center gap-2 px-4 py-2 border border-gray-500 rounded-full transparent hover:bg-slate-50 shadow-sm"
-    >
-      <SlidersVertical size={16} strokeWidth={1} absoluteStrokeWidth />
-      <span className="text-fluid-xxs font-normal">Filters</span>
-      {selectedFilters.length > 0 && (
-        <span className="ml-1 px-2 py-0.5 bg-dark text-white text-xs rounded-full">
-          {selectedFilters.length}
+    <button onClick={openDrawer} className="flex items-center gap-4 group">
+      <div className="w-10 h-10 border border-neutral-200 flex items-center justify-center group-hover:border-black transition-colors">
+        <SlidersVertical size={14} strokeWidth={1.5} />
+      </div>
+      <div className="flex flex-col items-start">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-dark">
+          Filter Archive
         </span>
-      )}
+        {selectedFilters.length > 0 && (
+          <span className="text-[9px] text-neutral-400 uppercase tracking-widest">
+            {selectedFilters.length} Parameters Active
+          </span>
+        )}
+      </div>
     </button>
   );
 }

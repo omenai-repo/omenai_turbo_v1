@@ -7,7 +7,7 @@ type EmailData = {
   artwork: string;
   artworkImage: string;
   artistName: string;
-  artworkPrice: number;
+  artworkPrice: string;
 };
 export const sendBuyerShipmentEmail = async ({
   name,

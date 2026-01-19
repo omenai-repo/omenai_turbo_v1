@@ -28,7 +28,7 @@ export default function FormConfirm() {
         account creation
       </p>
 
-      <div className="bg-white border border-dark/10 rounded-lg p-6 my-6">
+      <div className="bg-white border border-dark/10 rounded p-6 my-6">
         <h3 className="text-fluid-xxs font-semibold text-dark mb-4">
           Platform Terms
         </h3>

@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request
 ) {
-  const PAGE_SIZE = 30;
+  const PAGE_SIZE = 20;
   try {
     await connectMongoDB();
 

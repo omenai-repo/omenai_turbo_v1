@@ -7,7 +7,7 @@ import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
 import GetStartedWithStripe from "./modals/GetStartedWithStripe";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
 import { UpdateLogoModal } from "./modals/UpdateLogoModal";
@@ -29,7 +29,6 @@ export default function GalleryDashboardLayout({
     queryFn: async () => {
       const acc = await getAccountId(user.gallery_id as string, csrf || "");
 
-      console.log(acc);
       if (!acc?.isOk)
         toast_notif("Something went wrong, Please refresh the page", "error");
       else return acc.data;
@@ -38,7 +37,7 @@ export default function GalleryDashboardLayout({
   });
 
   if (isLoading) {
-    return <HomeLoad />;
+    return <Load />;
   }
 
   const isNotStripeConnected = account.connected_account_id === null;
@@ -50,7 +49,7 @@ export default function GalleryDashboardLayout({
       {width < 1280 ? (
         <NoMobileView />
       ) : (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-full overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
 
           <DesktopSidebar />

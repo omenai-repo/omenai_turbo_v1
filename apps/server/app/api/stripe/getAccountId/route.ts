@@ -55,7 +55,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       });
     }
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "stripe: get account id",

@@ -6,24 +6,25 @@ import RegisterOptions from "./RegisterOptions";
 
 export default function RegisterOptionSection() {
   return (
-    <AnimatePresence key={94}>
+    <AnimatePresence mode="wait">
       <motion.div
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ y: 100 }}
-        transition={{ duration: 0.33 }}
-        className="w-full h-full flex items-center justify-center gap-x-8"
+        key="register-selector-stage"
+        initial={{ opacity: 0, scale: 0.99, y: 15 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, y: -15 }}
+        transition={{
+          duration: 0.7,
+          ease: [0.19, 1, 0.22, 1], // Super smooth "Expo" easing
+        }}
+        className="w-full flex flex-col items-center md:items-start"
       >
-        <div className="flex justify-center w-full">
-          <div className="w-full h-full flex flex-col max-w-[500px] px-4 gap-y-8 overflow-x-hidden">
-            <div className="flex flex-col space-y-6">
-              <IndividualLogo />
-              <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
-                Create an account today
-              </h1>
-            </div>
+        <div className="w-full max-w-[500px]">
+          {/* Registration Options Component */}
+          <div className="w-full">
             <RegisterOptions />
           </div>
+
+          {/* Social Proof / Trust Footnote */}
         </div>
       </motion.div>
     </AnimatePresence>

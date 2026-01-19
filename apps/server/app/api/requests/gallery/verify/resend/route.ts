@@ -67,7 +67,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-      console.log(error);
       createErrorRollbarReport(
         "gallery: resend verification code",
         error,

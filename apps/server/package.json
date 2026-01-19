@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@omenai/cloudinary-config": "*",
     "@omenai/package-provider": "*",
+    "@omenai/rollbar-config": "*",
     "@omenai/shared-auth": "*",
     "@omenai/shared-emails": "*",
     "@omenai/shared-hooks": "*",
@@ -18,9 +20,7 @@
     "@omenai/shared-models": "*",
     "@omenai/shared-services": "*",
     "@omenai/shared-utils": "*",
-    "@omenai/rollbar-config": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/cloudinary-config": "*",
     "@omenai/upstash-config": "*"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "lru-cache": "^11.0.2",
     "sharp": "^0.33.5",
     "taxjar": "^4.1.0",
+    "ua-parser-js": "^2.0.8",
     "zod": "^4.0.15"
   }
 }

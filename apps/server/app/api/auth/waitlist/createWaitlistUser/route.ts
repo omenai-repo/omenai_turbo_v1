@@ -15,6 +15,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { SendWaitlistRegistrationEmail } from "@omenai/shared-emails/src/models/waitlist/SendWaitlistRegistrationEmail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
 
 /* ------------------ helpers ------------------ */
 
@@ -38,42 +39,83 @@ async function checkIfUserExists(email: string, entity: string) {
 
   if (exists) {
     throw new ForbiddenError(
-        "You're already part of the Omenai Experience, please login to continue your journey"
+      "You're already part of the Omenai Experience, please login to continue your journey",
     );
   }
 }
 
-async function checkWaitlistConflict(name: string, email: string, entity: string) {
-  const exists = await Waitlist.exists({ name, email, entity });
+async function checkWaitlistConflict(
+  name: string,
+  email: string,
+  entity: string,
+) {
+  const waitlistExists = await Waitlist.findOne({ email, entity }, "isInvited");
 
-  if (exists) {
-    throw new ConflictError("User previously added to wait list.");
+  if (waitlistExists) {
+    throw new ForbiddenError(
+      waitlistExists.isInvited
+        ? "An invitation to join our platform had already been sent. Please check your email for your access code."
+        : "You’re already signed up for our waitlist. Thanks for your patience — we’ll be in touch soon.",
+    );
   }
 }
 
 async function createWaitlistEntry(
-    payload: Omit<WaitListTypes, "referrerKey" | "waitlistId" | "discount">
+  payload: Omit<
+    WaitListTypes,
+    "referrerKey" | "waitlistId" | "discount" | "inviteAccepted" | "entityId"
+  >,
 ) {
-  const created = await Waitlist.create(payload);
+  try {
+    const created = await Waitlist.create(payload);
 
-  if (!created) {
+    if (!created) {
+      throw new ServerError(
+        "An error occured while adding you to our waitlist, please try again or contact support",
+      );
+    }
+
+    return;
+  } catch (error) {
+    rollbarServerInstance.error({ context: "Waitlist creation", error });
     throw new ServerError(
-        "An error occured while adding you to our waitlist, please try again or contact support"
+      "An error occured while adding you to our waitlist, please try again or contact support",
     );
   }
-
-  return created;
 }
 
 /* ------------------ route ------------------ */
 
-export const POST = withRateLimit(strictRateLimit)(async function POST(req: Request) {
+export const POST = withRateLimit(strictRateLimit)(async function POST(
+  req: Request,
+) {
   try {
     await connectMongoDB();
 
     const body = await req.json();
     const { name, email, entity } = validatePayload(body);
 
+    const waitlistUserExists = await Waitlist.exists({ email, entity, name });
+
+    if (waitlistUserExists)
+      throw new ConflictError("User previously added to wait list.");
+
+    const payload: Omit<
+      WaitListTypes,
+      "referrerKey" | "waitlistId" | "discount" | "inviteAccepted" | "entityId"
+    > = {
+      name,
+      email,
+      entity,
+    };
+    const createWaitlistUser = await Waitlist.create(payload);
+
+    if (!createWaitlistUser)
+      throw new ServerError(
+        "An error occured while adding you to our waitlist, please try again or contact support",
+      );
+
+    // TODO: Send a mail to this user informing them they've been added to the waitlist
     await checkIfUserExists(email, entity);
     await checkWaitlistConflict(name, email, entity);
 
@@ -81,21 +123,21 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(req: Requ
     await SendWaitlistRegistrationEmail({ email });
 
     return NextResponse.json(
-        { message: "Successfully added to waitlist" },
-        { status: 201 }
+      { message: "Successfully added to waitlist" },
+      { status: 201 },
     );
   } catch (error: any) {
     const errorResponse = handleErrorEdgeCases(error);
 
     createErrorRollbarReport(
-        "auth: Waitlist creation",
-        error,
-        errorResponse.status
+      "auth: Waitlist creation",
+      error,
+      errorResponse.status,
     );
 
     return NextResponse.json(
-        { message: errorResponse.message },
-        { status: errorResponse.status }
+      { message: errorResponse.message },
+      { status: errorResponse.status },
     );
   }
 });

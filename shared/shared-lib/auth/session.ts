@@ -74,7 +74,6 @@ export async function getSession(
         : sessionDataJSON;
   } catch (error) {
     // Invalid session data, destroy it everywhere
-    console.log("Invalid session caught and destroyed");
     await cleanupSession(sessionId, cookieStore);
     return null;
   }

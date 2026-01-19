@@ -8,12 +8,14 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function registerAccount(
   payload: IndividualRegisterData | GalleryRegisterData | ArtistRegisterData,
+  referrerKey: string,
+  inviteCode: string,
   route: "gallery" | "individual" | "artist"
 ) {
   const url = getApiUrl();
   const result = await fetch(`${url}/api/auth/${route}/register`, {
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, referrerKey, inviteCode }),
     headers: {
       "Content-type": "application/json",
     },

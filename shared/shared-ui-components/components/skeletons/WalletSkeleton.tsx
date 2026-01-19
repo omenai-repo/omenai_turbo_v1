@@ -10,10 +10,10 @@ export default function WalletSkeleton() {
         {/* Wallet Balance Card */}
         <Card
           shadow="sm"
-          padding="lg"
+          padding="sm"
           radius="md"
           withBorder
-          className="bg-black text-white"
+          className="bg-dark text-white"
         >
           <Stack gap="sm">
             <Skeleton height={20} width={120} />
@@ -23,13 +23,13 @@ export default function WalletSkeleton() {
                 <Skeleton height={15} width={80} />
                 <Skeleton height={25} width={100} />
               </Stack>
-              <Skeleton height={40} width={140} radius="xl" />
+              <Skeleton height={40} width={140} radius="sm" />
             </Group>
           </Stack>
         </Card>
 
         {/* Primary Withdrawal Account Card */}
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Card shadow="sm" padding="sm" radius="md" withBorder>
           <Stack gap="sm">
             <Skeleton height={20} width={180} />
             <Skeleton height={15} width="60%" />
@@ -42,7 +42,7 @@ export default function WalletSkeleton() {
         <Button
           variant="outline"
           color="dark"
-          radius="xl"
+          radius="sm"
           size="md"
           className="w-full mt-2"
           disabled

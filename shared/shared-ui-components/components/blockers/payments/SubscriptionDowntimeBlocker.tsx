@@ -50,7 +50,7 @@ export default function SubscriptionBillingBlocker({
           />
 
           {/* Overlay Status Icon (Centered Alert) */}
-          <div className="absolute p-1 bg-[#0f172a] rounded-full">
+          <div className="absolute p-1 bg-[#0f172a] rounded">
             <RefreshCcw
               className="w-6 h-6 text-[#2A9EDF] animate-spin"
               style={{ animationDuration: "2s" }}
@@ -58,7 +58,7 @@ export default function SubscriptionBillingBlocker({
           </div>
 
           {/* Secondary smaller gear/detail */}
-          <div className="absolute -bottom-4 -right-4 bg-[#0f172a] p-2 rounded-full border-2 border-[#47748E]/50">
+          <div className="absolute -bottom-4 -right-4 bg-[#0f172a] p-2 rounded border-2 border-[#47748E]/50">
             <CheckSquare className="w-4 h-4 text-[#47748E]" />
           </div>
         </div>
@@ -78,9 +78,9 @@ export default function SubscriptionBillingBlocker({
       </p>
 
       {/* --- Footer Status Bar --- */}
-      <div className="w-full max-w-xs h-2 bg-[#47748E]/20 rounded-full overflow-hidden">
+      <div className="w-full max-w-xs h-2 bg-[#47748E]/20 rounded overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-[#2A9EDF] to-white/50 rounded-full animate-pulse"
+          className="h-full bg-gradient-to-r from-[#2A9EDF] to-white/50 rounded animate-pulse"
           style={{ width: "35%" }} // Static progress bar to show work is underway
         ></div>
       </div>

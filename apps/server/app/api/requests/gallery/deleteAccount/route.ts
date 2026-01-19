@@ -81,8 +81,6 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         galleryAccount.stripe_connected_account_id
       );
 
-      console.log(hasBalance.balance);
-
       const commitments: DeletionCommitmentResult = generateDeletionCommitments(
         {
           hasActiveOrder: !!order,
@@ -126,7 +124,6 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
         { status: 202 }
       );
     } catch (error) {
-      console.log(error);
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: delete account",

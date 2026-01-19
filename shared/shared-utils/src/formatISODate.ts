@@ -1,6 +1,6 @@
 import { toUTCDate } from "./toUtcDate";
 
-export function formatISODate(isoDate: string) {
+export function formatISODate(isoDate: string | Date) {
   const date = toUTCDate(new Date(isoDate));
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const months = [

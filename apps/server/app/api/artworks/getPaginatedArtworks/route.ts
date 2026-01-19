@@ -78,8 +78,6 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         error,
         error_response.status
       );
-      console.log(error);
-
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

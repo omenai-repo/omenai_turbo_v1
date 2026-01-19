@@ -1,8 +1,6 @@
 "use client";
 import { Timeline, Text, ScrollArea, Paper } from "@mantine/core";
-import {
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import { MapPinCheckInside } from "lucide-react";
 import Image from "next/image";
 import { useWindowSize } from "usehooks-ts";
@@ -43,7 +41,7 @@ export default function EventTimeline({
     >
       <div className="space-y-2 mb-8">
         {/* <h5 className="text-fluid-base font-semibold mb-5">Shipment events</h5> */}
-        <Paper shadow="xs" radius="lg" withBorder p={"sm"}>
+        <Paper shadow="xs" radius="sm" withBorder p={"sm"}>
           <div className="flex gap-x-2">
             <Image
               src={image_url}

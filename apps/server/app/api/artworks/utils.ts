@@ -99,8 +99,6 @@ export async function getCachedArtwork(art_id: string) {
     const cached = await redis.get(cacheKey);
 
     if (cached) {
-      console.log(`Cache Hit: ${cacheKey}`);
-
       try {
         artworkJsonData =
           typeof cached === "string" ? JSON.parse(cached) : cached;
@@ -110,13 +108,8 @@ export async function getCachedArtwork(art_id: string) {
     }
 
     if (!artworkJsonData) {
-      console.log(`Cache Miss: ${cacheKey}`);
-
       const artwork = await Artworkuploads.findOne({ art_id }).lean().exec();
-      console.log(artwork, art_id);
       if (!artwork) throw new NotFoundError("Artwork not found");
-
-      console.log(artwork);
 
       artworkJsonData = artwork;
 

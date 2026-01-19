@@ -109,7 +109,7 @@ export default function WalletPinResetForm() {
             Enter new wallet pin
           </span>
           <PinInput
-            size="lg"
+            size="sm"
             mask
             type="number"
             aria-label="Wallet pin"
@@ -124,7 +124,7 @@ export default function WalletPinResetForm() {
             Confirm new wallet pin
           </span>
           <PinInput
-            size="lg"
+            size="sm"
             mask
             type="number"
             aria-label="Confirm wallet pin"

@@ -21,7 +21,6 @@ export default function ArtistExclusivityCountdown({
     [expiresAt]
   );
 
-  console.log(expiresAt);
   const { seconds, minutes, hours, days, isRunning } = useTimer({
     expiryTimestamp: expiryDate,
     autoStart: true,
@@ -29,12 +28,6 @@ export default function ArtistExclusivityCountdown({
       onExpire?.();
     },
   });
-
-  console.log(days)
-
-  useEffect(() => {
-    console.log("Exclusivity countdown date:", expiryDate);
-  }, [expiryDate]);
 
   const formatTime = (value: number) => String(value).padStart(2, "0");
   const { toggleExclusivityExtendModal } = artistActionStore();
@@ -46,10 +39,10 @@ export default function ArtistExclusivityCountdown({
   return (
     <div className="w-full" aria-live="polite">
       {isRunning ? (
-        <div className="bg-gradient-to-r from-dark/5 to-dark/10 rounded-lg p-3 border border-dark/10">
+        <div className="bg-gradient-to-r from-dark/5 to-dark/10 rounded p-3 border border-dark/10">
           <div className="flex flex-col items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-green-500 rounded animate-pulse" />
               <span className="text-dark/70 text-fluid-xxs font-medium">
                 Exclusivity contract ends in:
               </span>
@@ -86,7 +79,7 @@ export default function ArtistExclusivityCountdown({
           </div>
         </div>
       ) : (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <div className="bg-amber-50 border border-amber-200 rounded p-3">
           <div className="flex items-start gap-2 mb-3">
             <svg
               className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"
@@ -107,7 +100,7 @@ export default function ArtistExclusivityCountdown({
           </div>
           <button
             onClick={handleExtension}
-            className="w-full bg-dark hover:bg-dark/90 text-white text-fluid-xxs font-medium py-2 px-4 rounded-md transition-all duration-200 shadow-sm hover:shadow"
+            className="w-full bg-dark hover:bg-dark/90 text-white text-fluid-xxs font-medium py-2 px-4 rounded transition-all duration-200 shadow-sm hover:shadow"
             aria-label="Extend exclusivity contract"
           >
             Extend exclusivity contract

@@ -98,8 +98,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const data = await response.json();
 
-      console.log(data);
-
       // DONE: Fix for multiple DHL error responses
       if (!response.ok) {
         const error_message = getUserFriendlyError(data.detail);

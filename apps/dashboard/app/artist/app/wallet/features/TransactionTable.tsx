@@ -266,7 +266,7 @@ export default function TransactionTable() {
       ) : (
         <>
           {transactions.length === 0 ? (
-            <div className="bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 p-12">
+            <div className="bg-slate-50 rounded border-2 border-dashed border-slate-200 p-12">
               <div className="text-center max-w-sm mx-auto">
                 <div className="w-16 h-16 bg-slate-100 rounded flex items-center justify-center mx-auto mb-4">
                   <svg
@@ -293,7 +293,7 @@ export default function TransactionTable() {
               </div>
             </div>
           ) : (
-            <div className="border  border-slate-200 rounded-3xl p-4">
+            <div className="border  border-slate-200 rounded p-4">
               <div className=" flex items-center px-4 justify-between">
                 <h2 className="text-fluid-sm font-semibold text-dark">
                   Transaction History

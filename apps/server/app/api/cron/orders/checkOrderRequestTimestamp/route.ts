@@ -67,8 +67,6 @@ async function processAutoDeclines(
     return;
   }
 
-  console.log(`Auto-declined ${autoDeclinedOrders.length} orders`);
-
   // Update artwork rejection counts and check for breaches
   await updateArtworkRejectionCounts(autoDeclinedOrders);
 
@@ -118,10 +116,6 @@ async function processAutoDeclines(
       resend.batch.send(buyerEmailPayload),
       resend.batch.send(sellerEmailPayload),
     ]);
-
-    console.log(
-      `Successfully sent auto-decline emails for ${autoDeclinedOrders.length} orders`
-    );
   } catch (error) {
     console.error("Failed to send auto-decline emails:", error);
     processedCounts.emailErrors += autoDeclinedOrders.length * 2; // Buyer + seller emails
@@ -148,8 +142,6 @@ async function sendWarningEmails(
     return;
   }
 
-  console.log(`Sending warnings for ${orders72.length} orders`);
-
   try {
     const warningEmailPayload = await Promise.all(
       orders72.map(async (order) => {
@@ -167,7 +159,6 @@ async function sendWarningEmails(
 
     await resend.batch.send(warningEmailPayload);
     processedCounts.warningsSent = orders72.length;
-    console.log(`Successfully sent ${orders72.length} warning emails`);
   } catch (error) {
     console.error("Failed to send warning emails:", error);
     processedCounts.emailErrors += orders72.length;
@@ -194,8 +185,6 @@ async function sendReminderEmails(
     return;
   }
 
-  console.log(`Sending reminders for ${orders24.length} orders`);
-
   try {
     // Use consistent rendering approach
     const reminderEmailPayload = await Promise.all(
@@ -214,7 +203,6 @@ async function sendReminderEmails(
 
     await resend.batch.send(reminderEmailPayload);
     processedCounts.remindersSent = orders24.length;
-    console.log(`Successfully sent ${orders24.length} reminder emails`);
   } catch (error) {
     console.error("Failed to send reminder emails:", error);
     processedCounts.emailErrors += orders24.length;
@@ -251,10 +239,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     await sendReminderEmails(hours24Ago, hours72Ago, processedCounts);
 
     const duration = Date.now() - startTime;
-    console.log(
-      `Order management completed in ${duration}ms:`,
-      processedCounts
-    );
 
     return NextResponse.json(
       {
@@ -308,10 +292,6 @@ async function updateArtworkRejectionCounts(
       ordered: false, // Continue on errors
     });
 
-    console.log(
-      `Updated rejection counts for ${artworkUpdateResult.modifiedCount} artworks`
-    );
-
     // Step 2: Find all artworks that now have count >= 3
     const artworkQueries = autoDeclinedOrders.map((order) => ({
       art_id: order.artwork_data.art_id,
@@ -324,7 +304,6 @@ async function updateArtworkRejectionCounts(
     }).select("author_id");
 
     if (breachedArtworks.length === 0) {
-      console.log("No artworks reached breach threshold");
       return;
     }
 
@@ -364,26 +343,12 @@ async function updateArtworkRejectionCounts(
         }
       );
 
-      console.log(
-        `Marked ${artistUpdateResult.modifiedCount} artists as breached (${breachedArtworks.length} artworks exceeded threshold)`
-      );
-    } else {
-      console.log("No bulk writes to update breach status was run");
-    }
-
-    if (availabilityBulkWrites.length > 0) {
-      const availabilityUpdateResult = await Artworkuploads.bulkWrite(
-        availabilityBulkWrites,
-        { ordered: false }
-      );
-
-      console.log(
-        `Marked ${availabilityUpdateResult.modifiedCount} artworks as sold (${breachedArtworks.length}`
-      );
-    } else {
-      console.log(
-        "No bulk writes to update artwork availability status was run"
-      );
+      if (availabilityBulkWrites.length > 0) {
+        const availabilityUpdateResult = await Artworkuploads.bulkWrite(
+          availabilityBulkWrites,
+          { ordered: false }
+        );
+      }
     }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);

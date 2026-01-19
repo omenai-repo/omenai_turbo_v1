@@ -5,12 +5,10 @@ import {
   Head,
   Html,
   Img,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
-  Button,
 } from "@react-email/components";
 import * as React from "react";
 import EmailFooter from "../../components/Footer";
@@ -30,9 +28,9 @@ interface ShipmentPickupNotificationEmailProps {
   pickupAddress: AddressTypes;
   estimatedPickupDate?: string;
   daysLeft: string;
-  artistName: string;
   artworkImage: string;
-  artworkPrice: number;
+  artistName: string;
+  price: string;
 }
 
 export const ShipmentPickupNotificationEmail = ({
@@ -43,9 +41,9 @@ export const ShipmentPickupNotificationEmail = ({
   pickupAddress,
   daysLeft,
   estimatedPickupDate = `In the next ${daysLeft} day(s)`,
-  artistName,
   artworkImage,
-  artworkPrice,
+  artistName,
+  price,
 }: ShipmentPickupNotificationEmailProps) => {
   return (
     <Html>
@@ -94,10 +92,10 @@ export const ShipmentPickupNotificationEmail = ({
               </Text>
 
               <ArtworkCard
-                artistName={artistName}
                 artwork={artwork.title}
                 artworkImage={artworkImage}
-                artworkPrice={artworkPrice}
+                artistName={artistName}
+                price={price}
               />
 
               {/* Order Details */}

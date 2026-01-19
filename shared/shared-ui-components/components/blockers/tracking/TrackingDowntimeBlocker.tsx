@@ -65,17 +65,17 @@ export default function ShipmentTrackingBlocker({
         <div className="relative w-24 h-24 flex items-center justify-center">
           {/* Outer Ring (Pulse/Active) */}
           <div
-            className="absolute inset-0 border-4 border-[#2A9EDF]/20 rounded-full animate-ping-slow"
+            className="absolute inset-0 border-4 border-[#2A9EDF]/20 rounded animate-ping-slow"
             style={{ animationDuration: "4s" }}
           ></div>
 
           {/* Main Icon Container */}
-          <div className="relative w-20 h-20 bg-[#0f172a] border-4 border-[#2A9EDF] rounded-full flex items-center justify-center shadow-lg z-10">
+          <div className="relative w-20 h-20 bg-[#0f172a] border-4 border-[#2A9EDF] rounded flex items-center justify-center shadow-lg z-10">
             <Package className="w-10 h-10 text-[#2A9EDF] transition-transform duration-500 hover:rotate-6" />
           </div>
 
           {/* Loader/Transfer Indicator */}
-          <div className="absolute -bottom-2 -right-2 bg-[#0f172a] p-1 rounded-full border border-[#47748E]">
+          <div className="absolute -bottom-2 -right-2 bg-[#0f172a] p-1 rounded border border-[#47748E]">
             <Loader className="w-4 h-4 text-[#818181] animate-spin" />
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function ShipmentTrackingBlocker({
       </p>
 
       {/* --- Tracking Number Section --- */}
-      <div className="z-30 bg-[#1f2937] p-4 rounded-lg w-full max-w-sm shadow-xl border border-[#47748E]/30 mb-6">
+      <div className="z-30 bg-[#1f2937] p-4 rounded w-full max-w-sm shadow-xl border border-[#47748E]/30 mb-6">
         <p className="text-xs text-[#818181] uppercase tracking-widest mb-2 font-medium">
           Your Shipment Tracking Number
         </p>
@@ -102,7 +102,7 @@ export default function ShipmentTrackingBlocker({
           </span>
           <button
             onClick={() => copyToClipboard(trackingNumber, setCopied)}
-            className={`p-2 rounded-full transition-all duration-200 ${copied ? "bg-[#10b981] text-white" : "bg-[#2A9EDF]/10 text-[#2A9EDF] hover:bg-[#2A9EDF]/20"}`}
+            className={`p-2 rounded transition-all duration-200 ${copied ? "bg-[#10b981] text-white" : "bg-[#2A9EDF]/10 text-[#2A9EDF] hover:bg-[#2A9EDF]/20"}`}
             title="Copy Tracking Number"
           >
             {copied ? (
@@ -123,14 +123,14 @@ export default function ShipmentTrackingBlocker({
           href={externalLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full inline-flex items-center justify-center py-3 px-6 bg-[#2A9EDF] text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded-md hover:bg-opacity-90 transition-all shadow-[0_4px_15px_rgba(42,158,223,0.4)]"
+          className="w-full inline-flex items-center justify-center py-3 px-6 bg-[#2A9EDF] text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded hover:bg-opacity-90 transition-all shadow-[0_4px_15px_rgba(42,158,223,0.4)]"
         >
           <Globe className="w-4 h-4 mr-2" />
           {externalLinkText}
         </Link>
         <button
           onClick={() => router.back()}
-          className="w-full inline-flex items-center justify-center py-3 px-6 bg-dark text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded-md hover:bg-opacity-90 transition-all mt-4 border hover:border-[#2A9EDF] shadow-[0_4px_15px_rgba(42,158,223,0.2)]"
+          className="w-full inline-flex items-center justify-center py-3 px-6 bg-dark text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded hover:bg-opacity-90 transition-all mt-4 border hover:border-[#2A9EDF] shadow-[0_4px_15px_rgba(42,158,223,0.2)]"
         >
           <Globe className="w-4 h-4 mr-2" />
           Go Back

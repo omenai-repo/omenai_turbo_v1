@@ -32,7 +32,7 @@ export function TransactionTable({
   }));
 
   return (
-    <div className="w-full rounded-3xl bg-white p-6 shadow-sm">
+    <div className="w-full rounded bg-white p-6 shadow-sm">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-sm font-medium text-slate-900">
@@ -61,7 +61,7 @@ export function TransactionTable({
               {transaction_table_data.map((data) => (
                 <tr
                   key={data.id}
-                  className="rounded-xl bg-slate-50 hover:bg-slate-100 transition"
+                  className="rounded bg-slate-50 hover:bg-slate-100 transition"
                 >
                   <td className="px-4 py-3 text-sm font-medium text-slate-900">
                     #{data.id}
@@ -76,7 +76,7 @@ export function TransactionTable({
                     {data.net}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                    <span className="inline-flex rounded bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
                       {data.status}
                     </span>
                   </td>
@@ -86,7 +86,7 @@ export function TransactionTable({
           </table>
         ) : (
           <div className="flex flex-col items-center py-20 text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded bg-slate-100">
               <svg
                 className="h-6 w-6 text-slate-400"
                 fill="none"

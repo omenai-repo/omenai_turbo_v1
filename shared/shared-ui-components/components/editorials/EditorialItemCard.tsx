@@ -1,72 +1,111 @@
 import { Image as ImageIcon, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
 import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCoverFileView";
-// Note: Next.js 'Image' and 'Link' are replaced with standard HTML elements for rendering in this environment.
-export default function EditorialItemCard({ editorial }: { editorial: any }) {
+
+// We define the type exactly as you requested, plus the $id needed for the link
+type EditorialSchemaTypes = {
+  headline: string;
+  summary?: string;
+  cover: string;
+  date: Date | null;
+  content: string;
+  slug: string;
+  $id?: string; // Included to satisfy the link requirement
+};
+
+export default function EditorialItemCard({
+  editorial,
+}: {
+  editorial: EditorialSchemaTypes;
+}) {
   const url = editorial.cover
-    ? getEditorialFileView(editorial.cover, 300)
+    ? getEditorialFileView(editorial.cover, 600) // 600px for Retina sharpness
     : null;
 
+  const formattedDate = editorial.date
+    ? new Date(editorial.date).toLocaleDateString("en-US", {
+        month: "short",
+        year: "numeric",
+      })
+    : "ARCHIVE";
+
   return (
-    // Card Container: Sleek floating effect with subtle shadow and rounded corners.
-    <div
-      className="group relative bg-white rounded-2xl transition-all duration-300 
-                    transform  h-[420px] w-full max-w-[330px]  border border-slate-200 overflow-hidden"
+    <Link
+      href={`${base_url()}/articles/${editorial.slug}?id=${editorial.$id}`}
+      rel="noopener noreferrer"
+      className="group block h-full w-full max-w-[400px] cursor-pointer"
     >
-      {/* Image Section */}
-      <div className="relative h-[220px] overflow-hidden">
-        {url ? (
-          // Image with Hover Effect: Subtle zoom and brightness change
-          <img
-            src={url}
-            alt={editorial.headline}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05] group-hover:brightness-90"
-          />
-        ) : (
-          // Placeholder Section
-          <div className="h-full w-full bg-slate-800 flex items-center justify-center text-gray-400">
-            <div className="text-center">
-              <ImageIcon className="w-10 h-10 mx-auto mb-2 text-slate-500" />
-              <p className="text-sm font-medium text-slate-400">
-                No Cover Image
-              </p>
+      {/* CONTAINER: 
+          - No rounded corners. 
+          - Strict 1px neutral border that turns Black on hover.
+          - Internal padding (p-5) to frame the content like a matte. 
+      */}
+      <article className="flex h-full flex-col justify-between border border-neutral-200 bg-white p-5 transition-colors duration-500 hover:border-black">
+        {/* HEADER: Technical Metadata (The "File Number" look) */}
+        <div className="mb-4 flex items-center justify-between border-b border-neutral-100 pb-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">
+            {formattedDate}
+          </span>
+          {/* Aesthetic Anchor Point */}
+          <div className="h-1 w-1 bg-neutral-200 transition-colors duration-300 group-hover:bg-dark" />
+        </div>
+
+        {/* IMAGE SECTION: 
+            - 3:4 Aspect Ratio (Standard Portrait/Editorial ratio).
+            - Grayscale by default -> Full Color on hover.
+            - Slow zoom effect.
+        */}
+        <div className="relative mb-6 aspect-[3/4] w-full overflow-hidden bg-neutral-50">
+          {url ? (
+            <Image
+              src={url}
+              alt={editorial.headline}
+              fill
+              className="object-cover transition-all duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 grayscale group-hover:grayscale-0"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-neutral-300">
+              <div className="flex flex-col items-center gap-2">
+                <ImageIcon strokeWidth={1} className="h-8 w-8" />
+                <span className="font-mono text-[9px] uppercase tracking-widest">
+                  No Plate
+                </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          {/* Subtle Flash Overlay */}
+          <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 mix-blend-overlay" />
+        </div>
 
-        {/* Dynamic Image Overlay (Dark Gradient on Hover) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </div>
+        {/* TYPOGRAPHY SECTION */}
+        <div className="flex flex-col gap-3">
+          {/* TITLE: Serif Italic + Large + High Contrast */}
+          <h1 className="font-serif text-2xl font-light italic leading-[1.15] text-neutral-900 decoration-neutral-300 decoration-1 underline-offset-4 transition-all group-hover:underline">
+            {editorial.headline}
+          </h1>
 
-      {/* Content Section */}
-      <div className="p-6 flex flex-col h-[200px] bg-white">
-        {/* Title */}
-        <h1 className="text-gray-900 text-xl font-semibold leading-snug line-clamp-3 mb-4 transition-colors duration-300 group-hover:text-slate-700">
-          {editorial.headline}
-        </h1>
+          {/* SUMMARY: Sans-Serif + Neutral Grey */}
+          {editorial.summary && (
+            <p className="line-clamp-2 font-sans text-xs leading-relaxed text-neutral-500">
+              {editorial.summary}
+            </p>
+          )}
+        </div>
 
-        {/* Bottom Section: Read Button and Decorator */}
-        <div className="mt-auto flex items-center justify-between">
-          {/* Read Article Link: Sleek, integrated button style */}
-          <Link
-            href={`${base_url()}/articles/${editorial.slug}?id=${editorial.$id}`}
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm font-medium text-slate-700 hover:text-black transition-colors duration-300 group-hover:text-black"
-          >
-            Read Article
-            <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
-
-          {/* Decorative Time/Date/Accent (Optional: Add real time data here) */}
-          <div className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-            {new Date(editorial.date).toLocaleDateString("en-US", {
-              month: "short",
-              year: "numeric",
-            })}
+        {/* FOOTER: The "Hidden" Action 
+            - Only reveals "Read Article" on hover to keep the resting state clean.
+        */}
+        <div className="mt-8 flex items-center justify-end overflow-hidden border-t border-transparent pt-3 transition-colors group-hover:border-neutral-100">
+          <div className="flex translate-y-4 items-center gap-2 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-900">
+              Read Article
+            </span>
+            <ArrowRight className="h-3 w-3 text-neutral-900" />
           </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </Link>
   );
 }

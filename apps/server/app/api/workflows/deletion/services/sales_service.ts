@@ -54,7 +54,6 @@ export async function salesServiceDeletionProtocol(
         .lean();
 
       if (batch.length === 0) {
-        console.log("No more documents to process");
         break;
       }
       batchNumber++;
@@ -72,8 +71,6 @@ export async function salesServiceDeletionProtocol(
 
       stats.totalMatched += result.matchedCount;
       stats.totalModified += result.modifiedCount;
-
-      console.log(`Batch processed, ${stats.totalModified} total so far`);
     }
     let failedJobCreations = false;
 
@@ -93,9 +90,6 @@ export async function salesServiceDeletionProtocol(
       successfulJobCreations: failedJobCreations,
     };
 
-    console.log(
-      `Completed: Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
-    );
     return {
       success: true,
       count: { ...summary },

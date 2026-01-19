@@ -11,13 +11,14 @@ import {
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
 import { createErrorRollbarReport } from "../../util";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["gallery"],
 };
 
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+export const POST = withRateLimit(config)(async function POST(
   request: Request
 ) {
   try {

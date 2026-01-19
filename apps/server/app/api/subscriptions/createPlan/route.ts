@@ -30,7 +30,6 @@ export const POST = withRateLimit(config)(async function POST(
 
     return NextResponse.json({ message: "Plan created successfully" });
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "subscription: create plan",

@@ -44,7 +44,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "notifications: fetch notification",
       error,

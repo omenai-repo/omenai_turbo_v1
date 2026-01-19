@@ -22,7 +22,7 @@ export function MobileSidebar() {
         <div className="fixed inset-0 z-50 flex">
           {/* Overlay */}
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-dark/40"
             onClick={() => setOpen(false)}
           />
 

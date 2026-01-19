@@ -54,7 +54,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       );
       const data = await response.json();
       // DONE: Fix for multiple DHL error responses
-      console.log(data);
       if (!response.ok) {
         const error_message = getUserFriendlyError(data.detail);
         throw new BadRequestError(error_message);
@@ -62,7 +61,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       return NextResponse.json({ message: "Success", data }, { status: 200 });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-      console.log(error);
       createErrorRollbarReport(
         "shipment: address validation",
         error,

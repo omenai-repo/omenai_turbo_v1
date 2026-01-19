@@ -13,7 +13,7 @@ export default function FilterDrawer() {
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/40 z-40 transition-opacity ${
+        className={`fixed inset-0 bg-dark/40 z-[30] transition-opacity ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         onClick={closeDrawer}
@@ -21,12 +21,14 @@ export default function FilterDrawer() {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-[90%] md:w-[25%] bg-white z-50 shadow-xl transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-[90%] md:w-[25%] bg-white z-[40] shadow-xl transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         } flex flex-col`}
       >
         <div className="flex justify-between items-center p-5 border-b border-b-slate-200">
-          <h3 className="text-fluid-base font-normal">Filter artworks</h3>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-dark">
+            Filter artworks
+          </h3>
           <button onClick={closeDrawer}>
             <MdClose className="text-xl" />
           </button>

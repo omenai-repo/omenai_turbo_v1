@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
       error,
       error_response.status
     );
-    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

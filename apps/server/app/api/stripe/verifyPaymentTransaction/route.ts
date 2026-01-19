@@ -87,8 +87,6 @@ async function verifyStripeTransaction(
 ) {
   const date = toUTCDate(new Date());
 
-  console.log(meta, paymentIntent);
-
   // if (!meta?.buyer_email || !meta?.art_id) {
   //   throw new ServerError("Invalid metadata");
   // }
@@ -213,7 +211,6 @@ async function resolvePaymentIntent({
   if (payment_intent_id) {
     const paymentIntent =
       await stripe.paymentIntents.retrieve(payment_intent_id);
-    console.log(paymentIntent);
 
     return { paymentIntent, meta: paymentIntent.metadata };
   }
@@ -222,7 +219,6 @@ async function resolvePaymentIntent({
     const session =
       await stripe.checkout.sessions.retrieve(checkout_session_id);
 
-    console.log(session.payment_intent);
     if (!session.payment_intent) {
       throw new ServerError("Checkout session has no payment intent");
     }

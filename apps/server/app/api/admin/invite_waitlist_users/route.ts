@@ -4,11 +4,12 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport } from "../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
-import { CombinedConfig } from "@omenai/shared-types";
+import { CombinedConfig, WaitListTypes } from "@omenai/shared-types";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import InvitationEmail from "@omenai/shared-emails/src/views/admin/InvitationEmail";
 import { inviteWaitlistUserValidator } from "./InviteWaitlistUserValidator";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -26,6 +27,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request
 ) {
   try {
+    await connectMongoDB();
     const { waitlistUsers: selectedUsers } = await request.json();
     // validate payload
     inviteWaitlistUserValidator(selectedUsers);
@@ -35,9 +37,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
 
     // Look for waitlist users in database
-    const matchedUsers = await Waitlist.find({
+    const matchedUsers = (await Waitlist.find({
       waitlistId: { $in: waitlistIds },
-    }).lean();
+    }).lean()) as unknown as WaitListTypes[];
 
     // Create a map for quick discount lookup
     const discountMap = new Map(
@@ -54,7 +56,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         update: {
           $set: {
             isInvited: true,
-            "discount.active": discountMap.get(user.waitlistId) || false,
+            discount:
+              user.entity === "artist"
+                ? null
+                : {
+                    active: discountMap.get(user.waitlistId) || false,
+                    redeemed: false,
+                    plan: "pro",
+                  },
           },
         },
       },

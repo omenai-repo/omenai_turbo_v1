@@ -26,7 +26,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "subscription: retrieve single plan",
       error,

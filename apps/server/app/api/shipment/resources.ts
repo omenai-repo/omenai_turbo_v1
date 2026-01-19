@@ -140,7 +140,6 @@ export async function getLatLng(
 
     if (data?.data?.length > 0) {
       const result = data.data[0];
-      console.log(result);
       return { lat: result.latitude, lng: result.longitude };
     } else {
       console.warn("No results found for location:", location);

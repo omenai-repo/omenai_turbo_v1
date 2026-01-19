@@ -15,7 +15,6 @@ export default function Tracking({ order_id }: { order_id: string }) {
     queryFn: async () => {
       const response = await getTrackingData(order_id);
 
-      console.log(response);
       if (!response?.isOk)
         throw new Error(
           response?.message ||

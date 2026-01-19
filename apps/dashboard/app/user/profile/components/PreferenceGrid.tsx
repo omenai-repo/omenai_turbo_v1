@@ -47,7 +47,7 @@ export default function PreferencesGrid({
               key={pref}
               onClick={() => togglePreference(pref)}
               className={`
-                px-5 py-2.5 rounded-md text-fluid-xs transition-all duration-300 ease-out border
+                px-5 py-2.5 rounded text-fluid-xs transition-all duration-300 ease-out border
                 ${
                   isSelected
                     ? "bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-900/10 hover:bg-slate-800"

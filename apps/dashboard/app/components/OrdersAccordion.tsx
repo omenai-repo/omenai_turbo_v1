@@ -16,7 +16,7 @@ export function OrdersAccordion({
 
   return (
     <Accordion
-      radius="lg"
+      radius="sm"
       variant="separated"
       defaultValue={orders?.[0]?.order_id}
       className="w-full space-y-4"
@@ -25,17 +25,17 @@ export function OrdersAccordion({
         <Accordion.Item
           key={order.order_id}
           value={order.order_id}
-          className="rounded-2xl bg-white shadow-sm"
+          className="rounded bg-white shadow-sm"
         >
           {/* HEADER */}
-          <Accordion.Control className="px-5 py-4 hover:bg-neutral-50 rounded-2xl">
+          <Accordion.Control className="px-5 py-4 hover:bg-neutral-50 rounded">
             <div className="flex items-center gap-4">
               <Image
                 src={getImageUrl(order.artwork_data.url)}
                 alt={order.artwork_data.title}
                 width={56}
                 height={56}
-                className="h-14 w-14 rounded-xl object-cover"
+                className="h-14 w-14 rounded object-cover"
                 loading="lazy"
               />
 
@@ -50,7 +50,7 @@ export function OrdersAccordion({
 
               {/* Status */}
               <div className="ml-auto">
-                <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                <span className="rounded bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
                   Pending
                 </span>
               </div>
@@ -70,7 +70,7 @@ export function OrdersAccordion({
             <div className="mt-6">
               <Link
                 href={route}
-                className="inline-flex items-center rounded-lg bg-dark px-4 py-2 text-xs font-medium text-white transition hover:bg-neutral-800"
+                className="inline-flex items-center rounded bg-dark px-4 py-2 text-xs font-medium text-white transition hover:bg-neutral-800"
               >
                 View order details
               </Link>

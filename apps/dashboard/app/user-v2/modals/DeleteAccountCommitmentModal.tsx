@@ -16,7 +16,7 @@ export default function DeleteAccountCommitmentModal({
 }>) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 w-full h-full bg-dark/90">
-      <div className="relative bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-xl px-6 py-12 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+      <div className="relative bg-white dark:bg-slate-800 rounded shadow-xl w-full max-w-xl px-6 py-12 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
             <div className="w-12 h-12 rounded bg-yellow-50 flex items-center justify-center">

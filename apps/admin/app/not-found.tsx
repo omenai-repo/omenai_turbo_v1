@@ -50,7 +50,7 @@ export default function NotFoundPage() {
       >
         <button
           onClick={() => router.back()}
-          className="relative inline-block px-6 py-3 text-lg font-medium text-dark border border-dark rounded-full overflow-hidden group"
+          className="relative inline-block px-6 py-3 text-lg font-medium text-dark border border-dark rounded overflow-hidden group"
         >
           <span className="absolute inset-0 bg-dark transition-all duration-300 ease-out transform scale-x-0 origin-left group-hover:scale-x-100" />
           <span className="relative z-10 group-hover:text-white transition-colors duration-300">

@@ -1,29 +1,47 @@
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { collections } from "../collectionConstants";
 import ArtCollectionCard from "./components/ArtCollectionCard";
+import Footer from "@omenai/shared-ui-components/components/footer/Footer";
+
 export const dynamic = "force-dynamic";
+
 export default function page() {
   return (
-    <main>
+    <div className="min-h-screen bg-white">
       <DesktopNavbar />
-      <div className="h-full w-full text-black pt-10 pb-5 px-4 md:px-8 space-y-1">
-        <h1 className="text-fluid-sm md:text-fluid-md font-normal">
-          Art Collections
-        </h1>
-        <p className="text-fluid-base md:text-fluid-sm text-[#858585] font-light italic">
-          Dive Into Diverse Art Collections, Thoughtfully Curated for Your
-          Exploration
-        </p>
-      </div>
-      <div className="px-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3">
-        {collections.map((collection, index) => (
-          <ArtCollectionCard
-            key={index}
-            title={collection.title}
-            url={collection.url}
-          />
-        ))}
-      </div>
-    </main>
+
+      <main className="container mx-auto px-6 lg:px-12 pt-8 pb-32">
+        {/* 1. THE INDEX HEADER */}
+        <div className="mb-20 border-b border-black pb-8 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-4 block">
+              Department Index
+            </span>
+            <h1 className="font-serif text-6xl md:text-8xl italic text-dark leading-[0.9]">
+              Curated <br /> Collections.
+            </h1>
+          </div>
+
+          <p className="max-w-xs font-sans text-xs leading-relaxed text-neutral-500 text-right">
+            Dive into diverse art lineages, thoughtfully curated to trace the
+            history and future of each medium.
+          </p>
+        </div>
+
+        {/* 2. THE BOOKSHELF (Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+          {collections.map((collection, index) => (
+            <ArtCollectionCard
+              key={index}
+              index={index}
+              title={collection.title}
+              url={collection.url}
+            />
+          ))}
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

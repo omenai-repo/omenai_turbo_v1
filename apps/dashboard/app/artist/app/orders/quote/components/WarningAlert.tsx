@@ -7,7 +7,7 @@ export default function WarningAlert() {
     <Alert
       variant="light"
       color="red"
-      radius="lg"
+      radius="sm"
       title="Kindly review the following information carefully before continuing."
       icon={icon}
     >

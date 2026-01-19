@@ -56,7 +56,7 @@ export const SalesActivityChart = ({
   // Calculate Y-axis ticks
   const yTicks = calculateYTicks(minYValue, maxYValue);
   return (
-    <div className="h-[450px] rounded-2xl bg-white p-6 shadow-sm w-full">
+    <div className="h-[450px] rounded bg-white p-6 shadow-sm w-full">
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-fluid-base font-medium">Sales Activity</h3>

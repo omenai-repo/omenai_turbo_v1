@@ -69,7 +69,7 @@ export default function FormInput() {
       },
     };
 
-    const response = await registerAccount(data, "individual");
+    const response = await registerAccount(data, "", "", "individual");
 
     if (response.isOk) {
       toast.success("Operation successful", {

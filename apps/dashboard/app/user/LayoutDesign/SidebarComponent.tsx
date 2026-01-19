@@ -38,11 +38,11 @@ export function SidebarContent({
       <nav className="flex flex-1 flex-col gap-8 px-3">
         {["core", "account"].map((section) => (
           <div key={section}>
-            {expanded && (
+            {/* {expanded && (
               <p className="mb-3 px-2 text-[11px] uppercase tracking-wider text-neutral-400">
                 {section}
               </p>
-            )}
+            )} */}
 
             <ul className="space-y-3">
               {sidebarItems
@@ -56,7 +56,7 @@ export function SidebarContent({
                       <Link
                         href={item.href}
                         className={clsx(
-                          "flex items-center rounded-lg px-3 py-2.5 text-sm transition-colors",
+                          "flex items-center rounded px-3 py-2.5 text-sm transition-colors",
                           active
                             ? "bg-dark text-white"
                             : "text-neutral-600 hover:bg-neutral-100"

@@ -14,7 +14,7 @@ type SalesTooltipProps = {
 
 export function SalesTooltip({ point }: SalesTooltipProps) {
   return (
-    <div className="min-w-[180px] rounded-xl bg-dark px-4 py-3 shadow-xl">
+    <div className="min-w-[180px] rounded bg-dark px-4 py-3 shadow-xl">
       {/* Context */}
       <p className="mb-1 text-xs uppercase tracking-wide text-neutral-400">
         {point.data.xFormatted}

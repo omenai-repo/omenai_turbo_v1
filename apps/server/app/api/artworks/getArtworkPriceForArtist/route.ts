@@ -42,19 +42,12 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           "Artwork price calculation is currently disabled"
         );
 
-      console.log(
-        `Calculating price for medium: ${medium}, height: ${height}, width: ${width}, category: ${category}, currency: ${currency}`
-      );
-
       if (!medium || !height || !width || !category) {
         throw new ServerError(
           "Missing required parameters (medium, height, width, category)"
         );
       }
 
-      console.log(
-        `Calculating price for medium: ${medium}, height: ${height}, width: ${width}, category: ${category}, currency: ${currency}`
-      );
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
       const price: ArtworkPricing = calculateArtworkPrice({
@@ -72,13 +65,10 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         const cachedRate = await redis.get(cacheKey);
 
         if (cachedRate) {
-          console.log(`Cache Hit for key: ${cacheKey}`);
-
           // Parse the JSON string back into a number
           rateValue = JSON.parse(cachedRate as string);
         } else {
           // Cache Miss: Proceed to fetch from external source
-          console.log(`Cache Miss for key: ${cacheKey}. Fetching...`);
 
           const request = await fetch(
             `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
@@ -152,7 +142,6 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         error,
         error_response.status
       );
-      console.log(error);
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status }

@@ -131,7 +131,7 @@ export default function WalletPinModalForm() {
               Enter PIN
             </label>
             <PinInput
-              size="lg"
+              size="sm"
               name="pin"
               mask
               type="number"
@@ -151,7 +151,7 @@ export default function WalletPinModalForm() {
             </label>
             <PinInput
               name="confirm"
-              size="lg"
+              size="sm"
               mask
               type="number"
               aria-label="Confirm wallet pin"

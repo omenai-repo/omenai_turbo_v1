@@ -85,9 +85,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
             reason: "The payment period for this artwork has expired.",
             artwork_data: order.artwork_data,
           });
-          console.log(
-            `✅ Order ${order.order_id} marked as declined and email sent.`
-          );
         } catch (mailErr) {
           createErrorRollbarReport(
             "Cron: Decline orders with expired hold status - send decline email",
@@ -102,9 +99,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       })
     );
 
-    console.log(
-      `Checked ${ordersOnHold.length} orders. ${updatedCount} updated.`
-    );
     return NextResponse.json(
       {
         message: `Checked ${ordersOnHold.length} orders. ${updatedCount} updated.`,

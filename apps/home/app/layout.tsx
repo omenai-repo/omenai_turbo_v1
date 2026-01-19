@@ -55,7 +55,7 @@ export default async function RootLayout({
             <title>Omenai</title>
           </head>
           <body
-            className={`${work_sans.variable} font-sans flex flex-col justify-center`}
+            className={`${work_sans.variable} bg-white font-sans flex flex-col justify-center`}
           >
             <NextTopLoader color="#0f172a" height={6} />
             <Toaster

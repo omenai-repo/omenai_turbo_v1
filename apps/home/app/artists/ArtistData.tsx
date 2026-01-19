@@ -6,6 +6,8 @@ import { notFound, useSearchParams } from "next/navigation";
 import ArtistInfo from "./ArtistInfo";
 import ArtistWorks from "./ArtistWorks";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
+import Footer from "@omenai/shared-ui-components/components/footer/Footer";
 
 export default function ArtistData() {
   const params = useSearchParams();
@@ -18,23 +20,32 @@ export default function ArtistData() {
     queryKey: ["fetch_artist_data", id],
     queryFn: async () => {
       const response = await fetchArtistData(id, "1");
-
       if (!response.isOk) throw new Error("Something went wrong");
-
       return { artist: response.data, artworks: response.artworks };
     },
-
-    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
-    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    staleTime: 30 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false, // Don't refetch if we have cached data
+    refetchOnMount: false,
   });
 
   if (loading) return <Load />;
+
   return (
-    <div className="flex flex-col space-y-12">
-      <ArtistInfo loading={loading} info={artist_data?.artist} url={url} />
-      <ArtistWorks loading={loading} artworks={artist_data?.artworks} />
+    <div className="min-h-screen bg-white">
+      <DesktopNavbar />
+
+      <main className="container mx-auto px-6 lg:px-12 pt-12 pb-24">
+        <div className="flex flex-col gap-24">
+          <ArtistInfo loading={loading} info={artist_data?.artist} url={url} />
+
+          <div className="border-t border-neutral-200 pt-12">
+            <ArtistWorks loading={loading} artworks={artist_data?.artworks} />
+          </div>
+        </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

@@ -71,13 +71,9 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       headers: getDhlHeaders(),
     };
 
-    console.log(requestOptions);
-
     try {
       const response = await fetch(url.toString(), requestOptions);
-      console.log("fetched");
       const data = await response.json();
-      console.log(data);
 
       if (!response.ok)
         throw new ServerError(
@@ -104,7 +100,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         { status: 200 }
       );
     } catch (error) {
-      console.log(error);
       return NextResponse.json({ message: "Error", error }, { status: 500 });
     }
   } catch (error) {

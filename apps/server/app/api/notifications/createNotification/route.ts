@@ -60,7 +60,6 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "notifications: create notification",
       error,

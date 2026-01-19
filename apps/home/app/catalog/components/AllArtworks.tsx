@@ -72,8 +72,6 @@ export default function AllArtworks() {
 
   return (
     <div className="w-full my-3">
-      <p className="text-fluid-xxs font-bold mb-4">{artwork_total} artworks:</p>
-
       <div className="flex flex-wrap gap-x-4 justify-center">
         {arts.map((artworks: any[], index) => {
           return (

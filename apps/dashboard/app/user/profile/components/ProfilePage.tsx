@@ -141,7 +141,7 @@ export default function UserProfile({
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
               <div className="flex items-center gap-3 mb-8">
-                <div className="p-2 bg-slate-50 rounded-xl">
+                <div className="p-2 bg-slate-50 rounded">
                   <svg
                     className="w-5 h-5 text-slate-700"
                     fill="none"
@@ -173,7 +173,7 @@ export default function UserProfile({
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    className="w-full text-base text-slate-700 bg-slate-50/50 border rounded-xl p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
+                    className="w-full text-base text-slate-700 bg-slate-50/50 border rounded p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
                   />
                 </div>
 
@@ -187,7 +187,7 @@ export default function UserProfile({
                       type="text"
                       value={user.address.address_line}
                       disabled
-                      className="w-full text-base text-slate-700 bg-slate-50/50 border rounded-xl p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
+                      className="w-full text-base text-slate-700 bg-slate-50/50 border rounded p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
                       placeholder="Street"
                     />
                     <div className="grid grid-cols-2 gap-3">
@@ -195,14 +195,14 @@ export default function UserProfile({
                         type="text"
                         value={user.address.city}
                         disabled
-                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded-xl p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
+                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
                         placeholder="City"
                       />
                       <input
                         type="text"
                         value={user.address.zip}
                         disabled
-                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded-xl p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
+                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
                         placeholder="Zip"
                       />
                     </div>
@@ -211,14 +211,14 @@ export default function UserProfile({
                         type="text"
                         value={user.address.state}
                         disabled
-                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded-xl p-4 focus:bg-white focus:border-slate-300 border-slate-200 focus:ring-0 transition-all hover:bg-slate-50"
+                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded p-4 focus:bg-white focus:border-slate-300 border-slate-200 focus:ring-0 transition-all hover:bg-slate-50"
                         placeholder="City"
                       />
                       <input
                         type="text"
                         value={user.address.country}
                         disabled
-                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded-xl p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
+                        className="w-full text-base text-slate-700 bg-slate-50/50 border rounded p-4 focus:bg-white focus:border-slate-300 focus:ring-0 border-slate-200 disabled:cursor-not-allowed text-fluid-xs transition-all hover:bg-slate-50"
                         placeholder="Zip"
                       />
                     </div>
@@ -227,7 +227,7 @@ export default function UserProfile({
                 <div className="w-full grid place-items-center">
                   <button
                     onClick={() => updateAddressModalPopup(true)}
-                    className="rounded-md bg-dark p-4 text-xs font-normal w-full text-white hover:bg-slate-800"
+                    className="rounded bg-dark p-4 text-xs font-normal w-full text-white hover:bg-slate-800"
                   >
                     Edit Address information
                   </button>
@@ -260,7 +260,7 @@ export default function UserProfile({
                     Your account is safe and secure.
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
+                <div className="w-10 h-10 rounded bg-white/10 flex items-center justify-center backdrop-blur-sm">
                   <svg
                     className="w-5 h-5 text-white"
                     fill="none"
@@ -277,7 +277,7 @@ export default function UserProfile({
                 </div>
               </div>
               {/* Decorative background element */}
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded blur-3xl"></div>
             </div>
           </div>
         </div>

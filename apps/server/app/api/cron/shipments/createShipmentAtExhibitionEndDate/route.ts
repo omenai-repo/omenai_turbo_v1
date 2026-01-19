@@ -21,6 +21,7 @@ import {
 import { sendShipmentPickupReminderMail } from "@omenai/shared-emails/src/models/shipment/sendShipmentPickupReminderMail";
 import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -35,13 +36,12 @@ async function sendReminderEmail(
   artistName: string,
   artworkImage: string,
   artworkPrice: number,
+  requestDate: string,
   estimatedPickupDate?: string
 ): Promise<void> {
   if (isReminded) {
-    console.log(`🔁 Reminder already sent for order_id: ${orderId}, skipping.`);
     return;
   }
-  console.log(`🟡 Sending reminder email for order_id: ${orderId}`);
   // DONE: Implement actual email sending logic here
 
   await ScheduledShipment.updateOne(
@@ -60,9 +60,9 @@ async function sendReminderEmail(
     pickupAddress,
     daysLeft,
     estimatedPickupDate,
-    artistName,
     artworkImage: artworkImageUrl,
-    artworkPrice,
+    artistName,
+    price: formatPrice(artworkPrice),
   });
 }
 
@@ -81,7 +81,6 @@ async function updateShipmentStatus(
 }
 
 async function triggerShipmentWorkflow(orderId: string): Promise<void> {
-  console.log(`🚀 Triggering workflow for order_id: ${orderId}`);
   const workflowID = await createWorkflow(
     "/api/workflows/shipment/create_shipment",
     `test_workflow${generateDigit(2)}`,
@@ -105,7 +104,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     const nowUTC = toUTCDate(new Date());
     const shipments = await ScheduledShipment.find({ status: "scheduled" });
     if (!shipments.length) {
-      console.log("No scheduled shipments to process.");
       return NextResponse.json(
         { message: "No scheduled shipments." },
         { status: 200 }
@@ -153,6 +151,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
               order.seller_details.name,
               order.artwork_data.url,
               order.artwork_data.pricing.usd_price,
+              order.createdAt,
               order.shipping_details.shipment_information.planned_shipping_date
             );
             return;
@@ -169,7 +168,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       );
     }
 
-    console.log("✅ Scheduled shipment batch check completed.");
     return NextResponse.json(
       {
         message: "Scheduled shipment batch check completed.",

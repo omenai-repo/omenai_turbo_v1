@@ -29,22 +29,22 @@ const ArtistVerificationMail = (artist_name: string, token: string) => {
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-dark text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
               Welcome on board to <strong>Omenai for Artists.</strong>
             </Heading>
-            {/* <Text className="text-black text-fluid-xxs leading-[24px]"></Text> */}
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            {/* <Text className="text-dark text-fluid-xxs leading-[24px]"></Text> */}
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               We, at <strong>Omenai</strong>, are thrilled to have you on board
               and eagerly await the beginning of your journey with us
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Your email verification token is located below. Enter this code
               into the designated input field on the verification page. Please
               be aware that the validity of this token will expire in{" "}
               <strong>10 minutes.</strong>
             </Text>
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-fluid-xxs font-normal leading-[24px]">
+              <Text className="text-dark text-fluid-xxs font-normal leading-[24px]">
                 <strong>{token}</strong>
               </Text>
             </Section>
@@ -52,7 +52,7 @@ const ArtistVerificationMail = (artist_name: string, token: string) => {
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               is addressed directly to{" "}
-              <span className="text-black">{artist_name} </span>. In the event
+              <span className="text-dark">{artist_name} </span>. In the event
               that you were not anticipating the receipt of this email, we
               respectfully request that you refrain from taking any action based
               on its contents. This communication may contain confidential and

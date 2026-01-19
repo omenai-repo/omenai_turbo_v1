@@ -57,7 +57,6 @@ export default function page() {
         }
       );
       const result = await response.json();
-      console.log(result);
 
       return result;
     },

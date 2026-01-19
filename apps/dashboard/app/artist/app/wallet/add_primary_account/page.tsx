@@ -11,7 +11,7 @@ export default function page() {
       <PageTitle title="Add primary account" />
       <div className="w-full py-8">
         <Paper
-          radius={"lg"}
+          radius={"sm"}
           withBorder
           className="max-w-lg w-full p-8 flex flex-col space-y-6"
         >

@@ -91,6 +91,7 @@ export default function ArtworkPricing() {
       setLoading(true);
 
       // 1 ─ Upload image
+      console.log(image);
       const fileUploaded = await uploadImage(image);
       if (!fileUploaded) throw new Error("Image upload failed");
 
@@ -109,7 +110,7 @@ export default function ArtworkPricing() {
           currency: pricing?.currency,
         },
         file.fileId,
-        (user.artist_id as string) ?? "",
+        user.artist_id ?? "",
         {
           role: "artist",
           designation: user.categorization,
@@ -182,7 +183,7 @@ export default function ArtworkPricing() {
         <>
           <h1 className="font-bold text-fluid-base">Proposed Artwork Price</h1>
           <Paper
-            radius="lg"
+            radius="sm"
             className="flex flex-col space-y-2 p-5 my-6"
             withBorder
           >
@@ -204,7 +205,7 @@ export default function ArtworkPricing() {
             <Alert
               variant="light"
               color="yellow"
-              radius="lg"
+              radius="sm"
               title="Exclusivity Agreement"
               icon={<TriangleAlert strokeWidth={1.5} />}
               className="font-medium"

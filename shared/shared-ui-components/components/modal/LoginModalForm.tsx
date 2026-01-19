@@ -89,9 +89,7 @@ export default function LoginModalForm() {
     try {
       await loginFromModal(e);
       setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (

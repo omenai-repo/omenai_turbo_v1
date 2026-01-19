@@ -35,7 +35,6 @@ export default function ProfileSection() {
         } else {
           toast_notif(response.message, "success");
           setIsEditing(false);
-          toast_notif("Logging you out, please wait", "info");
           await signOut();
         }
       } catch (error) {
@@ -70,7 +69,7 @@ export default function ProfileSection() {
         <div className="flex items-center gap-6">
           <Avatar
             size={80}
-            radius="xl"
+            radius="sm"
             styles={{
               root: {
                 border: "3px solid #2a2a2a",

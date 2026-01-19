@@ -78,7 +78,8 @@ export function shouldSkipMiddleware(
     pathname.startsWith("/articles") ||
     pathname.startsWith("/search") ||
     pathname.startsWith("/privacy") ||
-    pathname.startsWith("/legal")
+    pathname.startsWith("/legal") ||
+    pathname.startsWith("/collections")
   ) {
     return true;
   }
