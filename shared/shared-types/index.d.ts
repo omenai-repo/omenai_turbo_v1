@@ -1344,3 +1344,16 @@ export type WaitlistCampaignDevice = {
     name: string; // 'Chrome', 'Safari'
   };
 };
+
+export type DeletePromise = Promise<
+  | {
+      success: boolean;
+      jobId: string;
+      error?: undefined;
+    }
+  | {
+      success: boolean;
+      jobId: string;
+      error: string;
+    }
+>;
