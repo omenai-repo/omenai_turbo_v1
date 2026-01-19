@@ -6,9 +6,9 @@ import {
 } from "../utils";
 import { anonymizeUserId } from "../../../util";
 
-async function deleteFlutterwaveBeneficiary(
+export async function deleteFlutterwaveBeneficiary(
   beneficiary_id: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; deletedCount: number }> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
@@ -32,13 +32,14 @@ async function deleteFlutterwaveBeneficiary(
     if (result.status !== "success") {
       return {
         success: false,
+        deletedCount: 0,
         error:
           result.message ??
           "Could not delete beneficiary account from Flutterwave",
       };
     }
 
-    return { success: true };
+    return { success: true, deletedCount: 1 };
   } catch (error) {
     clearTimeout(timeout);
     const message =
@@ -46,7 +47,7 @@ async function deleteFlutterwaveBeneficiary(
         ? "Request to Flutterwave timed out"
         : ((error as Error).message ??
           "Network error or non-JSON response from Flutterwave");
-    return { success: false, error: message };
+    return { success: false, error: message, deletedCount: 0 };
   }
 }
 
