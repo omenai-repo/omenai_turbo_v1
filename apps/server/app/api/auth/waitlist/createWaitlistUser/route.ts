@@ -15,7 +15,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { SendWaitlistRegistrationEmail } from "@omenai/shared-emails/src/models/waitlist/SendWaitlistRegistrationEmail";
 
 export const POST = withRateLimit(strictRateLimit)(async function POST(
-  req: Request
+  req: Request,
 ) {
   try {
     await connectMongoDB();
@@ -28,7 +28,10 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     if (waitlistUserExists)
       throw new ConflictError("User previously added to wait list.");
 
-    const payload: Omit<WaitListTypes, "referrerKey" | "waitlistId" | 'discount'> = {
+    const payload: Omit<
+      WaitListTypes,
+      "referrerKey" | "waitlistId" | "discount" | "inviteAccepted" | "entityId"
+    > = {
       name,
       email,
       entity,
@@ -37,26 +40,26 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
 
     if (!createWaitlistUser)
       throw new ServerError(
-        "An error occured while adding you to our waitlist, please try again or contact support"
+        "An error occured while adding you to our waitlist, please try again or contact support",
       );
 
     // TODO: Send a mail to this user informing them they've been added to the waitlist
     await SendWaitlistRegistrationEmail({ email });
     return NextResponse.json(
       { message: "Successfully added to waitlist" },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error: any) {
     const errorResponse = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "auth: Waitlist creation",
       error,
-      errorResponse.status
+      errorResponse.status,
     );
     console.log(error);
     return NextResponse.json(
       { message: errorResponse?.message },
-      { status: errorResponse?.status }
+      { status: errorResponse?.status },
     );
   }
 });
