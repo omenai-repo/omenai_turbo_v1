@@ -1,9 +1,28 @@
-"use client";
-import FormInput from "./components/FormInput";
 import Link from "next/link";
-export default function FormBlock() {
+import React from "react";
+
+export default function LoginFormLayout({
+  children,
+  entity,
+}: Readonly<{
+  children: React.ReactNode;
+  entity: string;
+}>) {
   return (
-    <section className="flex-1 h-full  bg-white relative overflow-y-scroll flex flex-col">
+    <section className="flex-1 h-full bg-white relative overflow-y-scroll flex flex-col">
+      {/* Top Navigation Hook (Premium standard) */}
+      <div className="w-full p-8 flex justify-end items-center gap-4 relative z-20">
+        <span className="text-xs text-slate-400 uppercase tracking-widest">
+          New to Omenai?
+        </span>
+        <Link
+          href="/register"
+          className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-slate-500 hover:border-slate-500 transition-colors"
+        >
+          Create Account
+        </Link>
+      </div>
+
       {/* Form Centering Container */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-12 lg:p-20 relative">
         {/* Subtle Background Grain or Gradient (Optional replacement for dots) */}
@@ -13,15 +32,15 @@ export default function FormBlock() {
           {/* Header section inside the form area for better context */}
           <div className="mb-10 space-y-2">
             <h1 className="text-fluid-xl font-light tracking-tight text-slate-900">
-              Welcome to Omenai
+              Welcome Back
             </h1>
             <p className="text-slate-500 text-fluid-xs font-light">
-              Please fill your information below
+              Please enter your details to access your {entity} account.
             </p>
           </div>
 
           {/* The actual Form component */}
-          <FormInput />
+          {children}
         </div>
       </div>
 
