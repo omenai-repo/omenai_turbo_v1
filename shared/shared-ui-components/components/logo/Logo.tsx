@@ -18,7 +18,7 @@ export const GalleryLogo = ({ className, theme = "dark" }: LogoProps) => {
       >
         <Image
           src={
-            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
           }
           alt="omenai logo"
           width={130}
@@ -40,7 +40,7 @@ export const AdminLogo = ({ className, theme = "dark" }: LogoProps) => {
       >
         <Image
           src={
-            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
           }
           alt="omenai logo"
           width={130}
@@ -67,7 +67,7 @@ export const IndividualLogo = ({ className }: LogoProps) => {
       <Link href={base_uri} className={`flex gap-1 items-end ${className}`}>
         <Image
           src={
-            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
           }
           alt="omenai logo"
           width={130}
@@ -86,7 +86,7 @@ export const ArtistLogo = ({ className }: LogoProps) => {
       <Link href={base_uri} className={`flex gap-1 items-end ${className}`}>
         <Image
           src={
-            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
           }
           alt="omenai logo"
           width={100}

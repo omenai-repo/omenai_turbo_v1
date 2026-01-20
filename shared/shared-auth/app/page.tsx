@@ -1,4 +1,3 @@
-import { createSession, getSession } from "../lib/auth/session";
 import Test from "./Test";
 
 export default function Page() {
