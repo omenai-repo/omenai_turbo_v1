@@ -46,7 +46,7 @@ function Page() {
       </div>
 
       {/* --- Right Side: The Interaction Space (60%) --- */}
-      <section className="flex-1 h-full bg-white relative flex flex-col">
+      <section className="flex-1 h-full bg-white relative overflow-y-scroll flex flex-col">
         {/* Top Navigation Hook (Premium standard) */}
         <div className="w-full p-8 flex justify-end items-center gap-4 relative z-20">
           <span className="text-xs text-slate-400 uppercase tracking-widest">
