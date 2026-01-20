@@ -1,10 +1,9 @@
 import { RegistrationTerminal } from "./components/form/RegisterationTerminal";
 import { HeroManifesto } from "./components/HeroManifesto";
-import { Navbar } from "./components/Navbar";
 
 export default function WaitlistPage() {
   return (
-    <main className="min-h-screen bg-white text-dark selection:bg-neutral-900 selection:text-white overflow-hidden">
+    <main className="min-h-screen bg-white h-full text-dark selection:bg-neutral-900 selection:text-white overflow-hidden">
       {/* <Navbar /> */}
 
       {/* SPLIT SCREEN LAYOUT 
