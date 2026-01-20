@@ -23,8 +23,8 @@ const WaitlistLeadSchema = new Schema<IWaitlistLead>(
       campaign: { type: String, default: "none" },
       referrer: { type: String, default: "" },
     },
+    survey: { type: Schema.Types.Mixed, required: true },
     device: { type: Schema.Types.Mixed, required: false },
-
     hasConvertedToPaid: { type: Boolean, default: false },
   },
   { timestamps: true },

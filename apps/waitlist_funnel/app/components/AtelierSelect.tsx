@@ -57,10 +57,10 @@ export const AtelierSelect = ({
         </select>
 
         {/* 4. Icon Pointer Events */}
-        <ChevronDown
+        {/* <ChevronDown
           className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none z-0 group-hover:text-black transition-colors"
           size={16}
-        />
+        /> */}
       </div>
     </div>
   );
