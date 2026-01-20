@@ -1,6 +1,4 @@
 "use client";
-import { GalleryLogo } from "@omenai/shared-ui-components/components/logo/Logo";
-import Action from "../actions/Action";
 import FormInput from "./components/FormInput";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
