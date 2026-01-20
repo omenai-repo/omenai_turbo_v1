@@ -8,7 +8,6 @@ import { CollectorInputs } from "./CollectorsInput";
 import { IWaitlistLead, WaitlistStateData } from "@omenai/shared-types";
 import { CountryDropdown } from "react-country-region-selector";
 import { useCampaignTracker } from "@omenai/shared-hooks/hooks/useCampaignTracker";
-import { UserType } from "./t";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { AtelierSelect } from "../AtelierSelect";
 import { createWaitlistLead } from "@omenai/shared-services/analytics/createWaitlistLead";
@@ -30,6 +29,7 @@ const INITIAL_WAITLIST_STATE: WaitlistStateData = {
   formal_education: null,
 };
 
+type UserType = "collector" | "artist";
 export const RegistrationTerminal = () => {
   const [step, setStep] = useState<1 | 2>(1);
 
