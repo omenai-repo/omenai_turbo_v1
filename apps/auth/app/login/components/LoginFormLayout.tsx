@@ -4,10 +4,10 @@ import React from "react";
 export default function LoginFormLayout({
   children,
   entity,
-}: {
+}: Readonly<{
   children: React.ReactNode;
   entity: string;
-}) {
+}>) {
   return (
     <section className="flex-1 h-full bg-white relative overflow-y-scroll flex flex-col">
       {/* Top Navigation Hook (Premium standard) */}

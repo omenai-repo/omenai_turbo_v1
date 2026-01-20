@@ -4,10 +4,10 @@ import Link from "next/link";
 export default function FormBlockLayout({
   entity,
   children,
-}: {
+}: Readonly<{
   entity: string;
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <AnimatePresence key={74}>
       <motion.section
