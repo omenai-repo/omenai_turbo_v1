@@ -1228,12 +1228,11 @@ export interface IWaitlistLead extends Document {
   entity: "artist" | "collector";
   kpi: KpiMetrics;
   marketing: Omit<ICampaignVisit, "createdAt">;
+  survey: IWaitlistLeadSurveyData;
   device: WaitlistCampaignDevice;
   hasConvertedToPaid: boolean;
   createdAt: Date;
 }
-
-import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface ICampaignVisit extends Document {
   source: string; // utm_source (e.g., 'twitter')
@@ -1253,11 +1252,43 @@ export type MarketingData = {
   visitorId: string; // (Optional) To de-duplicate refeshes
 };
 
+export type IWaitlistSurveyData = {
+  art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES;
+  current_challenges: CURRENT_CHALLENGES_TYPES;
+  app_value_drivers: APP_VALUE_DRIVERS_TYPES;
+};
+export type CURRENT_CHALLENGES_TYPES =
+  | "ARTIST_VISIBILITY"
+  | "PERSONALIZED_ART_DISCOVERY"
+  | "ART_SALES_BALANCE"
+  | "PRICE_PROVENANCE_TRANSPARENCY"
+  | "LOGISTICS_MANAGEMENT"
+  | "ART_OVERWHELM"
+  | "OTHER";
+
+export type ART_DISCOVERY_METHOD_TYPES =
+  | "SOCIAL_MEDIA"
+  | "GALLERIES"
+  | "ART_FAIRS"
+  | "ONLINE_MARKETPLACES"
+  | "PERSONAL_NETWORK"
+  | "NO_DISCOVERY_METHOD";
+
+export type APP_VALUE_DRIVERS_TYPES =
+  | "ARTIST_DISCOVERY"
+  | "SIMPLIFIED_BUY_SELL"
+  | "ART_COMMUNITY"
+  | "ARTIST_COLLECTOR_CONNECTION"
+  | "ART_EDUCATION_CONTEXT"
+  | "EARLY_ACCESS";
 export interface WaitlistStateData extends Partial<KpiMetrics> {
   name: string;
   email: string;
   language: string;
   country: string;
+  art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES | null;
+  current_challenges: CURRENT_CHALLENGES_TYPES | null;
+  app_value_drivers: APP_VALUE_DRIVERS_TYPES | null;
 }
 
 export type KpiMetrics = {
@@ -1283,3 +1314,31 @@ export type WaitlistCampaignDevice = {
     name: string; // 'Chrome', 'Safari'
   };
 };
+
+export const SURVEY_VALUE_MAP = {
+  CURRENT_CHALLENGES: [
+    "ARTIST_VISIBILITY",
+    "PERSONALIZED_ART_DISCOVERY",
+    "ART_SALES_BALANCE",
+    "PRICE_PROVENANCE_TRANSPARENCY",
+    "LOGISTICS_MANAGEMENT",
+    "ART_OVERWHELM",
+    "OTHER",
+  ],
+  ART_DISCOVERY_METHOD: [
+    "SOCIAL_MEDIA",
+    "GALLERIES",
+    "ART_FAIRS",
+    "ONLINE_MARKETPLACES",
+    "PERSONAL_NETWORK",
+    "NO_DISCOVERY_METHOD",
+  ],
+  APP_VALUE_DRIVERS: [
+    "ARTIST_DISCOVERY",
+    "SIMPLIFIED_BUY_SELL",
+    "ART_COMMUNITY",
+    "ARTIST_COLLECTOR_CONNECTION",
+    "ART_EDUCATION_CONTEXT",
+    "EARLY_ACCESS",
+  ],
+} as const;
