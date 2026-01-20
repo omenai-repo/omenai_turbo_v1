@@ -23,6 +23,22 @@ const artistOnboardingDashboardRegex = /\/artist\/onboarding\/.*/;
 export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname; // Get the current path
 
+  const host = req.headers.get("host");
+
+  // Check if we are on the root domain (not 'join')
+  if (host === "omenai.app" || host === "www.omenai.app") {
+    // 1. Create the destination URL
+    const targetUrl = new URL("https://join.omenai.app");
+
+    // 2. ⚡ CAPTURE: Copy all params from the current request to the target
+    // req.nextUrl.searchParams contains everything the user typed (?a=b&c=d)
+    req.nextUrl.searchParams.forEach((value, key) => {
+      targetUrl.searchParams.set(key, value);
+    });
+
+    // 3. Redirect with the baggage included
+    return NextResponse.redirect(targetUrl);
+  }
   const app_auth_uri = auth_uri();
 
   const publicRoutes = [
@@ -44,7 +60,7 @@ export default async function proxy(req: NextRequest) {
   const session = await getIronSession<{ sessionId: string }>(
     req,
     res,
-    sessionOptions
+    sessionOptions,
   );
 
   const { sessionId } = session;
@@ -108,7 +124,7 @@ export default async function proxy(req: NextRequest) {
     (isGalleryDashboard || isArtistDashboard || isAdminDashboard)
   ) {
     console.log(
-      `[UI Middleware] User role '${role}' forbidden from ${pathname}. Redirecting to user's dashboard.`
+      `[UI Middleware] User role '${role}' forbidden from ${pathname}. Redirecting to user's dashboard.`,
     );
     return NextResponse.redirect(new URL("/user/saves", dashboard_url())); // Redirect to their actual user dashboard
   }
@@ -123,7 +139,7 @@ export default async function proxy(req: NextRequest) {
       isPaymentPage)
   ) {
     console.log(
-      `[UI Middleware] Gallery role '${role}' forbidden from ${pathname}. Redirecting to gallery's dashboard.`
+      `[UI Middleware] Gallery role '${role}' forbidden from ${pathname}. Redirecting to gallery's dashboard.`,
     );
     return NextResponse.redirect(new URL("/gallery/overview", dashboard_url())); // Redirect to their actual gallery dashboard
   }
@@ -138,10 +154,10 @@ export default async function proxy(req: NextRequest) {
       isPaymentPage)
   ) {
     console.log(
-      `[UI Middleware] Artist role '${role}' forbidden from ${pathname}. Redirecting to artist's dashboard.`
+      `[UI Middleware] Artist role '${role}' forbidden from ${pathname}. Redirecting to artist's dashboard.`,
     );
     return NextResponse.redirect(
-      new URL("/artist/app/overview", dashboard_url())
+      new URL("/artist/app/overview", dashboard_url()),
     ); // Redirect to their actual artist dashboard
   }
 
@@ -155,10 +171,10 @@ export default async function proxy(req: NextRequest) {
       isPaymentPage)
   ) {
     console.log(
-      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to login`
+      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to login`,
     );
     return NextResponse.redirect(
-      new URL("/admin/requests/gallery", admin_url())
+      new URL("/admin/requests/gallery", admin_url()),
     ); // Redirect to their actual admin dashboard
   }
 
@@ -166,7 +182,7 @@ export default async function proxy(req: NextRequest) {
   if (role === "artist" && isOnboarding) {
     if (userData.isOnboardingCompleted)
       return NextResponse.redirect(
-        new URL("/artist/app/overview", dashboard_url())
+        new URL("/artist/app/overview", dashboard_url()),
       ); // Redirect to their actual artist dashboard
   }
 
