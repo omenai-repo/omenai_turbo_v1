@@ -15,7 +15,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     // 1. Parse Data
     const body = await req.json();
-    const { email, name, country, entity, kpi, marketing } = body;
+    const { email, name, country, entity, kpi, marketing, survey } = body;
 
     // 2. Validation (Basic)
     if (!email || !name || !entity) {
@@ -45,6 +45,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       entity,
       kpi,
       marketing,
+      survey,
       device: {
         type: result.device.type || "desktop",
         vendor: result.device.vendor || "unknown",

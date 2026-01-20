@@ -13,7 +13,7 @@ export const HeroManifesto = () => {
 
         {/* 1. The Hook (Typography) */}
         <div className="mb-16 space-y-8">
-          <h1 className="font-sans text-2xl md:text-3xl lg:text-fluid-4xl xl:text-5xl font-normal leading-[0.9] text-dark tracking-normal text-balance">
+          <h1 className="font-serif text-2xl md:text-3xl lg:text-fluid-4xl xl:text-5xl font-normal leading-[0.9] text-dark tracking-normal text-balance">
             Are you ready to shape the new Contemporary African Art landscape?
           </h1>
           {/* Added color accent to the border-l */}
@@ -24,18 +24,6 @@ export const HeroManifesto = () => {
         </div>
 
         <CountdownTimer />
-
-        {/* 2. The Visual Proof (Image) */}
-        {/* <div className="relative w-full max-w-3xl aspect-[16/9] bg-slate-100 overflow-hidden mb-20 transition-all duration-1000 ease-out group rounded-sm">
-        <div className="absolute inset-0 transition-colors z-10 pointer-events-none"></div>
-        <Image
-          src="/mobile_picture.webp"
-          alt="Omenai Mobile Application Interface"
-          fill
-          className="object-cover object-center scale-105 hover:scale-100 transition-transform duration-1000"
-          priority
-        />
-      </div> */}
 
         {/* 3. The Pitch (Body Text) */}
         <div className="max-w-2xl mb-24">

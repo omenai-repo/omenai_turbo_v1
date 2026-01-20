@@ -1,7 +1,6 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
 import { IWaitlistLead } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { create } from "zustand";
 
 type Payload = Omit<
   IWaitlistLead,

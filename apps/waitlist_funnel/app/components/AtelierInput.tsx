@@ -58,14 +58,11 @@ export const AtelierInput = ({
         {...props}
         className={`
           w-full rounded-none
-          border-b border-neutral-300 bg-transparent py-3 
+          border border-neutral-300 bg-transparent p-3 
           font-sans text-sm text-black font-medium
           placeholder:text-neutral-400
           focus:border-black focus:outline-none focus:ring-0
           transition-colors
-          
-          /* AUTOFILL STYLING FIX */
-          /* Removes the ugly Chrome yellow background, keeping it "Atelier" transparent */
           autofill:bg-transparent
           [-webkit-autofill]:shadow-[0_0_0_30px_white_inset_!important]
           [-webkit-autofill]:text-fill-color-black
