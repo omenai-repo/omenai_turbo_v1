@@ -12,23 +12,28 @@ import { DenseBarChart } from "./components/charts/DenseChartBar";
 import { StrategyFeed } from "./components/StrategyFeed";
 import { MetricCards } from "./components/MetricCards";
 import { RoiBarChart } from "./components/charts/RoiBarChart";
-import { FilterSidebar } from "./crm/components/FilterSideBar";
-import { UserTable } from "./crm/components/UserTable";
 
 // CRM Components
+import { FilterSidebar } from "./crm/components/FilterSideBar";
+import { UserTable } from "./crm/components/UserTable";
+import { SurveyView } from "./components/SurveyView";
+
+// Survey Components
 
 export default function EnterpriseDashboard() {
   // ---------------------------------------------------------------------------
   // 1. VIEW STATE MANAGEMENT
   // ---------------------------------------------------------------------------
-  const [viewMode, setViewMode] = useState<"analytics" | "crm">("analytics");
+  const [viewMode, setViewMode] = useState<"analytics" | "crm" | "survey">(
+    "analytics",
+  );
   const [crmTab, setCrmTab] = useState<"artist" | "collector">("collector");
 
   // ---------------------------------------------------------------------------
-  // 2. DATA HOOKS (Conditional Loading)
+  // 2. DATA HOOKS
   // ---------------------------------------------------------------------------
 
-  // Analytics Data (Always fetched or cached)
+  // Analytics Data
   const {
     data: analyticsData,
     isLoading: analyticsLoading,
@@ -39,10 +44,8 @@ export default function EnterpriseDashboard() {
   const stats = analyticsData?.stats;
   const suggestions = analyticsData?.suggestions || [];
 
-  // CRM Data (Only active when viewMode is 'crm')
-  // We pass the active tab ('artist' or 'collector') to fetch the right users
+  // CRM Data
   const crm = useUserOperations(crmTab);
-  console.log(crm.facets);
 
   // ---------------------------------------------------------------------------
   // 3. LOADING & ERROR STATES (Analytics View Only)
@@ -83,6 +86,16 @@ export default function EnterpriseDashboard() {
               }`}
             >
               Mission Control
+            </button>
+            <button
+              onClick={() => setViewMode("survey")}
+              className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${
+                viewMode === "survey"
+                  ? "bg-white shadow-sm text-slate-900"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              Survey Intel
             </button>
             <button
               onClick={() => setViewMode("crm")}
@@ -128,8 +141,8 @@ export default function EnterpriseDashboard() {
       {/* ======================================================================
           VIEW 1: ANALYTICS DASHBOARD
       ====================================================================== */}
-      {viewMode === "analytics" ? (
-        <div className="p-6 md:p-8">
+      {viewMode === "analytics" && (
+        <div className="p-6 md:p-8 animate-in fade-in duration-300">
           {/* Header Stats */}
           <div className="mb-8">
             <div className="mb-6">
@@ -288,17 +301,28 @@ export default function EnterpriseDashboard() {
             </div>
           </div>
         </div>
-      ) : (
-        /* ======================================================================
-            VIEW 2: CRM / USER OPERATIONS
-        ====================================================================== */
-        <div className="flex h-[calc(100vh-73px)] overflow-hidden bg-slate-50">
+      )}
+
+      {/* ======================================================================
+          VIEW 2: SURVEY INTEL (New)
+      ====================================================================== */}
+      {viewMode === "survey" && (
+        <div className="p-6 md:p-8 animate-in fade-in duration-300">
+          <SurveyView />
+        </div>
+      )}
+
+      {/* ======================================================================
+          VIEW 3: CRM / USER OPERATIONS
+      ====================================================================== */}
+      {viewMode === "crm" && (
+        <div className="flex h-[calc(100vh-73px)] overflow-hidden bg-slate-50 animate-in fade-in duration-300">
           {/* Sidebar Filter Panel */}
           <FilterSidebar
             activeTab={crmTab}
             filters={crm.filters}
             setFilters={crm.setFilters}
-            facets={crm.facets} // 👈 Pass the dynamic data here
+            facets={crm.facets}
           />
 
           {/* Main Content Area */}

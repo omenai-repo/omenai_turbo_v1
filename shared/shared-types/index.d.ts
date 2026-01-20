@@ -1286,6 +1286,7 @@ export interface IWaitlistLead extends Document {
   kpi: KpiMetrics;
   marketing: Omit<ICampaignVisit, "createdAt">;
   survey: IWaitlistLeadSurveyData;
+  survey: IWaitlistLeadSurveyData;
   device: WaitlistCampaignDevice;
   hasConvertedToPaid: boolean;
   createdAt: Date;
@@ -1336,6 +1337,12 @@ export type IWaitlistSurveyData = {
   current_challenges: CURRENT_CHALLENGES_TYPES;
   app_value_drivers: APP_VALUE_DRIVERS_TYPES;
 };
+
+export type IWaitlistSurveyData = {
+  art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES;
+  current_challenges: CURRENT_CHALLENGES_TYPES;
+  app_value_drivers: APP_VALUE_DRIVERS_TYPES;
+};
 export type CURRENT_CHALLENGES_TYPES =
   | "ARTIST_VISIBILITY"
   | "PERSONALIZED_ART_DISCOVERY"
@@ -1365,6 +1372,9 @@ export interface WaitlistStateData extends Partial<KpiMetrics> {
   email: string;
   language: string;
   country: string;
+  art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES | null;
+  current_challenges: CURRENT_CHALLENGES_TYPES | null;
+  app_value_drivers: APP_VALUE_DRIVERS_TYPES | null;
   art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES | null;
   current_challenges: CURRENT_CHALLENGES_TYPES | null;
   app_value_drivers: APP_VALUE_DRIVERS_TYPES | null;
@@ -1421,3 +1431,16 @@ export const SURVEY_VALUE_MAP = {
     "EARLY_ACCESS",
   ],
 } as const;
+
+export type DeletePromise = Promise<
+  | {
+      success: boolean;
+      jobId: string;
+      error?: undefined;
+    }
+  | {
+      success: boolean;
+      jobId: string;
+      error: string;
+    }
+>;

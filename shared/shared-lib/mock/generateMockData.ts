@@ -1,144 +1,3 @@
-export const generateMockData = () => {
-  const data = [];
-  const entities = ["artist", "collector"];
-  const buyingFreqs = ["frequently", "regularly", "rarely"];
-  const education = ["degree", "workshop", "self-taught"];
-  const sources = [
-    "twitter",
-    "linkedin",
-    "instagram",
-    "google",
-    "direct",
-    "newsletter",
-    "facebook",
-    "referral",
-    "other",
-  ];
-  const countries = [
-    "Nigeria",
-    "United States",
-    "United Kingdom",
-    "Ghana",
-    "South Africa",
-    "Canada",
-    "Germany",
-    "France",
-    "Brazil",
-    "Australia",
-    "India",
-    "Kenya",
-    "Italy",
-    "Spain",
-    "Netherlands",
-    "Sweden",
-    "Mexico",
-    "Japan",
-    "China",
-    "Russia",
-    "Turkey",
-    "Egypt",
-    "Argentina",
-    "Colombia",
-    "Chile",
-    "Peru",
-    "Poland",
-    "Belgium",
-    "Switzerland",
-    "Austria",
-    "Norway",
-    "Denmark",
-    "Finland",
-    "Ireland",
-    "New Zealand",
-    "Portugal",
-    "Czech Republic",
-    "Hungary",
-    "Greece",
-    "South Korea",
-  ];
-  const deviceTypes = ["mobile", "desktop", "tablet"];
-
-  for (let i = 0; i < 100; i++) {
-    // 1. Determine Identity
-    const isArtist = Math.random() > 0.4; // 60% Artists, 40% Collectors
-    const entity = isArtist ? "artist" : "collector";
-    const country = countries[Math.floor(Math.random() * countries.length)];
-
-    // 2. Generate KPIs based on Entity
-    let kpi = {};
-    if (isArtist) {
-      kpi = {
-        years_of_practice: Math.floor(Math.random() * 15 + 1).toString(), // 1-15 years
-        formal_education:
-          education[Math.floor(Math.random() * education.length)],
-        age: Math.floor(Math.random() * 40 + 25).toString(), // 25-65
-        // Artists don't have buying frequency usually, but schema allows mixed
-      };
-    } else {
-      kpi = {
-        buying_frequency:
-          buyingFreqs[Math.floor(Math.random() * buyingFreqs.length)],
-        years_of_collecting: Math.floor(Math.random() * 20 + 1).toString(),
-        collector_type: Math.random() > 0.5 ? "private" : "corporate",
-      };
-    }
-
-    // 3. Generate Tech Stack (Correlated)
-    // If mobile, likely iOS/Android. If desktop, likely Windows/Mac.
-    const deviceType =
-      deviceTypes[Math.floor(Math.random() * deviceTypes.length)];
-    let osName = "Windows";
-    let vendor = "unknown";
-    let model = "unknown";
-
-    if (deviceType === "mobile") {
-      const isIos = Math.random() > 0.5;
-      osName = isIos ? "iOS" : "Android";
-      vendor = isIos ? "Apple" : "Samsung";
-      model = isIos
-        ? `iPhone ${Math.floor(Math.random() * 4 + 11)}`
-        : "Galaxy S22";
-    } else if (deviceType === "desktop") {
-      osName = Math.random() > 0.5 ? "Mac OS" : "Windows";
-      vendor = osName === "Mac OS" ? "Apple" : "Generic";
-      model = "PC";
-    }
-
-    // 4. Marketing Source
-    // Skew LinkedIn towards Collectors
-    let source = sources[Math.floor(Math.random() * sources.length)];
-    if (!isArtist && Math.random() > 0.6) source = "linkedin";
-
-    data.push({
-      email: `user${i}_${Math.random().toString(36).substring(7)}@example.com`,
-      name: `Mock User ${i}`,
-      country: country,
-      entity: entity,
-      kpi: kpi,
-      marketing: {
-        source: source,
-        medium: source === "direct" || source === "google" ? "none" : "social",
-        campaign: "waitlist_launch_2026",
-        referrer: source === "google" ? "google.com" : "",
-      },
-      device: {
-        type: deviceType,
-        vendor: vendor,
-        model: model,
-      },
-      os: {
-        name: osName,
-        version: "10.0",
-      },
-      browser: {
-        name: "Chrome",
-      },
-    });
-  }
-
-  return data;
-};
-
 export const seedVisits = () => {
   const sources = [
     "twitter",
@@ -192,3 +51,177 @@ export const seedVisits = () => {
 };
 
 // await seedVisits();
+
+export const generateMockData = () => {
+  const data = [];
+  const entities = ["artist", "collector"];
+
+  // 1. Define Options exactly as they appear in your DB (Lowercase/Snake_case)
+  const discoveryMethods = [
+    "social_media",
+    "galleries",
+    "art_fairs",
+    "online_marketplaces",
+    "personal_network",
+    "no_discovery_method",
+  ];
+
+  const challenges = [
+    "artist_visibility",
+    "personalized_art_discovery",
+    "art_sales_balance",
+    "price_provenance_transparency",
+    "logistics_management",
+    "art_overwhelm",
+    "other",
+  ];
+
+  const valueDrivers = [
+    "artist_discovery",
+    "simplified_buy_sell",
+    "art_community",
+    "artist_collector_connection",
+    "art_education_context",
+    "early_access",
+  ];
+
+  const sources = [
+    "twitter",
+    "linkedin",
+    "instagram",
+    "google",
+    "direct",
+    "newsletter",
+    "facebook",
+    "referral",
+    "other",
+  ];
+  const countries = [
+    "Nigeria",
+    "United States",
+    "United Kingdom",
+    "Ghana",
+    "South Africa",
+    "Canada",
+    "Germany",
+    "France",
+    "Brazil",
+    "Australia",
+    "India",
+    "Kenya",
+    "Italy",
+    "Spain",
+    "Netherlands",
+    "Sweden",
+    "Mexico",
+    "Japan",
+    "China",
+    "Russia",
+    "Turkey",
+    "Egypt",
+    "Argentina",
+    "Colombia",
+    "Chile",
+    "Peru",
+    "Poland",
+    "Belgium",
+    "Switzerland",
+    "Austria",
+    "Norway",
+    "Denmark",
+    "Finland",
+    "Ireland",
+    "New Zealand",
+    "Portugal",
+    "Czech Republic",
+    "Hungary",
+    "Greece",
+    "South Korea",
+  ];
+  const buyingFreqs = ["frequently", "regularly", "rarely"];
+  const education = ["degree", "workshop", "self-taught"];
+
+  for (let i = 0; i < 100; i++) {
+    const isArtist = Math.random() > 0.4; // 60% Artists
+    const entity = isArtist ? "artist" : "collector";
+    const country = countries[Math.floor(Math.random() * countries.length)];
+
+    // 2. Generate Logic-Based Survey Answers
+    let survey = {
+      art_discovery_or_share_method: "",
+      current_challenges: "",
+      app_value_drivers: "",
+    };
+
+    if (isArtist) {
+      // Artists care about Visibility and Sales
+      survey.current_challenges =
+        Math.random() > 0.3 ? "artist_visibility" : "art_sales_balance";
+
+      survey.app_value_drivers =
+        Math.random() > 0.5 ? "artist_collector_connection" : "art_community";
+
+      survey.art_discovery_or_share_method = "social_media"; // Artists live on IG
+    } else {
+      // Collectors care about Transparency and Discovery
+      survey.current_challenges =
+        Math.random() > 0.4
+          ? "price_provenance_transparency"
+          : "personalized_art_discovery";
+
+      survey.app_value_drivers =
+        Math.random() > 0.5 ? "simplified_buy_sell" : "artist_discovery";
+
+      survey.art_discovery_or_share_method =
+        Math.random() > 0.5 ? "galleries" : "online_marketplaces";
+    }
+
+    // 3. Generate KPIs
+    let kpi = {};
+    if (isArtist) {
+      kpi = {
+        years_of_practice: Math.floor(Math.random() * 15 + 1).toString(),
+        formal_education:
+          education[Math.floor(Math.random() * education.length)],
+      };
+    } else {
+      kpi = {
+        buying_frequency:
+          buyingFreqs[Math.floor(Math.random() * buyingFreqs.length)],
+        years_of_collecting: Math.floor(Math.random() * 20 + 1).toString(),
+        collector_type: Math.random() > 0.5 ? "private" : "corporate",
+      };
+    }
+
+    // 4. Push User
+    data.push({
+      email: `user${i}_${Math.random().toString(36).substring(7)}@example.com`,
+      name: `Mock User ${i}`,
+      country: country,
+      entity: entity,
+      kpi: kpi,
+
+      // The New Survey Field
+      survey: survey,
+
+      marketing: {
+        source: isArtist ? "instagram" : "linkedin", // Correlate source too
+        medium: "social",
+        campaign: "launch_v1",
+        referrer: "",
+      },
+      device: {
+        type: Math.random() > 0.6 ? "mobile" : "desktop",
+        vendor: "Apple",
+        model: "iPhone 13",
+      },
+      os: { name: "iOS", version: "15" },
+      browser: { name: "Safari" },
+      createdAt: new Date(
+        Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 7),
+      ), // Last 7 days
+    });
+  }
+
+  return data;
+};
