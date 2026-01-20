@@ -9,10 +9,8 @@ interface TimeLeft {
 }
 
 export const CountdownTimer = () => {
-  // Set launch date to 11 days from now as per your original content
-  const [targetDate] = useState(
-    new Date(Date.now() + 25 * 24 * 60 * 60 * 1000),
-  );
+  const [targetDate] = useState(new Date("2026-02-13T00:00:00"));
+
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
