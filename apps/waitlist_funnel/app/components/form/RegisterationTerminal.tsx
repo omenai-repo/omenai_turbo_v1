@@ -30,17 +30,22 @@ const INITIAL_WAITLIST_STATE: WaitlistStateData = {
 };
 type UserType = "collector" | "artist";
 
+type UserType = "collector" | "artist";
+
 export const RegistrationTerminal = () => {
   const [step, setStep] = useState<1 | 2>(1);
-
   const [userType, setUserType] = useState<UserType>("collector");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [waitlistData, setWaitlistData] = useState<WaitlistStateData>(
+    INITIAL_WAITLIST_STATE,
+  );
+
+  const { getMarketingData } = useCampaignTracker();
 
   const handleSetUserType = (type: UserType) => {
     setUserType(type);
     resetForm("partial");
   };
-  const { getMarketingData } = useCampaignTracker();
 
   const resetForm = (state: "partial" | "complete") => {
     if (state === "partial")
@@ -53,9 +58,6 @@ export const RegistrationTerminal = () => {
       });
     else setWaitlistData(INITIAL_WAITLIST_STATE);
   };
-  const [waitlistData, setWaitlistData] = useState<WaitlistStateData>(
-    INITIAL_WAITLIST_STATE,
-  );
 
   const handleCountrySelect = (value: string) => {
     setWaitlistData((prev) => ({ ...prev, country: value }));
@@ -65,7 +67,6 @@ export const RegistrationTerminal = () => {
     e: ChangeEvent<HTMLSelectElement | HTMLInputElement>,
   ) => {
     const { name, value } = e.target;
-
     setWaitlistData((prev) => ({
       ...prev,
       [name]: value,
@@ -93,7 +94,6 @@ export const RegistrationTerminal = () => {
       const marketing = getMarketingData();
       const { name, email, language, country } = waitlistData;
 
-      // 2. Build the payload based on the active category
       let payload;
 
       if (userType === "artist") {
@@ -174,9 +174,9 @@ export const RegistrationTerminal = () => {
   }
 
   return (
-    <div className="bg-white border-l border-neutral-100 h-full flex flex-col relative overflow-hidden">
-      {/* HEADER: Context-Aware */}
-      <div className="p-8 border-b border-neutral-100 bg-neutral-50/30 z-20 relative">
+    <div className="bg-white border-l border-neutral-100 h-full flex flex-col relative">
+      {/* HEADER */}
+      <div className="p-8 border-b border-neutral-100 bg-neutral-50/30 z-20  sticky top-0">
         <div className="flex items-center justify-between mb-4">
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-400">
             Step {step} of 2
@@ -197,8 +197,9 @@ export const RegistrationTerminal = () => {
         </h2>
       </div>
 
-      {/* FORM BODY: Animated Transition */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden relative">
+      {/* FORM BODY */}
+      {/* Change: Removed 'overflow-y-auto' from wrapper so mobile window scrolls naturally */}
+      <div className="flex-1 relative">
         <AnimatePresence mode="wait">
           {/* STEP 1: IDENTITY */}
           {step === 1 && (
@@ -209,9 +210,9 @@ export const RegistrationTerminal = () => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
               onSubmit={handleNext}
-              className="p-8 space-y-4 absolute inset-0 overflow-y-auto"
+              // Change: 'relative' for mobile, 'absolute' for desktop
+              className="p-8 space-y-4 relative w-full lg:absolute lg:inset-0 lg:overflow-y-auto"
             >
-              {/* THE TOGGLE: "The Twist" */}
               <div className="space-y-4 mb-8">
                 <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500 block">
                   I am joining as:
@@ -223,7 +224,7 @@ export const RegistrationTerminal = () => {
                       type="button"
                       onClick={() => handleSetUserType(r)}
                       className={`flex-1 py-3 text-center font-mono text-[10px] uppercase tracking-[0.2em] transition-all
-                          ${userType === r ? "bg-dark text-white shadow-sm border border-neutral-100" : "text-dark bg-white border-neutral-100 hover:text-neutral-600"}
+                          ${userType === r ? "bg-black text-white shadow-sm border border-neutral-100" : "text-black bg-white border-neutral-100 hover:text-neutral-600"}
                         `}
                     >
                       {r}
@@ -231,6 +232,7 @@ export const RegistrationTerminal = () => {
                   ))}
                 </div>
               </div>
+
               <div className="grid grid-cols-1 gap-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <AtelierInput
@@ -255,13 +257,13 @@ export const RegistrationTerminal = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-2 w-full">
-                    <label className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-500">
+                    <label className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
                       Country of Residence *
                     </label>
                     <CountryDropdown
                       value={waitlistData.country}
                       onChange={(val: string) => handleCountrySelect(val)}
-                      className="w-full appearance-none border-b border-neutral-300 bg-transparent py-3 font-sans focus:ring-0 text-sm text-dark focus:border-black focus:outline-none transition-colors rounded-none"
+                      className="w-full appearance-none border-b border-neutral-300 bg-transparent py-3 font-sans focus:ring-0 text-sm text-black focus:border-black focus:outline-none transition-colors rounded-none"
                     />
                   </div>
                   <AtelierInput
@@ -389,22 +391,16 @@ export const RegistrationTerminal = () => {
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
               onSubmit={handleSubmit}
-              className="p-8 md:p-12 space-y-8 absolute inset-0 overflow-y-auto"
+              // Change: 'relative' for mobile, 'absolute' for desktop
+              className="p-8 md:p-12 space-y-8 relative w-full lg:absolute lg:inset-0 lg:overflow-y-auto"
             >
-              {/* Conditional Rendering of KPI Forms */}
-              {/* Note: Pass 'data' and 'handleUpdate' down to these components if you want them to be pure presentation, 
-                  or keep using your existing context/state structure. 
-                  Below assumes the components accept props. */}
-
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                 {userType === "artist" ? (
-                  // Pass data/handlers to ArtistForm
                   <ArtistInputs
                     waitlistData={waitlistData}
                     setWaitlistData={setWaitlistData}
                   />
                 ) : (
-                  // Pass data/handlers to CollectorForm
                   <CollectorInputs
                     waitlistData={waitlistData}
                     setWaitlistData={setWaitlistData}
