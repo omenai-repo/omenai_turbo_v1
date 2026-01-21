@@ -7,6 +7,7 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import RecentViewedCard from "@omenai/shared-ui-components/components/artworks/RecentViewedCard";
+import { MdHistory } from "react-icons/md";
 
 export default function RecentViewArtworks({ artworks }: { artworks: any }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -15,30 +16,24 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
     dragFree: true,
   });
 
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  // Sync Progress
-  const onScroll = useCallback((api: any) => {
-    const progress = Math.max(0, Math.min(1, api.scrollProgress()));
-    setScrollProgress(progress);
+  const onSelect = useCallback((api: any) => {
     setCanScrollPrev(api.canScrollPrev());
     setCanScrollNext(api.canScrollNext());
   }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
-    onScroll(emblaApi);
-    emblaApi.on("reInit", onScroll);
-    emblaApi.on("scroll", onScroll);
-    emblaApi.on("resize", onScroll);
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
     return () => {
-      emblaApi.off("reInit", onScroll);
-      emblaApi.off("scroll", onScroll);
-      emblaApi.off("resize", onScroll);
+      emblaApi.off("reInit", onSelect);
+      emblaApi.off("select", onSelect);
     };
-  }, [emblaApi, onScroll]);
+  }, [emblaApi, onSelect]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -51,38 +46,47 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
   if (!artworks || artworks.length === 0) return null;
 
   return (
-    <section className="w-full bg-neutral-50 py-20 border-t border-neutral-200">
-      <div className="container mx-auto">
-        {/* 1. HEADER: Minimalist Split */}
-        <div className="mb-12 flex flex-col py-6 items-start justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <span className="mb-4 block font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-400">
-              Session History
-            </span>
-            <h2 className="text-5xl md:text-6xl font-serif text-neutral-900 md:text-5xl">
-              Collector’s{" "}
-              <span className="italic text-neutral-500">Trace.</span>
+    <section className="w-full bg-[#FAFAFA] py-12 md:py-16 border-t border-neutral-200">
+      <div className="container mx-auto px-4">
+        {/* 1. HEADER: Utility Style (Smaller, Functional) */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <MdHistory className="text-dark  text-xl" />
+            <h2 className="text-xl md:text-2xl font-serif text-dark ">
+              Recently Viewed
             </h2>
           </div>
 
-          <div className="flex max-w-xs flex-col items-start gap-1 text-right md:items-end">
-            <p className="font-sans text-xs text-neutral-500">
-              Visual artifacts from your journey.
-            </p>
+          {/* Controls */}
+          <div className="flex gap-2">
+            <button
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
+            >
+              <MdOutlineKeyboardArrowLeft className="text-lg" />
+            </button>
+            <button
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
+            >
+              <MdOutlineKeyboardArrowRight className="text-lg" />
+            </button>
           </div>
         </div>
 
-        {/* 2. TIMELINE CAROUSEL */}
+        {/* 2. CAROUSEL */}
         <div className="embla overflow-hidden" ref={emblaRef}>
-          <div className="embla__container flex gap-6 md:gap-8">
+          <div className="embla__container flex gap-4 md:gap-6">
             {artworks.map((artwork: any, index: number) => {
               return (
                 <div
                   className="embla__slide min-w-0 flex-[0_0_auto]"
                   key={index + artwork.art_id}
                 >
-                  {/* Smaller Card Width for "History" feel (260px - 300px) */}
-                  <div className="w-[260px] md:w-[300px]">
+                  {/* Compact Card Width */}
+                  <div className="w-[200px] md:w-[240px]">
                     <RecentViewedCard
                       image={artwork.url}
                       artist={artwork.artist}
@@ -93,35 +97,6 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* 3. CONTROLS (Bottom Aligned) */}
-        <div className="mt-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          {/* Progress Line */}
-          <div className="relative h-[1px] w-full bg-neutral-200 md:max-w-xs">
-            <div
-              className="absolute top-0 left-0 h-full bg-dark transition-all duration-300"
-              style={{ width: `${scrollProgress * 100}%` }}
-            />
-          </div>
-
-          {/* Square Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={scrollPrev}
-              disabled={!canScrollPrev}
-              className="flex h-10 w-10 items-center justify-center border border-neutral-300 bg-transparent text-neutral-900 transition-all hover:border-black hover:bg-dark hover:text-white disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-neutral-900 disabled:hover:border-neutral-300"
-            >
-              <MdOutlineKeyboardArrowLeft className="text-xl" />
-            </button>
-            <button
-              onClick={scrollNext}
-              disabled={!canScrollNext}
-              className="flex h-10 w-10 items-center justify-center border border-neutral-300 bg-transparent text-neutral-900 transition-all hover:border-black hover:bg-dark hover:text-white disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-neutral-900 disabled:hover:border-neutral-300"
-            >
-              <MdOutlineKeyboardArrowRight className="text-xl" />
-            </button>
           </div>
         </div>
       </div>

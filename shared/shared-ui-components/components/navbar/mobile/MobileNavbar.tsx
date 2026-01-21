@@ -13,9 +13,9 @@ import {
 import SearchInput from "../ui/SearchInput";
 
 const navItems = [
-  { label: "Collect", href: "/catalog", index: "01" },
-  { label: "Editorials", href: "/articles", index: "02" },
-  { label: "Shop", href: "https://omenai.shop", index: "03" },
+  { label: "Collect Art", href: "/catalog" },
+  { label: "Editorials", href: "/articles" },
+  { label: "Visit Shop", href: "https://omenai.shop" },
 ];
 
 const loggedInRouteMap = {
@@ -49,57 +49,57 @@ export default function MobileNavbar() {
 
   return (
     <>
+      {/* Overlay */}
       <div
         onClick={() => updateOpenSideNav(false)}
-        className={`fixed inset-0 z-[99] bg-black/20 backdrop-blur-sm transition-opacity duration-500 lg:hidden ${
+        className={`fixed inset-0 z-[99] bg-[#091830]/40 backdrop-blur-sm transition-opacity duration-500 lg:hidden ${
           openSideNav
             ? "opacity-100 visible"
             : "opacity-0 invisible pointer-events-none"
         }`}
       />
 
+      {/* Drawer */}
       <div
-        className={`fixed inset-y-0 right-0 z-[100] w-full max-w-sm bg-white shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] lg:hidden ${
+        className={`fixed inset-y-0 right-0 z-[100] w-[85%] max-w-sm bg-white shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:hidden ${
           openSideNav ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col">
-          <div className="flex justify-between items-center py-6 px-6 border-b border-neutral-100">
+          {/* Header */}
+          <div className="flex justify-between items-center py-5 px-6 border-b border-neutral-100">
             <IndividualLogo />
             <button
               onClick={() => updateOpenSideNav(false)}
-              className="p-2 hover:bg-neutral-50 rounded-full transition-colors"
+              className="p-2 -mr-2 text-neutral-500 hover:text-neutral-900 transition-colors"
             >
-              <TfiClose size={24} />
+              <TfiClose size={20} />
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-8 py-8">
-            {/* Search Input (Mobile Only) */}
-            <div className="mb-10">
+          {/* Content */}
+          <nav className="flex-1 overflow-y-auto px-6 py-6">
+            {/* Search Priority */}
+            <div className="mb-8">
               <SearchInput setIsMobileMenuOpen={updateOpenSideNav} />
             </div>
 
-            <ul className="space-y-8">
+            {/* Links */}
+            <ul className="space-y-2">
               {navItems.map((item) => (
-                <li key={item.index} className="group overflow-hidden">
+                <li key={item.label}>
                   <Link
                     href={item.href}
                     onClick={() => updateOpenSideNav(false)}
-                    className="flex items-end gap-4"
+                    className="block px-4 py-3 rounded-lg text-sm font-sans font-medium text-neutral-800 hover:bg-neutral-50 hover:text-dark  transition-colors"
                   >
-                    <span className="text-[10px] font-mono text-neutral-300 mb-2">
-                      {item.index}
-                    </span>
-                    <span className="text-4xl font-serif italic text-dark group-hover:pl-4 transition-all duration-500">
-                      {item.label}
-                    </span>
+                    {item.label}
                   </Link>
                 </li>
               ))}
 
               {user && user.role !== "user" && (
-                <li className="group overflow-hidden">
+                <li>
                   <Link
                     href={
                       loggedInRouteMap[
@@ -107,32 +107,26 @@ export default function MobileNavbar() {
                       ]
                     }
                     onClick={() => updateOpenSideNav(false)}
-                    className="flex items-end gap-4"
+                    className="block px-4 py-3 rounded-lg text-sm font-sans font-medium text-dark  bg-neutral-50"
                   >
-                    <span className="text-[10px] font-mono text-neutral-300 mb-2">
-                      04
-                    </span>
-                    <span className="text-4xl font-serif italic text-dark group-hover:pl-4 transition-all duration-500">
-                      Dashboard
-                    </span>
+                    Dashboard
                   </Link>
                 </li>
               )}
             </ul>
 
-            {/* If NOT logged in, we still need Login links here because 
-                the header UserMenu won't exist for guests */}
+            {/* Footer / Login Actions */}
             {!user && (
-              <div className="mt-20 pt-8 border-t border-neutral-100 flex flex-col gap-6">
+              <div className="mt-10 pt-8 border-t border-neutral-100 flex flex-col gap-4">
                 <Link
                   href={`${login_base_url}/login/user`}
-                  className="text-xs uppercase tracking-[0.3em] font-bold hover:text-neutral-600 transition-colors"
+                  className="w-full text-center py-3 rounded-lg border border-neutral-200 text-sm font-sans font-semibold text-neutral-700 hover:border-neutral-400 transition-colors"
                 >
-                  Login
+                  Log In
                 </Link>
                 <Link
                   href={`${login_base_url}/register`}
-                  className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 hover:text-black transition-colors"
+                  className="w-full text-center py-3 rounded-lg bg-[#091830] text-sm font-sans font-semibold text-white shadow-md hover:bg-[#0F2342] transition-colors"
                 >
                   Create Account
                 </Link>

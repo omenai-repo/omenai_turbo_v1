@@ -11,6 +11,7 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { useEffect } from "react";
+import { HiViewGrid } from "react-icons/hi";
 
 export function ArtworksListing({
   medium,
@@ -34,12 +35,12 @@ export function ArtworksListing({
   const { width } = useWindowSize();
 
   const { data: artworksArray, isLoading: loading } = useQuery({
-    queryKey: ["get_artworks_by_collection", medium, currentPage], // Added currentPage to key
+    queryKey: ["get_artworks_by_collection", medium, currentPage],
     queryFn: async () => {
       const response = await fetchArtworksByCriteria(
         currentPage,
         filterOptions,
-        medium
+        medium,
       );
 
       if (response?.data) {
@@ -64,35 +65,37 @@ export function ArtworksListing({
 
   if (!artworks || artworks.length === 0) {
     return (
-      <div className="flex h-[50vh] w-full flex-col items-center justify-center border border-dashed border-neutral-200">
-        <NotFoundData />
-        <span className="mt-4 font-mono text-xs text-neutral-400">
-          No works found in this collection.
-        </span>
+      <div className="flex h-96 w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-neutral-50">
+        <div className="scale-75 opacity-50">
+          <NotFoundData />
+        </div>
       </div>
     );
   }
 
   const arts = catalogChunk(
     artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   return (
     <div className="w-full">
-      {/* Count Indicator */}
-      <div className="mb-8 flex items-center gap-2">
-        <div className="h-1.5 w-1.5 bg-dark rounded"></div>
-        <span className="font-mono text-xs uppercase tracking-widest text-neutral-500">
-          {artwork_total} Works Available
-        </span>
+      {/* 1. Results Header */}
+      <div className="mb-8 flex items-center justify-between border-b border-neutral-100 pb-4">
+        <div className="flex items-center gap-2">
+          <HiViewGrid className="text-neutral-400" />
+          <span className="font-sans text-sm font-medium text-neutral-500">
+            Showing <strong className="text-dark ">{artwork_total}</strong>{" "}
+            results
+          </span>
+        </div>
       </div>
 
-      {/* The Grid */}
-      <div className="flex flex-wrap justify-center gap-x-8">
+      {/* 2. The Masonry Grid */}
+      <div className="flex flex-wrap justify-center gap-6 md:gap-8">
         {arts.map((column: any[], colIndex) => {
           return (
-            <div className="flex flex-1 flex-col gap-12" key={colIndex}>
+            <div className="flex flex-1 flex-col gap-8" key={colIndex}>
               {column.map((art: any) => {
                 return (
                   <ArtworkCard
@@ -116,8 +119,8 @@ export function ArtworksListing({
         })}
       </div>
 
-      {/* Pagination */}
-      <div className="mt-20 border-t border-neutral-100 pt-12">
+      {/* 3. Pagination */}
+      <div className="mt-20 border-t border-neutral-100 pt-12 flex justify-center">
         <Pagination
           total={pageCount}
           fn={fetchArtworksByCriteria}

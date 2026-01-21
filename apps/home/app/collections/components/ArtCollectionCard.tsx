@@ -1,3 +1,5 @@
+"use client";
+
 import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 import Image from "next/image";
@@ -13,47 +15,43 @@ export default function ArtCollectionCard({
   url: string;
   index: number;
 }) {
-  const safeSlug = encodeURIComponent(title)
-    .replaceAll(/\(/g, "%28")
-    .replaceAll(/\)/g, "%29");
-
-  // Format index for that "Archive" feel (01, 02, etc.)
-  const formattedIndex = String(index + 1).padStart(2, "0");
-
   return (
-    <div className="group w-full cursor-pointer">
-      <Link
-        href={`/collections/${encodeMediumForUrl(title)}`}
-        className="block"
-      >
-        {/* IMAGE CONTAINER */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100 border border-neutral-200">
+    <Link
+      href={`/collections/${encodeMediumForUrl(title)}`}
+      className="group block w-full cursor-pointer"
+    >
+      <article className="flex flex-col gap-4">
+        {/* 1. IMAGE FRAME */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded bg-neutral-100 shadow-sm transition-all duration-300 group-hover:shadow-lg">
           <Image
             width={600}
             height={800}
-            src={`/images/${url}.png`} // Ensure these are high-res
+            src={`/images/${url}.png`}
             alt={title}
-            className="h-full w-full object-cover transition-all duration-[1.5s] ease-out group-hover:scale-105 grayscale group-hover:grayscale-0"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
 
-          {/* OVERLAY: Title appears on hover */}
-          <div className="absolute inset-0 bg-dark/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          {/* Hover Overlay: Darken slightly to make text/icon pop if needed */}
+          <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+
+          {/* Floating Action Button (Bottom Right) */}
+          <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-dark  shadow-md">
+              <MdArrowRightAlt className="text-xl" />
+            </div>
+          </div>
         </div>
 
-        {/* METADATA */}
-        <div className="mt-6 flex flex-col gap-2 border-t border-transparent pt-4 transition-colors duration-300 group-hover:border-black">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] text-neutral-400">
-              [ VOL. {formattedIndex} ]
-            </span>
-            <MdArrowRightAlt className="opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
-          </div>
-
-          <h3 className="font-serif text-2xl text-dark leading-tight group-hover:italic transition-all duration-300">
+        {/* 2. METADATA */}
+        <div className="flex flex-col gap-1 px-1">
+          <h3 className="font-serif text-xl text-dark  leading-tight group-hover:underline">
             {title}
           </h3>
+          <p className="font-sans text-xs font-medium text-neutral-500 uppercase tracking-wide">
+            Explore Collection
+          </p>
         </div>
-      </Link>
-    </div>
+      </article>
+    </Link>
   );
 }

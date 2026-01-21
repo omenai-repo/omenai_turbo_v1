@@ -1,10 +1,11 @@
-import { Image as ImageIcon, ArrowRight } from "lucide-react";
+"use client";
+import { Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
 import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCoverFileView";
+import { BsArrowRight } from "react-icons/bs";
 
-// We define the type exactly as you requested, plus the $id needed for the link
 type EditorialSchemaTypes = {
   headline: string;
   summary?: string;
@@ -12,97 +13,100 @@ type EditorialSchemaTypes = {
   date: Date | null;
   content: string;
   slug: string;
-  $id?: string; // Included to satisfy the link requirement
+  $id?: string;
 };
 
 export default function EditorialItemCard({
   editorial,
+  isFeatured = false,
 }: {
   editorial: EditorialSchemaTypes;
+  isFeatured?: boolean;
 }) {
   const url = editorial.cover
-    ? getEditorialFileView(editorial.cover, 600) // 600px for Retina sharpness
+    ? getEditorialFileView(editorial.cover, isFeatured ? 1000 : 600)
     : null;
 
   const formattedDate = editorial.date
     ? new Date(editorial.date).toLocaleDateString("en-US", {
-        month: "short",
+        month: "long",
+        day: "numeric",
         year: "numeric",
       })
-    : "ARCHIVE";
+    : "Archive";
 
   return (
     <Link
       href={`${base_url()}/articles/${editorial.slug}?id=${editorial.$id}`}
-      rel="noopener noreferrer"
-      className="group block h-full w-full max-w-[400px] cursor-pointer"
+      className="group block h-full w-full cursor-pointer"
     >
-      {/* CONTAINER: 
-          - No rounded corners. 
-          - Strict 1px neutral border that turns Black on hover.
-          - Internal padding (p-5) to frame the content like a matte. 
-      */}
-      <article className="flex h-full flex-col justify-between border border-neutral-200 bg-white p-5 transition-colors duration-500 hover:border-black">
-        {/* HEADER: Technical Metadata (The "File Number" look) */}
-        <div className="mb-4 flex items-center justify-between border-b border-neutral-100 pb-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">
-            {formattedDate}
-          </span>
-          {/* Aesthetic Anchor Point */}
-          <div className="h-1 w-1 bg-neutral-200 transition-colors duration-300 group-hover:bg-dark" />
-        </div>
-
-        {/* IMAGE SECTION: 
-            - 3:4 Aspect Ratio (Standard Portrait/Editorial ratio).
-            - Grayscale by default -> Full Color on hover.
-            - Slow zoom effect.
-        */}
-        <div className="relative mb-6 aspect-[3/4] w-full overflow-hidden bg-neutral-50">
+      <article className="relative h-full w-full overflow-hidden rounded-md border border-neutral-200 bg-neutral-900 transition-all duration-500 hover:shadow-xl hover:border-neutral-500">
+        {/* 1. BACKGROUND IMAGE (Full Bleed for ALL cards) */}
+        <div className="absolute inset-0 z-0">
           {url ? (
             <Image
               src={url}
               alt={editorial.headline}
               fill
-              className="object-cover transition-all duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 grayscale group-hover:grayscale-0"
+              // object-cover ensures no empty space. object-top focuses on faces/heads.
+              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 opacity-90 group-hover:opacity-100"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-neutral-300">
-              <div className="flex flex-col items-center gap-2">
-                <ImageIcon strokeWidth={1} className="h-8 w-8" />
-                <span className="font-mono text-[9px] uppercase tracking-widest">
-                  No Plate
-                </span>
-              </div>
+            <div className="flex h-full w-full items-center justify-center bg-neutral-800 text-neutral-600">
+              <ImageIcon className="h-10 w-10" />
             </div>
           )}
-          {/* Subtle Flash Overlay */}
-          <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 mix-blend-overlay" />
+
+          {/* GRADIENT OVERLAY - Essential for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity duration-300 group-hover:via-black/50" />
         </div>
 
-        {/* TYPOGRAPHY SECTION */}
-        <div className="flex flex-col gap-3">
-          {/* TITLE: Serif Italic + Large + High Contrast */}
-          <h1 className="font-serif text-2xl font-light italic leading-[1.15] text-neutral-900 decoration-neutral-300 decoration-1 underline-offset-4 transition-all group-hover:underline">
-            {editorial.headline}
-          </h1>
-
-          {/* SUMMARY: Sans-Serif + Neutral Grey */}
-          {editorial.summary && (
-            <p className="line-clamp-2 font-sans text-xs leading-relaxed text-neutral-500">
-              {editorial.summary}
-            </p>
+        {/* 2. CONTENT OVERLAY */}
+        {/* Using flex-col justify-end guarantees content sits at the bottom */}
+        <div className="relative z-10 flex h-full flex-col justify-end p-6 md:p-8">
+          {/* TOP BADGE (Featured Only) */}
+          {isFeatured && (
+            <div className="absolute top-6 left-6 md:top-8 md:left-8">
+              <span className="bg-white/20 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full font-sans text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+                Cover Story
+              </span>
+            </div>
           )}
-        </div>
 
-        {/* FOOTER: The "Hidden" Action 
-            - Only reveals "Read Article" on hover to keep the resting state clean.
-        */}
-        <div className="mt-8 flex items-center justify-end overflow-hidden border-t border-transparent pt-3 transition-colors group-hover:border-neutral-100">
-          <div className="flex translate-y-4 items-center gap-2 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-            <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-900">
-              Read Article
-            </span>
-            <ArrowRight className="h-3 w-3 text-neutral-900" />
+          {/* TEXT CONTENT */}
+          <div className="flex flex-col gap-3">
+            {/* Date */}
+            <div className="flex items-center gap-3">
+              <div className="h-[2px] w-6 bg-white/70 rounded-full" />
+              <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-white/80">
+                {formattedDate}
+              </span>
+            </div>
+
+            {/* Headline - Larger for Featured */}
+            <h3
+              className={`
+                font-serif font-medium text-white leading-[1.1] transition-colors
+                ${isFeatured ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"}
+              `}
+            >
+              {editorial.headline}
+            </h3>
+
+            {/* Summary - Visible on Featured Only */}
+            {isFeatured && editorial.summary && (
+              <p className="mt-2 font-sans text-sm md:text-base text-white/80 line-clamp-3 leading-relaxed max-w-2xl">
+                {editorial.summary}
+              </p>
+            )}
+
+            {/* Action Button - Always visible, slides on hover */}
+            <div className="mt-4 flex items-center gap-2">
+              <span className="font-sans text-[10px] font-bold uppercase tracking-widest text-white group-hover:underline underline-offset-4 decoration-white/50">
+                Read Story
+              </span>
+              <BsArrowRight className="text-white text-sm transition-transform duration-300 group-hover:translate-x-1" />
+            </div>
           </div>
         </div>
       </article>

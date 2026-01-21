@@ -1,7 +1,7 @@
 // Email template constants for consistent branding and styling
 export const COMPANY_INFO = {
   name: "Omenai",
-  logo: "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8",
+  logo: "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8",
   address: "123 Main Street Anytown, CA 12345",
   email: "contact@omenai.net",
   phone: "+123456789",

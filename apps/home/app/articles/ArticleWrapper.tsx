@@ -8,6 +8,7 @@ import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/deskto
 import Footer from "@omenai/shared-ui-components/components/footer/Footer";
 import JournalCard from "./components/JournalCard";
 import FeaturedJournalEntry from "./components/FeaturedJournalEntry";
+import { Models } from "appwrite";
 
 export default function ArticleWrapper() {
   const { data = [], isLoading } = useQuery({
@@ -17,7 +18,7 @@ export default function ArticleWrapper() {
       if (!response.isOk) {
         toast_notif(
           "Error fetching editorial list, please refresh or contact IT support",
-          "error"
+          "error",
         );
         return [];
       }
@@ -31,8 +32,8 @@ export default function ArticleWrapper() {
 
   if (isLoading) return <EditorialSkeleton />;
 
-  // Cast to ensure type safety based on your schema
-  const editorials = Array.isArray(data) ? data : [];
+  // Cast to ensure type safety
+  const editorials = (Array.isArray(data) ? data : []) as Models.DefaultRow[];
 
   // LOGIC: Separate the newest story from the rest
   const featuredStory = editorials[0];
@@ -40,63 +41,73 @@ export default function ArticleWrapper() {
 
   if (editorials.length === 0)
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
-        <p className="font-mono text-xs uppercase tracking-widest text-neutral-400">
-          No entries found in the archive.
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-white gap-4">
+        <DesktopNavbar />
+        <p className="font-sans text-sm font-medium text-neutral-400">
+          The archives are currently empty.
         </p>
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-white text-dark">
+    <div className="min-h-screen bg-white text-dark ">
       <DesktopNavbar />
 
-      <main className="container mx-auto px-6 lg:px-12 py-6">
-        {/* 1. THE MASTHEAD */}
-        <header className="mb-16 border-b border-black pb-8">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500">
-              Est. 2026
+      <main className="container mx-auto pb-4">
+        {/* 1. MASTHEAD */}
+        <header className="mb-16 border-b border-neutral-100  flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <span className="font-sans text-xs font-bold uppercase tracking-wider text-dark  mb-3 block">
+              Omenai Editorials
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500">
+            <h1 className="font-serif text-xl md:text-3xl text-dark  leading-tight">
+              Perspectives
+            </h1>
+            <p className="mt-4 font-sans text-sm text-neutral-500 max-w-xl leading-relaxed">
+              Discourse on art, ownership, and the provenance of the future.
+              Featuring interviews, market analysis, and curatorial essays.
+            </p>
+          </div>
+
+          <div className="text-right hidden md:block">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 block">
               Vol. {new Date().getFullYear()}
             </span>
-          </div>
-          <h1 className="text-center font-serif text-[12vw] leading-[0.8] tracking-tighter text-dark lg:text-[150px]">
-            THE JOURNAL
-          </h1>
-          <div className="mt-8 flex justify-center">
-            <p className="max-w-xl text-center font-serif text-lg italic text-neutral-600">
-              Discourse on art, ownership, and the provenance of the future.
-            </p>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 block mt-1">
+              Issue No. {String(editorials.length).padStart(2, "0")}
+            </span>
           </div>
         </header>
 
-        {/* 2. THE LEAD STORY (Cover) */}
+        {/* 2. THE COVER STORY */}
         {featuredStory && (
           <section className="mb-24">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="h-2 w-2 bg-[#091830] rounded-full animate-pulse" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-dark ">
+                Latest Issue
+              </span>
+            </div>
             <FeaturedJournalEntry article={featuredStory} />
           </section>
         )}
 
-        {/* 3. THE ARCHIVE (Grid) */}
+        {/* 3. THE ARCHIVE GRID */}
         {recentStories.length > 0 && (
           <section>
-            <div className="mb-12 flex items-center gap-4 pt-2">
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-dark">
-                Recent Publications
+            <div className="mb-10 flex items-center gap-4 border-b border-neutral-100 pb-4">
+              <span className="font-sans text-sm font-bold uppercase tracking-wide text-dark ">
+                Archive
               </span>
-              <div className="h-[1px] flex-1 bg-neutral-200"></div>
             </div>
 
-            <div className="grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
               {recentStories.map((editorial, index) => (
-                <div
-                  key={editorial.slug}
-                  className="border-r border-transparent md:border-neutral-100 md:pr-8 last:border-none"
-                >
-                  <JournalCard article={editorial} index={index + 1} />
-                </div>
+                <JournalCard
+                  key={editorial.$id}
+                  article={editorial}
+                  index={editorials.length - 1 - index} // Reverse index for "Vol. XX" feel
+                />
               ))}
             </div>
           </section>

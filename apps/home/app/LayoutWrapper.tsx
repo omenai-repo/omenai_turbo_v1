@@ -35,7 +35,7 @@ export const LayoutWrapper = ({
             <RecoveryModal />
             <OrderReceivedModal />
             <LenisProvider>
-              <div className="2xl:px-16 xl:px-8 px-4">{children}</div>
+              <div className="2xl:px-12 xl:px-8 px-4">{children}</div>
             </LenisProvider>
             <Analytics />
           </MantineProvider>

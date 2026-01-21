@@ -56,7 +56,7 @@ export default function FilterOptionBox({
               key={filter.option}
               className="flex items-center justify-between py-2 group cursor-pointer"
             >
-              <span className="text-[11px] uppercase tracking-wider text-neutral-500 group-hover:text-dark transition-colors">
+              <span className="text-[11px] uppercase tracking-wider text-slate-600 group-hover:text-dark transition-colors">
                 {filter.option}
               </span>
               <input
@@ -64,7 +64,7 @@ export default function FilterOptionBox({
                 checked={hasFilterValue(selectedFilters, filter.option)}
                 value={JSON.stringify(filter.value)}
                 onChange={(e) => handleChange(e, filter.option)}
-                className="w-3 h-3 appearance-none border border-neutral-300 checked:bg-dark checked:border-black transition-all cursor-pointer rounded-none"
+                className="w-3 h-3 appearance-none border border-slate-400 checked:bg-dark checked:border-dark transition-all cursor-pointer rounded-none"
               />
             </label>
           ))}

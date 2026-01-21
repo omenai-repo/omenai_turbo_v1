@@ -58,7 +58,7 @@ export const HeroManifesto = () => {
 
               <div>
                 {/* Title - Large, sans, turns Emerald on hover */}
-                <h3 className="font-sans text-3xl md:text-4xl  text-dark group-hover:text-emerald-800 transition-colors duration-300 flex items-center gap-4">
+                <h3 className="font-sans text-2xl md:text-3xl  text-dark group-hover:text-emerald-800 transition-colors duration-300 flex items-center gap-4">
                   {item.title}
                   <ArrowRight
                     className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 text-emerald-500"

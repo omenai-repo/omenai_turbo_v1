@@ -69,6 +69,7 @@
     "country-state-city": "^3.2.1",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
+    "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-class-names": "^8.5.2",
     "embla-carousel-react": "^8.5.1",
     "eslint-config-next": "^15.5.4",

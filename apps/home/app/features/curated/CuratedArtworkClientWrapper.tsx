@@ -1,9 +1,12 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import ExhibitionGrid from "./CuratedArtworksLayout"; // Using the new Grid
+import ExhibitionGrid from "./CuratedArtworksLayout";
 import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
 import { fetchCuratedArtworks } from "@omenai/shared-services/artworks/fetchedCuratedArtworks";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import Link from "next/link";
+import { IoArrowForward } from "react-icons/io5";
+import { MdRecommend } from "react-icons/md";
 
 export default function CuratedArtworkClientWrapper({
   sessionId,
@@ -25,46 +28,47 @@ export default function CuratedArtworkClientWrapper({
     refetchOnMount: false,
   });
 
-  if (isLoading)
-    return <SectionLoaderContainers title="Assembling Private View" />;
+  if (isLoading) return <SectionLoaderContainers title="Personalizing Feed" />;
 
   return (
-    <section className="w-full bg-white py-8">
-      <div className="container mx-auto">
-        {/* 1. HEADER: The "Private View" Statement */}
-        <div className="mb-16 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-[1px] w-8 bg-dark" />
-              <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-                Private View
+    <section className="w-full bg-[#f5f5f5] py-8 border-t border-neutral-200">
+      <div className="container mx-auto px-6 lg:px-12">
+        {/* 1. MARKETPLACE HEADER */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
+                <MdRecommend size={14} />
+              </span>
+              <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
+                For You
               </span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-serif text-dark">
-              Curated for <br />
-              <span className="italic text-neutral-500">
-                The Discerning Eye.
-              </span>
+            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+              Your Curated Edit
             </h2>
+            <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
+              Selections tailored to your taste .
+            </p>
           </div>
 
-          <div className="flex max-w-xs flex-col gap-4 text-right md:items-end">
-            <p className="font-sans text-xs leading-relaxed text-neutral-500">
-              A collection of works selected specifically to resonate with your
-              established preferences in.
-            </p>
+          <div className="hidden md:block">
+            <Link
+              href="/catalog"
+              className="group flex items-center gap-2 text-sm font-sans font-medium text-neutral-500 hover:text-dark  transition-colors"
+            >
+              Browse Full Catalog
+              <IoArrowForward className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
 
-        {/* 2. THE EXHIBITION */}
+        {/* 2. THE GRID */}
         {userCuratedArtworks!.length === 0 ? (
-          <div className="flex h-[400px] w-full flex-col items-center justify-center bg-neutral-50">
-            <h3 className="font-serif text-2xl italic text-neutral-400">
-              Curating selection...
-            </h3>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-300">
-              Please check back shortly
-            </p>
+          <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-neutral-100">
+            <span className="font-sans text-neutral-400">
+              Curating your selection...
+            </span>
           </div>
         ) : (
           <ExhibitionGrid
@@ -72,6 +76,16 @@ export default function CuratedArtworkClientWrapper({
             userCuratedArtworks={userCuratedArtworks}
           />
         )}
+
+        {/* Mobile View All */}
+        <div className="mt-12 flex md:hidden justify-center">
+          <Link
+            href="/catalog"
+            className="w-full py-3 text-center rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800 bg-white shadow-sm"
+          >
+            Browse Full Catalog
+          </Link>
+        </div>
       </div>
     </section>
   );

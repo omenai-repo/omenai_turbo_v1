@@ -19,13 +19,13 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       const artist_data = await AccountArtist.findOne(
         { artist_id },
-        "logo name bio documentation"
+        "logo name bio documentation address",
       );
 
       if (!artist_data || artist_data.length === 0) {
         return NextResponse.json(
           { message: "Artist not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
       const artworksForArtist = await Artworkuploads.find({
@@ -44,12 +44,12 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       createErrorRollbarReport(
         "artist: fetch Featured Artist data",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

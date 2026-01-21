@@ -50,18 +50,19 @@ const DesktopNavbar = () => {
   return (
     <>
       <nav
-        className={`fixed z-[30] top-0 left-0 right-0 transition-all duration-700 ease-in-out border-b
+        className={`fixed z-[30] top-0 left-0 right-0 transition-all duration-300 ease-in-out border-b
           ${
             isScrolled
-              ? "py-3 bg-white/90 backdrop-blur-md border-neutral-200 shadow-sm"
-              : "py-6 bg-white border-transparent"
+              ? "py-3 bg-white/95 backdrop-blur-md border-neutral-200 shadow-sm"
+              : "py-5 bg-white border-neutral-100"
           }`}
       >
         <div className="max-w-[1800px] mx-auto px-6 md:px-12 flex items-center justify-between">
-          <div className="flex items-center gap-12">
+          {/* LEFT: Logo & Nav */}
+          <div className="flex items-center gap-10">
             <IndividualLogo />
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Clean Sans Serif */}
             <ul className="hidden lg:flex items-center gap-8">
               {navigation.map((item) => (
                 <NavbarLink
@@ -83,25 +84,25 @@ const DesktopNavbar = () => {
             </ul>
           </div>
 
+          {/* RIGHT: Search & Actions */}
           <div className="flex items-center gap-4 md:gap-6">
-            <div className="hidden md:block">
+            <div className="hidden md:block w-64">
               <SearchInput setIsMobileMenuOpen={updateOpenSideNav} />
             </div>
 
             {user ? (
-              // VISIBLE ON ALL SCREENS
               <UserMenu />
             ) : (
-              <div className="hidden lg:flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-6">
                 <Link
                   href={`${login_base_url}/login/user?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-500 hover:text-black transition-colors"
+                  className="text-sm font-sans font-normal text-neutral-600 hover:text-dark  transition-colors"
                 >
-                  Login
+                  Log in
                 </Link>
                 <Link
                   href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="bg-black text-white px-6 py-2.5 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all"
+                  className="bg-[#091830] text-white px-5 py-2.5 rounded-md text-sm font-sans font-normal hover:bg-[#0F2342] transition-all shadow-sm"
                 >
                   Join Omenai
                 </Link>
@@ -111,9 +112,9 @@ const DesktopNavbar = () => {
             {/* Hamburger - Only visible on Mobile/Tablet */}
             <button
               onClick={() => updateOpenSideNav(true)}
-              className="lg:hidden p-2 text-black"
+              className="lg:hidden p-2 text-dark  hover:bg-neutral-100 rounded-md transition-colors"
             >
-              <icons.Menu strokeWidth={1.5} />
+              <icons.Menu strokeWidth={2} size={24} />
             </button>
           </div>
         </div>
@@ -121,8 +122,9 @@ const DesktopNavbar = () => {
 
       <MobileNavbar />
 
+      {/* Spacer to prevent content overlap */}
       <div
-        className={`transition-all duration-500 ${isScrolled ? "h-16" : "h-24"}`}
+        className={`transition-all duration-300 ${isScrolled ? "h-16" : "h-20"}`}
       />
     </>
   );

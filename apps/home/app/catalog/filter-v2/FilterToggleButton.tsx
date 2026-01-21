@@ -10,11 +10,11 @@ export default function FilterToggleButton() {
 
   return (
     <button onClick={openDrawer} className="flex items-center gap-4 group">
-      <div className="w-10 h-10 border border-neutral-200 flex items-center justify-center group-hover:border-black transition-colors">
+      <div className="w-10 h-10 rounded border border-neutral-200 flex items-center justify-center group-hover:border-dark transition-colors">
         <SlidersVertical size={14} strokeWidth={1.5} />
       </div>
       <div className="flex flex-col items-start">
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-dark">
+        <span className="text-[10px] font-medium font-sans uppercase tracking-[0.2em] text-dark">
           Filter Archive
         </span>
         {selectedFilters.length > 0 && (

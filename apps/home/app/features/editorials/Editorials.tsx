@@ -2,12 +2,11 @@
 import Link from "next/link";
 import EditorialsGrid from "./components/EditorialsGrid";
 import { useQuery } from "@tanstack/react-query";
-import { MdArrowRightAlt } from "react-icons/md";
 import { editorial_database } from "@omenai/appwrite-config/appwrite";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 import React from "react";
 import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
-import { GoArrowRight } from "react-icons/go";
+import { IoArrowForward } from "react-icons/io5";
+import { Newspaper } from "lucide-react";
 
 export default function Editorials() {
   const { data: editorials, isLoading } = useQuery({
@@ -23,68 +22,63 @@ export default function Editorials() {
       } else throw new Error("Something went wrong");
     },
     refetchOnWindowFocus: false,
-    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
-    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
-    refetchOnMount: false, // Don't refetch if we have cached data
+    staleTime: 30 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
   });
 
-  if (isLoading) return <SectionLoaderContainers title="Latest artworks" />;
+  if (isLoading) return <SectionLoaderContainers title="Loading Journal" />;
 
   return (
     <>
       {editorials && editorials?.length === 0 ? null : (
-        <>
-          <section className="w-full  bg-[#FDFDFD]">
-            <div className="container mx-auto px-6">
-              <div className="relative flex flex-col items-start">
-                {/* 1. THE EDITORIAL TAG */}
-                <div className="flex items-center gap-8 mb-12 w-full">
-                  <span className="text-[10px] font-normal tracking-[0.5em] text-neutral-400 uppercase whitespace-nowrap">
-                    Omenai Journal — Vol. 01
+        <section className="w-full bg-[#f5f5f5] py-16 md:py-24 border-t border-neutral-200">
+          <div className="container mx-auto px-6 lg:px-12">
+            {/* 1. MARKETPLACE HEADER */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
+                    <Newspaper />
                   </span>
-                  <div className="h-[1px] w-full bg-neutral-100"></div>
-                </div>
-
-                {/* 2. THE CONTENT - Using a 2-column editorial spread feel */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-baseline">
-                  <div className="lg:col-span-8">
-                    <h2 className="text-5xl md:text-6xl font-serif text-neutral-900 leading-tight">
-                      Beyond the <br />
-                      <span className="italic pl-12 md:pl-24">Canvas.</span>
-                    </h2>
-                  </div>
-
-                  <div className="lg:col-span-4 space-y-6">
-                    <p className="text-neutral-500 text-lg font-light leading-relaxed italic">
-                      "Art is the only way to run away without leaving home."
-                    </p>
-                    <p className="text-neutral-600 text-sm md:text-base font-light leading-relaxed">
-                      Our editorial team sits down with visionaries, explores
-                      the sociology of the market, and uncovers the stories that
-                      defined the masterpieces of tomorrow.
-                    </p>
-
-                    <div className="pt-4">
-                      <button className="group flex items-center gap-3 text-[10px] font-bold tracking-[0.2em] uppercase text-dark">
-                        View All Stories
-                        <div className="w-8 h-[1px] bg-dark transition-all duration-500 group-hover:w-16"></div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. THE NAVIGATION HINT - Anchored to the bottom right */}
-                <div className="self-end mt-12 flex items-center gap-4">
-                  <span className="text-[10px] text-neutral-300 uppercase tracking-widest font-medium">
-                    Slide to Read
+                  <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
+                    The Omenai Editorial
                   </span>
-                  <GoArrowRight className="text-neutral-300 animate-pulse" />
                 </div>
+                <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+                  Stories & Insights
+                </h2>
+                <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
+                  In-depth features, market analysis, and conversations with
+                  artists.
+                </p>
+              </div>
+
+              <div className="hidden md:block">
+                <Link
+                  href="/articles"
+                  className="group flex items-center gap-2 text-sm font-sans font-medium text-neutral-500 hover:text-dark  transition-colors"
+                >
+                  Read All Articles
+                  <IoArrowForward className="transition-transform group-hover:translate-x-1" />
+                </Link>
               </div>
             </div>
-          </section>
-          <EditorialsGrid editorials={editorials as any} />
-        </>
+
+            {/* 2. BENTO GRID */}
+            <EditorialsGrid editorials={editorials as any} />
+
+            {/* Mobile View All */}
+            <div className="mt-10 flex md:hidden justify-center">
+              <Link
+                href="/articles"
+                className="w-full py-3 text-center rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
+              >
+                Read All Articles
+              </Link>
+            </div>
+          </div>
+        </section>
       )}
     </>
   );

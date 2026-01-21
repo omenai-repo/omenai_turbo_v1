@@ -26,9 +26,11 @@ export default function CuratorialManifest({
   const categories = ["All", ...preferences];
 
   return (
-    <div className="mb-12 border-y border-neutral-100 py-4">
+    <div className="mb-12 border-y border-slate-100 py-4">
       <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 md:justify-start">
-        <span className="font-serif italic text-neutral-400">Index:</span>
+        <span className="font-sans text-slate-400 font-normal text-fluid-xxs">
+          Filter By:
+        </span>
         {categories.map((item) => {
           const isActive = curated_preference === item;
           return (
@@ -38,10 +40,8 @@ export default function CuratorialManifest({
               className="group relative"
             >
               <span
-                className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
-                  isActive
-                    ? "text-dark"
-                    : "text-neutral-400 hover:text-neutral-600"
+                className={`font-sans text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  isActive ? "text-dark" : "text-slate-600 hover:text-slate-800"
                 }`}
               >
                 {item}

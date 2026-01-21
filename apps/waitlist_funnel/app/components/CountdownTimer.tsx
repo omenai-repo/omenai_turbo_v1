@@ -52,7 +52,7 @@ export const CountdownTimer = () => {
   }) => (
     <div className="flex items-center">
       <div className="flex flex-col items-center px-4 md:px-6">
-        <span className="font-sans text-3xl md:text-4xl lg:text-5xl font-light tracking-tighter text-black">
+        <span className="font-sans text-2xl md:text-3xl lg:text-5xl font-light tracking-tighter text-black">
           {String(value).padStart(2, "0")}
         </span>
         <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-emerald-700 mt-2 font-bold">

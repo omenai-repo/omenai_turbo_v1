@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import { base_url } from "@omenai/url-config/src/config";
-import { MdNorthEast } from "react-icons/md"; // Simple directional arrow
+import { MdNorthEast, MdFavorite } from "react-icons/md";
 
 export function TrendingArtistCard({
   url,
@@ -20,7 +20,6 @@ export function TrendingArtistCard({
   country: string;
   artist_id: string;
 }) {
-  // Use a slightly larger thumbnail for the portrait ratio
   const image_href = getOptimizedImage(url, "medium", 40);
   const base_uri = base_url();
 
@@ -29,58 +28,44 @@ export function TrendingArtistCard({
       href={`${base_uri}/artists/?id=${artist_id}&url=${url}&artist=${artist}`}
       className="group block h-full w-full cursor-pointer"
     >
-      {/* CONTAINER: 
-         - Sharp corners (rounded-none)
-         - Transparent border by default, turns Black on hover
-         - 'bg-white' to ensure the matte effect works 
-      */}
-      <article className="relative flex h-full flex-col bg-white p-4 transition-all duration-500 ease-out hover:shadow-xl hover:shadow-neutral-200/50">
-        {/* IMAGE FRAME: 3:4 Aspect Ratio (Portrait) */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100">
+      <article className="flex flex-col gap-4">
+        {/* IMAGE FRAME: Removed grayscale, added rounding */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
           <Image
             src={image_href}
             alt={artist}
             fill
             loading="lazy"
-            quality={90}
-            className="object-cover transition-all duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105 grayscale group-hover:grayscale-0"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
 
-          {/* OVERLAY: Minimalist border on top of image for definition */}
-          <div className="absolute inset-0 border border-black/5 transition-colors duration-500 group-hover:border-transparent" />
+          {/* Subtle gradient at bottom for potential white text overlay if needed, 
+              but mostly just to add depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
 
         {/* METADATA SECTION */}
-        <div className="mt-5 flex flex-col justify-between gap-4">
-          {/* Top Row: Name & Arrow */}
-          <div className="flex items-start justify-between gap-4">
-            <h3 className="font-serif text-xl italic leading-none text-neutral-900 decoration-neutral-300 decoration-1 underline-offset-4 transition-all group-hover:underline">
+        <div className="flex flex-col gap-1">
+          {/* Name & Arrow */}
+          <div className="flex items-center justify-between">
+            <h3 className="font-serif text-lg text-dark  leading-tight group-hover:underline decoration-neutral-300 underline-offset-4">
               {artist}
             </h3>
-
-            {/* Hover Arrow Interaction */}
-            <span className="flex h-6 w-6 items-center justify-center text-neutral-300 transition-colors duration-300 group-hover:text-dark">
-              <MdNorthEast className="text-lg" />
-            </span>
+            <MdNorthEast className="text-neutral-300 transition-colors group-hover:text-dark " />
           </div>
 
-          {/* Bottom Row: Technical Data */}
-          <div className="flex items-end justify-between border-t border-neutral-100 pt-3">
-            <div className="flex flex-col gap-1">
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">
-                Origin
-              </span>
-              <p className="font-sans text-xs font-medium text-neutral-600">
-                {country}, {birthyear}
-              </p>
-            </div>
+          {/* Location & Stats */}
+          <div className="flex items-center justify-between mt-1">
+            <p className="font-sans text-xs font-medium text-neutral-500">
+              {country}
+            </p>
 
-            {/* "Likes" converted to "Following" metric */}
-            <div className="flex flex-col items-end gap-1">
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400">
-                Likes
+            {/* Likes Badge */}
+            <div className="flex items-center gap-1.5 bg-neutral-100 px-2 py-0.5 rounded-full">
+              <MdFavorite className="text-xs text-dark " />
+              <span className="font-sans text-[10px] font-bold text-dark ">
+                {likes}
               </span>
-              <p className="font-mono text-xs text-neutral-900">{likes}</p>
             </div>
           </div>
         </div>

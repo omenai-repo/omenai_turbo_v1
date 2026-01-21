@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import LatestArtworks from "./LatestArtworks";
 import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
+import Link from "next/link";
+import { IoArrowForward } from "react-icons/io5";
 
 export default function LatestArtworkWrapper({
   sessionId,
@@ -24,55 +26,61 @@ export default function LatestArtworkWrapper({
     refetchOnMount: false,
   });
 
-  if (isLoading) return <SectionLoaderContainers title="Unveiling New Works" />;
+  if (isLoading)
+    return <SectionLoaderContainers title="Loading New Arrivals" />;
 
   return (
-    <section className="w-full bg-white py-8 md:py-8 md:py-24 border-t border-neutral-100">
-      <div className="container mx-auto px-6 lg:px-12">
-        {/* 1. ARCHITECTURAL HEADER */}
-        {/* We use the Split Layout to match the Roster and Curated sections */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
-          {/* LEFT: The Headline & Signal */}
-          <div className="max-w-3xl">
-            {/* The "Live" Indicator */}
-            <div className="flex items-center gap-3 mb-6">
+    <section className="w-full bg-white py-16">
+      <div className="container mx-auto px-4">
+        {/* 1. MARKETPLACE HEADER */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded h-2 w-2 bg-red-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500">
-                Just Arrived
+              <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
+                Recently Added
               </span>
             </div>
-
-            <h2 className="text-5xl md:text-6xl font-serif text-neutral-900 leading-[0.9]">
-              Fresh from <br />
-              <span className="italic text-neutral-400">The Studio.</span>
+            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+              New to the Market
             </h2>
           </div>
 
-          {/* RIGHT: The Context */}
-          <div className="max-w-xs flex flex-col gap-6 items-start md:items-end text-left md:text-right">
-            <p className="font-sans text-xs leading-relaxed text-neutral-500">
-              A curated selection of the most recent works uploaded by our
-              diverse roster of verified artists.
-            </p>
-            {/* Decorative 'End of Section' Mark */}
-            <div className="h-[1px] w-12 bg-dark md:self-end"></div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/catalog"
+              className="group flex items-center gap-2 text-sm font-sans font-medium text-neutral-500 hover:text-dark  transition-colors"
+            >
+              View All Arrivals
+              <IoArrowForward className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
 
-        {/* 2. THE GRID (Content) */}
+        {/* 2. THE GRID */}
         <div className="w-full">
           {artworks?.length === 0 ? (
-            <div className="flex h-[400px] w-full flex-col items-center justify-center border border-dashed border-neutral-200 bg-neutral-50">
-              <span className="font-serif text-xl italic text-neutral-400">
+            <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg bg-neutral-50 border border-neutral-100">
+              <span className="font-sans text-neutral-400">
                 Catalog updating...
               </span>
             </div>
           ) : (
             <LatestArtworks artworks={artworks} sessionId={sessionId} />
           )}
+        </div>
+
+        {/* Mobile View All Button (Visible only on small screens) */}
+        <div className="mt-12 flex justify-center md:hidden">
+          <Link
+            href="/catalog"
+            className="w-full text-center py-3 rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
+          >
+            View Full Archive
+          </Link>
         </div>
       </div>
     </section>

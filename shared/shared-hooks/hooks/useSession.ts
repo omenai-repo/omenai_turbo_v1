@@ -36,7 +36,6 @@ async function fetchSessionData(): Promise<ClientSessionData> {
     credentials: "include",
   });
   if (!res.ok) {
-    console.error("Failed to fetch session data:", res.status, res.statusText);
     return { isLoggedIn: false, user: null, csrfToken: "" };
   }
   const { user, csrfToken } = await res.json();

@@ -13,7 +13,7 @@ export default function LoginOptions() {
     group relative flex flex-col justify-between p-6 h-[140px] 
     border border-slate-200 rounded bg-white 
     transition-all duration-500 ease-in-out
-    hover:border-black hover:shadow-xl hover:shadow-black/5
+    hover:border-dark hover:shadow-xl hover:shadow-black/5
   `;
 
   const ICON_WRAPPER = `
@@ -88,7 +88,7 @@ export default function LoginOptions() {
         >
           <p className="text-[9px] uppercase tracking-[0.25em] text-slate-500 group-hover:text-dark transition-colors font-medium">
             Don&apos;t have an account?{" "}
-            <span className="text-dark border-b border-black ml-2">
+            <span className="text-dark border-b border-dark ml-2">
               Join Omenai
             </span>
           </p>

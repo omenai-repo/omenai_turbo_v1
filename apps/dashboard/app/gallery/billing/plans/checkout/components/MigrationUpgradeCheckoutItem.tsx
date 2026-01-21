@@ -35,7 +35,7 @@ export default function MigrationUpgradeCheckoutItem({
   const totalDays = differenceInCalendarDays(expiryDate, startDate);
   const days_used = Math.min(
     differenceInCalendarDays(now, startDate),
-    totalDays
+    totalDays,
   );
   const progressPercentage = totalDays > 0 ? (days_used / totalDays) * 100 : 0;
   const days_left = Math.max(totalDays - days_used, 0);
@@ -48,9 +48,9 @@ export default function MigrationUpgradeCheckoutItem({
         sub_data.plan_details,
         plan,
         days_used,
-        totalDays
+        totalDays,
       ),
-    [startDate, interval, sub_data.plan_details, plan, days_used, totalDays]
+    [startDate, interval, sub_data.plan_details, plan, days_used, totalDays],
   );
 
   const plan_change_params = useMemo(() => {
@@ -62,7 +62,7 @@ export default function MigrationUpgradeCheckoutItem({
         ? +plan.pricing.annual_price
         : +plan.pricing.monthly_price,
       interval,
-      sub_data.status
+      sub_data.status,
     );
   }, [sub_data, interval, plan.pricing]);
 
@@ -234,10 +234,10 @@ export default function MigrationUpgradeCheckoutItem({
             </div>
 
             <div className="flex justify-center items-center gap-8 opacity-40 grayscale pointer-events-none">
-              <span className="text-sm font-black italic">VISA</span>
-              <span className="text-sm font-black italic">Mastercard</span>
-              <span className="text-sm font-black italic">AMEX</span>
-              <span className="text-sm font-black italic font-serif">
+              <span className="text-sm font-dark italic">VISA</span>
+              <span className="text-sm font-dark italic">Mastercard</span>
+              <span className="text-sm font-dark italic">AMEX</span>
+              <span className="text-sm font-dark italic font-serif">
                 Stripe
               </span>
             </div>

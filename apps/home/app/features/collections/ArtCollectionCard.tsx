@@ -26,16 +26,12 @@ export default function ArtCollectionCard({
       className="group block h-full w-full cursor-pointer"
     >
       <article className="flex flex-col gap-6">
-        {/* 1. IMAGE FRAME 
-            - Aspect Ratio: 4:5 (Classic Portrait)
-            - Interaction: Scale Up + Grayscale Removal
-        */}
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100">
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded bg-neutral-100">
           <Image
             fill
             src={`/images/${url}.png`}
             alt={title}
-            className="object-cover transition-all duration-[1.5s] ease-out group-hover:scale-105 grayscale group-hover:grayscale-0"
+            className="object-cover transition-all duration-[1.5s] ease-out group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 400px"
           />
 
@@ -48,10 +44,7 @@ export default function ArtCollectionCard({
           {/* Header Row: Title + Arrow Interaction */}
           <div className="flex items-start justify-between border-b border-neutral-200 pb-4 transition-colors duration-500 group-hover:border-black">
             <div>
-              <span className="mb-2 block font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-400">
-                [ Series ]
-              </span>
-              <h3 className="font-serif text-3xl italic leading-none text-neutral-900">
+              <h3 className="font-sans text-md leading-none text-neutral-900">
                 {title}
               </h3>
             </div>
@@ -61,12 +54,6 @@ export default function ArtCollectionCard({
               <MdArrowRightAlt className="-translate-x-full text-2xl text-dark opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:opacity-100" />
             </div>
           </div>
-
-          {/* Description Text */}
-          <p className="max-w-[90%] font-sans text-xs leading-relaxed text-neutral-500">
-            Discover a curated selection of works defining the current landscape
-            of <span className="text-neutral-800">{title.toLowerCase()}</span>.
-          </p>
         </div>
       </article>
     </Link>

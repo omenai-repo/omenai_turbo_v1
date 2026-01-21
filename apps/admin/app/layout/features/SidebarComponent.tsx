@@ -34,12 +34,6 @@ export function SidebarContent({ expanded }: { expanded: boolean }) {
       <nav className="flex flex-1 flex-col gap-8 px-3">
         {["actions", "activity", "management", "account"].map((section) => (
           <div key={section}>
-            {expanded && (
-              <p className="mb-3 px-2 text-[11px] uppercase tracking-wider text-neutral-400">
-                {section}
-              </p>
-            )}
-
             <ul className="space-y-3">
               {sidebarItems
                 .filter((item: SidebarItem) => item.section === section)

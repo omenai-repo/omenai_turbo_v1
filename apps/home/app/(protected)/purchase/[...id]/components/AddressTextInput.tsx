@@ -49,7 +49,7 @@ export default function AddressTextInput({
             border border-neutral-300 
             rounded-none
             placeholder:text-neutral-300
-            focus:border-black focus:ring-0 focus:outline-none
+            focus:border-dark focus:ring-0 focus:outline-none
             disabled:bg-neutral-50 disabled:text-neutral-400
             transition-colors duration-200
           `}

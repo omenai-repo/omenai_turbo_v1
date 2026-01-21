@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
-    const PAGE_SIZE = 30;
+    const PAGE_SIZE = 16;
     try {
       await connectMongoDB();
       const { page = 1, filters } = await request.json();
@@ -67,21 +67,21 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           pageCount: Math.ceil(total / 30),
           total,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get trending Artwork",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );
 // impressions: { $gt: 0 },
 //       .sort({

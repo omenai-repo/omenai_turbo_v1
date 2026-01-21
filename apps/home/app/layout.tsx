@@ -1,7 +1,7 @@
 // app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
-import { Work_Sans } from "next/font/google";
+import { PT_Serif, Work_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import { Provider as RollbarProvider } from "@rollbar/react";
@@ -34,6 +34,12 @@ const work_sans = Work_Sans({
   variable: "--font-work_sans",
   display: "swap",
 });
+const pt_serif = PT_Serif({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-pt_serif",
+  display: "swap",
+});
 
 export default async function RootLayout({
   children,
@@ -55,7 +61,7 @@ export default async function RootLayout({
             <title>Omenai</title>
           </head>
           <body
-            className={`${work_sans.variable} bg-white font-sans flex flex-col justify-center`}
+            className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}
           >
             <NextTopLoader color="#0f172a" height={6} />
             <Toaster

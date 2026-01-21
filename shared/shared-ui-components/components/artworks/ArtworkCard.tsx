@@ -6,15 +6,6 @@ import LikeComponent from "../likes/LikeComponent";
 import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
-import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
-import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
-import { useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { LoadSmall } from "../loader/Load";
 import FadeUpCard from "../animations/FadeUpCard";
 
 export default function ArtworkCard({
@@ -27,114 +18,91 @@ export default function ArtworkCard({
   sessionId,
   art_id,
   isDashboard = false,
-  dashboard_type = "gallery",
   availability,
   medium,
-  trending = false,
-  countdown,
 }: any) {
-  const queryClient = useQueryClient();
   const image_href = getOptimizedImage(image, "small");
   const base_uri = base_url();
   const encoded_url = encodeURIComponent(art_id).replaceAll(/\//g, "%2F");
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
-  const router = useRouter();
-  const { csrf } = useAuth({ requiredRole: "gallery" });
-
-  const expiryDate = useMemo(
-    () => (countdown ? new Date(countdown) : null),
-    [countdown]
-  );
 
   return (
     <FadeUpCard>
-      <div className="group relative w-full bg-white transition-all duration-700">
-        {/* 1. THE FRAME - Using a fixed min-height to ensure visibility */}
-        <div className="relative w-full overflow-hidden bg-neutral-50 border border-neutral-100 p-2">
+      <div className="group relative w-full flex flex-col gap-3">
+        {/* 1. IMAGE CONTAINER */}
+        <div className="relative w-full overflow-hidden rounded-md bg-slate-100">
           <Link
             href={`${base_uri}/artwork/${encoded_url}`}
             className="block w-full"
           >
-            {/* Using a standard img or Image with defined dimensions 
-                to prevent the "0px height" collapse 
-            */}
-            <div className="flex items-center justify-center min-h-[300px] md:min-h-[400px]">
+            <div className="relative">
               <Image
                 src={image_href}
                 alt={name}
-                width={400} // Explicit width
-                height={500} // Explicit height
-                className="w-full h-auto object-contain transition-transform duration-[2s] group-hover:scale-105"
-                priority={false}
+                width={500}
+                height={600}
+                // Removed the grayscale filter on sold items so they shine fully
+                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-            </div>
 
-            {/* Minimalist Overlay */}
-            <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/[0.02] transition-colors duration-500" />
+              {/* STATUS BADGE: Discrete, Premium, Non-Obstructive */}
+              {!availability && (
+                <div className="absolute top-2 left-2 z-20">
+                  <span className="inline-flex items-center justify-center bg-[#091830] px-2.5 py-1 rounded text-[10px] font-sans font-normal uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
+                    Acquired
+                  </span>
+                </div>
+              )}
+            </div>
           </Link>
 
-          {/* TOP LEFT: Medium Label */}
-          <div className="absolute top-4 left-4 overflow-hidden pointer-events-none">
-            <span className="translate-y-10 group-hover:translate-y-0 transition-transform duration-500 block text-[9px] uppercase tracking-[0.2em] font-bold text-neutral-400">
-              {medium}
-            </span>
-          </div>
-
-          {/* TOP RIGHT: Action */}
+          {/* Floating Actions (Only if available or if you want users to like sold items too) */}
           {!isDashboard && (
-            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <LikeComponent
-                impressions={impressions}
-                likeIds={likeIds}
-                sessionId={sessionId}
-                art_id={art_id}
-              />
-            </div>
-          )}
-
-          {/* BOTTOM QUICK ACTION */}
-          {availability && !isDashboard && (
-            <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-white/95 backdrop-blur-xl border-t border-neutral-100">
-              <Link
-                href={`${base_uri}/artwork/${encoded_url}`}
-                className="flex items-center justify-between group/link"
-              >
-                <span className="text-[10px] font-bold uppercase tracking-widest text-dark">
-                  {pricing?.shouldShowPrice === "Yes"
-                    ? "Acquire Piece"
-                    : "Request Details"}
-                </span>
-                <div className="w-6 h-[1px] bg-dark group-hover/link:w-12 transition-all duration-500"></div>
-              </Link>
+            <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-sm p-1.5 hover:bg-white transition-colors">
+                <LikeComponent
+                  impressions={impressions}
+                  likeIds={likeIds}
+                  sessionId={sessionId}
+                  art_id={art_id}
+                />
+              </div>
             </div>
           )}
         </div>
 
-        {/* 2. THE INFO PANEL */}
-        <div className="mt-5 space-y-2 px-4">
+        {/* 2. PRODUCT DETAILS */}
+        <div className="flex flex-col gap-0.5 px-1">
           <div className="flex justify-between items-start gap-4">
-            <div className="space-y-1">
-              <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-neutral-400">
-                {artist}
-              </p>
-              <h3 className="text-lg font-serif italic text-neutral-900 leading-tight">
-                {name}
-              </h3>
-            </div>
+            <h3 className="font-serif text-md text-dark  leading-snug group-hover:underline decoration-slate-300 underline-offset-4 line-clamp-2">
+              <Link href={`${base_uri}/artwork/${encoded_url}`}>{name}</Link>
+            </h3>
 
-            <div className="text-right">
+            {/* PRICE / STATUS */}
+            <div className="text-right shrink-0">
               {!availability ? (
-                <span className="text-[10px] uppercase tracking-widest font-bold text-red-500">
-                  Sold
+                <span className="font-sans text-xs font-semibold text-dark uppercase tracking-wider">
+                  Acquired
+                </span>
+              ) : pricing?.shouldShowPrice === "Yes" ? (
+                <span className="font-sans text-fluid-base font-bold text-dark ">
+                  {formatPrice(pricing.usd_price)}
                 </span>
               ) : (
-                <p className="text-fluid-xs font-semibold text-slate-800">
-                  {pricing?.price && pricing.shouldShowPrice === "Yes"
-                    ? formatPrice(pricing.usd_price)
-                    : "Price on Request"}
-                </p>
+                <span className="font-sans text-xs font-medium text-slate-500">
+                  On Request
+                </span>
               )}
             </div>
+          </div>
+
+          <div className="flex justify-between items-center mt-1">
+            <p className="font-sans text-fluid-xs text-slate-500 max-w-[70%]">
+              {artist}
+            </p>
+            <p className="font-sans text-[10px] text-slate-400 uppercase truncate tracking-wide">
+              {medium}
+            </p>
           </div>
         </div>
       </div>

@@ -79,14 +79,14 @@ export default function AddressForm({
       address,
       null,
       role_access.role,
-      csrf ?? ""
+      csrf ?? "",
     );
 
     if (!createdShippingOrder?.isOk) {
       toast_notif(
         createdShippingOrder.message ||
           "There was a problem placing this order request, please try again or contact support",
-        "error"
+        "error",
       );
       return setLoading(false);
     }
@@ -100,8 +100,8 @@ export default function AddressForm({
       <form onSubmit={handleOrderSubmission} className="space-y-12">
         {/* SECTION 1: Personal Info */}
         <section>
-          <div className="mb-6 border-b border-black pb-2">
-            <h2 className="font-mono text-xs font-bold uppercase tracking-widest text-dark">
+          <div className="mb-6 border-b border-neutral-200 pb-2">
+            <h2 className="font-sans text-xs font-medium uppercase tracking-widest text-dark">
               I. Collector Information
             </h2>
           </div>
@@ -123,8 +123,8 @@ export default function AddressForm({
 
         {/* SECTION 2: Delivery Address */}
         <section>
-          <div className="mb-6 border-b border-black pb-2">
-            <h2 className="font-mono text-xs font-bold uppercase tracking-widest text-dark">
+          <div className="mb-6 border-b border-neutral-200 pb-2">
+            <h2 className="font-sans text-xs font-medium uppercase tracking-widest text-dark">
               II. Destination
             </h2>
           </div>
@@ -170,7 +170,7 @@ export default function AddressForm({
             <input
               type="checkbox"
               id="save-address"
-              className="accent-black h-4 w-4 rounded-none border-neutral-300"
+              className="accent-dark h-4 w-4 rounded-none border-neutral-300"
               onChange={(e) => setSaveShippingAddress(e.target.checked)}
             />
             <label
@@ -184,7 +184,7 @@ export default function AddressForm({
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-dark text-white h-14 font-mono text-xs uppercase tracking-[0.2em] transition-all hover:bg-neutral-800 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-none"
+            className="w-full bg-dark text-white h-14 font-sans text-xs uppercase tracking-[0.2em] transition-all hover:bg-neutral-800 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-none"
           >
             {loading ? <LoadSmall /> : "Submit Purchase Request"}
           </button>

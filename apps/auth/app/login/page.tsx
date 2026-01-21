@@ -46,7 +46,7 @@ function Page() {
           </span>
           <Link
             href="/register"
-            className="text-[10px] font-bold uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-slate-500 hover:border-slate-500 transition-colors"
+            className="text-[10px] font-bold uppercase tracking-[0.2em] border-b border-dark pb-1 hover:text-slate-500 hover:border-slate-500 transition-colors"
           >
             Join Omenai
           </Link>

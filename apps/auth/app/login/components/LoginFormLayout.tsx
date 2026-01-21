@@ -17,7 +17,7 @@ export default function LoginFormLayout({
         </span>
         <Link
           href="/register"
-          className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-slate-500 hover:border-slate-500 transition-colors"
+          className="text-xs font-bold uppercase tracking-widest border-b border-dark pb-1 hover:text-slate-500 hover:border-slate-500 transition-colors"
         >
           Create Account
         </Link>

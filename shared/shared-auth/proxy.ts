@@ -42,13 +42,15 @@ export default async function proxy(req: NextRequest) {
   const app_auth_uri = auth_uri();
 
   const publicRoutes = [
-    "/", // Homepage
+    "/",
+    base_url(),
     new URL("/login", app_auth_uri).pathname,
     new URL("/register", app_auth_uri).pathname,
     "/catalog/*",
     "/search/*",
     "/artwork/*",
     "/categories/*",
+    "/collections/*",
   ];
   if (shouldSkipMiddleware(pathname, req) || publicRoutes.includes(pathname)) {
     return NextResponse.next();

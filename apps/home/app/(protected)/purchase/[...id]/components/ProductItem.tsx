@@ -16,10 +16,10 @@ export default function ProductItem({
     <div className="w-full bg-neutral-50 border border-neutral-200 p-6">
       {/* 1. ASSET HEADER */}
       <div className="mb-6 flex items-center justify-between border-b border-neutral-200 pb-4">
-        <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-500">
+        <span className="font-sans text-[9px] uppercase tracking-widest text-neutral-500">
           Asset Reference
         </span>
-        <span className="font-mono text-[9px] uppercase tracking-widest text-dark">
+        <span className="font-sans text-[9px] uppercase tracking-widest text-dark">
           #{artwork.art_id.slice(-6)}
         </span>
       </div>
@@ -51,29 +51,29 @@ export default function ProductItem({
         {/* 4. FINANCIAL TABLE */}
         <div className="border-t border-neutral-200 pt-6">
           <div className="flex justify-between items-end mb-4">
-            <span className="font-mono text-xs uppercase tracking-wide text-neutral-500">
+            <span className="font-sans text-xs uppercase tracking-wide text-neutral-500">
               Acquisition Price
             </span>
-            <span className="font-mono text-sm text-dark">
+            <span className="font-sans text-sm text-dark">
               {formatPrice(artwork.pricing.usd_price)}
             </span>
           </div>
 
           <div className="flex justify-between items-end mb-4">
-            <span className="font-mono text-xs uppercase tracking-wide text-neutral-500">
+            <span className="font-sans text-xs uppercase tracking-wide text-neutral-500">
               Shipping
             </span>
-            <span className="font-mono text-xs text-neutral-400 italic">
+            <span className="font-sans text-xs text-neutral-400 italic">
               Calculated on review
             </span>
           </div>
 
-          <div className="mt-6 border-t border-black pt-4 flex justify-between items-end">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-dark">
+          <div className="mt-6 border-t border-neutral-200 pt-4 flex justify-between items-end">
+            <span className="font-sans text-xs font-bold uppercase tracking-widest text-dark">
               Estimated Total
             </span>
             <div className="text-right">
-              <p className="font-mono text-lg text-dark">
+              <p className="font-sans text-lg text-dark">
                 {formatPrice(artwork.pricing.usd_price)}*
               </p>
               <p className="font-sans text-[10px] text-neutral-400 mt-1">

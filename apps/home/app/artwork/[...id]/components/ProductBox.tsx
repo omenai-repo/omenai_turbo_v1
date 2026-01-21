@@ -18,7 +18,6 @@ export default function ProductBox({ data, sessionId }: ProductBoxTypes) {
   const { csrf } = useAuth();
   const queryClient = useQueryClient();
 
-  // Track View History
   useEffect(() => {
     const updateViews = async () => {
       if (sessionId === undefined) return;
@@ -29,7 +28,7 @@ export default function ProductBox({ data, sessionId }: ProductBoxTypes) {
         data.art_id,
         sessionId,
         data.url,
-        csrf || ""
+        csrf || "",
       );
       if (res?.isOk) {
         queryClient.invalidateQueries({ queryKey: ["recent_views"] });
@@ -41,16 +40,10 @@ export default function ProductBox({ data, sessionId }: ProductBoxTypes) {
   return (
     <section className="relative w-full">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        {/* COLUMN 1: THE ARTWORK (Sticky on Desktop) 
-            Spans 7 columns for a cinematic view.
-        */}
         <div className="col-span-1 lg:col-span-7 lg:sticky lg:top-32">
           <ImageBox url={data.url} title={data.title} />
         </div>
 
-        {/* COLUMN 2: THE MANIFEST (Scrolls)
-            Spans 5 columns.
-        */}
         <div className="col-span-1 lg:col-span-5 flex flex-col gap-10 lg:pl-8">
           <ArtworkDetail data={data} sessionId={sessionId} />
           <div className="w-full h-[1px] bg-neutral-200" />

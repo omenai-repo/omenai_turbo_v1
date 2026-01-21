@@ -16,16 +16,18 @@ export default function ArtworkListing({
 
   if (!artworks || artworks.length === 0) {
     return (
-      <div className="flex h-[400px] w-full flex-col items-center justify-center border border-dashed border-neutral-200">
-        <NotFoundData />
-        <p className="mt-4 font-mono text-xs text-neutral-400">
-          No works currently listed.
+      <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50">
+        <div className="scale-75 opacity-60">
+          <NotFoundData />
+        </div>
+        <p className="mt-4 font-sans text-sm font-medium text-neutral-400">
+          No works listed in the archive yet.
         </p>
       </div>
     );
   }
 
-  // Column logic
+  // Column logic: Matches standard marketplace grid
   const columns = width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4;
   const arts = catalogChunk(artworks, columns);
 

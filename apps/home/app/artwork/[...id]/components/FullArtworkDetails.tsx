@@ -19,7 +19,7 @@ export default function FullArtworkDetails({
 
   return (
     <div className="w-full">
-      <h3 className="mb-8 font-serif text-2xl italic text-dark">
+      <h3 className="mb-8 font-serif text-2xl text-dark">
         Provenance & Details
       </h3>
       <dl className="grid grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2">
@@ -28,7 +28,7 @@ export default function FullArtworkDetails({
             key={row.label}
             className={`border-t border-neutral-200 pt-4 ${row.isLong ? "md:col-span-2" : ""}`}
           >
-            <dt className="mb-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+            <dt className="mb-2 font-sans text-[10px] uppercase tracking-widest text-neutral-400">
               {row.label}
             </dt>
             <dd className="font-sans text-sm leading-relaxed text-neutral-800">

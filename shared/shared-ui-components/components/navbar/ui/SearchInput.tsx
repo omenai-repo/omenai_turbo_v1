@@ -17,25 +17,34 @@ export default function SearchInput({ setIsMobileMenuOpen }: any) {
   };
 
   return (
-    <div className="relative w-full md:w-64 group">
+    <div className="relative w-full group">
+      {/* Search Icon - Moved to left for standard utility feel */}
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-dark  transition-colors pointer-events-none">
+        <CiSearch className="w-5 h-5" />
+      </div>
+
       <input
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-        placeholder="SEARCH ARCHIVE..."
-        className="w-full py-1 bg-transparent border border-neutral-300 text-[10px] tracking-[0.1em] text-dark placeholder:text-neutral-400 focus:outline-none focus:ring-0 outline-none focus:border-black transition-colors"
+        // More descriptive placeholder, no uppercase yelling
+        placeholder="Search artists, works, styles..."
+        className="
+            w-full pl-10 pr-4 py-2.5 
+            bg-slate-100 border border-transparent rounded-md 
+            text-sm font-sans text-slate-900 placeholder:text-slate-500 
+            focus:outline-none focus:bg-white focus:border-slate-200 focus:ring-0 focus:border-dark
+            transition-all duration-200
+        "
       />
-      <button
-        onClick={handleSearch}
-        className="absolute right-1 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-dark transition-colors"
-      >
-        {isPending ? (
-          <div className="h-3 w-3 border border-black border-t-transparent rounded animate-spin" />
-        ) : (
-          <CiSearch className="w-4 h-4" />
-        )}
-      </button>
+
+      {/* Loading Indicator - Right aligned */}
+      {isPending && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="h-4 w-4 border-2 border-[#091830] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
     </div>
   );
 }

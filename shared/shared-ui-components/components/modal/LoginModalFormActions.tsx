@@ -14,7 +14,7 @@ export default function LoginModalFormActions({
 
   return (
     <>
-      <div className="flex w-full flex-col mt-[1rem] gap-4">
+      <div className="flex w-full flex-col mt-[1rem] space-y-8">
         <div className="flex justify-end w-full my-3">
           <p className="font-normal text-fluid-xxs">
             Forgot password?{" "}
@@ -36,7 +36,7 @@ export default function LoginModalFormActions({
           {!loading ? "Login to your account" : <LoadSmall />}
         </button>
       </div>
-      <div className="w-full flex justify-center my-2">
+      <div className="w-full flex justify-center my-4">
         <p className="text-fluid-xxs text-dark font-medium">
           Don&apos;t have an account?{" "}
           <button onClick={() => toggleLoginModal(false)}>

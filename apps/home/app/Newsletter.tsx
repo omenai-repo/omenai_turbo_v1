@@ -5,11 +5,11 @@ export default function Newsletter() {
         <div className="flex flex-col items-start justify-between gap-16 lg:flex-row lg:items-center">
           {/* 1. EDITORIAL HOOK (Left Column) */}
           <div className="max-w-xl space-y-6">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-500">
-              Correspondence
+            <span className="font-sans text-xs font-bold uppercase tracking-wider text-white/60">
+              Market Intelligence
             </span>
 
-            <h2 className="font-serif text-5xl text-neutral-900 md:text-6xl">
+            <h2 className="font-serif text-4xl text-neutral-900 md:text-5xl">
               Join the{" "}
               <span className="italic text-neutral-500">Inner Circle.</span>
             </h2>
@@ -35,11 +35,7 @@ export default function Newsletter() {
               title="Omenai Newsletter"
               src="https://omenai.substack.com/embed"
               style={{ background: "#fafafa" }}
-              // Reduced height to 320px to cut off Substack's excess whitespace if possible,
-              // or keep 500px if it displays a feed.
               className="h-[320px] w-full"
-              frameBorder="0"
-              scrolling="no"
             />
           </div>
         </div>

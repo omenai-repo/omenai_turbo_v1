@@ -60,19 +60,19 @@ export default function UserProfile({
         "individual",
         formData,
         userBase.user_id,
-        csrf || ""
+        csrf || "",
       );
       if (!profile_update.isOk) {
         toast_notif(
           profile_update.body.message ||
             "Something went wrong, please try again or contact support",
-          "error"
+          "error",
         );
         return;
       }
       toast_notif(
         `${profile_update.body.message || "Profile information updated successfully"}`,
-        "success"
+        "success",
       );
       await queryClient.invalidateQueries({
         queryKey: ["fetch_user_info"],
@@ -87,7 +87,7 @@ export default function UserProfile({
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -118,7 +118,7 @@ export default function UserProfile({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="block w-full md:w-auto text-3xl md:text-4xl font-semibold bg-transparent border-b border-transparent hover:border-slate-200 focus:ring-0 focus:border-dark focus:border-b border-x-0 border-t-0 focus:outline-none transition-colors  placeholder-slate-300 px-0"
+                className="block w-full md:w-auto text-2xl md:text-3xl font-semibold bg-transparent border-b border-transparent hover:border-slate-200 focus:ring-0 focus:border-dark focus:border-b border-x-0 border-t-0 focus:outline-none transition-colors  placeholder-slate-300 px-0"
                 placeholder="Your Name"
               />
               <div className="flex items-center justify-center md:justify-start gap-3">

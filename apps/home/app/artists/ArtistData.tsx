@@ -35,12 +35,18 @@ export default function ArtistData() {
     <div className="min-h-screen bg-white">
       <DesktopNavbar />
 
-      <main className="container mx-auto px-6 lg:px-12 pt-12 pb-24">
-        <div className="flex flex-col gap-24">
+      {/* Added pt-28 to clear fixed navbar */}
+      <main className="container mx-auto px-4">
+        <div className="flex flex-col gap-4">
+          {/* Profile Section */}
           <ArtistInfo loading={loading} info={artist_data?.artist} url={url} />
 
-          <div className="border-t border-neutral-200 pt-12">
-            <ArtistWorks loading={loading} artworks={artist_data?.artworks} />
+          {/* Catalog Section */}
+          <div className="border-t border-neutral-100 pt-16">
+            <ArtistWorks
+              loading={loading}
+              artworks={artist_data?.artworks || []}
+            />
           </div>
         </div>
       </main>

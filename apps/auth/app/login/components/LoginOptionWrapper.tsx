@@ -27,7 +27,7 @@ export default function LoginOptionWrapper() {
           {/* TODO: Add mailto */}
           <p className="mt-12 text-[10px] text-slate-400 uppercase tracking-[0.2em] font-medium text-center md:text-left">
             Need assistance?{" "}
-            <span className="text-dark cursor-pointer border-b border-black pb-0.5">
+            <span className="text-dark cursor-pointer border-b border-dark pb-0.5">
               Contact Concierge
             </span>
           </p>

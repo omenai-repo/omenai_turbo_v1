@@ -14,7 +14,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
       {/* 1. THE MASTHEAD (Header) */}
       <header className="container mx-auto max-w-4xl px-6 text-center mb-16">
         {/* Meta Data Row */}
-        <div className="mb-8 flex items-center justify-center gap-4 border-b border-black pb-6">
+        <div className="mb-8 flex items-center justify-center gap-4 border-b border-dark pb-6">
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500">
             {article.date
               ? format(new Date(article.date), "MMMM d, yyyy")
@@ -35,7 +35,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         <div className="flex justify-center">
           <p className="font-mono text-xs uppercase tracking-widest text-dark">
             Words by{" "}
-            <span className="border-b border-black pb-0.5">
+            <span className="border-b border-dark pb-0.5">
               {"Iyanuoluwa Adenle"}
             </span>
           </p>
@@ -75,7 +75,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
             prose-p:font-sans prose-p:text-base prose-p:leading-8 prose-p:text-neutral-800
             prose-a:text-dark prose-a:underline prose-a:underline-offset-4 prose-a:decoration-1 hover:prose-a:decoration-2
             prose-strong:font-bold prose-strong:text-dark
-            prose-blockquote:border-l-2 prose-blockquote:border-black prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-2xl prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:text-neutral-900
+            prose-blockquote:border-l-2 prose-blockquote:border-dark prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-2xl prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:text-neutral-900
             prose-img:my-12 prose-img:w-full prose-img:shadow-none
             prose-ul:list-disc prose-ul:pl-6
             prose-ol:list-decimal prose-ol:pl-6

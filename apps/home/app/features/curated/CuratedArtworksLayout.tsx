@@ -2,13 +2,10 @@
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-import Link from "next/link";
 import { useState } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import CuratorialManifest from "./components/PreferencePicker"; // Imported the new picker
-import { GoArrowRight } from "react-icons/go";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import CuratorialManifest from "./components/PreferencePicker";
 
 export default function ExhibitionGrid({
   sessionId,
@@ -28,28 +25,28 @@ export default function ExhibitionGrid({
     return artwork.medium === curated_preference;
   });
 
-  // Chunking for Masonry
+  // Masonry Columns logic
   const columns = width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4;
   const arts = catalogChunk(filteredArtworks, columns);
 
   return (
     <div className="w-full">
-      {/* 1. The Control Rail (Manifest) */}
+      {/* 1. Filter Tabs */}
       <CuratorialManifest
         setIsFading={setIsFading}
         preferences={user.preferences}
       />
 
-      {/* 2. The Gallery Space */}
+      {/* 2. The Grid */}
       <div
-        className={`min-h-[500px] transition-all duration-500 ease-in-out ${
+        className={`min-h-[500px] transition-all duration-300 ease-out ${
           isFading ? "translate-y-4 opacity-0" : "translate-y-0 opacity-100"
         }`}
       >
         {filteredArtworks.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
             {arts.map((column: any[], colIndex: number) => (
-              <div className="flex flex-1 flex-col gap-12" key={colIndex}>
+              <div className="flex flex-1 flex-col gap-8" key={colIndex}>
                 {column.map((art: any) => (
                   <ArtworkCard
                     key={art.art_id}
@@ -71,28 +68,19 @@ export default function ExhibitionGrid({
             ))}
           </div>
         ) : (
-          // Empty State - "The White Wall"
-          <div className="flex h-[40vh] w-full flex-col items-center justify-center border border-dashed border-neutral-200">
-            <span className="font-serif text-2xl italic text-neutral-300">
-              No works available in this medium.
+          // Empty State
+          <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white">
+            <span className="font-sans font-medium text-neutral-400">
+              No works found in {curated_preference}.
             </span>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 text-xs font-bold uppercase tracking-wide text-dark  underline underline-offset-4"
+            >
+              Refresh Feed
+            </button>
           </div>
         )}
-      </div>
-
-      {/* 3. The Footer Action (No Gradient) */}
-      <div className="mt-20 flex justify-center border-t border-black pt-8">
-        <Link href={"/catalog"} className="group relative z-20">
-          <button className="flex items-center gap-4 bg-white px-8 py-4 text-dark transition-all duration-500 ease-out hover:bg-dark hover:text-white border border-neutral-200 hover:border-black">
-            {/* TYPOGRAPHY: Technical/Mono for the label */}
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em]">
-              Enter Full Archive
-            </span>
-
-            {/* ICON: Slide animation */}
-            <IoIosArrowRoundForward className="text-2xl transition-transform duration-300 group-hover:translate-x-2" />
-          </button>
-        </Link>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ import {
 export default function RegisterOptions() {
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
-    true
+    true,
   );
   const params = useSearchParams();
   const redirectTo = params.get("redirect") || "";
@@ -22,7 +22,7 @@ export default function RegisterOptions() {
     group relative flex flex-col justify-between p-6 h-[160px] 
     border border-slate-300 rounded bg-white 
     transition-all duration-500 ease-in-out
-    hover:border-black hover:shadow-2xl hover:shadow-black/5
+    hover:border-dark hover:shadow-2xl hover:shadow-black/5
   `;
 
   const ICON_STYLE = `
@@ -115,7 +115,7 @@ export default function RegisterOptions() {
           <p className="text-[9px] uppercase tracking-[0.3em] text-slate-400 font-medium">
             Already a member?
           </p>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-dark font-semibold border-b border-black pb-0.5 group-hover:text-slate-500 group-hover:border-slate-500 transition-all">
+          <span className="text-[11px] uppercase tracking-[0.2em] text-dark font-semibold border-b border-dark pb-0.5 group-hover:text-slate-500 group-hover:border-slate-500 transition-all">
             Secure Login
           </span>
         </Link>

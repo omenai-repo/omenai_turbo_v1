@@ -53,7 +53,7 @@ export default function AddressSelectInput({
     if (labelText === "state") {
       const cities = City.getCitiesOfState(
         selectedCountry.code,
-        selectedCode as string
+        selectedCode as string,
       );
       setSelectedCityList(cities);
       setAddress(labelText, value);
@@ -85,7 +85,7 @@ export default function AddressSelectInput({
             font-sans text-sm text-dark
             border border-neutral-300 
             rounded-none
-            focus:border-black focus:ring-0 focus:outline-none
+            focus:border-dark focus:ring-0 focus:outline-none
             appearance-none
             transition-colors duration-200
           `}
@@ -123,23 +123,6 @@ export default function AddressSelectInput({
               </option>
             ))}
         </select>
-
-        {/* Custom Arrow */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-neutral-500">
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
       </div>
     </div>
   );

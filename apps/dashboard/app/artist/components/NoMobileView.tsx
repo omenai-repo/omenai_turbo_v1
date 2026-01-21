@@ -9,7 +9,7 @@ export default function MobileBlockScreen() {
       <section className="w-full max-w-md text-center space-y-8">
         {/* Brand */}
         <Image
-          src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+          src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
           alt="Omenai"
           width={130}
           height={40}

@@ -1,20 +1,24 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { icons, UserRoundCheck } from "lucide-react";
+import { icons, User } from "lucide-react";
 import Link from "next/link";
 import { base_url, dashboard_url } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 const userMenuItems = [
-  { name: "Collection", href: `${dashboard_url()}/user/saves`, icon: "Heart" },
   {
-    name: "Acquisitions",
+    name: "My Collection",
+    href: `${dashboard_url()}/user/saves`,
+    icon: "Heart",
+  },
+  {
+    name: "Orders & Bids",
     href: `${dashboard_url()}/user/orders`,
     icon: "Package",
   },
   {
-    name: "Settings",
+    name: "Account Settings",
     href: `${dashboard_url()}/user/settings`,
     icon: "Settings",
   },
@@ -29,9 +33,10 @@ export const UserMenu = () => {
   });
 
   async function handleSignOut() {
-    toast_notif("Signing you out, you'll be redirected in a moment", "info");
+    toast_notif("Signing out...", "info");
     await signOut();
   }
+
   useEffect(() => {
     const close = (e: MouseEvent) =>
       !dropdownRef.current?.contains(e.target as Node) && setIsOpen(false);
@@ -43,49 +48,57 @@ export const UserMenu = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 group"
+        className={`flex items-center gap-3 px-2 py-1.5 rounded-full transition-all duration-200 ${
+          isOpen ? "bg-neutral-100" : "hover:bg-neutral-50"
+        }`}
       >
-        <div className="w-8 h-8 grid place-items-center border border-neutral-200 group-hover:border-black transition-colors">
-          <UserRoundCheck size={16} strokeWidth={1.5} />
+        <div className="w-8 h-8 rounded-full bg-[#091830] text-white grid place-items-center shadow-sm">
+          <User size={16} strokeWidth={2} />
         </div>
-        <span className="hidden lg:block text-[10px] font-bold uppercase tracking-widest">
-          {user.name}
-        </span>
+        <div className="hidden lg:flex flex-col items-start">
+          <span className="text-xs font-sans font-semibold text-dark  leading-none">
+            {user.name.split(" ")[0]}
+          </span>
+        </div>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-4 w-56 bg-white border border-neutral-200 shadow-xl overflow-hidden">
-          <div className="px-4 py-4 bg-neutral-50 border-b border-neutral-100">
-            <p className="text-[10px] font-bold uppercase tracking-widest">
+        <div className="absolute right-0 mt-2 w-64 bg-white border border-neutral-100 rounded-lg shadow-xl ring-1 ring-black/5 overflow-hidden z-50">
+          <div className="px-5 py-4 bg-neutral-50 border-b border-neutral-100">
+            <p className="text-sm font-sans font-semibold text-dark ">
               {user.name}
             </p>
-            <p className="text-[9px] text-neutral-500 lowercase">
+            <p className="text-xs text-neutral-500 font-sans truncate">
               {user.email}
             </p>
           </div>
-          <div className="py-2">
+
+          <div className="p-2">
             {userMenuItems.map((item) => {
               const Icon = icons[item.icon as keyof typeof icons];
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center px-4 py-2.5 text-[10px] uppercase tracking-widest text-neutral-600 hover:bg-dark hover:text-white transition-all"
+                  className="flex items-center px-4 py-2.5 text-sm font-sans font-medium text-neutral-600 rounded-md hover:bg-neutral-50 hover:text-dark  transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
-                  <Icon className="mr-3 h-3 w-3" />
+                  <Icon className="mr-3 h-4 w-4 text-neutral-400 group-hover:text-dark " />
                   {item.name}
                 </Link>
               );
             })}
           </div>
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center px-4 py-3 text-[10px] uppercase tracking-widest text-red-500 hover:bg-red-50 transition-colors border-t border-neutral-100"
-          >
-            <icons.LogOut className="mr-3 h-3 w-3" />
-            Sign Out
-          </button>
+
+          <div className="p-2 border-t border-neutral-100">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center px-4 py-2.5 text-sm font-sans font-medium text-red-600 rounded-md hover:bg-red-50 transition-colors"
+            >
+              <icons.LogOut className="mr-3 h-4 w-4" />
+              Sign Out
+            </button>
+          </div>
         </div>
       )}
     </div>

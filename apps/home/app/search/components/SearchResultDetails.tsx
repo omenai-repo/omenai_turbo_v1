@@ -2,10 +2,9 @@
 
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
-import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useWindowSize } from "usehooks-ts";
+import { HiSearch } from "react-icons/hi";
 
 type SearchResultDetailsProps = {
   data: (Pick<
@@ -24,6 +23,7 @@ type SearchResultDetailsProps = {
   searchTerm: string;
   sessionId: string | undefined;
 };
+
 export default function SearchResultDetails({
   data,
   searchTerm,
@@ -33,51 +33,51 @@ export default function SearchResultDetails({
 
   const arts = catalogChunk(
     data,
-    width <= 400 ? 1 : width <= 768 ? 2 : width <= 1280 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   return (
-    <div>
-      <div className="w-full h-full">
-        <div className=" py-4">
-          <h1 className="text-fluid-xs md:text-fluid-base font-normal text-dark">
-            {data.length} result(s) found for term{" "}
-            <span className="text-blue-600">&apos;{searchTerm}&apos;</span>
-          </h1>
-          {!data ||
-            (data.length === 0 && (
-              <div className="w-full h-full grid place-items-center">
-                <NotFoundData />
-              </div>
-            ))}
+    <div className="w-full">
+      {/* HEADER */}
+      <div className="mb-10 border-b border-neutral-100 pb-6">
+        <div className="flex items-center gap-2 mb-2 text-neutral-400">
+          <HiSearch className="text-lg" />
+          <span className="font-sans text-xs font-bold uppercase tracking-widest">
+            Search Results
+          </span>
         </div>
-        {/* <hr className=" border-dark/10" /> */}
-        <div className="flex flex-wrap gap-x-4 justify-center">
-          {arts.map((artworks: any[], index) => {
-            return (
-              <div className="flex-1 gap-2 space-y-6" key={index}>
-                {artworks.map((art: any) => {
-                  return (
-                    <ArtworkCard
-                      key={art.art_id}
-                      image={art.url}
-                      name={art.title}
-                      artist={art.artist}
-                      art_id={art.art_id}
-                      pricing={art.pricing}
-                      impressions={art.impressions as number}
-                      likeIds={art.like_IDs as string[]}
-                      sessionId={sessionId}
-                      availability={art.availability}
-                      medium={art.medium}
-                      author_id={art.author_id}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
+        <h1 className="font-serif text-3xl md:text-4xl text-dark ">
+          Found {data.length} {data.length === 1 ? "work" : "works"} for{" "}
+          <span className="italic text-neutral-500">“{searchTerm}”</span>
+        </h1>
+      </div>
+
+      {/* RESULTS GRID */}
+      <div className="flex flex-wrap justify-center gap-x-8">
+        {arts.map((artworks: any[], index) => {
+          return (
+            <div className="flex-1 flex flex-col gap-12" key={index}>
+              {artworks.map((art: any) => {
+                return (
+                  <ArtworkCard
+                    key={art.art_id}
+                    image={art.url}
+                    name={art.title}
+                    artist={art.artist}
+                    art_id={art.art_id}
+                    pricing={art.pricing}
+                    impressions={art.impressions as number}
+                    likeIds={art.like_IDs as string[]}
+                    sessionId={sessionId}
+                    availability={art.availability}
+                    medium={art.medium}
+                    author_id={art.author_id}
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

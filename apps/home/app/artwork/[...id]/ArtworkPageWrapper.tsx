@@ -39,23 +39,17 @@ export default function ArtworkPageWrapper({ param }: { param: string }) {
   return (
     <div className="min-h-screen bg-white text-dark relative">
       <DesktopNavbar />
-
-      {/* MAIN VIEWING ROOM LAYOUT */}
-      <main className="container mx-auto px-6 lg:px-12 pt-4 pb-24">
-        {/* The ProductBox now handles the Split Layout internally for better cohesion */}
+      <main className="pt-4 pb-8">
         <ProductBox
           data={artworkDetails}
           sessionId={user ? user.id : undefined}
         />
 
-        {/* SECONDARY INFORMATION (Below Fold) */}
         <div className="mt-24 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-neutral-200 pt-12">
-          {/* Left Column: Technical Details */}
           <div className="lg:col-span-7 space-y-12">
             <FullArtworkDetails data={artworkDetails} />
           </div>
 
-          {/* Right Column: Artist Bio */}
           <div className="lg:col-span-5">
             <ArtistInformation
               name={artworkDetails.artist}
@@ -65,7 +59,6 @@ export default function ArtworkPageWrapper({ param }: { param: string }) {
           </div>
         </div>
 
-        {/* CURATED SUGGESTIONS */}
         <div className="mt-32 space-y-24">
           <SimilarArtworks
             title={artworkDetails.title}

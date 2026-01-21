@@ -26,7 +26,7 @@ export const PaymentFailedEmail = (buyerName: string, artwork: string) => {
       <Body style={main}>
         <Container style={container}>
           <Img
-            src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+            src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
             alt="Omenai logo"
             width="120"
             style={{ margin: "0 auto 30px" }}

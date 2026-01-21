@@ -25,7 +25,7 @@ export default function PriceFilter({
         className="flex justify-between items-center cursor-pointer group"
       >
         <div className="flex gap-x-4 items-center">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 group-hover:text-dark transition-colors">
+          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-dark group-hover:text-dark transition-colors">
             Price Range
           </span>
           {filterOptions.price.length > 0 && (
