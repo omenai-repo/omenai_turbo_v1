@@ -48,13 +48,13 @@ export async function fetchArtworksFromCache(artIds: string[]) {
         redis
           .set(`artwork:${doc.art_id}`, JSON.stringify(doc))
           .catch((err) =>
-            console.error(`Failed to set cache for artwork:${doc.art_id}`, err)
+            console.error(`Failed to set cache for artwork:${doc.art_id}`, err),
           );
       }
     });
   }
 
-  return [...artworks].reverse();
+  return [...artworks];
 }
 
 // Helper function to fetch gallery IDs with caching

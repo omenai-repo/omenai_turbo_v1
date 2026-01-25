@@ -170,7 +170,7 @@ export default function AddressForm({
             <input
               type="checkbox"
               id="save-address"
-              className="accent-dark h-4 w-4 rounded-none border-neutral-300"
+              className="accent-dark h-4 w-4 rounded border-neutral-300"
               onChange={(e) => setSaveShippingAddress(e.target.checked)}
             />
             <label
@@ -184,7 +184,7 @@ export default function AddressForm({
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-dark text-white h-14 font-sans text-xs uppercase tracking-[0.2em] transition-all hover:bg-neutral-800 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-none"
+            className="w-full bg-dark text-white grid place-items-center h-14 font-sans text-xs uppercase tracking-[0.2em] transition-all hover:bg-neutral-800 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:cursor-not-allowed rounded"
           >
             {loading ? <LoadSmall /> : "Submit Purchase Request"}
           </button>

@@ -33,12 +33,12 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       createErrorRollbarReport(
         "shipment: address verification",
         error,
-        error_response.status
+        error_response.status,
       );
 
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
 
@@ -50,7 +50,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const response = await fetch(
         `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${true}`,
-        requestOptions
+        requestOptions,
       );
       const data = await response.json();
       // DONE: Fix for multiple DHL error responses
@@ -61,16 +61,17 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
       return NextResponse.json({ message: "Success", data }, { status: 200 });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
+      console.log(error);
       createErrorRollbarReport(
         "shipment: address validation",
         error,
-        error_response.status
+        error_response.status,
       );
 
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

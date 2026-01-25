@@ -19,7 +19,10 @@ import { getCurrentDate } from "@omenai/shared-utils/src/getCurrentDate";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   AddressTypes,
@@ -31,7 +34,7 @@ import {
 import { createErrorRollbarReport } from "../../util";
 
 const config: CombinedConfig = {
-  ...strictRateLimit,
+  ...standardRateLimit,
   allowedRoles: ["user"],
 };
 
@@ -40,7 +43,7 @@ const getSellerData = async (seller_id: string, designation: string) => {
   if (designation === "gallery") {
     return AccountGallery.findOne(
       { gallery_id: seller_id },
-      "name email address phone address"
+      "name email address phone address",
     ).lean() as unknown as {
       name: string;
       email: string;
@@ -51,7 +54,7 @@ const getSellerData = async (seller_id: string, designation: string) => {
   }
   return AccountArtist.findOne(
     { artist_id: seller_id },
-    "name email address phone address"
+    "name email address phone address",
   ).lean() as unknown as {
     name: string;
     email: string;
@@ -62,7 +65,7 @@ const getSellerData = async (seller_id: string, designation: string) => {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -92,7 +95,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const [buyerData, sellerData] = await Promise.all([
       AccountIndividual.findOne(
         { user_id: buyer_id },
-        "name email user_id phone address"
+        "name email user_id phone address",
       ).lean() as unknown as {
         name: string;
         email: string;
@@ -124,21 +127,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           "Content-Type": "application/json",
           Origin: "https://omenai.app",
         },
-      }
+      },
     );
 
     const validationResult = await validationResponse.json();
     if (!validationResponse.ok) {
       throw new BadRequestError(
         validationResult.message ||
-          "Oops! We can't ship to this address yet. Try another address."
+          "Oops! We can't ship to this address yet. Try another address.",
       );
     }
 
     // Fetch artwork details
     const artwork = (await Artworkuploads.findOne(
       { art_id },
-      "title artist pricing url art_id availability role_access exclusivity_status"
+      "title artist pricing url art_id availability role_access exclusivity_status",
     ).lean()) as unknown as Pick<
       ArtworkSchemaTypes,
       | "title"
@@ -154,15 +157,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServerError("Artwork not found.");
     }
 
-    // Prevent duplicate order creation
-    const existingOrder = (await CreateOrder.findOne({
-      "buyer_details.email": buyerData.email,
-      "artwork_data.art_id": artwork.art_id,
-    }).lean()) as unknown as CreateOrderModelTypes;
+    let existingOrder = null;
 
-    const status = existingOrder?.order_accepted.status;
+    try {
+      existingOrder = (await CreateOrder.findOne({
+        "buyer_details.id": buyer_id,
+        "artwork_data.art_id": art_id,
+        "order_accepted.status": { $in: ["", "accepted"] },
+      }).lean()) as unknown as CreateOrderModelTypes;
+    } catch (dbError: any) {
+      console.error("CRITICAL DB ERROR:", dbError);
+      throw new Error(`Database failed: ${dbError.message}`);
+    }
 
-    if (existingOrder && (!status || status === "accepted")) {
+    if (existingOrder) {
       throw new ForbiddenError("This order is already being processed.");
     }
 
@@ -200,7 +208,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (save_shipping_address) {
       await AccountIndividual.updateOne(
         { user_id: buyer_id },
-        { $set: { address: shipping_address } }
+        { $set: { address: shipping_address } },
       );
     }
 
@@ -212,10 +220,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       .lean();
 
     const buyerToken = deviceRecords.find(
-      (d) => d.auth_id === buyer_id
+      (d) => d.auth_id === buyer_id,
     )?.device_push_token;
     const sellerToken = deviceRecords.find(
-      (d) => d.auth_id === seller_id
+      (d) => d.auth_id === seller_id,
     )?.device_push_token;
 
     const notificationTasks: Promise<any>[] = [];
@@ -239,8 +247,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         createWorkflow(
           "/api/workflows/notification/pushNotification",
           `notif_buyer_${createOrder.order_id}_${generateDigit(2)}`,
-          JSON.stringify(buyerPayload)
-        )
+          JSON.stringify(buyerPayload),
+        ),
       );
     }
 
@@ -263,8 +271,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         createWorkflow(
           "/api/workflows/notification/pushNotification",
           `notif_seller_${createOrder.order_id}_${generateDigit(2)}`,
-          JSON.stringify(sellerPayload)
-        )
+          JSON.stringify(sellerPayload),
+        ),
       );
     }
 
@@ -289,19 +297,37 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Order created successfully" },
-      { status: 200 }
+      { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
+    // Explicitly type as any to access properties safely
+
+    // 1. Check specifically for your ForbiddenError first
+    if (error instanceof ForbiddenError || error.name === "ForbiddenError") {
+      // Don't report "Forbidden" actions to Rollbar (they are valid business logic)
+      return NextResponse.json(
+        { message: error.message || "This order is already being processed." },
+        { status: 403 },
+      );
+    }
+
+    // 2. Fallback to your standard handler for actual crashes
     const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "order: create order",
-      error,
-      error_response.status
-    );
+
+    // Only log true server errors (500s) to Rollbar to save quota/noise
+    if (error_response.status === 500) {
+      createErrorRollbarReport(
+        "order: create order",
+        error,
+        error_response.status,
+      );
+    }
+
     console.error("Order creation error:", error);
+
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });
