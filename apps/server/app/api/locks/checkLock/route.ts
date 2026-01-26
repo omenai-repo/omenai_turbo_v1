@@ -2,7 +2,7 @@ import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   lenientRateLimit,
   strictRateLimit,
@@ -25,7 +25,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
               locked: false,
             },
           },
-          { status: 200 }
+          { status: 200 },
         );
       }
 
@@ -37,7 +37,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
               locked: true,
             },
           },
-          { status: 200 }
+          { status: 200 },
         );
       } else {
         return NextResponse.json(
@@ -47,7 +47,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
               locked: false,
             },
           },
-          { status: 200 }
+          { status: 200 },
         );
       }
     } catch (error) {
@@ -55,12 +55,12 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       createErrorRollbarReport(
         "locks: check Lock",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

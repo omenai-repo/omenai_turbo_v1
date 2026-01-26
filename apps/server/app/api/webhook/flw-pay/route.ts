@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   InvoiceTypes,
   NotificationPayload,
@@ -20,13 +20,15 @@ import { createErrorRollbarReport, MetaSchema, retry } from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 /* ----------------------------- Schema ------------------------------------- */
 
 /* ----------------------------- Utilities ---------------------------------- */
 
 function verifyWebhookSignature(
   headerHash: string | null | undefined,
-  secret: string
+  secret: string,
 ): boolean {
   if (!headerHash || !secret) return false;
 
@@ -47,7 +49,7 @@ export async function fireAndForget(p: Promise<unknown>) {
     createErrorRollbarReport(
       "Flutterwave webhook fire-and-forget error",
       err as any,
-      500
+      500,
     );
   }
 }
@@ -76,12 +78,12 @@ function shouldExitEarly(flwStatus: string, verified: any, body: any): boolean {
 export async function sendPushNotifications(order_info: any) {
   const buyer_push = await DeviceManagement.findOne(
     { auth_id: order_info.buyer_details.id },
-    "device_push_token"
+    "device_push_token",
   );
 
   const seller_push = await DeviceManagement.findOne(
     { auth_id: order_info.seller_details.id },
-    "device_push_token"
+    "device_push_token",
   );
 
   const jobs: Promise<unknown>[] = [];
@@ -106,14 +108,14 @@ export async function sendPushNotifications(order_info: any) {
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notification_workflow_buyer_${order_info.order_id}_workflow`,
-        JSON.stringify(buyerPayload)
+        JSON.stringify(buyerPayload),
       ).catch((err) => {
         createErrorRollbarReport(
           "Flutterwave webhook processing - Buyer notification",
           err,
-          500
+          500,
         );
-      })
+      }),
     );
   }
 
@@ -123,7 +125,7 @@ export async function sendPushNotifications(order_info: any) {
       title: "Payment received",
       body: `A payment of ${formatPrice(
         order_info.artwork_data.pricing.usd_price,
-        "USD"
+        "USD",
       )} has been made for your artpiece`,
       data: {
         type: "orders",
@@ -140,14 +142,14 @@ export async function sendPushNotifications(order_info: any) {
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notification_workflow_seller_${order_info.order_id}_workflow`,
-        JSON.stringify(sellerPayload)
+        JSON.stringify(sellerPayload),
       ).catch((err) => {
         createErrorRollbarReport(
           "Flutterwave webhook processing - Seller notification",
           err,
-          500
+          500,
         );
-      })
+      }),
     );
   }
 
@@ -156,7 +158,7 @@ export async function sendPushNotifications(order_info: any) {
       createErrorRollbarReport(
         "Flutterwave webhook processing - Notifications",
         err,
-        500
+        500,
       );
     });
   }
@@ -166,10 +168,10 @@ export async function sendPushNotifications(order_info: any) {
 
 async function handlePurchaseTransaction(
   verified_transaction: any,
-  reqBody: any
+  reqBody: any,
 ) {
   const metaParse = MetaSchema.safeParse(
-    verified_transaction?.data?.meta ?? null
+    verified_transaction?.data?.meta ?? null,
   );
   if (!metaParse.success) return NextResponse.json({ status: 400 });
 
@@ -193,7 +195,7 @@ async function handlePurchaseTransaction(
           email: meta.buyer_email,
           name: order_info.buyer_details.name,
           artwork: order_info.artwork_data.title,
-        })
+        }),
       );
     }
     return NextResponse.json({ status: 200 });
@@ -214,7 +216,7 @@ async function handlePurchaseTransaction(
   if (existingTransaction || existingPaymentLedger) {
     await PurchaseTransactions.updateOne(
       { trans_reference: verified_transaction.data.id },
-      { $set: { webhookReceivedAt: new Date(), webhookConfirmed: true } }
+      { $set: { webhookReceivedAt: new Date(), webhookConfirmed: true } },
     );
     return NextResponse.json({ status: 200 });
   }
@@ -254,10 +256,10 @@ async function handlePurchaseTransaction(
           {
             $setOnInsert: paymentLedgerData,
           },
-          { upsert: true }
+          { upsert: true },
         ),
       3,
-      150
+      150,
     );
   } catch (error) {
     rollbarServerInstance.error({
@@ -273,7 +275,7 @@ async function handlePurchaseTransaction(
         message:
           "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -290,7 +292,7 @@ async function handlePurchaseTransaction(
   // Update order with payment information
   const updateOrder = await CreateOrder.updateOne(
     { order_id: order_info.order_id },
-    { $set: { payment_information, hold_status: null } }
+    { $set: { payment_information, hold_status: null } },
   );
 
   if (updateOrder.modifiedCount === 0) {
@@ -301,7 +303,7 @@ async function handlePurchaseTransaction(
     });
     return NextResponse.json(
       { message: "Order update unsuccessful" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -357,16 +359,16 @@ async function handlePurchaseTransaction(
           provider: "flutterwave",
           meta,
           verified_transaction: paymentObj,
-        })
-      )
+        }),
+      ),
     );
     // Create shipment workflow
     await fireAndForget(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
         `create_shipment_${order_info.order_id}_workflow`,
-        JSON.stringify({ order_id: order_info.order_id })
-      )
+        JSON.stringify({ order_id: order_info.order_id }),
+      ),
     );
 
     await fireAndForget(
@@ -375,8 +377,8 @@ async function handlePurchaseTransaction(
         `send_payment_invoice${invoice.invoiceNumber}_workflow`,
         JSON.stringify({
           invoice,
-        })
-      )
+        }),
+      ),
     );
 
     // Send email notifications
@@ -396,8 +398,8 @@ async function handlePurchaseTransaction(
           seller_email: order_info.seller_details.email,
           seller_name: order_info.seller_details.name,
           seller_entity: "artist",
-        })
-      )
+        }),
+      ),
     );
 
     // Send notifications
@@ -411,8 +413,8 @@ async function handlePurchaseTransaction(
 
 /* ----------------------------- Route -------------------------------------- */
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ) {
   try {
     const signature = request.headers.get("verif-hash");
@@ -421,7 +423,7 @@ export const POST = withAppRouterHighlight(async function POST(
     if (!verifyWebhookSignature(signature, secret)) {
       return NextResponse.json(
         { error: "Invalid webhook signature" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -434,7 +436,7 @@ export const POST = withAppRouterHighlight(async function POST(
           headers: {
             Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           },
-        }
+        },
       ).then((r) => r.json());
 
       return await handlePurchaseTransaction(verified, body);
@@ -445,7 +447,7 @@ export const POST = withAppRouterHighlight(async function POST(
     createErrorRollbarReport(
       "Flutterwave webhook processing - fatal error",
       err as any,
-      500
+      500,
     );
     return NextResponse.json({ status: 200 });
   }

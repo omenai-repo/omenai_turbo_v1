@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     if (!sessionId) {
       return NextResponse.json(
         { message: "Session not authenticated" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -29,14 +29,14 @@ export async function GET(request: Request) {
       sessionId,
       userAgent,
       header_is_middleware,
-      cookieStore
+      cookieStore,
     );
 
     if (!userSessionData) {
       cookieSession.destroy();
       return NextResponse.json(
         { message: "Session expired or invalid" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 

@@ -10,7 +10,7 @@ import {
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../../util";
@@ -24,7 +24,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const user = await VerificationCodes.findOne(
         { code: id },
-        "author"
+        "author",
       ).exec();
 
       if (!user)
@@ -34,14 +34,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const account = await AccountGallery.findOne(
         { gallery_id: user.author },
-        "password"
+        "password",
       );
 
       const isPasswordMatch = bcrypt.compareSync(password, account.password);
 
       if (isPasswordMatch)
         throw new ConflictError(
-          "Your new password cannot be identical to a previously used password"
+          "Your new password cannot be identical to a previously used password",
         );
 
       const hash = await hashPassword(password);
@@ -59,19 +59,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       await VerificationCodes.findOneAndDelete({ code: id });
       return NextResponse.json(
         { message: "Password updated! Please login with new credentials." },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: reset password",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

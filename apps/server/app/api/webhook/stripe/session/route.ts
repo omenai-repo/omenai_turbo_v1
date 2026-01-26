@@ -1,4 +1,3 @@
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
@@ -23,6 +22,8 @@ import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { retry } from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 /* -------------------------------------------------------------------------- */
 /*                            STRIPE VERIFICATION                              */
@@ -108,7 +109,7 @@ async function handleCheckoutCompleted(event: any) {
           webhookReceivedAt: toUTCDate(new Date()),
           webhookConfirmed: true,
         },
-      }
+      },
     );
     return NextResponse.json({ status: 200 });
   }
@@ -137,7 +138,7 @@ async function handleCheckoutCompleted(event: any) {
     provider: "stripe",
     provider_tx_id: String(paymentIntent.id),
     status: String(
-      paymentIntent.status === "succeeded" ? "successful" : "failed"
+      paymentIntent.status === "succeeded" ? "successful" : "failed",
     ),
     payment_date: toUTCDate(new Date()),
     order_id: order.order_id,
@@ -163,10 +164,10 @@ async function handleCheckoutCompleted(event: any) {
           {
             $setOnInsert: paymentLedgerData,
           },
-          { upsert: true }
+          { upsert: true },
         ),
       3,
-      150
+      150,
     );
   } catch (error) {
     rollbarServerInstance.error({
@@ -182,7 +183,7 @@ async function handleCheckoutCompleted(event: any) {
         message:
           "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -195,7 +196,7 @@ async function handleCheckoutCompleted(event: any) {
 
   const updateOrder = await CreateOrder.updateOne(
     { order_id: order.order_id },
-    { $set: { payment_information, hold_status: null } }
+    { $set: { payment_information, hold_status: null } },
   );
 
   if (updateOrder.modifiedCount === 0) {
@@ -206,7 +207,7 @@ async function handleCheckoutCompleted(event: any) {
     });
     return NextResponse.json(
       { message: "Order update unsuccessful" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   return processStripePayment(paymentObj, meta, order);
@@ -224,7 +225,7 @@ async function processStripePayment(
     currency: string;
   },
   meta: any,
-  order_info: any
+  order_info: any,
 ) {
   try {
     await runPostPaymentWorkflows(paymentIntent, order_info, meta);
@@ -258,7 +259,7 @@ export async function runPostPaymentWorkflows(
     currency: string;
   },
   order_info: CreateOrderModelTypes,
-  meta: MetaSchema & { commission: number }
+  meta: MetaSchema & { commission: number },
 ) {
   const amount = paymentIntent.amount_received ?? paymentIntent.amount;
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
@@ -307,11 +308,11 @@ export async function runPostPaymentWorkflows(
   const [buyer_push, seller_push] = await Promise.all([
     DeviceManagement.findOne(
       { auth_id: order_info.buyer_details.id },
-      "device_push_token"
+      "device_push_token",
     ),
     DeviceManagement.findOne(
       { auth_id: order_info.seller_details.id },
-      "device_push_token"
+      "device_push_token",
     ),
   ]);
 
@@ -337,8 +338,8 @@ export async function runPostPaymentWorkflows(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notif_buyer_${order_info.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -348,7 +349,7 @@ export async function runPostPaymentWorkflows(
       title: "Payment received",
       body: `A payment of ${formatPrice(
         order_info.artwork_data.pricing.usd_price,
-        "USD"
+        "USD",
       )} has been made for your artpiece`,
       data: {
         type: "orders",
@@ -365,8 +366,8 @@ export async function runPostPaymentWorkflows(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notif_seller_${order_info.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -374,7 +375,7 @@ export async function runPostPaymentWorkflows(
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
       `create_shipment_${order_info.order_id}_workflow`,
-      JSON.stringify({ order_id: order_info.order_id })
+      JSON.stringify({ order_id: order_info.order_id }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
@@ -390,7 +391,7 @@ export async function runPostPaymentWorkflows(
         seller_email: order_info.seller_details.email,
         seller_name: order_info.seller_details.name,
         seller_entity: "gallery",
-      })
+      }),
     ),
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
@@ -399,14 +400,14 @@ export async function runPostPaymentWorkflows(
         provider: "stripe",
         meta,
         paymentIntent,
-      })
+      }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
       `send_payment_invoice${invoice.invoiceNumber}_workflow`,
       JSON.stringify({
         invoice,
-      })
+      }),
     ),
     ...jobs,
   ]);
@@ -426,7 +427,7 @@ async function handleCheckoutExpired(event: any) {
       createErrorRollbarReport(
         "Stripe checkout expired - release lock error",
         error,
-        500
+        500,
       );
     }
   }
@@ -438,8 +439,8 @@ async function handleCheckoutExpired(event: any) {
 /*                                   ROUTE                                    */
 /* -------------------------------------------------------------------------- */
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ) {
   try {
     await connectMongoDB();

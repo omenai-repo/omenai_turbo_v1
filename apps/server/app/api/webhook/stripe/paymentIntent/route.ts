@@ -24,7 +24,6 @@ import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/
 import { sendPaymentPendingMail } from "@omenai/shared-emails/src/models/payment/sendPaymentPendingMail";
 
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { SubscriptionTransactions } from "@omenai/shared-models/models/transactions/SubscriptionTransactionSchema";
@@ -49,13 +48,15 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 import { retry } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 /* -------------------------------------------------------------------------- */
 /*                               ROUTE ENTRY                                  */
 /* -------------------------------------------------------------------------- */
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ): Promise<Response> {
   try {
     await connectMongoDB();
@@ -73,17 +74,17 @@ export const POST = withAppRouterHighlight(async function POST(
 
     return NextResponse.json(
       { error: "Unknown transaction type" },
-      { status: 400 }
+      { status: 400 },
     );
   } catch (error) {
     createErrorRollbarReport(
       "Stripe PaymentIntent webhook processing - fatal error",
       error as any,
-      500
+      500,
     );
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
@@ -93,7 +94,7 @@ export const POST = withAppRouterHighlight(async function POST(
 /* -------------------------------------------------------------------------- */
 
 async function verifyStripeWebhook(
-  request: Request
+  request: Request,
 ): Promise<{ event: any; pi: any; meta: any } | null> {
   const secretHash = process.env.STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET;
   if (!secretHash) {
@@ -189,7 +190,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
 
   const { isProcessed } = await purchaseIdempotencyCheck(
     paymentIntent.id,
-    "successful"
+    "successful",
   );
 
   if (isProcessed) {
@@ -214,7 +215,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     provider: "stripe",
     provider_tx_id: String(paymentIntent.id),
     status: String(
-      paymentIntent.status === "succeeded" ? "successful" : "failed"
+      paymentIntent.status === "succeeded" ? "successful" : "failed",
     ),
     payment_date: toUTCDate(new Date()),
     order_id: order.order_id,
@@ -240,10 +241,10 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
           {
             $setOnInsert: paymentLedgerData,
           },
-          { upsert: true }
+          { upsert: true },
         ),
       3,
-      150
+      150,
     );
   } catch (error) {
     rollbarServerInstance.error({
@@ -259,7 +260,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
         message:
           "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -272,7 +273,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
 
   const updateOrder = await CreateOrder.updateOne(
     { order_id: order.order_id },
-    { $set: { payment_information, hold_status: null } }
+    { $set: { payment_information, hold_status: null } },
   );
 
   if (updateOrder.modifiedCount === 0) {
@@ -283,7 +284,7 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     });
     return NextResponse.json(
       { message: "Order update unsuccessful" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -302,7 +303,7 @@ async function processPurchaseTransaction(
     currency: string;
   },
   meta: MetaSchema & { commission: string },
-  order: any
+  order: any,
 ) {
   try {
     await runPurchasePostWorkflows(paymentIntent, order, meta);
@@ -321,7 +322,7 @@ async function processPurchaseTransaction(
     createErrorRollbarReport(
       "Stripe PaymentIntent purchase transaction error",
       error,
-      500
+      500,
     );
     return NextResponse.json({ status: 500 });
   }
@@ -339,7 +340,7 @@ export async function runPurchasePostWorkflows(
     currency: string;
   },
   order: CreateOrderModelTypes,
-  meta: MetaSchema & { commission: string }
+  meta: MetaSchema & { commission: string },
 ) {
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
   const price = formatPrice(Math.round(Number(meta.unit_price)), currency);
@@ -387,11 +388,11 @@ export async function runPurchasePostWorkflows(
   const [buyerPush, sellerPush] = await Promise.all([
     DeviceManagement.findOne(
       { auth_id: order.buyer_details.id },
-      "device_push_token"
+      "device_push_token",
     ),
     DeviceManagement.findOne(
       { auth_id: order.seller_details.id },
-      "device_push_token"
+      "device_push_token",
     ),
   ]);
 
@@ -417,8 +418,8 @@ export async function runPurchasePostWorkflows(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notif_buyer_${order.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -428,7 +429,7 @@ export async function runPurchasePostWorkflows(
       title: "Payment received",
       body: `A payment of ${formatPrice(
         order.artwork_data.pricing.usd_price,
-        "USD"
+        "USD",
       )} has been made for your artpiece`,
       data: {
         type: "orders",
@@ -445,8 +446,8 @@ export async function runPurchasePostWorkflows(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notif_seller_${order.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -454,7 +455,7 @@ export async function runPurchasePostWorkflows(
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
       `create_shipment_${order.order_id}_workflow`,
-      JSON.stringify({ order_id: order.order_id })
+      JSON.stringify({ order_id: order.order_id }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
@@ -470,7 +471,7 @@ export async function runPurchasePostWorkflows(
         seller_email: order.seller_details.email,
         seller_name: order.seller_details.name,
         seller_entity: "gallery",
-      })
+      }),
     ),
 
     createWorkflow(
@@ -480,14 +481,14 @@ export async function runPurchasePostWorkflows(
         provider: "stripe",
         meta,
         paymentIntent,
-      })
+      }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
       `send_payment_invoice${invoice.invoiceNumber}_workflow`,
       JSON.stringify({
         invoice,
-      })
+      }),
     ),
     ...jobs,
   ]);
@@ -522,7 +523,7 @@ async function handleSubscriptionProcessing(paymentIntent: any, meta: any) {
     paymentIntent,
     meta,
     "processing",
-    sendSubscriptionPaymentPendingMail
+    sendSubscriptionPaymentPendingMail,
   );
 }
 
@@ -531,7 +532,7 @@ async function handleSubscriptionFailed(paymentIntent: any, meta: any) {
     paymentIntent,
     meta,
     "failed",
-    sendSubscriptionPaymentFailedMail
+    sendSubscriptionPaymentFailedMail,
   );
 }
 
@@ -539,7 +540,7 @@ async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
   const { isProcessed } = await subscriptionIdempotencyCheck(
     paymentIntent.id,
     String(paymentIntent.customer ?? meta.customer ?? ""),
-    "successful"
+    "successful",
   );
 
   if (isProcessed) {
@@ -594,7 +595,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     await SubscriptionTransactions.findOneAndUpdate(
       { payment_ref: paymentIntent.id },
       { $set: txnData },
-      { upsert: true, new: true, session }
+      { upsert: true, new: true, session },
     );
 
     const subPayload = {
@@ -633,18 +634,18 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     await Subscriptions.updateOne(
       { stripe_customer_id: customer },
       { $setOnInsert: subPayload },
-      { upsert: true }
+      { upsert: true },
     ).session(session);
 
     await AccountGallery.updateOne(
       { gallery_id: meta.gallery_id },
       { $set: { subscription_status: { type: plan.name, active: true } } },
-      { session }
+      { session },
     );
 
     await Waitlist.updateOne(
       { entityId: meta.gallery_id, entity: "gallery" },
-      { $set: { discount: null } }
+      { $set: { discount: null } },
     ).session(session);
     await session.commitTransaction();
 
@@ -661,7 +662,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     createErrorRollbarReport(
       "Stripe subscription success processing error",
       error,
-      500
+      500,
     );
     return NextResponse.json({ status: 500 });
   } finally {
@@ -677,12 +678,12 @@ async function updateSubscriptionStatus(
   paymentIntent: any,
   meta: any,
   status: string,
-  mailer: Function
+  mailer: Function,
 ) {
   const { isProcessed } = await subscriptionIdempotencyCheck(
     paymentIntent.id,
     String(paymentIntent.customer ?? meta.customer ?? ""),
-    status
+    status,
   );
 
   if (isProcessed) {
@@ -698,7 +699,7 @@ async function updateSubscriptionStatus(
     await SubscriptionTransactions.updateOne(
       { payment_ref: paymentIntent.id },
       { $set: { status } },
-      { session }
+      { session },
     );
 
     await session.commitTransaction();
@@ -728,7 +729,7 @@ async function findPurchaseOrder(meta: MetaSchema & { commission: string }) {
 async function subscriptionIdempotencyCheck(
   paymentId: string,
   customerId: string,
-  status: string
+  status: string,
 ) {
   const existingPayment = await SubscriptionTransactions.findOne({
     payment_ref: paymentId,
@@ -763,7 +764,7 @@ async function purchaseIdempotencyCheck(paymentId: string, status: string) {
           webhookReceivedAt: toUTCDate(new Date()),
           webhookConfirmed: true,
         },
-      }
+      },
     );
     return { isProcessed: true };
   }

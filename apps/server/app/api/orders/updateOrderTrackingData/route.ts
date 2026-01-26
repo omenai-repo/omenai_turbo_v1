@@ -3,7 +3,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -20,7 +20,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const updateOrders = await CreateOrder.findOneAndUpdate(
         { order_id },
-        { $set: { "shipping_details.shipment_information.tracking": data } }
+        { $set: { "shipping_details.shipment_information.tracking": data } },
       );
 
       if (!updateOrders)
@@ -30,19 +30,19 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         {
           message: "Successfully updated tracking information",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: update order tracking data",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

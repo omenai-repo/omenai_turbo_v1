@@ -13,15 +13,17 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/sendArtistSignupMail";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport } from "../../../util";
-import { redis } from "@omenai/upstash-config";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ) {
   try {
     const isArtistOnboardingEnabled =
@@ -29,7 +31,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     if (!isArtistOnboardingEnabled) {
       throw new ServiceUnavailableError(
-        "Artist onboarding is currently disabled"
+        "Artist onboarding is currently disabled",
       );
     }
 
@@ -45,7 +47,7 @@ export const POST = withAppRouterHighlight(async function POST(
     if (isWaitlistFeatureActive) {
       if (!referrerKey || !inviteCode)
         throw new BadRequestError(
-          "Invalid request parameters - Please try again or contact support"
+          "Invalid request parameters - Please try again or contact support",
         );
 
       // Check referrerKey and Invite code validity
@@ -60,7 +62,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
       if (!isWaitlistUserInvitedAndValidated)
         throw new ForbiddenError(
-          "Sign-up unavailable. Please join the waitlist or wait for an invite."
+          "Sign-up unavailable. Please join the waitlist or wait for an invite.",
         );
     }
 
@@ -69,7 +71,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const isAccountRegistered = await AccountArtist.findOne(
       { email: data.email.toLowerCase() },
-      "email"
+      "email",
     ).exec();
 
     if (isAccountRegistered)
@@ -129,18 +131,18 @@ export const POST = withAppRouterHighlight(async function POST(
         message: "Artist successfully registered",
         data: artist_id,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "auth: artist register",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

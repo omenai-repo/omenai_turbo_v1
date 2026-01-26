@@ -3,7 +3,7 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -22,12 +22,12 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       // Check if wallet exists
       const fetch_wallet = await Wallet.findOne(
         { owner_id },
-        "available_balance pending_balance wallet_id"
+        "available_balance pending_balance wallet_id",
       );
 
       if (!fetch_wallet)
         throw new NotFoundError(
-          "Wallet doesn't exists for this user, please escalate to IT support"
+          "Wallet doesn't exists for this user, please escalate to IT support",
         );
 
       const balances = {
@@ -41,19 +41,19 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
           message: "Wallet balance fetched",
           balances,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: fetch wallet balance",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

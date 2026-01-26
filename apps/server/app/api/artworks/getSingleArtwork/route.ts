@@ -3,13 +3,13 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { NextResponse } from "next/server";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { redis } from "@omenai/upstash-config";
 import { getCachedArtwork } from "../utils";
 import { createErrorRollbarReport } from "../../util";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -19,7 +19,7 @@ export const POST = withAppRouterHighlight(async function POST(
 
     return NextResponse.json(
       { message: "Successful", data: artwork },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
@@ -27,11 +27,11 @@ export const POST = withAppRouterHighlight(async function POST(
     createErrorRollbarReport(
       "artwork: get single Artwork",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message ?? "Unknown error occurred" },
-      { status: error_response?.status ?? 500 }
+      { status: error_response?.status ?? 500 },
     );
   }
 });

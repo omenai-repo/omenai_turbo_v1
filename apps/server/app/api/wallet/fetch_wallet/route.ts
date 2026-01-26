@@ -6,7 +6,7 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -28,12 +28,12 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       if (!fetchWallet)
         throw new NotFoundError(
-          "Wallet doesn't exists for this user, please escalate to IT support"
+          "Wallet doesn't exists for this user, please escalate to IT support",
         );
 
       if (!fetchWallet)
         throw new ServerError(
-          "An error was encountered. Please try again or contact IT support"
+          "An error was encountered. Please try again or contact IT support",
         );
 
       return NextResponse.json(
@@ -41,19 +41,19 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
           message: "Wallet data fetched",
           wallet: fetchWallet,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: fetch wallet",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

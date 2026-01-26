@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import posthog from "posthog-js";
 import QueryProvider from "@omenai/package-provider/QueryProvider";
 import LoginModal from "@omenai/shared-ui-components/components/modal/LoginModal";
@@ -11,6 +11,7 @@ import { SessionProvider } from "@omenai/package-provider";
 import LenisProvider from "@omenai/package-provider/ScrollProvider";
 import { ClientSessionData } from "@omenai/shared-types";
 import { AuthGuard } from "@omenai/package-provider/AuthGuard";
+import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
 
 export const LayoutWrapper = ({
   sessionData,
@@ -35,7 +36,12 @@ export const LayoutWrapper = ({
             <RecoveryModal />
             <OrderReceivedModal />
             <LenisProvider>
-              <div className="2xl:px-12 xl:px-8 px-4">{children}</div>
+              <div className="2xl:px-12 xl:px-8 px-4">
+                {children}
+                <Suspense fallback={null}>
+                  <SupportWidget />
+                </Suspense>
+              </div>
             </LenisProvider>
             <Analytics />
           </MantineProvider>

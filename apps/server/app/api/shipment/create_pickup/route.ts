@@ -5,7 +5,7 @@ import {
 } from "../resources";
 import { ShipmentPickupRequestDataTypes } from "@omenai/shared-types";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
@@ -31,7 +31,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           status: "error",
           message: "Missing one or more required fields",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       {
         hours: "12",
         minutes: "00",
-      }
+      },
     );
 
     const pickupRequestPayload = {
@@ -122,7 +122,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const response = await fetch(
         `https://express.api.dhl.com/mydhlapi/test/pickups`,
-        requestOptions
+        requestOptions,
       );
       const data = await response.json();
       return NextResponse.json({ message: "Success", data }, { status: 200 });
@@ -131,9 +131,9 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       createErrorRollbarReport(
         "shipment: create pickup",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json({ message: "Error", error }, { status: 500 });
     }
-  }
+  },
 );

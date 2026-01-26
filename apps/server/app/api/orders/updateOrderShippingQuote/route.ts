@@ -5,7 +5,7 @@ import { ServerError } from "../../../../custom/errors/dictionary/errorDictionar
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
 import { CombinedConfig, ShippingQuoteTypes } from "@omenai/shared-types";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -18,7 +18,7 @@ const config: CombinedConfig = {
   allowedRoles: ["gallery"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -33,7 +33,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           order_accepted: { status: "accepted", reason: "" },
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updateOrders) throw new ServerError("Quote could not be updated");
@@ -50,18 +50,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Successfully updated quote data",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: update order shipping quote",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

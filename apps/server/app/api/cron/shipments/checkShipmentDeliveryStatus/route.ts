@@ -1,4 +1,3 @@
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -10,6 +9,8 @@ import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/mod
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
 import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -38,7 +39,7 @@ async function processOrder(order: any, dbConnection: any) {
         },
         // Add timeout to prevent hanging requests
         signal: AbortSignal.timeout(10000), // 10 second timeout
-      }
+      },
     );
 
     if (!response.ok) {
@@ -102,7 +103,7 @@ async function processOrder(order: any, dbConnection: any) {
               "shipping_details.delivery_confirmed": true,
             },
           },
-          { session }
+          { session },
         );
 
         if (orderUpdateResult.matchedCount === 0) {
@@ -115,12 +116,12 @@ async function processOrder(order: any, dbConnection: any) {
           const walletExists = await Wallet.findOne(
             { owner_id: seller_details.id },
             { _id: 1 },
-            { session }
+            { session },
           );
 
           if (!walletExists) {
             throw new Error(
-              `Wallet not found for seller ${seller_details.id}. Escalate to IT support.`
+              `Wallet not found for seller ${seller_details.id}. Escalate to IT support.`,
             );
           }
 
@@ -136,12 +137,12 @@ async function processOrder(order: any, dbConnection: any) {
                 available_balance: wallet_increment_amount,
               },
             },
-            { session }
+            { session },
           );
 
           if (walletUpdateResult.matchedCount === 0) {
             throw new Error(
-              `Insufficient pending balance (${wallet_increment_amount} required) or wallet concurrency issue`
+              `Insufficient pending balance (${wallet_increment_amount} required) or wallet concurrency issue`,
             );
           }
 
@@ -191,7 +192,7 @@ async function processOrder(order: any, dbConnection: any) {
     createErrorRollbarReport(
       "Cron: Check shipment delivery status",
       errorMessage,
-      50
+      50,
     );
     return {
       status: "failed",
@@ -204,7 +205,9 @@ async function processOrder(order: any, dbConnection: any) {
 /**
  * Cron job endpoint to validate shipment deliveries and release funds
  */
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const startTime = Date.now();
 
   try {
@@ -227,7 +230,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         "shipping_details.shipment_information.tracking.delivery_status":
           "In Transit",
       },
-      "order_id shipping_details seller_designation payment_information seller_details"
+      "order_id shipping_details seller_designation payment_information seller_details",
     ).lean();
 
     // Filter orders where the estimated delivery date is at least two days past
@@ -238,7 +241,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       if (!estimatedDeliveryDateStr) {
         console.warn(
-          `Order ${order.order_id}: Missing estimated delivery date`
+          `Order ${order.order_id}: Missing estimated delivery date`,
         );
         return false;
       }
@@ -272,7 +275,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       const batch = eligibleOrders.slice(i, i + BATCH_SIZE);
 
       const batchPromises = batch.map((order) =>
-        processOrder(order, dbConnection)
+        processOrder(order, dbConnection),
       );
       const batchResults = await Promise.allSettled(batchPromises);
       results.push(...batchResults);
@@ -280,17 +283,17 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     // Aggregate results
     const successful = results.filter(
-      (r) => r.status === "fulfilled" && r.value.status === "success"
+      (r) => r.status === "fulfilled" && r.value.status === "success",
     );
 
     const skipped = results.filter(
-      (r) => r.status === "fulfilled" && r.value.status === "skipped"
+      (r) => r.status === "fulfilled" && r.value.status === "skipped",
     );
 
     const failed = results.filter(
       (r) =>
         r.status === "rejected" ||
-        (r.status === "fulfilled" && r.value.status === "failed")
+        (r.status === "fulfilled" && r.value.status === "failed"),
     );
 
     const totalFundsReleased = successful.reduce((sum, r) => {
@@ -303,7 +306,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
             order_id: "unknown",
             reason: r.reason?.message || "Rejected promise",
           }
-        : r.value
+        : r.value,
     );
 
     const executionTime = Date.now() - startTime;
@@ -322,7 +325,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         },
         failed_orders: failedOrders.length > 0 ? failedOrders : undefined,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Critical cron job error:", error);
@@ -331,7 +334,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     createErrorRollbarReport(
       "Cron: Check shipment delivery status",
       error,
-      errorResponse?.status
+      errorResponse?.status,
     );
 
     return NextResponse.json(
@@ -339,7 +342,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         message: errorResponse?.message || "Critical cron job failure",
         execution_time_ms: Date.now() - startTime,
       },
-      { status: errorResponse?.status || 500 }
+      { status: errorResponse?.status || 500 },
     );
   }
 });

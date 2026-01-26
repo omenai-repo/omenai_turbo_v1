@@ -2,12 +2,13 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { createErrorRollbarReport } from "../../../util";
 
-export const GET = withAppRouterHighlight(async function GET(
+import { createErrorRollbarReport } from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+
+export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
-  context: { params: Promise<Record<string, string>> }
 ) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
@@ -64,24 +65,24 @@ export const GET = withAppRouterHighlight(async function GET(
           message: "Income data fetched successfully",
           data: { netIncome: 0, salesRevenue: 0 },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
     return NextResponse.json(
       { message: "Income data fetched successfully", data: result[0] },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artist: fetch income data",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

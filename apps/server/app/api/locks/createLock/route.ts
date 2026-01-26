@@ -7,7 +7,7 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
@@ -18,7 +18,7 @@ const config: CombinedConfig = {
   allowedRoles: ["user"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -27,7 +27,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     // Check the availability of the piece
     const is_piece_still_available = await Artworkuploads.findOne(
       { art_id },
-      "availability"
+      "availability",
     );
 
     if (!is_piece_still_available.availability)
@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             "A user is currently processing a transaction on this piece. Please refersh your page in 10 minutes to check availability of the artwork",
           data: { lock_data: checkIfLockActive },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
     const createLock = await LockMechanism.create({ art_id, user_id });
@@ -57,18 +57,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         message: "Purchase Lock acquired",
         data: { lock_data: getLock },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "locks: create Lock",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -7,7 +7,7 @@ import {
   BadRequestError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../../util";
@@ -22,12 +22,12 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const user = await AccountGallery.findOne(
         { gallery_id: params },
-        "verified"
+        "verified",
       ).exec();
 
       if (user.verified)
         throw new ForbiddenError(
-          "This action is not permitted, account already verified"
+          "This action is not permitted, account already verified",
         );
 
       const isTokenActive = await VerificationCodes.findOne({
@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
         await AccountGallery.updateOne(
           { gallery_id: params },
-          { verified: true }
+          { verified: true },
         ).session(session);
 
         await VerificationCodes.deleteOne({
@@ -60,19 +60,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json(
         { message: "Verification was successful. Please login" },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: verify mail",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

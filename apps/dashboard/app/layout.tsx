@@ -19,6 +19,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
+import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
 
 export const viewport: Viewport = {
   width: "device-width",

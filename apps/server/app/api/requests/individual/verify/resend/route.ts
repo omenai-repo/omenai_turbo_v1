@@ -12,7 +12,7 @@ import {
   ServerError,
 } from "../../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../../../util";
@@ -26,7 +26,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const { name, email, verified } = await AccountIndividual.findOne(
         { user_id: author },
-        "name email verified"
+        "name email verified",
       ).exec();
 
       if (!name || !email)
@@ -34,7 +34,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (verified)
         throw new ForbiddenError(
-          "This action is not permitted. Account already verified"
+          "This action is not permitted. Account already verified",
         );
 
       const email_token = generateDigit(7);
@@ -67,20 +67,20 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         {
           message: "Verification code resent",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "individual: verify resend",
         error,
-        error_response.status
+        error_response.status,
       );
 
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

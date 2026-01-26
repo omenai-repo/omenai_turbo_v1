@@ -2,12 +2,14 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PromotionalModel } from "@omenai/shared-models/models/promotionals/PromotionalSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { createErrorRollbarReport } from "../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-export const GET = withAppRouterHighlight(async function GET() {
+export const GET = withRateLimit(standardRateLimit)(async function GET() {
   try {
     await connectMongoDB();
 
@@ -26,11 +28,11 @@ export const GET = withAppRouterHighlight(async function GET() {
     createErrorRollbarReport(
       "promotional: get promotional data",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

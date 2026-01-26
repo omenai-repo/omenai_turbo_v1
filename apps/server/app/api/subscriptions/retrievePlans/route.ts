@@ -7,7 +7,7 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { redis } from "@omenai/upstash-config";
 import { createErrorRollbarReport } from "../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -55,12 +55,12 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
     createErrorRollbarReport(
       "subscription: retrieve plans",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });
@@ -76,7 +76,7 @@ async function fetchAndSetCache() {
     createErrorRollbarReport(
       "subscription: retrieve plans: Redis write Error",
       redisWriteErr as any,
-      500
+      500,
     );
   }
 

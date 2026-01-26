@@ -1,4 +1,3 @@
-// app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 import { PT_Serif, Work_Sans } from "next/font/google";
@@ -12,6 +11,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { LayoutWrapper } from "./LayoutWrapper";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
+import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Discover, buy, and sell African contemporary art online.",

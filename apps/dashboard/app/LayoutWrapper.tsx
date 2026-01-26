@@ -6,6 +6,8 @@ import { QueryProvider } from "@omenai/package-provider";
 import { Toaster } from "sonner";
 import { ClientSessionData } from "@omenai/shared-types";
 import { AuthGuard } from "@omenai/package-provider/AuthGuard";
+import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
+import { Suspense } from "react";
 
 export default function LayoutWrapper({
   children,
@@ -27,7 +29,12 @@ export default function LayoutWrapper({
         />
         <div className=" w-full h-screen">
           <QueryProvider>
-            <AuthGuard initialData={initialSessionData}>{children}</AuthGuard>
+            <AuthGuard initialData={initialSessionData}>
+              {children}
+              <Suspense fallback={null}>
+                <SupportWidget />
+              </Suspense>
+            </AuthGuard>
           </QueryProvider>
         </div>
       </>

@@ -1,6 +1,6 @@
 import { DeletionTaskServiceType } from "@omenai/shared-types";
 import { FlattenMaps, ObjectId, Schema } from "mongoose";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -10,6 +10,8 @@ import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/Dele
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 interface ReponseMetadata {
   entityId: string;
@@ -18,7 +20,9 @@ interface ReponseMetadata {
 }
 
 const MAX_EXECUTION_TIME = 50000;
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const startTime = Date.now();
   let successfulTasks = 0;
   let failedTasks = 0;
@@ -43,7 +47,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       if (allFailedDeletionTaskCreation.length === 0) break;
 
       const batchProcessResult = await processBatch(
-        allFailedDeletionTaskCreation
+        allFailedDeletionTaskCreation,
       );
 
       const { successfulOps, failedOps } = batchProcessResult;
@@ -66,12 +70,12 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     createErrorRollbarReport(
       "Cron: Deletion task retry for failed creations",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
       { message: error_response.message },
-      { status: error_response.status }
+      { status: error_response.status },
     );
   }
 });
@@ -82,7 +86,7 @@ async function processBatch(
       _id: unknown;
     }> & {
       __v: number;
-    })[]
+    })[],
 ) {
   const retryOps: {
     metadata: ReponseMetadata;

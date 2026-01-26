@@ -6,7 +6,7 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity";
 import { getCurrentMonthAndYear } from "@omenai/shared-utils/src/getCurrentMonthAndYear";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -21,7 +21,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const data = await request.json();
@@ -36,7 +36,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
         },
-      }
+      },
     );
 
     const convert_verify_transaction_json_response =
@@ -47,7 +47,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         {
           message: convert_verify_transaction_json_response.message,
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -57,7 +57,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           message: "Transaction failed",
           data: convert_verify_transaction_json_response.data,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } else {
       const deposit_balance =
@@ -73,7 +73,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             available_balance: balance,
           },
         },
-        { new: true }
+        { new: true },
       );
 
       if (!gallery_wallet_update) {
@@ -82,7 +82,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             message: "Unable to verify transaction. Please contact support1",
             data: convert_verify_transaction_json_response.data,
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -106,7 +106,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             message: "Unable to verify transaction. Please contact support2",
             data: convert_verify_transaction_json_response.data,
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -125,7 +125,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             message: "Unable to verify transaction. Please contact support3",
             data: convert_verify_transaction_json_response.data,
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -141,7 +141,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
               transaction_reference: update_transactions_db.trans_reference,
             },
           },
-        }
+        },
       );
 
       if (update_order_data.modifiedCount === 0) {
@@ -150,7 +150,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             message: "Unable to verify transaction. Please contact support3",
             data: convert_verify_transaction_json_response.data,
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -159,7 +159,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           message: "Transaction successful",
           data: convert_verify_transaction_json_response.data,
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
@@ -167,11 +167,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "purchase: verify artwork purchase transaction",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

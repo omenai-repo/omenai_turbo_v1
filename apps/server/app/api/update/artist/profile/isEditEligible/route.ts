@@ -13,7 +13,7 @@ import {
   isAfter,
   startOfDay,
 } from "date-fns";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -45,14 +45,14 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const { artist_id } = await request.json();
 
     const find_artist_categorization = await ArtistCategorization.findOne(
       { artist_id },
-      "updatedAt request"
+      "updatedAt request",
     );
     if (!find_artist_categorization)
       throw new NotFoundError("Categorization data not found for this Artist");
@@ -61,7 +61,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (find_artist_categorization.request !== null)
       throw new ForbiddenError(
-        "A request to update your credentials is already in progress. Please be patient while we process your request."
+        "A request to update your credentials is already in progress. Please be patient while we process your request.",
       );
 
     const isEligible: Result = checkIfOneYearPassed(updatedAt);
@@ -72,18 +72,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Eligibility retrieved successfully", eligibility },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "updates: artist profile is edit eligible",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

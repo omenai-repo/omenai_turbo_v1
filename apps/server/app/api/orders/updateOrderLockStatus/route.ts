@@ -3,7 +3,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -20,7 +20,7 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const locked = await CreateOrder.updateMany(
         { "artwork_data.art_id": art_id },
-        { $set: { lock_purchase: lock_status } }
+        { $set: { lock_purchase: lock_status } },
       );
 
       if (!locked) throw new ServerError("An error occured");
@@ -29,19 +29,19 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         {
           message: "Successful",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: update order lock status",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

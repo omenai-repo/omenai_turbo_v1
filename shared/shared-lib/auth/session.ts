@@ -41,7 +41,7 @@ export async function cleanupSession(sessionId: string, cookieStore?: any) {
   if (cookieStore) {
     const session = await getIronSession<{ sessionId: string }>(
       cookieStore,
-      sessionOptions
+      sessionOptions,
     );
     session.destroy();
   }
@@ -52,7 +52,7 @@ export async function getSession(
   sessionId: string,
   userAgent: string | null,
   is_middleware_agent?: boolean,
-  cookieStore?: any
+  cookieStore?: any,
 ) {
   const sessionDataJSON = await redis.get(`session:${sessionId}`);
 
@@ -100,7 +100,7 @@ export async function destroySession(sessionId: string, cookieStore?: any) {
 export async function getSessionFromCookie(cookieStore: any) {
   const session = await getIronSession<{ sessionId: string }>(
     cookieStore,
-    sessionOptions
+    sessionOptions,
   );
   return session;
 }
@@ -114,7 +114,7 @@ export async function checkSessionExists(sessionId: string): Promise<boolean> {
 // Utility: Get session data without sliding (for middleware checks)
 export async function getSessionWithoutSliding(
   sessionId: string,
-  userAgent: string | null
+  userAgent: string | null,
 ): Promise<(SessionData & { csrfToken: string }) | null> {
   const sessionDataJSON = await redis.get(`session:${sessionId}`);
 
@@ -142,7 +142,7 @@ export async function getSessionWithoutSliding(
 // Utility: Refresh session with new data
 export async function refreshSession(
   sessionId: string,
-  newData?: Partial<SessionData>
+  newData?: Partial<SessionData>,
 ) {
   const currentSession = await redis.get(`session:${sessionId}`);
   if (!currentSession) return false;

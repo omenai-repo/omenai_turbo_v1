@@ -18,10 +18,11 @@ import {
   verifyFlutterwaveTransaction,
 } from "../resource-global";
 
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { createErrorRollbarReport } from "../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 /* -------------------------------------------------------------------------- */
 /*                               DB CONNECTION                                */
@@ -60,7 +61,7 @@ async function isSignatureValid(signature: string, secretHash: string) {
 async function dispatchTransferStatus(
   status: WalletTransactionStatusTypes,
   verified_transaction: any,
-  session: any
+  session: any,
 ) {
   switch (status) {
     case "NEW":
@@ -82,7 +83,7 @@ async function dispatchTransferStatus(
 
 async function checkAndHandleTransferStatus(
   verified_transaction: any,
-  session: any
+  session: any,
 ) {
   const { id, status } = verified_transaction.data;
 
@@ -111,7 +112,7 @@ async function checkAndHandleTransferStatus(
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - status resolution error",
       error,
-      500
+      500,
     );
     return { isOk: false };
   }
@@ -125,7 +126,7 @@ async function handleTransferPending(verified_transaction: any, session: any) {
   try {
     const res = await WalletTransaction.updateOne(
       { trans_flw_ref_id: verified_transaction.data.id },
-      { $set: { trans_status: "PENDING" } }
+      { $set: { trans_status: "PENDING" } },
     );
 
     if (res.modifiedCount === 0) {
@@ -138,7 +139,7 @@ async function handleTransferPending(verified_transaction: any, session: any) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - PENDING handler error",
       error,
-      500
+      500,
     );
     return { isOk: false };
   }
@@ -148,7 +149,7 @@ async function handleTransferSuccess(verified_transaction: any, session: any) {
   try {
     const res = await WalletTransaction.updateOne(
       { trans_flw_ref_id: verified_transaction.data.id },
-      { $set: { trans_status: "SUCCESSFUL" } }
+      { $set: { trans_status: "SUCCESSFUL" } },
     );
 
     if (res.modifiedCount === 0) {
@@ -168,7 +169,7 @@ async function handleTransferSuccess(verified_transaction: any, session: any) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - SUCCESS handler error",
       error,
-      500
+      500,
     );
     return { isOk: false };
   }
@@ -179,11 +180,11 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
     await Promise.all([
       WalletTransaction.updateOne(
         { trans_flw_ref_id: verified_transaction.data.id },
-        { $set: { trans_status: "FAILED" } }
+        { $set: { trans_status: "FAILED" } },
       ),
       Wallet.updateOne(
         { wallet_id: verified_transaction.data.meta.wallet_id },
-        { $inc: { available_balance: verified_transaction.data.amount } }
+        { $inc: { available_balance: verified_transaction.data.amount } },
       ),
     ]);
 
@@ -200,7 +201,7 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - FAILED handler error",
       error,
-      500
+      500,
     );
     return { isOk: false };
   }
@@ -229,12 +230,12 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
             trans_flw_ref_id: id,
           },
         },
-        { upsert: true }
+        { upsert: true },
       ),
 
       Wallet.updateOne(
         { wallet_id: meta.wallet_id },
-        { $inc: { available_balance: -amount } }
+        { $inc: { available_balance: -amount } },
       ),
     ]);
 
@@ -251,7 +252,7 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook - CREATION handler error",
       error,
-      500
+      500,
     );
     return { isOk: false };
   }
@@ -261,8 +262,8 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
 /*                                   ROUTE                                    */
 /* -------------------------------------------------------------------------- */
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ): Promise<Response> {
   const signature = request.headers.get("verif-hash");
 
@@ -270,7 +271,7 @@ export const POST = withAppRouterHighlight(async function POST(
   if (!isValid) {
     return NextResponse.json(
       { error: "Invalid webhook signature" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -283,7 +284,7 @@ export const POST = withAppRouterHighlight(async function POST(
   try {
     const verified_transaction = await verifyFlutterwaveTransaction(
       req,
-      `https://api.flutterwave.com/v3/transfers/${req.data.id}`
+      `https://api.flutterwave.com/v3/transfers/${req.data.id}`,
     );
 
     const client = await getMongoClient();
@@ -291,18 +292,18 @@ export const POST = withAppRouterHighlight(async function POST(
 
     const result = await checkAndHandleTransferStatus(
       verified_transaction,
-      session
+      session,
     );
 
     return NextResponse.json(
       { status: result?.isOk ? 200 : 400 },
-      { status: result?.isOk ? 200 : 400 }
+      { status: result?.isOk ? 200 : 400 },
     );
   } catch (error) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing - fatal error",
       error,
-      500
+      500,
     );
     return NextResponse.json({ status: 400 });
   }

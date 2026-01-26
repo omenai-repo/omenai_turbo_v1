@@ -1444,3 +1444,53 @@ export type DeletePromise = Promise<
       error: string;
     }
 >;
+
+export type SupportCategory =
+  | "GENERAL"
+  | "PAYMENT" // Buyer paying for art
+  | "ORDER"
+  | "SUBSCRIPTION" // Gallery paying Omenai (Billing)
+  | "PAYOUT" // Gallery receiving money (Stripe Connect)
+  | "WALLET"
+  | "AUTH"
+  | "UPLOAD"
+  | "CHECKOUT";
+
+export type TicketPriority = "LOW" | "NORMAL" | "HIGH" | "CRITICAL";
+
+export type TicketStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+
+export interface ISupportTicket {
+  _id?: string; // MongoDB ID
+  userId?: string; // Link to User/Artist/Gallery ID if logged in
+  userEmail: string; // REQUIRED: Either from session or typed by Guest
+  userType: "GUEST" | "USER" | "ARTIST" | "GALLERY";
+
+  // The Core Issue
+  category: SupportCategory;
+  subject?: string; // Optional summary (can default to Category name)
+  message: string; // The "Description"
+
+  // Context Data (The "Smart" stuff)
+  referenceId?: string; // OrderID, TransactionRef, etc.
+  pageUrl: string; // Where were they?
+
+  // The Context Container
+  meta: {
+    referenceType?: string; // e.g. "ORDER_NUMBER", "STRIPE_PAYOUT_ID"
+    transactionDate?: string;
+    browser?: string; // captured automatically
+    device?: string; // captured automatically
+    [key: string]: any; // Flexible for future needs (e.g. "upload_error_code")
+  };
+
+  // Triage Metadata
+  priority: TicketPriority;
+  status: TicketStatus;
+  ticketId: string; // New Field: e.g., "OM-88421"
+
+  // Timestamps
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt?: Date; // Good for tracking turnaround time later
+}

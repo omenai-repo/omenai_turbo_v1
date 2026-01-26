@@ -9,12 +9,16 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport } from "../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
     const isShipmentTrackingEnabled =
       (await fetchConfigCatValue("shipment_tracking_enabled", "low")) ?? false;
@@ -37,7 +41,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     await connectMongoDB();
     const order = await CreateOrder.findOne(
       { ...filter },
-      "shipping_details createdAt artwork_data"
+      "shipping_details createdAt artwork_data",
     );
 
     if (!order)
@@ -48,7 +52,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     if (!tracking_number)
       throw new NotFoundError(
-        "No tracking number found for the given order id"
+        "No tracking number found for the given order id",
       );
 
     // TODO: Fix this
@@ -77,7 +81,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       if (!response.ok)
         throw new ServerError(
-          "Unable to fetch shipment event at the moment. Please try again later or contact support"
+          "Unable to fetch shipment event at the moment. Please try again later or contact support",
         );
 
       const timeStamp = data.shipments[0].shipmentTimeStamp;
@@ -97,7 +101,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
           //   destination: get_destination_geo_location,
           // },
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       return NextResponse.json({ message: "Error", error }, { status: 500 });
@@ -107,12 +111,12 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     createErrorRollbarReport(
       "shipment: shipment tracking",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -4,7 +4,7 @@ import {
   BadRequestError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
@@ -31,7 +31,7 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const response = await fetch(
         `https://api.flutterwave.com/v3/transfers/rates?amount=${amount}&destination_currency=${destination.toUpperCase()}&source_currency=${source.toUpperCase()}`,
-        options
+        options,
       );
 
       const result = await response.json();
@@ -40,19 +40,19 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
         return NextResponse.json({ message: result.message }, { status: 400 });
       return NextResponse.json(
         { message: "Transfer rate retrieved", data: result.data },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "flutterwave: get transfert rate",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

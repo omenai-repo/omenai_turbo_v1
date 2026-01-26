@@ -2,11 +2,13 @@ import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../custom/errors/dictionary/errorDictionary";
 import z from "zod";
 import crypto from "node:crypto";
+import { base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { ClientSessionData } from "@omenai/shared-types";
 
 export function createErrorRollbarReport(
   context: string,
   error: any,
-  status: number
+  status: number,
 ) {
   if (status >= 500) {
     if (error instanceof ServerError) {
@@ -33,7 +35,7 @@ export const MetaSchema = z.object({
 export async function retry<T>(
   fn: () => Promise<T>,
   retries = 3,
-  delayMs = 100
+  delayMs = 100,
 ): Promise<T> {
   let lastError;
 
@@ -45,7 +47,7 @@ export async function retry<T>(
 
       if (attempt < retries) {
         await new Promise(
-          (res) => setTimeout(res, delayMs * attempt) // simple backoff
+          (res) => setTimeout(res, delayMs * attempt), // simple backoff
         );
       }
     }
@@ -88,4 +90,19 @@ export function anonymizeUsername(userId?: string): string {
     : crypto.randomInt(0, 10000).toString().padStart(4, "0");
 
   return `Deleted User #${suffix}`;
+}
+
+export async function getSessionData(): Promise<ClientSessionData> {
+  const res = await fetch(`${getApiUrl()}/api/auth/session/user`, {
+    headers: {
+      "Content-Type": "application/json",
+      Origin: base_url(),
+    },
+    credentials: "include",
+  });
+  if (!res.ok) {
+    return { isLoggedIn: false, user: null, csrfToken: "" };
+  }
+  const { user, csrfToken } = await res.json();
+  return { isLoggedIn: true, user: user.userData, csrfToken };
 }

@@ -5,7 +5,7 @@ import {
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
 } from "../resources";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -37,7 +37,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
         const response = await fetch(
           `https://express.api.dhl.com/mydhlapi/test/shipments/${trackingNumber}/get-image?shipperAccountNumber=${shipperAccountNumber}&typeCode=${typeCode}&pickupYearAndMonth=${pickupYearAndMonth}&encodingFormat=pdf&allInOnePDF=true&compressedPackage=false`,
-          requestOptions
+          requestOptions,
         );
         const data = await response.json();
         return NextResponse.json({ message: "Success", data }, { status: 200 });
@@ -49,13 +49,13 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       createErrorRollbarReport(
         "shipment: get shipment documents",
         error,
-        error_response.status
+        error_response.status,
       );
 
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

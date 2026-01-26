@@ -1,5 +1,5 @@
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -8,8 +8,12 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
     await connectMongoDB();
 
@@ -21,13 +25,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         "exclusivity_status.exclusivity_type": "exclusive",
         "exclusivity_status.exclusivity_end_date": { $lt: currentDate },
       },
-      "art_id"
+      "art_id",
     ).lean();
 
     if (expiredContracts.length === 0) {
       return NextResponse.json(
         { message: "No expired contracts found" },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -73,7 +77,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         artworksUpdated: artworkResult.modifiedCount,
         ordersUpdated: orderResult.modifiedCount,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
@@ -81,11 +85,11 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     createErrorRollbarReport(
       "Cron: Artwork Exclusivity Expiration",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

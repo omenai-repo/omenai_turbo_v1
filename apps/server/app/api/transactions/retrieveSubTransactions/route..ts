@@ -3,11 +3,13 @@ import { SubscriptionTransactions } from "@omenai/shared-models/models/transacti
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { createErrorRollbarReport } from "../../util";
 
-export const POST = withAppRouterHighlight(async function POST(
-  request: Request
+import { createErrorRollbarReport } from "../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+
+export const POST = withRateLimit(standardRateLimit)(async function POST(
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -27,18 +29,18 @@ export const POST = withAppRouterHighlight(async function POST(
         message: "Transaction fetched",
         data: gallery_id,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "transactions: retrieve sub transactions",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -1,15 +1,16 @@
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { DeletionRequest } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { createWorkflowTarget } from "../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
-import { rollbarServerInstance } from "@omenai/rollbar-config";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const BATCH_SIZE = 10;
   let BATCH_NUMBER = 0;
   const MAX_EXECUTION_TIME = 50_000; // 50 seconds
@@ -27,7 +28,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       const deletionTasks = await DeletionRequestModel.find(
         { status: "requested" },
-        "requestId services entityType targetId targetEmail initiatedBy requestedAt gracePeriodUntil"
+        "requestId services entityType targetId targetEmail initiatedBy requestedAt gracePeriodUntil",
       )
         .limit(BATCH_SIZE)
         .skip(BATCH_NUMBER * BATCH_SIZE)
@@ -52,13 +53,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         successfulRuns,
         failedRuns,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     return NextResponse.json(
       { message: error_response.message },
-      { status: error_response.status }
+      { status: error_response.status },
     );
   }
 });
@@ -113,7 +114,7 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
 
     // Execute all workflows in parallel
     const results = await Promise.allSettled(
-      workflowPromises.map((workflow) => workflow.fn)
+      workflowPromises.map((workflow) => workflow.fn),
     );
 
     results.forEach((result, i) => {
@@ -132,7 +133,7 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
         if (result.status === "rejected") {
           console.error(
             `❌ Workflow creation failed for requestId=${requestId}:`,
-            result.reason
+            result.reason,
           );
         }
       }
@@ -152,7 +153,7 @@ async function processTaskAllocation(tasks: DeletionRequest[]): Promise<{
     createErrorRollbarReport(
       "Cron: Deletion Task Allocation",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return { successfulAllocations: 0, failedWorkflowCreations: 0 };

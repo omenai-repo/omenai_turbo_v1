@@ -10,7 +10,7 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPasswordRecoveryMail } from "@omenai/shared-emails/src/models/recovery/sendPasswordRecoveryMail";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../../util";
@@ -23,7 +23,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const data = await AccountGallery.findOne(
         { email: recoveryEmail },
-        "email gallery_id admin name verified"
+        "email gallery_id admin name verified",
       ).exec();
 
       if (!data)
@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (isVerificationTokenActive)
         throw new ForbiddenError(
-          "Token link already exists. Please visit link to continue"
+          "Token link already exists. Please visit link to continue",
         );
 
       const storeVerificationCode = await VerificationCodes.create({
@@ -63,19 +63,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json(
         { message: "Password reset link has been sent", id: gallery_id },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: send password reset link",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

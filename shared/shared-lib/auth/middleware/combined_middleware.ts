@@ -1,7 +1,6 @@
 import { handleErrorEdgeCases } from "./../../../../apps/server/custom/errors/handler/errorHandler";
 import { ForbiddenError } from "./../../../../apps/server/custom/errors/dictionary/errorDictionary";
 import { NextRequest, NextResponse } from "next/server";
-import { withAppRouterHighlight } from "../../highlight/app_router_highlight";
 import { withRateLimit } from "./rate_limit_middleware";
 import { validateCsrf } from "../validateCsrf";
 import { CombinedConfig, SessionData } from "@omenai/shared-types";
@@ -12,8 +11,8 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
     handler: (
       request: Request | NextRequest,
       response?: Response | NextResponse,
-      sessionData?: SessionData & { csrfToken: string }
-    ) => Promise<Response | NextResponse>
+      sessionData?: SessionData & { csrfToken: string },
+    ) => Promise<Response | NextResponse>,
   ) {
     let sessionDataId: string | undefined = undefined;
     const wrapped = async (req: Request | NextRequest) => {
@@ -48,8 +47,6 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
 
           return handler(req, undefined, sessionData);
         }
-
-        // No CSRF/role check needed for GET/HEAD
         return handler(req);
       } catch (error) {
         const error_response = handleErrorEdgeCases(error);
@@ -60,13 +57,11 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
 
         return NextResponse.json(
           { message: error_response!.message },
-          { status: error_response!.status }
+          { status: error_response!.status },
         );
       }
     };
 
-    return withAppRouterHighlight(
-      withRateLimit(config, sessionDataId)(wrapped)
-    );
+    return withRateLimit(config, sessionDataId)(wrapped);
   };
 }

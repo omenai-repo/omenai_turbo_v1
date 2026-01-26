@@ -1,6 +1,6 @@
 // import { DeletionTaskServiceType, EntityType } from "@omenai/shared-types";
 // import { FlattenMaps, ObjectId, Schema } from "mongoose";
-// import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+//
 // import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 // import { NextResponse } from "next/server";
 // import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -15,7 +15,7 @@
 // }
 
 // const MAX_EXECUTION_TIME = 50000;
-// export const GET = withAppRouterHighlight(async function GET(request: Request) {
+// export const GET = withRateLimit(standardRateLimit)(async function GET(request: Request) {
 //   const startTime = Date.now();
 //   let successfulTasks = 0;
 //   let failedTasks = 0;

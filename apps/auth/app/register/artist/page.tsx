@@ -1,5 +1,4 @@
 import ArtistSignupPageWrapper from "./ArtistSignupPageWrapper";
-
 export default async function ArtistSignupPage({
   searchParams,
 }: Readonly<{

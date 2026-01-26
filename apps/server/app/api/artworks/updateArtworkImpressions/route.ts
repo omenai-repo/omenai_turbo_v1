@@ -3,7 +3,7 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   lenientRateLimit,
   strictRateLimit,
@@ -17,7 +17,7 @@ const config: CombinedConfig = {
   allowedRoles: ["user"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -26,7 +26,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const updateImpression = await Artworkuploads.updateOne(
       { art_id: id },
-      { $inc: { impressions: value === true ? 1 : -1 } }
+      { $inc: { impressions: value === true ? 1 : -1 } },
     );
 
     if (updateImpression.modifiedCount === 0)
@@ -35,12 +35,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (value) {
       await Artworkuploads.updateOne(
         { art_id: id },
-        { $push: { like_IDs: like_id } }
+        { $push: { like_IDs: like_id } },
       );
     } else {
       await Artworkuploads.updateOne(
         { art_id: id },
-        { $pull: { like_IDs: like_id } }
+        { $pull: { like_IDs: like_id } },
       );
     }
 
@@ -49,18 +49,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         message: "Successful",
         data: updateImpression,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: update artwork impression",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

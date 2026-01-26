@@ -4,7 +4,7 @@ import {
   BadRequestError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -29,13 +29,13 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
           },
-        }
+        },
       );
       const result = await response.json();
       if (!response.ok) {
         return NextResponse.json(
           { message: result.message },
-          { status: response.status }
+          { status: response.status },
         );
       }
 
@@ -45,19 +45,19 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
           no_of_banks: result.data.length,
           banks: result.data,
         },
-        { status: response.status }
+        { status: response.status },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: account -> get banks",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );
