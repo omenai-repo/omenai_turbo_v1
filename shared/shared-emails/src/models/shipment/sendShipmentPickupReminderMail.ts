@@ -31,7 +31,7 @@ export const sendShipmentPickupReminderMail = async ({
     prefix: "Omenai orders",
     from: "orders",
     to: email,
-    subject: "Shipment created - Prepare for pickup",
+    subject: "Shipment Pickup Schedule Reminder - Action Required",
     react: ShipmentPickupNotificationEmail({
       galleryName: name,
       artwork,
