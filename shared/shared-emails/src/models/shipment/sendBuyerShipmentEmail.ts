@@ -22,14 +22,14 @@ export const sendBuyerShipmentEmail = async ({
     prefix: "Omenai orders",
     from: "orders",
     to: email,
-    subject: "Your shipment has been created and is ready for pickup",
+    subject: "Your artwork is on the way.",
     react: BuyerShipmentEmail(
       trackingCode,
       name,
       artwork,
       artworkImage,
       artistName,
-      artworkPrice
+      artworkPrice,
     ),
   });
 };
