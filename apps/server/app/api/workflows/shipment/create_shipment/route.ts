@@ -51,7 +51,7 @@ type ShipmentAction =
 /* -------------------------------------------------------------------------- */
 
 async function callShipmentAPI(
-  data: Omit<ShipmentRequestDataTypes, "originCountryCode">
+  data: Omit<ShipmentRequestDataTypes, "originCountryCode">,
 ): Promise<any> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
@@ -103,7 +103,7 @@ async function cleanupLock(order: OrderWithTimestamps) {
 
 async function handleCompletedShipment(
   order: OrderWithTimestamps,
-  orderId: string
+  orderId: string,
 ) {
   await FailedJob.deleteOne({ jobId: orderId, jobType: "create_shipment" });
   await WaybillCache.deleteOne({ order_id: orderId });
@@ -141,7 +141,7 @@ async function executeShipmentAction(
   action: ShipmentAction,
   order: OrderWithTimestamps,
   orderId: string,
-  client: any
+  client: any,
 ) {
   const actionMap: Record<ShipmentAction, () => Promise<void>> = {
     ALREADY_COMPLETED: async () => {
@@ -178,12 +178,12 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
           executeAt: toUTCDate(order.exhibition_status!.exhibition_end_date),
         },
       },
-      { upsert: true }
+      { upsert: true },
     ).session(session);
 
     await CreateOrder.updateOne(
       { order_id: order.order_id },
-      { $set: { "exhibition_status.status": "scheduled" } }
+      { $set: { "exhibition_status.status": "scheduled" } },
     ).session(session);
 
     await session.commitTransaction();
@@ -230,7 +230,7 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
   await WaybillCache.updateOne(
     { order_id: orderId },
     { $setOnInsert: { pdf_base64: shipment.data.documents[0].content } },
-    { upsert: true }
+    { upsert: true },
   );
 
   await CreateOrder.updateOne(
@@ -247,7 +247,7 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
         "shipping_details.shipment_information.tracking.delivery_status":
           "In Transit",
       },
-    }
+    },
   );
 
   await sendShipmentEmailWorkflow(
@@ -260,7 +260,7 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
     shipmentData.artwork_name,
     order.artwork_data.url,
     order.artwork_data.pricing.usd_price,
-    order.createdAt
+    order.artwork_data.artist,
   );
 
   await finalizeWaybill(orderId, shipment.data.documents[0].content);
@@ -296,7 +296,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
       createErrorRollbarReport(
         "Shipment creation workflow — unexpected error",
         error,
-        500
+        500,
       );
 
       return handleWorkflowError(error, { order_id });

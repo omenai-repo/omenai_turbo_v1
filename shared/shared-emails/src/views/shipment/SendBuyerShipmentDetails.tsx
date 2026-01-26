@@ -15,7 +15,7 @@ export default function BuyerShipmentEmail(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  price: string
+  price: string,
 ) {
   return (
     <ShipmentLayout
@@ -32,7 +32,7 @@ export default function BuyerShipmentEmail(
               marginBottom: "20px",
             }}
           >
-            Your Shipment is on the Way
+            Your artwork is on the Way
           </Heading>
           <Text
             style={{

@@ -51,7 +51,7 @@ import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCa
 
 export const base64ToPDF = (
   base64: string,
-  filename = "waybilldoc.pdf"
+  filename = "waybilldoc.pdf",
 ): File => {
   const byteArray = Buffer.from(base64, "base64");
   return new File([byteArray], filename, { type: "application/pdf" });
@@ -67,7 +67,7 @@ export async function getMongoClient() {
 }
 
 export function buildShipmentData(
-  order: CreateOrderModelTypes & { createdAt: string; updatedAt: string }
+  order: CreateOrderModelTypes & { createdAt: string; updatedAt: string },
 ): Omit<ShipmentRequestDataTypes, "originCountryCode"> {
   return {
     specialInstructions:
@@ -97,11 +97,11 @@ export function buildShipmentData(
 // Utility function to upload waybill document and update the order
 export async function handleWaybillUpload(
   waybillBase64: string,
-  orderId: string
+  orderId: string,
 ): Promise<string> {
   const waybillFile = base64ToPDF(
     waybillBase64,
-    `waybilldoc_${generateAlphaDigit(6)}.pdf`
+    `waybilldoc_${generateAlphaDigit(6)}.pdf`,
   );
   const uploadedDoc = await uploadWaybillDocument(waybillFile);
 
@@ -121,7 +121,7 @@ export async function handleWaybillUpload(
         "shipping_details.shipment_information.waybill_document":
           waybillDocLink,
       },
-    }
+    },
   );
 
   if (updateResult.modifiedCount === 0) {
@@ -143,7 +143,7 @@ export async function sendShipmentEmailWorkflow(
   artwork: string,
   artworkImage: string,
   artworkPrice: number,
-  artistName: string
+  artistName: string,
 ) {
   await createWorkflow(
     "/api/workflows/emails/sendShipmentEmail",
@@ -159,6 +159,6 @@ export async function sendShipmentEmailWorkflow(
       artworkImage,
       artworkPrice,
       artistName,
-    })
+    }),
   );
 }
