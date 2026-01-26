@@ -9,7 +9,7 @@ export default function SendArtistShipmentSuccess(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  price: string
+  price: string,
 ) {
   return (
     <ShipmentLayout
@@ -77,7 +77,7 @@ export default function SendArtistShipmentSuccess(
 
       <div style={{ textAlign: "center", margin: "30px 0" }}>
         <Link
-          href={`${dashboard_url()}/artist/app/orders`}
+          href={`${dashboard_url()}/artist/app/wallet`}
           style={{
             display: "inline-block",
             backgroundColor: "#10b981",
