@@ -177,7 +177,7 @@ export default function SupportWidget() {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-end sm:items-end justify-end p-8 pointer-events-none">
+    <div className="fixed inset-0 z-[9999] w-full flex items-end sm:items-end justify-end p-4 pointer-events-none">
       <div
         className="fixed inset-0 bg-black/5 backdrop-blur-sm pointer-events-auto transition-all duration-400"
         onClick={handleClose}
@@ -201,7 +201,7 @@ export default function SupportWidget() {
             {/* Header */}
             <div className="px-7 py-6 border-b border-slate-300 bg-white flex justify-between items-start sticky top-0 z-10">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center border border-slate-300 shadow-sm">
+                <div className="p-2 rounded-full flex items-center justify-center shadow-sm">
                   <OmenaiLogoCut />
                 </div>
                 <div>
@@ -224,7 +224,7 @@ export default function SupportWidget() {
             </div>
 
             {/* Form Body */}
-            <div className="p-7 overflow-y-auto bg-white">
+            <div className="p-6 overflow-y-auto bg-white">
               <SupportForm
                 user={user}
                 category={category}

@@ -47,7 +47,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     let finalUserEmail = bodyEmail;
     let finalUserType = "GUEST";
 
-    if (sessionData) {
+    if (sessionData && sessionData.userData) {
       finalUserId = sessionData.userData.id;
       finalUserEmail = sessionData.userData.email;
       finalUserType = sessionData.userData.role.toUpperCase();

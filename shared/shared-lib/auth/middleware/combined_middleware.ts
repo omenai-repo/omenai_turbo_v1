@@ -16,6 +16,10 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
   ) {
     let sessionDataId: string | undefined = undefined;
     const wrapped = async (req: Request | NextRequest) => {
+      const url = new URL(req.url);
+
+      const pathname = url.pathname;
+
       const method = req.method.toUpperCase();
       const userAgent = req.headers.get("User-Agent");
       const authorization: string = req.headers.get("Authorization") ?? "";
@@ -38,6 +42,10 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
             allowedRoles: config.allowedRoles,
             allowedAdminAccessRoles: config.allowedAdminAccessRoles,
           });
+
+          if (pathname === "/api/support" && !valid) {
+            return handler(req, undefined, undefined);
+          }
 
           if (!valid) {
             throw new ForbiddenError(message);

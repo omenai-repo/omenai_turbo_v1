@@ -74,13 +74,19 @@ export function SupportForm({
   const getReferenceConfig = () => {
     switch (category) {
       case "CHECKOUT":
-        return { label: "Artwork ID", placeholder: "Enter Artwork ID" };
+        return {
+          label: "Artwork ID/ Artwork Name",
+          placeholder: "Leave empty if not applicable",
+        };
       case "ORDER":
-        return { label: "Order Number", placeholder: "Enter order ID" };
+        return {
+          label: "Order Number",
+          placeholder: "Leave empty if not applicable",
+        };
       case "PAYMENT":
         return {
-          label: "Transaction Ref",
-          placeholder: "Enter transaction reference",
+          label: "Transaction ID",
+          placeholder: "Leave empty if not applicable",
         };
 
       case "WALLET":

@@ -18,11 +18,11 @@ export default function LikeComponent({
     impressions,
     likeIds,
     sessionId,
-    art_id
+    art_id,
   );
 
   return (
-    <span className="grid place-items-center bg-[#fff] p-2 rounded">
+    <span className="grid place-items-center bg-[#fff] p-1 rounded-full">
       {/* <span className="text-fluid-xxs text-dark">{likedState.count}</span> */}
       {(sessionId === undefined ||
         (sessionId && !likedState.ids.includes(sessionId))) && (

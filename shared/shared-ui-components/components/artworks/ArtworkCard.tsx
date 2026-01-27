@@ -58,8 +58,8 @@ export default function ArtworkCard({
 
           {/* Floating Actions (Only if available or if you want users to like sold items too) */}
           {!isDashboard && (
-            <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-sm p-1.5 hover:bg-white transition-colors">
+            <div className="absolute bottom-4 right-2 z-20 transition-opacity duration-300">
+              <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-sm p-1 transition-colors">
                 <LikeComponent
                   impressions={impressions}
                   likeIds={likeIds}
