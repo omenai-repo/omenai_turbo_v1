@@ -1,10 +1,11 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useSupportDefaulter } from "@omenai/shared-hooks/hooks/useSupportDefaulter";
 import { createSupportTicket } from "@omenai/shared-services/support/createSupportTicket";
+import { fetchUserSupportTickets } from "@omenai/shared-services/support/fetchUserSupportTickets";
 import { SupportCategory } from "@omenai/shared-types";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export const Icons = {
   Close: () => (
@@ -129,4 +130,92 @@ export const Icons = {
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
   ),
+  Search: () => (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  ),
+  Filter: () => (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+    </svg>
+  ),
+  ChevronLeft: () => (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  ),
+  ChevronRight: () => (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  ),
+};
+// --- Badges ---
+export const UserStatusBadge = ({ status }: { status: string }) => {
+  const styles: Record<string, string> = {
+    OPEN: "bg-emerald-50 text-emerald-700 border-emerald-100",
+    IN_PROGRESS: "bg-blue-50 text-blue-700 border-blue-100",
+    RESOLVED: "bg-slate-100 text-slate-600 border-slate-200",
+    CLOSED: "bg-gray-50 text-gray-500 border-gray-100",
+  };
+  return (
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${styles[status] || styles.OPEN} tracking-wide uppercase`}
+    >
+      {status.replace("_", " ")}
+    </span>
+  );
+};
+
+export const PriorityBadge = ({ priority }: { priority: string }) => {
+  const styles: Record<string, string> = {
+    HIGH: "text-rose-600 bg-rose-50 border-rose-100",
+    NORMAL: "text-slate-600 bg-slate-50 border-slate-200",
+    LOW: "text-gray-500 bg-gray-50 border-gray-100",
+  };
+  return (
+    <span
+      className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium border ${styles[priority] || styles.NORMAL} tracking-wide uppercase`}
+    >
+      {priority}
+    </span>
+  );
 };

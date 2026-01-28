@@ -1,5 +1,4 @@
-// types/sidebar.ts
-import { LucideIcon } from "lucide-react";
+import { Headphones, LucideIcon } from "lucide-react";
 
 export type SidebarSection = "core" | "finance" | "account";
 
@@ -11,16 +10,7 @@ export type SidebarItem = {
 };
 
 // config/sidebar.ts
-import {
-  LayoutDashboard,
-  Package,
-  Image,
-  CreditCard,
-  Wallet,
-  User,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { LayoutDashboard, Package, Image, Wallet, User } from "lucide-react";
 
 export const sidebarItems: SidebarItem[] = [
   {
@@ -47,6 +37,12 @@ export const sidebarItems: SidebarItem[] = [
     href: "/artist/app/wallet",
     icon: Wallet,
     section: "finance",
+  },
+  {
+    label: "Support tickets",
+    href: "/artist/app/support",
+    icon: Headphones,
+    section: "account",
   },
 
   {
