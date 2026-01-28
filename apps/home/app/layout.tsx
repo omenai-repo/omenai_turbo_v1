@@ -47,36 +47,36 @@ export default async function RootLayout({
   const initialSessionData = await getServerSession();
 
   return (
-    <RollbarProvider config={clientConfig}>
-      <HighRiskProvider>
-        <html lang="en" {...mantineHtmlProps}>
-          <head>
-            <meta name="color-scheme" content="light" />
-            <ColorSchemeScript defaultColorScheme="light" />
+    // <RollbarProvider config={clientConfig}>
+    <HighRiskProvider>
+      <html lang="en" {...mantineHtmlProps}>
+        <head>
+          <meta name="color-scheme" content="light" />
+          <ColorSchemeScript defaultColorScheme="light" />
 
-            {/* Favicon fallback for localhost/dev */}
-            <link rel="icon" href="/favicon.ico" />
-            <link rel="shortcut icon" href="/favicon.ico" />
-            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-            <title>Omenai</title>
-          </head>
-          <body
-            className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}
-          >
-            <NextTopLoader color="#0f172a" height={6} />
-            <Toaster
-              position="top-right"
-              expand
-              visibleToasts={3}
-              closeButton
-              duration={7000}
-            />
-            <LayoutWrapper sessionData={initialSessionData}>
-              {children}
-            </LayoutWrapper>
-          </body>
-        </html>
-      </HighRiskProvider>
-    </RollbarProvider>
+          {/* Favicon fallback for localhost/dev */}
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <title>Omenai</title>
+        </head>
+        <body
+          className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}
+        >
+          <NextTopLoader color="#0f172a" height={6} />
+          <Toaster
+            position="top-right"
+            expand
+            visibleToasts={3}
+            closeButton
+            duration={7000}
+          />
+          <LayoutWrapper sessionData={initialSessionData}>
+            {children}
+          </LayoutWrapper>
+        </body>
+      </html>
+    </HighRiskProvider>
+    // </RollbarProvider>
   );
 }
