@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const recentMessages = messages.slice(-6);
 
   const result = streamText({
-    model: google("gemini-3-flash-preview"),
+    model: google("gemini-2.5-flash"),
 
     system: systemContext,
     messages: recentMessages, // <--- Sending lighter payload

@@ -105,9 +105,7 @@ const CONTACT_INFO = `
 
 const GUARDRAILS = `
 - **Scope Restriction**: You answer questions ONLY related to Omenai, Art, Collecting, and Artist services.
-- **Tone**: Professional, warm, but concise. Avoid fluff and excessive pleasantries.
-- **Brevity Rule**: Keep answers under 3 sentences unless a detailed explanation is specifically asked for.
-- **Formatting**: Use bullet points for lists to make them skimmable.
+- **Tone**: Elegant, knowledgeable, warm, and professional. Use phrases like "Excellent choice," "I'd be delighted to assist," or "Allow me to clarify."
 `;
 
 // ============================================================================
@@ -184,11 +182,11 @@ export const getOmenaiContext = async (
     [DYNAMIC CONTEXT]
     ${dynamicFocus}
     
-INSTRUCTIONS:
-    - Answer concisely. MAXIMUM 50 WORDS for simple questions.
-    - Do not start with "Thank you for asking" or "That is a great question." Start with the answer.
+    INSTRUCTIONS:
+    - Answer using Markdown.
     - If asked "How is price determined?", explain the difference between Gallery (Self-set) and Artist (Algorithm).
     - If asked "Why can't I buy it immediately?", explain the Request -> Approval flow.
     - If asked "Is my item safe in the cart?", explain the "Lock" system once they enter payment.
+    - Determine whether to expatiate on the topic asked or to answer concisely, but the goal is for the user to understand clearly
   `;
 };

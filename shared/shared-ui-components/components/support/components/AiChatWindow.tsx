@@ -194,7 +194,7 @@ export function AiChatWindow({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ duration: 0.3, type: "spring" }}
-          className="fixed bottom-8 right-6 w-[90vw] max-w-[500px] h-[650px] max-h-[80vh] bg-white rounded shadow-2xl border border-slate-200 overflow-hidden flex flex-col z-50 font-sans"
+          className="fixed bottom-0 right-6 w-[90vw] max-w-[500px] h-[650px] max-h-[80vh] bg-white rounded shadow-2xl border border-slate-200 overflow-hidden flex flex-col z-50 font-sans"
         >
           {/* HEADER */}
           <BubbleHeader onClose={onClose} />

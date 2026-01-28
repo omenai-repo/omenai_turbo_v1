@@ -193,19 +193,24 @@ export default function SupportWidget() {
   // 2. MODE A: AI CHAT (Floating Bubble)
   if (mode === "CHAT") {
     return (
-      <>
-        {/* Helper overlay to close on click outside */}
-        <div className="fixed inset-0 z-40" onClick={handleClose} />
+      <div className="fixed inset-0 z-[9999] w-full flex items-end sm:items-end justify-end p-4 pointer-events-none">
+        <div
+          className="fixed inset-0 bg-black/5 backdrop-blur-sm pointer-events-auto transition-all duration-400"
+          style={{ animation: "fadeIn 0.3s ease-out" }}
+        >
+          {/* Helper overlay to close on click outside */}
+          <div className="fixed inset-0 z-40" onClick={handleClose} />
 
-        <AiChatWindow
-          isOpen={isOpen}
-          onClose={handleClose}
-          pageContext={suggestedCategory || "general"}
-          switchToSupport={() => setMode("TICKET")}
-          messages={chatMessages}
-          setMessages={setChatMessages}
-        />
-      </>
+          <AiChatWindow
+            isOpen={isOpen}
+            onClose={handleClose}
+            pageContext={suggestedCategory || "general"}
+            switchToSupport={() => setMode("TICKET")}
+            messages={chatMessages}
+            setMessages={setChatMessages}
+          />
+        </div>
+      </div>
     );
   }
 
