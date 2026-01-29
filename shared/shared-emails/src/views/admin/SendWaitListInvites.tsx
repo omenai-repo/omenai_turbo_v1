@@ -1,7 +1,6 @@
 import { auth_uri } from "@omenai/url-config/src/config";
-import { Hr, Img, Link, Section, Text } from "@react-email/components";
+import { Img, Link, Section, Text } from "@react-email/components";
 import AdminEmailLayout from "./AdminEmailLayout";
-import { FaApple, FaGooglePlay } from "react-icons/fa";
 
 const SendWaitListInvites = (name: string, email: string, entity: string) => {
   return (
@@ -65,7 +64,6 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
                 cellPadding="0"
                 cellSpacing="0"
                 border={0}
-                role="presentation"
                 style={{ display: "inline-block" }}
               >
                 <tr>

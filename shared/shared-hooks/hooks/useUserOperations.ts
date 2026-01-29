@@ -9,7 +9,6 @@ import { fetchWaitlistKpiUsers } from "@omenai/shared-services/admin/fetch_waitl
 import { sendWaitlistInvites } from "@omenai/shared-services/admin/send_waitlist_invites";
 import { IWaitlistLead } from "@omenai/shared-types";
 import { useAuth } from "./useAuth";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 // 1. Define the Shape of your API Response
 interface UserSearchResponse {
@@ -54,7 +53,6 @@ export const useUserOperations = (activeTab: "artist" | "collector") => {
   const [filters, setFilters] = useState<UserFilter>({});
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { csrf } = useAuth({ requiredRole: "admin" });
-  const url = getApiUrl();
   const queryClient = useQueryClient();
   // 2. Fetch Users based on filters
   const { data, isLoading, refetch } = useQuery<UserSearchResponse>({
