@@ -1,0 +1,33 @@
+import { logRollbarServerError } from "@omenai/rollbar-config";
+import { getApiUrl } from "@omenai/url-config/src/config";
+export async function sendWaitlistInvites(
+  selectedUsers: {
+    name: string;
+    email: string;
+    entity: "artist" | "collector";
+  }[],
+  token: string,
+) {
+  try {
+    const url = getApiUrl();
+    const res = await fetch(`${url}/api/admin/send_waitlist_invites`, {
+      method: "POST",
+      body: JSON.stringify({ selectedUsers }),
+      headers: { "x-csrf-token": token },
+      credentials: "include",
+    });
+    const result = await res.json();
+
+    return {
+      isOk: res.ok,
+      message: result.message,
+    };
+  } catch (error: any) {
+    logRollbarServerError(error);
+    return {
+      isOk: false,
+      message:
+        "An error was encountered, please try again later or contact support",
+    };
+  }
+}
