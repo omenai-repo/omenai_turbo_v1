@@ -51,13 +51,7 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
         >
           Or
         </Text>
-        <table
-          width="100%"
-          cellPadding="0"
-          cellSpacing="0"
-          border={0}
-          role="presentation"
-        >
+        <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
           <thead style={{ display: "none" }}>
             <tr>
               <th>App Store Download Links</th>
