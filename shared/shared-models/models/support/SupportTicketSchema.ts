@@ -2,7 +2,7 @@ import mongoose, { Schema, Model, models } from "mongoose";
 import { ISupportTicket, SupportCategory } from "@omenai/shared-types";
 const SupportTicketSchema = new Schema<ISupportTicket>(
   {
-    userId: { type: String, index: true }, // Index for fast lookup of a user's history
+    userId: { type: String, index: true },
     userEmail: { type: String, required: true },
     userType: {
       type: String,

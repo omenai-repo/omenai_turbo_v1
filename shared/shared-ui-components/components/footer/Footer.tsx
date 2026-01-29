@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-white text-dark  border-t border-neutral-200">
       {/* MAIN GRID WRAPPER */}
-      <div className="w-full max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0">
+      <div className="w-full max-w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0">
         {/* COLUMN 1: BRAND IDENTITY (Spans 4 cols) */}
         <div className="lg:col-span-4 flex flex-col justify-between p-8 lg:p-16 lg:border-r border-neutral-100">
           <div className="space-y-6">

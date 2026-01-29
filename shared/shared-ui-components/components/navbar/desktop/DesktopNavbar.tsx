@@ -57,7 +57,7 @@ const DesktopNavbar = () => {
               : "py-5 bg-white border-neutral-100"
           }`}
       >
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 flex items-center justify-between">
+        <div className="max-w-full mx-auto px-6 md:px-12 flex items-center justify-between">
           {/* LEFT: Logo & Nav */}
           <div className="flex items-center gap-10">
             <IndividualLogo />

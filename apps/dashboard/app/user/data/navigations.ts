@@ -11,7 +11,7 @@ export type SidebarItem = {
 };
 
 // config/sidebar.ts
-import { Package, Image, User, Settings } from "lucide-react";
+import { Package, Image, User, Settings, Headphones } from "lucide-react";
 
 export const sidebarItems: SidebarItem[] = [
   {
@@ -31,6 +31,12 @@ export const sidebarItems: SidebarItem[] = [
     label: "Profile",
     href: "/user/profile",
     icon: User,
+    section: "account",
+  },
+  {
+    label: "Support tickets",
+    href: "/user/support",
+    icon: Headphones,
     section: "account",
   },
   {

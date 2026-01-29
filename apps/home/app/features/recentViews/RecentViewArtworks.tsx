@@ -47,7 +47,7 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
 
   return (
     <section className="w-full bg-[#FAFAFA] py-12 md:py-16 border-t border-neutral-200">
-      <div className="container mx-auto px-4">
+      <div className="px-4">
         {/* 1. HEADER: Utility Style (Smaller, Functional) */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">

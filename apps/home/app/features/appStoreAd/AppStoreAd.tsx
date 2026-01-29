@@ -5,7 +5,7 @@ import { BsQrCode } from "react-icons/bs";
 export default function AppStoreAd() {
   return (
     <section className="w-full bg-[#091830] overflow-hidden">
-      <div className="container mx-auto px-6 lg:px-12">
+      <div className="p-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12 pt-16 md:pt-24 pb-0">
           {/* 1. CONTENT COLUMN */}
           <div className="flex-1 max-w-xl text-left pb-16 md:pb-24">

@@ -33,7 +33,7 @@ export default function Editorials() {
     <>
       {editorials && editorials?.length === 0 ? null : (
         <section className="w-full bg-[#f5f5f5] py-16 md:py-24 border-t border-neutral-200">
-          <div className="container mx-auto px-6 lg:px-12">
+          <div className="px-4 lg:px-12">
             {/* 1. MARKETPLACE HEADER */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
               <div>
