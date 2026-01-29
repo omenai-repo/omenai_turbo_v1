@@ -3,14 +3,18 @@ import {
   useQuery,
   useMutation,
   keepPreviousData, // 👈 Import the helper function here
+  useQueryClient,
 } from "@tanstack/react-query";
 import { fetchWaitlistKpiUsers } from "@omenai/shared-services/admin/fetch_waitlist_kpi_users";
+import { sendWaitlistInvites } from "@omenai/shared-services/admin/send_waitlist_invites";
 import { IWaitlistLead } from "@omenai/shared-types";
 import { useAuth } from "./useAuth";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 // 1. Define the Shape of your API Response
 interface UserSearchResponse {
   success: boolean;
-  users: IWaitlistLead[];
+  users: (IWaitlistLead & { _id: string })[];
   pagination: {
     total: number;
     pages: number;
@@ -50,6 +54,8 @@ export const useUserOperations = (activeTab: "artist" | "collector") => {
   const [filters, setFilters] = useState<UserFilter>({});
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { csrf } = useAuth({ requiredRole: "admin" });
+  const url = getApiUrl();
+  const queryClient = useQueryClient();
   // 2. Fetch Users based on filters
   const { data, isLoading, refetch } = useQuery<UserSearchResponse>({
     queryKey: ["admin-users", activeTab, page, filters],
@@ -90,14 +96,24 @@ export const useUserOperations = (activeTab: "artist" | "collector") => {
   // 4. Invite Mutation
   const inviteMutation = useMutation({
     mutationFn: async (ids: string[]) => {
-      const res = await fetch("/api/admin/invite", {
-        method: "POST",
-        body: JSON.stringify({ ids }),
-      });
-      return res.json();
+      const selectedUsers = data?.users
+        .filter((user) => ids.includes(user._id))
+        .map((user) => ({
+          name: user.name,
+          email: user.email,
+          entity: user.entity,
+        }))!;
+      return await sendWaitlistInvites(selectedUsers, csrf ?? "");
     },
-    onSuccess: () => {
-      alert("Invites Sent!");
+    onSuccess: (res) => {
+      if (res.isOk) {
+        toast_notif(res.message, "success");
+        queryClient.invalidateQueries({
+          queryKey: ["admin-users", activeTab, page, filters],
+        });
+      } else {
+        toast_notif(res.message, "error");
+      }
       setSelectedIds([]);
     },
   });
