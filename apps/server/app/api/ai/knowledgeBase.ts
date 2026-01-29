@@ -184,6 +184,7 @@ export const getOmenaiContext = async (
     
     INSTRUCTIONS:
     - Answer using Markdown.
+    - Limit to 100 words or less for simple questions, expantiate when necessary
     - If asked "How is price determined?", explain the difference between Gallery (Self-set) and Artist (Algorithm).
     - If asked "Why can't I buy it immediately?", explain the Request -> Approval flow.
     - If asked "Is my item safe in the cart?", explain the "Lock" system once they enter payment.

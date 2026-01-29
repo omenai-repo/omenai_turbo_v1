@@ -3,15 +3,31 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Sparkles, User, Bot, ArrowUp } from "lucide-react";
+import {
+  X,
+  ArrowRight,
+  Sparkles,
+  Clock,
+  ChevronLeft,
+  MessageSquarePlus,
+  Square,
+} from "lucide-react";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import BubbleHeader from "./BubbleHeader";
-import { INPUT_CLASS } from "../../styles/inputClasses";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
+// --- TYPES ---
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+}
+
+interface ChatSession {
+  id: string;
+  title: string;
+  date: number;
+  preview: string;
+  messages: Message[];
 }
 
 interface AiChatWindowProps {
@@ -19,106 +35,175 @@ interface AiChatWindowProps {
   onClose: () => void;
   pageContext: string;
   switchToSupport: () => void;
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  sessions: ChatSession[];
+  activeSessionId: string | null;
+  onSelectSession: (id: string) => void;
+  onCreateSession: (initialMsg?: string) => string;
+  onUpdateSession: (messages: Message[]) => void;
+  onBackToHome: () => void;
 }
+
+const SUGGESTIONS_MAP: Record<string, string[]> = {
+  payment: [
+    "Is my payment secure?",
+    "How is shipping calculated?",
+    "Return policy?",
+    "Duties included?",
+  ],
+  upload: [
+    "Max image size?",
+    "How does pricing work?",
+    "Exclusivity rules?",
+    "When do I get paid?",
+  ],
+  orders: [
+    "Track my shipment",
+    "Order not arrived",
+    "Cancel order",
+    "Contact artist",
+  ],
+  gallery: [
+    "Subscription tiers?",
+    "Commission rates?",
+    "Price on Demand?",
+    "Logistics handling?",
+  ],
+  default: [
+    "About about the Omenai platform",
+    "Help me find great artworks",
+    "Tell me about Omenai's purchase process",
+    "Certificate of Authenticity?",
+  ],
+};
 
 export function AiChatWindow({
   isOpen,
   onClose,
   pageContext,
   switchToSupport,
-  messages,
-  setMessages,
+  sessions,
+  activeSessionId,
+  onSelectSession,
+  onCreateSession,
+  onUpdateSession,
+  onBackToHome,
 }: AiChatWindowProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
-  // TYPING EFFECT STATE
+  // STATE
   const [streamingContent, setStreamingContent] = useState("");
   const [fullContent, setFullContent] = useState("");
+
+  // REFS
   const isTypingRef = useRef(false);
-
   const scrollRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null); // New Ref for Textarea
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  // FIX: BODY SCROLL LOCK
+  // VIEW LOGIC
+  const activeSession = sessions.find((s) => s.id === activeSessionId);
+  const messages = activeSession?.messages || [];
+  const isGuest = !user;
+  const isChatView = isGuest || !!activeSessionId;
+
+  const getSuggestions = () => {
+    const currentPath = pageContext.toLowerCase();
+    if (currentPath.includes("purchase") || currentPath.includes("payment"))
+      return SUGGESTIONS_MAP.payment;
+    if (currentPath.includes("upload") || currentPath.includes("artworks"))
+      return SUGGESTIONS_MAP.upload;
+    if (currentPath.includes("orders") || currentPath.includes("transactions"))
+      return SUGGESTIONS_MAP.orders;
+    if (currentPath.includes("gallery") || currentPath.includes("subscription"))
+      return SUGGESTIONS_MAP.gallery;
+    return SUGGESTIONS_MAP.default;
+  };
+  const currentSuggestions = getSuggestions();
+
+  // --- EFFECTS ---
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
-  // FIX: AUTO-GROW TEXTAREA
   useEffect(() => {
     if (textareaRef.current) {
-      // Reset height to calculate correct scrollHeight for shrinkage
       textareaRef.current.style.height = "auto";
-      // Set to scrollHeight to expand
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`; // Max height 120px
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
     }
   }, [input]);
 
-  // AUTO-SCROLL (Smart scroll for incoming AI messages)
   useEffect(() => {
     if (isOpen && scrollRef.current) {
-      // Use setTimeout to ensure the DOM is fully rendered before scrolling
       setTimeout(() => {
-        if (scrollRef.current) {
+        if (scrollRef.current)
           scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-        }
       }, 10);
     }
-  }, [isOpen]);
+  }, [isOpen, messages.length, streamingContent, activeSessionId, isChatView]);
 
-  // TYPING ENGINE
   useEffect(() => {
     if (streamingContent.length < fullContent.length) {
       isTypingRef.current = true;
       const timeout = setTimeout(() => {
         setStreamingContent(fullContent.slice(0, streamingContent.length + 1));
-      }, 1);
+      }, 5);
       return () => clearTimeout(timeout);
     } else {
       isTypingRef.current = false;
     }
   }, [streamingContent, fullContent]);
 
-  // SUBMIT HANDLER
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  // --- STOP HANDLER (NEW) ---
+  const handleStop = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setIsLoading(false);
+      isTypingRef.current = false;
+
+      setStreamingContent(fullContent);
+    }
+  };
+
+  // --- SEND HANDLER ---
+  const handleSend = async (textOverride?: string) => {
+    const textToSend = textOverride || input;
+    if (!textToSend.trim() || isLoading) return;
+
+    let currentSessionId = activeSessionId;
+    if (!currentSessionId) {
+      currentSessionId = onCreateSession(textToSend);
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: input,
+      content: textToSend,
     };
+    const currentMessages =
+      sessions.find((s) => s.id === currentSessionId)?.messages || [];
+    const updatedMessages = [...currentMessages, userMessage];
 
+    onUpdateSession(updatedMessages);
+    setInput("");
     setFullContent("");
     setStreamingContent("");
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
     setIsLoading(true);
 
-    // FIX: FORCE SCROLL TO BOTTOM ON USER SEND
-    // We use setTimeout to allow the DOM to render the new message first
-    setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-      }
-    }, 10);
+    // Create new AbortController for this request
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-    // Reset textarea height manually
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+    setTimeout(() => {
+      if (scrollRef.current)
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }, 10);
 
     try {
       const response = await fetch(`${getApiUrl()}/api/ai/chat`, {
@@ -127,10 +212,8 @@ export function AiChatWindow({
           "Content-Type": "application/json",
           Origin: "https://omenai.app",
         },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-          pageContext,
-        }),
+        body: JSON.stringify({ messages: updatedMessages, pageContext }),
+        signal: controller.signal,
       });
 
       if (!response.ok) throw new Error("Network error");
@@ -142,8 +225,8 @@ export function AiChatWindow({
       let accumulatedText = "";
 
       const aiMessageId = (Date.now() + 1).toString();
-      setMessages((prev) => [
-        ...prev,
+      onUpdateSession([
+        ...updatedMessages,
         { id: aiMessageId, role: "assistant", content: "" },
       ]);
 
@@ -154,24 +237,32 @@ export function AiChatWindow({
         accumulatedText += chunkValue;
         setFullContent(accumulatedText);
       }
-
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === aiMessageId ? { ...m, content: accumulatedText } : m,
-        ),
-      );
-    } catch (error) {
-      console.error("Stream Error:", error);
+      onUpdateSession([
+        ...updatedMessages,
+        { id: aiMessageId, role: "assistant", content: accumulatedText },
+      ]);
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        console.log("Stream stopped by user");
+        // Save what we have so far
+        const aiMessageId = (Date.now() + 1).toString();
+        onUpdateSession([
+          ...updatedMessages,
+          { id: aiMessageId, role: "assistant", content: fullContent },
+        ]);
+      } else {
+        console.error("Stream Error:", error);
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
-  // HANDLE ENTER KEY (Submit vs New Line)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // Prevent default newline
-      handleSubmit();
+      e.preventDefault();
+      handleSend();
     }
   };
 
@@ -190,135 +281,276 @@ export function AiChatWindow({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ duration: 0.3, type: "spring" }}
-          className="fixed bottom-0 right-6 w-[90vw] max-w-[500px] h-[650px] max-h-[80vh] bg-white rounded shadow-2xl border border-slate-200 overflow-hidden flex flex-col z-50 font-sans"
+          initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "100%" }}
+          transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+          className="fixed inset-0 md:inset-auto md:bottom-6 md:right-6 w-full md:w-[440px] h-[100dvh] md:h-[700px] max-h-none md:max-h-[85vh] bg-[#FDFDFD] md:rounded-2xl shadow-2xl border-0 md:border border-slate-200 overflow-hidden flex flex-col z-[9999] font-sans"
         >
-          {/* HEADER */}
-          <BubbleHeader onClose={onClose} />
+          {/* BACKGROUND */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50/50">
+            <motion.div
+              animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-20 -left-20 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl"
+            />
+            <motion.div
+              animate={{ x: [0, -80, 0], y: [0, 60, 0], scale: [1, 1.3, 1] }}
+              transition={{
+                duration: 25,
+                repeat: Infinity,
+                ease: "linear",
+                delay: 2,
+              }}
+              className="absolute top-1/2 -right-20 w-80 h-80 bg-rose-200/15 rounded-full blur-3xl"
+            />
+          </div>
 
-          {/* CHAT AREA */}
+          {/* HEADER */}
+          <div className="absolute top-0 left-0 right-0 h-18 bg-white/80 backdrop-blur-xl border-b border-slate-100 z-20 flex items-center justify-between px-6 py-4 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.05)]">
+            <div className="flex items-center gap-4 relative z-10">
+              {!isGuest && isChatView && (
+                <button
+                  onClick={onBackToHome}
+                  className="absolute -left-3 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-slate-100/50 text-slate-400 hover:text-slate-900 transition-colors"
+                  aria-label="Back to History"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+              )}
+
+              <div
+                className={`relative group cursor-default transition-all ${!isGuest && isChatView ? "ml-6" : ""}`}
+              >
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-full blur opacity-20 group-hover:opacity-40 transition duration-500" />
+                <div className="relative w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/50">
+                  <Sparkles
+                    size={18}
+                    className="text-indigo-200"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 ring-2 ring-white" />
+                </span>
+              </div>
+
+              <div className="flex flex-col justify-center">
+                <h3 className="text-[17px] text-slate-900 leading-none font-bold tracking-tight">
+                  Omenai{" "}
+                  <span className="font-sans font-light text-slate-400">
+                    Advisor
+                  </span>
+                </h3>
+                <p className="text-[10px] font-semibold text-dark/80 uppercase tracking-widest mt-1.5 flex items-center gap-1.5">
+                  <span className="w-1 h-1 bg-indigo-500 rounded-full" />
+                  Live Assistant
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="relative z-10 group p-2 rounded-xl transition-all duration-300 text-slate-300 backdrop-blur-sm border border-neutral-300 hover:border-neutral-200"
+            >
+              <X
+                size={20}
+                className="group-hover:rotate-90 transition-transform duration-300"
+              />
+            </button>
+          </div>
+
+          {/* CONTENT AREA */}
           <div
-            className="flex-1 overflow-y-auto p-5 space-y-6 bg-slate-50 overscroll-contain"
+            className="flex-1 overflow-y-auto pt-24 pb-4 px-5 z-10 overscroll-contain"
             ref={scrollRef}
             onWheel={(e) => e.stopPropagation()}
             style={{ overscrollBehavior: "contain" }}
           >
-            {displayMessages.length === 0 && (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-60 p-8">
-                <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-2">
-                  <Sparkles className="text-indigo-400" size={32} />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-slate-700">
-                    How may I assist?
-                  </h4>
-                  <p className="text-sm text-slate-500 mt-1">
-                    Ask about artwork details, shipping fees, or get collection
-                    advice.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {displayMessages.map((m) => (
-              <div
-                key={m.id}
-                className={`flex gap-4 ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+            {/* --- VIEW 1: HOME SCREEN (User Only) --- */}
+            {!isChatView && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
               >
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-sm ${m.role === "user" ? "bg-white border border-slate-200" : "bg-indigo-600 text-white"}`}
-                >
-                  {m.role === "user" ? (
-                    <User size={16} className="text-slate-600" />
-                  ) : (
-                    <Bot size={16} />
-                  )}
-                </div>
+                <h4 className="font-serif text-2xl text-slate-800 mb-2 tracking-tight">
+                  Good{" "}
+                  {new Date().getHours() < 12
+                    ? "morning"
+                    : new Date().getHours() < 18
+                      ? "afternoon"
+                      : "evening"}{" "}
+                  {`${user ? user.name.split(" ")[0] : ""}`},
+                </h4>
+                <p className="text-slate-400 font-light text-sm leading-relaxed max-w-[280px] mb-8">
+                  Access your chat history or start a new inquiry.
+                </p>
 
-                <div
-                  className={`flex flex-col max-w-[75%] ${m.role === "user" ? "items-end" : "items-start"}`}
+                <button
+                  onClick={() => onCreateSession()}
+                  className="w-full py-3 bg-slate-900 text-white rounded-xl shadow-lg shadow-slate-300/20 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all text-[15px] font-medium mb-8"
                 >
-                  <div
-                    className={`px-4 py-2 rounded-2xl text-[13px] shadow-sm leading-snug ${
-                      m.role === "user"
-                        ? "bg-slate-900 text-white rounded-tr-none"
-                        : "bg-white text-slate-800 border border-slate-100 rounded-tl-none"
-                    }`}
-                  >
-                    <div className="prose prose-sm max-w-none prose-p:leading-normal prose-pre:bg-slate-800 prose-pre:text-slate-100 prose-a:text-indigo-600">
-                      <ReactMarkdown>{m.content}</ReactMarkdown>
-                    </div>
+                  <MessageSquarePlus size={18} />
+                  Start New Conversation
+                </button>
+
+                {sessions.length > 0 ? (
+                  <div className="grid gap-2">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1 pl-1 flex items-center gap-2">
+                      <Clock size={12} /> Conversation History
+                    </p>
+                    {sessions.map((sess) => (
+                      <button
+                        key={sess.id}
+                        onClick={() => onSelectSession(sess.id)}
+                        className="text-left bg-white border border-slate-200 p-3.5 rounded-xl hover:border-indigo-300 transition-all group"
+                      >
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="font-medium text-slate-700 text-[13px] truncate w-[70%]">
+                            {sess.title}
+                          </span>
+                          <span className="text-[10px] text-slate-400">
+                            {new Date(sess.date).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 truncate">
+                          {sess.preview}
+                        </p>
+                      </button>
+                    ))}
                   </div>
-                </div>
-              </div>
-            ))}
+                ) : (
+                  <div className="text-center py-8 opacity-50">
+                    <p className="text-xs text-slate-400 uppercase tracking-widest">
+                      No previous history
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
 
-            {isLoading && !fullContent && (
-              <div className="flex gap-4">
-                <div className="w-9 h-9 bg-indigo-600 rounded-full flex items-center justify-center shadow-sm shrink-0">
-                  <Bot size={16} className="text-white" />
-                </div>
-                <div className="bg-white px-4 py-4 rounded rounded-tl-none border border-slate-100 shadow-sm flex gap-1.5 items-center">
-                  <span
-                    className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0ms" }}
-                  />
-                  <span
-                    className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "150ms" }}
-                  />
-                  <span
-                    className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "300ms" }}
-                  />
-                </div>
+            {/* --- VIEW 2: ACTIVE CHAT --- */}
+            {isChatView && (
+              <div className="space-y-6">
+                {messages.length === 0 && (
+                  <div className="grid gap-2 mb-4">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1 pl-1">
+                      Suggested
+                    </p>
+                    {currentSuggestions.map((text, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleSend(text)}
+                        className="text-left bg-white/60 hover:bg-white backdrop-blur-sm border border-slate-200/60 hover:border-indigo-200 p-3.5 rounded-xl text-slate-700 text-[13px] transition-all hover:shadow-md hover:-translate-y-0.5 flex items-center justify-between group"
+                      >
+                        {text}
+                        <ArrowRight
+                          size={14}
+                          className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-indigo-500"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {displayMessages.map((m) => (
+                  <div
+                    key={m.id}
+                    className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-slideIn`}
+                  >
+                    {m.role === "user" && (
+                      <div className="max-w-[85%] bg-slate-900 text-white px-5 py-2 rounded-2xl rounded-tr-sm text-[12px] leading-relaxed shadow-lg shadow-slate-300/20">
+                        {m.content}
+                      </div>
+                    )}
+                    {m.role === "assistant" && (
+                      <div className="max-w-[95%] group">
+                        <div className="flex gap-4">
+                          <div className="w-[2px] bg-gradient-to-b from-indigo-400/50 to-transparent min-h-[24px] shrink-0" />
+                          <div className="prose prose-slate prose-p:text-[12px] prose-p:leading-7 prose-p:text-slate-700 prose-headings:font-serif prose-headings:font-normal prose-strong:font-medium prose-strong:text-slate-900 prose-li:text-slate-600 text-[13.5px]">
+                            <ReactMarkdown>{m.content}</ReactMarkdown>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {isLoading && !fullContent && (
+                  <div className="flex gap-4 max-w-[90%] pl-0.5">
+                    <div className="w-[2px] bg-slate-200 h-6 shrink-0" />
+                    <p className="text-xs text-slate-500 flex items-center gap-x-2 font-medium animate-pulse tracking-widest uppercase mt-1">
+                      Thinking...{" "}
+                      <Sparkles size={16} className="animate-spin" />
+                    </p>
+                  </div>
+                )}
+                <div className="h-2" />
               </div>
             )}
-          </div>
-
-          {/* INPUT AREA */}
-          <div className="p-4 bg-white border-t border-slate-100 shrink-0">
-            <form
-              onSubmit={handleSubmit}
-              className="flex gap-2 relative items-end"
-            >
-              {/* FIX: Multi-line Textarea */}
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Ask Omenai Advisor"
-                rows={1}
-                className={`${INPUT_CLASS} resize-none min-h-[42px] py-3 max-h-[120px] overflow-y-auto`}
-                style={{ scrollbarWidth: "none" }} // Hide scrollbar for cleaner look (optional)
-              />
-              <button
-                type="submit"
-                disabled={(isLoading && !fullContent) || !input.trim()}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 mb-1 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center shrink-0"
-              >
-                {isLoading && !fullContent ? (
-                  <span className="animate-spin text-xs">↻</span>
-                ) : (
-                  <ArrowUp size={18} strokeWidth={2.5} />
-                )}
-              </button>
-            </form>
-
-            {/* FOOTER */}
-            <div className="mt-3 text-center">
+            <div className="mt-3 w-full absolute bottom-4 flex justify-center pb-safe">
               <button
                 onClick={switchToSupport}
-                className="text-[10px] text-slate-400 hover:text-indigo-600 font-medium transition-colors underline"
+                className="text-[11px] text-slate-400 hover:text-dark transition-colors tracking-wide font-medium"
               >
-                Need detailed help? Create a Support Ticket
+                Need human assistance?{" "}
+                <span className="underline decoration-slate-300 underline-offset-2">
+                  Create a Ticket
+                </span>
               </button>
             </div>
           </div>
+
+          {/* --- INPUT AREA --- */}
+          {isChatView && (
+            <div className="p-4 bg-white/80 backdrop-blur-xl border-t border-slate-100 shrink-0 z-20">
+              <div className="relative group shadow-sm rounded-xl">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask Omenai Advisor..."
+                  rows={1}
+                  className="w-full bg-slate-50 hover:bg-white focus:bg-white transition-all border border-slate-200 focus:border-indigo-200 rounded-xl px-4 py-3.5 pr-12 text-[15px] focus:outline-none focus:ring-4 focus:ring-indigo-50/50 resize-none max-h-[120px] placeholder:text-slate-400 font-normal"
+                  style={{ scrollbarWidth: "none" }}
+                />
+
+                {/* BUTTON: Switches between SEND (Arrow) and STOP (Square) */}
+                <button
+                  onClick={isLoading ? handleStop : () => handleSend()}
+                  disabled={!isLoading && !input.trim()}
+                  className="absolute right-2 bottom-4 p-2 bg-slate-900 text-white rounded-lg disabled:opacity-30 disabled:cursor-not-allowed hover:bg-dark transition-all shadow-sm active:scale-95"
+                >
+                  {isLoading ? (
+                    // STOP ICON
+                    <Square
+                      size={16}
+                      fill="currentColor"
+                      className="text-white"
+                    />
+                  ) : (
+                    // SEND ICON
+                    <ArrowRight size={18} strokeWidth={2} />
+                  )}
+                </button>
+              </div>
+
+              <div className="mt-3 flex justify-center pb-safe">
+                <button
+                  onClick={switchToSupport}
+                  className="text-[11px] text-slate-400 hover:text-dark transition-colors tracking-wide font-medium"
+                >
+                  Need human assistance?{" "}
+                  <span className="underline decoration-slate-300 underline-offset-2">
+                    Create a Ticket
+                  </span>
+                </button>
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

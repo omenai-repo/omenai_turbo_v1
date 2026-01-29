@@ -44,7 +44,7 @@ export default function Collections({
   if (isCatalog) {
     return (
       <div className="w-full bg-white border-b border-neutral-100">
-        <div className="container mx-auto px-6 lg:px-12 py-16">
+        <div className="px-6 lg:px-12 py-16">
           <h1 className="font-serif text-4xl text-dark  mb-2">
             Browse Collections
           </h1>
@@ -59,7 +59,7 @@ export default function Collections({
   // HOMEPAGE MODE
   return (
     <section className="w-full bg-[#f5f5f5] py-8 border-t border-neutral-200">
-      <div className="container mx-auto px-6 lg:px-12">
+      <div className="px-6 lg:px-12">
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div>
