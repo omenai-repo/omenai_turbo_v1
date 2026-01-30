@@ -35,8 +35,8 @@ async function processOrder(order: any, dbConnection: any) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
         },
+        credentials: "include",
         // Add timeout to prevent hanging requests
         signal: AbortSignal.timeout(10000), // 10 second timeout
       },

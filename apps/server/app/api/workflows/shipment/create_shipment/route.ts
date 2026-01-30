@@ -61,7 +61,6 @@ async function callShipmentAPI(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Origin: "https://omenai.app",
       },
       body: JSON.stringify(data),
       signal: controller.signal,

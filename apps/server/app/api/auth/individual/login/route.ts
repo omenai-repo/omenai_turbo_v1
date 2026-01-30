@@ -54,6 +54,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         request.headers.get("Authorization") || null;
 
       if (userAgent && userAgent === process.env.MOBILE_USER_AGENT) {
+        // TODO: Create sessionID and send back to mobile
         if (
           authorization &&
           authorization === process.env.APP_AUTHORIZATION_SECRET
@@ -62,7 +63,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             await DeviceManagement.updateOne(
               { auth_id: sessionPayload.user_id },
               { $set: { device_push_token } },
-              { upsert: true }
+              { upsert: true },
             );
           return NextResponse.json(
             {
@@ -70,7 +71,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
               message: "Login successful",
               data: { ...sessionPayload, device_push_token },
             },
-            { status: 200 }
+            { status: 200 },
           );
         }
       }
@@ -84,7 +85,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         createErrorRollbarReport(
           "auth: Deletion request removal failed",
           error,
-          500
+          500,
         );
       }
 
@@ -106,15 +107,15 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           message: "Login successful",
           data: sessionPayload,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error: any) {
       const errorResponse = handleErrorEdgeCases(error);
       createErrorRollbarReport("auth: user login", error, errorResponse.status);
       return NextResponse.json(
         { message: errorResponse?.message },
-        { status: errorResponse?.status }
+        { status: errorResponse?.status },
       );
     }
-  }
+  },
 );

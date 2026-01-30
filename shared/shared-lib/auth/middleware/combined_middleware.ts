@@ -25,6 +25,7 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
       const authorization: string = req.headers.get("Authorization") ?? "";
 
       if (userAgent === process.env.MOBILE_USER_AGENT) {
+        // TODO: Instead of just returning, validate sessionID from the request header
         if (authorization === process.env.APP_AUTHORIZATION_SECRET) {
           return handler(req);
         } else {

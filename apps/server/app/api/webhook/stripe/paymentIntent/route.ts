@@ -137,7 +137,7 @@ async function verifyStripeWebhook(
 /*                          PURCHASE EVENT ROUTER                              */
 /* -------------------------------------------------------------------------- */
 
-async function handlePurchaseEvent({ event, pi, meta }: any) {
+async function handlePurchaseEvent({ event, pi, meta, order_id }: any) {
   if (event.type === "payment_intent.processing") {
     return handlePurchaseProcessing(meta);
   }
@@ -187,17 +187,18 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
   const date = toUTCDate(new Date());
 
   const amount = paymentIntent.amount_received ?? paymentIntent.amount;
+  const order = await findPurchaseOrder(meta);
+  if (!order) return NextResponse.json({ status: 400 });
 
   const { isProcessed } = await purchaseIdempotencyCheck(
     paymentIntent.id,
-    "successful",
+    order.order_id,
   );
 
   if (isProcessed) {
     return NextResponse.json({ status: 200 });
   }
 
-  const order = await findPurchaseOrder(meta);
   if (!order) return NextResponse.json({ status: 400 });
 
   const paymentObj: {
@@ -230,38 +231,20 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     },
   };
 
+  let updateResult;
   try {
-    await retry(
-      () =>
-        PaymentLedger.updateOne(
-          {
-            provider: "stripe",
-            provider_tx_id: paymentIntent.id,
-          },
-          {
-            $setOnInsert: paymentLedgerData,
-          },
-          { upsert: true },
-        ),
-      3,
-      150,
+    updateResult = await PaymentLedger.updateOne(
+      { provider: "stripe", provider_tx_id: paymentIntent.id },
+      { $setOnInsert: paymentLedgerData },
+      { upsert: true },
     );
-  } catch (error) {
-    rollbarServerInstance.error({
-      context: "Stripe Webhook",
-      formatted_date: getFormattedDateTime(),
-      message: "Payment ledger creation failed after retries",
-      error,
-      payment_reference: paymentLedgerData?.provider_tx_id,
-    });
+  } catch (e) {
+    console.error("Payment Ledger write failed", e);
+    return NextResponse.json({ status: 500 });
+  }
 
-    return NextResponse.json(
-      {
-        message:
-          "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
-      },
-      { status: 400 },
-    );
+  if (updateResult.upsertedCount === 0) {
+    return NextResponse.json({ status: 200 });
   }
 
   const payment_information: PaymentStatusTypes = {
@@ -479,7 +462,7 @@ export async function runPurchasePostWorkflows(
       `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
-        meta,
+        meta: { ...meta, order_id: order.order_id },
         paymentIntent,
       }),
     ),
@@ -743,11 +726,12 @@ async function subscriptionIdempotencyCheck(
   return { isProcessed: false, existingPayment: null };
 }
 
-async function purchaseIdempotencyCheck(paymentId: string, status: string) {
+async function purchaseIdempotencyCheck(paymentId: string, order_id: string) {
   // Check idempotency: has this transaction been processed successfully before?
   const [existingTransaction, existingPaymentLedger] = await Promise.all([
     PurchaseTransactions.exists({
       trans_reference: paymentId,
+      order_id,
     }),
     PaymentLedger.exists({
       provider: "stripe",

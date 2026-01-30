@@ -18,7 +18,6 @@ export function useTourState(id: string) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Origin: "https://omenai.app",
           },
         });
 

@@ -43,7 +43,7 @@ export async function validateCsrf({
       sessionId,
       userAgent,
       false,
-      cookieStore
+      cookieStore,
     );
 
     if (!sessionData) {
@@ -76,7 +76,7 @@ export async function validateCsrf({
 
       if (
         !(allowedAdminAccessRoles as AdminAccessRoleTypes[]).includes(
-          adminAccessRole
+          adminAccessRole,
         )
       ) {
         return {
@@ -113,7 +113,7 @@ export async function validateSession(req: Request): Promise<{
       sessionId,
       userAgent,
       false,
-      cookieStore
+      cookieStore,
     );
 
     if (!sessionData) {

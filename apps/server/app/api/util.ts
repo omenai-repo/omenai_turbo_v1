@@ -3,7 +3,12 @@ import { ServerError } from "../../custom/errors/dictionary/errorDictionary";
 import z from "zod";
 import crypto from "node:crypto";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
-import { ClientSessionData } from "@omenai/shared-types";
+import {
+  ClientSessionData,
+  ExclusivityUpholdStatus,
+  MetaSchema,
+  PaymentLedgerTypes,
+} from "@omenai/shared-types";
 
 export function createErrorRollbarReport(
   context: string,
@@ -21,11 +26,14 @@ export function createErrorRollbarReport(
   }
 }
 
-export const MetaSchema = z.object({
+export const ZMetaSchema = z.object({
   buyer_email: z.email(),
   buyer_id: z.string().optional(),
   seller_id: z.string().optional(),
+  seller_email: z.string().optional(),
+  seller_name: z.string().optional(),
   seller_designation: z.string().optional(),
+  artwork_name: z.string().optional(),
   art_id: z.string().optional(),
   unit_price: z.union([z.string(), z.number()]).optional(),
   shipping_cost: z.union([z.string(), z.number()]).optional(),
@@ -105,4 +113,21 @@ export async function getSessionData(): Promise<ClientSessionData> {
   }
   const { user, csrfToken } = await res.json();
   return { isLoggedIn: true, user: user.userData, csrfToken };
+}
+
+export function buildPricing(
+  meta: any,
+  exclusivity_uphold_status: ExclusivityUpholdStatus,
+) {
+  const { isBreached, incident_count } = exclusivity_uphold_status;
+
+  const safeIncidents = Number(incident_count) || 0;
+  const penalty_rate = (10 * Math.min(safeIncidents, 6)) / 100;
+  const penalty_fee = isBreached
+    ? penalty_rate * Number(meta.unit_price ?? 0)
+    : 0;
+
+  const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
+
+  return { penalty_fee, commission };
 }

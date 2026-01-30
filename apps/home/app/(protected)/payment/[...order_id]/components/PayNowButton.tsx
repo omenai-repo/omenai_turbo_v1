@@ -49,7 +49,7 @@ export default function PayNowButton({
     const get_purchase_lock = await createOrderLock(
       art_id,
       user.id,
-      csrf || ""
+      csrf || "",
     );
 
     if (get_purchase_lock?.isOk) {
@@ -72,9 +72,10 @@ export default function PayNowButton({
               shipping_cost,
               unit_price,
               tax_fees,
+              seller_designation: role_access,
             },
             `${url}/verifyTransaction`,
-            csrf || ""
+            csrf || "",
           );
           checkout_session_response = checkout_session;
         } else {
@@ -93,10 +94,11 @@ export default function PayNowButton({
               shipping_cost,
               unit_price,
               tax_fees,
+              seller_designation: role_access,
             },
             `${url}/payment/success`,
             `${url}/payment/cancel?a_id=${art_id}&u_id=${user.id}`,
-            csrf || ""
+            csrf || "",
           );
           checkout_session_response = checkout_session;
         }

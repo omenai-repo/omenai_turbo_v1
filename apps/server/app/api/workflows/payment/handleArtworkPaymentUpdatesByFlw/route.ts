@@ -19,11 +19,12 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { MetaSchema } from "@omenai/shared-types";
+import { buildPricing } from "../../../util";
 
 // Map the payload of the expected data here
 type Payload = {
   provider: PaymentLedgerTypes["provider"];
-  meta: MetaSchema;
+  meta: MetaSchema & { order_id: string };
   verified_transaction: any;
 };
 
@@ -52,7 +53,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
           provider_tx_id: transaction_id,
           provider: "flutterwave",
         },
-        "payment_fulfillment_checks_done"
+        "payment_fulfillment_checks_done",
       ).lean()) as { payment_fulfillment_checks_done: boolean } | null;
 
       if (is_fulfillment_checked?.payment_fulfillment_checks_done) {
@@ -61,7 +62,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
 
       const artist = (await AccountArtist.findOne(
         { artist_id: meta.seller_id },
-        "exclusivity_uphold_status"
+        "exclusivity_uphold_status",
       ).lean()) as {
         exclusivity_uphold_status: ExclusivityUpholdStatus;
       } | null;
@@ -83,39 +84,23 @@ export const { POST } = serve<Payload>(async (ctx) => {
         meta,
         transaction_status,
         provider,
-        verified_transaction
+        verified_transaction,
       );
 
       return response;
-    }
+    },
   );
   return Boolean(update_run);
 });
-
-export function buildPricing(
-  meta: MetaSchema,
-  exclusivity_uphold_status: ExclusivityUpholdStatus
-) {
-  const { isBreached, incident_count } = exclusivity_uphold_status;
-
-  const penalty_rate = (10 * Math.min(incident_count, 6)) / 100;
-  const penalty_fee = isBreached
-    ? penalty_rate * Number(meta.unit_price ?? 0)
-    : 0;
-
-  const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
-
-  return { penalty_fee, commission };
-}
 
 async function handlePaymentTransactionUpdates(
   amount: number,
   transaction_id: string,
   exclusivity_uphold_status: ExclusivityUpholdStatus,
-  meta: MetaSchema,
+  meta: MetaSchema & { order_id: string },
   transaction_status: "failed" | "successful" | "processing",
   provider: PaymentLedgerTypes["provider"],
-  verifiedTransaction: any
+  verifiedTransaction: any,
 ) {
   const paymentFulfillmentStatus: PaymentLedgerTypes["payment_fulfillment"] = {
     transaction_created: "failed",
@@ -129,7 +114,7 @@ async function handlePaymentTransactionUpdates(
   try {
     const { penalty_fee, commission } = buildPricing(
       meta,
-      exclusivity_uphold_status
+      exclusivity_uphold_status,
     );
 
     const pricing: PurchaseTransactionPricing = {
@@ -150,6 +135,7 @@ async function handlePaymentTransactionUpdates(
       trans_recipient_role: "artist",
       trans_reference: transaction_id,
       status: transaction_status,
+      order_id: meta.order_id,
       createdBy: "webhook",
       webhookReceivedAt: new Date(),
       webhookConfirmed: true,
@@ -163,7 +149,7 @@ async function handlePaymentTransactionUpdates(
       updateSalesRecord(
         transaction_id,
         pricing.unit_price,
-        meta.seller_id ?? ""
+        meta.seller_id ?? "",
       ),
       updateArtworkRecordAsSold(meta.art_id ?? ""),
       updateMassOrderRecords(meta.art_id ?? "", meta.buyer_id ?? ""),
@@ -190,7 +176,7 @@ async function handlePaymentTransactionUpdates(
       provider: "flutterwave",
     };
     const isAllUpdatesDone = Object.values(paymentFulfillmentStatus).every(
-      (status) => status === "done"
+      (status) => status === "done",
     );
 
     // Update the Payment Ledger with the fulfillment status
@@ -202,7 +188,7 @@ async function handlePaymentTransactionUpdates(
           payment_fulfillment: paymentFulfillmentStatus,
           payment_fulfillment_checks_done: isAllUpdatesDone,
         },
-      }
+      },
     );
     if (paymentLedgerUpdate.modifiedCount === 0) {
       rollbarServerInstance.error({
@@ -225,7 +211,7 @@ async function handlePaymentTransactionUpdates(
 export async function handleWalletIncrement(
   pricing: PurchaseTransactionPricing,
   seller_id: string,
-  transaction_id: string
+  transaction_id: string,
 ): Promise<FulfillmentStepResult> {
   const walletIncrement =
     pricing.amount_total -
@@ -242,7 +228,7 @@ export async function handleWalletIncrement(
       {
         $inc: { pending_balance: walletIncrement },
         $push: { applied_payment_refs: transaction_id },
-      }
+      },
     );
 
     // Case 1: Wallet updated successfully
@@ -298,13 +284,13 @@ export async function handleWalletIncrement(
 }
 
 export async function createPurchaseTransactionEntry(
-  transaction: Omit<PurchaseTransactionModelSchemaTypes, "trans_id">
+  transaction: Omit<PurchaseTransactionModelSchemaTypes, "trans_id">,
 ): Promise<FulfillmentStepResult> {
   try {
     await PurchaseTransactions.updateOne(
       { trans_reference: transaction.trans_reference },
       { $setOnInsert: transaction },
-      { upsert: true }
+      { upsert: true },
     );
 
     return {
@@ -329,7 +315,7 @@ export async function createPurchaseTransactionEntry(
 export async function updateSalesRecord(
   tx_ref: string,
   unit_price: number,
-  seller_id: string
+  seller_id: string,
 ) {
   const { month, year } = getCurrentMonthAndYear();
 
@@ -345,7 +331,7 @@ export async function updateSalesRecord(
           trans_ref: tx_ref,
         },
       },
-      { upsert: true }
+      { upsert: true },
     );
 
     return {
@@ -367,13 +353,13 @@ export async function updateSalesRecord(
 }
 
 export async function updateArtworkRecordAsSold(
-  art_id: string
+  art_id: string,
 ): Promise<FulfillmentStepResult> {
   try {
     const artwork = await Artworkuploads.findOneAndUpdate(
       { art_id, availability: true }, // 🔐 guard
       { $set: { availability: false } },
-      { new: true }
+      { new: true },
     );
 
     // Case 1: We successfully marked it sold
@@ -436,7 +422,7 @@ export async function updateArtworkRecordAsSold(
 
 async function updateMassOrderRecords(
   art_id: string,
-  buyer_id: string
+  buyer_id: string,
 ): Promise<FulfillmentStepResult> {
   try {
     const result = await CreateOrder.updateMany(
@@ -449,7 +435,7 @@ async function updateMassOrderRecords(
       },
       {
         $set: { availability: false },
-      }
+      },
     );
 
     // Case 1: We actually updated some records

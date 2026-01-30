@@ -445,6 +445,7 @@ export type PaymentStatusTypes = {
   transaction_date: Date;
   transaction_reference: string;
   invoice_reference?: string;
+  artist_wallet_increment?: number;
 };
 
 export type PaymentLedgerTypes = {
@@ -474,7 +475,7 @@ export type MetaSchema = {
   shipping_cost: number;
   unit_price: number;
   tax_fees: number;
-  commission?: number;
+  seller_designation: string;
 };
 
 export type PaymentLedgerPayloadTypes = {
@@ -603,6 +604,7 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_recipient_role: "gallery" | "artist";
   status: "successful" | "processing" | "failed";
   provider: "flutterwave" | "stripe";
+  order_id: string;
   invoice_reference?: string;
   createdBy?: "webhook" | "verification"; // Who created this record
   verifiedAt?: Date; // When verification route processed it

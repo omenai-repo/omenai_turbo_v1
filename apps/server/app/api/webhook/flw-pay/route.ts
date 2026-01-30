@@ -16,12 +16,18 @@ import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
-import { createErrorRollbarReport, MetaSchema, retry } from "../../util";
+import {
+  createErrorRollbarReport,
+  ZMetaSchema,
+  retry,
+  buildPricing,
+} from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 /* ----------------------------- Schema ------------------------------------- */
 
 /* ----------------------------- Utilities ---------------------------------- */
@@ -170,7 +176,7 @@ async function handlePurchaseTransaction(
   verified_transaction: any,
   reqBody: any,
 ) {
-  const metaParse = MetaSchema.safeParse(
+  const metaParse = ZMetaSchema.safeParse(
     verified_transaction?.data?.meta ?? null,
   );
   if (!metaParse.success) return NextResponse.json({ status: 400 });
@@ -179,11 +185,17 @@ async function handlePurchaseTransaction(
 
   const meta = metaParse.data;
 
-  const order_info = await CreateOrder.findOne({
-    "buyer_details.email": meta.buyer_email,
-    "artwork_data.art_id": meta.art_id,
-    "order_accepted.status": "accepted",
-  });
+  const [order_info, artist] = await Promise.all([
+    CreateOrder.findOne({
+      "buyer_details.email": meta.buyer_email,
+      "artwork_data.art_id": meta.art_id,
+      "order_accepted.status": "accepted",
+    }),
+    AccountArtist.findOne(
+      { artist_id: meta.seller_id },
+      "exclusivity_uphold_status",
+    ),
+  ]);
 
   if (!order_info) return NextResponse.json({ status: 200 });
   const flwStatus = String(verified_transaction.data.status).toLowerCase();
@@ -201,10 +213,14 @@ async function handlePurchaseTransaction(
     return NextResponse.json({ status: 200 });
   }
 
+  if (order_info.payment_information?.status === "completed") {
+    return NextResponse.json({ status: 200 });
+  }
   // Check idempotency: has this transaction been processed successfully before?
   const [existingTransaction, existingPaymentLedger] = await Promise.all([
     PurchaseTransactions.exists({
       trans_reference: verified_transaction.data.id,
+      order_id: order_info.order_id,
     }),
     PaymentLedger.exists({
       provider: "flutterwave",
@@ -245,8 +261,9 @@ async function handlePurchaseTransaction(
     },
   };
 
+  let result;
   try {
-    await retry(
+    result = await retry(
       () =>
         PaymentLedger.updateOne(
           {
@@ -256,7 +273,7 @@ async function handlePurchaseTransaction(
           {
             $setOnInsert: paymentLedgerData,
           },
-          { upsert: true },
+          { upsert: true }, // Atomically safe
         ),
       3,
       150,
@@ -279,6 +296,23 @@ async function handlePurchaseTransaction(
     );
   }
 
+  if (result.upsertedCount === 0) {
+    console.log("Transaction already processed (caught by atomic upsert).");
+    return NextResponse.json({ status: 200 });
+  }
+
+  const { penalty_fee, commission } = buildPricing(
+    meta,
+    artist.exclusivity_uphold_status,
+  );
+  const wallet_increment_amount = Math.round(
+    Number(verified_transaction.data.amount) -
+      (commission +
+        penalty_fee +
+        Number(meta.tax_fees ?? 0) +
+        Number(meta.shipping_cost ?? 0)),
+  );
+
   // Update order with payment information before proceeding
   const nowUTC = toUTCDate(new Date());
 
@@ -287,6 +321,7 @@ async function handlePurchaseTransaction(
     transaction_value: Math.round(Number(verified_transaction.data.amount)),
     transaction_date: nowUTC,
     transaction_reference: verified_transaction.data.id,
+    artist_wallet_increment: wallet_increment_amount,
   };
 
   // Update order with payment information
@@ -357,7 +392,7 @@ async function handlePurchaseTransaction(
         `flw_payment_workflow_${paymentObj.id}_workflow`,
         JSON.stringify({
           provider: "flutterwave",
-          meta,
+          meta: { ...meta, order_id: order_info.order_id },
           verified_transaction: paymentObj,
         }),
       ),

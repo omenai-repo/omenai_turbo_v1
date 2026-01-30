@@ -36,7 +36,6 @@ const client = new Taxjar({
 
 const API_URL = getApiUrl();
 const HEADERS = {
-  Origin: "https://omenai.app",
   "Content-Type": "application/json",
 };
 
@@ -44,7 +43,7 @@ const calculate_taxes = async (
   origin_address: AddressTypes,
   destination_address: AddressTypes,
   amount: number,
-  shipping: number
+  shipping: number,
 ): Promise<number> => {
   if (
     origin_address.countryCode !== "US" &&
@@ -80,7 +79,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   await connectMongoDB();
 
@@ -102,7 +101,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const shipment_information = await buildShipmentInformation(
       order,
       data.dimensions,
-      shipping_rate_data
+      shipping_rate_data,
     );
 
     const expiresAt = buildExpiryDate();
@@ -126,19 +125,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Order successfully accepted.", data: shipment_information },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: accept order request",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });
@@ -150,7 +149,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 function validatePayload(data: any) {
   if (!data?.order_id || !data?.dimensions) {
     throw new BadRequestError(
-      "Invalid params - Order ID or dimensions is missing"
+      "Invalid params - Order ID or dimensions is missing",
     );
   }
 }
@@ -168,19 +167,19 @@ async function validateSellerSubscription(order: CreateOrderModelTypes) {
 
   const active_subscription = await Subscriptions.findOne(
     { "customer.gallery_id": order.seller_details.id },
-    "plan_details status"
+    "plan_details status",
   );
 
   if (active_subscription?.status !== "active") {
     throw new ForbiddenError(
-      "Please activate a subscription to access this feature"
+      "Please activate a subscription to access this feature",
     );
   }
 }
 
 async function getShippingRate(
   order: CreateOrderModelTypes,
-  dimensions: ShipmentDimensions
+  dimensions: ShipmentDimensions,
 ) {
   const payload: ShipmentRateRequestTypes = {
     originCountryCode: order.shipping_details.addresses.origin.countryCode,
@@ -201,6 +200,7 @@ async function getShippingRate(
       method: "POST",
       body: JSON.stringify(payload),
       headers: HEADERS,
+      credentials: "include",
     });
 
     const json = await response.json();
@@ -215,7 +215,7 @@ async function getShippingRate(
     createErrorRollbarReport(
       "order: calculate shipping rate",
       error,
-      error_response.status
+      error_response.status,
     );
     throw error;
   }
@@ -224,7 +224,7 @@ async function getShippingRate(
 async function buildShipmentInformation(
   order: CreateOrderModelTypes,
   dimensions: ShipmentDimensions,
-  rate: any
+  rate: any,
 ) {
   const origin = order.shipping_details.addresses.origin;
   const destination = order.shipping_details.addresses.destination;
@@ -233,7 +233,7 @@ async function buildShipmentInformation(
     origin,
     destination,
     order.artwork_data.pricing.usd_price,
-    Number(rate.chargeable_price_in_usd)
+    Number(rate.chargeable_price_in_usd),
   );
 
   return {
@@ -268,7 +268,7 @@ async function updateOrder({
 }) {
   if (!expiresAt)
     throw new Error(
-      "Something went wrong. Please try again or contact support"
+      "Something went wrong. Please try again or contact support",
     );
   await CreateOrder.updateOne(
     { order_id },
@@ -281,14 +281,14 @@ async function updateOrder({
         "order_accepted.status": "accepted",
         expiresAt,
       },
-    }
+    },
   );
 }
 
 async function notifyBuyer(order: CreateOrderModelTypes) {
   const buyer_push_token = await DeviceManagement.findOne(
     { auth_id: order.buyer_details.id },
-    "device_push_token"
+    "device_push_token",
   );
 
   if (!buyer_push_token?.device_push_token) return;
@@ -311,12 +311,12 @@ async function notifyBuyer(order: CreateOrderModelTypes) {
   await createWorkflow(
     "/api/workflows/notification/pushNotification",
     `notification_workflow_buyer_${order.order_id}_${generateDigit(2)}`,
-    JSON.stringify(payload)
+    JSON.stringify(payload),
   ).catch((error) => {
     createErrorRollbarReport(
       "order: failed to send buyer notification",
       error,
-      500
+      500,
     );
   });
 }

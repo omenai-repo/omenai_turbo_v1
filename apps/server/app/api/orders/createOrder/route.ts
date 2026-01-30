@@ -125,8 +125,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         }),
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
         },
+        credentials: "include",
       },
     );
 

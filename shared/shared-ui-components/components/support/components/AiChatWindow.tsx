@@ -210,7 +210,6 @@ export function AiChatWindow({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
         },
         body: JSON.stringify({ messages: updatedMessages, pageContext }),
         signal: controller.signal,

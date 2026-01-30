@@ -16,6 +16,7 @@ const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
     trans_initiator_id: { type: String, required: true, index: true },
     trans_recipient_id: { type: String, required: true, index: true },
     trans_recipient_role: { type: String, required: true },
+    order_id: { type: String, required: true },
     status: { type: String, required: true },
     provider: { type: String, enum: ["flutterwave, stripe"], required: true },
     verifiedAt: { type: Date },
@@ -23,7 +24,7 @@ const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
     webhookReceivedAt: { type: Date },
     webhookConfirmed: { type: Boolean },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const PurchaseTransactions =

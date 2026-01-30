@@ -19,7 +19,7 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 
 type Payload = {
   provider: PaymentLedgerTypes["provider"];
-  meta: MetaSchema & { commission: string };
+  meta: MetaSchema & { commission: string; order_id: string };
   paymentIntent: any;
 };
 
@@ -44,7 +44,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
           provider_tx_id: paymentIntent.id,
           provider: "stripe",
         },
-        "payment_fulfillment_checks_done"
+        "payment_fulfillment_checks_done",
       ).lean()) as { payment_fulfillment_checks_done: boolean } | null;
 
       if (is_fulfillment_checked?.payment_fulfillment_checks_done) {
@@ -53,24 +53,24 @@ export const { POST } = serve<Payload>(async (ctx) => {
       const response: boolean = await handlePaymentTransactionUpdatesByStripe(
         paymentIntent,
         meta,
-        provider
+        provider,
       );
 
       return response;
-    }
+    },
   );
 
   return Boolean(update_run);
 });
 
 async function createPurchaseTransactionEntry(
-  transaction: Omit<PurchaseTransactionModelSchemaTypes, "trans_id">
+  transaction: Omit<PurchaseTransactionModelSchemaTypes, "trans_id">,
 ): Promise<FulfillmentStepResult> {
   try {
     await PurchaseTransactions.updateOne(
       { trans_reference: transaction.trans_reference },
       { $setOnInsert: transaction },
-      { upsert: true }
+      { upsert: true },
     );
 
     return {
@@ -95,7 +95,7 @@ async function createPurchaseTransactionEntry(
 async function updateSalesRecord(
   tx_ref: string,
   unit_price: number,
-  seller_id: string
+  seller_id: string,
 ) {
   const { month, year } = getCurrentMonthAndYear();
 
@@ -111,7 +111,7 @@ async function updateSalesRecord(
           trans_ref: tx_ref,
         },
       },
-      { upsert: true }
+      { upsert: true },
     );
 
     return {
@@ -133,13 +133,13 @@ async function updateSalesRecord(
 }
 
 async function updateArtworkRecordAsSold(
-  art_id: string
+  art_id: string,
 ): Promise<FulfillmentStepResult> {
   try {
     const artwork = await Artworkuploads.findOneAndUpdate(
       { art_id, availability: true }, // 🔐 guard
       { $set: { availability: false } },
-      { new: true }
+      { new: true },
     );
 
     // Case 1: We successfully marked it sold
@@ -202,7 +202,7 @@ async function updateArtworkRecordAsSold(
 
 async function updateMassOrderRecords(
   art_id: string,
-  buyer_id: string
+  buyer_id: string,
 ): Promise<FulfillmentStepResult> {
   try {
     const result = await CreateOrder.updateMany(
@@ -215,7 +215,7 @@ async function updateMassOrderRecords(
       },
       {
         $set: { availability: false },
-      }
+      },
     );
 
     // Case 1: We actually updated some records
@@ -250,8 +250,8 @@ async function updateMassOrderRecords(
 
 async function handlePaymentTransactionUpdatesByStripe(
   paymentIntent: any,
-  meta: MetaSchema & { commission: string },
-  provider: PaymentLedgerTypes["provider"]
+  meta: MetaSchema & { commission: string; order_id: string },
+  provider: PaymentLedgerTypes["provider"],
 ) {
   const amount = paymentIntent.amount_received ?? paymentIntent.amount;
   const paymentFulfillmentStatus: PaymentLedgerTypes["payment_fulfillment"] = {
@@ -279,6 +279,7 @@ async function handlePaymentTransactionUpdatesByStripe(
       trans_initiator_id: meta.buyer_id,
       trans_recipient_role: "gallery",
       trans_reference: paymentIntent.id,
+      order_id: meta.order_id,
       status: "successful",
       provider,
     };
@@ -289,7 +290,7 @@ async function handlePaymentTransactionUpdatesByStripe(
       updateSalesRecord(
         paymentIntent.id,
         pricing.unit_price,
-        meta.seller_id ?? ""
+        meta.seller_id ?? "",
       ),
       updateArtworkRecordAsSold(meta.art_id ?? ""),
       updateMassOrderRecords(meta.art_id ?? "", meta.buyer_id ?? ""),
@@ -315,7 +316,7 @@ async function handlePaymentTransactionUpdatesByStripe(
       provider: "stripe",
     };
     const isAllUpdatesDone = Object.values(paymentFulfillmentStatus).every(
-      (status) => status === "done"
+      (status) => status === "done",
     );
 
     // Update the Payment Ledger with the fulfillment status
@@ -328,7 +329,7 @@ async function handlePaymentTransactionUpdatesByStripe(
           payment_fulfillment_checks_done: isAllUpdatesDone,
           needs_manual_review: isAllUpdatesDone && false,
         },
-      }
+      },
     );
     if (paymentLedgerUpdate.modifiedCount === 0) {
       rollbarServerInstance.error({

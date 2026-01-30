@@ -28,7 +28,7 @@ import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLoc
 /* ----------------------------- Route ----------------------------------- */
 
 export const POST = withRateLimit(standardRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const { payment_intent_id, checkout_session_id } = await request.json();
@@ -44,7 +44,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           success: false,
           message: "Payment failed",
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -58,7 +58,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         paymentIntent,
         success: true,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const errorResponse = handleErrorEdgeCases(error);
@@ -66,7 +66,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     createErrorRollbarReport(
       "transactions: verify Stripe transaction",
       error,
-      errorResponse.status
+      errorResponse.status,
     );
 
     return NextResponse.json(
@@ -74,7 +74,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         success: false,
         message: errorResponse.message || "Payment verification failed",
       },
-      { status: errorResponse.status || 500 }
+      { status: errorResponse.status || 500 },
     );
   }
 });
@@ -83,18 +83,24 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
 async function verifyStripeTransaction(
   paymentIntent: any,
-  meta: MetaSchema & { commission: string }
+  meta: MetaSchema & { commission: string },
 ) {
   const date = toUTCDate(new Date());
+  const order = (await CreateOrder.findOne({
+    "buyer_details.email": meta.buyer_email,
+    "artwork_data.art_id": meta.art_id,
+    "order_accepted.status": "accepted",
+  }).lean()) as CreateOrderModelTypes | null;
 
-  // if (!meta?.buyer_email || !meta?.art_id) {
-  //   throw new ServerError("Invalid metadata");
-  // }
+  if (!order) return NextResponse.json({ status: 400 });
 
-  // Idempotency guards
+  if (order.payment_information?.status === "completed") {
+    return NextResponse.json({ status: 200 });
+  }
   const [existingTransaction, existingPaymentLedger] = await Promise.all([
     PurchaseTransactions.exists({
       trans_reference: paymentIntent.id,
+      order_id: order.order_id,
     }),
     PaymentLedger.exists({
       provider: "stripe",
@@ -106,20 +112,11 @@ async function verifyStripeTransaction(
   if (existingTransaction || existingPaymentLedger) {
     await PurchaseTransactions.updateOne(
       { trans_reference: paymentIntent.id },
-      { $set: { verifiedAt: toUTCDate(new Date()) } }
+      { $set: { verifiedAt: toUTCDate(new Date()) } },
     );
     return;
   }
 
-  const order = (await CreateOrder.findOne({
-    "buyer_details.email": meta.buyer_email,
-    "artwork_data.art_id": meta.art_id,
-    "order_accepted.status": "accepted",
-  }).lean()) as CreateOrderModelTypes | null;
-
-  if (!order) {
-    throw new ServerError("Order not found");
-  }
   const paymentObj: {
     amount: number;
     amount_received: number;
@@ -132,7 +129,6 @@ async function verifyStripeTransaction(
     currency: paymentIntent.currency,
   };
 
-  // ✅ Correct PaymentIntent amount handling
   const amount = paymentIntent.amount_received ?? paymentIntent.amount ?? 0;
 
   const paymentLedgerData = {
@@ -152,19 +148,21 @@ async function verifyStripeTransaction(
     },
   };
 
-  await retry(
-    () =>
-      PaymentLedger.updateOne(
-        {
-          provider: "stripe",
-          provider_tx_id: paymentIntent.id,
-        },
-        { $setOnInsert: paymentLedgerData },
-        { upsert: true }
-      ),
-    3,
-    150
-  );
+  let updateResult;
+  try {
+    updateResult = await PaymentLedger.updateOne(
+      { provider: "stripe", provider_tx_id: paymentIntent.id },
+      { $setOnInsert: paymentLedgerData },
+      { upsert: true },
+    );
+  } catch (e) {
+    console.error("Payment Ledger write failed", e);
+    return NextResponse.json({ status: 500 });
+  }
+
+  if (updateResult.upsertedCount === 0) {
+    return NextResponse.json({ status: 200 });
+  }
 
   const payment_information: PaymentStatusTypes = {
     status: "completed",
@@ -175,7 +173,7 @@ async function verifyStripeTransaction(
 
   const updateOrder = await CreateOrder.updateOne(
     { order_id: order.order_id },
-    { $set: { payment_information, hold_status: null } }
+    { $set: { payment_information, hold_status: null } },
   );
 
   if (updateOrder.modifiedCount === 0) {
@@ -224,7 +222,7 @@ async function resolvePaymentIntent({
     }
 
     const paymentIntent = await stripe.paymentIntents.retrieve(
-      session.payment_intent
+      session.payment_intent,
     );
     return {
       paymentIntent,
@@ -245,12 +243,12 @@ async function runPurchasePostWorkflows(
     currency: string;
   },
   order: CreateOrderModelTypes,
-  meta: MetaSchema & { commission: string }
+  meta: MetaSchema & { commission: string },
 ) {
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
   const price = formatPrice(
     (paymentIntent.amount_received ?? paymentIntent.amount) / 100,
-    currency
+    currency,
   );
 
   const buyerAddress = order.shipping_details.addresses.destination;
@@ -297,11 +295,11 @@ async function runPurchasePostWorkflows(
   const [buyerPush, sellerPush] = await Promise.all([
     DeviceManagement.findOne(
       { auth_id: order.buyer_details.id },
-      "device_push_token"
+      "device_push_token",
     ),
     DeviceManagement.findOne(
       { auth_id: order.seller_details.id },
-      "device_push_token"
+      "device_push_token",
     ),
   ]);
 
@@ -327,8 +325,8 @@ async function runPurchasePostWorkflows(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notif_buyer_${order.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -338,7 +336,7 @@ async function runPurchasePostWorkflows(
       title: "Payment received",
       body: `A payment of ${formatPrice(
         order.artwork_data.pricing.usd_price,
-        "USD"
+        "USD",
       )} has been made for your artpiece`,
       data: {
         type: "orders",
@@ -355,8 +353,8 @@ async function runPurchasePostWorkflows(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notif_seller_${order.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -364,7 +362,7 @@ async function runPurchasePostWorkflows(
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
       `create_shipment_${order.order_id}`,
-      JSON.stringify({ order_id: order.order_id })
+      JSON.stringify({ order_id: order.order_id }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
@@ -380,23 +378,23 @@ async function runPurchasePostWorkflows(
         seller_email: order.seller_details.email,
         seller_name: order.seller_details.name,
         seller_entity: "gallery",
-      })
+      }),
     ),
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
       `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
-        meta,
+        meta: { ...meta, order_id: order.order_id },
         paymentIntent,
-      })
+      }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
       `send_payment_invoice${invoice.invoiceNumber}_workflow`,
       JSON.stringify({
         invoice,
-      })
+      }),
     ),
     ...jobs,
   ]);

@@ -20,11 +20,10 @@ async function callCreateNotificationApi(data: any): Promise<any> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
         },
         body: JSON.stringify(data),
         signal: controller.signal,
-      }
+      },
     );
     clearTimeout(timeout);
 
@@ -33,7 +32,7 @@ async function callCreateNotificationApi(data: any): Promise<any> {
 
     if (!response.ok) {
       throw new ServerError(
-        result?.message || "Unable to create notification record"
+        result?.message || "Unable to create notification record",
       );
     }
 
@@ -45,7 +44,7 @@ async function callCreateNotificationApi(data: any): Promise<any> {
       throw new ServerError("Notification API request timed out");
     }
     throw new ServerError(
-      `Failed to create notification: ${error?.message || error}`
+      `Failed to create notification: ${error?.message || error}`,
     );
   }
 }
@@ -66,12 +65,9 @@ export const { POST } = serve<NotificationPayload>(async (ctx) => {
       ]);
 
       // Check both succeeded
-      if (
-        !createNotificationHistory ||
-          sendNotification?.success !== true
-      ) {
+      if (!createNotificationHistory || sendNotification?.success !== true) {
         throw new ServerError(
-          `Notification failed: history=${!!createNotificationHistory}, send=${sendNotification?.success}`
+          `Notification failed: history=${!!createNotificationHistory}, send=${sendNotification?.success}`,
         );
       }
 

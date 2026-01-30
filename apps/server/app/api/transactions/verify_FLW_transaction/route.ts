@@ -13,7 +13,7 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { buildPricing, createErrorRollbarReport } from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
@@ -21,6 +21,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 /* -------------------------------- Schema -------------------------------- */
 
@@ -49,13 +50,13 @@ async function verifyFlutterwaveTransaction(transactionId: string) {
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   if (!res.ok) {
     const body = await res.text().catch(() => null);
     throw new Error(
-      `Flutterwave verification failed: ${res.status} ${body || ""}`
+      `Flutterwave verification failed: ${res.status} ${body || ""}`,
     );
   }
 
@@ -65,12 +66,12 @@ async function verifyFlutterwaveTransaction(transactionId: string) {
 async function sendNotifications(order_info: any) {
   const buyer_push = await DeviceManagement.findOne(
     { auth_id: order_info.buyer_details.id },
-    "device_push_token"
+    "device_push_token",
   );
 
   const seller_push = await DeviceManagement.findOne(
     { auth_id: order_info.seller_details.id },
-    "device_push_token"
+    "device_push_token",
   );
 
   const jobs: Promise<unknown>[] = [];
@@ -95,8 +96,8 @@ async function sendNotifications(order_info: any) {
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notification_buyer_${order_info.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -106,7 +107,7 @@ async function sendNotifications(order_info: any) {
       title: "Payment received",
       body: `A payment of ${formatPrice(
         order_info.artwork_data.pricing.usd_price,
-        "USD"
+        "USD",
       )} has been made for your artpiece`,
       data: {
         type: "orders",
@@ -123,8 +124,8 @@ async function sendNotifications(order_info: any) {
       createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notification_seller_${order_info.order_id}_workflow`,
-        JSON.stringify(payload)
-      )
+        JSON.stringify(payload),
+      ),
     );
   }
 
@@ -140,7 +141,7 @@ export async function fireAndForget(p: Promise<unknown>) {
     createErrorRollbarReport(
       "Flutterwave webhook fire-and-forget error",
       err as any,
-      500
+      500,
     );
   }
 }
@@ -148,7 +149,7 @@ export async function fireAndForget(p: Promise<unknown>) {
 export async function retry<T>(
   fn: () => Promise<T>,
   retries = 3,
-  delayMs = 100
+  delayMs = 100,
 ): Promise<T> {
   let lastError;
 
@@ -160,7 +161,7 @@ export async function retry<T>(
 
       if (attempt < retries) {
         await new Promise(
-          (res) => setTimeout(res, delayMs * attempt) // simple backoff
+          (res) => setTimeout(res, delayMs * attempt), // simple backoff
         );
       }
     }
@@ -171,7 +172,7 @@ export async function retry<T>(
 /* ------------------------------ Route ------------------------------------ */
 
 export const POST = withRateLimit(standardRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -181,16 +182,16 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     if (!data.transaction_id) {
       return NextResponse.json(
         { ok: false, success: false, message: "Transaction ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     /* 1️⃣ Verify with Flutterwave */
     const verified_transaction = await verifyFlutterwaveTransaction(
-      data.transaction_id
+      data.transaction_id,
     );
     const metaParse = MetaSchema.safeParse(
-      verified_transaction?.data?.meta ?? null
+      verified_transaction?.data?.meta ?? null,
     );
     if (!metaParse.success) {
       rollbarServerInstance.error({
@@ -203,17 +204,22 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     const meta = metaParse.data;
 
-    /* 2️⃣ Fetch order + artist (same as before) */
-    const order_info = await CreateOrder.findOne({
-      "buyer_details.email": meta.buyer_email,
-      "artwork_data.art_id": meta.art_id,
-      "order_accepted.status": "accepted",
-    });
+    const [order_info, artist] = await Promise.all([
+      CreateOrder.findOne({
+        "buyer_details.email": meta.buyer_email,
+        "artwork_data.art_id": meta.art_id,
+        "order_accepted.status": "accepted",
+      }),
+      AccountArtist.findOne(
+        { artist_id: meta.seller_id },
+        "exclusivity_uphold_status",
+      ),
+    ]);
 
     if (!order_info)
       return NextResponse.json(
         { message: "Order not found. Please contact support", success: false },
-        { status: 400 }
+        { status: 400 },
       );
 
     const flwStatus = String(verified_transaction.data.status).toLowerCase();
@@ -224,7 +230,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           email: meta.buyer_email,
           name: order_info.buyer_details.name,
           artwork: order_info.artwork_data.title,
-        })
+        }),
       );
       return NextResponse.json(
         {
@@ -232,12 +238,14 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           status: flwStatus,
           message: `Payment transaction ${flwStatus}`,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const nowUTC = toUTCDate(new Date());
-
+    if (order_info.payment_information?.status === "completed") {
+      return NextResponse.json({ status: 200 });
+    }
     // Check idempotency: has this transaction been processed successfully before?
     const [existingTransaction, existingPaymentLedger] = await Promise.all([
       PurchaseTransactions.exists({
@@ -253,14 +261,14 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     if (existingTransaction || existingPaymentLedger) {
       await PurchaseTransactions.updateOne(
         { trans_reference: verified_transaction.data.id },
-        { $set: { verifiedAt: toUTCDate(new Date()) } }
+        { $set: { verifiedAt: toUTCDate(new Date()) } },
       );
       return NextResponse.json(
         {
           message: "Transaction already processed successfully",
           status: flwStatus,
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -281,8 +289,9 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       payment_fulfillment: {},
     };
 
+    let result;
     try {
-      await retry(
+      result = await retry(
         () =>
           PaymentLedger.updateOne(
             {
@@ -292,10 +301,10 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
             {
               $setOnInsert: paymentLedgerData,
             },
-            { upsert: true }
+            { upsert: true }, // Atomically safe
           ),
         3,
-        150
+        150,
       );
     } catch (error) {
       rollbarServerInstance.error({
@@ -311,22 +320,38 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           message:
             "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    /* 4️⃣ Successful payment → update order immediately */
-    // Secure this operation to make it foolproof against network failures
+    if (result.upsertedCount === 0) {
+      console.log("Transaction already processed (caught by atomic upsert).");
+      return NextResponse.json({ status: 200 });
+    }
+
+    const { penalty_fee, commission } = buildPricing(
+      meta,
+      artist.exclusivity_uphold_status,
+    );
+    const wallet_increment_amount = Math.round(
+      Number(verified_transaction.data.amount) -
+        (commission +
+          penalty_fee +
+          Number(meta.tax_fees ?? 0) +
+          Number(meta.shipping_cost ?? 0)),
+    );
+
     const payment_information: PaymentStatusTypes = {
       status: "completed",
       transaction_value: Math.round(Number(verified_transaction.data.amount)),
       transaction_date: nowUTC,
       transaction_reference: verified_transaction.data.id,
+      artist_wallet_increment: wallet_increment_amount,
     };
 
     const updateOrder = await CreateOrder.updateOne(
       { order_id: order_info.order_id },
-      { $set: { payment_information, hold_status: null } }
+      { $set: { payment_information, hold_status: null } },
     );
 
     if (updateOrder.modifiedCount === 0) {
@@ -341,7 +366,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
             "We’re having trouble updating your order, but your payment is safe.We’ll keep retrying automatically — please don’t make another payment. If this continues, contact support for help",
           success: false,
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -393,10 +418,10 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         `flw_payment_workflow_${verified_transaction.data.id}_workflow`,
         JSON.stringify({
           provider: "flutterwave",
-          meta,
+          meta: { ...meta, order_id: order_info.order_id },
           verified_transaction,
-        })
-      )
+        }),
+      ),
     );
 
     // Create shipment workflow
@@ -404,8 +429,8 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       createWorkflow(
         "/api/workflows/shipment/create_shipment",
         `create_shipment_${order_info.order_id}_workflow`,
-        JSON.stringify({ order_id: order_info.order_id })
-      )
+        JSON.stringify({ order_id: order_info.order_id }),
+      ),
     );
 
     await fireAndForget(
@@ -423,8 +448,8 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           seller_email: order_info.seller_details.email,
           seller_name: order_info.seller_details.name,
           seller_entity: "artist",
-        })
-      )
+        }),
+      ),
     );
 
     await fireAndForget(
@@ -433,8 +458,8 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         `send_payment_invoice${invoice.invoiceNumber}_workflow`,
         JSON.stringify({
           invoice,
-        })
-      )
+        }),
+      ),
     );
 
     // Send notifications
@@ -451,7 +476,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     createErrorRollbarReport(
       "transactions: verify Flutterwave transaction",
       error,
-      errorResponse.status
+      errorResponse.status,
     );
 
     return NextResponse.json(
@@ -459,7 +484,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         success: false,
         message: errorResponse.message || "Payment verification failed",
       },
-      { status: errorResponse.status || 500 }
+      { status: errorResponse.status || 500 },
     );
   }
 });

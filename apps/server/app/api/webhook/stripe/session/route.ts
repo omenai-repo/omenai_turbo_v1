@@ -80,7 +80,7 @@ async function handleCheckoutCompleted(event: any) {
   const date = toUTCDate(new Date());
 
   if (paymentIntent.status !== "succeeded") {
-    // Send failed mail
+    //TODO: Send payment failed mail
     return NextResponse.json({ status: 400 });
   }
 
@@ -88,32 +88,6 @@ async function handleCheckoutCompleted(event: any) {
   if (!meta?.buyer_email || !meta?.art_id) {
     return NextResponse.json({ status: 400 });
   }
-
-  // Check idempotency: has this transaction been processed successfully before?
-  const [existingTransaction, existingPaymentLedger] = await Promise.all([
-    PurchaseTransactions.exists({
-      trans_reference: paymentIntent.id,
-    }),
-    PaymentLedger.exists({
-      provider: "stripe",
-      provider_tx_id: paymentIntent.id,
-      payment_fulfillment_checks_done: true,
-    }),
-  ]);
-
-  if (existingTransaction || existingPaymentLedger) {
-    await PurchaseTransactions.updateOne(
-      { trans_reference: paymentIntent.id },
-      {
-        $set: {
-          webhookReceivedAt: toUTCDate(new Date()),
-          webhookConfirmed: true,
-        },
-      },
-    );
-    return NextResponse.json({ status: 200 });
-  }
-
   const order = (await CreateOrder.findOne({
     "buyer_details.email": meta.buyer_email,
     "artwork_data.art_id": meta.art_id,
@@ -121,6 +95,22 @@ async function handleCheckoutCompleted(event: any) {
   }).lean()) as unknown as CreateOrderModelTypes | null;
 
   if (!order) return NextResponse.json({ status: 400 });
+
+  if (order.payment_information?.status === "completed") {
+    return NextResponse.json({ status: 200 });
+  }
+
+  const [existingTransaction, existingPaymentLedger] = await Promise.all([
+    PurchaseTransactions.exists({
+      trans_reference: paymentIntent.id,
+      order_id: order.order_id,
+    }),
+    PaymentLedger.exists({ provider_tx_id: paymentIntent.id }),
+  ]);
+
+  if (existingTransaction || existingPaymentLedger) {
+    return NextResponse.json({ status: 200 });
+  }
 
   const paymentObj: {
     amount: number;
@@ -153,38 +143,20 @@ async function handleCheckoutCompleted(event: any) {
     },
   };
 
+  let updateResult;
   try {
-    await retry(
-      () =>
-        PaymentLedger.updateOne(
-          {
-            provider: "stripe",
-            provider_tx_id: paymentIntent.id,
-          },
-          {
-            $setOnInsert: paymentLedgerData,
-          },
-          { upsert: true },
-        ),
-      3,
-      150,
+    updateResult = await PaymentLedger.updateOne(
+      { provider: "stripe", provider_tx_id: paymentIntent.id },
+      { $setOnInsert: paymentLedgerData },
+      { upsert: true },
     );
-  } catch (error) {
-    rollbarServerInstance.error({
-      context: "Stripe Webhook",
-      formatted_date: getFormattedDateTime(),
-      message: "Payment ledger creation failed after retries",
-      error,
-      payment_reference: paymentLedgerData?.provider_tx_id,
-    });
+  } catch (e) {
+    console.error("Payment Ledger write failed", e);
+    return NextResponse.json({ status: 500 });
+  }
 
-    return NextResponse.json(
-      {
-        message:
-          "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
-      },
-      { status: 400 },
-    );
+  if (updateResult.upsertedCount === 0) {
+    return NextResponse.json({ status: 200 });
   }
 
   const payment_information: PaymentStatusTypes = {
@@ -398,7 +370,7 @@ export async function runPostPaymentWorkflows(
       `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
-        meta,
+        meta: { ...meta, order_id: order_info.order_id },
         paymentIntent,
       }),
     ),

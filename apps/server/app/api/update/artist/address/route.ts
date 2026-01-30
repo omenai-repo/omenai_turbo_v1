@@ -18,7 +18,7 @@ const config: CombinedConfig = {
   allowedRoles: ["artist"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -41,9 +41,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
         },
-      }
+        credentials: "include",
+      },
     );
     const result = await response.json();
 
@@ -51,12 +51,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const updatedData = await AccountArtist.updateOne(
       { artist_id },
-      { $set: { address, base_currency } }
+      { $set: { address, base_currency } },
     );
 
     await Wallet.updateOne(
       { owner_id: artist_id },
-      { $set: { base_currency } }
+      { $set: { base_currency } },
     );
 
     if (!updatedData) throw new ServerError("An unexpected error has occured.");
@@ -65,18 +65,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Address information updated successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "updates: artist address",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });
