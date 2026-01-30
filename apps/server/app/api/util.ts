@@ -127,7 +127,7 @@ export function buildPricing(
     ? penalty_rate * Number(meta.unit_price ?? 0)
     : 0;
 
-  const commission = Math.round(0.35 * Number(meta.unit_price ?? 0));
+  const commission = Math.round(0.39 * Number(meta.unit_price ?? 0));
 
   return { penalty_fee, commission };
 }
