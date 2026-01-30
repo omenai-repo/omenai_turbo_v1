@@ -50,12 +50,7 @@ export async function cleanupSession(sessionId: string, cookieStore?: any) {
 }
 
 // Enhanced getSession with proper cleanup
-export async function getSession(
-  sessionId: string,
-  userAgent: string | null,
-  is_middleware_agent?: boolean,
-  cookieStore?: any,
-) {
+export async function getSession(sessionId: string, cookieStore?: any) {
   const sessionDataJSON = await redis.get(`session:${sessionId}`);
 
   if (!sessionDataJSON) {
@@ -64,7 +59,7 @@ export async function getSession(
     return null;
   }
 
-  let sessionData: SessionData & { csrfToken: string; isMobile?: boolean };
+  let sessionData: SessionData & { csrfToken: string };
 
   try {
     sessionData =
@@ -74,21 +69,6 @@ export async function getSession(
   } catch (error) {
     await cleanupSession(sessionId, cookieStore);
     return null;
-  }
-
-  // **Security Refinement:**
-
-  // TODO: Remove middleware agent check
-  if (!is_middleware_agent && !sessionData.isMobile) {
-    if (
-      sessionData.userAgent &&
-      userAgent &&
-      sessionData.userAgent !== userAgent
-    ) {
-      // Optional: Log this potential hijacking attempt
-      await cleanupSession(sessionId, cookieStore);
-      return null;
-    }
   }
 
   // Sliding session: reset TTL

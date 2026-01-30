@@ -9,14 +9,9 @@ export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
 
-    const header_is_middleware =
-      request.headers.get("X-From-Middleware") === "true";
-
     const cookieSession = await getSessionFromCookie(cookieStore);
 
     const sessionId = cookieSession.sessionId;
-
-    const userAgent = request.headers.get("user-agent");
 
     if (!sessionId) {
       return NextResponse.json(
@@ -25,12 +20,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const userSessionData = await getSession(
-      sessionId,
-      userAgent,
-      header_is_middleware,
-      cookieStore,
-    );
+    const userSessionData = await getSession(sessionId, cookieStore);
 
     if (!userSessionData) {
       cookieSession.destroy();

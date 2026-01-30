@@ -1,9 +1,7 @@
 export async function getClientIdentifier(
   request: Request,
-  userId?: string
+  userId?: string,
 ): Promise<string> {
-  // 1️⃣ Priority: Rate limit by User ID if authenticated
-  // This prevents users from rotating IPs to bypass limits.
   if (userId) {
     return `user:${userId}`;
   }
@@ -14,7 +12,7 @@ export async function getClientIdentifier(
 
   // 2️⃣ Cloudflare headers (most trusted)
   const cfConnectingIP = headers.get("cf-connecting-ip");
-  
+
   const trueClientIP = headers.get("true-client-ip");
 
   if (cfConnectingIP && isValidIP(cfConnectingIP)) {

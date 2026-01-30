@@ -1,10 +1,12 @@
+// combined_middleware.ts
 import { handleErrorEdgeCases } from "./../../../../apps/server/custom/errors/handler/errorHandler";
 import { ForbiddenError } from "./../../../../apps/server/custom/errors/dictionary/errorDictionary";
 import { NextRequest, NextResponse } from "next/server";
-import { withRateLimit } from "./rate_limit_middleware";
-import { validateCsrf } from "../validateCsrf";
+import { validateCsrf, validateSession } from "../validateCsrf";
 import { CombinedConfig, SessionData } from "@omenai/shared-types";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import { withRateLimit } from "./rate_limit_middleware";
+import { getSession } from "../session";
 
 export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
   return function combinedWrapper(
@@ -14,63 +16,64 @@ export function withRateLimitHighlightAndCsrf(config: CombinedConfig) {
       sessionData?: SessionData & { csrfToken: string },
     ) => Promise<Response | NextResponse>,
   ) {
-    let sessionDataId: string | undefined = undefined;
-    const wrapped = async (req: Request | NextRequest) => {
+    return async (req: Request | NextRequest) => {
       const url = new URL(req.url);
-
       const pathname = url.pathname;
-
       const method = req.method.toUpperCase();
-      const userAgent = req.headers.get("User-Agent");
-      const authorization: string = req.headers.get("Authorization") ?? "";
-
-      if (userAgent === process.env.MOBILE_USER_AGENT) {
-        // TODO: Instead of just returning, validate sessionID from the request header
-        if (authorization === process.env.APP_AUTHORIZATION_SECRET) {
-          return handler(req);
-        } else {
-          throw new ForbiddenError("Unauthorized access detected");
-        }
-      }
-
-      // Only validate CSRF + role for mutative methods
       const isMutative = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
 
+      let sessionData: (SessionData & { csrfToken: string }) | undefined;
+      let userIdForLimit: string | undefined;
+
       try {
+        // 1. AUTH FIRST
         if (isMutative && config.allowedRoles?.length) {
-          const { valid, message, sessionData } = await validateCsrf({
+          const {
+            valid,
+            message,
+            sessionData: sData,
+          } = await validateCsrf({
             req,
             allowedRoles: config.allowedRoles,
             allowedAdminAccessRoles: config.allowedAdminAccessRoles,
           });
 
           if (pathname === "/api/support" && !valid) {
-            return handler(req, undefined, undefined);
+            return await withRateLimit(config, undefined, sessionData)(handler)(
+              req,
+            );
           }
 
           if (!valid) {
             throw new ForbiddenError(message);
           }
 
-          sessionDataId = sessionData?.userData.id;
+          sessionData = sData;
+          userIdForLimit = sessionData?.userData.id;
+        } else {
+          const result = await validateSession(req);
 
-          return handler(req, undefined, sessionData);
+          if (result.valid && result.sessionData) {
+            sessionData = result.sessionData;
+            userIdForLimit = sessionData?.userData.id;
+          }
         }
-        return handler(req);
+
+        return await withRateLimit(
+          config,
+          userIdForLimit,
+          sessionData,
+        )(handler)(req);
       } catch (error) {
         const error_response = handleErrorEdgeCases(error);
-
         rollbarServerInstance.error(error_response.message, {
           context: "With RateLimitHighlightAndCsrf Middleware",
         });
-
         return NextResponse.json(
           { message: error_response!.message },
           { status: error_response!.status },
         );
       }
     };
-
-    return withRateLimit(config, sessionDataId)(wrapped);
   };
 }

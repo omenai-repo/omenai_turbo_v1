@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit } from "../rate_limiter";
+import { SessionData } from "@omenai/shared-types";
 
 interface RateLimitConfig {
   maxTokens: number;
@@ -8,18 +9,23 @@ interface RateLimitConfig {
   keyPrefix?: string;
 }
 
-export function withRateLimit(config: RateLimitConfig, userId?: string) {
+export function withRateLimit(
+  config: RateLimitConfig,
+  currentUserId?: string | undefined,
+  sessionData?: (SessionData & { csrfToken: string }) | undefined,
+) {
   return function rateLimitWrapper(
-    handler: (request: Request) => Promise<Response>,
+    handler: (
+      request: Request | NextRequest,
+      response?: Response | NextResponse,
+      sessionData?: SessionData & { csrfToken: string },
+    ) => Promise<Response>,
   ) {
     return async function rateLimitedHandler(
       request: Request,
     ): Promise<Response> {
-      // 1. Start the try block IMMEDIATELY
       try {
-        // This is likely where it was crashing before if userId was undefined
-        // or if the request object wasn't what keyGenerator expected.
-        const identifier = await config.keyGenerator(request, userId);
+        const identifier = await config.keyGenerator(request, currentUserId);
 
         const result = await checkRateLimit(
           identifier,
@@ -49,7 +55,7 @@ export function withRateLimit(config: RateLimitConfig, userId?: string) {
         }
 
         // Execute the actual route handler
-        const response = await handler(request);
+        const response = await handler(request, undefined, sessionData);
 
         if (response instanceof NextResponse) {
           response.headers.set(
@@ -68,11 +74,8 @@ export function withRateLimit(config: RateLimitConfig, userId?: string) {
 
         return response;
       } catch (error: any) {
-        // 2. Catch EVERYTHING, including errors from keyGenerator or checkRateLimit
-
         console.error("Rate Limit Middleware Error:", error);
 
-        // Handle ForbiddenError specifically (from your business logic)
         if (
           error.name === "ForbiddenError" ||
           error.message?.includes("processed")

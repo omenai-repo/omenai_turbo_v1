@@ -26,10 +26,29 @@ const ALLOWED_ORIGINS = new Set([
 
 export default async function proxy(req: NextRequest) {
   const origin = req.headers.get("origin") ?? "";
+  const userAgent = req.headers.get("user-agent") ?? "";
+  const referer = req.headers.get("referer");
+  const mobileKey = req.headers.get("x-access-key") ?? "";
 
-  // 2. Early return for Webhooks (Pass-through but strictly scoped)
   if (req.nextUrl.pathname.startsWith("/api/webhook")) {
     return NextResponse.next();
+  }
+
+  if (userAgent === process.env.MOBILE_USER_AGENT) {
+    if (mobileKey !== process.env.MOBILE_ACCESS_KEY) {
+      return NextResponse.json({ message: "Invalid App Key" }, { status: 403 });
+    }
+  } else {
+    const validOrigin = origin && ALLOWED_ORIGINS.has(origin);
+    const validReferer =
+      referer && Array.from(ALLOWED_ORIGINS).some((u) => referer.startsWith(u));
+
+    if (!validOrigin && !validReferer) {
+      return NextResponse.json(
+        { message: "Access Denied: Bad Origin" },
+        { status: 403 },
+      );
+    }
   }
 
   // 3. Handle CORS Preflight (OPTIONS)
