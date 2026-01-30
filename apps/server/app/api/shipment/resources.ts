@@ -10,7 +10,7 @@ export const DHL_API_VERSION = "3.0.1";
 
 // DHL API credentials encryption
 export const credentials = Buffer.from(`${API_KEY}:${API_SECRET}`).toString(
-  "base64"
+  "base64",
 );
 
 // Export a FUNCTION that creates and returns new headers
@@ -32,7 +32,7 @@ export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT =
 
 // async function to select the most appropriate DHL product for a particular shipment based on price and product relevance to shipment
 export async function selectAppropriateDHLProduct(
-  products: any[]
+  products: any[],
 ): Promise<any> {
   if (products === undefined || products.length === 0) {
     return null;
@@ -41,7 +41,7 @@ export async function selectAppropriateDHLProduct(
 
   // Filter for preferred products if available, otherwise consider all
   let validProducts = products.filter((product: any) =>
-    acceptableProductCodes.includes(product.productCode)
+    acceptableProductCodes.includes(product.productCode),
   );
 
   if (validProducts.length === 0) {
@@ -59,7 +59,7 @@ export async function selectAppropriateDHLProduct(
       // Loop through the priority list until we find a matching price object
       for (const type of priceTypesPriority) {
         selectedPriceObj = product.totalPrice.find(
-          (priceObj: any) => priceObj.currencyType === type
+          (priceObj: any) => priceObj.currencyType === type,
         );
         if (selectedPriceObj) break;
       }
@@ -74,7 +74,7 @@ export async function selectAppropriateDHLProduct(
       if (selectedPriceObj.priceCurrency !== "USD") {
         chargeable_price_in_usd = await convertToUSD(
           selectedPriceObj.price,
-          selectedPriceObj.priceCurrency
+          selectedPriceObj.priceCurrency,
         );
       } else {
         chargeable_price_in_usd = selectedPriceObj.price;
@@ -89,12 +89,12 @@ export async function selectAppropriateDHLProduct(
         totalPrice: product.totalPrice,
         chargeable_price_in_usd,
       };
-    })
+    }),
   );
 
   // Sort the products by their USD-converted price (ascending)
   processedProducts.sort(
-    (a: any, b: any) => a.chargeable_price_in_usd - b.chargeable_price_in_usd
+    (a: any, b: any) => a.chargeable_price_in_usd - b.chargeable_price_in_usd,
   );
 
   // Return the cheapest product
@@ -104,7 +104,7 @@ export async function selectAppropriateDHLProduct(
 // API call to get the currency conversion rate
 async function convertToUSD(
   amount: number,
-  fromCurrency: string
+  fromCurrency: string,
 ): Promise<number> {
   const conversion = await getCurrencyConversion(fromCurrency, amount, "");
   if (!conversion?.isOk) {
@@ -129,7 +129,7 @@ export function getUserFriendlyError(dhlErrorMessage: string): string {
 }
 
 export async function getLatLng(
-  location: string
+  location: string,
 ): Promise<{ lat: number; lng: number } | null> {
   const accessKey = process.env.POSITION_STACK_API;
 

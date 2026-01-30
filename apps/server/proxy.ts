@@ -22,6 +22,7 @@ const ALLOWED_ORIGINS = new Set([
   "http://localhost:5000",
   "http://localhost:3002",
   "http://localhost:3003",
+  "http://localhost:8001",
 ]);
 
 export default async function proxy(req: NextRequest) {
@@ -45,7 +46,7 @@ export default async function proxy(req: NextRequest) {
 
     if (!validOrigin && !validReferer) {
       return NextResponse.json(
-        { message: "Access Denied: Bad Origin" },
+        { message: "Access Denied: Bad Origin gotten" },
         { status: 403 },
       );
     }

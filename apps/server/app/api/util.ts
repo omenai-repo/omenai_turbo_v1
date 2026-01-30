@@ -3,6 +3,8 @@ import { ServerError } from "../../custom/errors/dictionary/errorDictionary";
 import z from "zod";
 import crypto from "node:crypto";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { getDhlHeaders, getUserFriendlyError } from "./shipment/resources";
+import { BadRequestError } from "../../custom/errors/dictionary/errorDictionary";
 import {
   ClientSessionData,
   ExclusivityUpholdStatus,
@@ -130,4 +132,29 @@ export function buildPricing(
   const commission = Math.round(0.39 * Number(meta.unit_price ?? 0));
 
   return { penalty_fee, commission };
+}
+
+import { ShipmentAddressValidationType } from "@omenai/shared-types";
+
+export async function validateDHLAddress(data: ShipmentAddressValidationType) {
+  const { type, countryCode, postalCode, cityName, countyName, country } = data;
+
+  const requestOptions = {
+    method: "GET",
+    headers: getDhlHeaders(),
+  };
+
+  const response = await fetch(
+    `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${true}`,
+    requestOptions,
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    const error_message = getUserFriendlyError(result.detail);
+    throw new BadRequestError(error_message);
+  }
+
+  return result;
 }

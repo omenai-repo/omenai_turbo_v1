@@ -32,7 +32,7 @@ import {
   NotificationPayload,
 } from "@omenai/shared-types";
 import { createErrorRollbarReport } from "../../util";
-
+import { validateDHLAddress } from "../../util";
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["user"],
@@ -111,30 +111,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     }
 
     // Validate shipping address via DHL API
-    const validationResponse = await fetch(
-      `${getApiUrl()}/api/shipment/address_validation`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          type: "delivery",
-          countryCode: shipping_address.countryCode,
-          postalCode: shipping_address.zip,
-          cityName: shipping_address.state,
-          countyName: shipping_address.city,
-          country: shipping_address.country,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      },
-    );
-
-    const validationResult = await validationResponse.json();
-    if (!validationResponse.ok) {
+    try {
+      await validateDHLAddress({
+        type: "delivery",
+        countryCode: shipping_address.countryCode,
+        postalCode: shipping_address.zip,
+        cityName: shipping_address.state,
+        countyName: shipping_address.city,
+        country: shipping_address.country,
+      });
+    } catch (error: any) {
+      // Handle the specific DHL error thrown by the helper
       throw new BadRequestError(
-        validationResult.message ||
-          "Oops! We can't ship to this address yet. Try another address.",
+        error.message || "Oops! We can't ship to this address yet.",
       );
     }
 

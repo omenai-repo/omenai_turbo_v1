@@ -7,7 +7,7 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
-
+import { validateDHLAddress } from "../../util";
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     const {
@@ -43,21 +43,15 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
     }
 
     try {
-      const requestOptions = {
-        method: "GET",
-        headers: getDhlHeaders(),
-      };
+      const data = await validateDHLAddress({
+        type,
+        countryCode,
+        postalCode,
+        cityName,
+        countyName,
+        country,
+      });
 
-      const response = await fetch(
-        `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${true}`,
-        requestOptions,
-      );
-      const data = await response.json();
-      // DONE: Fix for multiple DHL error responses
-      if (!response.ok) {
-        const error_message = getUserFriendlyError(data.detail);
-        throw new BadRequestError(error_message);
-      }
       return NextResponse.json({ message: "Success", data }, { status: 200 });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
