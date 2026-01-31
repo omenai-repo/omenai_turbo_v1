@@ -18,14 +18,14 @@ export default function ArtistSignupPageWrapper({
     "collectoronboardingenabled",
     false,
   );
-  const { value: waitlistActivated } = useLowRiskFeatureFlag(
-    "waitlistActivated",
-    true,
-  );
-  const router = useRouter();
-  if (waitlistActivated) {
-    if (!referrerKey || !email || !inviteCode) router.replace("/register");
-  }
+  // const { value: waitlistActivated } = useLowRiskFeatureFlag(
+  //   "waitlistActivated",
+  //   true,
+  // );
+  // const router = useRouter();
+  // if (waitlistActivated) {
+  //   if (!referrerKey || !email || !inviteCode) router.replace("/register");
+  // }
   return (
     <>
       {collectorOnboardingEnabled ? (

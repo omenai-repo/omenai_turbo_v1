@@ -37,7 +37,7 @@ export default function FormConfirm() {
           <li className="flex items-start gap-3">
             <span className="text-dark font-medium mt-0.5">•</span>
             <span>
-              A 35% commission applies to all artwork sales, covering marketing,
+              A 39% commission applies to all artwork sales, covering marketing,
               platform visibility, payment processing, shipping coordination,
               and dedicated customer support.
             </span>

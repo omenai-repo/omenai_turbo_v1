@@ -9,12 +9,8 @@ export default async function GallerySignup({
   const referrerKey = (await searchParams).referrerKey;
   const email = (await searchParams).email;
   const inviteCode = (await searchParams).inviteCode;
-  if (!referrerKey || !email || !inviteCode) redirect("/register");
+  // if (!referrerKey || !email || !inviteCode) redirect("/register");
   return (
-    <GallerySignupPageWrapper
-      referrerKey={referrerKey}
-      email={email}
-      inviteCode={inviteCode}
-    />
+    <GallerySignupPageWrapper referrerKey={""} email={""} inviteCode={""} />
   );
 }
