@@ -26,7 +26,7 @@ const notificationSchema = z.object({
   data: NotificationDataSchema,
 });
 export const POST = withRateLimit(standardRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const validated = notificationSchema.parse(await request.json());
@@ -46,28 +46,28 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     await connectMongoDB();
     const createNotificationHistory = await NotificationHistory.create(
-      notificationHistoryData
+      notificationHistoryData,
     );
 
     if (!createNotificationHistory)
       throw new ServerError(
-        "Unable to save notification data, please contact support"
+        "Unable to save notification data, please contact support",
       );
 
     return NextResponse.json(
       { message: "Notification record created" },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "notifications: create notification",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

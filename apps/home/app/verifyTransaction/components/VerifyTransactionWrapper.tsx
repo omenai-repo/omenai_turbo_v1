@@ -167,7 +167,8 @@ const SuccessState = ({
 
         <div className="text-center space-y-4 max-w-sm">
           <h2
-            className={`text-fluid-md font-semibold transition-colors duration-500 ${config.titleColor}`}
+            // TODO: Check the title color here
+            className={`text-fluid-md font-semibold transition-colors duration-500 text-green-700`}
           >
             Payment verification completed
           </h2>
@@ -187,7 +188,7 @@ const SuccessState = ({
 const verifyTransaction = async (
   transactionId: string,
   apiUrl: string,
-  rollbar: Rollbar
+  rollbar: Rollbar,
 ) => {
   try {
     const response = await fetch(
@@ -196,7 +197,7 @@ const verifyTransaction = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transaction_id: transactionId }),
-      }
+      },
     );
 
     if (!response.ok) {

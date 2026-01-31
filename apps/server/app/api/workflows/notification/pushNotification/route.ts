@@ -14,12 +14,14 @@ async function callCreateNotificationApi(data: any): Promise<any> {
   const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
+    // TODO: Remove origin
     const response = await fetch(
       `${getApiUrl()}/api/notifications/createNotification`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Origin: "https://omenai.app",
         },
         body: JSON.stringify(data),
         signal: controller.signal,
