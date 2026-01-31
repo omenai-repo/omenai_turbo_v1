@@ -5,11 +5,16 @@ import crypto from "node:crypto";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { getDhlHeaders, getUserFriendlyError } from "./shipment/resources";
 import { BadRequestError } from "../../custom/errors/dictionary/errorDictionary";
+
 import {
+  AddressTypes,
   ClientSessionData,
+  CreateOrderModelTypes,
   ExclusivityUpholdStatus,
   MetaSchema,
   PaymentLedgerTypes,
+  ShipmentDimensions,
+  ShipmentRateRequestTypes,
 } from "@omenai/shared-types";
 
 export function createErrorRollbarReport(
@@ -135,6 +140,7 @@ export function buildPricing(
 }
 
 import { ShipmentAddressValidationType } from "@omenai/shared-types";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
@@ -157,4 +163,86 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   }
 
   return result;
+}
+
+const API_URL = getApiUrl();
+const HEADERS = {
+  "Content-Type": "application/json",
+};
+// FILE: packages/shared-lib/shipment/rateService.ts (Create this file)
+
+export async function calculateShipmentRate(
+  order: CreateOrderModelTypes,
+  dimensions: ShipmentDimensions,
+) {
+  const { origin, destination } = order.shipping_details.addresses;
+
+  // 1. CONSTRUCT DHL PAYLOAD
+  // ⚠️ COPY THE LOGIC FROM YOUR EXISTING '/api/shipment/rate' ROUTE HERE ⚠️
+  const payload = {
+    customerDetails: {
+      shipperDetails: {
+        postalCode: origin.zip,
+        cityName: origin.city,
+        countryCode: origin.countryCode,
+        provinceCode: origin.stateCode,
+        addressLine1: origin.address_line,
+        countyName: origin.city,
+      },
+      receiverDetails: {
+        postalCode: destination.zip,
+        cityName: destination.city,
+        countryCode: destination.countryCode,
+        provinceCode: destination.stateCode,
+        addressLine1: destination.address_line,
+        countyName: destination.city,
+      },
+    },
+    accounts: [
+      {
+        typeCode: "shipper",
+        number: process.env.DHL_ACCOUNT_NUMBER, // Ensure this ENV is available
+      },
+    ],
+    plannedShippingDateAndTime: new Date().toISOString(),
+    unitOfMeasurement: "metric",
+    isCustomsDeclarable: true,
+    monetaryAmount: [
+      {
+        typeCode: "declaredValue",
+        value: order.artwork_data.pricing.usd_price,
+        currency: "USD",
+      },
+    ],
+    packages: [
+      {
+        weight: dimensions.weight,
+        dimensions: {
+          length: dimensions.length,
+          width: dimensions.width,
+          height: dimensions.height,
+        },
+      },
+    ],
+  };
+
+  // 2. CALL DHL DIRECTLY (This bypasses your middleware)
+  const response = await fetch(
+    "https://express.api.dhl.com/mydhlapi/test/rates?strictValidation=true",
+    {
+      method: "POST",
+      headers: getDhlHeaders(),
+      body: JSON.stringify(payload),
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const error_msg = getUserFriendlyError(data.detail);
+    throw new BadRequestError(error_msg);
+  }
+
+  // Return the first product (usually the best rate)
+  return data.products[0];
 }

@@ -28,6 +28,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { createErrorRollbarReport } from "../../util";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -36,6 +37,7 @@ const client = new Taxjar({
 
 const API_URL = getApiUrl();
 const HEADERS = {
+  Origin: "https://omenai.app",
   "Content-Type": "application/json",
 };
 
@@ -78,7 +80,7 @@ const config: CombinedConfig = {
   allowedRoles: ["artist", "gallery"],
 };
 
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+export const POST = withRateLimit(config)(async function POST(
   request: Request,
 ) {
   await connectMongoDB();
@@ -200,7 +202,6 @@ async function getShippingRate(
       method: "POST",
       body: JSON.stringify(payload),
       headers: HEADERS,
-      credentials: "include",
     });
 
     const json = await response.json();
