@@ -228,10 +228,10 @@ export type ArtworkSchemaTypes = {
   artist_country_origin: string;
   certificate_of_authenticity: string;
   artwork_description?: string;
-  framing: string;
   signature: string;
   should_show_on_sub_active?: boolean;
   availability: boolean;
+  packaging_type: ArtworkPackagingType;
   role_access: RoleAccess;
   exclusivity_status: {
     exclusivity_type: "exclusive" | "non-exclusive" | null;
@@ -246,10 +246,9 @@ export type RoleAccess = {
 };
 
 export type ArtworkDimensions = {
-  width: string;
   height: string;
-  depth?: string;
   weight: string;
+  length: string;
 };
 
 export type ArtworkPricing = {
@@ -310,8 +309,7 @@ export type ArtworkUploadStateTypes = {
   rarity: string;
   materials: string;
   height: string;
-  width: string;
-  depth?: string;
+  length: string;
   weight: string;
   price: number;
   usd_price: number;
@@ -320,15 +318,22 @@ export type ArtworkUploadStateTypes = {
   artist_country_origin: string;
   certificate_of_authenticity: string;
   artwork_description?: string;
-  framing: string;
   signature: string;
   currency: string;
+  packaging_type: ArtworkPackagingType;
 };
+type ArtworkPackagingType = "rolled" | "stretched";
 
 export type CreateOrderModelTypes = {
   artwork_data: Pick<
     ArtworkSchemaTypes,
-    "artist" | "pricing" | "title" | "url" | "art_id" | "role_access"
+    | "artist"
+    | "pricing"
+    | "title"
+    | "url"
+    | "art_id"
+    | "role_access"
+    | "dimensions"
   > & {
     _id: ObjectId;
     exclusivity_status: Omit<

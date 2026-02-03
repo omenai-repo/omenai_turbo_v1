@@ -4,9 +4,9 @@ export const dynamic = "force-dynamic";
 
 export default function page() {
   return (
-    <div className="p-5">
-      <PageTitle title="Upload artwork Image" />
-      <div className="my-12">
+    <div>
+      <h1 className="font-semibold text-lg">Upload Artwork Image</h1>
+      <div className="my-4">
         <UploadArtworkImage />
       </div>
     </div>

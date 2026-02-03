@@ -46,7 +46,7 @@ export const SalesActivityChart = ({
         <Dropdown />
       </div>
       <ResponsiveLine
-        key={year}
+        key={JSON.stringify(data)}
         data={data}
         margin={{ top: 10, right: 70, bottom: 90, left: 70 }}
         xScale={{ type: "point" }}

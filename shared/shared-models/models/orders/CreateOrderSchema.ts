@@ -17,6 +17,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
         usd_price: { type: Number, required: true },
         shouldShowPrice: { type: String },
       },
+      dimensions: { type: Schema.Types.Mixed, required: true },
 
       exclusivity_status: { type: Schema.Types.Mixed },
       deletedEntity: { type: Boolean, default: false },
@@ -52,7 +53,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
     availability: { type: Boolean, default: () => true },
     expiresAt: { type: Date || null, default: null },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const CreateOrder =

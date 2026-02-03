@@ -49,7 +49,7 @@ export default function ArtworkCard({
               {!availability && (
                 <div className="absolute top-2 left-2 z-20">
                   <span className="inline-flex items-center justify-center bg-[#091830] px-2.5 py-1 rounded text-[10px] font-sans font-normal uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
-                    Acquired
+                    Sold
                   </span>
                 </div>
               )}
@@ -82,7 +82,7 @@ export default function ArtworkCard({
             <div className="text-right shrink-0">
               {!availability ? (
                 <span className="font-sans text-xs font-semibold text-dark uppercase tracking-wider">
-                  Acquired
+                  Sold
                 </span>
               ) : pricing?.shouldShowPrice === "Yes" ? (
                 <span className="font-sans text-fluid-base font-bold text-dark ">

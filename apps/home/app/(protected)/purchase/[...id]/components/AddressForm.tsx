@@ -8,7 +8,11 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import { createShippingOrder } from "@omenai/shared-services/orders/createShippingOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
-import { AddressTypes, RoleAccess } from "@omenai/shared-types";
+import {
+  AddressTypes,
+  ArtworkDimensions,
+  RoleAccess,
+} from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { City, State } from "country-state-city";
 import { useEffect, useState, FormEvent } from "react";

@@ -13,7 +13,7 @@ export const validate = (label: string, value: string) => {
     title: (value: string) => validateBasicText(value),
     materials: (value: string) => validateBasicText(value),
     height: (value: string) => validateMeasurement(value),
-    depth: (value: string) => validateMeasurement(value),
+    length: (value: string) => validateMeasurement(value),
     width: (value: string) => validateMeasurement(value),
     price: (value: string) => validatePrice(value),
     weight: (value: string) => validateWeight(value),

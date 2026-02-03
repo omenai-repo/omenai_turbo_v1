@@ -110,7 +110,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         </span>
         {isSoldOut ? (
           <span className="inline-block border border-slate-200 bg-slate-50 px-3 py-1 font-sans text-xs uppercase tracking-widest text-slate-500">
-            Acquired
+            Sold
           </span>
         ) : (
           <div className="text-3xl font-light text-dark">

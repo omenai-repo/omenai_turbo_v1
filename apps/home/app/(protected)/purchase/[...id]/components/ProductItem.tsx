@@ -26,7 +26,6 @@ export default function ProductItem({
 
       {/* 2. IMAGE PREVIEW (Reduced Size) */}
       <div className="relative mb-6 w-full bg-white p-4 border border-neutral-100">
-        {/* Changed w-full to w-32 (128px) and added mx-auto to center it */}
         <div className="relative aspect-[3/4] w-64 mx-auto overflow-hidden bg-neutral-100 shadow-sm">
           <Image
             src={image_href}
@@ -59,13 +58,38 @@ export default function ProductItem({
             </span>
           </div>
 
-          <div className="flex justify-between items-end mb-4">
-            <span className="font-sans text-xs uppercase tracking-wide text-neutral-500">
-              Shipping
-            </span>
-            <span className="font-sans text-xs text-neutral-400 italic">
-              Calculated on review
-            </span>
+          <div className="mb-4">
+            <div className="flex justify-between items-end">
+              <span className="font-sans text-xs uppercase tracking-wide text-neutral-500">
+                Shipping
+              </span>
+              <span className="font-sans text-xs text-neutral-400 italic">
+                Calculated on review
+              </span>
+            </div>
+
+            {/* STRETCHED ARTWORK WARNING */}
+            {artwork.packaging_type === "stretched" && (
+              <div className="mt-3 flex items-start gap-2 rounded bg-amber-50/80 p-2.5 border border-amber-100/50">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-3.5 h-3.5 text-amber-600 mt-0.5 shrink-0"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <p className="font-sans text-[12px] text-amber-800 leading-relaxed">
+                  <span className="font-bold">Special Handling:</span> This
+                  artwork is shipped stretched which attracts higher shipping
+                  fees than rolled works.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mt-6 border-t border-neutral-200 pt-4 flex justify-between items-end">

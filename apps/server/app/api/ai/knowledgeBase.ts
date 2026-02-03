@@ -86,7 +86,7 @@ const ARTIST_RULES = `
 // --- SECTOR 7: COLLECTOR INFO & ADVISORY ---
 const COLLECTOR_INFO = `
 - **Authenticity**: All works come with a signed Certificate of Authenticity (COA) from the Artist or Gallery.
-- **Framing**: Varies (Framed or Rolled) depending on the specific item/seller.
+- **Framing**: Varies (Stretched or Rolled) depending on the specific item/seller.
 - **Art Advisor Philosophy**: "All artworks are unique and investment-grade, born from the creativity of their creators."
 - **Core Categories**:
   - Photography

@@ -39,7 +39,7 @@ export default function ArtworkPageWrapper({ param }: { param: string }) {
   return (
     <div className="min-h-screen bg-white text-dark relative">
       <DesktopNavbar />
-      <main className="pt-4 pb-8">
+      <main className="pt-4 pb-8 relative">
         <ProductBox
           data={artworkDetails}
           sessionId={user ? user.id : undefined}

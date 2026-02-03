@@ -41,7 +41,7 @@ export default function TrendingArtworkCard({
           {!availability ? (
             <div className="absolute top-2 left-2 z-20">
               <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded-sm text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
-                Acquired
+                Sold
               </span>
             </div>
           ) : (

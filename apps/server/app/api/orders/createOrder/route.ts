@@ -26,6 +26,7 @@ import {
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   AddressTypes,
+  ArtworkDimensions,
   ArtworkSchemaTypes,
   CombinedConfig,
   CreateOrderModelTypes,
@@ -130,7 +131,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     // Fetch artwork details
     const artwork = (await Artworkuploads.findOne(
       { art_id },
-      "title artist pricing url art_id availability role_access exclusivity_status",
+      "title artist pricing url art_id availability role_access exclusivity_status dimensions",
     ).lean()) as unknown as Pick<
       ArtworkSchemaTypes,
       | "title"
@@ -140,6 +141,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       | "availability"
       | "role_access"
       | "exclusivity_status"
+      | "dimensions"
     >;
 
     if (!artwork) {

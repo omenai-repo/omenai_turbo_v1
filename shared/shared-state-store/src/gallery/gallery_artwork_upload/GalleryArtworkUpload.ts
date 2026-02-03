@@ -6,10 +6,9 @@ type ErrorFields = {
   year: string;
   title: string;
   materials: string;
-  width: string;
   height: string;
   price: string;
-  depth?: string;
+  length: string;
 };
 type GalleryArtworkUploadTypes = {
   image: File | null;
@@ -38,14 +37,14 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       price: 0,
       usd_price: 0,
       shouldShowPrice: "Yes",
-      depth: "",
+      length: "",
       artist_birthyear: "",
       artist_country_origin: "",
       certificate_of_authenticity: "",
       artwork_description: "",
-      framing: "",
       signature: "",
       currency: "",
+      packaging_type: "rolled",
     },
     updateArtworkUploadData: (label: string, value: string | number) => {
       const data: Record<string, any> = get().artworkUploadData;
@@ -67,20 +66,19 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
           medium: "",
           rarity: "",
           materials: "",
-          width: "",
           height: "",
           price: 0,
           usd_price: 0,
           weight: "",
           shouldShowPrice: "",
-          depth: "",
+          length: "",
           artist_birthyear: "",
           artist_country_origin: "",
           certificate_of_authenticity: "",
           artwork_description: "",
-          framing: "",
           signature: "",
           currency: "",
+          packaging_type: "rolled",
         },
       });
       set({ image: null });
@@ -90,10 +88,9 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       year: "",
       title: "",
       materials: "",
-      width: "",
       height: "",
       price: "",
-      depth: "",
+      length: "",
       weight: "",
       artist_birthyear: "",
       artwork_description: "",
@@ -109,5 +106,5 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
         });
       }
     },
-  })
+  }),
 );

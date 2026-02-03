@@ -7,43 +7,54 @@ import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { createUploadedArtworkData } from "@omenai/shared-utils/src/createUploadedArtworkData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { fetchArtworkPriceForArtist } from "@omenai/shared-services/artworks/fetchArtworkPriceForArtist";
-import { Alert, Paper } from "@mantine/core";
-import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, CheckCircle2, ArrowRight } from "lucide-react";
 import ArtworkPricingSkeleton from "@omenai/shared-ui-components/components/skeletons/ArtworkPricingSkeleton";
 import Link from "next/link";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { base_url } from "@omenai/url-config/src/config";
 import { useRollbar } from "@rollbar/react";
+import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+
+// --- Helper Functions ---
 function extractNumberString(str: string) {
-  if (!str) return ""; // handle empty or null input
-
-  const cleaned = str.trim().replaceAll(/[^\d.]/g, ""); // keep only digits and dot
-
-  return cleaned;
+  if (!str) return "";
+  return str.trim().replaceAll(/[^\d.]/g, "");
 }
+
+// --- Main Component ---
 export default function ArtworkPricing() {
   const { user, csrf } = useAuth({ requiredRole: "artist" });
+
+  // Destructure store data
   const { image, setImage, artworkUploadData, clearData } =
     artistArtworkUploadStore();
+
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
   const [priceConsent, setPriceConsent] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const rollbar = useRollbar();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const canProceed = acknowledgment && penaltyConsent && priceConsent;
 
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  // Logic for visual progress bar
+  const totalSteps = 3;
+  const currentStep =
+    (priceConsent ? 1 : 0) +
+    (acknowledgment ? 1 : 0) +
+    (penaltyConsent ? 1 : 0);
+  const isComplete = currentStep === totalSteps;
+
   const artwork_height = extractNumberString(artworkUploadData.height);
-  const artwork_width = extractNumberString(artworkUploadData.width);
+  const artwork_width = extractNumberString(artworkUploadData.length);
 
   const { data: pricing, isLoading } = useQuery({
     queryKey: [
@@ -58,7 +69,7 @@ export default function ArtworkPricing() {
         user.categorization,
         artwork_height,
         artwork_width,
-        user.base_currency as string
+        user.base_currency as string,
       );
 
       if (response === undefined || !response.isOk)
@@ -82,16 +93,13 @@ export default function ArtworkPricing() {
     if (!canProceed) {
       toast_notif(
         "Terms and conditions must be accepted before proceeding",
-        "error"
+        "error",
       );
       return;
     }
 
     try {
       setLoading(true);
-
-      // 1 ─ Upload image
-      console.log(image);
       const fileUploaded = await uploadImage(image);
       if (!fileUploaded) throw new Error("Image upload failed");
 
@@ -100,7 +108,8 @@ export default function ArtworkPricing() {
         fileId: fileUploaded.$id,
       };
 
-      // 2 ─ Build payload
+      const packagingType = artworkUploadData.packaging_type || "rolled";
+
       const data = createUploadedArtworkData(
         {
           ...artworkUploadData,
@@ -108,191 +117,281 @@ export default function ArtworkPricing() {
           usd_price: pricing?.usd_price,
           shouldShowPrice: pricing?.shouldShowPrice,
           currency: pricing?.currency,
+          packaging_type: packagingType,
         },
         file.fileId,
         user.artist_id ?? "",
         {
           role: "artist",
           designation: user.categorization,
-        }
+        },
       );
 
-      // 3 ─ Upload metadata
       const uploadResponse = await uploadArtworkData(data, csrf || "");
+
       if (!uploadResponse?.isOk) {
         try {
           toast_notif(uploadResponse.body.message, "error");
-          await storage.deleteFile({
-            bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-            fileId: file.fileId,
-          });
+          await storage.deleteFile(
+            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+            file.fileId,
+          );
         } catch (error) {
           rollbar.error({
             context: "Artist artwork upload: Delete appwrite image",
             error,
           });
         } finally {
-          setImage(null);
+          setLoading(false);
         }
         return;
       }
 
-      // 4 ─ Success toast
       toast_notif(uploadResponse.body.message, "success");
 
-      // 5 ─ Invalidate listings
       await queryClient.invalidateQueries({
         queryKey: ["fetch_artworks_by_id"],
       });
 
       setHasUploaded(true);
-
-      // 6 ─ Redirect IMMEDIATELY so component unmounts
+      clearData();
+      setImage(null);
       router.replace("/artist/app/artworks");
-
-      // 7 ─ Clear store AFTER redirect so current page never rerenders
-      setTimeout(() => {
-        clearData();
-        setImage(null);
-      }, 1000); // microtask / async tick
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
       } else {
         rollbar.error(new Error(String(error)));
       }
-
       console.error("Error uploading artwork:", error);
-      toast_notif(
-        "An error occurred while uploading the artwork. Please try again later.",
-        "error"
-      );
+      toast_notif("An error occurred. Please try again later.", "error");
     } finally {
       setLoading(false);
     }
   };
 
+  // Prevent rendering if missing data
+  if (!image || !artworkUploadData.medium) {
+    return <ArtworkPricingSkeleton />;
+  }
+
   return (
     <form
       onSubmit={handleArtworkUpload}
-      className="bg-[#f8f8f8] p-10 rounded flex flex-col max-w-5xl"
+      className="w-full max-w-4xl mx-auto flex flex-col gap-8 pb-20"
     >
       {isLoading || !pricing || hasUploaded ? (
         <ArtworkPricingSkeleton />
       ) : (
         <>
-          <h1 className="font-bold text-fluid-base">Proposed Artwork Price</h1>
-          <Paper
-            radius="sm"
-            className="flex flex-col space-y-2 p-5 my-6"
-            withBorder
-          >
-            <p className="text-fluid-xxs">
-              Omenai will list your art piece for
+          {/* --- Section 1: Price Reveal Hero Card --- */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm text-center relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-dark via-slate-600 to-dark" />
+            <p className="text-slate-500 text-sm font-medium uppercase tracking-wide mb-3">
+              Proposed Listing Price
             </p>
-            <h1 className="text-fluid-md font-bold">
-              {formatPrice(pricing.usd_price, "USD")}
-            </h1>
-            <p className="text-fluid-xxs font-medium">
-              ({pricing.currency} equivalent:{" "}
-              <span className="font-bold text-fluid-xxs">
-                {formatPrice(pricing.price, pricing.currency)})
-              </span>
-            </p>
-          </Paper>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <h1 className="text-5xl font-bold text-dark tracking-tight">
+                {formatPrice(pricing.usd_price, "USD")}
+              </h1>
+              <p className="text-slate-400 text-sm font-medium mt-2 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+                Local currency equivalent:{" "}
+                <span className="text-slate-700 font-semibold">
+                  {formatPrice(pricing.price, pricing.currency)}
+                </span>
+              </p>
+            </div>
+            <div className="mt-6 text-xs text-slate-400 max-w-lg mx-auto leading-relaxed">
+              This price is calculated based on your artist tier, the medium,
+              and dimensions of the artwork. Consistent pricing helps build
+              collector trust.
+            </div>
+          </div>
 
-          <div className="my-4">
-            <Alert
-              variant="light"
-              color="yellow"
-              radius="sm"
-              title="Exclusivity Agreement"
-              icon={<TriangleAlert strokeWidth={1.5} />}
-              className="font-medium"
-            >
-              <div className="mt-3 space-y-2 px-4">
-                <label className="flex items-start gap-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={priceConsent}
-                    onChange={(e) => setPriceConsent(e.target.checked)}
-                    className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
-                  />
-                  <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
-                    I accept the price stipulated for this artwork and agree to
-                    have it listed on the platform at this price. I understand
-                    that I may cancel this upload if I do not agree.
-                  </span>
-                </label>
-                <label className="flex items-start gap-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={acknowledgment}
-                    onChange={(e) => setAcknowledgment(e.target.checked)}
-                    className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
-                  />
-                  <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
+          {/* --- Section 2: Agreements --- */}
+          <div className="bg-amber-50/50 border border-amber-200 rounded-xl overflow-hidden shadow-sm">
+            {/* Header */}
+            <div className="bg-amber-100/60 px-6 py-4 border-b border-amber-200 flex items-center gap-3">
+              <div className="p-2 bg-amber-200 text-amber-700 rounded-lg shrink-0">
+                <TriangleAlert size={20} strokeWidth={2} />
+              </div>
+              <div>
+                <h3 className="text-amber-900 font-semibold text-sm sm:text-base">
+                  Exclusivity & Pricing Agreement
+                </h3>
+                <p className="text-amber-800/70 text-xs mt-0.5">
+                  Please review and accept terms to proceed.
+                </p>
+              </div>
+            </div>
+
+            {/* Checklist */}
+            <div className="p-5 sm:p-6 space-y-3">
+              <CheckboxCard
+                checked={priceConsent}
+                onChange={setPriceConsent}
+                text="I accept the price stipulated for this artwork and agree to have it listed on the platform at this price. I understand that I may cancel this upload if I do not agree."
+              />
+
+              <CheckboxCard
+                checked={acknowledgment}
+                onChange={setAcknowledgment}
+                text={
+                  <span>
                     I acknowledge that this artwork is subject to a 90-day
                     exclusivity period with Omenai as stipulated in the{" "}
                     <Link
                       href={`${base_url()}/legal?ent=artist`}
                       target="__blank"
-                      className="underline font-semibold text-dark"
+                      className="text-amber-700 underline decoration-amber-400 underline-offset-2 hover:text-amber-900 font-medium transition-colors"
                     >
                       Terms of Agreement
                     </Link>{" "}
                     and may not be sold through external channels during this
                     time.
                   </span>
-                </label>
+                }
+              />
 
-                <label className="flex items-start gap-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={penaltyConsent}
-                    onChange={(e) => setPenaltyConsent(e.target.checked)}
-                    className="mt-1 h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-yellow-500 cursor-pointer"
-                  />
-                  <span className="text-fluid-xxs text-dark font-normal group-hover:text-gray-900">
+              <CheckboxCard
+                checked={penaltyConsent}
+                onChange={setPenaltyConsent}
+                text={
+                  <span>
                     I agree that any breach of this exclusivity obligation will
                     result in a 10% penalty fee deducted from my next successful
                     sale on the platform as stipulated in the{" "}
                     <Link
                       href={`${base_url()}/legal?ent=artist`}
                       target="__blank"
-                      className="underline font-semibold text-dark"
+                      className="text-amber-700 underline decoration-amber-400 underline-offset-2 hover:text-amber-900 font-medium transition-colors"
                     >
                       Terms of Agreement.
-                    </Link>{" "}
+                    </Link>
                   </span>
-                </label>
+                }
+              />
+            </div>
+
+            {/* Progress Footer */}
+            <div className="px-6 py-3 bg-white border-t border-amber-100 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                <span className="hidden sm:inline">Completion Status:</span>
+                <div className="flex gap-1">
+                  {[1, 2, 3].map((step) => (
+                    <div
+                      key={step}
+                      className={`h-1.5 w-6 rounded-full transition-all duration-300 ${
+                        step <= currentStep ? "bg-green-500" : "bg-slate-200"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
-            </Alert>
+              <div
+                className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors duration-300 ${
+                  isComplete
+                    ? "bg-green-100 text-green-700"
+                    : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                {isComplete
+                  ? "All Agreed"
+                  : `${currentStep}/${totalSteps} Agreed`}
+              </div>
+            </div>
           </div>
 
-          <div className="mt-4 text-fluid-xxs text-slate-700">
-            Acknowledgment: {acknowledgment ? "✔️" : "❌"} | Penalty Consent:{" "}
-            {penaltyConsent ? "✔️" : "❌"} | Price Consent:{" "}
-            {priceConsent ? "✔️" : "❌"}
-          </div>
-
-          <div className="w-full flex justify-between items-center gap-x-4 mb-2 mt-6">
-            <Link href={"/artist/app/artworks/upload"} className="w-fit h-fit">
-              <button className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-white hover:bg-[#f1f1f1] text-dark ring-1 ring-dark text-fluid-xxs font-normal whitespace-nowrap">
-                Cancel
+          {/* --- Section 3: Action Buttons --- */}
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-2">
+            <Link
+              href={"/artist/app/artworks/upload"}
+              className="w-full sm:w-auto"
+            >
+              <button
+                type="button"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-slate-300 text-slate-600 font-medium text-sm hover:bg-slate-50 hover:text-dark transition-colors"
+              >
+                Cancel Upload
               </button>
             </Link>
 
             <button
               type="submit"
               disabled={loading || !canProceed}
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs hover:bg-dark/90 font-normal whitespace-nowrap"
+              className={`w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-3.5 rounded-lg font-medium text-sm text-white shadow-lg transition-all duration-200
+                ${
+                  loading || !canProceed
+                    ? "bg-slate-300 cursor-not-allowed shadow-none"
+                    : "bg-dark hover:bg-black hover:-translate-y-0.5"
+                }
+              `}
             >
-              {loading ? <LoadSmall /> : "Upload artwork"}
+              {loading ? (
+                <LoadSmall />
+              ) : (
+                <>
+                  Publish Artwork <ArrowRight size={16} />
+                </>
+              )}
             </button>
           </div>
         </>
       )}
     </form>
+  );
+}
+
+// --- Sub-Component: Checkbox Card ---
+function CheckboxCard({
+  checked,
+  onChange,
+  text,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  text: React.ReactNode;
+}) {
+  return (
+    <label
+      className={`relative flex items-start gap-4 p-4 rounded-lg border transition-all duration-200 cursor-pointer group select-none
+      ${
+        checked
+          ? "bg-white border-amber-300 shadow-sm ring-1 ring-amber-100"
+          : "bg-white/50 border-transparent hover:bg-white hover:border-amber-200"
+      }`}
+    >
+      <div className="pt-0.5 shrink-0">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="peer sr-only"
+        />
+        <div
+          className={`h-5 w-5 rounded border flex items-center justify-center transition-all duration-200 
+          ${
+            checked
+              ? "bg-amber-500 border-amber-600 text-white"
+              : "bg-white border-slate-300 text-transparent group-hover:border-amber-400"
+          }`}
+        >
+          <CheckCircle2
+            size={14}
+            strokeWidth={3}
+            className={`transition-transform duration-200 ${
+              checked ? "scale-100" : "scale-0"
+            }`}
+          />
+        </div>
+      </div>
+      <span
+        className={`text-sm leading-relaxed transition-colors ${
+          checked ? "text-slate-800" : "text-slate-600"
+        }`}
+      >
+        {text}
+      </span>
+    </label>
   );
 }

@@ -11,7 +11,7 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
         Physical Specifications
       </h6>
 
-      <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+      <div className="grid grid-cols-3 gap-y-4 gap-x-8">
         {/* Column 1 */}
         <div className="flex justify-between border-b border-neutral-200 pb-2">
           <span className="font-sans text-xs text-neutral-500">Height</span>
@@ -20,17 +20,9 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
           </span>
         </div>
         <div className="flex justify-between border-b border-neutral-200 pb-2">
-          <span className="font-sans text-xs text-neutral-500">Width</span>
+          <span className="font-sans text-xs text-neutral-500">Length</span>
           <span className="font-sans text-xs text-dark">
-            {dimensions.width}
-          </span>
-        </div>
-
-        {/* Column 2 */}
-        <div className="flex justify-between border-b border-neutral-200 pb-2">
-          <span className="font-sans text-xs text-neutral-500">Depth</span>
-          <span className="font-sans text-xs text-dark">
-            {dimensions.depth || "N/A"}
+            {dimensions.length}
           </span>
         </div>
         <div className="flex justify-between border-b border-neutral-200 pb-2">

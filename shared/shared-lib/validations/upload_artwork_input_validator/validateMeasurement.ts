@@ -8,13 +8,13 @@ export const validateMeasurement = (value: string): string[] => {
   // Validate if the value is not blank and follows the measurement format
   if (
     !schema
-      .regex(/^\d+(\.\d+)?(cm|in|ft|m|mm)$/, {
+      .regex(/^\d+(\.\d+)?(in)$/, {
         message: "Measurement? Flopped. Try again 😭.",
       })
       .safeParse(value).success
   ) {
     errors.push(
-      "Heyyy 📣 — need a proper measurement like '24cm', '5m', or '34ft'. No freestyling."
+      "Heyyy 📣 — need a proper measurement in inches. No freestyling.",
     );
   }
 

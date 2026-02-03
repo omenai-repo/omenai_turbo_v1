@@ -13,9 +13,8 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
     availability: { type: Boolean, default: () => true },
     dimensions: {
       height: { type: String, required: true },
-      width: { type: String, required: true },
       weight: { type: String, required: true },
-      depth: { type: String, required: false },
+      length: { type: String, required: true },
     },
     pricing: {
       price: { type: Number, required: true },
@@ -37,11 +36,15 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
     artist_country_origin: { type: String, required: true },
     certificate_of_authenticity: { type: String, required: true },
     artwork_description: { type: String },
-    framing: { type: String, required: true },
     signature: { type: String, required: true },
     should_show_on_sub_active: {
       type: Boolean,
       default: () => true,
+    },
+    packaging_type: {
+      type: String,
+      enum: ["rolled", "stretched"],
+      required: true,
     },
     role_access: { type: Schema.Types.Mixed, required: true },
     exclusivity_status: {
@@ -50,7 +53,7 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
       order_auto_rejection_count: { type: Number, default: 0 },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Artworkuploads =

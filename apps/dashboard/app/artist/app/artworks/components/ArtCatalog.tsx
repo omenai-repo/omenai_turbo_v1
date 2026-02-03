@@ -34,11 +34,11 @@ export default function ArtCatalog() {
     return <UsersSavedArtworksSkeleton />;
   }
 
-  const reversedArtworks = [...artworks].reverse();
+  const reversedArtworks = [...artworks];
 
   const arts = catalogChunk(
     reversedArtworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width < 1500 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width < 1500 ? 3 : 4,
   );
   return (
     <div className="py-4 w-full">

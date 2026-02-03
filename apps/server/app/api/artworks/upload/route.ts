@@ -24,7 +24,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isArtworkUploadEnabled =
@@ -63,12 +63,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (data.role_access.role === "gallery") {
       const active_subscription = await Subscriptions.findOne(
         { "customer.gallery_id": data.author_id },
-        "plan_details status upload_tracker"
+        "plan_details status upload_tracker",
       );
 
       if (!active_subscription || active_subscription.status !== "active") {
         throw new ForbiddenError(
-          "No active subscription for this user. Please activate a plan to continue"
+          "No active subscription for this user. Please activate a plan to continue",
         );
       }
 
@@ -77,7 +77,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         active_subscription.upload_tracker.limit
       ) {
         throw new ForbiddenError(
-          "Plan usage limit exceeded, please upgrade plan"
+          "Plan usage limit exceeded, please upgrade plan",
         );
       }
     }
@@ -92,14 +92,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (data.role_access.role === "gallery") {
       const update_tracker = await Subscriptions.updateOne(
         { "customer.gallery_id": data.author_id },
-        { $inc: { "upload_tracker.upload_count": 1 } }
+        { $inc: { "upload_tracker.upload_count": 1 } },
       );
 
       if (update_tracker.modifiedCount === 0) {
         // Rollback the artwork upload if tracker update fails
         await Artworkuploads.deleteOne({ _id: uploadArt._id });
         throw new ServerError(
-          "A server error has occurred, please try again or contact support"
+          "A server error has occurred, please try again or contact support",
         );
       }
     }
@@ -113,7 +113,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       createErrorRollbarReport(
         "artwork: Redis Write Error",
         redisWriteErr as any,
-        500
+        500,
       );
     }
 
@@ -121,14 +121,15 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Artwork uploaded successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.log(error);
     createErrorRollbarReport("artwork: upload", error, error_response.status);
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

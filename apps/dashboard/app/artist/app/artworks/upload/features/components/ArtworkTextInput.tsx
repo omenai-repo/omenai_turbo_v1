@@ -4,7 +4,10 @@ import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_va
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useEffect, useState } from "react";
-import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  INPUT_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type ArtworkTextInputProps = {
   label: string;
@@ -16,6 +19,7 @@ type ArtworkTextInputProps = {
   disabled?: boolean;
   value?: string;
 };
+
 export default function ArtworkTextInput({
   label,
   placeholder,
@@ -50,6 +54,27 @@ export default function ArtworkTextInput({
     }
   };
 
+  // Helper to determine the unit to display
+  const getUnit = (labelText: string) => {
+    const l = labelText.toLowerCase();
+    // Check for dimension keywords
+    if (
+      l.includes("length") ||
+      l.includes("height") ||
+      l.includes("width") ||
+      l.includes("depth")
+    ) {
+      return "in";
+    }
+    // Check for weight
+    if (l.includes("weight")) {
+      return "kg";
+    }
+    return null;
+  };
+
+  const unit = getUnit(label);
+
   return (
     <div
       className={`flex flex-col gap-1 ${
@@ -62,18 +87,29 @@ export default function ArtworkTextInput({
       >
         {label}
       </label>
+
       {type === "text" && (
-        <input
-          name={name}
-          required={required}
-          type="text"
-          disabled={disabled}
-          placeholder={placeholder}
-          defaultValue={value}
-          onChange={(e) => handleChange(e.target.value, name)}
-          className={INPUT_CLASS}
-        />
+        <div className="relative w-full">
+          <input
+            name={name}
+            required={required}
+            type="text"
+            disabled={disabled}
+            placeholder={placeholder}
+            defaultValue={value}
+            onChange={(e) => handleChange(e.target.value, name)}
+            // Increased padding-right to pr-12 to accommodate the new badge
+            className={`${INPUT_CLASS} ${unit ? "pr-12" : ""}`}
+          />
+          {unit && (
+            // Premium styled unit indicator
+            <div className="absolute right-1 top-1/2 -translate-y-1/2 bg-dark text-white text-xs font-medium p-3 rounded pointer-events-none select-none shadow-sm">
+              {unit}
+            </div>
+          )}
+        </div>
       )}
+
       {type === "textarea" && (
         <textarea
           name={name}
@@ -84,6 +120,7 @@ export default function ArtworkTextInput({
           className={TEXTAREA_CLASS}
         />
       )}
+
       {errorList.length > 0 &&
         errorList.map((error, index) => {
           return (
