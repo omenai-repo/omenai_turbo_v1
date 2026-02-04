@@ -9,6 +9,7 @@ import {
   UserRoundPen,
   ChartColumnBig,
   Headset,
+  Image,
 } from "lucide-react";
 // types/sidebar.ts
 import { LucideIcon } from "lucide-react";
@@ -47,6 +48,13 @@ export const sidebarItems: SidebarItem[] = [
     key: "support",
   },
 
+  {
+    label: "Artworks",
+    icon: Image,
+    href: "/admin/artworks",
+    section: "actions",
+    key: "artworks",
+  },
   {
     label: "Upload promotionals",
     icon: Proportions,
