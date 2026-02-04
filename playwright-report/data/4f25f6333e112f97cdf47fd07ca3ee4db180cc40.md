@@ -1,0 +1,72 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T"
+    - generic [ref=e3]:
+      - main [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]:
+            - link "omenai logo" [ref=e7]:
+              - /url: http://localhost:3000
+              - img "omenai logo" [ref=e8]
+            - generic [ref=e9]:
+              - img "Omenai Gallery Visual" [ref=e10]
+              - generic [ref=e12]:
+                - paragraph [ref=e13]: Featured Collection
+                - paragraph [ref=e14]: Contemporary Resonance, 2024
+            - paragraph [ref=e16]: Connecting global collectors with the world's most exceptional artists.
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - generic [ref=e19]: New to Omenai?
+              - link "Create Account" [ref=e20]:
+                - /url: /register
+            - generic [ref=e22]:
+              - generic [ref=e23]:
+                - heading "Welcome Back" [level=1] [ref=e24]
+                - paragraph [ref=e25]: Please enter your details to access your collectors account.
+              - generic [ref=e29]:
+                - textbox "Enter your email address" [active] [ref=e31]: dantereus1@gmail.com
+                - generic [ref=e33]:
+                  - textbox "Enter your password" [ref=e34]
+                  - button "Show Password" [ref=e36] [cursor=pointer]
+                - generic [ref=e37]:
+                  - generic [ref=e38]:
+                    - button "Sign In to Omenai" [ref=e39] [cursor=pointer]
+                    - link "Create an account" [ref=e40]:
+                      - /url: /register
+                      - button "Create an account" [ref=e41] [cursor=pointer]
+                  - generic [ref=e42]:
+                    - generic [ref=e43]:
+                      - link "Artist Portal" [ref=e44]:
+                        - /url: http://localhost:4000/login/artist
+                      - link "Gallery Portal" [ref=e46]:
+                        - /url: http://localhost:4000/login/gallery
+                    - button "Forgot password?" [ref=e47] [cursor=pointer]
+            - generic [ref=e48]:
+              - generic [ref=e49]: © 2026 OMENAI INC.
+              - generic [ref=e50]:
+                - link "Privacy" [ref=e51]:
+                  - /url: /privacy
+                - link "Terms" [ref=e52]:
+                  - /url: /terms
+      - generic [ref=e53]:
+        - generic:
+          - generic:
+            - generic: Ask Advisor
+        - button "Open Omenai Advisor" [ref=e54] [cursor=pointer]:
+          - img [ref=e60]
+  - generic [ref=e74] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e75]:
+      - img [ref=e76]
+    - generic [ref=e81]:
+      - button "Open issues overlay" [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]: "0"
+          - generic [ref=e85]: "1"
+        - generic [ref=e86]: Issue
+      - button "Collapse issues badge" [ref=e87]:
+        - img [ref=e88]
+  - alert [ref=e90]
+```

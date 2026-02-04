@@ -1,0 +1,79 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T"
+    - generic [ref=e3]:
+      - main [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]:
+            - link "omenai logo" [ref=e7] [cursor=pointer]:
+              - /url: http://localhost:3000
+              - img "omenai logo" [ref=e8]
+            - img "Omenai Portal" [ref=e10]
+            - paragraph [ref=e13]: The premier digital destination for the global contemporary art market.
+          - generic [ref=e14]:
+            - generic [ref=e15]:
+              - generic [ref=e16]: New to the platform?
+              - link "Join Omenai" [ref=e17] [cursor=pointer]:
+                - /url: /register
+            - generic [ref=e19]:
+              - generic [ref=e20]:
+                - heading "Identify your portal" [level=1] [ref=e21]
+                - paragraph [ref=e22]: Select your account type to access your personalized workspace.
+              - generic [ref=e24]:
+                - generic [ref=e26]:
+                  - generic [ref=e27]:
+                    - link "Portal Gallery" [ref=e28] [cursor=pointer]:
+                      - /url: /login/gallery
+                      - img [ref=e30]
+                      - generic [ref=e32]:
+                        - generic [ref=e33]:
+                          - paragraph [ref=e34]: Portal
+                          - heading "Gallery" [level=3] [ref=e35]
+                        - img [ref=e36]
+                    - link "Creative Artist" [ref=e38] [cursor=pointer]:
+                      - /url: /login/artist
+                      - img [ref=e40]
+                      - generic [ref=e42]:
+                        - generic [ref=e43]:
+                          - paragraph [ref=e44]: Creative
+                          - heading "Artist" [level=3] [ref=e45]
+                        - img [ref=e46]
+                  - link "Experience Art Login as Collector" [ref=e48] [cursor=pointer]:
+                    - /url: /login/user
+                    - generic [ref=e49]:
+                      - img [ref=e51]
+                      - generic [ref=e53]:
+                        - generic [ref=e54]:
+                          - paragraph [ref=e55]: Experience Art
+                          - heading "Login as Collector" [level=3] [ref=e56]
+                        - img [ref=e57]
+                  - link "Don't have an account? Join Omenai" [ref=e60] [cursor=pointer]:
+                    - /url: /register
+                    - paragraph [ref=e61]: Don't have an account? Join Omenai
+                - paragraph [ref=e62]: Need assistance? Contact Concierge
+            - generic [ref=e63]:
+              - generic [ref=e64]: © 2026 OMENAI INC.
+              - link "Support" [ref=e66] [cursor=pointer]:
+                - /url: /help
+      - generic [ref=e67]:
+        - generic:
+          - generic:
+            - generic: Ask Advisor
+        - button "Open Omenai Advisor" [ref=e68] [cursor=pointer]:
+          - img [ref=e74]
+  - generic [ref=e88] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e89]:
+      - img [ref=e90]
+    - generic [ref=e93]:
+      - button "Open issues overlay" [ref=e94]:
+        - generic [ref=e95]:
+          - generic [ref=e96]: "0"
+          - generic [ref=e97]: "1"
+        - generic [ref=e98]: Issue
+      - button "Collapse issues badge" [ref=e99]:
+        - img [ref=e100]
+  - alert [ref=e102]
+```
