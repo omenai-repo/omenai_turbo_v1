@@ -3,12 +3,8 @@ import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFe
 import OnboardingBlockerScreen from "@omenai/shared-ui-components/components/blockers/onboarding/OboardingBlockerScreen";
 import FormBlock from "./features/form/FormBlock";
 import ImageBlock from "./features/image/Image";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { validateInviteToken } from "@omenai/shared-services/auth/waitlist/validateInviteToken";
-import { useEffect } from "react";
-import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import { useWaitlistValidation } from "../components/useWaitlistValidation";
 
 export default function ArtistSignupPageWrapper({
   referrerKey,
@@ -23,37 +19,14 @@ export default function ArtistSignupPageWrapper({
     "collectoronboardingenabled",
     false,
   );
-  const router = useRouter();
-  const { value: waitlistActivated } =
-    useLowRiskFeatureFlag("waitlistActivated");
-  if (waitlistActivated) {
-    if (!referrerKey || !email || !inviteCode)
-      router.push("/waitlist?entity=artist");
-  }
-  const { data, isLoading } = useQuery({
-    queryKey: ["artist_signup", referrerKey, email, inviteCode],
-    queryFn: async () => {
-      return await validateInviteToken({
-        referrerKey: referrerKey!,
-        email: email!,
-        entity: "artist",
-        inviteCode: inviteCode!,
-      });
-    },
-    enabled: waitlistActivated && !!referrerKey,
-    refetchOnWindowFocus: false,
+  const { isLoading } = useWaitlistValidation({
+    entity: "artist",
+    referrerKey,
+    email,
+    inviteCode,
   });
 
-  // Handle validation errors in useEffect
-  useEffect(() => {
-    if (data && data.status !== 200) {
-      toast_notif(data.message, "error");
-      router.replace("/waitlist?entity=artist");
-    }
-  }, [data]);
-
-  // Show loading state while validating
-  if (waitlistActivated && isLoading) {
+  if (isLoading) {
     return (
       <div className="w-full h-screen grid place-items-center">
         <Load />
