@@ -39,7 +39,7 @@ export function ArtworkListing({
       const response = await fetchCuratedArtworks(
         currentPage,
         user.preferences,
-        filterOptions
+        filterOptions,
       );
       if (response?.isOk) {
         set_artwork_total(response.total);
@@ -65,7 +65,7 @@ export function ArtworkListing({
 
   const arts = catalogChunk(
     artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   return (

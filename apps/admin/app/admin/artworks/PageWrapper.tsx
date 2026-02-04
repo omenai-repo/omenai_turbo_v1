@@ -30,22 +30,22 @@ export default function ArtworkListing() {
     filterOptions,
   } = useArtworksPagination();
 
-  async function downloadArtwork(artwork: ArtworkSchemaTypes) {
+  async function downloadArtwork(url: string, title: string) {
     setIsDownloading(true);
-    toast_notif(`Downloading ${artwork.title}`, "info");
+    toast_notif(`Downloading ${title}`, "info");
     try {
-      const image_href = getOptimizedImage(artwork.url, "xlarge");
+      const image_href = getOptimizedImage(url, "xlarge");
       const response = await fetch(image_href);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = artwork.title;
+      link.download = title;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
-      toast_notif(`Downloaded ${artwork.title}`, "success");
+      toast_notif(`Downloaded ${title}`, "success");
     } catch (error) {
       toast_notif("Failed to download artwork", "error");
     }
@@ -67,10 +67,13 @@ export default function ArtworkListing() {
       </div>
     );
   }
+  const filteredArtworks = artworksArray.data.filter(
+    (artwork: ArtworkSchemaTypes) => artwork.role_access.role === viewMode,
+  );
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
-      <div className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-20 shadow-sm">
+    <div className="min-h-screen bg-neutral-50 font-sans text-slate-800">
+      <div className="bg-neutral-50  py-6 flex justify-between items-center sticky -top-5 z-30">
         {/* View Toggle Switch */}
         <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
           <button
@@ -96,23 +99,11 @@ export default function ArtworkListing() {
         </div>
       </div>
 
-      <div className="p-6 md:p-8 animate-in fade-in duration-300">
+      <div className="py-6 animate-in fade-in duration-300">
         <ArtworkGrid
-          artworks={artworks}
+          artworks={filteredArtworks}
           sessionId={user ? user.id : undefined}
-          filterByRole={viewMode}
-          renderArtworkWrapper={(art, artworkCard) => (
-            <div className="relative">
-              <button
-                disabled={isDownloading}
-                onClick={() => downloadArtwork(art)}
-                className="absolute bg-white disabled:bg-white/50 top-4 right-2 p-2 rounded-full z-10 cursor-pointer"
-              >
-                <Download size={18} />
-              </button>
-              {artworkCard}
-            </div>
-          )}
+          handleDownload={downloadArtwork}
         />
       </div>
 

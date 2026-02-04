@@ -60,7 +60,6 @@ export default function ExhibitionGrid({
                     sessionId={sessionId}
                     availability={art.availability}
                     medium={art.medium}
-                    trending={false}
                     author_id={art.author_id}
                   />
                 ))}
