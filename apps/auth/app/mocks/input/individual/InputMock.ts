@@ -16,6 +16,13 @@ export const user_signup_step_one = [
     labelText: "email",
     id: 1,
   },
+  {
+    label: "Phone number",
+    type: "text",
+    placeholder: "e.g +1234567890",
+    labelText: "phone",
+    id: 2,
+  },
 ];
 export const user_signup_step_two = [
   {

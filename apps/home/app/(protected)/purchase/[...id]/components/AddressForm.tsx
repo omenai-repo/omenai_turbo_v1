@@ -42,6 +42,7 @@ export default function AddressForm({
     toggleOrderReceivedModal,
   } = actionStore();
 
+  // TODO: Switch to fetching the user address from DB and populating
   const { user, csrf } = useAuth({ requiredRole: "user" });
 
   const [loading, setLoading] = useState(false);

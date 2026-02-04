@@ -16,7 +16,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -26,30 +26,29 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const block_artist = await AccountArtist.updateOne(
       { artist_id },
-      { $set: { status } }
+      { $set: { status } },
     );
 
     if (block_artist.modifiedCount === 0)
       throw new ServerError("Something went wrong");
 
-    // TODO: Send mail to artist
     await sendArtistBlockedMail({ email: artist.email, name: artist.name });
 
     return NextResponse.json(
       { message: "Artist status updated" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: block artist",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

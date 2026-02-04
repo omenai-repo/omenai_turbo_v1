@@ -20,7 +20,7 @@ const config: CombinedConfig = {
   ...strictRateLimit,
 };
 export const POST = withRateLimit(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const { name, password, token, email } = await request.json();
@@ -51,7 +51,7 @@ export const POST = withRateLimit(config)(async function POST(
           admin_active: true,
           joinedAt: date,
         },
-      }
+      },
     );
 
     if (activate_admin_user.modifiedCount === 0)
@@ -59,7 +59,6 @@ export const POST = withRateLimit(config)(async function POST(
 
     await AdminInviteToken.deleteOne({ token });
 
-    //TODO - SCOPE CREEP: Send email notification about account activation
     await sendAdminActivationEmail({
       name,
       email,
@@ -74,11 +73,11 @@ export const POST = withRateLimit(config)(async function POST(
     createErrorRollbarReport(
       "admin:Activate admin account",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

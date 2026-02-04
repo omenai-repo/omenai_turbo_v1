@@ -41,14 +41,13 @@ export const FormCard = () => {
         "individual",
         newUpdateData,
         user.id as string,
-        csrf || ""
+        csrf || "",
       );
       if (!isOk) toast_notif(body.message, "error");
       else {
-        // todo: add update session function
         toast_notif(
           `${body.message}... Please log back in to view update`,
-          "success"
+          "success",
         );
         clearData();
       }

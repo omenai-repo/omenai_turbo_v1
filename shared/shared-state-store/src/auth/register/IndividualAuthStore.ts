@@ -134,11 +134,11 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       email: true,
       password: true,
       confirmPassword: true,
-      address_line: true,
-      city: true,
-      country: true,
-      zip: true,
-      state: true,
+      address_line: false,
+      city: false,
+      country: false,
+      zip: false,
+      state: false,
       phone: true,
     },
     setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => {
@@ -149,5 +149,5 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
         },
       }));
     },
-  })
+  }),
 );

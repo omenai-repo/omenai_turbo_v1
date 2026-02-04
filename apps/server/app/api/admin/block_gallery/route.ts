@@ -16,7 +16,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -26,30 +26,29 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const block_gallery = await AccountGallery.updateOne(
       { gallery_id },
-      { $set: { status } }
+      { $set: { status } },
     );
 
     if (block_gallery.modifiedCount === 0)
       throw new ServerError("Something went wrong");
 
-    // TODO: Send mail to gallery
     await sendGalleryBlockedEmail({ name: gallery.name, email: gallery.email });
 
     return NextResponse.json(
       { message: "Gallery status updated" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: block gallery",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

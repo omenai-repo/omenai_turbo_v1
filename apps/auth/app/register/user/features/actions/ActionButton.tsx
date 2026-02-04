@@ -142,17 +142,11 @@ export default function ({
       <button
         className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
         type={"button"}
-        disabled={
-          (currentSignupFormIndex === 1 && loading) ||
-          (currentSignupFormIndex === 1 && isFieldDirty["phone"])
-        }
-        onClick={
-          currentSignupFormIndex === 1
-            ? validateAddressCapability
-            : handleClickNext
-        }
+        disabled={currentSignupFormIndex === 0 && isFieldDirty["phone"]}
+        onClick={handleClickNext}
       >
-        <span>
+        Continue
+        {/* <span>
           {loading ? (
             <LoadSmall />
           ) : currentSignupFormIndex === 1 ? (
@@ -160,7 +154,7 @@ export default function ({
           ) : (
             "Continue"
           )}
-        </span>
+        </span> */}
       </button>
     </div>
   );
