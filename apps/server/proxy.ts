@@ -76,10 +76,73 @@ export default async function proxy(req: NextRequest) {
     setCorsHeaders(response, origin);
   }
 
-  // 6. Mobile "Session" Compatibility
-  // If it's a mobile request with a Bearer token, we don't need to do anything here.
-  // The Route Handler will validate the token against Redis.
-  // We DO NOT check static secrets here.
+  const cspHeader = `
+    default-src 'self';
+    
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' 
+        https://js.stripe.com 
+        https://checkout.flutterwave.com 
+        https://*.rollbar.com 
+        https://*.highlight.io 
+        https://*.posthog.com 
+        https://us.i.posthog.com 
+        https://eu.i.posthog.com
+        https://va.vercel-scripts.com 
+        https://vitals.vercel-insights.com;
+        
+    style-src 'self' 'unsafe-inline' 
+        https://fonts.googleapis.com;
+        
+    img-src 'self' blob: data: 
+        https://fra.cloud.appwrite.io 
+        https://cloud.appwrite.io
+        https://res.cloudinary.com 
+        https://*.stripe.com 
+        https://*.rollbar.com 
+        https://*.openstreetmap.org 
+        https://*.tile.openstreetmap.org;
+        
+    font-src 'self' data: 
+        https://fonts.gstatic.com;
+        
+    connect-src 'self' 
+        https://fra.cloud.appwrite.io 
+        https://cloud.appwrite.io
+        https://api.stripe.com 
+        https://api.flutterwave.com 
+        https://*.rollbar.com 
+        https://*.highlight.io 
+        https://*.posthog.com 
+        https://us.i.posthog.com 
+        https://eu.i.posthog.com
+        https://cdn-global.configcat.com 
+        https://api.positionstack.com 
+        https://generativelanguage.googleapis.com 
+        https://vitals.vercel-insights.com;
+        
+    frame-src 'self' 
+        https://js.stripe.com 
+        https://hooks.stripe.com 
+        https://checkout.flutterwave.com;
+        
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    block-all-mixed-content;
+    upgrade-insecure-requests;
+  `;
+
+  // Minify the string (remove newlines/spaces)
+  const contentSecurityPolicyHeaderValue = cspHeader
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
+  // Set the header
+  response.headers.set(
+    "Content-Security-Policy",
+    contentSecurityPolicyHeaderValue,
+  );
 
   return response;
 }

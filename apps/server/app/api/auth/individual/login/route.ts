@@ -21,12 +21,24 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { createErrorRollbarReport } from "../../../util";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+import { validateRequestBody } from "../../../util";
+import z from "zod";
+
+const LoginSchema = z.object({
+  email: z.email(),
+  password: z.string(),
+  device_push_token: z.string().optional(),
+});
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request, response?: Response) {
     const cookieStore = await cookies();
     try {
-      const { email, password, device_push_token } = await request.json();
+      const data = await validateRequestBody(request, LoginSchema);
+      const { email, password, device_push_token } = data;
+
+      console.log(data);
+
       await connectMongoDB();
 
       // 1. Authenticate User

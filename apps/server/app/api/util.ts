@@ -1,6 +1,6 @@
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../custom/errors/dictionary/errorDictionary";
-import z from "zod";
+import z, { ZodType } from "zod";
 import crypto from "node:crypto";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
 import { getDhlHeaders, getUserFriendlyError } from "./shipment/resources";
@@ -245,4 +245,36 @@ export async function calculateShipmentRate(
 
   // Return the first product (usually the best rate)
   return data.products[0];
+}
+
+export async function validateRequestBody<T>(
+  request: Request,
+  schema: ZodType<T>,
+): Promise<T> {
+  let body: any;
+
+  // 1. Safe JSON Parsing
+  try {
+    body = await request.json();
+    console.log("safely parsed");
+  } catch (error) {
+    throw new BadRequestError(
+      "Invalid JSON syntax: Request body could not be parsed.",
+    );
+  }
+
+  // 2. Zod Validation & Sanitization
+  const validationResult = schema.safeParse(body);
+  console.log(validationResult);
+
+  if (!validationResult.success) {
+    const errorMessage = validationResult.error.issues
+      .map((e: any) => `${e.path.join(".")}: ${e.message}`)
+      .join(", ");
+
+    throw new BadRequestError(`Validation Failed: ${errorMessage}`);
+  }
+
+  // 3. Return Clean Data (Typed automatically)
+  return validationResult.data;
 }

@@ -218,35 +218,53 @@ async function handleTransferCreation(verified_transaction: any, session: any) {
       day: now.getDate(),
     };
 
-    await Promise.all([
-      WalletTransaction.updateOne(
-        { wallet_id: meta.wallet_id, transaction_flw_ref_id: id },
-        {
-          $setOnInsert: {
-            wallet_id: meta.wallet_id,
-            trans_amount: amount,
-            trans_status: status,
-            trans_date: date_obj,
-            trans_flw_ref_id: id,
-          },
+    // 1. Just create the missing transaction record.
+    await WalletTransaction.updateOne(
+      { wallet_id: meta.wallet_id, trans_flw_ref_id: id },
+      {
+        $setOnInsert: {
+          wallet_id: meta.wallet_id,
+          trans_amount: amount,
+          trans_status: status,
+          trans_date: date_obj,
+          trans_flw_ref_id: id,
+          reference: verified_transaction.data.reference, // Capture the ref too
         },
-        { upsert: true },
-      ),
+      },
+      { upsert: true }, // Removed session to avoid complexity if not passing it consistently
+    );
 
-      Wallet.updateOne(
+    // 2. If the status is ALREADY 'FAILED' (rare for a creation event, but possible),
+    // we actually need to REFUND because we assumed it was deducted.
+    if (status === "FAILED") {
+      await Wallet.updateOne(
         { wallet_id: meta.wallet_id },
-        { $inc: { available_balance: -amount } },
-      ),
-    ]);
+        { $inc: { available_balance: amount } }, // Refund
+      );
 
+      const artist = await AccountArtist.findOne({
+        wallet_id: verified_transaction.data.meta.wallet_id,
+      });
+
+      await sendArtistFundsWithdrawalFailed({
+        amount: formatPrice(verified_transaction.data.amount),
+        email: artist.email,
+        name: artist.name,
+      });
+      return { isOk: true };
+    }
+
+    // 3. Send Processing Mail (Only if not failed)
     const artist = await AccountArtist.findOne({
       wallet_id: verified_transaction.data.meta.wallet_id,
     });
+
     await sendArtistFundsWithdrawalProcessingMail({
       amount: formatPrice(verified_transaction.data.amount),
       email: artist.email,
       name: artist.name,
     });
+
     return { isOk: true };
   } catch (error) {
     createErrorRollbarReport(

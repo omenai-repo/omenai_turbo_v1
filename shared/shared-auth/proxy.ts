@@ -12,6 +12,105 @@ import { getIronSession } from "iron-session";
 import { sessionOptions } from "@omenai/shared-lib/auth/configs/session-config";
 import { destroySession } from "@omenai/shared-lib/auth/session";
 
+// 1. Define Paths that REQUIRE Authentication (Your old matcher logic)
+const PROTECTED_PATHS = [
+  "/admin",
+  "/purchase",
+  "/payment",
+  "/user",
+  "/gallery",
+  "/artist",
+];
+
+// 2. CSP Header Definition (Same as Backend)
+// apps/web/middleware.ts
+
+const CSP_HEADER = `
+    default-src 'self';
+
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' 
+        https://js.stripe.com 
+        https://checkout.flutterwave.com 
+        https://*.rollbar.com 
+        https://*.highlight.io 
+        https://*.posthog.com 
+        https://us.i.posthog.com 
+        https://eu.i.posthog.com 
+        https://va.vercel-scripts.com 
+        https://vitals.vercel-insights.com;
+
+    style-src 'self' 'unsafe-inline' 
+        https://fonts.googleapis.com;
+
+    img-src 'self' blob: data: 
+        https://fra.cloud.appwrite.io 
+        https://cloud.appwrite.io 
+        https://res.cloudinary.com 
+        https://*.stripe.com 
+        https://*.rollbar.com 
+        https://*.openstreetmap.org 
+        https://*.tile.openstreetmap.org;
+
+    font-src 'self' data: 
+        https://fonts.gstatic.com;
+
+    connect-src 'self' 
+        http://localhost:3000
+        http://localhost:3001
+        http://localhost:3002
+        http://localhost:3003
+        http://localhost:4000
+        http://localhost:5000
+        http://localhost:8001
+        https://staging.auth.omenai.app
+        https://staging.dashboard.omenai.app
+        https://staging.admin.omenai.app
+        https://staging.omenai.app
+        https://staging.api.omenai.app
+        https://staging.tracking.omenai.app
+        https://auth.omenai.app
+        https://dashboard.omenai.app
+        https://admin.omenai.app
+        https://omenai.app
+        https://join.omenai.app
+        https://api.omenai.app
+        https://tracking.omenai.app
+        https://fra.cloud.appwrite.io 
+        https://cloud.appwrite.io 
+        https://api.stripe.com 
+        https://api.flutterwave.com 
+        https://*.rollbar.com 
+        https://*.highlight.io 
+        https://*.posthog.com 
+        https://us.i.posthog.com 
+        https://eu.i.posthog.com 
+        https://cdn-global.configcat.com 
+        https://api.positionstack.com 
+        https://generativelanguage.googleapis.com 
+        https://vitals.vercel-insights.com
+        ws: wss:;
+
+    frame-src 'self' 
+        https://js.stripe.com 
+        https://hooks.stripe.com 
+        https://checkout.flutterwave.com;
+
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    block-all-mixed-content;
+    upgrade-insecure-requests;
+`
+  .replace(/\s{2,}/g, " ")
+  .trim();
+
+// Helper to attach CSP to any response
+function addCspHeaders(response: NextResponse) {
+  response.headers.set("Content-Security-Policy", CSP_HEADER);
+  return response;
+}
+
 const userDashboardRegex = /\/user\/.*/;
 const galleryDashboardRegex = /\/gallery\/.*/;
 const artistDashboardRegex = /\/artist\/app\/.*/;
@@ -21,44 +120,54 @@ const paymentPageRegex = /\/payment\/.*/;
 const artistOnboardingDashboardRegex = /\/artist\/onboarding\/.*/;
 
 export default async function proxy(req: NextRequest) {
-  const pathname = req.nextUrl.pathname; // Get the current path
-
+  const pathname = req.nextUrl.pathname;
   const host = req.headers.get("host");
 
-  // Check if we are on the root domain (not 'join')
+  // === HOST REDIRECT (Preserve Params) ===
   if (host === "omenai.app" || host === "www.omenai.app") {
-    // 1. Create the destination URL
     const targetUrl = new URL("https://join.omenai.app");
-
-    // 2. ⚡ CAPTURE: Copy all params from the current request to the target
-    // req.nextUrl.searchParams contains everything the user typed (?a=b&c=d)
     req.nextUrl.searchParams.forEach((value, key) => {
       targetUrl.searchParams.set(key, value);
     });
-
-    // 3. Redirect with the baggage included
     return NextResponse.redirect(targetUrl);
   }
+
   const app_auth_uri = auth_uri();
 
+  // === PUBLIC ROUTE CHECK ===
   const publicRoutes = [
     "/",
-    base_url(),
+    // Note: base_url() usually returns a full URL (https://...), so simple equality might fail
+    // if pathname is just '/'. Removing it from here if it duplicates '/'
+    // or ensure base_url() returns just a path.
     new URL("/login", app_auth_uri).pathname,
     new URL("/register", app_auth_uri).pathname,
-    "/catalog/*",
-    "/search/*",
-    "/artwork/*",
-    "/categories/*",
-    "/collections/*",
+    "/catalog", // Changed /catalog/* to check startsWith logic if needed, or keep as string if exact match
   ];
-  if (shouldSkipMiddleware(pathname, req) || publicRoutes.includes(pathname)) {
-    return NextResponse.next();
+
+  // Helper for simple glob matching if publicRoutes has wildcards
+  const isPublic = publicRoutes.some(
+    (p) => pathname === p || pathname.startsWith(p),
+  );
+
+  if (shouldSkipMiddleware(pathname, req) || isPublic) {
+    return addCspHeaders(NextResponse.next());
   }
 
-  const res = NextResponse.next();
+  // === AUTHENTICATION LOGIC ===
+  // Only run this heavy logic if the user is trying to access a PROTECTED path.
+  // This mimics your previous 'matcher' config.
+  const isProtectedPath = PROTECTED_PATHS.some((path) =>
+    pathname.startsWith(path),
+  );
 
-  // For middleware, getIronSession needs the request and response objects.
+  if (!isProtectedPath) {
+    // If it's not a protected path (e.g. /about, /terms), allow access + CSP
+    return addCspHeaders(NextResponse.next());
+  }
+
+  // --- Start Iron Session & Redis Check ---
+  const res = NextResponse.next();
   const session = await getIronSession<{ sessionId: string }>(
     req,
     res,
@@ -67,51 +176,40 @@ export default async function proxy(req: NextRequest) {
 
   const { sessionId } = session;
 
-  // Redirect to login if no session cookie is found
-
   if (!sessionId) {
-    if (pathname.startsWith("/admin/")) {
-      const redirect_url = new URL("/auth/login", admin_url());
-      return NextResponse.redirect(redirect_url);
-    } else {
-      const loginUrl = new URL("/login", auth_uri());
-      return NextResponse.redirect(loginUrl);
-    }
+    const redirectUrl = pathname.startsWith("/admin/")
+      ? new URL("/auth/login", admin_url())
+      : new URL("/login", auth_uri());
+    return NextResponse.redirect(redirectUrl);
   }
 
   const cookieHeader = req.headers.get("cookie") as string;
-
-  // Verify the session ID is still valid in Redis by calling our own API.
-  // This is the recommended pattern since middleware (especially on the edge)
-  // cannot directly connect to a database like Redis.
 
   const response = await fetch(`${getApiUrl()}/api/auth/session/user`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Origin: base_url(),
-      Cookie: cookieHeader, // Include the cookie for session verification
+      Cookie: cookieHeader,
       "X-From-Middleware": "true",
     },
-    credentials: "include", // Ensure cookies are sent with the request
+    credentials: "include",
   });
 
-  const userSessionData = await response.json();
-
-  // If the /api/user route returns an unauthorized status, the session is invalid.
+  // Handle Invalid Session
   if (!response.ok || response.status === 401) {
     destroySession(sessionId, cookieHeader);
-    if (pathname.startsWith("/admin/")) {
-      const redirect_url = new URL("/auth/login", admin_url());
-      return NextResponse.redirect(redirect_url);
-    } else {
-      const loginUrl = new URL("/login", auth_uri());
-      return NextResponse.redirect(loginUrl);
-    }
+    const redirectUrl = pathname.startsWith("/admin/")
+      ? new URL("/auth/login", admin_url())
+      : new URL("/login", auth_uri());
+    return NextResponse.redirect(redirectUrl);
   }
 
+  const userSessionData = await response.json();
   const { userData } = userSessionData.user;
   const role = userData.role;
+
+  // --- Role Based Access Control (RBAC) ---
   const isUserDashboard = userDashboardRegex.test(pathname);
   const isGalleryDashboard = galleryDashboardRegex.test(pathname);
   const isPurchasePage = purchasePageRegex.test(pathname);
@@ -120,15 +218,15 @@ export default async function proxy(req: NextRequest) {
   const isAdminDashboard = adminDashboardRegex.test(pathname);
   const isOnboarding = artistOnboardingDashboardRegex.test(pathname);
 
-  // User role restrictions
+  // User Role
   if (
     role === "user" &&
     (isGalleryDashboard || isArtistDashboard || isAdminDashboard)
   ) {
-    return NextResponse.redirect(new URL("/user/saves", dashboard_url())); // Redirect to their actual user dashboard
+    return NextResponse.redirect(new URL("/user/saves", dashboard_url()));
   }
 
-  // Gallery role restrictions
+  // Gallery Role
   if (
     role === "gallery" &&
     (isUserDashboard ||
@@ -137,13 +235,10 @@ export default async function proxy(req: NextRequest) {
       isPurchasePage ||
       isPaymentPage)
   ) {
-    console.log(
-      `[UI Middleware] Gallery role '${role}' forbidden from ${pathname}. Redirecting to gallery's dashboard.`,
-    );
-    return NextResponse.redirect(new URL("/gallery/overview", dashboard_url())); // Redirect to their actual gallery dashboard
+    return NextResponse.redirect(new URL("/gallery/overview", dashboard_url()));
   }
 
-  // Artist role restrictions
+  // Artist Role
   if (
     role === "artist" &&
     (isUserDashboard ||
@@ -152,15 +247,12 @@ export default async function proxy(req: NextRequest) {
       isPurchasePage ||
       isPaymentPage)
   ) {
-    console.log(
-      `[UI Middleware] Artist role '${role}' forbidden from ${pathname}. Redirecting to artist's dashboard.`,
-    );
     return NextResponse.redirect(
       new URL("/artist/app/overview", dashboard_url()),
-    ); // Redirect to their actual artist dashboard
+    );
   }
 
-  // Admin role restrictions (adjust if admins should have full access)
+  // Admin Role
   if (
     role === "admin" &&
     (isUserDashboard ||
@@ -169,34 +261,24 @@ export default async function proxy(req: NextRequest) {
       isPurchasePage ||
       isPaymentPage)
   ) {
-    console.log(
-      `[UI Middleware] Admin role '${role}' restricted from ${pathname}. Redirecting to login`,
-    );
     return NextResponse.redirect(
       new URL("/admin/requests/gallery", admin_url()),
-    ); // Redirect to their actual admin dashboard
+    );
   }
 
-  // Other restriction
-  if (role === "artist" && isOnboarding) {
-    if (userData.isOnboardingCompleted)
-      return NextResponse.redirect(
-        new URL("/artist/app/overview", dashboard_url()),
-      ); // Redirect to their actual artist dashboard
+  // Onboarding Check
+  if (role === "artist" && isOnboarding && userData.isOnboardingCompleted) {
+    return NextResponse.redirect(
+      new URL("/artist/app/overview", dashboard_url()),
+    );
   }
 
-  // If no specific rule blocks access, allow the req to proceed
-  return NextResponse.next();
+  // Allow Access + Add CSP
+  return addCspHeaders(NextResponse.next());
 }
 
 export const config = {
-  matcher: [
-    // Only run middleware on these specific paths
-    "/admin/:path*",
-    "/purchase/:path*",
-    "/payment/:path*",
-    "/user/:path*",
-    "/gallery/:path*",
-    "/artist/:path*",
-  ],
+  // NEW MATCHER: Apply to everything EXCEPT static files and internals.
+  // This ensures CSP is applied to Login, Register, and Landing pages.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
