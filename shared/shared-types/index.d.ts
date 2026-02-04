@@ -111,13 +111,19 @@ export type GallerySchemaTypes = {
   role: AccessRoleTypes;
   logo?: string;
   phone?: string;
-  subscription_status: {
-    type: "basic" | "premium" | "pro" | null;
-    active: boolean;
-  };
+  subscription_status: SubscriptionStatus;
   status: "active" | "blocked";
   connected_account_id: string | null;
   stripe_customer_id: string | null;
+};
+
+type SubscriptionStatus = {
+  type: "basic" | "premium" | "pro" | null;
+  active: boolean;
+  discount: {
+    active: boolean;
+    plan: "pro";
+  };
 };
 
 export type IndividualSchemaTypes = {

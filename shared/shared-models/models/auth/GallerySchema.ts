@@ -68,6 +68,10 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
         return {
           type: null,
           active: false,
+          discount: {
+            active: true,
+            plan: "pro",
+          },
         };
       },
     },
@@ -81,7 +85,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
     },
     stripe_customer_id: { type: String, default: () => null },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const AccountGallery =

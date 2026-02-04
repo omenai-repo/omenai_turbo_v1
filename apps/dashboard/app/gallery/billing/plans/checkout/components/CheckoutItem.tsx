@@ -23,13 +23,20 @@ export default function CheckoutItem({
 }) {
   /* -------------------- PRICING & LOGIC -------------------- */
   const currency = getCurrencySymbol(plan.currency);
-  const basePrice =
+  const singleIntervalPrice =
     interval === "monthly"
       ? Number(plan.pricing.monthly_price)
       : Number(plan.pricing.annual_price);
 
-  const discountAmount = discountEligible ? basePrice : 0;
-  const totalDue = basePrice - discountAmount;
+  // If discount is eligible (and it's the 2-month specific offer),
+  // we calculate the "Display Value" as 2 months worth of cost.
+  // Otherwise, we just show the standard single interval cost.
+  const displayBasePrice = discountEligible
+    ? singleIntervalPrice * 2
+    : singleIntervalPrice;
+
+  const displayDiscountAmount = discountEligible ? displayBasePrice : 0;
+  const totalDue = displayBasePrice - displayDiscountAmount;
 
   return (
     <div className="fixed inset-0 flex flex-col md:flex-row bg-white overflow-auto">
@@ -48,7 +55,7 @@ export default function CheckoutItem({
           <div className="space-y-4">
             {discountEligible && (
               <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded">
-                Invite-Only Access
+                2 Months Free
               </span>
             )}
             <h1 className="text-xl md:text-2xl lg:text-2xl font-bold leading-[1.1]">
@@ -61,7 +68,7 @@ export default function CheckoutItem({
             </p>
           </div>
 
-          {/* Plan Highlights (Since they aren't upgrading, show them what they get) */}
+          {/* Plan Highlights */}
           <ul className="space-y-4 py-4">
             {[
               "Showcase your pieces to a growing global audience",
@@ -92,31 +99,42 @@ export default function CheckoutItem({
 
           {/* Receipt Breakdown */}
           <div className="bg-white/5 border border-white/10 rounded p-6 space-y-4">
+            {/* Line Item: Base Cost */}
             <div className="flex justify-between text-sm text-gray-400">
               <span>
-                {plan.name} Plan ({interval})
+                {plan.name} Plan{" "}
+                {discountEligible ? "(2 Months Value)" : `(${interval})`}
               </span>
-              <span>{formatPrice(basePrice, currency)}</span>
+              <span>{formatPrice(displayBasePrice, currency)}</span>
             </div>
 
+            {/* Line Item: Discount */}
             {discountEligible && (
               <div className="flex justify-between text-emerald-400 font-medium">
                 <div className="flex text-fluid-xxs gap-x-2 items-center">
-                  <span>Welcome Discount</span>
+                  <span>2 Months Free</span>
                   <span className="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded uppercase tracking-tighter">
                     100% OFF
                   </span>
                 </div>
-                <span>-{formatPrice(discountAmount, currency)}</span>
+                <span>-{formatPrice(displayDiscountAmount, currency)}</span>
               </div>
             )}
 
+            {/* Total Due */}
             <div className="border-t border-white/10 pt-4 flex justify-between items-end">
               <div>
                 <p className="text-sm text-gray-300 font-semibold uppercase tracking-wider">
                   Total Due Today
                 </p>
-                <p className="text-xs text-gray-500">No hidden setup fees</p>
+                {discountEligible ? (
+                  <p className="text-xs text-emerald-400 mt-1">
+                    First 2 months free, then{" "}
+                    {formatPrice(singleIntervalPrice, currency)}/mo
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-500">No hidden setup fees</p>
+                )}
               </div>
               <span className="text-3xl font-bold tracking-tighter">
                 {formatPrice(totalDue, currency)}
@@ -158,7 +176,9 @@ export default function CheckoutItem({
             <p className="text-gray-500 font-normal text-fluid-xs leading-relaxed">
               Provide your payment details to activate your gallery
               subscription.{" "}
-              {discountEligible ? "You won't be charged today." : ""}
+              {discountEligible
+                ? "You won't be charged for the first 2 months."
+                : ""}
             </p>
           </header>
 
@@ -180,7 +200,6 @@ export default function CheckoutItem({
 
           {/* Compliance & Security Footer */}
           <div className="space-y-8">
-            {/* Payment Network Logos */}
             <div className="flex justify-center items-center gap-8 grayscale opacity-30 pt-4">
               <span className="text-xs font-black">VISA</span>
               <span className="text-xs font-black">MASTERCARD</span>

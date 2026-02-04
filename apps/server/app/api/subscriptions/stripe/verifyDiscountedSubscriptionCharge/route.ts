@@ -37,7 +37,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const body = await request.json();
@@ -46,13 +46,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!setupIntentId || !galleryId || !planId) {
       return NextResponse.json(
         { message: "Invalid parameters - Please try again" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const isSubscriptionEnabled = (await fetchConfigCatValue(
       "subscription_creation_enabled",
-      "high"
+      "high",
     )) as boolean;
 
     if (!isSubscriptionEnabled) {
@@ -68,7 +68,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           message:
             "There was a problem adding your payment method. Please try again or contact support.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -77,7 +77,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!paymentMethodId) {
       return NextResponse.json(
         { message: "No payment method found. Please try again." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -99,7 +99,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (exists) {
       return NextResponse.json(
         { message: "Subscription already verified" },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -107,7 +107,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Subscription verified successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const errorResponse = handleErrorEdgeCases(error);
@@ -115,12 +115,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "subscription: verify discounted subscription",
       error,
-      errorResponse.status
+      errorResponse.status,
     );
 
     return NextResponse.json(
       { message: errorResponse.message },
-      { status: errorResponse.status }
+      { status: errorResponse.status },
     );
   }
 });
@@ -129,7 +129,7 @@ async function processSubscriptionSuccess(
   planId: string,
   gallery_id: string,
   paymentMethod: Stripe.PaymentMethod,
-  client: any
+  client: any,
 ) {
   const nowUTC = toUTCDate(new Date());
   const stripeCustomerId = paymentMethod.customer as string;
@@ -142,14 +142,14 @@ async function processSubscriptionSuccess(
     const [plan, existingSubscription, account] = await Promise.all([
       SubscriptionPlan.findOne({ plan_id: planId }).session(session),
       Subscriptions.findOne({ stripe_customer_id: stripeCustomerId }).session(
-        session
+        session,
       ),
       AccountGallery.findOne({ gallery_id }).session(session),
     ]);
 
     if (!plan) {
       throw new BadRequestError(
-        "Invalid plan selected - Please contact support"
+        "Invalid plan selected - Please contact support",
       );
     }
 
@@ -163,18 +163,18 @@ async function processSubscriptionSuccess(
       account.stripe_customer_id !== stripeCustomerId
     ) {
       throw new ForbiddenError(
-        "Payment method does not belong to this gallery account"
+        "Payment method does not belong to this gallery account",
       );
     }
 
     // LOGIC CHECK: Enforce "New Subscribers Only"
     if (existingSubscription) {
       throw new ConflictError(
-        "This discount is valid for new subscribers only."
+        "This discount is valid for new subscribers only.",
       );
     }
 
-    const expiryDate = getSubscriptionExpiryDate("monthly");
+    const expiryDate = getSubscriptionExpiryDate("monthly", 2);
     const payment_ref = `discount:${stripeCustomerId}:${planId}`;
 
     const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
@@ -214,7 +214,7 @@ async function processSubscriptionSuccess(
         id: planId,
       },
       upload_tracker: {
-        limit: getUploadLimitLookup(plan.name, "monthly"),
+        limit: getUploadLimitLookup(plan.name, "monthly", 2),
         next_reset_date: expiryDate.toISOString(),
         upload_count: 0,
       },
@@ -231,15 +231,19 @@ async function processSubscriptionSuccess(
       { gallery_id },
       {
         $set: {
-          subscription_status: { type: plan.name, active: true },
+          subscription_status: {
+            type: plan.name,
+            active: true,
+            discount: { active: false, plan: "pro" },
+          },
         },
-      }
+      },
     ).session(session);
 
     // 4. Remove Discount from Waitlist
     await Waitlist.updateOne(
       { entityId: gallery_id, entity: "gallery" },
-      { $set: { discount: null } }
+      { $set: { discount: null } },
     ).session(session);
 
     await session.commitTransaction();
@@ -253,11 +257,12 @@ async function processSubscriptionSuccess(
       createErrorRollbarReport(
         "subscription success email failed",
         emailError,
-        500
+        500,
       );
     }
   } catch (error) {
     await session.abortTransaction();
+    console.log(error);
     throw error;
   } finally {
     session.endSession();

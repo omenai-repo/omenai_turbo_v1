@@ -10,7 +10,7 @@ const paymentIcons = {
     "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amazonpay.svg",
   paypal: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/paypal.svg",
   cashapp: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/cashapp.svg",
-  link: "https://cdn.jsdelivr.net/npm/heroicons@2.0.0/24/outline/link.svg",
+  link: "https://cdn.brandfetch.io/link.co/logo.svg",
 };
 
 type PaymentIconType =

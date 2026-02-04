@@ -27,7 +27,7 @@ const calculateYearlySavings = (monthlyPrice: string, annualPrice: string) =>
 const getPlanChangeParams = (
   subData: SubscriptionModelSchemaTypes | null,
   tab: "monthly" | "yearly",
-  pricing: { monthly_price: string; annual_price: string }
+  pricing: { monthly_price: string; annual_price: string },
 ) => {
   if (subData === null) return { action: "", shouldCharge: false };
 
@@ -39,7 +39,7 @@ const getPlanChangeParams = (
     subData.plan_details.interval.toLowerCase() as "yearly" | "monthly",
     price,
     tab,
-    subData.status
+    subData.status,
   );
 
   return { action, shouldCharge };
@@ -49,7 +49,7 @@ const getButtonText = (
   subData: SubscriptionModelSchemaTypes | null,
   planAction: string | null,
   planName: string,
-  tab: "monthly" | "yearly"
+  tab: "monthly" | "yearly",
 ) => {
   if (subData === null) return "Get started";
   if (subData.status === "expired") return "Get started";
@@ -69,7 +69,7 @@ const isButtonDisabled = (
   subData: SubscriptionModelSchemaTypes | null,
   planName: string,
   tab: "monthly" | "yearly",
-  planAction: string | null
+  planAction: string | null,
 ) => {
   if (subData === null) return false;
   if (planAction !== null) return false;
@@ -81,7 +81,7 @@ const isButtonDisabled = (
   );
 };
 
-/* ----------------------------- UI ATOMS (unchanged + additive) ----------------------------- */
+/* ----------------------------- UI ATOMS ----------------------------- */
 
 const PlanBadge = ({ planName }: { planName: string }) =>
   planName === "Pro" ? (
@@ -90,20 +90,15 @@ const PlanBadge = ({ planName }: { planName: string }) =>
     </div>
   ) : null;
 
-/* 🔹 ADDITIVE visual badge — does not replace existing UI */
-const DiscountBadge = () => (
-  <p className="text-xs font-medium text-dark">100% off · One time</p>
-);
-
-/* 🔹 ADDITIVE Forfeit Warning — Informs user they lose the discount */
+/* 🔹 UPDATED Forfeit Warning — Reflects the 2-month offer */
 const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
   <div className="mb-4 rounded bg-amber-50 border border-amber-200 p-3">
     <div className="flex gap-2">
       <span className="text-amber-600">⚠️</span>
       <p className="text-[11px] leading-relaxed font-medium text-amber-800">
         Selecting this plan will <span className="font-bold">forfeit</span> your
-        one-time 100% discount on the monthly{" "}
-        <span className="capitalize font-bold">{targetPlan}</span> plan.
+        one-time <span className="font-bold">2-month free trial</span> on the
+        monthly <span className="capitalize font-bold">{targetPlan}</span> plan.
       </p>
     </div>
   </div>
@@ -135,18 +130,16 @@ export default function Plan({
 
   const isFeatured = name === "Pro";
 
-  /* -------------------- DISCOUNT CHECK (core logic) -------------------- */
+  /* -------------------- DISCOUNT CHECK -------------------- */
+  // Logic remains the same, but the UI presentation changes below
   const isEligibleForDiscount =
-    discount !== null &&
-    discount.plan === name.toLowerCase() &&
-    discount.redeemed === false &&
-    tab === "monthly";
+    discount && name.toLowerCase() === "pro" && tab === "monthly";
 
-  const showForfeitWarning =
-    discount !== null && discount.redeemed === false && !isEligibleForDiscount;
+  const showForfeitWarning = discount && !isEligibleForDiscount;
 
+  // 🔹 UPDATED: CTA text specific to the 2-month offer
   const finalButtonText =
-    isEligibleForDiscount && !isDisabled ? "Activate free plan" : buttonText;
+    isEligibleForDiscount && !isDisabled ? "Claim 2 months free" : buttonText;
 
   return (
     <div className="relative mx-auto w-full max-w-sm">
@@ -181,16 +174,18 @@ export default function Plan({
                   : pricing.annual_price}
             </span>
 
-            {!isEligibleForDiscount && (
-              <span className="text-sm text-slate-500">
-                /{tab === "monthly" ? "month" : "year"}
-              </span>
-            )}
+            {/* 🔹 UPDATED: Sub-text for pricing unit */}
+            <span className="text-sm text-slate-500">
+              {isEligibleForDiscount
+                ? "/mo for 2 months"
+                : `/${tab === "monthly" ? "month" : "year"}`}
+            </span>
           </div>
 
+          {/* 🔹 UPDATED: Green Pricing Benefits Text */}
           {isEligibleForDiscount ? (
             <p className="mt-1 text-xs font-medium text-emerald-600">
-              100% off · Applied once to this plan
+              Then ${pricing.monthly_price}/mo · One-time offer
             </p>
           ) : (
             tab === "yearly" && (
@@ -198,7 +193,7 @@ export default function Plan({
                 Save $
                 {calculateYearlySavings(
                   pricing.monthly_price,
-                  pricing.annual_price
+                  pricing.annual_price,
                 )}{" "}
                 yearly
               </p>
@@ -214,11 +209,11 @@ export default function Plan({
                 <span className="mt-1 h-1.5 w-1.5 rounded bg-slate-900" />
                 {benefit}
               </div>
-            )
+            ),
           )}
         </div>
 
-        {/* 🔹 ADDED: Forfeit Warning UI (only appears if they are about to lose their discount) */}
+        {/* Forfeit Warning UI */}
         {showForfeitWarning && <ForfeitWarning targetPlan={discount.plan} />}
 
         {/* CTA */}
@@ -229,7 +224,7 @@ export default function Plan({
         >
           <button
             disabled={isDisabled}
-            className={`w-full rounded py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2
+            className={`w-full rounded py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 
               ${
                 isFeatured
                   ? "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900"

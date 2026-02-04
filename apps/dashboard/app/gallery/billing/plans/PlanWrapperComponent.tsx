@@ -16,7 +16,7 @@ export default function Plans() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
 
   const { value: isSubscriptionBillingEnabled } = useHighRiskFeatureFlag(
-    "subscription_creation_enabled"
+    "subscription_creation_enabled",
   );
 
   const query = useQuery({
@@ -37,7 +37,7 @@ export default function Plans() {
         };
       } catch (error: any) {
         throw new Error(
-          "Something went wrong please try again or contact support for assistance"
+          "Something went wrong please try again or contact support for assistance",
         );
       }
     },

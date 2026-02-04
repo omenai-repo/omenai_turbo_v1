@@ -4,6 +4,7 @@ import {
   CombinedConfig,
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
+  SubscriptionStatus,
 } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -19,49 +20,46 @@ const config: CombinedConfig = {
   allowedRoles: ["gallery"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   const { email } = await request.json();
   try {
     if (!email)
       throw new BadRequestError(
-        "Invalid data parameters provided. Please try again"
+        "Invalid data parameters provided. Please try again",
       );
 
     await connectMongoDB();
 
-    const account = (await AccountGallery.findOne({ email }, "email gallery_id")
+    const account = (await AccountGallery.findOne(
+      { email },
+      "email gallery_id subscription_status",
+    )
       .lean()
-      .select("email")) as { email: string; gallery_id: string };
+      .select("email")) as {
+      email: string;
+      gallery_id: string;
+      subscription_status: SubscriptionStatus;
+    };
 
     if (!account)
       throw new BadRequestError("No gallery account found for this ID");
 
-    const waitlistUserDiscount = await Waitlist.findOneAndUpdate(
-      {
-        email: account.email,
-        isInvited: true,
-        inviteAccepted: true,
-        entity: "gallery",
-      },
-      { $set: { entityId: account.gallery_id } },
-      { new: true }
-    );
-
+    const isDiscountActive = account.subscription_status.discount.active;
     return NextResponse.json({
       message: "Discount Data retrieved",
-      discount: waitlistUserDiscount ? waitlistUserDiscount.discount : null,
+      discount: isDiscountActive,
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Subscriptions: retrieve discount data",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

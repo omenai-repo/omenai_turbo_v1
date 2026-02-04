@@ -42,16 +42,14 @@ export default function SubscriptionCheckout() {
           createdAt: string;
           updatedAt: string;
         },
-        discount: discount_data.discount as WaitListTypes["discount"],
+        discount: discount_data.discount as boolean,
       };
     },
     refetchOnWindowFocus: false,
   });
 
-  const isEligibleForDiscount =
-    data?.discount !== null &&
-    data?.discount.plan === data?.plan.name.toLowerCase() &&
-    data?.discount.redeemed === false;
+  const isEligibleForDiscount = (data?.discount &&
+    data?.plan.name.toLowerCase() === "pro") as boolean;
 
   return (
     <div>
