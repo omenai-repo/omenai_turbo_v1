@@ -37,21 +37,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       email: { $in: userEmails },
     }).lean()) as unknown as IWaitlistLead[];
 
-    console.log(matchedUsers);
-    // const inviteUserEmailPayload = await Promise.all(
-    //   matchedUsers.map(async (user) => {
-    //     const html = await render(
-    //       SendWaitListInvites(user.name, user.email, user.entity),
-    //     );
-    //     return {
-    //       from: "Onboarding <onboarding@omenai.app>",
-    //       to: [user.email],
-    //       subject: "Join Omenai: An Invitation for Your Gallery",
-    //       html,
-    //     };
-    //   }),
-    // );
-    // await resend.batch.send(inviteUserEmailPayload);
+     const inviteUserEmailPayload = await Promise.all(
+       matchedUsers.map(async (user) => {
+         const html = await render(
+           SendWaitListInvites(user.name, user.email, user.entity),
+         );
+         return {
+           from: "Onboarding <onboarding@omenai.app>",
+           to: [user.email],
+           subject: "Join Omenai: An Invitation for Your Gallery",
+           html,
+         };
+       }),
+     );
+    await resend.batch.send(inviteUserEmailPayload);
 
     return NextResponse.json(
       { success: true, message: "Successfully invited waitlist users" },
