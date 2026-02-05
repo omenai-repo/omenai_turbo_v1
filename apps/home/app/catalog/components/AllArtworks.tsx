@@ -1,27 +1,52 @@
 "use client";
 
 import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPaginatedArtworks";
+import { artworkActionStore } from "@omenai/shared-state-store/src/artworks/ArtworkActionStore";
+import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
+import { useQuery } from "@tanstack/react-query";
+import { useWindowSize } from "usehooks-ts";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
+import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
+import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { ArtworkGrid } from "@omenai/shared-ui-components/components/artworks/ArtworkGrid";
-import { useArtworksPagination } from "@omenai/shared-hooks/hooks/useArtworksPagination";
+
 export default function AllArtworks() {
+  const { currentPage, setCurrentPage } = artworkActionStore();
   const { user } = useAuth({ requiredRole: "user" });
 
   const {
-    artworksArray,
-    loading,
     isLoading,
-    artworks,
-    pageCount,
-    currentPage,
-    setCurrentPage,
     setArtworks,
     setIsLoading,
-    filterOptions,
-  } = useArtworksPagination();
+    artworks,
+    artwork_total,
+    set_artwork_total,
+    setPageCount,
+    pageCount,
+  } = artworkStore();
+  const { filterOptions } = filterStore();
+
+  const { width } = useWindowSize();
+
+  const { data: artworksArray, isLoading: loading } = useQuery({
+    queryKey: ["get_paginated_artworks"],
+    queryFn: async () => {
+      const response = await fetchPaginatedArtworks(currentPage, filterOptions);
+      if (response?.isOk) {
+        setArtworks(response.data);
+        set_artwork_total(response.total);
+        setPageCount(response.count);
+        return { data: response.data, pages: response.count };
+      } else throw new Error("Failed to fetch artworks");
+    },
+    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch if we have cached data
+  });
 
   if (loading || isLoading) {
     return <ArtworksListingSkeletonLoader />;
@@ -39,9 +64,39 @@ export default function AllArtworks() {
     );
   }
 
+  const arts = catalogChunk(
+    artworks,
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
+  );
+
   return (
-    <>
-      <ArtworkGrid artworks={artworks} sessionId={user ? user.id : undefined} />
+    <div className="w-full my-3">
+      <div className="flex flex-wrap gap-x-4 justify-center">
+        {arts.map((artworks: any[], index) => {
+          return (
+            <div className="flex-1 gap-2 space-y-6" key={index}>
+              {artworks.map((art: any) => {
+                return (
+                  <ArtworkCard
+                    key={art.art_id}
+                    image={art.url}
+                    name={art.title}
+                    artist={art.artist}
+                    art_id={art.art_id}
+                    pricing={art.pricing}
+                    impressions={art.impressions as number}
+                    likeIds={art.like_IDs as string[]}
+                    sessionId={user ? user.id : undefined}
+                    availability={art.availability}
+                    medium={art.medium}
+                    author_id={art.author_id}
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
 
       <Pagination
         total={pageCount}
@@ -52,6 +107,7 @@ export default function AllArtworks() {
         setIsLoading={setIsLoading}
         currentPage={currentPage}
       />
-    </>
+    </div>
   );
 }
+// grid xxm:grid-cols-2 md:grid-cols-3 2lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-7 justify-center md:space-y-4 space-x-2 items-end
