@@ -119,7 +119,7 @@ export default function Plan({
   tab: "monthly" | "yearly";
   id: ObjectId;
   sub_data: SubscriptionModelSchemaTypes;
-  discount: WaitListTypes["discount"];
+  discount: boolean;
 }) {
   const searchParams = useSearchParams();
   const plan_action = searchParams.get("plan_action");
@@ -214,7 +214,7 @@ export default function Plan({
         </div>
 
         {/* Forfeit Warning UI */}
-        {showForfeitWarning && <ForfeitWarning targetPlan={discount.plan} />}
+        {showForfeitWarning && <ForfeitWarning targetPlan={"pro"} />}
 
         {/* CTA */}
         <Link

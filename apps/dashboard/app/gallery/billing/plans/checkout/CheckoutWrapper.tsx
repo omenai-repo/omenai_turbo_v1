@@ -7,13 +7,10 @@ import { notFound, useSearchParams } from "next/navigation";
 import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { loadStripe } from "@stripe/stripe-js";
-import InitialPaymentFormWrapper from "./components/InitialPaymentFormWrapper";
 import MigrationUpgradeCheckout from "./components/MigrationUpgradeCheckout";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { retrieveSubscriptionDiscount } from "@omenai/shared-services/subscriptions/retriveSubscriptionDiscount";
 import { SubscriptionPlanDataTypes, WaitListTypes } from "@omenai/shared-types";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 export default function SubscriptionCheckout() {
   const searchParams = useSearchParams();

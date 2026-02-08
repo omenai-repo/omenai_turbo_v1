@@ -27,8 +27,11 @@ export const DHL_API_URL_TEST = "https://express.api.dhl.com/mydhlapi/test";
 export const SHIPMENT_API_URL = `${DHL_API_URL_TEST}/shipments`;
 
 // DHL API express account number
-export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT =
-  process.env.DHL_SHIPPER_ACCOUNT!;
+export const OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT = process.env
+  .DHL_SHIPPER_ACCOUNT as string;
+
+export const OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT = process.env
+  .DHL_SHIPPER_ACCOUNT_EXPORT as string;
 
 // async function to select the most appropriate DHL product for a particular shipment based on price and product relevance to shipment
 export async function selectAppropriateDHLProduct(

@@ -16,7 +16,7 @@ export default function PlanWrapper({
 }: {
   plans: (SubscriptionPlanDataTypes & { _id: ObjectId })[];
   sub_data: SubscriptionModelSchemaTypes;
-  discount: WaitListTypes["discount"];
+  discount: boolean;
 }) {
   const [tab, setTab] = useState<"monthly" | "yearly">("monthly");
 

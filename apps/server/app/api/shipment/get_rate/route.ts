@@ -3,6 +3,7 @@ import {
   DHL_API_URL_TEST,
   getDhlHeaders,
   getUserFriendlyError,
+  OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
   selectAppropriateDHLProduct,
 } from "../resources";
@@ -71,11 +72,13 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         originCountryCode,
       );
 
+      const account_to_use =
+        originCountryCode === destinationCountryCode
+          ? OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT
+          : OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
+
       const url = new URL(API_URL);
-      url.searchParams.append(
-        "accountNumber",
-        OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
-      );
+      url.searchParams.append("accountNumber", account_to_use);
       url.searchParams.append("originCountryCode", originCountryCode);
       url.searchParams.append("originCityName", originCityName);
       url.searchParams.append("destinationCountryCode", destinationCountryCode);

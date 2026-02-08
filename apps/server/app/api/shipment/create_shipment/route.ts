@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   getDhlHeaders,
+  OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
   SHIPMENT_API_URL,
 } from "../resources";
@@ -13,7 +14,7 @@ import { createErrorRollbarReport } from "../../util";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 export const POST = withRateLimit(strictRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
   const {
     specialInstructions,
@@ -41,7 +42,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
         status: "error",
         message: "Missing one or more required fields",
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -52,6 +53,11 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     }),
     getFutureShipmentDate(0, false, seller_details.address.countryCode),
   ]);
+
+  const account_to_use =
+    seller_details.address.countryCode === receiver_address.countryCode
+      ? OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT
+      : OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
 
   const shipmentPayloadData = {
     plannedShippingDateAndTime,
@@ -85,11 +91,11 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     accounts: [
       {
         typeCode: "shipper",
-        number: OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
+        number: account_to_use,
       },
       {
         typeCode: "payer",
-        number: OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
+        number: account_to_use,
       },
     ],
 
@@ -236,21 +242,21 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
 
     return NextResponse.json(
       { message: "Success", data: { ...data, plannedShippingDateAndTime } },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "shipment: create shipment",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       {
         message: "Error occured while creating shipment, contact support",
         error,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

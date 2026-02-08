@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   getDhlHeaders,
+  OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
 } from "../resources";
 import { ShipmentPickupRequestDataTypes } from "@omenai/shared-types";
