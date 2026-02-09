@@ -18,12 +18,19 @@ import type Rollbar from "rollbar";
 
 // Status configuration
 const STATUS_CONFIG = {
-  successful: {
+  completed: {
     bgColor: "bg-green-100",
     textColor: "text-green-600",
     titleColor: "text-green-700",
     rippleColor: "bg-green-400",
     icon: CheckCircle,
+  },
+  pending: {
+    bgColor: "bg-amber-100",
+    textColor: "text-amber-600",
+    titleColor: "text-amber-700",
+    rippleColor: "bg-amber-400",
+    icon: Clock4,
   },
   failed: {
     bgColor: "bg-red-100",
@@ -37,10 +44,10 @@ const STATUS_CONFIG = {
 // Sub-components
 const LoadIcon = () => (
   <div className="relative">
-    <div className="w-16 h-16 border-4 border-blue-200 rounded animate-pulse"></div>
-    <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-500 rounded animate-spin"></div>
+    <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-pulse"></div>
+    <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
     <div
-      className="absolute inset-2 w-12 h-12 border-4 border-transparent border-t-purple-400 rounded animate-spin"
+      className="absolute inset-2 w-12 h-12 border-4 border-transparent border-t-purple-400 rounded-full animate-spin"
       style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
     ></div>
     <CreditCard className="absolute inset-0 m-auto w-6 h-6 text-blue-600 animate-pulse" />
@@ -52,7 +59,7 @@ const ProgressDots = () => (
     {[0, 1, 2].map((i) => (
       <div
         key={i}
-        className="w-2 h-2 bg-blue-400 rounded animate-pulse"
+        className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"
         style={{ animationDelay: `${i * 0.2}s` }}
       />
     ))}
@@ -60,7 +67,7 @@ const ProgressDots = () => (
 );
 
 const LoadingState = () => (
-  <div className="bg-white/80 backdrop-blur-xl rounded p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
+  <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
     <div className="flex flex-col items-center justify-center space-y-8">
       <LoadIcon />
       <div className="text-center space-y-3">
@@ -77,7 +84,7 @@ const LoadingState = () => (
 );
 
 const ErrorState = () => (
-  <div className="bg-white/80 backdrop-blur-xl rounded p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
+  <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
     <div className="flex flex-col items-center justify-center space-y-8">
       <h2 className="text-fluid-base font-semibold bg-gradient-to-r from-red-600 to-red-600 bg-clip-text text-transparent">
         Error occurred while verifying transaction
@@ -102,14 +109,14 @@ const StatusIcon = ({
   return (
     <div className="relative">
       <div
-        className={`w-20 h-20 rounded flex items-center justify-center transform transition-all duration-500 ${
+        className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${
           showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"
         } ${config.bgColor} ${config.textColor}`}
       >
         <IconComponent className="w-12 h-12 animate-pulse" />
       </div>
       <div
-        className={`absolute inset-0 rounded animate-ping opacity-20 ${config.rippleColor}`}
+        className={`absolute inset-0 rounded-full animate-ping opacity-20 ${config.rippleColor}`}
       />
     </div>
   );
@@ -138,7 +145,7 @@ const ActionButtons = () => (
 
 const SecurityBadge = () => (
   <div className="flex items-center gap-2 text-fluid-xxs text-slate-700 pt-2">
-    <div className="w-2 h-2 bg-green-400 rounded animate-pulse" />
+    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
     <span>Secure SSL Encrypted Transaction</span>
   </div>
 );
@@ -158,7 +165,7 @@ const SuccessState = ({
 
   return (
     <div
-      className={`bg-white/90 backdrop-blur-xl rounded p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
+      className={`bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
         showContent ? "scale-100 opacity-100" : "scale-95 opacity-0"
       }`}
     >
@@ -167,10 +174,11 @@ const SuccessState = ({
 
         <div className="text-center space-y-4 max-w-sm">
           <h2
-            // TODO: Check the title color here
-            className={`text-fluid-md font-semibold transition-colors duration-500 text-green-700`}
+            className={`text-fluid-md font-semibold transition-colors duration-500 ${config.titleColor}`}
           >
-            Payment verification completed
+            {verified.success
+              ? "Payment Verified!"
+              : "Payment Verification Failed"}
           </h2>
           <p className="text-gray-600 text-fluid-xxs leading-relaxed">
             {verified.message}
@@ -207,8 +215,8 @@ const verifyTransaction = async (
     const result = await response.json();
     return {
       message: result.message,
-      isOk: response.ok,
-      status: result.status,
+      isOk: result.ok,
+      status: result.status || response.ok ? "successful" : "failed",
       success: result.success,
     };
   } catch (error) {

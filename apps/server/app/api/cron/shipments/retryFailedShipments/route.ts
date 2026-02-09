@@ -6,6 +6,7 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 import { NextResponse } from "next/server";
 import pLimit from "p-limit";
 import { createErrorRollbarReport } from "../../../util";
+import { verifyAuthVercel } from "../../utils";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -32,7 +33,7 @@ function shouldRetryNow(job: any): boolean {
 }
 
 async function processJob(
-  job: any
+  job: any,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const { payload } = job;
@@ -43,13 +44,13 @@ async function processJob(
         method: "POST",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     if (res.ok) {
       await FailedJob.updateOne(
         { _id: job._id },
-        { $set: { status: "reprocessed" } }
+        { $set: { status: "reprocessed" } },
       );
       return { success: true };
     } else {
@@ -67,7 +68,7 @@ async function processJob(
             status,
             lastRetryAt: new Date(),
           },
-        }
+        },
       );
 
       return {
@@ -91,7 +92,7 @@ async function processJob(
           status,
           lastRetryAt: new Date(),
         },
-      }
+      },
     );
 
     return { success: false, error: errorMessage };
@@ -99,8 +100,12 @@ async function processJob(
 }
 
 // Run every hour
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+export const GET = withRateLimit(lenientRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     const allFailedJobs = await FailedJob.find({
@@ -132,7 +137,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
 
     // Process jobs in parallel with concurrency limit
     const results = await Promise.allSettled(
-      jobsReadyForRetry.map((job) => limit(() => processJob(job)))
+      jobsReadyForRetry.map((job) => limit(() => processJob(job))),
     );
 
     // Analyze results
@@ -148,14 +153,14 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
           failed++;
           if (result.value.error) {
             errors.push(
-              `Job ${jobsReadyForRetry[index]._id}: ${result.value.error}`
+              `Job ${jobsReadyForRetry[index]._id}: ${result.value.error}`,
             );
           }
         }
       } else {
         failed++;
         errors.push(
-          `Job ${jobsReadyForRetry[index]._id}: Promise rejected - ${result.reason}`
+          `Job ${jobsReadyForRetry[index]._id}: Promise rejected - ${result.reason}`,
         );
       }
     });
@@ -178,7 +183,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         message: "Failed job retry cron failed",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

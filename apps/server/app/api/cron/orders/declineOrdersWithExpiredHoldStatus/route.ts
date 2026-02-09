@@ -8,10 +8,15 @@ import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { createErrorRollbarReport } from "../../../util";
+import { verifyAuthVercel } from "../../utils";
 
 // NOTE: Run every 5 minutes
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+export const GET = withRateLimit(lenientRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
     const nowUTC = toUTCDate(new Date());
 
@@ -27,7 +32,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     if (!ordersOnHold.length) {
       return NextResponse.json(
         { message: "No held orders found." },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -61,7 +66,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     if (!bulkOps.length) {
       return NextResponse.json(
         { message: "No expired holds to process." },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -89,21 +94,21 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
           createErrorRollbarReport(
             "Cron: Decline orders with expired hold status - send decline email",
             mailErr as any,
-            500
+            500,
           );
           console.error(
             `❌ Failed to send decline email for order ${order.order_id}:`,
-            mailErr
+            mailErr,
           );
         }
-      })
+      }),
     );
 
     return NextResponse.json(
       {
         message: `Checked ${ordersOnHold.length} orders. ${updatedCount} updated.`,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
@@ -111,11 +116,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     createErrorRollbarReport(
       "Cron: Decline orders with expired hold status",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

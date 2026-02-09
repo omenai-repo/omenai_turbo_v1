@@ -80,7 +80,7 @@ const config: CombinedConfig = {
   allowedRoles: ["artist", "gallery"],
 };
 
-export const POST = withRateLimit(config)(async function POST(
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   await connectMongoDB();

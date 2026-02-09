@@ -2,15 +2,16 @@ import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/Dele
 import { DeletionTaskModel } from "@omenai/shared-models/models/deletion/DeletionTaskSchema";
 import { EntityType } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { LeanDeletionRequest } from "./createDeletionTasks/route";
+import { LeanDeletionRequest } from "./deletion/createDeletionTasks/route";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import {
   BadRequestError,
   ServerError,
-} from "../../../../custom/errors/dictionary/errorDictionary";
+} from "../../../custom/errors/dictionary/errorDictionary";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
-import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
+import { NextResponse } from "next/server";
 
 export const DELETION_TASK_SERVICES = [
   "order_service",
@@ -58,7 +59,7 @@ export const serviceMap: Record<
 export async function createDeletionTaskPerService(
   task: DeletionTaskServiceType,
   requestId: string,
-  metadata: Record<string, string | Exclude<EntityType, "admin">>
+  metadata: Record<string, string | Exclude<EntityType, "admin">>,
 ) {
   const entityId = metadata.entityId as string;
   const entityType = metadata.entityType as Exclude<EntityType, "admin">;
@@ -107,7 +108,7 @@ export async function pollExpiredDeletionRequests(batch_size: number) {
           ],
           entityType: { $ne: "admin" },
         },
-        "requestId entityType targetId"
+        "requestId entityType targetId",
       )
         .limit(batch_size)
         .lean<LeanDeletionRequest[]>()
@@ -142,7 +143,7 @@ export async function createWorkflowTarget(metadata: {
     const workflowID = await createWorkflow(
       `/api/workflows/deletion/deletion_workflow`,
       `deletion_workflow${generateDigit(2)}`,
-      JSON.stringify(metadata)
+      JSON.stringify(metadata),
     );
 
     return workflowID;
@@ -161,10 +162,18 @@ export async function createWorkflowTarget(metadata: {
 }
 
 export function isDeletionTaskServiceType(
-  value: unknown
+  value: unknown,
 ): value is DeletionTaskServiceType {
   return (
     typeof value === "string" &&
     DELETION_TASK_SERVICES.includes(value as DeletionTaskServiceType)
   );
+}
+
+export async function verifyAuthVercel(request: Request) {
+  const authHeader = request.headers.get("authorization");
+
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
 }

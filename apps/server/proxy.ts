@@ -31,7 +31,10 @@ export default async function proxy(req: NextRequest) {
   const referer = req.headers.get("referer");
   const mobileKey = req.headers.get("x-access-key") ?? "";
 
-  if (req.nextUrl.pathname.startsWith("/api/webhook")) {
+  if (
+    req.nextUrl.pathname.startsWith("/api/webhook") ||
+    req.nextUrl.pathname.startsWith("/api/cron")
+  ) {
     return NextResponse.next();
   }
 

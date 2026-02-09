@@ -5,7 +5,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedDeletionTaskModel } from "@omenai/shared-models/models/deletion/FailedDeletionTaskSchema";
-import { createDeletionTaskPerService } from "../utils";
+import { createDeletionTaskPerService, verifyAuthVercel } from "../../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -28,6 +28,8 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   let failedTasks = 0;
 
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     let batchNumber = 0;

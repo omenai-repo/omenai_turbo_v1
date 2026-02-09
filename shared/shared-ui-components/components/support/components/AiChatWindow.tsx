@@ -11,15 +11,18 @@ import {
   ChevronLeft,
   MessageSquarePlus,
   Square,
+  AlertCircle, // <--- ADDED: Error Icon
 } from "lucide-react";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 // --- TYPES ---
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  isError?: boolean; // <--- ADDED: To style error messages differently
 }
 
 interface ChatSession {
@@ -69,7 +72,7 @@ const SUGGESTIONS_MAP: Record<string, string[]> = {
     "Logistics handling?",
   ],
   default: [
-    "About about the Omenai platform",
+    "About the Omenai platform",
     "Help me find great artworks",
     "Tell me about Omenai's purchase process",
     "Certificate of Authenticity?",
@@ -101,6 +104,7 @@ export function AiChatWindow({
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const lastMessageTimeRef = useRef<number>(0);
 
   // VIEW LOGIC
   const activeSession = sessions.find((s) => s.id === activeSessionId);
@@ -158,22 +162,45 @@ export function AiChatWindow({
     }
   }, [streamingContent, fullContent]);
 
-  // --- STOP HANDLER (NEW) ---
+  // --- STOP HANDLER ---
   const handleStop = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
       setIsLoading(false);
       isTypingRef.current = false;
-
       setStreamingContent(fullContent);
     }
   };
 
-  // --- SEND HANDLER ---
+  // --- SEND HANDLER (WITH ERROR INJECTION) ---
+  // --- SEND HANDLER (FIXED FOR 429 ERRORS) ---
   const handleSend = async (textOverride?: string) => {
     const textToSend = textOverride || input;
+
+    // 1. Validations
     if (!textToSend.trim() || isLoading) return;
+
+    // Spam Protection
+    const now = Date.now();
+    if (now - lastMessageTimeRef.current < 2000) {
+      toast_notif(
+        "Please wait a moment before sending another message.",
+        "error",
+      );
+      return;
+    }
+
+    // Payload Cap
+    if (textToSend.length > 500) {
+      toast_notif(
+        "Message too long. Please keep it under 500 characters.",
+        "error",
+      );
+      return;
+    }
+
+    lastMessageTimeRef.current = now;
 
     let currentSessionId = activeSessionId;
     if (!currentSessionId) {
@@ -195,7 +222,6 @@ export function AiChatWindow({
     setStreamingContent("");
     setIsLoading(true);
 
-    // Create new AbortController for this request
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
@@ -210,12 +236,40 @@ export function AiChatWindow({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Origin: "https://omenai.app",
         },
         body: JSON.stringify({ messages: updatedMessages, pageContext }),
         signal: controller.signal,
       });
 
-      if (!response.ok) throw new Error("Network error");
+      // --- GRACEFUL ERROR HANDLING ---
+      if (!response.ok) {
+        // 1. Read the error text (consumes the stream)
+        let errorMessage = "Unable to connect to the advisor.";
+        try {
+          const text = await response.text();
+          if (text) errorMessage = text;
+        } catch (e) {
+          // Fallback if parsing fails
+        }
+
+        // 2. Inject Error Message directly into Chat
+        const errorId = (Date.now() + 1).toString();
+        onUpdateSession([
+          ...updatedMessages,
+          {
+            id: errorId,
+            role: "assistant",
+            content: errorMessage,
+            isError: true, // Triggers red styling
+          },
+        ]);
+
+        // 3. STOP HERE. Do not try to getReader()
+        return;
+      }
+
+      // --- SUCCESSFUL STREAM HANDLING ---
       if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
@@ -243,7 +297,6 @@ export function AiChatWindow({
     } catch (error: any) {
       if (error.name === "AbortError") {
         console.log("Stream stopped by user");
-        // Save what we have so far
         const aiMessageId = (Date.now() + 1).toString();
         onUpdateSession([
           ...updatedMessages,
@@ -251,6 +304,17 @@ export function AiChatWindow({
         ]);
       } else {
         console.error("Stream Error:", error);
+        // Only trigger this fallback if it wasn't handled by the response.ok check above
+        const errorId = (Date.now() + 2).toString();
+        onUpdateSession([
+          ...updatedMessages,
+          {
+            id: errorId,
+            role: "assistant",
+            content: "An unexpected network error occurred.",
+            isError: true,
+          },
+        ]);
       }
     } finally {
       setIsLoading(false);
@@ -373,6 +437,7 @@ export function AiChatWindow({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                className="flex flex-col h-full relative"
               >
                 <h4 className="font-serif text-2xl text-slate-800 mb-2 tracking-tight">
                   Good{" "}
@@ -427,6 +492,19 @@ export function AiChatWindow({
                     </p>
                   </div>
                 )}
+
+                {/* --- FOOTER FOR HOME VIEW --- */}
+                <div className="mt-auto w-full flex justify-center pb-4 pt-6">
+                  <button
+                    onClick={switchToSupport}
+                    className="text-[11px] text-slate-400 hover:text-dark transition-colors tracking-wide font-medium"
+                  >
+                    Need human assistance?{" "}
+                    <span className="underline decoration-slate-300 underline-offset-2">
+                      Create a Ticket
+                    </span>
+                  </button>
+                </div>
               </motion.div>
             )}
 
@@ -469,7 +547,18 @@ export function AiChatWindow({
                         <div className="flex gap-4">
                           <div className="w-[2px] bg-gradient-to-b from-indigo-400/50 to-transparent min-h-[24px] shrink-0" />
                           <div className="prose prose-slate prose-p:text-[12px] prose-p:leading-7 prose-p:text-slate-700 prose-headings:font-serif prose-headings:font-normal prose-strong:font-medium prose-strong:text-slate-900 prose-li:text-slate-600 text-[13.5px]">
-                            <ReactMarkdown>{m.content}</ReactMarkdown>
+                            {/* ERROR MESSAGE STYLING */}
+                            {m.isError ? (
+                              <div className="flex items-start gap-2 text-rose-600 bg-rose-50 p-3 rounded-lg border border-rose-100">
+                                <AlertCircle
+                                  size={16}
+                                  className="mt-0.5 shrink-0"
+                                />
+                                <span>{m.content}</span>
+                              </div>
+                            ) : (
+                              <ReactMarkdown>{m.content}</ReactMarkdown>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -489,17 +578,6 @@ export function AiChatWindow({
                 <div className="h-2" />
               </div>
             )}
-            <div className="mt-3 w-full absolute bottom-4 flex justify-center pb-safe">
-              <button
-                onClick={switchToSupport}
-                className="text-[11px] text-slate-400 hover:text-dark transition-colors tracking-wide font-medium"
-              >
-                Need human assistance?{" "}
-                <span className="underline decoration-slate-300 underline-offset-2">
-                  Create a Ticket
-                </span>
-              </button>
-            </div>
           </div>
 
           {/* --- INPUT AREA --- */}
@@ -513,9 +591,19 @@ export function AiChatWindow({
                   onKeyDown={handleKeyDown}
                   placeholder="Ask Omenai Advisor..."
                   rows={1}
+                  maxLength={500}
                   className="w-full bg-slate-50 hover:bg-white focus:bg-white transition-all border border-slate-200 focus:border-indigo-200 rounded-xl px-4 py-3.5 pr-12 text-[15px] focus:outline-none focus:ring-4 focus:ring-indigo-50/50 resize-none max-h-[120px] placeholder:text-slate-400 font-normal"
                   style={{ scrollbarWidth: "none" }}
                 />
+
+                {/* Character Counter */}
+                {input.length > 0 && (
+                  <span
+                    className={`absolute right-12 bottom-4 text-[10px] font-medium transition-colors ${input.length > 450 ? "text-rose-500" : "text-slate-300"}`}
+                  >
+                    {input.length}/500
+                  </span>
+                )}
 
                 {/* BUTTON: Switches between SEND (Arrow) and STOP (Square) */}
                 <button

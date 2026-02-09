@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createErrorRollbarReport } from "../../../util";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { verifyAuthVercel } from "../../utils";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -15,8 +16,12 @@ export const dynamic = "force-dynamic";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // NOTE: Run every hour - cancels subscriptions that have been expired for 3+ days
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+export const GET = withRateLimit(lenientRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     // Calculate the date that is three days ago
@@ -28,7 +33,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         expiry_date: { $lt: threeDaysAgo },
         status: "expired", // Only cancel expired subscriptions, not active ones
       },
-      { $set: { status: "canceled" } }
+      { $set: { status: "canceled" } },
     );
     const subscriptions = await Subscriptions.find({
       expiry_date: { $lt: threeDaysAgo },
@@ -38,7 +43,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     const expiredEmailPayload = await Promise.all(
       subscriptions.map(async (subscription) => {
         const html = await render(
-          SubscriptionPaymentFailedMail(subscription.customer.name)
+          SubscriptionPaymentFailedMail(subscription.customer.name),
         );
         return {
           from: "Subscription <omenai@omenai.app>",
@@ -46,7 +51,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
           subject: "Action Required: We were Unable to Process Your Payment",
           html,
         };
-      })
+      }),
     );
     await resend.batch.send(expiredEmailPayload);
 
@@ -61,14 +66,14 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     createErrorRollbarReport(
       "Cron: Change expired subscriptions status",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       {
         message: "Subscription cancellation failed",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

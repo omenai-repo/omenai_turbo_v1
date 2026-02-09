@@ -16,6 +16,7 @@ import { subscriptionService } from "./services/subscriptionService";
 import { walletService } from "./services/wallet_service";
 import { flutterwaveService } from "./services/flutterwave_service";
 import { cloudinaryService } from "./services/cloudinary_service";
+import { verifyAuthVercel } from "../../utils";
 
 type Job =
   | "anonymize_artist_account"
@@ -33,8 +34,12 @@ type Job =
   | "delete_flutterwave_beneficiary_id"
   | "anonymize_wallet_data";
 
-export const GET = withRateLimit(standardRateLimit)(async function GET() {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     const jobs = (await FailedJob.find({

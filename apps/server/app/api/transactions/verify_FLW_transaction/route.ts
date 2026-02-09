@@ -301,7 +301,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
             {
               $setOnInsert: paymentLedgerData,
             },
-            { upsert: true }, // Atomically safe
+            { upsert: true },
           ),
         3,
         150,
@@ -365,6 +365,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           message:
             "We’re having trouble updating your order, but your payment is safe.We’ll keep retrying automatically — please don’t make another payment. If this continues, contact support for help",
           success: false,
+          status: "successful",
         },
         { status: 200 },
       );
@@ -467,7 +468,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     return NextResponse.json({
       success: true,
-      status: "completed",
+      status: "successful",
       order_id: order_info.order_id,
     });
   } catch (error) {

@@ -10,9 +10,14 @@ import { PaymentLedgerTypes } from "@omenai/shared-types";
 import { createWorkflow } from "@omenai/upstash-config";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
+import { verifyAuthVercel } from "../utils";
 
-export const GET = withRateLimit(standardRateLimit)(async function GET() {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     const unresolvedPayments = (await PaymentLedger.find({
@@ -45,7 +50,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
             last_reconciliation_at: toUTCDate(new Date()),
             needs_manual_review: payment.reconciliation_attempts + 1 >= 5,
           },
-        }
+        },
       );
 
       if (updated.modifiedCount === 0) {
@@ -63,10 +68,10 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
                   provider: "flutterwave",
                   meta,
                   verified_transaction: paymentObj,
-                })
+                }),
               ),
             3,
-            150
+            150,
           );
         } catch (error) {
           rollbarServerInstance.error({
@@ -90,10 +95,10 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
                   provider: "stripe",
                   meta,
                   paymentIntent: paymentObj,
-                })
+                }),
               ),
             3,
-            150
+            150,
           );
         } catch (error) {
           rollbarServerInstance.error({
@@ -122,7 +127,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
       {
         message: "Payment reconciliation attemped successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Critical cron job error:", error);
@@ -131,7 +136,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
     createErrorRollbarReport(
       "Cron: Resolve payment fulfillments",
       error,
-      errorResponse?.status
+      errorResponse?.status,
     );
 
     return NextResponse.json(
@@ -140,7 +145,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET() {
           errorResponse?.message ||
           "Critical cron job failure - Resolve payment fulfillments",
       },
-      { status: errorResponse?.status || 500 }
+      { status: errorResponse?.status || 500 },
     );
   }
 });

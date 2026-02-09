@@ -2,7 +2,7 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { NextResponse } from "next/server";
 import { DeletionRequest } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { createWorkflowTarget } from "../utils";
+import { createWorkflowTarget, verifyAuthVercel } from "../../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { createErrorRollbarReport } from "../../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -16,6 +16,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   const MAX_EXECUTION_TIME = 50_000; // 50 seconds
 
   try {
+    await verifyAuthVercel(request);
     const startTime = Date.now();
     await connectMongoDB();
 

@@ -187,7 +187,7 @@ const SuccessState = ({
 const verifyTransaction = async (
   transactionId: string,
   apiUrl: string,
-  rollbar: Rollbar
+  rollbar: Rollbar,
 ): Promise<{
   isOk: boolean;
   status?: "successful" | "failed";
@@ -201,7 +201,7 @@ const verifyTransaction = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ checkout_session_id: transactionId }),
-      }
+      },
     );
 
     if (!response.ok) {
@@ -255,17 +255,7 @@ export default function VerifyTransactionWrapper() {
     if (isLoading) return <LoadingState />;
     if (!verified?.isOk) return <ErrorState />;
     return (
-      <SuccessState
-        verified={
-          verified as {
-            isOk: boolean;
-            status: "successful" | "failed";
-            message: string;
-            success: boolean;
-          }
-        }
-        showContent={showContent}
-      />
+      <SuccessState verified={verified as any} showContent={showContent} />
     );
   };
 

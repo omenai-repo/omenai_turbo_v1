@@ -11,6 +11,7 @@ import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { verifyAuthVercel } from "../../utils";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -211,6 +212,8 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   const startTime = Date.now();
 
   try {
+    await verifyAuthVercel(request);
+
     const dbConnection = await connectMongoDB();
 
     // Fetch processing orders with valid shipment IDs

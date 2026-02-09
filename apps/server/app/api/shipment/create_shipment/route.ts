@@ -56,7 +56,7 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
 
   const account_to_use =
     seller_details.address.countryCode === receiver_address.countryCode
-      ? OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT
+      ? OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT
       : OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
 
   const shipmentPayloadData = {

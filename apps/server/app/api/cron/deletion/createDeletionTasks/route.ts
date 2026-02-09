@@ -17,7 +17,8 @@ import {
   createDeletionTaskPerService,
   pollExpiredDeletionRequests,
   serviceMap,
-} from "../utils";
+  verifyAuthVercel,
+} from "../../utils";
 
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -186,6 +187,8 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   const startTime = Date.now();
 
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     // Verify cron authorization
