@@ -93,7 +93,6 @@ const COLLECTOR_INFO = `
   - Works on paper
   - Acrylic on canvas/linen/panel
   - Mixed media on paper/canvas
-  - Sculpture (Resin/plaster/clay/Bronze/stone/metal)
   - Oil on canvas/panel
 `;
 

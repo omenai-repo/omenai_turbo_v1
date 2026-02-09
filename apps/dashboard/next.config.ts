@@ -32,6 +32,12 @@ module.exports = {
         port: "",
         // pathname: "/v1/**",
       },
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+        port: "",
+        // pathname: "/v1/**",
+      },
     ],
   },
 };

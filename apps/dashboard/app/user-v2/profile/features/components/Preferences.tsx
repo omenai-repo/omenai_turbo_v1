@@ -11,9 +11,7 @@ let artTypes = [
   "Works on paper",
   "Acrylic on canvas/linen/panel",
   "Mixed media on paper/canvas",
-  "Sculpture (Resin/plaster/clay)",
   "Oil on canvas/panel",
-  "Sculpture (Bronze/stone/metal)",
 ];
 export default function Preferences() {
   const { user } = useAuth({ requiredRole: "user" });
@@ -22,7 +20,7 @@ export default function Preferences() {
     function () {
       setInitialPreferencesData("preferences", user.preferences);
     },
-    [user.preferences]
+    [user.preferences],
   );
   return (
     <div className="w-full">

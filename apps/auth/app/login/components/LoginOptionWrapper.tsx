@@ -23,12 +23,11 @@ export default function LoginOptionWrapper() {
             <LoginOptions />
           </div>
 
-          {/* Subtle Help Text */}
           {/* TODO: Add mailto */}
-          <p className="mt-12 text-[10px] text-slate-400 uppercase tracking-[0.2em] font-medium text-center md:text-left">
+          <p className="mt-12 text-[10px] text-slate-400 uppercase tracking-[0.2em] font-medium text-center">
             Need assistance?{" "}
             <span className="text-dark cursor-pointer border-b border-dark pb-0.5">
-              Contact Concierge
+              Contact Support
             </span>
           </p>
         </div>

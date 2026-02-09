@@ -4,9 +4,7 @@ import { fetchAllArtworksForSeo } from "@omenai/shared-services/seo/fetchArtIds"
 const collections = [
   "photography",
   "acrylic-on-canvas-linen-panel",
-  "sculpture-bronze-stone-metal",
   "mixed-media-on-paper-canvas",
-  "sculpture-resin-plaster-clay",
   "oil-on-canvas-panel",
 ];
 

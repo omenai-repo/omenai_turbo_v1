@@ -1,4 +1,3 @@
-// http://api.omenai.app/api/artworks/getArtworkPriceForArtist?medium=Sculpture (Bronze/stone/metal)&category=Mid-Career&height=86&width=102&currency=NGN
 import { logRollbarServerError } from "@omenai/rollbar-config";
 import { ArtistCategory, ArtworkMediumTypes } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
@@ -8,7 +7,7 @@ export async function fetchArtworkPriceForArtist(
   category: ArtistCategory,
   height: string,
   width: string,
-  currency: string
+  currency: string,
 ) {
   try {
     const url = getApiUrl();
@@ -17,7 +16,7 @@ export async function fetchArtworkPriceForArtist(
 `,
       {
         method: "GET",
-      }
+      },
     );
 
     const result = await res.json();

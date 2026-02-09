@@ -38,14 +38,16 @@ const CSP_HEADER = `
         https://eu.i.posthog.com 
         https://va.vercel-scripts.com 
         https://vitals.vercel-insights.com;
-
-    style-src 'self' 'unsafe-inline' 
+        
+        style-src 'self' 'unsafe-inline' 
         https://fonts.googleapis.com;
-
-    img-src 'self' blob: data: 
+        
+        img-src 'self' blob: data: 
         https://fra.cloud.appwrite.io 
         https://cloud.appwrite.io 
         https://res.cloudinary.com 
+        https://flagcdn.com
+        https://upload.wikimedia.org
         https://*.stripe.com 
         https://*.rollbar.com 
         https://*.openstreetmap.org 
@@ -88,12 +90,15 @@ const CSP_HEADER = `
         https://api.positionstack.com 
         https://generativelanguage.googleapis.com 
         https://vitals.vercel-insights.com
+
         ws: wss:;
 
     frame-src 'self' 
         https://js.stripe.com 
         https://hooks.stripe.com 
-        https://checkout.flutterwave.com;
+        https://checkout.flutterwave.com
+        https://www.omenaiinsider.com
+        https://omenai.substack.com;
 
     object-src 'none';
     base-uri 'self';

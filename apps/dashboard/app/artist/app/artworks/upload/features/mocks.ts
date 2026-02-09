@@ -25,9 +25,7 @@ export const uploadArtworkDetailInputMocks = [
       "Works on paper",
       "Acrylic on canvas/linen/panel",
       "Mixed media on paper/canvas",
-      "Sculpture (Resin/plaster/clay)",
       "Oil on canvas/panel",
-      "Sculpture (Bronze/stone/metal)",
     ],
   },
   {

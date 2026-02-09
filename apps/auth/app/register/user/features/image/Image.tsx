@@ -10,7 +10,7 @@ export default function ImageBlock() {
       {/* Framed Image Container */}
       <div className="relative w-full h-[75%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
         <Image
-          src={"/user_banner.png"}
+          src={"/images/collector_auth.jpg"}
           alt="Individual sign up image block"
           fill
           priority
@@ -24,9 +24,7 @@ export default function ImageBlock() {
           <p className="text-xs uppercase tracking-widest opacity-80 mb-1">
             Featured Collection
           </p>
-          <p className="text-fluid-base font-light">
-            Contemporary Resonance, 2024
-          </p>
+          <p className="text-fluid-base font-light">Sister Journeying, 2023</p>
         </div>
       </div>
 

@@ -26,7 +26,6 @@ const medium_arts = [
   { name: "Painting", tag: "painting.jpg" },
   { name: "Drawing", tag: "drawing.jpg" },
   { name: "Contemporary art", tag: "contemporary.webp" },
-  { name: "Sculpture", tag: "sculpture.jpg" },
   { name: "Textile Arts", tag: "textile.jpg" },
   { name: "Photography", tag: "photography.jpg" },
 ];

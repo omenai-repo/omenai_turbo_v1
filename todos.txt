@@ -31,8 +31,7 @@ const MEDIUM_POINTS: Record<string, number> = {
   "Acrylic on canvas/linen/panel": 11,
   "Oil on canvas/panel": 13,
   "Mixed media on paper/canvas": 17,
-  "Sculpture (Resin/plaster/clay)": 20,
-  "Sculpture (Bronze/stone/metal)": 30,
+
 };
 
 // Size Points Calculation (Now Max 70)

@@ -16,7 +16,7 @@ function Page() {
         {/* Framed Image Container */}
         <div className="relative w-full h-[75%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
           <Image
-            src="/artist__banner.png"
+            src="/images/artist_auth.jpg"
             alt="Omenai Gallery Visual"
             fill
             priority
@@ -31,7 +31,7 @@ function Page() {
               Featured Collection
             </p>
             <p className="text-fluid-base font-light">
-              Contemporary Resonance, 2024
+              Tolu&apos;s Dream, 2023
             </p>
           </div>
         </div>

@@ -18,7 +18,7 @@ export default function RegisterOptionSection() {
         }}
         className="w-full flex flex-col items-center md:items-start"
       >
-        <div className="w-full max-w-[500px]">
+        <div className="w-full max-w-lg">
           {/* Registration Options Component */}
           <div className="w-full">
             <RegisterOptions />
