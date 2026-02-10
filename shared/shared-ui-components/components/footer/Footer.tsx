@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="space-y-6">
             <IndividualLogo />
             <p className="font-sans text-sm text-neutral-500 leading-relaxed max-w-sm">
-              Discover and collect African contemporary art from artists and
+              Discover and collect Contemporary African Art from artists and
               galleries across Africa and it's diaspora.
             </p>
           </div>

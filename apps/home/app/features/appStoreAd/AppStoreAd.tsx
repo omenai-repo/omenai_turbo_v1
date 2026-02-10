@@ -18,7 +18,7 @@ export default function AppStoreAd() {
               </span>
             </div>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6">
-              Discover and collect African contemporary art, anywhere
+              Discover and collect Contemporary African Art, anywhere
             </h2>
 
             {/* <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6">

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
   title: "Join the Omenai Waitlist | The Future of African Art",
   description:
-    "Secure early access to the premier ecosystem for African contemporary art. Connect with vetted artists and serious collectors.",
+    "Secure early access to the premier ecosystem for Contemporary African Art. Connect with vetted artists and serious collectors.",
 
   icons: {
     icon: "/favicon.ico",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Join the Omenai Waitlist | The Future of African Art",
     description:
-      "The new standard for discovering, buying, and selling African contemporary art. Reserve your spot today.",
+      "The new standard for discovering, buying, and selling Contemporary African Art. Reserve your spot today.",
     url: baseUrl,
     siteName: "Omenai",
     locale: "en_US",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Omenai | Join the Waitlist",
     description:
-      "Discover, buy, and sell African contemporary art online. Early access is now open.",
+      "Discover, buy, and sell Contemporary African Art online. Early access is now open.",
   },
 
   manifest: "/site.webmanifest",
