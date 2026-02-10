@@ -20,7 +20,7 @@ type Payload = {
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload: Payload = ctx.requestPayload;
   await connectMongoDB();
-  const artworkImage = getImageFileView(payload.artworkImage, 120);
+  const artworkImage = getImageFileView(payload.artworkImage, 120, 100);
   await Promise.all([
     ctx.run("sendSellerShipmentEmail", async () => {
       await sendSellerShipmentEmail({

@@ -156,6 +156,7 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   );
 
   const result = await response.json();
+  console.log(result);
 
   if (!response.ok) {
     const error_message = getUserFriendlyError(result.detail);

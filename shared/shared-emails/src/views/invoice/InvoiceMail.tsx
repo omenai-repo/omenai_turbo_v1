@@ -26,7 +26,9 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
             {/* Logo */}
             <Section className="mb-10 text-center">
               <Img
-                src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
+                src={
+                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
+                }
                 width="120"
                 height="32"
                 alt="Omenai"

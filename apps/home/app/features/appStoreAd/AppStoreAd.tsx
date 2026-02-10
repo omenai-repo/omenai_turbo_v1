@@ -17,16 +17,18 @@ export default function AppStoreAd() {
                 Omenai Mobile
               </span>
             </div>
-
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6">
-              The Art World <br />
-              <span className="italic text-white/50">In Your Pocket.</span>
+              Discover and collect African contemporary art, anywhere
             </h2>
 
+            {/* <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6">
+              The Art World <br />
+              <span className="italic text-white/50">In Your Pocket.</span>
+            </h2> */}
+
             <p className="font-sans text-white/70 text-base leading-relaxed mb-8 max-w-md">
-              Experience the marketplace without boundaries. Bid in real-time,
-              view high-resolution details, and manage your collection from
-              anywhere.
+              Discover artists, save works you love, and manage your collection
+              anywhere you are.
             </p>
 
             {/* Store Buttons */}

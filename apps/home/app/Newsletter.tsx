@@ -15,17 +15,17 @@ export default function Newsletter() {
             </h2>
 
             <p className="font-sans text-sm leading-relaxed text-neutral-600">
-              Receive our weekly curatorial notes, market analysis, and
-              invitations to private viewing rooms. No noise, just art.
+              Receive weekly editorials, market analysis, and collector
+              insights. No noise, just art.
             </p>
 
             {/* Trust Signal */}
-            <div className="flex items-center gap-3 pt-4">
+            {/* <div className="flex items-center gap-3 pt-4">
               <div className="h-[1px] w-8 bg-neutral-300" />
               <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-400">
                 Read by 5,000+ Collectors
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* 2. THE EMBED (Right Column) */}

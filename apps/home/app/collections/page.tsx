@@ -16,16 +16,16 @@ export default function page() {
         <div className="mb-16 border-b border-neutral-100 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl">
             <span className="font-sans text-xs font-bold uppercase tracking-wider text-dark  mb-3 block">
-              Department Index
+              Collections
             </span>
             <h1 className="font-serif text-xl md:text-3xl text-dark  leading-tight">
-              Curated Collections
+              Browse by medium
             </h1>
-            <p className="mt-4 font-sans text-sm text-neutral-500 max-w-xl leading-relaxed">
+            {/* <p className="mt-4 font-sans text-sm text-neutral-500 max-w-xl leading-relaxed">
               Explore our archive by medium and style. From traditional oil
               paintings to avant-garde digital works, discover pieces that
               define the contemporary landscape.
-            </p>
+            </p> */}
           </div>
         </div>
 

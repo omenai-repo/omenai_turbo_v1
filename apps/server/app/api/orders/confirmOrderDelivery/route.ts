@@ -18,7 +18,7 @@ const config: CombinedConfig = {
   allowedRoles: ["user"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -27,22 +27,22 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const updateOrders = await CreateOrder.updateOne(
       { order_id },
-      { $set: { "shipping_details.delivery_confirmed": confirm_delivery } }
+      { $set: { "shipping_details.delivery_confirmed": confirm_delivery } },
     );
 
     const order = await CreateOrder.findOne({ order_id });
     if (!order) {
       throw new ServerError(
-        "Cannot find order with provided orderID. Please try again"
+        "Cannot find order with provided orderID. Please try again",
       );
     }
 
     if (!updateOrders)
       throw new ServerError(
-        "Delivery confirmation could not be updated. Please try again"
+        "Delivery confirmation could not be updated. Please try again",
       );
 
-    const artworkImage = getImageFileView(order.artwork_data.url, 120);
+    const artworkImage = getImageFileView(order.artwork_data.url, 120, 0, 100);
 
     // TODO: Send mail to buyer and seller about the order delivery confirmation
     await SendBuyerShipmentSuccessEmail({
@@ -81,18 +81,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Successfully confirmed order delivery.",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: confirm order delivery",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

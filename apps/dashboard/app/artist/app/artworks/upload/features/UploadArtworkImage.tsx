@@ -221,8 +221,7 @@ export default function UploadArtworkImage() {
                       size="xs"
                       className="text-slate-500 mt-1 leading-relaxed"
                     >
-                      Canvas is removed from the frame and shipped in a tube.{" "}
-                      <br />
+                      Canvas is unstretched and shipped in a tube. <br />
                       <span className="text-emerald-600 font-medium">
                         Recommended for lower shipping fees.
                       </span>

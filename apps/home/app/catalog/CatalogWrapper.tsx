@@ -23,13 +23,12 @@ export default function CatalogWrapper() {
             <div className="flex items-center gap-3 mb-6">
               <span className="w-8 h-[1px] bg-dark"></span>
               <span className="text-[10px] font-sans font-bold tracking-[0.4em] uppercase text-slate-400">
-                Global Archive
+                All works
               </span>
             </div>
             <h1 className="text-xl md:text-3xl font-serif leading-[1.1] text-dark">
-              Curating <span className="">creativity</span> <br />
-              <span className="text-slate-300">&</span> design in the digital
-              realm.
+              Discover works <br /> from artist across Africa
+              <span className="text-slate-300"> &</span> it's diaspora.
             </h1>
           </div>
 

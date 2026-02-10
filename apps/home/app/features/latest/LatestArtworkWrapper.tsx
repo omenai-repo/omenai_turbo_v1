@@ -45,7 +45,7 @@ export default function LatestArtworkWrapper({
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-serif text-dark ">
-              New to the Market
+              New Arrivals
             </h2>
           </div>
 

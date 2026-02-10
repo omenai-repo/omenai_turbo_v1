@@ -115,7 +115,7 @@ export default function ConfirmationStep({
         if (response.isOk) {
           toast_notif(
             "Your verification request has been sent successfully",
-            "success"
+            "success",
           );
 
           clearData();
@@ -137,7 +137,7 @@ export default function ConfirmationStep({
       }
       toast_notif(
         "Something went wrong. Please contact customer support",
-        "error"
+        "error",
       );
     } finally {
       setIsSubmitting(false);
@@ -227,8 +227,8 @@ export default function ConfirmationStep({
             <p className="text-fluid-xs text-yellow-700 mt-1">
               Providing false, misleading, or unverifiable information (e.g.,
               exhibitions, awards, education) could severely affect your
-              verification status and may lead to the rejection of your
-              application. Ensure all details are accurate to avoid delays.
+              verification status would lead to rejection of your acceptance to
+              the platform. Ensure all details are accurate to avoid delays.
             </p>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { InvoiceTypes } from "@omenai/shared-types";
 const BRAND = {
   name: "OMENAI",
   logoUrl:
-    "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/6922f45000243c4d7bab/view?project=682272b1001e9d1609a8",
+    "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8",
 };
 
 const COLORS = {
@@ -31,7 +31,7 @@ const SPACING = {
 /* ================= MAIN ================= */
 
 export async function generateInvoicePdf(
-  invoice: Omit<InvoiceTypes, "storage" | "document_created" | "receipt_sent">
+  invoice: Omit<InvoiceTypes, "storage" | "document_created" | "receipt_sent">,
 ): Promise<Buffer> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]); // A4
@@ -78,7 +78,7 @@ export async function generateInvoicePdf(
     headerX,
     y,
     font,
-    fontBold
+    fontBold,
   );
   y -= 18;
   drawMutedLabelValue(
@@ -88,7 +88,7 @@ export async function generateInvoicePdf(
     headerX,
     y,
     font,
-    fontBold
+    fontBold,
   );
 
   y -= SPACING.headerGap;
@@ -109,7 +109,7 @@ export async function generateInvoicePdf(
     ],
     leftMargin,
     addressY - 20,
-    font
+    font,
   );
 
   // Column 2: Bill To
@@ -126,7 +126,7 @@ export async function generateInvoicePdf(
     ],
     headerX,
     addressY - 20,
-    font
+    font,
   );
 
   y -= 100;
@@ -191,7 +191,7 @@ export async function generateInvoicePdf(
       startY,
       fontBold,
       10,
-      COLORS.text
+      COLORS.text,
     );
 
     y -= SPACING.itemGap - SPACING.lineHeight;
@@ -210,7 +210,7 @@ export async function generateInvoicePdf(
     label: string,
     value: string,
     isBold = false,
-    isDiscount = false
+    isDiscount = false,
   ) => {
     page.drawText(label, {
       x: totalsLabelX,
@@ -229,7 +229,7 @@ export async function generateInvoicePdf(
       y,
       isBold ? fontBold : font,
       11,
-      COLORS.text
+      COLORS.text,
     );
 
     y -= SPACING.rowGap;
@@ -242,7 +242,7 @@ export async function generateInvoicePdf(
   if (invoice.pricing.discount) {
     drawTotalLine(
       "Discount",
-      `- ${money(invoice.pricing.discount, invoice.currency)}`
+      `- ${money(invoice.pricing.discount, invoice.currency)}`,
     );
   }
 
@@ -267,7 +267,7 @@ export async function generateInvoicePdf(
     y,
     fontBold,
     14,
-    COLORS.primary
+    COLORS.primary,
   );
 
   return Buffer.from(await pdfDoc.save());
@@ -286,7 +286,7 @@ function drawSectionTitle(
   text: string,
   x: number,
   y: number,
-  font: PDFFont
+  font: PDFFont,
 ) {
   page.drawText(text.toUpperCase(), {
     x,
@@ -302,7 +302,7 @@ function drawTextBlock(
   lines: string[],
   x: number,
   startY: number,
-  font: PDFFont
+  font: PDFFont,
 ) {
   let y = startY;
   for (const line of lines) {
@@ -332,7 +332,7 @@ function drawMutedText(
   x: number,
   y: number,
   font: PDFFont,
-  size = 10
+  size = 10,
 ) {
   page.drawText(text, {
     x,
@@ -350,7 +350,7 @@ function drawMutedLabelValue(
   x: number,
   y: number,
   font: PDFFont,
-  fontBold: PDFFont
+  fontBold: PDFFont,
 ) {
   page.drawText(label, {
     x,
@@ -380,7 +380,7 @@ function drawRightAlignedText(
   y: number,
   font: PDFFont,
   size: number,
-  color: any
+  color: any,
 ) {
   const textWidth = font.widthOfTextAtSize(text, size);
   page.drawText(text, {
@@ -396,7 +396,7 @@ function wrapText(
   text: string,
   font: PDFFont,
   fontSize: number,
-  maxWidth: number
+  maxWidth: number,
 ): string[] {
   const words = text.split(" ");
   const lines: string[] = [];

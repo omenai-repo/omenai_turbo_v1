@@ -48,49 +48,6 @@ const PaymentSuccessfulGalleryMail = (
               processed, and the funds have been deposited into your Stripe
               Connect account.{" "}
             </Text>
-            {/* Transaction Card */}
-            <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
-              <Text className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4 text-center">
-                Transaction Summary
-              </Text>
-
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Artwork</Text>
-                  <Text className="text-gray-900 font-medium text-sm">
-                    {artwork}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Sale Amount</Text>
-                  <Text className="text-gray-900 font-semibold text-sm">
-                    {price}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Order ID</Text>
-                  <Text className="text-gray-900 font-mono text-sm">
-                    #{order_id}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Transaction ID</Text>
-                  <Text className="text-gray-900 font-mono text-sm">
-                    {transaction_Id}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Date</Text>
-                  <Text className="text-gray-900 font-medium text-sm">
-                    {order_date}
-                  </Text>
-                </div>
-              </div>
-            </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded p-6 mb-8">
               <Text className="text-blue-900 font-semibold text-base mb-3">
