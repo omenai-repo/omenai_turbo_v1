@@ -24,7 +24,7 @@ type WaitlistUserPayload = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -33,7 +33,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     inviteWaitlistUserValidator(selectedUsers);
 
     const waitlistIds = selectedUsers.map(
-      (user: WaitlistUserPayload) => user.waitlistId
+      (user: WaitlistUserPayload) => user.waitlistId,
     );
 
     // Look for waitlist users in database
@@ -46,7 +46,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       selectedUsers.map((user: WaitlistUserPayload) => [
         user.waitlistId,
         user.discount,
-      ])
+      ]),
     );
 
     // Bulk write operations
@@ -92,21 +92,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       createErrorRollbarReport(
         "admin: invite waitlist users - bulkWrite errors",
         new Error(
-          `BulkWrite encountered ${bulkErrors.length} errors: ${JSON.stringify(errorDetails)}`
+          `BulkWrite encountered ${bulkErrors.length} errors: ${JSON.stringify(errorDetails)}`,
         ),
-        500
+        500,
       );
 
       // Extract failed waitlist IDs
       const failedIndices = new Set(bulkErrors.map((err) => err.index));
       const failedUsers = matchedUsers.filter((_, index) =>
-        failedIndices.has(index)
+        failedIndices.has(index),
       );
       failedUserIds = failedUsers.map((u) => u.waitlistId);
 
       // Remove failed users from successful list
       successfullyUpdatedUsers = matchedUsers.filter(
-        (_, index) => !failedIndices.has(index)
+        (_, index) => !failedIndices.has(index),
       );
     }
 
@@ -119,8 +119,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
               user.name,
               user.inviteCode ?? "",
               user.email,
-              user.entity
-            )
+              user.entity,
+            ),
           );
           return {
             from: "Onboarding <onboarding@omenai.app>",
@@ -128,7 +128,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             subject: "Join Omenai: An Invitation for Your Gallery",
             html,
           };
-        })
+        }),
       );
       await resend.batch.send(inviteUserEmailPayload);
     }
@@ -138,18 +138,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         message: "Successfully invited waitlist users",
         modifiedCount,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: invite waitlist users",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -2,21 +2,21 @@ import {
   Body,
   Container,
   Head,
-  Hr,
   Html,
   Img,
-  Link,
   Preview,
   Section,
   Tailwind,
-  Text,
 } from "@react-email/components";
 import React from "react";
+import EmailFooter from "../../components/Footer";
 
 export default function AdminEmailLayout({
+  name,
   previewText,
   children,
 }: {
+  name?: string;
   previewText: string;
   children: React.ReactNode;
 }) {
@@ -39,51 +39,10 @@ export default function AdminEmailLayout({
             </Section>
 
             {children}
-
-            {/* Divider */}
-            <Hr className="border-gray-200 dark:border-gray-700 my-8" />
-
-            {/* Footer */}
-            <Section>
-              <Text className="text-gray-400 dark:text-gray-600 text-xs leading-relaxed">
-                © {new Date().getFullYear()} Omenai. All rights reserved.
-                <br />
-                <Link
-                  href="https://omenai.com"
-                  className="text-gray-400 dark:text-gray-600 underline"
-                >
-                  omenai.com
-                </Link>{" "}
-                •
-                <Link
-                  href="https://omenai.com/privacy"
-                  className="text-gray-400 dark:text-gray-600 underline ml-1"
-                >
-                  Privacy Policy
-                </Link>{" "}
-                •
-                <Link
-                  href="https://omenai.com/terms"
-                  className="text-gray-400 dark:text-gray-600 underline ml-1"
-                >
-                  Terms of Service
-                </Link>
-              </Text>
-            </Section>
           </Container>
 
           {/* Help Section Outside Container */}
-          <Container className="text-center mt-8 mb-4">
-            <Text className="text-slate-700 dark:text-slate-700 text-xs">
-              Need help?{" "}
-              <Link
-                href="mailto:support@omenai.com"
-                className="text-purple-600 dark:text-purple-400 no-underline"
-              >
-                Contact our support team
-              </Link>
-            </Text>
-          </Container>
+          <EmailFooter recipientName={name} />
         </Body>
       </Tailwind>
     </Html>
