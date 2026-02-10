@@ -84,9 +84,9 @@ export const uploadArtworkDimensionInputMocks = [
   {
     name: "weight",
     type: "text",
-    label: "Weight (in lb)",
+    label: "Weight (in pounds)",
     required: true,
-    placeholder: "e.g 10lbs",
+    placeholder: "e.g 10pounds",
   },
 ];
 
