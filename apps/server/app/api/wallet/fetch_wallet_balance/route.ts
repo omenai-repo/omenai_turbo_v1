@@ -9,15 +9,28 @@ import {
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "../../../../node_modules/zod/v4/classic/external.cjs";
+
+const ZFetchWalletSchema = z.object({
+  owner_id: z.string().min(1),
+});
 
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
+    const url = new URL(request.url);
+    const searchParams = url.searchParams;
+    const owner_id = searchParams.get("id");
+
+    const rawParam = {
+      owner_id,
+    };
     try {
+      const data = validateGetRouteParams(ZFetchWalletSchema, rawParam);
+
+      const { owner_id } = data;
+
       await connectMongoDB();
-      const url = new URL(request.url);
-      const searchParams = url.searchParams;
-      const owner_id = searchParams.get("id");
 
       // Check if wallet exists
       const fetch_wallet = await Wallet.findOne(

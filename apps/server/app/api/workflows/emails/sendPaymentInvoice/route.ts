@@ -20,7 +20,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
       const dbInvoice = await Invoice.findOneAndUpdate(
         { invoiceNumber: invoice.invoiceNumber },
         { $setOnInsert: invoice },
-        { upsert: true, new: true }
+        { upsert: true, new: true },
       );
 
       if (!dbInvoice) {
@@ -38,7 +38,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
       if (!dbInvoice.document_created) {
         await Invoice.updateOne(
           { invoiceNumber: dbInvoice.invoiceNumber, document_created: false },
-          { $set: { document_created: true } }
+          { $set: { document_created: true } },
         );
       }
 
@@ -61,7 +61,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
                 fileId: upload.fileId,
               },
             },
-          }
+          },
         );
       }
 
@@ -70,19 +70,15 @@ export const { POST } = serve<Payload>(async (ctx) => {
         const sent = await sendReceipt(
           pdfBuffer,
           dbInvoice.recipient.name,
-          dbInvoice.recipient.email
+          dbInvoice.recipient.email,
         );
-
-        if (!sent) {
-          throw new Error("Failed to send invoice email");
-        }
 
         await Invoice.updateOne(
           {
             invoiceNumber: dbInvoice.invoiceNumber,
             receipt_sent: false,
           },
-          { $set: { receipt_sent: true } }
+          { $set: { receipt_sent: true } },
         );
       }
 
@@ -92,7 +88,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
           $set: {
             "payment_information.invoice_reference": invoice.invoiceNumber,
           },
-        }
+        },
       );
       await PurchaseTransactions.updateOne({});
       return true;

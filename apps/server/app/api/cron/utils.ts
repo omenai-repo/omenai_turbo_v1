@@ -12,6 +12,8 @@ import {
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { createErrorRollbarReport } from "../util";
 
 export const DELETION_TASK_SERVICES = [
   "order_service",
@@ -175,5 +177,40 @@ export async function verifyAuthVercel(request: Request) {
 
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new NextResponse("Unauthorized", { status: 401 });
+  }
+}
+
+export async function retrieveTrackingResult(order_id: string) {
+  try {
+    const response = await fetch(
+      `${getApiUrl()}/api/shipment/shipment_tracking?order_id=${order_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: AbortSignal.timeout(10000), // 10 second timeout
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`API fetch failed with status ${response.status}`);
+    }
+
+    const trackingResult = await response.json();
+    return trackingResult;
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "Cron: Retrieve shipment tracking data",
+      error,
+      error_response.status,
+    );
+
+    return NextResponse.json(
+      { message: error_response.message },
+      { status: error_response.status },
+    );
   }
 }

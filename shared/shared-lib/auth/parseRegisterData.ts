@@ -7,14 +7,14 @@ import {
 
 import { hashPassword } from "../hash/hashPassword";
 
-type data =
+type Data =
   | (Omit<IndividualRegisterData, "confirmPassword"> & {
       preferences: string[];
     })
   | Omit<GallerySignupData, "confirmPassword">
   | Omit<ArtistSignupData, "confirmPassword>">;
 
-export async function parseRegisterData(data: data) {
+export async function parseRegisterData(data: Data) {
   // Validate data before extracting password
   if (!data || typeof data !== "object") {
     throw new Error("Invalid data");

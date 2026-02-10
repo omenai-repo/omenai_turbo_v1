@@ -11,7 +11,7 @@ import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-import { verifyAuthVercel } from "../../utils";
+import { retrieveTrackingResult, verifyAuthVercel } from "../../utils";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -29,25 +29,7 @@ const isDateAtLeastTwoDaysPast = (targetDate: Date): boolean => {
  */
 async function processOrder(order: any, dbConnection: any) {
   try {
-    // Fetch the latest shipment status from the tracking API
-    const response = await fetch(
-      `${getApiUrl()}/api/shipment/shipment_tracking?order_id=${order.order_id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        // Add timeout to prevent hanging requests
-        signal: AbortSignal.timeout(10000), // 10 second timeout
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`API fetch failed with status ${response.status}`);
-    }
-
-    const trackingResult = await response.json();
+    const trackingResult = await retrieveTrackingResult(order.order_id);
 
     // Validate response structure
     if (!trackingResult?.events || !Array.isArray(trackingResult.events)) {
