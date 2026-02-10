@@ -9,19 +9,31 @@ import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { sendSellerShipmentEmail } from "@omenai/shared-emails/src/models/shipment/sendSellerShipmentEmail";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 export async function GET() {
-  await sendShipmentScheduledEmail({
-    artistname: "Frank Raymond",
-    artwork: "Glacial Landscape",
+  const artworkImage = getImageFileView("69826eb2000756464742", 900);
+  await SendBuyerShipmentSuccessEmail({
     email: "moses@omenai.net",
-    name: "Ra's Al Ghul",
+    name: "Samwell Tarly",
+    trackingCode: "1223445",
+    artworkImage,
+    artwork: "Comfort zone",
+    artistName: "Nana Bruce",
     price: formatPrice("4414"),
-    // trackingCode: "12345678",
-    artworkId: "034b5209-be26-41ba-bf79-1b0672e7ade1",
-    artworkImage:
-      "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/696a43780031549618dc/preview?width=1200&height=0&gravity=center&quality=90&output=webp&project=682272b1001e9d1609a8",
   });
+
+  // await sendShipmentScheduledEmail({
+  //   artistname: "Frank Raymond",
+  //   artwork: "Glacial Landscape",
+  //   email: "moses@omenai.net",
+  //   name: "Ra's Al Ghul",
+  //   price: formatPrice("4414"),
+  //   // trackingCode: "12345678",
+  //   artworkId: "034b5209-be26-41ba-bf79-1b0672e7ade1",
+  //   artworkImage:
+  //     "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/696a43780031549618dc/preview?width=1200&height=0&gravity=center&quality=90&output=webp&project=682272b1001e9d1609a8",
+  // });
 
   return NextResponse.json({
     message: "Successful",

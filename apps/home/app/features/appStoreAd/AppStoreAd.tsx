@@ -21,14 +21,9 @@ export default function AppStoreAd() {
               Discover and collect Contemporary African Art, anywhere
             </h2>
 
-            {/* <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6">
-              The Art World <br />
-              <span className="italic text-white/50">In Your Pocket.</span>
-            </h2> */}
-
             <p className="font-sans text-white/70 text-base leading-relaxed mb-8 max-w-md">
-              Discover artists, save works you love, and manage your collection
-              anywhere you are.
+              Discover artists, save works you love, and manage your
+              collections, from Anywhere
             </p>
 
             {/* Store Buttons */}

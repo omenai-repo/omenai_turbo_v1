@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         "Delivery confirmation could not be updated. Please try again",
       );
 
-    const artworkImage = getImageFileView(order.artwork_data.url, 120, 0, 100);
+    const artworkImage = getImageFileView(order.artwork_data.url, 900);
 
     // TODO: Send mail to buyer and seller about the order delivery confirmation
     await SendBuyerShipmentSuccessEmail({

@@ -51,7 +51,7 @@ async function sendReminderEmail(
   );
 
   const daysLeft = Math.floor(days).toString();
-  const artworkImageUrl = getImageFileView(artworkImage, 120, 0, 100);
+  const artworkImageUrl = getImageFileView(artworkImage, 900);
   await sendShipmentPickupReminderMail({
     name,
     email,

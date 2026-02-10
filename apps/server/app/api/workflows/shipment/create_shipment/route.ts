@@ -195,7 +195,7 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
     await session.endSession();
   }
 
-  const artworkImage = getImageFileView(order.artwork_data.url, 120, 0, 100);
+  const artworkImage = getImageFileView(order.artwork_data.url, 900);
 
   await Promise.all([
     // sendShipmentScheduledEmail({
