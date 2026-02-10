@@ -142,7 +142,7 @@ async function processOrder(order: any, dbConnection: any) {
           }
 
           console.log(!!order.artwork_data);
-          const artworkImage = getImageFileView(order.artwork_data.url, 120);
+          const artworkImage = getImageFileView(order.artwork_data.url, 900);
           // TODO: Send notification emails
           if (seller_designation === "artist") {
             // - Artist: Notify about fund unlock
