@@ -7,11 +7,15 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import {
   BadRequestError,
+  ForbiddenError,
+  NotFoundError,
   ServerError,
 } from "../../../custom/errors/dictionary/errorDictionary";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
+import { getApiUrl } from "@omenai/url-config/src/config";
+import { createErrorRollbarReport } from "../util";
 
 export const DELETION_TASK_SERVICES = [
   "order_service",
@@ -174,6 +178,51 @@ export async function verifyAuthVercel(request: Request) {
   const authHeader = request.headers.get("authorization");
 
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    throw new ForbiddenError("Unauthorized");
   }
+}
+
+import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
+import {
+  DHL_API_URL_TEST,
+  getDhlHeaders,
+  getUserFriendlyError,
+} from "../shipment/resources";
+import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
+
+export async function trackOrderShipment(order_id: string) {
+  // 1. Fetch Order directly from DB
+  const order = await CreateOrder.findOne({ order_id }, "shipping_details");
+
+  if (!order) {
+    throw new NotFoundError("Order not found");
+  }
+
+  const trackingId = order.shipping_details?.shipment_information?.tracking?.id;
+
+  if (!trackingId) {
+    throw new BadRequestError("Tracking ID not found for this order");
+  }
+
+  const API_URL = `${DHL_API_URL_TEST}/shipments/9356579890/tracking`;
+  // TODO: Change during live switch
+  const PROD_API_URL = `https://express.api.dhl.com/mydhlapi/test/shipments/${trackingId}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
+
+  // 2. Call DHL API directly
+  const response = await fetch(`${API_URL}`, {
+    method: "GET",
+    headers: getDhlHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new BadRequestError(getUserFriendlyError(data.detail));
+  }
+
+  // 3. Return clean data
+  return {
+    message: "Successfully fetched shipment events",
+    events: data.shipments[0].events,
+  };
 }

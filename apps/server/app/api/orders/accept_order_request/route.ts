@@ -218,7 +218,11 @@ async function getShippingRate(
       error,
       error_response.status,
     );
-    throw error;
+
+    return NextResponse.json(
+      { message: error_response.message },
+      { status: error_response.status },
+    );
   }
 }
 

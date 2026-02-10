@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
@@ -11,7 +10,7 @@ import { createErrorRollbarReport } from "../../../util";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-import { verifyAuthVercel } from "../../utils";
+import { trackOrderShipment, verifyAuthVercel } from "../../utils";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -27,27 +26,18 @@ const isDateAtLeastTwoDaysPast = (targetDate: Date): boolean => {
 /**
  * Process a single order: check delivery status and update order/wallet if delivered
  */
+
+async function retrieveTrackingResult(order_id: string) {
+  try {
+    return await trackOrderShipment(order_id);
+  } catch (error) {
+    console.error(`Tracking failed for ${order_id}:`, error);
+    return null;
+  }
+}
 async function processOrder(order: any, dbConnection: any) {
   try {
-    // Fetch the latest shipment status from the tracking API
-    const response = await fetch(
-      `${getApiUrl()}/api/shipment/shipment_tracking?order_id=${order.order_id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        // Add timeout to prevent hanging requests
-        signal: AbortSignal.timeout(10000), // 10 second timeout
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`API fetch failed with status ${response.status}`);
-    }
-
-    const trackingResult = await response.json();
+    const trackingResult = await retrieveTrackingResult(order.order_id);
 
     // Validate response structure
     if (!trackingResult?.events || !Array.isArray(trackingResult.events)) {
@@ -151,6 +141,7 @@ async function processOrder(order: any, dbConnection: any) {
             throw new Error("Wallet update failed - no changes made");
           }
 
+          console.log(!!order.artwork_data);
           const artworkImage = getImageFileView(order.artwork_data.url, 120);
           // TODO: Send notification emails
           if (seller_designation === "artist") {
@@ -233,7 +224,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
         "shipping_details.shipment_information.tracking.delivery_status":
           "In Transit",
       },
-      "order_id shipping_details seller_designation payment_information seller_details",
+      "order_id shipping_details seller_designation payment_information seller_details artwork_data",
     ).lean();
 
     // Filter orders where the estimated delivery date is at least two days past

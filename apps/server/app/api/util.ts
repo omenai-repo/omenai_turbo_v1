@@ -140,7 +140,6 @@ export function buildPricing(
 }
 
 import { ShipmentAddressValidationType } from "@omenai/shared-types";
-import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
@@ -278,4 +277,14 @@ export async function validateRequestBody<T>(
 
   // 3. Return Clean Data (Typed automatically)
   return validationResult.data;
+}
+
+export function validateGetRouteParams<T>(schema: ZodType<T>, data: T): T {
+  const validation = schema.safeParse(data);
+
+  if (!validation.success) {
+    throw new BadRequestError("Invalid URL parameters");
+  }
+
+  return data;
 }

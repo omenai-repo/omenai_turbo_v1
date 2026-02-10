@@ -1,18 +1,24 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import {
   NotFoundError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+  validateRequestBody,
+} from "../../util";
+import z from "zod";
+
+export const ZFetchWalletSchema = z.object({
+  owner_id: z.string().min(1),
+});
 
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
@@ -20,11 +26,20 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
     const searchParams = url.searchParams;
     const owner_id = searchParams.get("id");
 
+    const rawParam = {
+      owner_id,
+    };
     try {
+      const data = validateGetRouteParams(ZFetchWalletSchema, rawParam);
+
+      const { owner_id } = data;
+
       await connectMongoDB();
 
       // Check if wallet exists
-      const fetchWallet = await Wallet.findOne({ owner_id });
+      const fetchWallet = await Wallet.findOne({
+        owner_id,
+      });
 
       if (!fetchWallet)
         throw new NotFoundError(
@@ -38,7 +53,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       return NextResponse.json(
         {
-          message: "Wallet data fetched",
+          message: "Wallet validation fetched",
           wallet: fetchWallet,
         },
         { status: 200 },

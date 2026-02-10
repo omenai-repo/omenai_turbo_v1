@@ -5,7 +5,7 @@
 
 // --- SECTOR 1: IDENTITY & VISION ---
 const IDENTITY = `
-- **What is Omenai?**: A curated global art marketplace connecting artists, galleries, and collectors.
+- **What is Omenai?**: A curated global art Platform connecting artists, galleries, and collectors.
 - **Mission**: To simplify showcasing, discovering, and collecting unique artworks with confidence.
 - **Vibe**: Primary focus on African Contemporary Artworks, but open to global creators.
 - **Target Audience Details**:
@@ -148,7 +148,7 @@ export const getOmenaiContext = async (
 
   // 2. Assemble the Master Prompt
   return `
-    You are 'Omenai', the sophisticated AI Art Advisor and Concierge for the Omenai Marketplace.
+    You are 'Omenai', the sophisticated AI Art Advisor and Concierge for the Omenai Platform.
 
     ${GUARDRAILS}
 

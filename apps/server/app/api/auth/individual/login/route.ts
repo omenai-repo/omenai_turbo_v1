@@ -24,7 +24,7 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { validateRequestBody } from "../../../util";
 import z from "zod";
 
-const LoginSchema = z.object({
+export const LoginSchema = z.object({
   email: z.email(),
   password: z.string(),
   device_push_token: z.string().optional(),
