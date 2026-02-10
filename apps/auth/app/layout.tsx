@@ -7,6 +7,7 @@ import { LowRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
 import { ColorSchemeScript } from "@mantine/core";
+import { headers } from "next/headers";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -35,6 +36,8 @@ export default async function AuthDashboardRootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const nonce = (await headers()).get("x-nonce") || "";
+
   return (
     <RollbarProvider config={clientConfig}>
       <LowRiskProvider>

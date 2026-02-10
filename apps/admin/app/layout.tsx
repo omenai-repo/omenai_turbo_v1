@@ -17,6 +17,7 @@ import "@mantine/tiptap/styles.css";
 import { Metadata, Viewport } from "next";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
+import { headers } from "next/headers";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -41,11 +42,13 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-export default function AdminDashboardRootLayout({
+export default async function AdminDashboardRootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const nonce = (await headers()).get("x-nonce") || "";
+
   return (
     <RollbarProvider config={clientConfig}>
       <html lang="en" {...mantineHtmlProps}>
