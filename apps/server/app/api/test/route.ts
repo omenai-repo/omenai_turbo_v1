@@ -20,20 +20,6 @@ export async function GET() {
     artwork: "Comfort zone",
     artistName: "Nana Bruce",
     price: formatPrice("4414"),
-  });
-
-  // await sendShipmentScheduledEmail({
-  //   artistname: "Frank Raymond",
-  //   artwork: "Glacial Landscape",
-  //   email: "moses@omenai.net",
-  //   name: "Ra's Al Ghul",
-  //   price: formatPrice("4414"),
-  //   // trackingCode: "12345678",
-  //   artworkId: "034b5209-be26-41ba-bf79-1b0672e7ade1",
-  //   artworkImage:
-  //     "https://fra.cloud.appwrite.io/v1/storage/buckets/6822733300074eb56561/files/696a43780031549618dc/preview?width=1200&height=0&gravity=center&quality=90&output=webp&project=682272b1001e9d1609a8",
-  // });
-
   return NextResponse.json({
     message: "Successful",
   });

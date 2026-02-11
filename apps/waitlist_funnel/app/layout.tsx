@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Work_Sans, PT_Serif } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { headers } from "next/headers";
+
 const work_sans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-work_sans",
@@ -53,11 +55,13 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get("x-nonce") || "";
+
   return (
     <html lang="en">
       <body

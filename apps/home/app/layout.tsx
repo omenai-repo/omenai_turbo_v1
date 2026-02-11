@@ -11,7 +11,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { LayoutWrapper } from "./LayoutWrapper";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
+import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Discover, buy, and sell Contemporary African Art online.",
@@ -28,7 +28,6 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-// Font
 const work_sans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-work_sans",
@@ -45,6 +44,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const initialSessionData = await getServerSession();
+  const nonce = (await headers()).get("x-nonce") || "";
 
   return (
     <RollbarProvider config={clientConfig}>

@@ -1,0 +1,9 @@
+{
+  "name": "@omenai/next-security-headers",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index",
+  "devDependencies": {
+    "@omenai/typescript-config": "*"
+  }
+}

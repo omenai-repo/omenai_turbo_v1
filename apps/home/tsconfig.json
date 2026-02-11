@@ -20,7 +20,8 @@
     "app/catalog/components/Filter.tsx",
     "app/catalog/components/CancelFilter.tsx",
     "../../arc.d.ts",
-    "app/test/page.tsx"
+    "app/test/page.tsx",
+    "next.config.mjs"
   ],
   "exclude": ["node_modules"]
 }

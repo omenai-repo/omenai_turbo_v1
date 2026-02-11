@@ -1,3 +1,4 @@
+// apps/web/middleware.ts
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import {
@@ -12,7 +13,7 @@ import { getIronSession } from "iron-session";
 import { sessionOptions } from "@omenai/shared-lib/auth/configs/session-config";
 import { destroySession } from "@omenai/shared-lib/auth/session";
 
-// 1. Define Paths that REQUIRE Authentication (Your old matcher logic)
+// 1. Define Paths that REQUIRE Authentication
 const PROTECTED_PATHS = [
   "/admin",
   "/purchase",
@@ -22,13 +23,16 @@ const PROTECTED_PATHS = [
   "/artist",
 ];
 
-// 2. CSP Header Definition (Same as Backend)
-// apps/web/middleware.ts
+export default async function proxy(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+  const host = req.headers.get("host");
 
-const CSP_HEADER = `
+  const nonce = crypto.randomUUID();
+
+  const cspHeader = `
     default-src 'self';
 
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' 
+    script-src 'self' 'unsafe-eval' 'nonce-${nonce}' 
         https://js.stripe.com 
         https://checkout.flutterwave.com 
         https://*.rollbar.com 
@@ -39,10 +43,10 @@ const CSP_HEADER = `
         https://va.vercel-scripts.com 
         https://vitals.vercel-insights.com;
         
-        style-src 'self' 'unsafe-inline' 
+    style-src 'self' 'unsafe-inline' 
         https://fonts.googleapis.com;
         
-        img-src 'self' blob: data: 
+    img-src 'self' blob: data: 
         https://fra.cloud.appwrite.io 
         https://cloud.appwrite.io 
         https://res.cloudinary.com 
@@ -90,7 +94,6 @@ const CSP_HEADER = `
         https://api.positionstack.com 
         https://generativelanguage.googleapis.com 
         https://vitals.vercel-insights.com
-
         ws: wss:;
 
     frame-src 'self' 
@@ -98,7 +101,8 @@ const CSP_HEADER = `
         https://hooks.stripe.com 
         https://checkout.flutterwave.com
         https://www.omenaiinsider.com
-        https://omenai.substack.com;
+        https://*.substack.com
+        https://substack.com;
 
     object-src 'none';
     base-uri 'self';
@@ -107,28 +111,29 @@ const CSP_HEADER = `
     block-all-mixed-content;
     upgrade-insecure-requests;
 `
-  .replace(/\s{2,}/g, " ")
-  .trim();
+    .replace(/\s{2,}/g, " ")
+    .trim();
 
-// Helper to attach CSP to any response
-function addCspHeaders(response: NextResponse) {
-  response.headers.set("Content-Security-Policy", CSP_HEADER);
-  return response;
-}
+  // === HELPER: Finalize Response with Headers ===
+  const finalizeResponse = (response: NextResponse) => {
+    response.headers.set("Content-Security-Policy", cspHeader);
+    return response;
+  };
 
-const userDashboardRegex = /\/user\/.*/;
-const galleryDashboardRegex = /\/gallery\/.*/;
-const artistDashboardRegex = /\/artist\/app\/.*/;
-const adminDashboardRegex = /\/admin\/.*/;
-const purchasePageRegex = /\/purchase\/.*/;
-const paymentPageRegex = /\/payment\/.*/;
-const artistOnboardingDashboardRegex = /\/artist\/onboarding\/.*/;
+  // === HELPER: Create Next() with Nonce ===
+  // We must pass the nonce in request headers so the UI (app/layout) can read it
+  const nextWithNonce = () => {
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-nonce", nonce);
+    requestHeaders.set("Content-Security-Policy", cspHeader);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  };
 
-export default async function proxy(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
-  const host = req.headers.get("host");
-
-  // === HOST REDIRECT (Preserve Params) ===
+  // === HOST REDIRECT ===
   if (host === "omenai.app" || host === "www.omenai.app") {
     const targetUrl = new URL("https://join.omenai.app");
     req.nextUrl.searchParams.forEach((value, key) => {
@@ -142,36 +147,29 @@ export default async function proxy(req: NextRequest) {
   // === PUBLIC ROUTE CHECK ===
   const publicRoutes = [
     "/",
-    // Note: base_url() usually returns a full URL (https://...), so simple equality might fail
-    // if pathname is just '/'. Removing it from here if it duplicates '/'
-    // or ensure base_url() returns just a path.
     new URL("/login", app_auth_uri).pathname,
     new URL("/register", app_auth_uri).pathname,
-    "/catalog", // Changed /catalog/* to check startsWith logic if needed, or keep as string if exact match
+    "/catalog",
   ];
 
-  // Helper for simple glob matching if publicRoutes has wildcards
   const isPublic = publicRoutes.some(
     (p) => pathname === p || pathname.startsWith(p),
   );
 
   if (shouldSkipMiddleware(pathname, req) || isPublic) {
-    return addCspHeaders(NextResponse.next());
+    return finalizeResponse(nextWithNonce());
   }
 
-  // === AUTHENTICATION LOGIC ===
-  // Only run this heavy logic if the user is trying to access a PROTECTED path.
-  // This mimics your previous 'matcher' config.
+  // === AUTH CHECK ===
   const isProtectedPath = PROTECTED_PATHS.some((path) =>
     pathname.startsWith(path),
   );
 
   if (!isProtectedPath) {
-    // If it's not a protected path (e.g. /about, /terms), allow access + CSP
-    return addCspHeaders(NextResponse.next());
+    return finalizeResponse(nextWithNonce());
   }
 
-  // --- Start Iron Session & Redis Check ---
+  // --- Start Iron Session ---
   const res = NextResponse.next();
   const session = await getIronSession<{ sessionId: string }>(
     req,
@@ -201,7 +199,6 @@ export default async function proxy(req: NextRequest) {
     credentials: "include",
   });
 
-  // Handle Invalid Session
   if (!response.ok || response.status === 401) {
     destroySession(sessionId, cookieHeader);
     const redirectUrl = pathname.startsWith("/admin/")
@@ -214,7 +211,15 @@ export default async function proxy(req: NextRequest) {
   const { userData } = userSessionData.user;
   const role = userData.role;
 
-  // --- Role Based Access Control (RBAC) ---
+  // === RBAC LOGIC ===
+  const userDashboardRegex = /\/user\/.*/;
+  const galleryDashboardRegex = /\/gallery\/.*/;
+  const artistDashboardRegex = /\/artist\/app\/.*/;
+  const adminDashboardRegex = /\/admin\/.*/;
+  const purchasePageRegex = /\/purchase\/.*/;
+  const paymentPageRegex = /\/payment\/.*/;
+  const artistOnboardingDashboardRegex = /\/artist\/onboarding\/.*/;
+
   const isUserDashboard = userDashboardRegex.test(pathname);
   const isGalleryDashboard = galleryDashboardRegex.test(pathname);
   const isPurchasePage = purchasePageRegex.test(pathname);
@@ -223,7 +228,6 @@ export default async function proxy(req: NextRequest) {
   const isAdminDashboard = adminDashboardRegex.test(pathname);
   const isOnboarding = artistOnboardingDashboardRegex.test(pathname);
 
-  // User Role
   if (
     role === "user" &&
     (isGalleryDashboard || isArtistDashboard || isAdminDashboard)
@@ -231,7 +235,6 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/user/saves", dashboard_url()));
   }
 
-  // Gallery Role
   if (
     role === "gallery" &&
     (isUserDashboard ||
@@ -243,7 +246,6 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/gallery/overview", dashboard_url()));
   }
 
-  // Artist Role
   if (
     role === "artist" &&
     (isUserDashboard ||
@@ -257,7 +259,6 @@ export default async function proxy(req: NextRequest) {
     );
   }
 
-  // Admin Role
   if (
     role === "admin" &&
     (isUserDashboard ||
@@ -271,19 +272,16 @@ export default async function proxy(req: NextRequest) {
     );
   }
 
-  // Onboarding Check
   if (role === "artist" && isOnboarding && userData.isOnboardingCompleted) {
     return NextResponse.redirect(
       new URL("/artist/app/overview", dashboard_url()),
     );
   }
 
-  // Allow Access + Add CSP
-  return addCspHeaders(NextResponse.next());
+  // === SUCCESS ===
+  return finalizeResponse(nextWithNonce());
 }
 
 export const config = {
-  // NEW MATCHER: Apply to everything EXCEPT static files and internals.
-  // This ensures CSP is applied to Login, Register, and Landing pages.
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

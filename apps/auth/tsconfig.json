@@ -8,7 +8,8 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/waitlist/useWaitlistForm.ts"
+    "app/waitlist/useWaitlistForm.ts",
+    "next.config.mjs"
   ],
   "exclude": ["node_modules"]
 }

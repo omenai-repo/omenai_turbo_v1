@@ -20,6 +20,7 @@ import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
 import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
+import { headers } from "next/headers";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -55,6 +56,8 @@ export default async function DashboardRootLayout({
   children: React.ReactNode;
 }) {
   const initialSessionData = await getServerSession();
+  const nonce = (await headers()).get("x-nonce") || "";
+
   return (
     <RollbarProvider config={clientConfig}>
       <HighRiskProvider>
