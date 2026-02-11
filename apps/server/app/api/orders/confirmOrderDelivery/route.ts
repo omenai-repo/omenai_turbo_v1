@@ -10,7 +10,6 @@ import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/
 import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { createErrorRollbarReport } from "../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 const config: CombinedConfig = {
@@ -18,7 +17,7 @@ const config: CombinedConfig = {
   allowedRoles: ["user"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -27,29 +26,27 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const updateOrders = await CreateOrder.updateOne(
       { order_id },
-      { $set: { "shipping_details.delivery_confirmed": confirm_delivery } }
+      { $set: { "shipping_details.delivery_confirmed": confirm_delivery } },
     );
 
     const order = await CreateOrder.findOne({ order_id });
     if (!order) {
       throw new ServerError(
-        "Cannot find order with provided orderID. Please try again"
+        "Cannot find order with provided orderID. Please try again",
       );
     }
 
     if (!updateOrders)
       throw new ServerError(
-        "Delivery confirmation could not be updated. Please try again"
+        "Delivery confirmation could not be updated. Please try again",
       );
-
-    const artworkImage = getImageFileView(order.artwork_data.url, 120);
 
     // TODO: Send mail to buyer and seller about the order delivery confirmation
     await SendBuyerShipmentSuccessEmail({
       email: order.buyer_details.email,
       name: order.buyer_details.name,
       trackingCode: order_id,
-      artworkImage,
+      artworkImage: order.artwork_data.url,
       artwork: order.artwork_data.title,
       artistName: order.artwork_data.artist,
       price: formatPrice(order.artwork_data.pricing.usd_price),
@@ -60,7 +57,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artworkImage,
+        artworkImage: order.artwork_data.url,
         artwork: order.artwork_data.title,
         artistName: order.artwork_data.artist,
         price: formatPrice(order.artwork_data.pricing.usd_price),
@@ -70,7 +67,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artworkImage,
+        artworkImage: order.artwork_data.url,
         artwork: order.artwork_data.title,
         artistName: order.artwork_data.artist,
         price: formatPrice(order.artwork_data.pricing.usd_price),
@@ -81,18 +78,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Successfully confirmed order delivery.",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: confirm order delivery",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

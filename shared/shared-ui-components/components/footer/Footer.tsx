@@ -5,7 +5,8 @@ import { IndividualLogo } from "../logo/Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaApple, FaGooglePlay } from "react-icons/fa";
-import { Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
+import { Instagram, Facebook, Linkedin } from "lucide-react";
+import { BsThreads } from "react-icons/bs";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -23,8 +24,8 @@ export default function Footer() {
           <div className="space-y-6">
             <IndividualLogo />
             <p className="font-sans text-sm text-neutral-500 leading-relaxed max-w-sm">
-              The premium marketplace for contemporary African art. We connect
-              discerning collectors with the vanguard of global creativity.
+              Discover and collect Contemporary African Art from artists and
+              galleries across Africa and it's diaspora.
             </p>
           </div>
 
@@ -38,7 +39,10 @@ export default function Footer() {
                   Icon: Instagram,
                   href: "https://instagram.com/omenaiofficial",
                 },
-                { Icon: Twitter, href: "https://x.com" },
+                {
+                  Icon: BsThreads,
+                  href: "https://www.threads.com/@omenaiofficial?hl=en",
+                },
                 { Icon: Facebook, href: "https://facebook.com/omenaiofficial" },
                 {
                   Icon: Linkedin,
@@ -72,7 +76,7 @@ export default function Footer() {
                   href={`${base_url()}/catalog`}
                   className="hover:text-dark  transition-colors block py-1"
                 >
-                  The Marketplace
+                  Collect
                 </Link>
               </li>
               <li>
@@ -80,7 +84,7 @@ export default function Footer() {
                   href={`${base_url()}/collections`}
                   className="hover:text-dark  transition-colors block py-1"
                 >
-                  Curated Collections
+                  Collections
                 </Link>
               </li>
               <li>
@@ -88,17 +92,17 @@ export default function Footer() {
                   href={`${base_url()}/articles`}
                   className="hover:text-dark  transition-colors block py-1"
                 >
-                  Editorial Journal
+                  Editorials
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   href={`${base_url()}/curated`}
                   className="hover:text-dark  transition-colors block py-1"
                 >
                   Private View
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 

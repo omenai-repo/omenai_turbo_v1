@@ -24,7 +24,6 @@ import { ScheduledShipment } from "@omenai/shared-models/models/orders/CreateShi
 import { tracking_url } from "@omenai/url-config/src/config";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
 import { createErrorRollbarReport } from "../../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
@@ -195,8 +194,6 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
     await session.endSession();
   }
 
-  const artworkImage = getImageFileView(order.artwork_data.url, 120);
-
   await Promise.all([
     // sendShipmentScheduledEmail({
     //   email: order.buyer_details.email,
@@ -210,7 +207,7 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
       email: order.seller_details.email,
       name: order.seller_details.name,
       artwork: order.artwork_data.title,
-      artworkImage,
+      artworkImage: order.artwork_data.url,
       artistname: order.artwork_data.artist,
       artworkId: order.artwork_data.art_id,
       price: formatPrice(order.artwork_data.pricing.usd_price),

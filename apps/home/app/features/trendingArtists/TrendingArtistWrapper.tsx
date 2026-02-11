@@ -28,20 +28,19 @@ export default function TrendingArtistWrapper() {
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            {/* <div className="flex items-center gap-2 mb-3">
               <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
                 <HiUserGroup size={14} />
               </span>
               <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
                 Creator Roster
               </span>
-            </div>
+            </div> */}
             <h2 className="text-2xl md:text-3xl font-serif text-dark ">
-              Trending Artists
+              Artist to watch
             </h2>
             <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
-              Meet the creators redefining the boundaries of their medium this
-              week.
+              Discover artists gaining collector attention right now.
             </p>
           </div>
         </div>

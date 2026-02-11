@@ -137,7 +137,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
                 ? "Unavailable"
                 : isPriceHidden
                   ? "Inquire for Price"
-                  : "Acquire Artwork"}
+                  : "Buy Artwork"}
             </span>
           )}
         </button>

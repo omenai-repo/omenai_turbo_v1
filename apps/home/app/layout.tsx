@@ -14,7 +14,7 @@ import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Omenai",
-  description: "Discover, buy, and sell African contemporary art online.",
+  description: "Discover, buy, and sell Contemporary African Art online.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Omenai – African Art Marketplace",
-    description: "Discover, buy, and sell African contemporary art online.",
+    description: "Discover, buy, and sell Contemporary African Art online.",
     url: "https://omenai.app",
   },
   manifest: "/site.webmanifest",

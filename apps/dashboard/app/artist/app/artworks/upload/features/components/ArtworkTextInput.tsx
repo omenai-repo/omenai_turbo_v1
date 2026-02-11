@@ -68,7 +68,7 @@ export default function ArtworkTextInput({
     }
     // Check for weight
     if (l.includes("weight")) {
-      return "kg";
+      return "lb";
     }
     return null;
   };

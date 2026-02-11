@@ -45,10 +45,10 @@ export default function CuratedArtworkClientWrapper({
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-serif text-dark ">
-              Your Curated Edit
+              Your Personal Edits
             </h2>
             <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
-              Selections tailored to your taste .
+              Works selected from your chosen interests
             </p>
           </div>
 

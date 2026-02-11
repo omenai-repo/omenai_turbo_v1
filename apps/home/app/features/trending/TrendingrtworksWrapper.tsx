@@ -40,15 +40,14 @@ export default function TrendingArtworkWrapper({
                 <HiArrowTrendingUp size={14} />
               </span>
               <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
-                Market Movers
+                Trending works
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-serif text-dark ">
               Trending Now
             </h2>
             <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
-              Artworks generating the most engagement and collector interest
-              this week.
+              Works capturing collector attention this week.
             </p>
           </div>
 

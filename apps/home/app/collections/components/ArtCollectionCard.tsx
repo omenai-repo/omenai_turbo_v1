@@ -47,9 +47,9 @@ export default function ArtCollectionCard({
           <h3 className="font-serif text-xl text-dark  leading-tight group-hover:underline">
             {title}
           </h3>
-          <p className="font-sans text-xs font-medium text-neutral-500 uppercase tracking-wide">
+          {/* <p className="font-sans text-xs font-medium text-neutral-500 uppercase tracking-wide">
             Explore Collection
-          </p>
+          </p> */}
         </div>
       </article>
     </Link>

@@ -9,15 +9,17 @@ import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { sendSellerShipmentEmail } from "@omenai/shared-emails/src/models/shipment/sendSellerShipmentEmail";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
-import { sendWaitlistInviteEmail } from "@omenai/shared-emails/src/models/admin/sendWaitlistInviteEmail";
+import SendArtistShipmentSuccess from "@omenai/shared-emails/src/views/shipment/SendArtistShipmentSuccess";
 
 export async function GET() {
-  await sendWaitlistInviteEmail({
-    email: "moses@omenai.net",
-    name: "Ra's Al Ghul",
-    entity: "artist",
-  });
-
+  await SendArtistShipmentSuccessEmail({
+    email: "rodolphe@omenai.net",
+    name: "Samwell Tarly",
+    trackingCode: "1223445",
+    artworkImage: "69826eb2000756464742",
+    artwork: "Comfort zone",
+    artistName: "Nana Bruce",
+    price: formatPrice("4414"),
   return NextResponse.json({
     message: "Successful",
   });

@@ -15,7 +15,7 @@ export default function FilterToggleButton() {
       </div>
       <div className="flex flex-col items-start">
         <span className="text-[10px] font-medium font-sans uppercase tracking-[0.2em] text-dark">
-          Filter Archive
+          Filter works
         </span>
         {selectedFilters.length > 0 && (
           <span className="text-[9px] text-neutral-400 uppercase tracking-widest">

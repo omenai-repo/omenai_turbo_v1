@@ -64,10 +64,10 @@ export default function Collections({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div>
             <span className="block mb-3 text-[9px] font-mono text-dark  tracking-wide uppercase">
-              Curated Series
+              Featured Collections
             </span>
             <h2 className="text-2xl md:text-3xl font-serif text-dark ">
-              Shop by Category
+              Browse by medium
             </h2>
           </div>
 

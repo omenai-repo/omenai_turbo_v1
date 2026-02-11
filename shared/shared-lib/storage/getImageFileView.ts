@@ -26,7 +26,7 @@ export const getImageFileView = (
   fileId: string,
   width: number,
   height?: number,
-  quality: number = 70 // Default to 70 instead of 100
+  quality: number = 70, // Default to 70 instead of 100
 ) => {
   return storage.getFilePreview({
     bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
@@ -43,7 +43,7 @@ export const getImageFileView = (
 export const getOptimizedImage = (
   fileId: string,
   preset: "thumbnail" | "small" | "medium" | "large" | "xlarge" = "small",
-  customQuality?: number
+  customQuality?: number,
 ) => {
   const size = SIZE_PRESETS[preset];
 

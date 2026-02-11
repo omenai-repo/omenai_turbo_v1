@@ -29,7 +29,7 @@ export default function SearchInput({ setIsMobileMenuOpen }: any) {
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         // More descriptive placeholder, no uppercase yelling
-        placeholder="Search artists, works, styles..."
+        placeholder="Search artists, artworks, styles..."
         className="
             w-full pl-10 pr-4 py-2.5 
             bg-slate-100 border border-transparent rounded-md 
