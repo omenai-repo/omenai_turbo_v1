@@ -1,6 +1,6 @@
 // components/emails/SellerShipmentEmail.tsx
 import { Container, Section, Text, Heading } from "@react-email/components";
-import ArtworkCard from "./ArtworkCard";
+import EmailArtworkCard from "./EmailArtworkCard";
 import ShipmentLayout from "./ShipmentLayout";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
@@ -49,7 +49,7 @@ export default function SellerShipmentEmail(
             courier service will reach out shortly to schedule a pickup from
             your location.
           </Text>
-          <ArtworkCard
+          <EmailArtworkCard
             artwork={artwork}
             artworkImage={artworkImage}
             artistName={artistName}

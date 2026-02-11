@@ -6,7 +6,7 @@ import {
   Heading,
   Link,
 } from "@react-email/components";
-import ArtworkCard from "./ArtworkCard";
+import EmailArtworkCard from "./EmailArtworkCard";
 import ShipmentLayout from "./ShipmentLayout";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
@@ -59,7 +59,7 @@ export default function BuyerShipmentEmail(
           <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
             <strong>Tracking Code:</strong> {trackingCode}
           </Text>
-          <ArtworkCard
+          <EmailArtworkCard
             artwork={artwork}
             artworkImage={artworkImage}
             artistName={artistName}

@@ -1,7 +1,7 @@
 import { Img, Section, Text } from "@react-email/components";
 import React from "react";
 
-export default function ArtworkCard({
+export default function EmailArtworkCard({
   artwork,
   artworkImage,
   artistName,

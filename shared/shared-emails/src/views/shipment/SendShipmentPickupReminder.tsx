@@ -18,7 +18,7 @@ import {
   EMAIL_COLORS,
   EMAIL_SIGNATURES,
 } from "../../constants/constants";
-import ArtworkCard from "./ArtworkCard";
+import EmailArtworkCard from "./EmailArtworkCard";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 interface ShipmentPickupNotificationEmailProps {
@@ -93,7 +93,7 @@ export const ShipmentPickupNotificationEmail = ({
                 your gallery address.
               </Text>
 
-              <ArtworkCard
+              <EmailArtworkCard
                 artwork={artwork.title}
                 artworkImage={artworkImage}
                 artistName={artistName}
