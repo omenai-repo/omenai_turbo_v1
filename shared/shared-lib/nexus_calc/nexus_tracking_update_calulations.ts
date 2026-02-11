@@ -16,7 +16,7 @@ const THRESHOLD_TYPES = {
 export const updateNexusTracking = async (
   stateCode: string,
   sales: number,
-  transactions: number
+  transactions: number,
 ): Promise<void | { status: boolean; state: string; stateCode: string }> => {
   await connectMongoDB();
   const nexus = await NexusTransactions.findOne({ stateCode });
@@ -36,12 +36,12 @@ export const updateNexusTracking = async (
 
   nexus.calculation.sales_exposure_percentage = calculatePercentage(
     nexus.calculation.total_sales,
-    sales_threshold
+    sales_threshold,
   );
 
   nexus.calculation.transactions_exposure_percentage = calculatePercentage(
     nexus.calculation.total_transactions,
-    transactions_threshold || 0
+    transactions_threshold || 0,
   );
 
   let is_breached = false;
@@ -81,15 +81,15 @@ export const updateNexusTracking = async (
 
   if (is_breached) {
     //TODO: send mail to admin that nexus threshold has been breached in the specified state and tax collection registeration is required
+    // await sendNexusTresholdEmail({
+    //   email: "moses@omenai.app",
+    //   state: nexus.state,
+    // });
     return {
       status: true,
       state: nexus.state,
       stateCode: nexus.stateCode,
     };
-    // await sendNexusTresholdEmail({
-    //   email: "moses@omenai.app",
-    //   state: nexus.state,
-    // });
   }
 
   await nexus.save();
@@ -114,7 +114,7 @@ export const evaluateNexusThresholds = async (): Promise<void> => {
       tax_withholding_eligibility: 1,
       state: 1,
       stateCode: 1,
-    }
+    },
   );
 
   await Promise.all(
@@ -126,7 +126,7 @@ export const evaluateNexusThresholds = async (): Promise<void> => {
         shouldReset = checkEvaluationPeriod(
           nexus.nexus_rule.evaluation_period_type,
           lastReset,
-          now
+          now,
         );
       } else {
         const salesExposure = nexus.calculation.sales_exposure_percentage ?? 0;
@@ -191,7 +191,7 @@ export const evaluateNexusThresholds = async (): Promise<void> => {
           reset_date: now,
         });
       }
-    })
+    }),
   );
 
   // Bulk write operations
@@ -219,7 +219,7 @@ export const evaluateNexusThresholds = async (): Promise<void> => {
 const checkEvaluationPeriod = (
   evaluationType: string,
   lastReset: Date,
-  now: Date
+  now: Date,
 ): boolean => {
   switch (evaluationType) {
     case "PREVIOUS_CALENDAR_YEAR":

@@ -42,7 +42,7 @@ export default function Editorials() {
                     <Newspaper />
                   </span>
                   <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
-                    The Omenai Editorial
+                    Omenai Editorial
                   </span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-serif text-dark ">

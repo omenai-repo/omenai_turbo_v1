@@ -5,7 +5,7 @@ export default function Newsletter() {
         <div className="flex flex-col items-start justify-between gap-16 lg:flex-row lg:items-center">
           {/* 1. EDITORIAL HOOK (Left Column) */}
           <div className="max-w-xl space-y-6">
-            <span className="font-sans text-xs font-bold uppercase tracking-wider text-white/60">
+            <span className="font-sans text-xs font-bold uppercase tracking-wider text-dark">
               Market Intelligence
             </span>
 

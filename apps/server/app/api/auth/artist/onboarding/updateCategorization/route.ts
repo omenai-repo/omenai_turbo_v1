@@ -44,7 +44,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (!is_algorithmCalculated)
         throw new NotFoundError(
-          "Data not found for update, please try again or contact support"
+          "Data not found for update, please try again or contact support",
         );
 
       const algorithm_result: ArtistCategorizationAlgorithmResult =
@@ -52,7 +52,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (algorithm_result.status !== "success")
         throw new ServerError(
-          "Something went wrong while processing data, please contact support"
+          "Something went wrong while processing data, please contact support",
         );
 
       // Create algorithm save structure
@@ -78,7 +78,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           $set: {
             request: categorization_result_payload.request,
           },
-        }
+        },
       ).session(session);
 
       await session.commitTransaction();
@@ -86,12 +86,12 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       // TODO: Replace email with actual admin email
       await sendVerifyArtistMail({
         name: artist.name,
-        email: "moses@omenai.net",
+        email: "support@omenai.app",
       });
 
       return NextResponse.json(
         { message: "Algorithm ran successfully" },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       await session.abortTransaction();
@@ -99,14 +99,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       createErrorRollbarReport(
         "auth: artist onboarding update categorization",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response!.message },
-        { status: error_response!.status }
+        { status: error_response!.status },
       );
     } finally {
       await session.endSession();
     }
-  }
+  },
 );

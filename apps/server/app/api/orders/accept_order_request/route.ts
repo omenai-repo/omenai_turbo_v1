@@ -32,6 +32,7 @@ import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_mid
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
+  // TODO: Change to production endpoint
   apiUrl: "https://api.sandbox.taxjar.com",
 });
 

@@ -78,16 +78,16 @@ export default function PrivacyPolicy() {
               </li>
               <li className="text-gray-700">or</li>
               <li className="text-gray-700">
-                <strong>info@omenai.app</strong> (for general inquiries)
+                <strong>support@omenai.app</strong> (for general inquiries)
               </li>
             </ul>
             <p className="text-gray-700 mb-2">
               <strong>Registered Address:</strong>
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>Omenai, Inc.</strong>
+              <strong>OMENAI Inc.</strong>
               <br />
-              16192 Coastal Hwy, Lewes, DE 19958, USA
+              122, S. Michigan Avenue, Suite 1390-H73
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
@@ -372,11 +372,11 @@ export default function PrivacyPolicy() {
               please contact:
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>Omenai, Inc.</strong>
+              <strong>OMENAI Inc.</strong>
               <br />
-              16192 Coastal Hwy, Lewes, DE 19958, USA
+              122, S. Michigan Avenue, Suite 1390-H73
               <br />
-              info@omenai.app | support@omenai.app | legal@omenai.app
+              support@omenai.app | legal@omenai.app
             </p>
           </div>
         </div>

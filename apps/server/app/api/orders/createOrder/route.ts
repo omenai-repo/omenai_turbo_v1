@@ -131,7 +131,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     // Fetch artwork details
     const artwork = (await Artworkuploads.findOne(
       { art_id },
-      "title artist pricing url art_id availability role_access exclusivity_status dimensions",
+      "title artist pricing url art_id availability role_access exclusivity_status dimensions packaging_type",
     ).lean()) as unknown as Pick<
       ArtworkSchemaTypes,
       | "title"
@@ -142,6 +142,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       | "role_access"
       | "exclusivity_status"
       | "dimensions"
+      | "packaging_type"
     >;
 
     if (!artwork) {

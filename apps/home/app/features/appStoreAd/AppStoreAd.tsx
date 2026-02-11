@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { BsQrCode } from "react-icons/bs";
 
 export default function AppStoreAd() {
   return (
     <section className="w-full bg-[#091830] overflow-hidden">
-      <div className="p-12">
+      <div className="px-12 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12 pt-16 md:pt-24 pb-0">
           {/* 1. CONTENT COLUMN */}
           <div className="flex-1 max-w-xl text-left pb-16 md:pb-24">
@@ -17,8 +18,9 @@ export default function AppStoreAd() {
                 Omenai Mobile
               </span>
             </div>
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6">
-              Discover and collect Contemporary African Art, anywhere
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-6">
+              Discover and collect Contemporary African Art,{" "}
+              <span className="text-yellow-400">Anywhere</span>
             </h2>
 
             <p className="font-sans text-white/70 text-base leading-relaxed mb-8 max-w-md">
@@ -28,25 +30,37 @@ export default function AppStoreAd() {
 
             {/* Store Buttons */}
             <div className="flex flex-wrap items-center gap-4">
-              <button className="group relative h-[45px] transition-transform hover:-translate-y-1">
-                <Image
-                  src="/images/google_play.png"
-                  width={150}
-                  height={45}
-                  alt="Get it on Google Play"
-                  className="h-full w-auto object-contain"
-                />
-              </button>
+              <Link
+                href={
+                  "https://play.google.com/store/apps/details?id=com.omenai.omenaiapp"
+                }
+                target="_blank"
+              >
+                <button className="group relative h-[45px] transition-transform hover:-translate-y-1">
+                  <Image
+                    src="/images/google_play.png"
+                    width={150}
+                    height={45}
+                    alt="Get it on Google Play"
+                    className="h-full w-auto object-contain"
+                  />
+                </button>
+              </Link>
 
-              <button className="group relative h-[45px] transition-transform hover:-translate-y-1">
-                <Image
-                  src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-                  width={150}
-                  height={45}
-                  alt="Download on the App Store"
-                  className="h-full w-auto object-contain"
-                />
-              </button>
+              <Link
+                href={"https://apps.apple.com/ng/app/omenai/id6748387089"}
+                target="_blank"
+              >
+                <button className="group relative h-[45px] transition-transform hover:-translate-y-1">
+                  <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                    width={150}
+                    height={45}
+                    alt="Download on the App Store"
+                    className="h-full w-auto object-contain"
+                  />
+                </button>
+              </Link>
             </div>
           </div>
 

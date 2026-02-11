@@ -140,10 +140,7 @@ async function processOrder(order: any, dbConnection: any) {
             throw new Error("Wallet update failed - no changes made");
           }
 
-          console.log(!!order.artwork_data);
-          // TODO: Send notification emails
           if (seller_designation === "artist") {
-            // - Artist: Notify about fund unlock
             await sendArtistFundUnlockEmail({
               name: seller_details.name,
               email: seller_details.email,

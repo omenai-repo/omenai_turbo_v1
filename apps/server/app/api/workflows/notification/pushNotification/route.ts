@@ -5,16 +5,11 @@ import { ServerError } from "../../../../../custom/errors/dictionary/errorDictio
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { pushNotification } from "@omenai/shared-lib/notifications/sendMobileNotification";
 
-/**
- * Calls the notification creation API with a timeout.
- * Throws a ServerError on failure.
- */
 async function callCreateNotificationApi(data: any): Promise<any> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
-    // TODO: Remove origin
     const response = await fetch(
       `${getApiUrl()}/api/notifications/createNotification`,
       {

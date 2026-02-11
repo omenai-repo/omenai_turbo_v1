@@ -15,7 +15,6 @@ import SearchInput from "../ui/SearchInput";
 const navItems = [
   { label: "Collect Art", href: "/catalog" },
   { label: "Editorials", href: "/articles" },
-  { label: "Visit Shop", href: "https://omenai.shop" },
 ];
 
 const loggedInRouteMap = {

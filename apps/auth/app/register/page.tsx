@@ -3,6 +3,7 @@ import React from "react";
 import RegisterOptionSection from "./components/RegisterOptionSection";
 import Link from "next/link";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
+import { base_url } from "@omenai/url-config/src/config";
 
 export const dynamic = "force-dynamic";
 
@@ -50,10 +51,13 @@ function Page() {
       <div className="p-8 absolute bottom-5 right-5 flex justify-between items-center text-[10px] text-slate-300 tracking-[0.3em] uppercase">
         <span>&copy; 2026 OMENAI INC.</span>
         <div className="flex gap-6">
-          <Link href="/terms" className="hover:text-dark">
-            Terms
+          <Link
+            href={`${base_url()}/legal?ent=collector`}
+            className="hover:text-dark"
+          >
+            Terms of Service
           </Link>
-          <Link href="/privacy" className="hover:text-dark">
+          <Link href={`${base_url()}/privacy`} className="hover:text-dark">
             Privacy
           </Link>
         </div>

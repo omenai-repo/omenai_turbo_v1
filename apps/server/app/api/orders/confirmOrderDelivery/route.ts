@@ -41,7 +41,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         "Delivery confirmation could not be updated. Please try again",
       );
 
-    // TODO: Send mail to buyer and seller about the order delivery confirmation
     await SendBuyerShipmentSuccessEmail({
       email: order.buyer_details.email,
       name: order.buyer_details.name,

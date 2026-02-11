@@ -39,7 +39,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
       expiry_date: { $lt: threeDaysAgo },
     }).lean();
 
-    // TODO: Send email to all emails telling them their card is unable to be charged.
     const expiredEmailPayload = await Promise.all(
       subscriptions.map(async (subscription) => {
         const html = await render(

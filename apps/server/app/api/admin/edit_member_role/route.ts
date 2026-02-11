@@ -15,7 +15,7 @@ const config: CombinedConfig = {
 };
 
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
-  request: Request
+  request: Request,
 ) {
   try {
     const { admin_id, role } = await request.json();
@@ -25,21 +25,20 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
 
     const admin = await AccountAdmin.findOne(
       { admin_id },
-      "access_role name email"
+      "access_role name email",
     );
 
     const role_update = await AccountAdmin.updateOne(
       { admin_id },
-      { $set: { access_role: role } }
+      { $set: { access_role: role } },
     );
 
     if (role_update.modifiedCount === 0) {
       return NextResponse.json(
         { message: "No changes made or admin not found" },
-        { status: 500 }
+        { status: 500 },
       );
     }
-    // TODO: Send email notification to user informing them their member role has changed
     await sendRoleChangeMail({
       name: admin.name,
       previousRole: admin.access_role,
@@ -54,11 +53,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     createErrorRollbarReport(
       "admin: edit member role",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

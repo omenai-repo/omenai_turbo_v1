@@ -13,8 +13,8 @@ export default function WarningAlert() {
     >
       By accepting this order, you agree to hold the artwork for 24 hours to
       allow for payment and shipment processing. If the piece is on exhibition
-      and paid for by this buyer, shipment will be scheduled at the exhibition’s
-      end date
+      and paid for by this buyer, shipment will be scheduled at the
+      exhibition&apos;s end date
     </Alert>
   );
 }

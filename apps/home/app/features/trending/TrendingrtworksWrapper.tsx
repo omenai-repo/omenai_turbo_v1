@@ -50,15 +50,6 @@ export default function TrendingArtworkWrapper({
               Works capturing collector attention this week.
             </p>
           </div>
-
-          <div className="hidden md:block">
-            <Link
-              href="/catalog?filter=trending"
-              className="text-sm font-sans font-medium text-dark  hover:underline underline-offset-4"
-            >
-              View All Trending
-            </Link>
-          </div>
         </div>
 
         {/* 2. CONTENT */}
@@ -69,16 +60,6 @@ export default function TrendingArtworkWrapper({
         ) : (
           <TrendingArtworks artworks={artworks} sessionId={sessionId} />
         )}
-
-        {/* Mobile View All */}
-        <div className="mt-10 flex md:hidden justify-center">
-          <Link
-            href="/catalog?filter=trending"
-            className="w-full py-3 text-center rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
-          >
-            View All Trending
-          </Link>
-        </div>
       </div>
     </section>
   );

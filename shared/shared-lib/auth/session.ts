@@ -90,7 +90,6 @@ export async function getSessionFromCookie(cookieStore: any) {
   return session;
 }
 
-// TODO: Implement this where necessary
 export async function getSessionIdFromRequest(
   req: Request,
   cookieStore: any,

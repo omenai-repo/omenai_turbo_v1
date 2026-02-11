@@ -320,11 +320,11 @@ export default function GalleriesTerms() {
               15. Contact Information
             </h3>
             <p className="text-gray-700 mb-4">
-              <strong>Omenai, Inc.</strong>
+              <strong>OMENAI Inc.</strong>
               <br />
-              16192 Coastal Hwy, Lewes, DE 19958, USA
+              122, S. Michigan Avenue, Suite 1390-H73
               <br />
-              info@omenai.app | support@omenai.app | legal@omenai.app
+              support@omenai.app | legal@omenai.app
             </p>
           </div>
         </div>

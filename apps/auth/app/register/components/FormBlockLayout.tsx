@@ -1,4 +1,5 @@
 "use client";
+import { base_url } from "@omenai/url-config/src/config";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 export default function FormBlockLayout({
@@ -37,8 +38,8 @@ export default function FormBlockLayout({
           <div className="w-full max-w-[480px] relative z-10">
             {/* Header section inside the form area for better context */}
             <div className="mb-10 space-y-2">
-              <h1 className="text-fluid-xl font-light tracking-tight text-slate-900">
-                Create {entity} Account
+              <h1 className="text-fluid-xl font-normal tracking-tight text-slate-900">
+                Create {entity} account
               </h1>
               <p className="text-slate-500 text-fluid-xs font-light">
                 Please fill your information below
@@ -54,11 +55,19 @@ export default function FormBlockLayout({
         <div className="p-8 flex justify-between items-center text-[10px] text-slate-300 tracking-[0.3em] uppercase">
           <span>&copy; 2026 OMENAI INC.</span>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-dark transition-colors">
+            <Link
+              href={`${base_url()}/privacy`}
+              target="_blank"
+              className="hover:text-dark transition-colors"
+            >
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-dark transition-colors">
-              Terms
+            <Link
+              href={`${base_url()}/legal?ent=${entity}`}
+              target="_blank"
+              className="hover:text-dark transition-colors"
+            >
+              Terms of use
             </Link>
           </div>
         </div>

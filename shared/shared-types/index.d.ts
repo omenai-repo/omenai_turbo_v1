@@ -338,6 +338,7 @@ export type CreateOrderModelTypes = {
     | "art_id"
     | "role_access"
     | "dimensions"
+    | "packaging_type"
   > & {
     _id: ObjectId;
     exclusivity_status: Omit<

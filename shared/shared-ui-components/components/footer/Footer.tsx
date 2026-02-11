@@ -5,8 +5,13 @@ import { IndividualLogo } from "../logo/Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaApple, FaGooglePlay } from "react-icons/fa";
-import { Instagram, Facebook, Linkedin } from "lucide-react";
-import { BsThreads } from "react-icons/bs";
+import {
+  BsFacebook,
+  BsInstagram,
+  BsLinkedin,
+  BsPinterest,
+  BsThreads,
+} from "react-icons/bs";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -36,17 +41,21 @@ export default function Footer() {
             <div className="flex gap-4">
               {[
                 {
-                  Icon: Instagram,
+                  Icon: BsInstagram,
                   href: "https://instagram.com/omenaiofficial",
                 },
                 {
                   Icon: BsThreads,
                   href: "https://www.threads.com/@omenaiofficial?hl=en",
                 },
-                { Icon: Facebook, href: "https://facebook.com/omenaiofficial" },
+
                 {
-                  Icon: Linkedin,
+                  Icon: BsLinkedin,
                   href: "https://linkedin.com/company/omenaiart",
+                },
+                {
+                  Icon: BsPinterest,
+                  href: "https://pinterest.com/omenaiofficial",
                 },
               ].map(({ Icon, href }, i) => (
                 <a
@@ -95,14 +104,6 @@ export default function Footer() {
                   Editorials
                 </Link>
               </li>
-              {/* <li>
-                <Link
-                  href={`${base_url()}/curated`}
-                  className="hover:text-dark  transition-colors block py-1"
-                >
-                  Private View
-                </Link>
-              </li> */}
             </ul>
           </div>
 
@@ -114,15 +115,7 @@ export default function Footer() {
             <ul className="space-y-4 font-sans text-sm text-neutral-500">
               <li>
                 <Link
-                  href="#"
-                  className="hover:text-dark  transition-colors block py-1"
-                >
-                  Help Center & FAQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="mailto:info@omenai.app"
+                  href="mailto:support@omenai.app"
                   className="hover:text-dark  transition-colors block py-1"
                 >
                   Contact Concierge
@@ -154,11 +147,11 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col gap-4">
               <p className="font-sans text-xs text-neutral-500 leading-relaxed mb-2">
-                Manage your collection and bid in real-time from anywhere.
+                Discover and collect Contemporary African Art, anywhere.
               </p>
 
               <a
-                href="https://apps.apple.com/app/omenai"
+                href="https://apps.apple.com/ng/app/omenai/id6748387089"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 w-full rounded-md bg-white border border-neutral-200 px-4 py-3 hover:border-[#091830] hover:shadow-md transition-all duration-300"
