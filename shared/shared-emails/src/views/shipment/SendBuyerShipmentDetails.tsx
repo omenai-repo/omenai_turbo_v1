@@ -8,6 +8,7 @@ import {
 } from "@react-email/components";
 import ArtworkCard from "./ArtworkCard";
 import ShipmentLayout from "./ShipmentLayout";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function BuyerShipmentEmail(
   trackingCode: string,
@@ -17,6 +18,7 @@ export default function BuyerShipmentEmail(
   artistName: string,
   price: string,
 ) {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <ShipmentLayout
       preview="Your artwork is on the way. Track your shipment now."

@@ -14,17 +14,19 @@ export default function ArtworkCard({
 }>) {
   return (
     <Section className="my-8 p-6 bg-gray-50 rounded">
-      <div className="text-center">
+      <div style={{ textAlign: "center", width: "100%" }}>
         <Img
           src={artworkImage}
           alt={artwork}
           className="mx-auto rounded shadow-md"
+          width={200}
           style={{
-            maxWidth: "480px",
-            width: "100%",
+            display: "block",
+            maxWidth: "200px",
+            width: "200px",
             height: "auto",
-            maxHeight: "420px",
-            objectFit: "cover",
+            margin: "0 auto",
+            imageRendering: "-webkit-optimize-contrast",
           }}
         />
       </div>

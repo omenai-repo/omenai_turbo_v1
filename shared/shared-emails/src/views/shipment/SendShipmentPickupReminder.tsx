@@ -19,6 +19,7 @@ import {
   EMAIL_SIGNATURES,
 } from "../../constants/constants";
 import ArtworkCard from "./ArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 interface ShipmentPickupNotificationEmailProps {
   galleryName: string;
@@ -45,6 +46,7 @@ export const ShipmentPickupNotificationEmail = ({
   artistName,
   price,
 }: ShipmentPickupNotificationEmailProps) => {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <Html>
       <Head />

@@ -2,6 +2,7 @@ import { Container, Section, Text, Heading } from "@react-email/components";
 import ArtworkCard from "./ArtworkCard";
 import ShipmentLayout from "./ShipmentLayout";
 import { base_url } from "@omenai/url-config/src/config";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function SendShipmentScheduled(
   name: string,
@@ -9,8 +10,9 @@ export default function SendShipmentScheduled(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  price: string
+  price: string,
 ) {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <ShipmentLayout
       name={name}

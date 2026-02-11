@@ -10,7 +10,6 @@ import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/
 import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { createErrorRollbarReport } from "../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 const config: CombinedConfig = {
@@ -42,14 +41,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         "Delivery confirmation could not be updated. Please try again",
       );
 
-    const artworkImage = getImageFileView(order.artwork_data.url, 900);
-
     // TODO: Send mail to buyer and seller about the order delivery confirmation
     await SendBuyerShipmentSuccessEmail({
       email: order.buyer_details.email,
       name: order.buyer_details.name,
       trackingCode: order_id,
-      artworkImage,
+      artworkImage: order.artwork_data.url,
       artwork: order.artwork_data.title,
       artistName: order.artwork_data.artist,
       price: formatPrice(order.artwork_data.pricing.usd_price),
@@ -60,7 +57,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artworkImage,
+        artworkImage: order.artwork_data.url,
         artwork: order.artwork_data.title,
         artistName: order.artwork_data.artist,
         price: formatPrice(order.artwork_data.pricing.usd_price),
@@ -70,7 +67,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artworkImage,
+        artworkImage: order.artwork_data.url,
         artwork: order.artwork_data.title,
         artistName: order.artwork_data.artist,
         price: formatPrice(order.artwork_data.pricing.usd_price),

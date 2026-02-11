@@ -9,15 +9,14 @@ import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { sendSellerShipmentEmail } from "@omenai/shared-emails/src/models/shipment/sendSellerShipmentEmail";
 import { sendShipmentScheduledEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import SendArtistShipmentSuccess from "@omenai/shared-emails/src/views/shipment/SendArtistShipmentSuccess";
 
 export async function GET() {
-  const artworkImage = getImageFileView("69826eb2000756464742", 900);
-  await SendBuyerShipmentSuccessEmail({
-    email: "moses@omenai.net",
+  await SendArtistShipmentSuccessEmail({
+    email: "rodolphe@omenai.net",
     name: "Samwell Tarly",
     trackingCode: "1223445",
-    artworkImage,
+    artworkImage: "69826eb2000756464742",
     artwork: "Comfort zone",
     artistName: "Nana Bruce",
     price: formatPrice("4414"),

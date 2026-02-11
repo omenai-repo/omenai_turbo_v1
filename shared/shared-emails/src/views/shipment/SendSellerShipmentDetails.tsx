@@ -2,14 +2,16 @@
 import { Container, Section, Text, Heading } from "@react-email/components";
 import ArtworkCard from "./ArtworkCard";
 import ShipmentLayout from "./ShipmentLayout";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function SellerShipmentEmail(
   name: string,
   artwork: string,
   artworkImage: string,
   artistName: string,
-  price: string
+  price: string,
 ) {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <ShipmentLayout
       preview="Your shipment has been created and is ready for pickup"

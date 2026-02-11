@@ -7,7 +7,6 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
 import { createErrorRollbarReport } from "../../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { trackOrderShipment, verifyAuthVercel } from "../../utils";
@@ -142,7 +141,6 @@ async function processOrder(order: any, dbConnection: any) {
           }
 
           console.log(!!order.artwork_data);
-          const artworkImage = getImageFileView(order.artwork_data.url, 900);
           // TODO: Send notification emails
           if (seller_designation === "artist") {
             // - Artist: Notify about fund unlock
@@ -157,7 +155,7 @@ async function processOrder(order: any, dbConnection: any) {
               name: seller_details.name,
               email: seller_details.email,
               trackingCode: order.order_id,
-              artworkImage,
+              artworkImage: order.artwork_data.url,
               artwork: order.artwork_data.title,
               buyerName: order.buyer_details.name,
               requestDate: order.createdAt,
