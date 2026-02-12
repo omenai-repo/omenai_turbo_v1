@@ -12,7 +12,7 @@ export default function RecentArtworks() {
       <DesktopNavbar />
       <div className="p-4">
         <div className="space-y-1 my-5 px-4">
-          <h1 className="text-fluid-sm md:text-fluid-md font-normal">
+          <h1 className="text-fluid-sm md:text-fluid-md font-light">
             Latest artworks
           </h1>
           <p className="text-fluid-base md:text-fluid-sm text-[#858585] font-light italic">

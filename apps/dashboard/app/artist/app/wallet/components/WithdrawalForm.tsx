@@ -15,7 +15,7 @@ export default function WithdrawalForm() {
 
         <div className="flex justify-center w-full my-4">
           <div className="flex flex-col items-center">
-            <button className="h-[35px] p-4 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal">
+            <button className="h-[35px] p-4 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light">
               <RefreshCcwDot size={20} strokeWidth={1.5} absoluteStrokeWidth />
             </button>
             <span className="text-fluid-xxs">Click to convert</span>{" "}
@@ -41,7 +41,7 @@ export default function WithdrawalForm() {
       </div>
 
       <div className="w-full flex justify-center">
-        <button className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal">
+        <button className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light">
           Withdraw
         </button>
       </div>

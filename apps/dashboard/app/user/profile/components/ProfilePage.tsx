@@ -227,7 +227,7 @@ export default function UserProfile({
                 <div className="w-full grid place-items-center">
                   <button
                     onClick={() => updateAddressModalPopup(true)}
-                    className="rounded bg-dark p-4 text-xs font-normal w-full text-white hover:bg-slate-800"
+                    className="rounded bg-dark p-4 text-xs font-light w-full text-white hover:bg-slate-800"
                   >
                     Edit Address information
                   </button>

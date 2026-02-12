@@ -74,7 +74,7 @@ export default function ArtistWorks({
             <select
               value={filterOption}
               onChange={(e) => setFilterOption(e.target.value as FilterOption)}
-              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-normal uppercase tracking-wider pl-4 pr-10 py-2.5 rounded-sm focus:outline-none focus:border-[#091830] cursor-pointer"
+              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-light uppercase tracking-wider pl-4 pr-10 py-2.5 rounded-sm focus:outline-none focus:border-[#091830] cursor-pointer"
             >
               <option value="all">All Works</option>
               <option value="available">Available Only</option>
@@ -87,7 +87,7 @@ export default function ArtistWorks({
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value as SortOption)}
-              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-normal uppercase tracking-wider pl-4 pr-10 py-2.5 rounded-sm focus:outline-none focus:border-[#091830] cursor-pointer"
+              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-light uppercase tracking-wider pl-4 pr-10 py-2.5 rounded-sm focus:outline-none focus:border-[#091830] cursor-pointer"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>

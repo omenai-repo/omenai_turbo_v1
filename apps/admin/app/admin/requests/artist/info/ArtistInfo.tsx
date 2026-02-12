@@ -27,7 +27,7 @@ import { useRollbar } from "@rollbar/react";
 export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   const { artist, request } = data;
   const [recommendation, setRecommedation] = useState<ArtistCategory>(
-    request.categorization.artist_categorization as ArtistCategory
+    request.categorization.artist_categorization as ArtistCategory,
   );
   const [loading, setLoading] = useState(false);
   const { artist_id, name, email } = artist;
@@ -68,7 +68,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
           ? await acceptArtistVerification(
               artist_id,
               recommendation,
-              csrf || ""
+              csrf || "",
             )
           : await rejectArtistVerification(artist_id, name, email, csrf || "");
 
@@ -90,7 +90,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
       }
       toast_notif(
         "An error was encountered, please try again later or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -184,11 +184,11 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                 </h1>
 
                 <div className="flex flex-wrap gap-3 mb-4">
-                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded text-fluid-xxs font-normal border border-blue-200">
+                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded text-fluid-xxs font-light border border-blue-200">
                     <Palette size={14} />
                     {artist.art_style}
                   </div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded text-fluid-xxs font-normal border border-green-200">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded text-fluid-xxs font-light border border-green-200">
                     <MapPin size={14} />
                     {artist.address.state}, {artist.address.country}
                   </div>

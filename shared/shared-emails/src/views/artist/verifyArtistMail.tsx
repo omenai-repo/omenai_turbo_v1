@@ -27,7 +27,7 @@ const ArtistVerificationEmail = (username: string, token: string) => {
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Heading className="text-dark text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-dark text-fluid-lg font-light text-center p-0 mb-[20px] mx-0">
               Welcome on board to <strong>Omenai for Artists</strong>
             </Heading>
             <Text className="text-dark text-fluid-xxs leading-[24px]">
@@ -44,7 +44,7 @@ const ArtistVerificationEmail = (username: string, token: string) => {
               <strong>10 minutes.</strong>
             </Text>
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-dark text-fluid-xxs font-normal leading-[24px]">
+              <Text className="text-dark text-fluid-xxs font-light leading-[24px]">
                 <strong>{token}</strong>
               </Text>
             </Section>

@@ -46,7 +46,7 @@ const getProgressColor = (percentage: number) => {
 
 const getRiskLevel = (
   salesPercentage: number,
-  transactionPercentage: number
+  transactionPercentage: number,
 ) => {
   const maxPercentage = Math.max(salesPercentage, transactionPercentage);
   return (
@@ -143,7 +143,7 @@ const ThresholdStatus = ({
           Exceeded threshold by {difference}
         </span>
       ) : (
-        <span className="text-dark font-normal">
+        <span className="text-dark font-light">
           Will exceed threshold after {difference} transactions
         </span>
       )}
@@ -233,7 +233,7 @@ export const PerformanceWrapper = () => {
   if (!stateCode) return notFound();
 
   const thresholds = nexus_thresholds.find(
-    (nexus) => nexus.stateCode === stateCode
+    (nexus) => nexus.stateCode === stateCode,
   );
   const rules = thresholds?.nexus_rule;
 

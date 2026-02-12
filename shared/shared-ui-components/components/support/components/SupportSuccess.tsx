@@ -19,10 +19,10 @@ export function SupportSuccess({ ticketId, onClose }: SupportSuccessProps) {
       </div>
 
       <div className="space-y-2.5">
-        <h3 className="text-2xl font-normal text-dark tracking-tight">
+        <h3 className="text-2xl font-light text-dark tracking-tight">
           Request Received
         </h3>
-        <p className="text-sm text-slate-500 max-w-[280px] mx-auto leading-relaxed font-normal">
+        <p className="text-sm text-slate-500 max-w-[280px] mx-auto leading-relaxed font-light">
           Our team has been notified and will review your request shortly.
         </p>
       </div>
@@ -35,21 +35,21 @@ export function SupportSuccess({ ticketId, onClose }: SupportSuccessProps) {
           Ticket ID
         </p>
         <div className="flex items-center justify-center gap-2.5">
-          <span className="text-2xl font-normal text-dark tracking-tight font-mono">
+          <span className="text-2xl font-light text-dark tracking-tight font-mono">
             {ticketId}
           </span>
           <button className="text-slate-400 hover:text-dark transition-colors p-1">
             <Icons.Copy />
           </button>
         </div>
-        <p className="text-[10px] text-slate-400 mt-2.5 font-normal">
+        <p className="text-[10px] text-slate-400 mt-2.5 font-light">
           Tap to copy • Keep for your records
         </p>
       </div>
 
       <button
         onClick={onClose}
-        className="w-full bg-dark text-white font-normal py-3.5 rounded-lg hover:bg-black transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
+        className="w-full bg-dark text-white font-light py-3.5 rounded-lg hover:bg-black transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
       >
         Close
       </button>

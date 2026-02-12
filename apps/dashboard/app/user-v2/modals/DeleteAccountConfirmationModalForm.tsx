@@ -45,7 +45,7 @@ export default function DeleteAccountConfirmationModalForm() {
         "individual",
         payload.id,
         payload.reason,
-        csrf || ""
+        csrf || "",
       );
 
       if (response.status === 409) {
@@ -70,7 +70,7 @@ export default function DeleteAccountConfirmationModalForm() {
     } catch (err: any) {
       setError(
         err?.message ||
-          "Network error encountered, please try again or contact support"
+          "Network error encountered, please try again or contact support",
       );
     } finally {
       setLoading(false);
@@ -148,7 +148,7 @@ export default function DeleteAccountConfirmationModalForm() {
                       placeholder="Tell us briefly"
                       value={otherText}
                       onChange={(e) => setOtherText(e.target.value)}
-                      className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed max-w-[300px]"
+                      className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed max-w-[300px]"
                     />
                   )}
                 </div>

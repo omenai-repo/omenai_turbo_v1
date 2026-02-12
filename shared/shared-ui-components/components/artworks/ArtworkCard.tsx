@@ -126,7 +126,7 @@ export default function ArtworkCard({
               {/* STATUS BADGE: Discrete, Premium, Non-Obstructive */}
               {!availability && !isDashboard && (
                 <div className="absolute top-2 left-2 z-20">
-                  <span className="inline-flex items-center justify-center bg-[#091830] px-2.5 py-1 rounded text-[10px] font-sans font-normal uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
+                  <span className="inline-flex items-center justify-center bg-[#091830] px-2.5 py-1 rounded text-[10px] font-sans font-light uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
                     Sold
                   </span>
                 </div>
@@ -140,7 +140,7 @@ export default function ArtworkCard({
               <button
                 onClick={deleteUploadArtwork}
                 disabled={deleteLoading}
-                className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-normal shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white"
+                className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white"
               >
                 {deleteLoading ? <LoadSmall /> : " Delete artwork"}
               </button>

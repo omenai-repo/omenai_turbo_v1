@@ -19,7 +19,7 @@ export default function Pill({ text }: PillProps) {
         px-4 
         py-2 
         rounded 
-        font-normal 
+        font-light 
         text-fluid-xs
         transition-all 
         duration-200

@@ -115,7 +115,7 @@ export default function ActivationFormInputs() {
     focus:ring-0
     rounded
     transition-all duration-300
-    text-fluid-xxs font-normal text-dark
+    text-fluid-xxs font-light text-dark
      disabled:bg-dark/10
     p-3
                 disabled:bg-gray-50
@@ -140,7 +140,7 @@ export default function ActivationFormInputs() {
     focus:ring-0
     rounded
     transition-all duration-300
-    text-fluid-xxs font-normal text-dark
+    text-fluid-xxs font-light text-dark
      disabled:bg-dark/10
     p-3
                 disabled:bg-gray-50
@@ -166,7 +166,7 @@ export default function ActivationFormInputs() {
     focus:ring-0
     rounded
     transition-all duration-300
-    text-fluid-xxs font-normal text-dark
+    text-fluid-xxs font-light text-dark
      disabled:bg-dark/10
     p-3
                 disabled:bg-gray-50
@@ -184,7 +184,7 @@ export default function ActivationFormInputs() {
             name="confirm_password"
             disabled={form.password === ""}
             placeholder="Confirm your password"
-            className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark  disabled:bg-dark/10 p-3
+            className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark  disabled:bg-dark/10 p-3
                 disabled:bg-gray-50
                 disabled:border-dark/20
                 disabled:text-slate-700
@@ -221,7 +221,7 @@ export default function ActivationFormInputs() {
           <button
             disabled={loading || errorList.length > 0}
             type="submit"
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
           >
             {loading ? <LoadSmall /> : "Activate your account"}{" "}
           </button>

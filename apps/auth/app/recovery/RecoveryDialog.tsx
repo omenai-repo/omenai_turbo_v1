@@ -33,7 +33,7 @@ export default function Recovery() {
               <RecoveryEmailInputField />
             </div>
             <div>
-              <p className="text-fluid-xxs font-normal text-red-600">
+              <p className="text-fluid-xxs font-light text-red-600">
                 Kindly note that a link will be sent to your email address.
                 Click the link to complete this process.
               </p>

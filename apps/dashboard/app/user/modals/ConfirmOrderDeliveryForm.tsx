@@ -26,7 +26,7 @@ export default function ConfirmOrderDeliveryForm() {
     const response = await confirmOrderDelivery(
       true,
       confirmOrderDeliveryPopup.order_id,
-      csrf || ""
+      csrf || "",
     );
     try {
       if (!response?.isOk)
@@ -72,10 +72,10 @@ export default function ConfirmOrderDeliveryForm() {
 
   return (
     <div>
-      <h1 className="text-fluid-sm font-normal mb-4 text-dark">
+      <h1 className="text-fluid-sm font-light mb-4 text-dark">
         Confirm order delivery
       </h1>
-      <div className="flex flex-col gap-4 font-normal text-fluid-base">
+      <div className="flex flex-col gap-4 font-light text-fluid-base">
         <div className="bg-[#fafafa] p-5 flex flex-col gap-3">
           <p className="font-bold flex items-center gap-x-2">
             <IoWarning className="text-fluid-md text-[#FFA500]" />
@@ -95,7 +95,7 @@ export default function ConfirmOrderDeliveryForm() {
           disabled={loading}
           type="button"
           onClick={confirmDelivery}
-          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+          className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
         >
           {loading ? <LoadSmall /> : "I understand, confirm delivery"}
         </button>

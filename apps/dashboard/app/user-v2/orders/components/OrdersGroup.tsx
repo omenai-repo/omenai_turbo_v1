@@ -129,7 +129,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-light bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Awaiting payment
         </span>
@@ -142,7 +142,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-light bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
           <Banknote strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Payment completed
         </span>
@@ -155,7 +155,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-light bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
           <Truck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Delivery in progress
         </span>
@@ -168,7 +168,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       !tracking_status
     ) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-light bg-amber-100 text-amber-600 flex gap-x-1 items-center w-fit">
           <Info strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order in review
         </span>
@@ -178,11 +178,11 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
       return (
         <>
           <div className="flex flex-col gap-y-2">
-            <span className="px-3 py-1 self-end rounded text-fluid-xxs font-normal text-red-600 bg-red-100 flex gap-x-1 items-center w-fit">
+            <span className="px-3 py-1 self-end rounded text-fluid-xxs font-light text-red-600 bg-red-100 flex gap-x-1 items-center w-fit">
               <BanknoteX strokeWidth={1.5} absoluteStrokeWidth size={16} />
               Order declined
             </span>
-            <span className=" rounded text-fluid-xxs font-normal text-red-600 hidden lg:flex items-center w-fit">
+            <span className=" rounded text-fluid-xxs font-light text-red-600 hidden lg:flex items-center w-fit">
               {order_decline_reason}
             </span>
           </div>
@@ -192,7 +192,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
 
     if (status === "completed" && order_accepted === "accepted" && delivered) {
       return (
-        <span className="px-3 py-1 rounded text-fluid-xxs font-normal bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
+        <span className="px-3 py-1 rounded text-fluid-xxs font-light bg-green-100 text-green-600 flex gap-x-1 items-center w-fit">
           <CheckCheck strokeWidth={1.5} absoluteStrokeWidth size={16} />
           Order has been fulfilled
         </span>
@@ -262,7 +262,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
     },
   ];
   const CurrentIcon = filterList.filter(
-    (filter) => filter.value === activeFilter
+    (filter) => filter.value === activeFilter,
   )[0].Icon;
   return (
     <div className="w-full flex flex-col h-full gap-8 lg:p-5">
@@ -275,7 +275,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
             aria-expanded={isOpen}
           >
             <CurrentIcon size={20} absoluteStrokeWidth />
-            <span className=":block text-fluid-xs font-normal text-slate-800">
+            <span className=":block text-fluid-xs font-light text-slate-800">
               {
                 filterList.filter((list) => list.value === activeFilter)[0]
                   .title
@@ -403,7 +403,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
                     <span className="text-gray-600 text-sm">
                       Ordered on {formatISODate(order.createdAt)}
                     </span>
-                    <span className=" rounded text-fluid-xxs font-normal text-red-600 lg:hidden items-center w-fit">
+                    <span className=" rounded text-fluid-xxs font-light text-red-600 lg:hidden items-center w-fit">
                       {order.order_accepted.reason}
                     </span>
                   </div>
@@ -424,7 +424,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
                     <Image
                       src={get_image_url(
                         order.artwork_data.url,
-                        order.artwork_data.deletedEntity
+                        order.artwork_data.deletedEntity,
                       )}
                       alt={`${order.artwork_data.title} image`}
                       width="120"
@@ -562,7 +562,7 @@ export default function OrdersGroup({ orders }: { orders: Orders }) {
                                 order.hold_status === null
                                   ? new Date(
                                       new Date(order.updatedAt).getTime() +
-                                        24 * 60 * 60 * 1000
+                                        24 * 60 * 60 * 1000,
                                     )
                                   : order.hold_status.hold_end_date
                               }

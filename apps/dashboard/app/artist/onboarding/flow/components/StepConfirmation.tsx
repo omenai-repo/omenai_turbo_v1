@@ -208,7 +208,7 @@ export default function ConfirmationStep({
   return (
     <div className="flex flex-col items-center">
       <CheckCircle className="w-12 h-12 text-purple-500 mb-4" />
-      <h2 className="text-fluid-xs font-normal text-slate-700 mb-2 text-center">
+      <h2 className="text-fluid-xs font-light text-slate-700 mb-2 text-center">
         {stepQuestion}
       </h2>
       <p className="text-slate-700 text-fluid-xs mb-8 max-w-lg text-center">
@@ -265,7 +265,7 @@ export default function ConfirmationStep({
         <button
           onClick={handleSubmit}
           disabled={!isConfirmed || isSubmitting}
-          className={`px-4 py-2 rounded text-fluid-xs flex items-center text-white font-normal transition duration-300 ${
+          className={`px-4 py-2 rounded text-fluid-xs flex items-center text-white font-light transition duration-300 ${
             isConfirmed && !isSubmitting
               ? "bg-slate-800 shadow-lg hover:shadow-xl hover:bg-dark"
               : "bg-slate-300 cursor-not-allowed"

@@ -267,7 +267,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                           description:
                             "text-[11px] text-gray-500 mb-2 leading-tight",
                           input:
-                            "text-xs font-normal h-[36px] bg-white border-gray-300 text-gray-700 focus:border-0 focus:ring-1 focus:ring-dark shadow-sm cursor-pointer",
+                            "text-xs font-light h-[36px] bg-white border-gray-300 text-gray-700 focus:border-0 focus:ring-1 focus:ring-dark shadow-sm cursor-pointer",
                         }}
                         onChange={(e) =>
                           handleChangeExhibitionStatus(e.target.value)

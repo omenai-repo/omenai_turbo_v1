@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { requestPrice } from "@omenai/shared-services/requests/requestPrice";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArtworkResultTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-
+import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehaviour";
 type ArtworkDetailTypes = {
   data: ArtworkResultTypes;
   sessionId: string | undefined;
@@ -32,7 +32,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   const { user, csrf } = useAuth({ requiredRole: "user" });
 
   async function handleBuyButtonClick() {
-    if (sessionId === undefined) toggleLoginModal(true);
+    if (sessionId === undefined || !user || user.role !== "user")
+      toggleLoginModal(true);
     else {
       if (data.pricing.shouldShowPrice === "Yes") {
         set_click_loading(true);
@@ -127,7 +128,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         <button
           disabled={loading || isSoldOut || purchase_click_loading}
           onClick={handleBuyButtonClick}
-          className="group flex h-14 w-full items-center justify-center gap-3 bg-dark text-white transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded-none"
+          className="group flex h-14 w-full items-center justify-center gap-3 bg-dark text-white transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
         >
           {loading || purchase_click_loading ? (
             <LoadSmall />

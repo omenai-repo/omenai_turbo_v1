@@ -137,16 +137,16 @@ export default async function proxy(req: NextRequest) {
     pathname.startsWith("/privacy") &&
     (host === "omenai.app" || host === "www.omenai.app")
   )
-    return NextResponse.next();
+    return finalizeResponse(nextWithNonce());
 
   // === HOST REDIRECT ===
-  if (host === "omenai.app" || host === "www.omenai.app") {
-    const targetUrl = new URL("https://join.omenai.app");
-    req.nextUrl.searchParams.forEach((value, key) => {
-      targetUrl.searchParams.set(key, value);
-    });
-    return NextResponse.redirect(targetUrl);
-  }
+  // if (host === "omenai.app" || host === "www.omenai.app") {
+  //   const targetUrl = new URL("https://join.omenai.app");
+  //   req.nextUrl.searchParams.forEach((value, key) => {
+  //     targetUrl.searchParams.set(key, value);
+  //   });
+  //   return NextResponse.redirect(targetUrl);
+  // }
 
   const app_auth_uri = auth_uri();
 

@@ -205,7 +205,7 @@ const PremiumDatePicker = ({
         `}
       >
         <span
-          className={`text-sm ${!selectedDate ? "text-slate-400 font-normal" : "font-normal"}`}
+          className={`text-sm ${!selectedDate ? "text-slate-400 font-light" : "font-light"}`}
         >
           {selectedDate
             ? selectedDate.toLocaleDateString("en-US", {

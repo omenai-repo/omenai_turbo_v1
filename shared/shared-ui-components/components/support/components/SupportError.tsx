@@ -14,10 +14,10 @@ export function SupportError({ message, onRetry, onClose }: SupportErrorProps) {
       </div>
 
       <div className="space-y-2.5">
-        <h3 className="text-2xl font-normal text-dark tracking-tight">
+        <h3 className="text-2xl font-light text-dark tracking-tight">
           Request Failed
         </h3>
-        <p className="text-sm text-slate-500 max-w-[280px] mx-auto leading-relaxed font-normal">
+        <p className="text-sm text-slate-500 max-w-[280px] mx-auto leading-relaxed font-light">
           {message || "We couldn't process your request. Please try again."}
         </p>
       </div>
@@ -25,13 +25,13 @@ export function SupportError({ message, onRetry, onClose }: SupportErrorProps) {
       <div className="w-full space-y-3">
         <button
           onClick={onRetry}
-          className="w-full bg-dark text-white font-normal py-3.5 rounded-lg hover:bg-black transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
+          className="w-full bg-dark text-white font-light py-3.5 rounded-lg hover:bg-black transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
         >
           Try Again
         </button>
         <button
           onClick={onClose}
-          className="w-full text-slate-600 font-normal py-3 rounded-lg hover:bg-slate-100 transition-all duration-200"
+          className="w-full text-slate-600 font-light py-3 rounded-lg hover:bg-slate-100 transition-all duration-200"
         >
           Cancel
         </button>

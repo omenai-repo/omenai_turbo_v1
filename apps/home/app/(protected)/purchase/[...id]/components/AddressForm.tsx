@@ -18,6 +18,7 @@ import { City, State } from "country-state-city";
 import { useEffect, useState, FormEvent } from "react";
 import { toast } from "sonner";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type AddressFormProps = {
   userAddress: AddressTypes;
@@ -186,11 +187,7 @@ export default function AddressForm({
             </label>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-dark text-white grid place-items-center h-14 font-sans text-xs uppercase tracking-[0.2em] transition-all hover:bg-neutral-800 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:cursor-not-allowed rounded"
-          >
+          <button type="submit" disabled={loading} className={BUTTON_CLASS}>
             {loading ? <LoadSmall /> : "Submit Purchase Request"}
           </button>
 

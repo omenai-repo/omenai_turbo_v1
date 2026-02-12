@@ -23,7 +23,7 @@ export default function FormConfirm() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      <p className="text-fluid-xxs my-4 font-normal text-dark/70">
+      <p className="text-fluid-xxs my-4 font-light text-dark/70">
         Review the following terms and confirm your agreement to proceed with
         account creation
       </p>
@@ -64,7 +64,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="terms-confirmation"
-              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
+              className="text-fluid-xxs font-light text-dark/70 cursor-pointer"
             >
               I have reviewed and accept the terms outlined above
             </Label>
@@ -81,7 +81,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="policy-acceptance"
-              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
+              className="text-fluid-xxs font-light text-dark/70 cursor-pointer"
             >
               I accept Omenai's{" "}
               <Link
@@ -113,7 +113,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="mailing-consent"
-              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
+              className="text-fluid-xxs font-light text-dark/70 cursor-pointer"
             >
               I'd like to receive updates, promotions, and news from Omenai
               (optional)

@@ -52,7 +52,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
         "gallery",
         data,
         user.gallery_id,
-        csrf || ""
+        csrf || "",
       );
 
       if (!updateProfileData.isOk) {
@@ -69,7 +69,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -100,7 +100,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
               onClick={() => updateLogoModalPopup(true)}
               className="mx-4 absolute inset-0 flex items-center justify-center rounded bg-dark/60 opacity-0 group-hover:opacity-100 transition"
             >
-              <span className="flex items-center flex-col gap-2 rounded bg-white p-2 text-xs font-normal text-slate-900">
+              <span className="flex items-center flex-col gap-2 rounded bg-white p-2 text-xs font-light text-slate-900">
                 <Camera className="h-4 w-4" />
                 Update logo
               </span>

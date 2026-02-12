@@ -60,7 +60,7 @@ export default function DashboardIndicator({
   return (
     <div className="w-full flex justify-between items-center">
       <div className="space-y-1">
-        <p className="text-fluid-xxs text-dark font-normal">
+        <p className="text-fluid-xxs text-dark font-light">
           {greeting}, <strong>{admin_name}</strong>
         </p>
 

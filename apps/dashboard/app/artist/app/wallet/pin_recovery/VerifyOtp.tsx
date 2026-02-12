@@ -46,7 +46,7 @@ export default function VerifyOTP({
       if (!response?.isOk) {
         handleError(
           "Error sending OTP",
-          response?.message || "Please try again or contact support"
+          response?.message || "Please try again or contact support",
         );
         return false;
       }
@@ -91,7 +91,7 @@ export default function VerifyOTP({
             if (!response?.isOk) {
               handleError(
                 "Verification failed",
-                response?.message || "Please try again or contact support"
+                response?.message || "Please try again or contact support",
               );
               setOtp("");
               return;
@@ -107,8 +107,8 @@ export default function VerifyOTP({
           .catch(() =>
             handleError(
               "Network error",
-              "Please check your connection and try again"
-            )
+              "Please check your connection and try again",
+            ),
           )
           .finally(() => setVerificationLoading(false));
       }, 300); // Debounce 300ms
@@ -153,7 +153,7 @@ export default function VerifyOTP({
             </p>
             <button
               onClick={() => setVerification(otpVerified)}
-              className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
             >
               Proceed
             </button>

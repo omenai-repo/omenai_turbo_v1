@@ -12,10 +12,9 @@ import {
   auth_uri,
   dashboard_url,
 } from "@omenai/url-config/src/config";
-import { usePathname } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import MobileNavbar from "../mobile/MobileNavbar";
-
+import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehaviour";
 export const navigation = [
   { name: "Collect", href: "/catalog" },
   { name: "Editorials", href: "/articles" },
@@ -28,22 +27,9 @@ const loggedInRouteMap = {
 };
 
 const DesktopNavbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [fullUrl, setFullUrl] = useState<string>("");
-
   const { updateOpenSideNav } = actionStore();
+  const { getCurrentUrl, isScrolled } = useRedirectBehavior();
   const { user } = useAuth({ requiredRole: "user" });
-  const pathname = usePathname();
-
-  const handleScroll = useCallback(() => {
-    setIsScrolled(window.scrollY > 20);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    setFullUrl(`${window.location.origin}${pathname}`);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll, pathname]);
 
   const login_base_url = auth_uri();
 
@@ -90,21 +76,21 @@ const DesktopNavbar = () => {
               <SearchInput setIsMobileMenuOpen={updateOpenSideNav} />
             </div>
 
-            {user ? (
+            {user && user.role === "user" ? (
               <UserMenu />
             ) : (
               <div className="hidden lg:flex items-center gap-6">
                 <Link
-                  href={`${login_base_url}/login/user?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="text-sm font-sans font-normal text-neutral-600 hover:text-dark  transition-colors"
+                  href={`${login_base_url}/register?redirect=${encodeURIComponent(getCurrentUrl())}`}
+                  className="bg-[#091830] text-white px-5 py-2.5 rounded-md text-sm font-sans font-light hover:bg-[#0F2342] transition-all shadow-sm"
                 >
-                  Log in
+                  Create Account
                 </Link>
                 <Link
-                  href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="bg-[#091830] text-white px-5 py-2.5 rounded-md text-sm font-sans font-normal hover:bg-[#0F2342] transition-all shadow-sm"
+                  href={`${login_base_url}/login/user?redirect=${encodeURIComponent(getCurrentUrl())}`}
+                  className="text-sm font-sans font-light text-neutral-600 hover:text-dark  transition-colors"
                 >
-                  Join Omenai
+                  Log in
                 </Link>
               </div>
             )}

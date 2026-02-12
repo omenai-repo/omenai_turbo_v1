@@ -150,7 +150,7 @@ export function SupportForm({
                       onCategoryChange(cat); // <--- USE NEW HANDLER
                       setDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-fluid-xxs font-normal transition-all ${
+                    className={`w-full text-left px-4 py-2 text-fluid-xxs font-light transition-all ${
                       category === cat
                         ? "bg-dark text-white"
                         : "text-dark hover:bg-slate-50"
@@ -218,7 +218,7 @@ export function SupportForm({
       <button
         onClick={onSubmit}
         disabled={isSubmitting}
-        className="w-full group relative flex justify-center py-3.5 px-4 border-0 text-sm font-normal rounded-lg text-white bg-dark hover:bg-black focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
+        className="w-full group relative flex justify-center py-3.5 px-4 border-0 text-sm font-light rounded-lg text-white bg-dark hover:bg-black focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
       >
         {isSubmitting ? (
           <span className="flex items-center gap-2">
@@ -246,7 +246,7 @@ export function SupportForm({
       </button>
 
       <div className="text-center pt-2">
-        <p className="text-[10px] text-slate-400 font-normal">
+        <p className="text-[10px] text-slate-400 font-light">
           Secured by Omenai • {new Date().getFullYear()}
         </p>
       </div>

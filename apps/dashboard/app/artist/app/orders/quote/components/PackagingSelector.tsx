@@ -294,7 +294,7 @@ export default function PackagingSelector({
                     {preset.label}
                   </h3>
                   <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-                    {preset.weight_lbs} lbs
+                    Max weight: {preset.weight_lbs} lbs
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mb-3">

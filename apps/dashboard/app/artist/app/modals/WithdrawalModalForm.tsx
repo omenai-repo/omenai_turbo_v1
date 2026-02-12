@@ -50,13 +50,13 @@ export default function WithdrawalModalForm() {
       const rate_response = await getTransferRate(
         user.base_currency,
         "USD",
-        amount_data.amount
+        amount_data.amount,
       );
 
       if (rate_response === undefined || !rate_response.isOk) {
         toast_notif(
           "Something went wrong while fetching the transfer rate. Please try again later.",
-          "error"
+          "error",
         );
 
         return;
@@ -77,7 +77,7 @@ export default function WithdrawalModalForm() {
       }
       toast_notif(
         "Something went wrong while fetching the transfer rate. Please try again later.",
-        "error"
+        "error",
       );
     } finally {
       setTransferRateLoading(false);
@@ -102,7 +102,7 @@ export default function WithdrawalModalForm() {
         toast_notif(
           withdrawal_response.message ||
             "Something went wrong while processing your withdrawal. Please try again later.",
-          "error"
+          "error",
         );
 
         return;
@@ -119,7 +119,7 @@ export default function WithdrawalModalForm() {
       }
       toast_notif(
         "Something went wrong while processing your withdrawal. Please try again later.",
-        "error"
+        "error",
       );
     } finally {
       setWithdrawalLoading(false);
@@ -168,7 +168,7 @@ export default function WithdrawalModalForm() {
               <div className="space-y-3">
                 <label
                   htmlFor="amount"
-                  className="block text-fluid-xxs font-normal text-slate-700"
+                  className="block text-fluid-xxs font-light text-slate-700"
                 >
                   Withdrawal Amount
                 </label>
@@ -180,7 +180,7 @@ export default function WithdrawalModalForm() {
                       <span className="text-fluid-xxs text-slate-600">
                         You Send
                       </span>
-                      <span className="text-fluid-xxs font-normal text-slate-700">
+                      <span className="text-fluid-xxs font-light text-slate-700">
                         USD
                       </span>
                     </div>
@@ -226,7 +226,7 @@ export default function WithdrawalModalForm() {
                       <span className="text-fluid-xxs text-green-700">
                         You Receive
                       </span>
-                      <span className="text-fluid-xxs font-normal text-green-800">
+                      <span className="text-fluid-xxs font-light text-green-800">
                         {user.base_currency}
                       </span>
                     </div>
@@ -234,7 +234,7 @@ export default function WithdrawalModalForm() {
                       <p className="text-fluid-xxs font-semibold text-green-800">
                         {formatPrice(
                           amount_data.currency_amount,
-                          user.base_currency
+                          user.base_currency,
                         )}
                       </p>
                     </div>
@@ -246,7 +246,7 @@ export default function WithdrawalModalForm() {
               <div className="space-y-2">
                 <label
                   htmlFor="pin"
-                  className="block text-fluid-xxs font-normal text-slate-700"
+                  className="block text-fluid-xxs font-light text-slate-700"
                 >
                   Security PIN
                 </label>

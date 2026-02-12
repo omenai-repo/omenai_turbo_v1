@@ -39,7 +39,7 @@ function getImageUrl(url: string, deletedEntity: boolean) {
 function getStatusDescription(
   actionType: string,
   orderAccepted?: string,
-  orderDeclineReason?: string
+  orderDeclineReason?: string,
 ) {
   if (orderAccepted === "declined") {
     return `${orderDeclineReason}`;
@@ -87,7 +87,7 @@ function construct_status({
   order_decline_reason?: string;
 }) {
   const base =
-    "inline-flex items-center gap-x-1 rounded px-3 py-1 text-fluid-xxs font-normal";
+    "inline-flex items-center gap-x-1 rounded px-3 py-1 text-fluid-xxs font-light";
 
   if (order_accepted === "declined") {
     return (
@@ -221,7 +221,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
   const statusDescription = getStatusDescription(
     actionType!,
     order.order_accepted.status,
-    order.order_accepted.reason
+    order.order_accepted.reason,
   );
 
   return (
@@ -239,7 +239,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
             <Image
               src={getImageUrl(
                 order.artwork_data.url,
-                order.artwork_data.deletedEntity
+                order.artwork_data.deletedEntity,
               )}
               alt={order.artwork_data.title}
               fill
@@ -304,7 +304,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
             <MetaBlock icon={<MapPin size={14} />} label="Destination">
               {order.shipping_details.addresses.destination.state},{" "}
               {order.shipping_details.addresses.destination.country}
-              <span className="block text-xs text-slate-400 font-normal mt-0.5"></span>
+              <span className="block text-xs text-slate-400 font-light mt-0.5"></span>
             </MetaBlock>
 
             <MetaBlock icon={<Info size={14} />} label="Status Note">
@@ -331,7 +331,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                 <Link
                   href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
                 >
-                  <button className="w-fit rounded bg-dark px-5 py-2 text-fluid-xxs font-normal text-white hover:opacity-90 transition">
+                  <button className="w-fit rounded bg-dark px-5 py-2 text-fluid-xxs font-light text-white hover:opacity-90 transition">
                     Track shipment
                   </button>
                 </Link>
@@ -350,7 +350,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                   expiresAt={
                     order.hold_status?.hold_end_date ??
                     new Date(
-                      new Date(order.updatedAt).getTime() + 24 * 60 * 60 * 1000
+                      new Date(order.updatedAt).getTime() + 24 * 60 * 60 * 1000,
                     )
                   }
                   order_id={order.order_id}
@@ -365,7 +365,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                   onClick={() => setIsDrawerOpen(true)}
                   className="flex items-center gap-x-2 hover:underline bg-slate-100 px-4 py-2 rounded"
                 >
-                  <span className="w-fit text-fluid-xs font-normal text-dark hover:opacity-90 transition">
+                  <span className="w-fit text-fluid-xs font-light text-dark hover:opacity-90 transition">
                     View receipt invoice
                   </span>
                   <ExternalLink size={14} strokeWidth={1.75} />

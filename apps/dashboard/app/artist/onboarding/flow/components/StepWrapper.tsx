@@ -14,7 +14,7 @@ export default function StepWrapper({
   return (
     <div className="w-full max-w-2xl p-4 sm:p-8 relative z-10">
       <div className="mb-12">
-        <div className="text-fluid-xs font-normal text-dark mb-2">
+        <div className="text-fluid-xs font-light text-dark mb-2">
           Question {currentStepIndex + 1} of {totalSteps}
         </div>
         <div className="w-full bg-slate-200 rounded h-2.5">

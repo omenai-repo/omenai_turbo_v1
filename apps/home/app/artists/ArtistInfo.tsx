@@ -43,14 +43,14 @@ export default function ArtistInfo({
 
           <div className="h-4 w-[1px] bg-neutral-200" />
 
-          <div className="flex items-center gap-2 font-normal">
+          <div className="flex items-center gap-2 font-light">
             <span className="text-neutral-500">Based in</span>
             <span className="text-dark ">{info.address.country}</span>
           </div>
 
           <div className="h-4 w-[1px] bg-neutral-200" />
 
-          <div className="flex items-center gap-1.5 text-dark font-normal">
+          <div className="flex items-center gap-1.5 text-dark font-light">
             <HiCheckBadge className="text-lg text-blue-600" />
             <span>Verified Artist</span>
           </div>

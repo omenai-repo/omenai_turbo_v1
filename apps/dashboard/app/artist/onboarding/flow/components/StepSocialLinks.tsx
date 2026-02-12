@@ -48,17 +48,17 @@ export default function SocialsStep({
     }));
 
   const [links, setLinks] = useState<SocialLink[]>(
-    pre_socials.length === 0 ? [{ type: "", url: "" }] : pre_socials
+    pre_socials.length === 0 ? [{ type: "", url: "" }] : pre_socials,
   );
 
   const selectedTypes = useMemo(
     () => links.map((link) => link.type).filter(Boolean),
-    [links]
+    [links],
   );
 
   const isReady = useMemo(
     () => links.some((link) => link.type && link.url.trim()),
-    [links]
+    [links],
   );
 
   // Handler to update a specific link's type or URL
@@ -86,10 +86,10 @@ export default function SocialsStep({
             return { ...link, [field]: newValue };
           }
           return link;
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const handleClickNext = () => {
@@ -126,7 +126,7 @@ export default function SocialsStep({
   return (
     <div className="flex flex-col items-center">
       <Link2 className="w-12 h-12 text-purple-500 mb-6" />
-      <h2 className="text-fluid-xs font-normal text-dark mb-8 text-center">
+      <h2 className="text-fluid-xs font-light text-dark mb-8 text-center">
         {question}
       </h2>
 
@@ -145,7 +145,7 @@ export default function SocialsStep({
                   handleLinkChange(index, "type", e.target.value)
                 }
                 className={
-                  "w-1/3 p-3 bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed resize-none"
+                  "w-1/3 p-3 bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed resize-none"
                 }
               >
                 <option value="" disabled>
@@ -178,7 +178,7 @@ export default function SocialsStep({
                   placeholder={`Profile Link (${link.type || "URL"})`}
                   disabled={!link.type}
                   className={
-                    "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 px-3 py-2.5 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed pl-[58px]" // Increased padding-left to accommodate "https://"
+                    "w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 px-3 py-2.5 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed pl-[58px]" // Increased padding-left to accommodate "https://"
                   }
                 />
               </div>
@@ -199,7 +199,7 @@ export default function SocialsStep({
           <button
             onClick={addLink}
             disabled={links.length >= socialOptions.length}
-            className={`text-sm text-purple-600 hover:text-purple-800 transition font-normal text-fluid-xs ${
+            className={`text-sm text-purple-600 hover:text-purple-800 transition font-light text-fluid-xs ${
               links.length >= socialOptions.length
                 ? "opacity-50 cursor-not-allowed"
                 : ""
@@ -211,7 +211,7 @@ export default function SocialsStep({
           {links.length > 1 && (
             <button
               onClick={() => removeLink(links.length - 1)}
-              className="text-sm text-red-500 hover:text-red-700 transition font-normal text-fluid-xs"
+              className="text-sm text-red-500 hover:text-red-700 transition font-light text-fluid-xs"
             >
               Remove Last
             </button>
@@ -230,7 +230,7 @@ export default function SocialsStep({
         <button
           onClick={handleClickNext}
           disabled={!isReady}
-          className={`px-4 py-2 rounded text-fluid-xs text-white font-normal transition duration-300 ${
+          className={`px-4 py-2 rounded text-fluid-xs text-white font-light transition duration-300 ${
             isReady
               ? "bg-dark shadow-lg hover:shadow-xl"
               : "bg-gray-400 cursor-not-allowed"

@@ -71,7 +71,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         <div
           className={`
             prose prose-lg max-w-none 
-            prose-headings:font-serif prose-headings:font-normal prose-headings:italic prose-headings:text-dark
+            prose-headings:font-serif prose-headings:font-light prose-headings:italic prose-headings:text-dark
             prose-p:font-sans prose-p:text-base prose-p:leading-8 prose-p:text-neutral-800
             prose-a:text-dark prose-a:underline prose-a:underline-offset-4 prose-a:decoration-1 hover:prose-a:decoration-2
             prose-strong:font-bold prose-strong:text-dark

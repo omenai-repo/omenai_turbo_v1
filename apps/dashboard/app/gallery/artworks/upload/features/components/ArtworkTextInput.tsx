@@ -3,7 +3,7 @@ import { validate } from "@omenai/shared-lib/validations/upload_artwork_input_va
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { ChangeEvent, useState } from "react";
-import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import { TEXTAREA_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 type ArtworkTextInputProps = {
   label: string;
@@ -53,7 +53,7 @@ export default function ArtworkTextInput({
     >
       <label
         htmlFor={name}
-        className="text-dark whitespace-nowrap font-normal text-fluid-xxs"
+        className="text-dark whitespace-nowrap font-light text-fluid-xxs"
       >
         {label}
       </label>
@@ -69,7 +69,7 @@ export default function ArtworkTextInput({
           value={value}
           onChange={(e) => handleChange(e.target.value, name)}
           className={`${errorList.length > 0 ? "ring-red-600 focus:ring-red-600" : " focus:ring-dark ring-dark/20"} 
-          w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed`}
+          w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed`}
         />
       )}
       {type === "textarea" && (

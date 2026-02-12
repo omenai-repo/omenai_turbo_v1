@@ -343,7 +343,7 @@ export default function UploadArtworkImage() {
               color="#091830"
               disabled={!image}
               onClick={handleImageSubmit}
-              className="bg-dark disabled:hover:bg-dark/10 hover:bg-dark/80 transition-transform active:scale-[0.99] font-normal"
+              className="bg-dark disabled:hover:bg-dark/10 hover:bg-dark/80 transition-transform active:scale-[0.99] font-light"
             >
               Continue to Pricing
             </Button>

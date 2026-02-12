@@ -36,7 +36,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-normal text-slate-900">
+          <h1 className="text-2xl font-light text-slate-900">
             Order Management
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -62,7 +62,7 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
         classNames={{
           root: "w-full",
           list: "flex flex-wrap gap-2 mb-8",
-          tab: "data-[active]:bg-dark data-[active]:text-white bg-white border border-slate-200 text-slate-600 font-normal px-5 h-10 hover:bg-slate-50 transition-all",
+          tab: "data-[active]:bg-dark data-[active]:text-white bg-white border border-slate-200 text-slate-600 font-light px-5 h-10 hover:bg-slate-50 transition-all",
         }}
       >
         <Tabs.List className="w-full">

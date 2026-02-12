@@ -220,7 +220,7 @@ export default function ProvideOrderRejectionModalForm() {
                 (accepted_status.reason ?? "").trim() === "")
             }
             type="submit"
-            className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xxs font-normal transition-all duration-200 ease-in-out
+            className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xxs font-light transition-all duration-200 ease-in-out
               ${
                 (order_modal_metadata.is_current_order_exclusive && checked) ||
                 (!order_modal_metadata.is_current_order_exclusive &&

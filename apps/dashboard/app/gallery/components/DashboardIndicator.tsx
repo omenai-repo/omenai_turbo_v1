@@ -32,7 +32,7 @@ export default function DashboardIndicator({
         toast_notif(
           response.message ||
             "An error was encountered, please try again later or contact support",
-          "error"
+          "error",
         );
       else
         toast_notif(response.message || "Verification request sent", "success");
@@ -44,7 +44,7 @@ export default function DashboardIndicator({
       }
       toast_notif(
         "An error was encountered, please try again later or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -89,7 +89,7 @@ export default function DashboardIndicator({
   return (
     <div className="w-full flex justify-between items-center">
       <div className="space-y-1">
-        <p className="text-fluid-xxs text-dark font-normal">
+        <p className="text-fluid-xxs text-dark font-light">
           {greeting}, <strong>{gallery_name}</strong>
         </p>
 
@@ -100,11 +100,11 @@ export default function DashboardIndicator({
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+            className=" h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>
-          <p className="text-fluid-xxs text-dark font-normal">
+          <p className="text-fluid-xxs text-dark font-light">
             Account currently under review
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function DashboardIndicator({
         <div className="flex gap-2 items-center">
           <RiAdminLine className="text-fluid-xxs font-light text-dark" />
           <div>
-            <p className="text-dark text-fluid-xxs font-normal">
+            <p className="text-dark text-fluid-xxs font-light">
               {admin_name} (Admin)
             </p>
           </div>

@@ -49,7 +49,7 @@ export default function DashboardIndicator({ artist_name }: AppbarTypes) {
   return (
     <div className="w-full flex justify-between items-center">
       <div className="space-y-1">
-        <p className="text-fluid-xxs text-dark font-normal">
+        <p className="text-fluid-xxs text-dark font-light">
           {greeting}, <strong>{artist_name}</strong>
         </p>
 

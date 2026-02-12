@@ -546,7 +546,7 @@ export function AiChatWindow({
                       <div className="max-w-[95%] group">
                         <div className="flex gap-4">
                           <div className="w-[2px] bg-gradient-to-b from-indigo-400/50 to-transparent min-h-[24px] shrink-0" />
-                          <div className="prose prose-slate prose-p:text-[12px] prose-p:leading-7 prose-p:text-slate-700 prose-headings:font-serif prose-headings:font-normal prose-strong:font-medium prose-strong:text-slate-900 prose-li:text-slate-600 text-[13.5px]">
+                          <div className="prose prose-slate prose-p:text-[12px] prose-p:leading-7 prose-p:text-slate-700 prose-headings:font-serif prose-headings:font-light prose-strong:font-medium prose-strong:text-slate-900 prose-li:text-slate-600 text-[13.5px]">
                             {/* ERROR MESSAGE STYLING */}
                             {m.isError ? (
                               <div className="flex items-start gap-2 text-rose-600 bg-rose-50 p-3 rounded-lg border border-rose-100">
@@ -592,7 +592,7 @@ export function AiChatWindow({
                   placeholder="Ask Omenai Advisor..."
                   rows={1}
                   maxLength={500}
-                  className="w-full bg-slate-50 hover:bg-white focus:bg-white transition-all border border-slate-200 focus:border-indigo-200 rounded-xl px-4 py-3.5 pr-12 text-[15px] focus:outline-none focus:ring-4 focus:ring-indigo-50/50 resize-none max-h-[120px] placeholder:text-slate-400 font-normal"
+                  className="w-full bg-slate-50 hover:bg-white focus:bg-white transition-all border border-slate-200 focus:border-indigo-200 rounded-xl px-4 py-3.5 pr-12 text-[15px] focus:outline-none focus:ring-4 focus:ring-indigo-50/50 resize-none max-h-[120px] placeholder:text-slate-400 font-light"
                   style={{ scrollbarWidth: "none" }}
                 />
 

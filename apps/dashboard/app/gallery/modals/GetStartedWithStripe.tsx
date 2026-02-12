@@ -119,7 +119,7 @@ export default function GetStartedWithStripe() {
             >
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-fluid-xxs mb-2"
+                  className="text-[#858585] font-light text-fluid-xxs mb-2"
                   htmlFor="name"
                 >
                   Name
@@ -133,7 +133,7 @@ export default function GetStartedWithStripe() {
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-[#858585] font-normal text-fluid-xxs mb-2"
+                  className="text-[#858585] font-light text-fluid-xxs mb-2"
                   htmlFor="email"
                 >
                   Email
@@ -147,7 +147,7 @@ export default function GetStartedWithStripe() {
               </div>
               <div className="relative w-full flex flex-col">
                 <label
-                  className="text-[#858585] font-normal text-fluid-xxs mb-2"
+                  className="text-[#858585] font-light text-fluid-xxs mb-2"
                   htmlFor="email"
                 >
                   Business Location
@@ -179,7 +179,7 @@ export default function GetStartedWithStripe() {
                 <div className="dev-callout">
                   {connectedAccountId && (
                     <div className="my-5">
-                      <p className="text-fluid-xxs font-normal">
+                      <p className="text-fluid-xxs font-light">
                         Your connected account ID is:{" "}
                         <code className="font-bold">
                           {connectedAccountId}
@@ -206,7 +206,7 @@ export default function GetStartedWithStripe() {
                 <button
                   type="submit"
                   disabled={accountCreatePending}
-                  className="h-[35px] p-5 rounded my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                  className="h-[35px] p-5 rounded my-4 w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
                 >
                   {accountCreatePending ? (
                     <LoadSmall />
@@ -220,7 +220,7 @@ export default function GetStartedWithStripe() {
             {connectedAccountId && (
               <button
                 disabled={accountLinkCreatePending}
-                className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+                className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
                 onClick={handleAccountLink}
               >
                 {accountLinkCreatePending ? (

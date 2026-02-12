@@ -16,10 +16,10 @@ export default function OrderDetails({
   lock_status: boolean;
 }) {
   const { value: isFlutterwavePaymentEnabled } = useHighRiskFeatureFlag(
-    "flutterwave_payment_enabled"
+    "flutterwave_payment_enabled",
   );
   const { value: isStripePaymentEnabled } = useHighRiskFeatureFlag(
-    "stripe_payment_enabled"
+    "stripe_payment_enabled",
   );
 
   const showBlocker =
@@ -32,13 +32,13 @@ export default function OrderDetails({
   const image_href = getOptimizedImage(
     order.artwork_data.url,
     "thumbnail",
-    100
+    100,
   );
 
   const total_price_number = calculatePurchaseGrandTotalNumber(
     order.artwork_data.pricing.usd_price,
     +order.shipping_details.shipment_information.quote.fees,
-    +order.shipping_details.shipment_information.quote.taxes
+    +order.shipping_details.shipment_information.quote.taxes,
   );
 
   // Reusable row for the summary card
@@ -116,7 +116,7 @@ export default function OrderDetails({
                 <h3 className="text-fluid-sm font-semibold text-dark leading-tight">
                   {order.artwork_data.title}
                 </h3>
-                <p className="text-fluid-xs text-slate-500 font-normal">
+                <p className="text-fluid-xs text-slate-500 font-light">
                   {order.artwork_data.artist}
                 </p>
               </div>
@@ -205,13 +205,13 @@ export default function OrderDetails({
                 <PriceRow
                   label="Shipping Cost"
                   value={formatPrice(
-                    order.shipping_details.shipment_information.quote.fees
+                    order.shipping_details.shipment_information.quote.fees,
                   )}
                 />
                 <PriceRow
                   label="Taxes"
                   value={formatPrice(
-                    order.shipping_details.shipment_information.quote.taxes
+                    order.shipping_details.shipment_information.quote.taxes,
                   )}
                 />
 

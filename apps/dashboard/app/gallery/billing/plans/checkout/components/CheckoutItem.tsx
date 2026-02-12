@@ -173,7 +173,7 @@ export default function CheckoutItem({
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
               Complete your setup
             </h2>
-            <p className="text-gray-500 font-normal text-fluid-xs leading-relaxed">
+            <p className="text-gray-500 font-light text-fluid-xs leading-relaxed">
               Provide your payment details to activate your gallery
               subscription.{" "}
               {discountEligible

@@ -323,10 +323,10 @@ export default function SupportWidget() {
                     <OmenaiLogoCut />
                   </div>
                   <div>
-                    <h3 className="font-normal text-lg text-dark tracking-tight">
+                    <h3 className="font-light text-lg text-dark tracking-tight">
                       Contact Support
                     </h3>
-                    <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                    <p className="text-xs text-slate-500 mt-0.5 font-light">
                       Typically responds within ~ 6 hours
                     </p>
                   </div>

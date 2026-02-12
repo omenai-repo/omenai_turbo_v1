@@ -13,7 +13,7 @@ export default function AlertComponent({
       <div className="flex gap-3">
         <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
         <div className="text-xs text-yellow-800 space-y-1">
-          <p className="font-normal">{title}</p>
+          <p className="font-light">{title}</p>
           <p>{children}</p>
         </div>
       </div>

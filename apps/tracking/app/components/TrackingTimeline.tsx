@@ -58,7 +58,7 @@ export default function TrackingTimeline({
             </div>
             <h2 className="text-fluid-base font-medium">Current Status</h2>
           </div>
-          <p className="text-fluid-xs text-white/90 ml-15 font-normal">
+          <p className="text-fluid-xs text-white/90 ml-15 font-light">
             {currentStatus}
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function TrackingTimeline({
                     {/* Date Badge */}
                     <div className="inline-flex items-center gap-2 bg-slate-50 rounded px-2 py-1.5">
                       <Calendar className="w-4 h-4 text-slate-600" />
-                      <span className="text-fluid-xxs font-normal text-slate-700">
+                      <span className="text-fluid-xxs font-light text-slate-700">
                         {event.date} at {event.time}
                       </span>
                     </div>

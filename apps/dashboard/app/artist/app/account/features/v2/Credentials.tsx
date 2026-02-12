@@ -260,7 +260,7 @@ export default function Credentials({
         <div className="flex items-center gap-4">
           <button
             onClick={DownloadCV}
-            className="flex items-center space-x-2 px-4 py-2 bg-white border border-dark text-dark rounded font-normal text-fluid-xxs
+            className="flex items-center space-x-2 px-4 py-2 bg-white border border-dark text-dark rounded font-light text-fluid-xxs
                    hover:bg-dark/90 hover:text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
           >
             <Download className="w-5 h-5" />
@@ -268,7 +268,7 @@ export default function Credentials({
           </button>
           {/* <button
             onClick={() => setShowVerificationModal(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-slate-400 text-white rounded font-normal text-fluid-xxs
+            className="flex items-center space-x-2 px-4 py-2 bg-slate-400 text-white rounded font-light text-fluid-xxs
                     shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
           >
             <Award className="w-5 h-5" />

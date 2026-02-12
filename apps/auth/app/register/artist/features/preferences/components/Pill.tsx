@@ -24,7 +24,7 @@ export default function Pill({ text, art_styles, logo }: PillProps) {
         px-4 
         py-2 
         rounded 
-        font-normal 
+        font-light 
         text-fluid-xs
         transition-all 
         duration-200

@@ -38,7 +38,7 @@ export default function FormBlockLayout({
           <div className="w-full max-w-[480px] relative z-10">
             {/* Header section inside the form area for better context */}
             <div className="mb-10 space-y-2">
-              <h1 className="text-fluid-xl font-normal tracking-tight text-slate-900">
+              <h1 className="text-fluid-xl font-light tracking-tight text-slate-900">
                 Create {entity} account
               </h1>
               <p className="text-slate-500 text-fluid-xs font-light">

@@ -60,7 +60,7 @@ export default function OnboardingContainer() {
       updateData: (
         label: string,
         value: any,
-        socialKey?: keyof (typeof onboardingData)["socials"]
+        socialKey?: keyof (typeof onboardingData)["socials"],
       ) => updateOnboardingData(label as keyof ArtistData, value, socialKey),
       goNext,
       goBack,
@@ -75,7 +75,7 @@ export default function OnboardingContainer() {
       goBack,
       totalSteps,
       updateData,
-    ]
+    ],
   );
 
   const renderStep = () => {
@@ -130,7 +130,7 @@ export default function OnboardingContainer() {
         <h1 className="text-fluid-xl font-bold text-dark">
           Your Artistic Journey so far
         </h1>
-        <p className="text-slate-700 font-normal mt-2 text-fluid-xs">
+        <p className="text-slate-700 font-light mt-2 text-fluid-xs">
           Share a bit about your creative journey and how it has evolved.
         </p>
       </header>

@@ -28,7 +28,7 @@ export default function FormInput() {
 
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
     "redirect_uri_on_login",
-    ""
+    "",
   );
 
   const url = useReadLocalStorage("redirect_uri_on_login") as string;
@@ -42,7 +42,7 @@ export default function FormInput() {
   };
 
   const handleSubmit = async (
-    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
 
@@ -153,7 +153,7 @@ export default function FormInput() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
           >
             {loading ? <LoadSmall /> : "Login to your account"}{" "}
           </button>

@@ -6,7 +6,7 @@ export default function AskForHelp() {
     <div className="flex w-full justify-center absolute bottom-0 py-5">
       <p>
         Need help?{" "}
-        <Link href="mailto:moses@omenai.net" className="underline font-normal">
+        <Link href="mailto:moses@omenai.net" className="underline font-light">
           Talk to us
         </Link>
       </p>

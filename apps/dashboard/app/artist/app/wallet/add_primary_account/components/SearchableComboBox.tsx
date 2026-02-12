@@ -156,8 +156,8 @@ export function SearchableSelect({
           rightSectionPointerEvents="none"
           size="sm"
           classNames={{
-            input: "text-left font-normal",
-            label: "mb-1 font-normal text-slate-700",
+            input: "text-left font-light",
+            label: "mb-1 font-light text-slate-700",
           }}
         >
           {selectedItem ? (

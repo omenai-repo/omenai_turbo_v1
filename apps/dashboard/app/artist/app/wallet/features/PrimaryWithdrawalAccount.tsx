@@ -45,7 +45,7 @@ export default function PrimaryWithdrawalAccount({
               {/* Action Button */}
               <Link
                 href="/artist/app/wallet/add_primary_account"
-                className="inline-flex items-center gap-2 px-6 py-2 bg-slate-900 text-white text-fluid-xxs font-normal rounded shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+                className="inline-flex items-center gap-2 px-6 py-2 bg-slate-900 text-white text-fluid-xxs font-light rounded shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
               >
                 <svg
                   className="w-5 h-5"
@@ -123,7 +123,7 @@ export default function PrimaryWithdrawalAccount({
                   <button
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        String(withdrawal_account.account_number)
+                        String(withdrawal_account.account_number),
                       )
                     }
                     className=" p-1 rounded hover:bg-slate-100 transition-all"

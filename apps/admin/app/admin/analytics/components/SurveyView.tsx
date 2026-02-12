@@ -37,7 +37,7 @@ export const SurveyView = () => {
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
           📊 Market Consensus
           {isFetching && (
-            <span className="text-xs font-normal text-blue-500 animate-pulse ml-2">
+            <span className="text-xs font-light text-blue-500 animate-pulse ml-2">
               Updating data...
             </span>
           )}
@@ -113,7 +113,7 @@ export const SurveyView = () => {
         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
           <h3 className="text-sm font-bold text-slate-800">
             Individual Responses{" "}
-            <span className="text-slate-400 font-normal ml-2">
+            <span className="text-slate-400 font-light ml-2">
               ({pagination?.total} Total)
             </span>
           </h3>
@@ -140,7 +140,7 @@ export const SurveyView = () => {
                 <tr key={i} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4 font-medium text-slate-900">
                     {user.name} <br />
-                    <span className="text-xs text-slate-400 font-normal">
+                    <span className="text-xs text-slate-400 font-light">
                       {user.email}
                     </span>
                   </td>

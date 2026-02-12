@@ -29,7 +29,7 @@ const SendTestMail = (name: string) => {
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-dark text-fluid-md font-normal text-center p-0 mb-[40px] mx-0">
+            <Heading className="text-dark text-fluid-md font-light text-center p-0 mb-[40px] mx-0">
               Test Email
             </Heading>
             <Text>Hello {name}</Text>

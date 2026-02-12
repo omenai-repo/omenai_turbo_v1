@@ -10,9 +10,24 @@ import { fetchSingleArtworkOnPurchase } from "@omenai/shared-services/artworks/f
 import { useQuery } from "@tanstack/react-query";
 import { orderStore } from "@omenai/shared-state-store/src/orders/ordersStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { useRouter } from "next/navigation";
+import { auth_uri } from "@omenai/url-config/src/config";
+import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehaviour";
 
 export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   const { user } = useAuth({ requiredRole: "user" });
+  const { getCurrentUrl } = useRedirectBehavior();
+
+  const router = useRouter();
+  if (!user || user.role !== "user") {
+    router.replace(`${auth_uri()}/login/user?redirect=${getCurrentUrl()}`);
+    toast_notif(
+      "Invalid permission access, please sign into your collector account",
+      "error",
+    );
+  }
+
   const { set_address_on_order, address } = orderStore();
 
   const { data: artwork, isLoading: loading } = useQuery({

@@ -18,7 +18,7 @@ export default function TC() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      <p className="text-fluid-xxs my-4 font-normal">
+      <p className="text-fluid-xxs my-4 font-light">
         Please read through and confirm that you understand and accept all the
         terms stated
       </p>
@@ -35,7 +35,7 @@ export default function TC() {
           />
           <Label
             htmlFor="policy-acceptance"
-            className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
+            className="text-dark/80 text-fluid-xxs font-light cursor-pointer"
           >
             I accept Omenai's{" "}
             <Link

@@ -56,7 +56,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
       if (!response.isOk)
         toast_notif(
           "Something went wrong with fetching receipt details, please contact support",
-          "error"
+          "error",
         );
       return response.data;
     },
@@ -224,7 +224,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
                           {formatCurrency(item.unitPrice, data.currency)}
                         </p>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>
@@ -278,7 +278,7 @@ const ReceiptDrawer: React.FC<ReceiptDrawerProps> = ({
               <button
                 onClick={handleDownload}
                 disabled={downloadReceiptLoading}
-                className="w-full py-2 px-4 rounded text-fluid-xs disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 bg-dark text-white font-normal hover:bg-slate-800 transition-all grid place-items-center gap-2 shadow-lg shadow-gray-200"
+                className="w-full py-2 px-4 rounded text-fluid-xs disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 bg-dark text-white font-light hover:bg-slate-800 transition-all grid place-items-center gap-2 shadow-lg shadow-gray-200"
               >
                 {downloadReceiptLoading ? (
                   <LoadSmall />

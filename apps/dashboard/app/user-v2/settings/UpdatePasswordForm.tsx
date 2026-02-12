@@ -78,7 +78,7 @@ export default function UpdatePasswordForm() {
     const response = await requestPasswordConfirmationCode(
       "individual",
       user.id,
-      csrf || ""
+      csrf || "",
     );
     if (response?.isOk)
       toast.success("Operation successful", {
@@ -126,7 +126,7 @@ export default function UpdatePasswordForm() {
       info.code,
       "individual",
       user.id,
-      csrf || ""
+      csrf || "",
     );
 
     if (response?.isOk) {
@@ -198,7 +198,7 @@ export default function UpdatePasswordForm() {
           <div className="mb-5">
             <label
               htmlFor="password"
-              className="block text-fluid-xxs font-normal text-dark/20-700 mb-2"
+              className="block text-fluid-xxs font-light text-dark/20-700 mb-2"
             >
               New Password
             </label>
@@ -232,7 +232,7 @@ export default function UpdatePasswordForm() {
             {info.password && (
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-normal text-dark/20-500">
+                  <span className="text-xs font-light text-dark/20-500">
                     Password strength
                   </span>
                   <span
@@ -278,7 +278,7 @@ export default function UpdatePasswordForm() {
           <div className="mb-5">
             <label
               htmlFor="confirmPassword"
-              className="block text-fluid-xxs font-normal text-dark/20-700 mb-2"
+              className="block text-fluid-xxs font-light text-dark/20-700 mb-2"
             >
               Confirm Password
             </label>
@@ -310,7 +310,7 @@ export default function UpdatePasswordForm() {
             {passwordsMatch && (
               <div className="flex items-center gap-2 mt-2 text-green-600">
                 <CheckCircle size={14} />
-                <span className="text-xs font-normal">Passwords match</span>
+                <span className="text-xs font-light">Passwords match</span>
               </div>
             )}
           </div>
@@ -319,7 +319,7 @@ export default function UpdatePasswordForm() {
           <div className="mb-6">
             <label
               htmlFor="code"
-              className="block text-fluid-xxs font-normal text-dark/20-700 mb-2"
+              className="block text-fluid-xxs font-light text-dark/20-700 mb-2"
             >
               Verification Code
             </label>
@@ -350,7 +350,7 @@ export default function UpdatePasswordForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-normal transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
+                className={`absolute right-2 top-1/2 -translate-y-1/2 h-8 px-3 rounded text-xs font-light transition-all duration-200 grid place-items-center disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-dark ${
                   loading ||
                   errorList.length > 0 ||
                   !info.confirmPassword ||
@@ -395,7 +395,7 @@ export default function UpdatePasswordForm() {
             <div className="flex gap-3">
               <AlertCircle className="w-4 h-4 text-dark/20-500 mt-0.5 flex-shrink-0" />
               <div className="text-xs text-dark/20-600 space-y-1">
-                <p className="font-normal">Security tips:</p>
+                <p className="font-light">Security tips:</p>
                 <p>
                   It is highly recommended to change your password regularly.
                   <br />
@@ -416,7 +416,7 @@ export default function UpdatePasswordForm() {
               info.password === ""
             }
             type="submit"
-            className={`w-full h-12 mt-6 rounded text-fluid-xxs font-normal transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`w-full h-12 mt-6 rounded text-fluid-xxs font-light transition-all duration-200 flex items-center justify-center gap-2 ${
               loading ||
               errorList.length > 0 ||
               !info.code ||

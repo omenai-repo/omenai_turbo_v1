@@ -35,14 +35,14 @@ export default function ExtendArtworkContractConfirmationModalForm() {
       if (!exclusivityExtendModal.art_id) {
         toast_notif(
           "Resource data `art_id` is missing, re-open modal form. If issue persists, please contact support",
-          "error"
+          "error",
         );
         return;
       }
 
       const extend_contract = await extendArtworkExclusivity(
         exclusivityExtendModal.art_id,
-        csrf || ""
+        csrf || "",
       );
 
       if (!extend_contract.isOk) {

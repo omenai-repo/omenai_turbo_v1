@@ -32,7 +32,7 @@ export default function PreferencesGrid({
         <h3 className="text-lg font-medium text-slate-900">
           Artistic Interests
         </h3>
-        <p className="text-sm text-slate-500 font-normal mt-1">
+        <p className="text-sm text-slate-500 font-light mt-1">
           Select the styles that resonate with you most.
         </p>
       </div>

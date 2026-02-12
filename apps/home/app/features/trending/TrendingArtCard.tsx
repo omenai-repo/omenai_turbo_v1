@@ -85,10 +85,10 @@ export default function TrendingArtworkCard({
           </p>
 
           <div className="flex items-center gap-1 text-xs text-neutral-400">
-            <span className="font-sans font-semibold text-dark ">
+            <span className="font-sans font-medium text-[10px] text-dark ">
               {impressions}
             </span>
-            <span className="text-[9px] uppercase tracking-wide">Views</span>
+            <span className="text-[9px] uppercase tracking-wide">like(s)</span>
           </div>
         </div>
       </div>

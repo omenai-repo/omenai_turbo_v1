@@ -16,7 +16,10 @@ import {
 import WarningAlert from "./WarningAlert";
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { TEXTAREA_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  BUTTON_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 // Components
 import PackagingSelector from "./PackagingSelector";
@@ -260,11 +263,11 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                 <button
                   type="submit"
                   disabled={loading || !terms_checked}
-                  className="w-full flex items-center justify-center gap-2 rounded bg-slate-900 px-8 py-4 text-white shadow-lg hover:bg-dark/80 disabled:opacity-50 transition-all"
+                  className={BUTTON_CLASS}
                 >
                   {loading ? <LoadSmall /> : <CheckIcon className="w-5 h-5" />}
                   <span>
-                    {loading ? "Processing..." : "Confirm & Request Pickup"}
+                    {loading ? "Processing..." : "Confirm & Accept request"}
                   </span>
                 </button>
               </div>

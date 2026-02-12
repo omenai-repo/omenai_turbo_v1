@@ -37,7 +37,7 @@ export default function AccountSettings() {
           <button
             onClick={() => updatePasswordModalPopup(true)}
             className="px-4 py-2 bg-dark text-white rounded hover:bg-dark/90 
-                           transition-all duration-300 text-fluid-xxs font-normal"
+                           transition-all duration-300 text-fluid-xxs font-light"
           >
             Update Password
           </button>
@@ -62,7 +62,7 @@ export default function AccountSettings() {
           <button
             onClick={() => updateDeleteArtistAccountModalPopup(true)}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 
-                           transition-all duration-300 text-fluid-xxs font-normal flex items-center space-x-2"
+                           transition-all duration-300 text-fluid-xxs font-light flex items-center space-x-2"
           >
             <Trash2 className="w-4 h-4" />
             <span>Delete Account</span>

@@ -87,7 +87,7 @@ export default function PasswordForm({ id }: IdProps) {
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
           <label
-            className="text-[#858585] text-fluid-xxs font-normal self-start"
+            className="text-[#858585] text-fluid-xxs font-light self-start"
             htmlFor="password"
           >
             Password
@@ -103,7 +103,7 @@ export default function PasswordForm({ id }: IdProps) {
         </div>
         <div className="flex flex-col gap-2">
           <label
-            className="text-[#858585] text-fluid-xxs font-normal self-start"
+            className="text-[#858585] text-fluid-xxs font-light self-start"
             htmlFor="confirmpassword"
           >
             Confirm password
@@ -133,7 +133,7 @@ export default function PasswordForm({ id }: IdProps) {
         <div className="w-full">
           <button
             disabled={isLoading}
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
           >
             {isLoading ? <LoadSmall /> : "Change password"}
           </button>

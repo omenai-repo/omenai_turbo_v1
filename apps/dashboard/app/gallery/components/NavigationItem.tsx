@@ -30,7 +30,7 @@ export default function NavigationItem({
             className="flex items-center"
           >
             <IconWrapper className=" hover:text-dark group">{icon}</IconWrapper>
-            <p className={`text-fluid-xxs p-2 font-normal`}>{title}</p>
+            <p className={`text-fluid-xxs p-2 font-light`}>{title}</p>
           </button>
         </li>
       ) : (
@@ -54,9 +54,7 @@ export default function NavigationItem({
           >
             {icon}
           </IconWrapper>
-          <p
-            className={`text-fluid-xxs p-2 font-normal group-hover:text-white`}
-          >
+          <p className={`text-fluid-xxs p-2 font-light group-hover:text-white`}>
             {title}
           </p>
         </Link>

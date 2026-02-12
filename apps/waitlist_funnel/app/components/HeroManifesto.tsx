@@ -13,7 +13,7 @@ export const HeroManifesto = () => {
 
         {/* 1. The Hook (Typography) */}
         <div className="mb-16 space-y-8">
-          <h1 className="font-serif text-2xl md:text-3xl lg:text-fluid-4xl xl:text-5xl font-normal leading-[0.9] text-dark tracking-normal text-balance">
+          <h1 className="font-serif text-2xl md:text-3xl lg:text-fluid-4xl xl:text-5xl font-light leading-[0.9] text-dark tracking-normal text-balance">
             Are you ready to shape the new Contemporary African Art landscape?
           </h1>
           {/* Added color accent to the border-l */}

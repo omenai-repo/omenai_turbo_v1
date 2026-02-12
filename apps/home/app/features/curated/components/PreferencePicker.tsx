@@ -28,7 +28,7 @@ export default function CuratorialManifest({
   return (
     <div className="mb-12 border-y border-slate-100 py-4">
       <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 md:justify-start">
-        <span className="font-sans text-slate-400 font-normal text-fluid-xxs">
+        <span className="font-sans text-slate-400 font-light text-fluid-xxs">
           Filter By:
         </span>
         {categories.map((item) => {

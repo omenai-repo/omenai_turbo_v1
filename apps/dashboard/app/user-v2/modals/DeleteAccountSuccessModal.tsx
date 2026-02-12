@@ -56,7 +56,7 @@ export default function DeleteAccountSuccessModal() {
               — Logging in during this period will automatically reactivate your
               account.
             </p>
-            <p className="mt-4 text-fluid-xs font-normal text-slate-600 dark:text-slate-400">
+            <p className="mt-4 text-fluid-xs font-light text-slate-600 dark:text-slate-400">
               Redirecting you to login page in{" "}
               <span className="text-slate-900 dark:text-white">
                 {countdown}s ...
