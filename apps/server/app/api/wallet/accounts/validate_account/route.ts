@@ -37,12 +37,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
         },
+        // TODO: Change to dynamic
         body: JSON.stringify({
-          account_number: "0690000032",
-          account_bank: "044",
+          account_number: String(accountNumber),
+          account_bank: String(bankCode),
         }),
       },
     );
+
     const result = await response.json();
 
     if (!response.ok) {

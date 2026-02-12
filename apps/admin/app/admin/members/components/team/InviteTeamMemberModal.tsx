@@ -29,11 +29,11 @@ const ROLE_OPTIONS = [
   { value: "Viewer", label: "Viewer", icon: <Eye size={16} /> },
 ];
 
-const ALLOWED_DOMAIN = "omenai.net";
+const ALLOWED_DOMAIN = ["omenai.net", "omenai.app"];
 
 function isValidOrgEmail(email: string) {
   const [_, domain] = email.split("@");
-  return domain?.toLowerCase() === ALLOWED_DOMAIN;
+  return ALLOWED_DOMAIN.includes(domain?.toLowerCase());
 }
 
 export default function InviteTeamMemberModal({
@@ -57,13 +57,13 @@ export default function InviteTeamMemberModal({
   const handleInvite = async () => {
     if (!email) return;
 
-    if (!isValidOrgEmail(email)) {
-      toast_notif(
-        `Only ${ALLOWED_DOMAIN} email addresses can be invited.`,
-        "error"
-      );
-      return;
-    }
+    // if (!isValidOrgEmail(email)) {
+    //   toast_notif(
+    //     `Only ${ALLOWED_DOMAIN} email addresses can be invited.`,
+    //     "error",
+    //   );
+    //   return;
+    // }
 
     setLoading(true);
     try {

@@ -13,7 +13,7 @@ export default function page() {
         <Paper
           radius={"sm"}
           withBorder
-          className="max-w-lg w-full p-8 flex flex-col space-y-6"
+          className="max-w-full w-full p-8 flex flex-col space-y-6"
         >
           <div>
             <h5 className="font-semibold">Add a primary bank account</h5>
