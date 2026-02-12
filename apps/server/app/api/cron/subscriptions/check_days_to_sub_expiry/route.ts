@@ -65,10 +65,6 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
       },
     ]);
 
-    // TODO: Send reminder email to users based on days_until_expiry
-    // - Day 3: "Your subscription expires in 3 days"
-    // - Day 2: "Your subscription expires in 2 days"
-    // - Day 1: "Your subscription expires tomorrow"
     const expiredSoonEmailPayload = await Promise.all(
       results.map(async (subscription) => {
         const html = await render(

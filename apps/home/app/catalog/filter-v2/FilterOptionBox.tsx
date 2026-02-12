@@ -56,7 +56,7 @@ export default function FilterOptionBox({
               key={filter.option}
               className="flex items-center justify-between py-2 group cursor-pointer"
             >
-              <span className="text-[11px] uppercase tracking-wider text-slate-600 group-hover:text-dark transition-colors">
+              <span className="text-[11px] tracking-wider text-slate-600 group-hover:text-dark transition-colors">
                 {filter.option}
               </span>
               <input

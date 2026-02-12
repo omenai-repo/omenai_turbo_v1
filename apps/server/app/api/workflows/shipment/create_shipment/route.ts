@@ -56,7 +56,6 @@ async function callShipmentAPI(
   const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
-    // TODO: Remove origin
     const response = await fetch(SHIPMENT_API_URL, {
       method: "POST",
       headers: {

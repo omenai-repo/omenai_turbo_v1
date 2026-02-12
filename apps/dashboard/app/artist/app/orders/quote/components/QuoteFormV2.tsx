@@ -85,7 +85,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
   // 2. State
   const [packagingType, setPackagingType] = useState<"rolled" | "stretched">(
-    "stretched",
+    order_data?.data.artwork_data.packaging_type || "rolled",
   );
   const [package_details, setPackageDetails] = useState({
     height: "",
@@ -233,7 +233,8 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
               {/* Actions */}
               <div className="space-y-6 pt-2 px-4 pb-10">
-                <WarningAlert />
+                {order_data.data.artwork_data.exclusivity_status
+                  .exclusivity_type === "non-exclusive" && <WarningAlert />}
 
                 <div
                   onClick={() => set_terms_checked(!terms_checked)}

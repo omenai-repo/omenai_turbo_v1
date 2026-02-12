@@ -87,7 +87,6 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     await checkIfUserExists(email, entity);
     await checkWaitlistConflict(name, email, entity);
     await createWaitlistEntry({ name, email, entity });
-    // TODO: Send a mail to this user informing them they've been added to the waitlist
     await SendWaitlistRegistrationEmail({ email });
     return NextResponse.json(
       { message: "Successfully added to waitlist" },

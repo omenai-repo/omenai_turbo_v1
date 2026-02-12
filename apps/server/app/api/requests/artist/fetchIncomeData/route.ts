@@ -39,7 +39,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
           netIncome: {
             $sum: {
               $add: [
-                { $ifNull: ["$trans_pricing.amount_total", 0] },
+                { $ifNull: ["$trans_pricing.unit_price", 0] },
                 {
                   $multiply: [
                     { $ifNull: ["$trans_pricing.commission", 0] },

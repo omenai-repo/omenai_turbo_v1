@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
 import { validateInviteToken } from "@omenai/shared-services/auth/waitlist/validateInviteToken";

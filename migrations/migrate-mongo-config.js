@@ -2,10 +2,10 @@
 
 const config = {
   mongodb: {
-    // TODO Change (or review) the url to your MongoDB:
+    // Change (or review) the url to your MongoDB:
     url: "",
 
-    // TODO Change this to your database name:
+    // Change this to your database name:
     databaseName: "test",
 
     options: {

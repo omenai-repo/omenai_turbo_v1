@@ -46,7 +46,6 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
         { status: 500 },
       );
     }
-    // TODO: Send email notification to user informing them their member role has changed
     await sendRoleChangeMail({
       name: admin.name,
       previousRole: admin.access_role,

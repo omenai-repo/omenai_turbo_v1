@@ -8,8 +8,8 @@ export default function FullArtworkDetails({
   // Helper to make the packaging status user-friendly
   const formatPackaging = (type: string | undefined) => {
     if (!type) return "Standard Packaging";
-    if (type === "rolled") return "Rolled (Shipped in a rigid tube)";
-    if (type === "stretched") return "Stretched (Ready to hang)";
+    if (type === "rolled") return "Rolled";
+    if (type === "stretched") return "Stretched";
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 

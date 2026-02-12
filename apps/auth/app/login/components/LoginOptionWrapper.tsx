@@ -23,12 +23,14 @@ export default function LoginOptionWrapper() {
             <LoginOptions />
           </div>
 
-          {/* TODO: Add mailto */}
           <p className="mt-12 text-[10px] text-slate-400 uppercase tracking-[0.2em] font-medium text-center">
             Need assistance?{" "}
-            <span className="text-dark cursor-pointer border-b border-dark pb-0.5">
+            <a
+              href="mailto:support@omenai.app"
+              className="text-dark cursor-pointer border-b border-dark pb-0.5"
+            >
               Contact Support
-            </span>
+            </a>
           </p>
         </div>
       </motion.div>

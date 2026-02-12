@@ -9,49 +9,54 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
+import { CombinedConfig } from "@omenai/shared-types";
 
-// TODO: Freakishly protect this route and add Idempotency if possible
-export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
-  async function POST(request: Request) {
-    try {
-      await connectMongoDB();
-      const data = await request.json();
+const config: CombinedConfig = {
+  ...standardRateLimit,
+  allowedRoles: [],
+};
 
-      // Check if wallet exists
-      const wallet_exists = await Wallet.findOne({ owner_id: data.owner_id });
+export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+  request: Request,
+) {
+  try {
+    await connectMongoDB();
+    const data = await request.json();
 
-      if (!wallet_exists)
-        throw new NotFoundError(
-          "Wallet doesn't exists for this user, please escalate to IT support"
-        );
+    // Check if wallet exists
+    const wallet_exists = await Wallet.findOne({ owner_id: data.owner_id });
 
-      const fund_wallet = await Wallet.updateOne(
-        { owner_id: data.owner_id },
-        { $inc: { pending_balance: data.amount } }
+    if (!wallet_exists)
+      throw new NotFoundError(
+        "Wallet doesn't exists for this user, please escalate to IT support",
       );
 
-      if (fund_wallet.modifiedCount === 0)
-        throw new ServerError(
-          "An error was encountered. Please try again or contact IT support"
-        );
+    const fund_wallet = await Wallet.updateOne(
+      { owner_id: data.owner_id },
+      { $inc: { pending_balance: data.amount } },
+    );
 
-      return NextResponse.json(
-        {
-          message: "Wallet funded",
-        },
-        { status: 200 }
+    if (fund_wallet.modifiedCount === 0)
+      throw new ServerError(
+        "An error was encountered. Please try again or contact IT support",
       );
-    } catch (error) {
-      const error_response = handleErrorEdgeCases(error);
-      createErrorRollbarReport(
-        "wallet: fund wallet",
-        error,
-        error_response.status
-      );
-      return NextResponse.json(
-        { message: error_response?.message },
-        { status: error_response?.status }
-      );
-    }
+
+    return NextResponse.json(
+      {
+        message: "Wallet funded",
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    createErrorRollbarReport(
+      "wallet: fund wallet",
+      error,
+      error_response.status,
+    );
+    return NextResponse.json(
+      { message: error_response?.message },
+      { status: error_response?.status },
+    );
   }
-);
+});

@@ -109,7 +109,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       // TODO: Replace email with actual admin email
       await sendVerifyArtistMail({
         name: artist.name,
-        email: "moses@omenai.net",
+        email: "support@omenai.app",
       });
 
       return NextResponse.json(
