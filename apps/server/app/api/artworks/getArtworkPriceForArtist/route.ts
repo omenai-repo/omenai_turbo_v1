@@ -16,6 +16,8 @@ import { redis } from "@omenai/upstash-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
 import z from "zod";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 const GetArtworkPriceForArtist = z.object({
   medium: z.enum([
     "Photography",
@@ -36,6 +38,7 @@ const GetArtworkPriceForArtist = z.object({
   ]),
   currency: z.string(),
 });
+
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);

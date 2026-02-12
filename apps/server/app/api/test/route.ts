@@ -1,3 +1,5 @@
+import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { NextResponse } from "next/server";
 
 export async function GET() {
