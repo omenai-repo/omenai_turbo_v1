@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-<<<<<<< HEAD
   await SendArtistShipmentSuccessEmail({
     email: "rodolphe@omenai.net",
     name: "Samwell Tarly",
@@ -14,7 +13,4 @@ export async function GET() {
   return NextResponse.json({
     message: "Successful",
   });
-=======
-  return NextResponse.json({});
->>>>>>> a2cfb759a87a54f31c4d3da45a23a28dadeb8733
 }
