@@ -21,35 +21,36 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
     const url = new URL(request.url);
     const searchParams = url.searchParams;
     const medium: ArtworkMediumTypes = searchParams.get(
-      "medium"
+      "medium",
     ) as ArtworkMediumTypes;
 
     const height = searchParams.get("height") as string;
     const width = searchParams.get("width") as string;
     const category: ArtistCategory = searchParams.get(
-      "category"
+      "category",
     ) as ArtistCategory;
     const currency = searchParams.get("currency") as string;
 
     try {
       const isArtworkPriceEnabled = (await fetchConfigCatValue(
         "artwork_price_calculation_enabled",
-        "high"
+        "high",
       )) as boolean;
 
       if (!isArtworkPriceEnabled)
         throw new ForbiddenError(
-          "Artwork price calculation is currently disabled"
+          "Artwork price calculation is currently disabled",
         );
 
       if (!medium || !height || !width || !category) {
         throw new ServerError(
-          "Missing required parameters (medium, height, width, category)"
+          "Missing required parameters (medium, height, width, category)",
         );
       }
 
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
+
       const price: ArtworkPricing = calculateArtworkPrice({
         artistCategory: category,
         medium,
@@ -72,12 +73,12 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
           const request = await fetch(
             `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
-            { method: "GET" }
+            { method: "GET" },
           );
 
           if (!request.ok) {
             throw new ServerError(
-              "Failed to fetch exchange rate. Try again or contact support"
+              "Failed to fetch exchange rate. Try again or contact support",
             );
           }
 
@@ -91,31 +92,31 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           } catch (redisError) {
             console.error(
               `Failed to WRITE to Redis for key ${cacheKey}:`,
-              redisError
+              redisError,
             );
             createErrorRollbarReport(
               "artwork: get Artwork price for artist- Failed to WRITE to Redis for key",
               redisError,
-              500
+              500,
             );
           }
         }
       } catch (redisError) {
         console.error(
           `Failed to READ from Redis for key ${cacheKey}:`,
-          redisError
+          redisError,
         );
 
         // Fallback: Manually run the fetch logic here if the read failed.
         const request = await fetch(
           `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY!}/pair/USD/${currency.toUpperCase()}`,
-          { method: "GET" }
+          { method: "GET" },
         );
 
         if (!request.ok) {
           // If external API fails after cache failed, then throw a ServerError.
           throw new ServerError(
-            "Failed to fetch exchange rate after cache failure."
+            "Failed to fetch exchange rate after cache failure.",
           );
         }
 
@@ -133,19 +134,19 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
       return NextResponse.json(
         { message: "Proposed Price calculated", data: price_response_data },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get Artwork price for artist",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

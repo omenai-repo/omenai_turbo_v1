@@ -133,6 +133,12 @@ export default async function proxy(req: NextRequest) {
     });
   };
 
+  if (
+    pathname === "/privacy" &&
+    (host === "omenai.app" || host === "www.omenai.app")
+  )
+    return NextResponse.next();
+
   // === HOST REDIRECT ===
   if (host === "omenai.app" || host === "www.omenai.app") {
     const targetUrl = new URL("https://join.omenai.app");
