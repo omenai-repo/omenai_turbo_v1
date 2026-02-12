@@ -12,18 +12,18 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-import z from "zod";
-const ResetPasswordSchema = z.object({
-  password: z.string(),
-  id: z.string(),
-});
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import { ResetPasswordSchema } from "../../utils";
+
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { password, id } = await request.json();
+      const { password, id } = await validateRequestBody(
+        request,
+        ResetPasswordSchema,
+      );
 
       const user = await VerificationCodes.findOne(
         { code: id },

@@ -13,11 +13,8 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
-import z from "zod";
-const ResetPasswordSchema = z.object({
-  password: z.string(),
-  id: z.string(),
-});
+import { ResetPasswordSchema } from "../../utils";
+
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
