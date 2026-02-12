@@ -127,7 +127,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         <button
           disabled={loading || isSoldOut || purchase_click_loading}
           onClick={handleBuyButtonClick}
-          className="group flex h-14 w-full items-center justify-center gap-3 bg-dark text-white transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded-none"
+          className="group flex h-14 w-full items-center justify-center gap-3 bg-dark text-white transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
         >
           {loading || purchase_click_loading ? (
             <LoadSmall />

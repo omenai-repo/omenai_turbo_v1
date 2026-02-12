@@ -95,16 +95,16 @@ const DesktopNavbar = () => {
             ) : (
               <div className="hidden lg:flex items-center gap-6">
                 <Link
+                  href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
+                  className="bg-[#091830] text-white px-5 py-2.5 rounded-md text-sm font-sans font-normal hover:bg-[#0F2342] transition-all shadow-sm"
+                >
+                  Create Account
+                </Link>
+                <Link
                   href={`${login_base_url}/login/user?redirect=${encodeURIComponent(fullUrl)}`}
                   className="text-sm font-sans font-normal text-neutral-600 hover:text-dark  transition-colors"
                 >
                   Log in
-                </Link>
-                <Link
-                  href={`${login_base_url}/register?redirect=${encodeURIComponent(fullUrl)}`}
-                  className="bg-[#091830] text-white px-5 py-2.5 rounded-md text-sm font-sans font-normal hover:bg-[#0F2342] transition-all shadow-sm"
-                >
-                  Join Omenai
                 </Link>
               </div>
             )}
