@@ -134,7 +134,7 @@ export default async function proxy(req: NextRequest) {
   };
 
   if (
-    pathname === "/privacy" &&
+    pathname.startsWith("/privacy") &&
     (host === "omenai.app" || host === "www.omenai.app")
   )
     return NextResponse.next();
