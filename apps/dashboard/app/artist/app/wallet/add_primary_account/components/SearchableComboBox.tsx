@@ -1,71 +1,60 @@
 "use client";
+
 import { useState, useCallback, useMemo } from "react";
-import { Combobox, Input, InputBase, Loader, useCombobox } from "@mantine/core";
+import { Combobox, InputBase, Loader, useCombobox, Input } from "@mantine/core";
 import { getBanks } from "@omenai/shared-services/wallet/getBanks";
 import { getBankBranches } from "@omenai/shared-services/wallet/getBankBranches";
-import {
-  ArtistSchemaTypes,
-  BankBranchType,
-  BankType,
-} from "@omenai/shared-types";
+import { BankBranchType, BankType } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
+import { ChevronDown, Search } from "lucide-react";
 
+// --- Helper Types & Guards ---
+const isBank = (item: BankType | BankBranchType): item is BankType =>
+  "code" in item;
+
+// --- Async Data Fetcher ---
 async function getAsyncData(
   type: "banks" | "branches",
   countryCode: string,
-  bankCode?: string
+  bankCode?: string,
 ) {
-  let response;
-
   if (type === "banks") {
-    const get_banks_response = await getBanks(countryCode);
-    if (get_banks_response === undefined || !get_banks_response.isOk) {
-      throw new Error(
-        "Unable to retrieve banks list. Please try again or contact support"
-      );
-    }
-    response = get_banks_response?.data;
+    const response = await getBanks(countryCode);
+    if (!response?.isOk) throw new Error("Unable to retrieve banks list.");
+    return response.data;
   }
 
   if (type === "branches" && bankCode) {
-    const get_banks_branches_response = await getBankBranches(bankCode);
-    if (
-      get_banks_branches_response === undefined ||
-      !get_banks_branches_response.isOk
-    ) {
-      throw new Error(
-        "Unable to retrieve banks list. Please try again or contact support"
-      );
-    }
-
-    response = get_banks_branches_response?.data;
+    const response = await getBankBranches(bankCode);
+    if (!response?.isOk) throw new Error("Unable to retrieve branches list.");
+    return response.data;
   }
 
-  return response;
+  return [];
+}
+
+interface SearchableSelectProps {
+  type: "banks" | "branches";
+  onChange: (value: BankType | BankBranchType | null) => void;
+  selectedItem: BankType | BankBranchType | null; // Controlled prop
+  bankCode?: string;
+  disabled: boolean;
 }
 
 export function SearchableSelect({
   type,
-  setSelect,
+  onChange,
+  selectedItem,
   bankCode,
   disabled,
-}: {
-  type: "banks" | "branches";
-  setSelect: (
-    type: "banks" | "branches",
-    value: BankType | BankBranchType
-  ) => void;
-  bankCode?: string;
-  disabled: boolean;
-}) {
-  const [value, setValue] = useState<string | null>(null);
+}: SearchableSelectProps) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<BankType[] | BankBranchType[]>([]);
-  const { user } = useAuth({ requiredRole: "artist" });
   const [search, setSearch] = useState("");
+
+  const { user } = useAuth({ requiredRole: "artist" });
   const rollbar = useRollbar();
 
   const combobox = useCombobox({
@@ -81,89 +70,67 @@ export function SearchableSelect({
           const response = await getAsyncData(
             type,
             user.address.countryCode,
-            bankCode || ""
+            bankCode,
           );
           setData(response);
         } catch (error) {
-          if (error instanceof Error) {
-            rollbar.error(error);
-          } else {
-            rollbar.error(new Error(String(error)));
-          }
-          console.error("Error loading data:", error);
+          const err = error instanceof Error ? error : new Error(String(error));
+          rollbar.error(err);
+          console.error("Error loading data:", err);
         } finally {
           setLoading(false);
         }
-        combobox.focusSearchInput();
-        combobox.resetSelectedOption();
       }
     },
   });
 
-  // Memoize the name getter to avoid repetitive conditionals
+  // --- Helpers for Display Names ---
   const getName = useCallback(
     (item: BankType | BankBranchType) =>
-      "name" in item ? item.name : item.branch_name,
-    []
+      isBank(item) ? item.name : item.branch_name,
+    [],
   );
 
   const getCode = useCallback(
     (item: BankType | BankBranchType) =>
-      "code" in item ? item.code : item.branch_code,
-    []
+      isBank(item) ? String(item.id) : String(item.id),
+    [],
   );
 
-  // Memoize the handleOptionSubmit to prevent recreation on every render
-  const handleOptionSubmit = useCallback(
-    (val: string) => {
-      const selected_data = data.find(
-        (item: BankType | BankBranchType) => getName(item) === val
-      );
-      setValue(val);
-      setSelect(type, selected_data as BankType | BankBranchType);
-      combobox.closeDropdown();
-    },
-    [data, getName, setSelect, type, combobox]
-  );
-
-  // Memoize filtered and mapped options for better performance
-  const options = useMemo(() => {
+  // --- Filter Options ---
+  const filteredOptions = useMemo(() => {
     const searchLower = search.toLowerCase().trim();
+    return data.filter((item) =>
+      getName(item).toLowerCase().includes(searchLower),
+    );
+  }, [data, search, getName]);
 
-    return data
-      .filter((item: BankType | BankBranchType) =>
-        getName(item).toLowerCase().includes(searchLower)
-      )
-      .map((item: BankType | BankBranchType) => (
-        <Combobox.Option value={getName(item)} key={getCode(item)}>
-          {getName(item)}
-        </Combobox.Option>
-      ));
-  }, [data, search, getName, getCode]);
+  const options = filteredOptions.map((item) => (
+    <Combobox.Option value={getName(item)} key={getCode(item)}>
+      {getName(item)}
+    </Combobox.Option>
+  ));
 
-  // Memoize placeholder and label text
-  const placeholderText = useMemo(
-    () => (type === "banks" ? "Select bank" : "Select bank branch"),
-    [type]
-  );
-
-  const labelText = useMemo(
-    () => (type === "banks" ? "Select your bank" : "Select your bank branch"),
-    [type]
-  );
-
-  const searchPlaceholder = useMemo(
-    () => (type === "banks" ? "Search your bank" : "Search your bank branch"),
-    [type]
-  );
-
-  // Memoize empty state message
-  const emptyMessage = useMemo(() => {
-    if (type === "branches") {
-      return "No branches listed for this bank. Kindly continue.";
+  // --- Handler ---
+  const handleOptionSubmit = (val: string) => {
+    const selected = data.find((item) => getName(item) === val);
+    if (selected) {
+      onChange(selected);
     }
-    return "No banks match your search criteria. Please try again.";
-  }, [type]);
+    combobox.closeDropdown();
+  };
+
+  // --- Labels & Text ---
+  const config = useMemo(
+    () => ({
+      label: type === "banks" ? "Select Bank" : "Select Branch",
+      placeholder: type === "banks" ? "Choose your bank" : "Choose your branch",
+      searchPlaceholder:
+        type === "banks" ? "Search banks..." : "Search branches...",
+      empty: type === "branches" ? "No branches found." : "No banks found.",
+    }),
+    [type],
+  );
 
   return (
     <Combobox
@@ -171,42 +138,55 @@ export function SearchableSelect({
       withinPortal={false}
       onOptionSubmit={handleOptionSubmit}
       disabled={disabled}
-      dropdownPadding={6}
-      offset={0}
+      dropdownPadding={8}
     >
       <Combobox.Target>
         <InputBase
-          label={labelText}
+          label={config.label}
+          description={
+            type === "branches" ? "Required for some banks" : undefined
+          }
           component="button"
           type="button"
           pointer
-          rightSection={loading ? <Loader size={18} /> : <Combobox.Chevron />}
+          rightSection={
+            loading ? <Loader size={16} /> : <ChevronDown size={16} />
+          }
           onClick={() => combobox.toggleDropdown()}
           rightSectionPointerEvents="none"
+          size="sm"
+          classNames={{
+            input: "text-left font-normal",
+            label: "mb-1 font-normal text-slate-700",
+          }}
         >
-          {value || <Input.Placeholder>{placeholderText}</Input.Placeholder>}
+          {selectedItem ? (
+            getName(selectedItem)
+          ) : (
+            <Input.Placeholder>{config.placeholder}</Input.Placeholder>
+          )}
         </InputBase>
       </Combobox.Target>
 
-      <Combobox.Dropdown className="max-h-[500px] overflow-scroll">
+      <Combobox.Dropdown className="max-h-[300px] overflow-y-auto shadow-lg border-slate-100 rounded-lg">
         <Combobox.Search
-          className="placeholder:text-dark"
           value={search}
           onChange={(event) => setSearch(event.currentTarget.value)}
-          placeholder={searchPlaceholder}
+          placeholder={config.searchPlaceholder}
+          leftSection={<Search size={14} />}
         />
-        <Combobox.Options>
+        <Combobox.Options className="pt-2">
           {loading ? (
             <Combobox.Empty>
-              <div className="flex justify-center items-center w-full">
+              <div className="flex justify-center py-4">
                 <LoadSmall />
               </div>
             </Combobox.Empty>
           ) : options.length > 0 ? (
             options
           ) : (
-            <Combobox.Empty>
-              <span className="text-fluid-xxs font-light">{emptyMessage}</span>
+            <Combobox.Empty className="text-base text-slate-500 py-4 text-center">
+              {config.empty}
             </Combobox.Empty>
           )}
         </Combobox.Options>

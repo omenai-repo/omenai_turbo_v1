@@ -15,14 +15,14 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const { bankCode, accountNumber } = await request.json();
 
     if (!bankCode || !accountNumber)
       throw new BadRequestError(
-        "Invalid parameters - Bank code or Account number missing"
+        "Invalid parameters - Bank code or Account number missing",
       );
 
     const response = await fetch(
@@ -33,18 +33,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
         },
+        // TODO: Change to dynamic
         body: JSON.stringify({
-          account_number: "0690000032",
-          account_bank: "044",
+          account_number: String(accountNumber),
+          account_bank: String(bankCode),
         }),
-      }
+      },
     );
+
     const result = await response.json();
 
     if (!response.ok) {
       return NextResponse.json(
         { message: result.message },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -53,18 +55,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         message: "Bank account validated successfully",
         account_data: result.data,
       },
-      { status: response.status }
+      { status: response.status },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "wallet: account -> validate account",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

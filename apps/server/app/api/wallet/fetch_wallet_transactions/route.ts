@@ -64,7 +64,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const fetch_wallet_transactions = await mongoQuery.exec();
 
-      const total = await WalletTransaction.countDocuments({ wallet_id });
+      const total = await WalletTransaction.countDocuments(query);
 
       return NextResponse.json(
         {
