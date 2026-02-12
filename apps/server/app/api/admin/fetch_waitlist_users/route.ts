@@ -15,7 +15,7 @@ const config: CombinedConfig = {
 };
 
 const FetchWaitlistUserSchema = z.object({
-  entity: z.enum(["gallery, artist"]),
+  entity: z.enum(["gallery", "artist"]),
 });
 
 export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(

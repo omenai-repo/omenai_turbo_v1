@@ -9,7 +9,7 @@ import z from "zod";
 const SupportSchema = z.object({
   status: z.string().min(1),
   priority: z.string().min(1),
-  category: z.string().min(1),
+  category: z.string().optional(),
   search: z.string().optional(),
   page: z.number(),
   limit: z.number(),
