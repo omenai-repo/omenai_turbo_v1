@@ -2,20 +2,23 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
-
-import { createErrorRollbarReport } from "../util";
+import { createErrorRollbarReport, validateRequestBody } from "../util";
 import { fetchArtworksFromCache } from "../artworks/utils";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-
+import z from "zod";
+const SearchTermsSchema = z.object({
+  searchTerm: z.any(),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {
+    const { searchTerm } = await validateRequestBody(
+      request,
+      SearchTermsSchema,
+    );
     await connectMongoDB();
-
-    const { searchTerm } = await request.json();
-
     const regex = new RegExp(searchTerm, "i");
 
     const foundArtworks = await Artworkuploads.find({

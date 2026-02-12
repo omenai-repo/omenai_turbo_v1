@@ -3,20 +3,23 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const UpdateOrderTrackingSchema = z.object({
+  data: z.any(),
+  order_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { data, order_id } = await request.json();
+      const { data, order_id } = await validateRequestBody(
+        request,
+        UpdateOrderTrackingSchema,
+      );
 
       const updateOrders = await CreateOrder.findOneAndUpdate(
         { order_id },

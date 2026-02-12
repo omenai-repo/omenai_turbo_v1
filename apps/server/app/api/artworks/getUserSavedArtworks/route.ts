@@ -1,14 +1,17 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
 import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-
+import z from "zod";
+const GetUserSavedArtworksSchema = z.object({
+  id: z.string().min(1),
+  page: z.number(),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
@@ -17,7 +20,10 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
   try {
     await connectMongoDB();
 
-    const { id, page } = await request.json();
+    const { id, page } = await validateRequestBody(
+      request,
+      GetUserSavedArtworksSchema,
+    );
     const skip = (page - 1) * PAGE_SIZE;
 
     const galleries = await getCachedGalleryIds();

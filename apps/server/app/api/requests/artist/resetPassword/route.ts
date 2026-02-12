@@ -13,7 +13,11 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../../util";
-
+import z from "zod";
+const ResetPasswordSchema = z.object({
+  password: z.string(),
+  id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -23,7 +27,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const user = await VerificationCodes.findOne(
         { code: id },
-        "author"
+        "author",
       ).exec();
 
       if (!user)
@@ -33,14 +37,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const account = await AccountArtist.findOne(
         { artist_id: user.author },
-        "password"
+        "password",
       );
 
       const isPasswordMatch = bcrypt.compareSync(password, account.password);
 
       if (isPasswordMatch)
         throw new ConflictError(
-          "Your new password cannot be identical to a previously used password"
+          "Your new password cannot be identical to a previously used password",
         );
 
       const hash = await hashPassword(password);
@@ -59,19 +63,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json(
         { message: "Password updated! Please login with new credentials." },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artist: reset Password",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

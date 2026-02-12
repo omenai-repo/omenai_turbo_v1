@@ -1,7 +1,6 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import {
-  BadRequestError,
   NotFoundError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
@@ -13,7 +12,8 @@ import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -21,23 +21,29 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+export const AcceptArtistVerificationSchema = z.object({
+  artist_id: z.string().min(1),
+  recommendation: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   const client = await connectMongoDB();
   const session = await client.startSession();
 
   try {
-    const { artist_id, recommendation } = await request.json();
-    if (!artist_id) throw new BadRequestError("Artist ID is required");
+    const { artist_id, recommendation } = await validateRequestBody(
+      request,
+      AcceptArtistVerificationSchema,
+    );
 
     const artist = await AccountArtist.findOne(
       { artist_id },
-      "name email base_currency"
+      "name email base_currency",
     );
     const categorization = await ArtistCategorization.findOne(
       { artist_id },
-      "request history id"
+      "request history id",
     );
 
     if (!artist || !categorization) throw new NotFoundError("Artist not found");
@@ -76,7 +82,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       const categorizationResult = await ArtistCategorization.updateOne(
         { artist_id },
         { $set: categorizationUpdate },
-        { session }
+        { session },
       );
       if (!categorizationResult.acknowledged)
         throw new ServerError("Failed to update categorization");
@@ -89,7 +95,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             base_currency: artist.base_currency,
           },
         ],
-        { session }
+        { session },
       );
       wallet = wallet[0];
 
@@ -104,7 +110,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
             categorization: nextCategorization,
           },
         },
-        { session }
+        { session },
       );
       if (!artistResult.acknowledged)
         throw new ServerError("Failed to update artist account");
@@ -118,19 +124,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Artist verification accepted" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin:Accept artist verification",
       error,
-      error_response?.status
+      error_response?.status,
     );
     console.error("Onboarding error:", error);
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   } finally {
     session.endSession();

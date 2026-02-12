@@ -1,14 +1,11 @@
 import { ArtistCategorization } from "@omenai/shared-models/models/artist/ArtistCategorizationSchema";
 import { sendVerifyArtistMail } from "@omenai/shared-emails/src/models/verification/sendVerifyArtistMail";
-
 import {
   ArtistAlgorithmSchemaTypes,
   ArtistCategory,
   ArtistCategorizationAlgorithmResult,
-  ArtistCategorizationUpdateDataTypes,
 } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
-
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { calculateArtistRating } from "@omenai/shared-lib/algorithms/artistCategorization";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -20,7 +17,29 @@ import {
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../../util";
+import {
+  createErrorRollbarReport,
+  validateRequestBody,
+} from "../../../../util";
+import z from "zod";
+const CreateCategorizationSchema = z.object({
+  artist_id: z.string().min(1),
+  bio: z.string(),
+  documentation: z.object({
+    cv: z.string(),
+    socials: z.object(),
+  }),
+  answers: z.object({
+    graduate: z.enum(["yes", "no"]),
+    mfa: z.enum(["yes", "no"]),
+    solo: z.number(),
+    group: z.number(),
+    museum_collection: z.enum(["yes", "no"]),
+    biennale: z.enum(["venice", "none", "other recognized biennale events"]),
+    museum_exhibition: z.enum(["yes", "no"]),
+    art_fair: z.enum(["yes", "no"]),
+  }),
+});
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -29,11 +48,10 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     try {
       session.startTransaction();
 
-      const data: ArtistCategorizationUpdateDataTypes = await request.json();
-
-      if (!data.answers || !data.artist_id || !data.bio || !data.documentation)
-        throw new BadRequestError("Invalid data parameters");
-
+      const data = await validateRequestBody(
+        request,
+        CreateCategorizationSchema,
+      );
       const artist = await AccountArtist.findOne({ artist_id: data.artist_id });
 
       if (!artist) throw new BadRequestError("Artist not found. Invalid ID");
@@ -45,7 +63,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (is_algorithmCalculated)
         throw new ForbiddenError(
-          "Duplicate request detected. Cannot fulfill request."
+          "Duplicate request detected. Cannot fulfill request.",
         );
 
       // Calculate new algorithm
@@ -54,7 +72,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (algorithm_result.status !== "success")
         throw new ServerError(
-          "Something went wrong while processing data, please contact support"
+          "Something went wrong while processing data, please contact support",
         );
 
       // Create algorithm save structure
@@ -86,7 +104,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             bio: data.bio,
             isOnboardingCompleted: true,
           },
-        }
+        },
       ).session(session);
 
       await session.commitTransaction();
@@ -98,7 +116,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json(
         { message: "Categorization Algorithm ran successfully" },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       await session.abortTransaction();
@@ -106,14 +124,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       createErrorRollbarReport(
         "auth: artist onboarding create categorization",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response!.message },
-        { status: error_response!.status }
+        { status: error_response!.status },
       );
     } finally {
       await session.endSession();
     }
-  }
+  },
 );

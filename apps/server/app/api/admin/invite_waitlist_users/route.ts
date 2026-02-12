@@ -2,14 +2,14 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { CombinedConfig, WaitListTypes } from "@omenai/shared-types";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import InvitationEmail from "@omenai/shared-emails/src/views/admin/InvitationEmail";
-import { inviteWaitlistUserValidator } from "./InviteWaitlistUserValidator";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -23,14 +23,24 @@ type WaitlistUserPayload = {
   discount: boolean;
 };
 
+const InviteWaitlistUserSchema = z.object({
+  waitlistUsers: z.array(
+    z.object({
+      waitlistId: z.string().min(1),
+      discount: z.boolean(),
+    }),
+  ),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { waitlistUsers: selectedUsers } = await request.json();
-    // validate payload
-    inviteWaitlistUserValidator(selectedUsers);
+    const { waitlistUsers: selectedUsers } = await validateRequestBody(
+      request,
+      InviteWaitlistUserSchema,
+    );
 
     const waitlistIds = selectedUsers.map(
       (user: WaitlistUserPayload) => user.waitlistId,

@@ -7,19 +7,41 @@ import {
   ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { CombinedConfig, WithdrawalAccount } from "@omenai/shared-types";
+import { CombinedConfig } from "@omenai/shared-types";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  owner_id: z.string(),
+  base_currency: z.string(),
+  account_details: z.object({
+    account_number: z.string(),
+    bank_name: z.string(),
+    account_name: z.string(),
+    bank_id: z.string(),
+    bank_code: z.string(),
+    branch: z
+      .object({
+        id: z.string(),
+        branch_code: z.string(),
+        branch_name: z.string(),
+        swift_code: z.string(),
+        bic: z.string(),
+        bank_id: z.string(),
+      })
+      .nullable(),
+    bank_country: z.string(),
+  }),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isWalletWithdrawalEnabled =
@@ -28,15 +50,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServiceUnavailableError("Wallet is temporarily disabled");
     }
     await connectMongoDB();
-    const {
-      owner_id,
-      account_details,
-      base_currency,
-    }: {
-      owner_id: string;
-      account_details: Omit<WithdrawalAccount, "beneficiary_id">;
-      base_currency: string;
-    } = await request.json();
+    const { owner_id, account_details, base_currency } =
+      await validateRequestBody(request, Schema);
 
     const payload = {
       account_bank: account_details.bank_code,
@@ -50,7 +65,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!wallet_exists)
       throw new NotFoundError(
-        "Wallet doesn't exists for this user, please escalate to IT support"
+        "Wallet doesn't exists for this user, please escalate to IT support",
       );
 
     // Add to flw bneficiary
@@ -65,7 +80,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const response = await fetch(
       "https://api.flutterwave.com/v3/beneficiaries",
-      options
+      options,
     );
 
     const result = await response.json();
@@ -73,7 +88,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!response.ok)
       return NextResponse.json(
         { message: result.message, data: result },
-        { status: 400 }
+        { status: 400 },
       );
 
     const updated_account_data = {
@@ -85,30 +100,30 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         owner_id,
       },
-      { $set: { primary_withdrawal_account: updated_account_data } }
+      { $set: { primary_withdrawal_account: updated_account_data } },
     );
 
     if (add_primary_account.modifiedCount === 0)
       throw new ServerError(
-        "An error was encountered. Please try again or contact IT support"
+        "An error was encountered. Please try again or contact IT support",
       );
 
     return NextResponse.json(
       {
         message: "Primary account added successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "wallet: add primary account",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -9,19 +9,23 @@ import {
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  artist_id: z.string(),
+  otp: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
+    const { artist_id, otp } = await validateRequestBody(request, Schema);
     await connectMongoDB();
-    const { artist_id, otp } = await request.json();
 
     const isOtpActive = await VerificationCodes.findOne({
       author: artist_id,
@@ -42,18 +46,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "OTP code validated successfully",
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "wallet: pin recovery -> verify otp code",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

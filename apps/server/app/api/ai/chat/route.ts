@@ -3,6 +3,8 @@ import { streamText } from "ai";
 import { getOmenaiContext } from "../knowledgeBase";
 import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@omenai/upstash-config";
+import z from "zod";
+import { validateRequestBody } from "../../util";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -12,6 +14,11 @@ const ratelimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "86400 s"),
   analytics: true,
   prefix: "@upstash/ratelimit",
+});
+
+const AiSchema = z.object({
+  messages: z.any(),
+  pageContext: z.string(),
 });
 
 export async function POST(req: Request) {
@@ -35,7 +42,8 @@ export async function POST(req: Request) {
   }
 
   // 2. Extract Data
-  const { messages, pageContext } = await req.json();
+  // const { messages, pageContext } = await req.json();
+  const { messages, pageContext } = await validateRequestBody(req, AiSchema);
 
   // 3. Context Injection
   const systemContext = await getOmenaiContext(pageContext || "general");

@@ -10,12 +10,17 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
+const UpdateArtworkPrice = z.object({
+  art_id: z.string().min(1),
+  filter: z.any(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
@@ -25,7 +30,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const data: {
       filter: ArtworkPriceFilterData;
       art_id: string;
-    } = await request.json();
+    } = await validateRequestBody(request, UpdateArtworkPrice);
 
     if (data === null || data === undefined)
       throw new ConflictError("Invalid input data");

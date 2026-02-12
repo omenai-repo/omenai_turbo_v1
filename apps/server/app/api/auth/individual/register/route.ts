@@ -6,7 +6,6 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse, NextResponse as res } from "next/server";
 import {
   ConflictError,
-  ForbiddenError,
   ServerError,
   ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -17,7 +16,27 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
-
+import z from "zod";
+const RegisterSchema = z
+  .object({
+    name: z.string(),
+    email: z.email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+    device_push_token: z.string().optional(),
+    phone: z.string(),
+    address: z.object({
+      address_line: z.string(),
+      city: z.string(),
+      country: z.string(),
+      countryCode: z.string(),
+      state: z.string(),
+      stateCode: z.string(),
+      zip: z.string(),
+    }),
+    preferences: z.array(z.string()),
+  })
+  .refine((data) => data.password === data.confirmPassword);
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -32,7 +51,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       await connectMongoDB();
 
-      const data = await request.json();
+      const data = await validateRequestBody(request, RegisterSchema);
 
       const isAccountRegistered = await AccountIndividual.findOne(
         { email: data.email.toLowerCase() },

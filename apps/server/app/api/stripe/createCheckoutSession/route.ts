@@ -1,4 +1,3 @@
-import { plan_details } from "./../../../../../dashboard/app/gallery/billing/plans/plan_details";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
@@ -17,15 +16,23 @@ import {
   SubscriptionModelSchemaTypes,
 } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
-
+const createCheckoutSessionSchema = z.object({
+  item: z.string(),
+  amount: z.number(),
+  seller_id: z.string(),
+  meta: z.any(),
+  success_url: z.string(),
+  cancel_url: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isStripePaymentEnabled =
@@ -36,7 +43,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     await connectMongoDB();
 
     const { item, amount, seller_id, meta, success_url, cancel_url } =
-      await request.json();
+      await validateRequestBody(request, createCheckoutSessionSchema);
 
     // Fetch gallery and subscription concurrently
     const [gallery, active_subscription] = await Promise.all([
@@ -57,7 +64,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       active_subscription.status !== "active"
     ) {
       throw new ForbiddenError(
-        "Cannot proceed with this purchase at the moment. Please try again later or contact support if this persists"
+        "Cannot proceed with this purchase at the moment. Please try again later or contact support if this persists",
       );
     }
 
@@ -74,7 +81,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const baseAmountCents = Math.round(amount * 100);
     const commissionCents = Math.round(
       (meta.unit_price * commissionRate + meta.shipping_cost + meta.tax_fees) *
-        100
+        100,
     );
 
     const expiresAt = Math.floor(Date.now() / 1000) + 30 * 60;
@@ -116,7 +123,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
       if (!session)
         throw new ServerError(
-          "Cannot proceed with this purchase at the moment. Please try again or contact support"
+          "Cannot proceed with this purchase at the moment. Please try again or contact support",
         );
 
       return NextResponse.json({
@@ -128,11 +135,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       createErrorRollbarReport(
         "stripe: check checkout session",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
   } catch (error) {
@@ -140,11 +147,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "stripe: check checkout session",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -18,8 +18,34 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
+import z from "zod";
+
+const RegisterSchema = z
+  .object({
+    name: z.string(),
+    email: z.email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+    referrerKey: z.string().optional(),
+    inviteCode: z.string().optional(),
+    device_push_token: z.string().optional(),
+    phone: z.string(),
+    address: z.object({
+      address_line: z.string(),
+      city: z.string(),
+      country: z.string(),
+      countryCode: z.string(),
+      state: z.string(),
+      stateCode: z.string(),
+      zip: z.string(),
+    }),
+    logo: z.file().nullable(),
+    admin: z.string(),
+    description: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword);
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
@@ -29,7 +55,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (!isGalleryOnboardingEnabled) {
         throw new ServiceUnavailableError(
-          "Gallery onboarding is currently disabled"
+          "Gallery onboarding is currently disabled",
         );
       }
 
@@ -38,14 +64,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       await connectMongoDB();
 
-      const data = await request.json();
+      const data = await validateRequestBody(request, RegisterSchema);
 
       const { referrerKey, inviteCode } = data;
 
       if (isWaitlistFeatureActive) {
         if (!referrerKey || !inviteCode)
           throw new BadRequestError(
-            "Invalid request parameters - Please try again or contact support"
+            "Invalid request parameters - Please try again or contact support",
           );
 
         // Check referrerKey and Invite code validity
@@ -60,7 +86,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
         if (!isWaitlistUserInvitedAndValidated)
           throw new ForbiddenError(
-            "Sign-up unavailable. Please join the waitlist or wait for an invite."
+            "Sign-up unavailable. Please join the waitlist or wait for an invite.",
           );
       }
 
@@ -77,7 +103,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (isAccountRejected)
         throw new ConflictError(
-          "Unfortunately, you cannot create an account with us at this time. Please contact support."
+          "Unfortunately, you cannot create an account with us at this time. Please contact support.",
         );
 
       const parsedData = await parseRegisterData(data);
@@ -124,7 +150,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           isInvited: true,
           entity: "gallery",
         },
-        { $set: { inviteAccepted: true, entityId: gallery_id } }
+        { $set: { inviteAccepted: true, entityId: gallery_id } },
       );
       await sendGalleryMail({
         name: name,
@@ -137,19 +163,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           message: "Account successfully registered",
           data: gallery_id,
         },
-        { status: 201 }
+        { status: 201 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: gallery register",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

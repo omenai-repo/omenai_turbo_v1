@@ -5,11 +5,11 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { sendWaitlistInviteValidator } from "./sendWaitlistInviteValidator";
 import WaitlistLead from "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel";
 import SendWaitListInvites from "@omenai/shared-emails/src/views/admin/SendWaitListInvites";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -17,39 +17,42 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 const resend = new Resend(process.env.RESEND_API_KEY);
-type Payload = {
-  name: string;
-  email: string;
-  entity: string;
-};
+const SendWaitlistInvitesSchema = z.object({
+  selectedUsers: z.array(
+    z.object({
+      name: z.string().min(1),
+      email: z.email(),
+      entity: z.enum(["gallery", "artist"]),
+    }),
+  ),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { selectedUsers } = (await request.json()) as {
-      selectedUsers: Payload[];
-    };
-    sendWaitlistInviteValidator(selectedUsers);
-
+    const { selectedUsers } = await validateRequestBody(
+      request,
+      SendWaitlistInvitesSchema,
+    );
     const userEmails = selectedUsers.map((user) => user.email);
     const matchedUsers = (await WaitlistLead.find({
       email: { $in: userEmails },
     }).lean()) as unknown as IWaitlistLead[];
 
-     const inviteUserEmailPayload = await Promise.all(
-       matchedUsers.map(async (user) => {
-         const html = await render(
-           SendWaitListInvites(user.name, user.email, user.entity),
-         );
-         return {
-           from: "Onboarding <onboarding@omenai.app>",
-           to: [user.email],
-           subject: "Join Omenai: An Invitation for Your Gallery",
-           html,
-         };
-       }),
-     );
+    const inviteUserEmailPayload = await Promise.all(
+      matchedUsers.map(async (user) => {
+        const html = await render(
+          SendWaitListInvites(user.name, user.email, user.entity),
+        );
+        return {
+          from: "Onboarding <onboarding@omenai.app>",
+          to: [user.email],
+          subject: "Join Omenai: An Invitation for Your Gallery",
+          html,
+        };
+      }),
+    );
     await resend.batch.send(inviteUserEmailPayload);
 
     return NextResponse.json(

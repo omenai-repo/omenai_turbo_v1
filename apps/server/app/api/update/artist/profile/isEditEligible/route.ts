@@ -20,7 +20,11 @@ import {
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../../util";
+import {
+  createErrorRollbarReport,
+  validateRequestBody,
+} from "../../../../util";
+import z from "zod";
 
 type Result = {
   isOneYearPassed: boolean;
@@ -43,12 +47,14 @@ const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  artist_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
-    const { artist_id } = await request.json();
+    const { artist_id } = await validateRequestBody(request, Schema);
 
     const find_artist_categorization = await ArtistCategorization.findOne(
       { artist_id },

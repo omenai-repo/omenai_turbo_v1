@@ -9,22 +9,30 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
+const UpdatePasswordSchema = z.object({
+  id: z.string(),
+  password: z.string(),
+  code: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { id, password, code } = await request.json();
+    const { id, password, code } = await validateRequestBody(
+      request,
+      UpdatePasswordSchema,
+    );
 
     const account = await AccountArtist.findOne(
       {

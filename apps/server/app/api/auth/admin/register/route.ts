@@ -6,25 +6,31 @@ import {
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { parseRegisterData } from "@omenai/shared-lib/auth/parseRegisterData";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { AdminAccessRoleTypes } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+
+const RegisterSchema = z.object({
+  email: z.email(),
+  access_role: z.enum(["Admin", "Owner", "Editor", "Viewer"]),
+});
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const data: { email: string; access_role: AdminAccessRoleTypes } =
-        await request.json();
+      const { access_role, email } = await validateRequestBody(
+        request,
+        RegisterSchema,
+      );
 
       const isAccountRegistered = await AccountAdmin.findOne(
-        { email: data.email },
-        "email"
+        { email },
+        "email",
       ).exec();
 
       if (isAccountRegistered)
@@ -60,19 +66,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
           message: "Administrator successfully registered",
           data: admin_id,
         },
-        { status: 201 }
+        { status: 201 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: admin register",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

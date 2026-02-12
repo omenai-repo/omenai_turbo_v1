@@ -1,10 +1,7 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { NextResponse } from "next/server";
-import {
-  BadRequestError,
-  ServerError,
-} from "../../../../custom/errors/dictionary/errorDictionary";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { sendOrderDeclinedMail } from "@omenai/shared-emails/src/models/orders/orderDeclinedMail";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -21,22 +18,23 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import mongoose from "mongoose";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist", "gallery"],
 };
 
-interface DeclineOrderRequest {
-  data: {
-    status: string;
-    reason: string;
-  };
-  order_id: string;
-  seller_designation: "artist" | "gallery";
-  art_id: string;
-}
+const DeclineOrderRequestSchema = z.object({
+  data: z.object({
+    status: z.string(),
+    reason: z.string(),
+  }),
+  order_id: z.string(),
+  seller_designation: z.enum(["artist", "gallery"]),
+  art_id: z.string(),
+});
 
 type ExclusivityStatus = Pick<
   ExclusivityUpholdStatus,
@@ -59,16 +57,16 @@ function isCurrentDateGreaterOrEqual(targetDate: Date): boolean {
  */
 async function handleExclusivityBreach(
   art_id: string,
-  session: mongoose.ClientSession
+  session: mongoose.ClientSession,
 ): Promise<void> {
   const artwork = await Artworkuploads.findOne(
     { art_id },
-    "exclusivity_status author_id"
+    "exclusivity_status author_id",
   ).session(session);
 
   if (!artwork) {
     throw new ServerError(
-      "Artwork not found. Please try again or contact support"
+      "Artwork not found. Please try again or contact support",
     );
   }
 
@@ -91,7 +89,7 @@ async function handleExclusivityBreach(
           },
           $inc: { "exclusivity_uphold_status.incident_count": 1 },
         },
-        { session }
+        { session },
       ),
       // Optionally change exclusivity status for artwork if necessary
       Artworkuploads.updateOne(
@@ -101,14 +99,14 @@ async function handleExclusivityBreach(
             availability: false,
           },
         },
-        { session }
+        { session },
       ),
     ]);
 
     // Verify both updates succeeded
     if (artistUpdate.modifiedCount === 0 || artworkUpdate.modifiedCount === 0) {
       throw new ServerError(
-        "Failed to update exclusivity breach status. Please try again or contact support"
+        "Failed to update exclusivity breach status. Please try again or contact support",
       );
     }
   }
@@ -120,12 +118,12 @@ async function handleExclusivityBreach(
  */
 async function sendBuyerNotification(
   buyer_id: string,
-  order_id: string
+  order_id: string,
 ): Promise<void> {
   try {
     const buyer_device = await DeviceManagement.findOne(
       { auth_id: buyer_id },
-      "device_push_token"
+      "device_push_token",
     );
 
     if (buyer_device?.device_push_token) {
@@ -147,7 +145,7 @@ async function sendBuyerNotification(
       await createWorkflow(
         "/api/workflows/notification/pushNotification",
         `notification_workflow_buyer_${order_id}_${generateDigit(2)}`,
-        JSON.stringify(notification)
+        JSON.stringify(notification),
       );
     }
   } catch (error) {
@@ -156,7 +154,7 @@ async function sendBuyerNotification(
     createErrorRollbarReport(
       "order: failed to send buyer notification",
       error,
-      500
+      500,
     );
   }
 }
@@ -169,7 +167,7 @@ async function sendBuyerEmail(
   name: string,
   email: string,
   reason: string,
-  artwork_data: any
+  artwork_data: any,
 ): Promise<void> {
   try {
     await sendOrderDeclinedMail({
@@ -184,13 +182,13 @@ async function sendBuyerEmail(
     createErrorRollbarReport(
       "order: failed to send order declined email",
       error,
-      500
+      500,
     );
   }
 }
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   const session = await mongoose.startSession();
 
@@ -198,18 +196,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     await connectMongoDB();
 
     // Parse and validate request body
-    const body: DeclineOrderRequest = await request.json();
-    const { data, order_id, seller_designation, art_id } = body;
-
-    if (
-      !data.status ||
-      !data.reason ||
-      !order_id ||
-      !seller_designation ||
-      !art_id
-    ) {
-      throw new BadRequestError("Missing required fields for operation");
-    }
+    const { art_id, data, order_id, seller_designation } =
+      await validateRequestBody(request, DeclineOrderRequestSchema);
 
     // Start transaction for critical database operations
     session.startTransaction();
@@ -229,7 +217,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           availability: false,
         },
       },
-      { new: true, session }
+      { new: true, session },
     );
 
     if (!declinedOrder) {
@@ -244,13 +232,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const notificationPromises = [
       sendBuyerNotification(
         declinedOrder.buyer_details.id,
-        declinedOrder.order_id
+        declinedOrder.order_id,
       ),
       sendBuyerEmail(
         declinedOrder.buyer_details.name,
         declinedOrder.buyer_details.email,
         declinedOrder.order_accepted.reason,
-        declinedOrder.artwork_data
+        declinedOrder.artwork_data,
       ),
     ];
 
@@ -267,7 +255,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           status: declinedOrder.status,
         },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     // Rollback transaction on any error
@@ -279,11 +267,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "order: decline order request",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   } finally {
     // Always end the session

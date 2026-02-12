@@ -1,9 +1,6 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
-import {
-  BadRequestError,
-  ServerError,
-} from "../../../../custom/errors/dictionary/errorDictionary";
+import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -16,7 +13,7 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
       await connectMongoDB();
       const artists = await AccountArtist.find(
         { isOnboardingCompleted: true },
-        "name logo email artist_verified artist_id"
+        "name logo email artist_verified artist_id",
       );
 
       if (!artists)
@@ -24,19 +21,19 @@ export const GET = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json(
         { message: "Data retrieved", data: artists },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "admin: get artist verif status",
         error,
-        error_response?.status
+        error_response?.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

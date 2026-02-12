@@ -1,12 +1,11 @@
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { NextResponse } from "next/server";
 import { hashPayloadToken } from "@omenai/shared-lib/encryption/encrypt_token";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import {
-  BadRequestError,
   ForbiddenError,
   NotFoundError,
   ServerError,
@@ -14,22 +13,9 @@ import {
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
+import z from "zod";
 
 /* ---------------- helpers ---------------- */
-
-function validatePayload(body: any) {
-  const { email, inviteCode, entity } = body ?? {};
-
-  if (!email || !inviteCode || !entity) {
-    throw new BadRequestError("Invalid parameters provided");
-  }
-
-  if (!["artist", "gallery"].includes(entity)) {
-    throw new BadRequestError("Invalid entity type");
-  }
-
-  return { email, inviteCode, entity };
-}
 
 async function ensureUserNotRegistered(email: string, entity: string) {
   const Model = entity === "artist" ? AccountArtist : AccountGallery;
@@ -37,21 +23,21 @@ async function ensureUserNotRegistered(email: string, entity: string) {
 
   if (exists) {
     throw new ForbiddenError(
-        "You're already part of the Omenai Experience, please login to continue your journey"
+      "You're already part of the Omenai Experience, please login to continue your journey",
     );
   }
 }
 
 async function ensureWaitlistUserExists(
-    email: string,
-    inviteCode: string,
-    entity: string
+  email: string,
+  inviteCode: string,
+  entity: string,
 ) {
   const exists = await Waitlist.exists({ email, inviteCode, entity });
 
   if (!exists) {
     throw new NotFoundError(
-        "User does not exist, please sign up to our waitlist"
+      "User does not exist, please sign up to our waitlist",
     );
   }
 }
@@ -65,7 +51,7 @@ function generateReferrerKey(payload: {
 
   if (!token) {
     throw new ServerError(
-        "An error occured while performing this action, please try again or contact support"
+      "An error occured while performing this action, please try again or contact support",
     );
   }
 
@@ -73,33 +59,41 @@ function generateReferrerKey(payload: {
 }
 
 async function saveReferrerKey(
-    email: string,
-    inviteCode: string,
-    entity: string,
-    token: string
+  email: string,
+  inviteCode: string,
+  entity: string,
+  token: string,
 ) {
   const result = await Waitlist.updateOne(
-      { email, inviteCode, entity },
-      { $set: { referrerKey: token } }
+    { email, inviteCode, entity },
+    { $set: { referrerKey: token } },
   );
 
   if (result.modifiedCount === 0) {
     throw new ServerError(
-        "An error occured while performing this action, please try again or contact support"
+      "An error occured while performing this action, please try again or contact support",
     );
   }
 }
 
 /* ---------------- route ---------------- */
 
+const CreateInviteTokenSchema = z.object({
+  email: z.email(),
+  inviteCode: z.string(),
+  entity: z.string(),
+});
+
 export const POST = withRateLimit(strictRateLimit)(async function POST(
-    request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const body = await request.json();
-    const { email, inviteCode, entity } = validatePayload(body);
+    const { email, entity, inviteCode } = await validateRequestBody(
+      request,
+      CreateInviteTokenSchema,
+    );
 
     await ensureUserNotRegistered(email, entity);
     await ensureWaitlistUserExists(email, inviteCode, entity);
@@ -108,21 +102,21 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
     await saveReferrerKey(email, inviteCode, entity, referrerKey);
 
     return NextResponse.json(
-        { message: "Invite referrer key created", referrerKey },
-        { status: 201 }
+      { message: "Invite referrer key created", referrerKey },
+      { status: 201 },
     );
   } catch (error: any) {
     const errorResponse = handleErrorEdgeCases(error);
 
     createErrorRollbarReport(
-        "auth: Waitlist referrerKey error",
-        error,
-        errorResponse.status
+      "auth: Waitlist referrerKey error",
+      error,
+      errorResponse.status,
     );
 
     return NextResponse.json(
-        { message: errorResponse.message },
-        { status: errorResponse.status }
+      { message: errorResponse.message },
+      { status: errorResponse.status },
     );
   }
 });

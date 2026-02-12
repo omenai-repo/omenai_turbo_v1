@@ -16,14 +16,19 @@ import {
 } from "@omenai/shared-lib/auth/session";
 import { cookies } from "next/headers";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-
+import z from "zod";
+const LoginSchema = z.object({
+  email: z.email(),
+  password: z.string().min(1),
+  device_push_token: z.string().optional(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
-      const data = await request.json();
+      const data = await validateRequestBody(request, LoginSchema);
       const { email, password, device_push_token } = data;
 
       await connectMongoDB();

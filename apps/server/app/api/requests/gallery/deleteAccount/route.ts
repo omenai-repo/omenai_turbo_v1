@@ -21,28 +21,35 @@ import {
 } from "../../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
-
+const DeleteAccountSchema = z.object({
+  id: z.string(),
+  reason: z.string(),
+});
 export const DELETE = withRateLimitHighlightAndCsrf(config)(
   async function DELETE(request: Request) {
     try {
       await connectMongoDB();
-      const { id, reason }: DeletionRequestBody = await request.json();
+      const { id, reason } = await validateRequestBody(
+        request,
+        DeleteAccountSchema,
+      );
 
       if (!id || !reason) {
         throw new BadRequestError(
-          "Missing parameters, No ID or Reason provided"
+          "Missing parameters, No ID or Reason provided",
         );
       }
 
       const galleryAccount = await AccountGallery.findOne(
         { gallery_id: id },
-        "stripe_connected_account_id email"
+        "stripe_connected_account_id email",
       );
 
       if (!galleryAccount) {
@@ -56,7 +63,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
 
       if (checkActiveDeletionRequest) {
         throw new ForbiddenError(
-          "An active deletion request already exists for this account."
+          "An active deletion request already exists for this account.",
         );
       }
       const order = await CreateOrder.findOne(
@@ -65,7 +72,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
           status: "processing",
           "order_accepted.status": "accepted",
         },
-        "payment_information"
+        "payment_information",
       );
 
       const subscription = await Subscriptions.findOne(
@@ -73,12 +80,12 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
           "customer.gallery_id": id,
           status: { $in: ["active", "expired"] },
         },
-        "stripe_customer_id"
+        "stripe_customer_id",
       );
 
       //TODO: Re-work this
       const hasBalance = await hasActiveStripeBalance(
-        galleryAccount.stripe_connected_account_id
+        galleryAccount.stripe_connected_account_id,
       );
 
       const commitments: DeletionCommitmentResult = generateDeletionCommitments(
@@ -86,7 +93,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
           hasActiveOrder: !!order,
           hasActiveSubscription: !!subscription,
           // hasUnpaidStripeBalance: hasBalance.isBalance,
-        }
+        },
       );
 
       if (!commitments.can_delete) {
@@ -97,7 +104,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
             commitments,
             balance: hasBalance.balance.available,
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
 
@@ -105,7 +112,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
 
       if (!hashTargetEmail)
         throw new ServerError(
-          "Unable to create an Account deletion request at this time, please contact support"
+          "Unable to create an Account deletion request at this time, please contact support",
         );
 
       const gracePeriodEnd = await createDeletionRequestAndRespond({
@@ -121,19 +128,19 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
           can_delete: true,
           gracePeriodEnd,
         },
-        { status: 202 }
+        { status: 202 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "gallery: delete account",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

@@ -1,26 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import {
-  BadRequestError,
-  ServerError,
-} from "../../../../../custom/errors/dictionary/errorDictionary";
-
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
+import z from "zod";
+const Schema = z.object({
+  bankCode: z.string(),
+});
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-    const bankCode = searchParams.get("bankCode");
+    const bankCodeParams = searchParams.get("bankCode");
     try {
-      if (!bankCode)
-        throw new BadRequestError("Invalid parameters - Bank code missing");
-
+      const { bankCode } = validateGetRouteParams(Schema, {
+        bankCode: bankCodeParams,
+      });
       const response = await fetch(
         `https://api.flutterwave.com/v3/banks/${bankCode}/branches`,
         {

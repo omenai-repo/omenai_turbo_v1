@@ -1,13 +1,9 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { NextResponse } from "next/server";
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
-  ForbiddenError,
   NotFoundError,
   ServerError,
   ServiceUnavailableError,
@@ -16,28 +12,37 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { CombinedConfig } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
+const CreateStripeToken = z.object({
+  amount: z.number(),
+  gallery_id: z.string(),
+  meta: z.any(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isSubscriptionEnabled = (await fetchConfigCatValue(
       "subscription_creation_enabled",
-      "high"
+      "high",
     )) as boolean;
 
     if (!isSubscriptionEnabled)
       throw new ServiceUnavailableError("Subscriptions are currently disabled");
     await connectMongoDB();
-    const { amount, gallery_id, meta } = await request.json();
+    const { amount, gallery_id, meta } = await validateRequestBody(
+      request,
+      CreateStripeToken,
+    );
     const subscription_data = await Subscriptions.findOne(
       { "customer.gallery_id": gallery_id },
-      "paymentMethod stripe_customer_id customer"
+      "paymentMethod stripe_customer_id customer",
     );
     if (!subscription_data)
       throw new NotFoundError("No subscription record found for this user");
@@ -66,11 +71,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "subscription: create stripe token charge",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

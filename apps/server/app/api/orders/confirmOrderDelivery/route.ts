@@ -9,20 +9,28 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendBuyerShipmentSuccessEmail";
 import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
+const ConfirmOrderDeliverySchema = z.object({
+  confirm_delivery: z.string(),
+  order_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { confirm_delivery, order_id } = await request.json();
+    const { confirm_delivery, order_id } = await validateRequestBody(
+      request,
+      ConfirmOrderDeliverySchema,
+    );
 
     const updateOrders = await CreateOrder.updateOne(
       { order_id },

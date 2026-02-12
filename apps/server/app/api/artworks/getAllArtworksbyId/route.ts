@@ -5,17 +5,23 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { fetchArtworksFromCache } from "../utils";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const GetAllArtworkByIdSchema = z.object({
+  author_id: z.string().min(1),
+});
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { id } = await request.json();
+      const { author_id } = await validateRequestBody(
+        request,
+        GetAllArtworkByIdSchema,
+      );
 
       const allArtworksIds = await Artworkuploads.find({
-        author_id: id,
+        author_id,
       })
         .sort({ createdAt: -1 })
         .select("art_id")
@@ -32,19 +38,19 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           data: allArtworks,
           count: allArtworks.length,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get All Artwork by id",
         error,
-        error_response?.status
+        error_response?.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

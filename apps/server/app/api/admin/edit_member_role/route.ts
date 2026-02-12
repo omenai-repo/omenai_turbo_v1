@@ -5,38 +5,45 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { sendRoleChangeMail } from "@omenai/shared-emails/src/models/admin/sendRoleChangeMail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const EditMemberRole = z.object({
+  admin_id: z.string().min(1),
+  role: z.string().min(1),
+});
+
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
-  request: Request
+  request: Request,
 ) {
   try {
-    const { admin_id, role } = await request.json();
-    if (!admin_id) throw new BadRequestError('"Admin ID is required"');
+    const { admin_id, role } = await validateRequestBody(
+      request,
+      EditMemberRole,
+    );
 
     await connectMongoDB();
 
     const admin = await AccountAdmin.findOne(
       { admin_id },
-      "access_role name email"
+      "access_role name email",
     );
 
     const role_update = await AccountAdmin.updateOne(
       { admin_id },
-      { $set: { access_role: role } }
+      { $set: { access_role: role } },
     );
 
     if (role_update.modifiedCount === 0) {
       return NextResponse.json(
         { message: "No changes made or admin not found" },
-        { status: 500 }
+        { status: 500 },
       );
     }
     // TODO: Send email notification to user informing them their member role has changed
@@ -54,11 +61,11 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
     createErrorRollbarReport(
       "admin: edit member role",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

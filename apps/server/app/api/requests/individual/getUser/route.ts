@@ -1,21 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import {
-  BadRequestError,
-  NotFoundError,
-} from "../../../../../custom/errors/dictionary/errorDictionary";
+import { NotFoundError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { IndividualSchemaTypes } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
-
+import z from "zod";
+const GetUserSchema = z.object({
+  user_id: z.string(),
+});
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const user_id = searchParams.get("id");
+  const user_idParams = searchParams.get("id");
 
   try {
-    if (!user_id || typeof user_id !== "string")
-      throw new BadRequestError("Invalid ID parameter provided");
+    const { user_id } = validateGetRouteParams(GetUserSchema, {
+      user_id: user_idParams,
+    });
     await connectMongoDB();
 
     const user = await AccountIndividual.findOne<IndividualSchemaTypes>({
@@ -39,18 +43,18 @@ export async function GET(request: NextRequest) {
         message: "Profile retrieved successfully",
         user: payload,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "user: fetch profile",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 }

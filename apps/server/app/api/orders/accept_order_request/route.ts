@@ -27,8 +27,8 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { createErrorRollbarReport } from "../../util";
-import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const client = new Taxjar({
   apiKey: process.env.TAXJAR_API_KEY!,
@@ -80,18 +80,29 @@ const config: CombinedConfig = {
   allowedRoles: ["artist", "gallery"],
 };
 
+const AcceptOrderRequestSchema = z.object({
+  order_id: z.string(),
+  specialInstructions: z.string().optional(),
+  dimensions: z.object({
+    length: z.number(),
+    width: z.number(),
+    height: z.number(),
+    weight: z.number(),
+  }),
+  exhibition_status: z.object({
+    is_on_exhibition: z.boolean(),
+    exhibition_end_date: z.string().or(z.date()),
+    status: z.enum(["pending", "scheduled"]),
+  }),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   await connectMongoDB();
 
   try {
-    const data: {
-      order_id: string;
-      dimensions: ShipmentDimensions;
-      exhibition_status: OrderArtworkExhibitionStatus | null;
-      specialInstructions?: string;
-    } = await request.json();
+    const data = await validateRequestBody(request, AcceptOrderRequestSchema);
 
     validatePayload(data);
 

@@ -12,19 +12,22 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
-
+const RequestPasswordSchema = z.object({
+  id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { id } = await request.json();
+    const { id } = await validateRequestBody(request, RequestPasswordSchema);
 
     const account = await AccountArtist.findOne({
       artist_id: id,
@@ -39,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (check_code_existence)
       throw new ConflictError(
-        "A token has already been sent to you, check your email or try later"
+        "A token has already been sent to you, check your email or try later",
       );
 
     const create_code = await VerificationCodes.create({
@@ -49,7 +52,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!create_code)
       throw new Error(
-        "Something went wrong with this request, Please contact support."
+        "Something went wrong with this request, Please contact support.",
       );
 
     await sendPasswordConfirmationCodeMail({
@@ -60,18 +63,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Confirmation code sent to email address" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artist: request password confirmation",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -20,6 +20,7 @@ export async function GET() {
     artwork: "Comfort zone",
     artistName: "Nana Bruce",
     price: formatPrice("4414"),
+  });
   return NextResponse.json({
     message: "Successful",
   });

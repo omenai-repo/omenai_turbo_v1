@@ -6,19 +6,29 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...lenientRateLimit,
   allowedRoles: ["user"],
 };
+const Schema = z.object({
+  artwork: z.string(),
+  user_id: z.string(),
+  art_id: z.string(),
+  artist: z.string(),
+  url: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
+    const { artwork, user_id, art_id, artist, url } = await validateRequestBody(
+      request,
+      Schema,
+    );
     await connectMongoDB();
-
-    const { artwork, user_id, art_id, artist, url } = await request.json();
     const checkIfViewed = await RecentView.findOne({
       art_id,
       user: user_id,
@@ -41,12 +51,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "viewhistory: create view history",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });
