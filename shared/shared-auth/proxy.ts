@@ -25,6 +25,12 @@ export default async function proxy(req: NextRequest) {
 
   const host = req.headers.get("host");
 
+  if (
+    pathname.startsWith("/privacy") &&
+    (host === "omenai.app" || host === "www.omenai.app")
+  )
+    return NextResponse.next();
+
   // Check if we are on the root domain (not 'join')
   if (host === "omenai.app" || host === "www.omenai.app") {
     // 1. Create the destination URL
