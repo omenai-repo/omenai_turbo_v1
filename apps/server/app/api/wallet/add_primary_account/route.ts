@@ -8,7 +8,6 @@ import {
   ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { CombinedConfig } from "@omenai/shared-types";
 import {
   CombinedConfig,
   WalletModelSchemaTypes,
@@ -125,7 +124,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const response = await fetch(
       "https://api.flutterwave.com/v3/beneficiaries",
-      options,
       { ...appendOptions("POST"), body: JSON.stringify(payload) },
     );
 

@@ -49,16 +49,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
 
     const heightParams = searchParams.get("height") as string;
     const widthParams = searchParams.get("width") as string;
-    const categoryParams: ArtistCategory = searchParams.get(
-    const medium: ArtworkMediumTypes = searchParams.get(
-      "medium",
-    ) as ArtworkMediumTypes;
-
-    const height = searchParams.get("height") as string;
-    const width = searchParams.get("width") as string;
-    const category: ArtistCategory = searchParams.get(
-      "category",
-    ) as ArtistCategory;
+    const categoryParams = searchParams.get("category");
     const currencyParams = searchParams.get("currency") as string;
 
     try {
@@ -80,17 +71,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           "Artwork price calculation is currently disabled",
         );
 
-      if (!medium || !height || !width || !category) {
-        throw new ServerError(
-          "Missing required parameters (medium, height, width, category)",
-        );
-      }
-
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
 
       const price: ArtworkPricing = calculateArtworkPrice({
-        artistCategory: category,
+        artistCategory: category as ArtistCategory,
         medium,
         height: +height,
         width: +width,
