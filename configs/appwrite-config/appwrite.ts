@@ -14,7 +14,16 @@ import {
 const client = new Client();
 const serverClient = new Client();
 
-const endpoint = process.env.APPWRITE_ENDPOINT as string;
+const environment = process.env.APP_ENV as string;
+
+if (!environment) {
+  throw new Error("APPWRITE_ENDPOINT is not defined");
+}
+
+const endpoint =
+  environment === "production"
+    ? "https://sfo.cloud.appwrite.io/v1"
+    : "https://fra.cloud.appwrite.io/v1";
 
 client
   .setEndpoint(endpoint)
