@@ -1,4 +1,3 @@
-// apps/web/middleware.ts
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import {
@@ -56,6 +55,7 @@ export default async function proxy(req: NextRequest) {
     'self'
     blob:
     data:
+    https://sfo.cloud.appwrite.io
     https://fra.cloud.appwrite.io
     https://cloud.appwrite.io
     https://res.cloudinary.com
@@ -72,7 +72,11 @@ export default async function proxy(req: NextRequest) {
     https://fonts.gstatic.com;
 
   connect-src
-    'self'
+'self'
+    http://localhost:*
+    https://staging.api.omenai.app
+    https://api.omenai.app
+    https://sfo.cloud.appwrite.io
     https://fra.cloud.appwrite.io
     https://cloud.appwrite.io
     https://api.stripe.com

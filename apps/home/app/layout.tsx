@@ -1,3 +1,4 @@
+// apps/web/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 import { PT_Serif, Work_Sans } from "next/font/google";
@@ -12,6 +13,7 @@ import "@mantine/dates/styles.css";
 import { LayoutWrapper } from "./LayoutWrapper";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { headers } from "next/headers";
+
 export const metadata: Metadata = {
   title: "Omenai",
   description: "Discover, buy, and sell Contemporary African Art online.",
@@ -44,26 +46,32 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const initialSessionData = await getServerSession();
-  const nonce = (await headers()).get("x-nonce") || "";
+
+  // 1. Get the Nonce
+  const headersList = await headers();
+  const nonce = headersList.get("x-nonce") || "";
 
   return (
-    <RollbarProvider config={clientConfig}>
-      <HighRiskProvider>
-        <html lang="en" {...mantineHtmlProps}>
-          <head>
-            <meta name="color-scheme" content="light" />
-            <ColorSchemeScript defaultColorScheme="light" />
+    <html lang="en" {...mantineHtmlProps}>
+      <head>
+        <meta name="color-scheme" content="light" />
+        {/* 2. Pass nonce to Mantine Script */}
+        <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
 
-            {/* Favicon fallback for localhost/dev */}
-            <link rel="icon" href="/favicon.ico" />
-            <link rel="shortcut icon" href="/favicon.ico" />
-            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-            <title>Omenai</title>
-          </head>
-          <body
-            className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}
-          >
-            <NextTopLoader color="#0f172a" height={6} />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <title>Omenai</title>
+      </head>
+      <body
+        className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}
+      >
+        {/* 3. Providers must be INSIDE body */}
+        <RollbarProvider config={clientConfig}>
+          <HighRiskProvider>
+            {/* 4. Pass nonce to TopLoader (Critical for CSP) */}
+            <NextTopLoader color="#0f172a" height={6} nonce={nonce} />
+
             <Toaster
               position="top-right"
               expand
@@ -74,9 +82,9 @@ export default async function RootLayout({
             <LayoutWrapper sessionData={initialSessionData}>
               {children}
             </LayoutWrapper>
-          </body>
-        </html>
-      </HighRiskProvider>
-    </RollbarProvider>
+          </HighRiskProvider>
+        </RollbarProvider>
+      </body>
+    </html>
   );
 }
