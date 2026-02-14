@@ -16,10 +16,6 @@ const serverClient = new Client();
 
 const environment = process.env.APP_ENV as string;
 
-if (!environment) {
-  throw new Error(`APP environment is not defined: ${environment}`);
-}
-
 const endpoint =
   environment === "production"
     ? "https://sfo.cloud.appwrite.io/v1"
