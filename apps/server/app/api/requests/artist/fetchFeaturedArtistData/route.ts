@@ -4,19 +4,27 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
+import z from "zod";
+const FetchFeaturedArtistSchema = z.object({
+  artist_id: z.string(),
+});
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-    const artist_id = searchParams.get("id");
-    const page = searchParams.get("page") || 1;
+    const id = searchParams.get("id");
+    // const page = searchParams.get("page") || 1;
 
     try {
       await connectMongoDB();
-
+      const { artist_id } = validateGetRouteParams(FetchFeaturedArtistSchema, {
+        artist_id: id,
+      });
       const artist_data = await AccountArtist.findOne(
         { artist_id },
         "logo name bio documentation address",

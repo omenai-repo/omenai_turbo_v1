@@ -9,14 +9,21 @@ import {
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const UpdateOrderLockStatusSchema = z.object({
+  art_id: z.string(),
+  lock_status: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { art_id, lock_status } = await request.json();
+      const { art_id, lock_status } = await validateRequestBody(
+        request,
+        UpdateOrderLockStatusSchema,
+      );
 
       const locked = await CreateOrder.updateMany(
         { "artwork_data.art_id": art_id },

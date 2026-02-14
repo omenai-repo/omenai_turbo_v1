@@ -11,28 +11,34 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { createErrorRollbarReport } from "../../util";
-import {redis} from "@omenai/upstash-config";
-import {rollbarServerInstance} from "@omenai/rollbar-config";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import { redis } from "@omenai/upstash-config";
+import { rollbarServerInstance } from "@omenai/rollbar-config";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
 
+const ExtendArtworkExclusivitySchema = z.object({
+  art_id: z.string().min(1),
+});
+
 export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
-  request: Request
+  request: Request,
 ) {
   try {
-    const { art_id } = await request.json();
-
-    if (!art_id) throw new BadRequestError("art_id is required");
+    const { art_id } = await validateRequestBody(
+      request,
+      ExtendArtworkExclusivitySchema,
+    );
 
     await connectMongoDB();
 
     const artwork = (await Artworkuploads.findOne(
       { art_id },
-      "exclusivity_status art_id"
+      "exclusivity_status art_id",
     ).lean()) as {
       exclusivity_status?: {
         exclusivity_end_date?: Date;
@@ -53,16 +59,23 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
           "exclusivity_status.exclusivity_type": "exclusive",
           "exclusivity_status.exclusivity_end_date": future_exclusivity_date,
         },
-      }, {new: true}
+      },
+      { new: true },
     );
 
-    if (!updateArtworkExclusivity) throw new ServerError("Unable to update artwork exclusivity status at this time, please try again or contact support");
+    if (!updateArtworkExclusivity)
+      throw new ServerError(
+        "Unable to update artwork exclusivity status at this time, please try again or contact support",
+      );
     const cacheKey = `artwork:${art_id}`;
 
     try {
-    await redis.set(cacheKey, JSON.stringify(updateArtworkExclusivity));
-    }catch (e) {
-        rollbarServerInstance.error({e, context: "Update cache after exclusivity update"})
+      await redis.set(cacheKey, JSON.stringify(updateArtworkExclusivity));
+    } catch (e) {
+      rollbarServerInstance.error({
+        e,
+        context: "Update cache after exclusivity update",
+      });
     }
 
     await CreateOrder.updateMany(
@@ -75,30 +88,29 @@ export const PUT = withRateLimitHighlightAndCsrf(config)(async function PUT(
           "artwork_data.exclusivity_status.exclusivity_end_date":
             future_exclusivity_date,
         },
-      }
+      },
     );
-
 
     if (updateArtworkExclusivity.modifiedCount === 0) {
       throw new ServerError(
-        "Something went wrong. Please try again later or contact support"
+        "Something went wrong. Please try again later or contact support",
       );
     }
 
     return NextResponse.json(
       { message: "Exclusivity period extended for 90 days" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: extend artwork Exclusivity",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status ?? 500 }
+      { status: error_response?.status ?? 500 },
     );
   }
 });

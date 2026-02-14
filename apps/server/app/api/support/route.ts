@@ -1,6 +1,6 @@
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { NextResponse } from "next/server";
-import { getSessionData } from "../util";
+import { getSessionData, validateRequestBody } from "../util";
 import {
   ClientSessionData,
   CombinedConfig,
@@ -10,6 +10,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import SupportTicket from "@omenai/shared-models/models/support/SupportTicketSchema";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -17,14 +18,20 @@ const config: CombinedConfig = {
 };
 const generateTicketId = () =>
   `OM_TICKET_${Math.floor(100000 + Math.random() * 900000)}`;
-
+const SupportSchema = z.object({
+  category: z.string(),
+  referenceId: z.string().optional(),
+  message: z.string(),
+  pageUrl: z.string(),
+  userEmail: z.string(),
+  meta: z.any().optional(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   req: Request,
   _: any,
   sessionData?: SessionData & { csrfToken: string },
 ) {
   try {
-    const body = await req.json();
     const {
       category,
       referenceId,
@@ -32,7 +39,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       pageUrl,
       userEmail: bodyEmail,
       meta = {},
-    } = body;
+    } = await validateRequestBody(req, SupportSchema);
 
     // 1. Validation
     if (!category || !message) {

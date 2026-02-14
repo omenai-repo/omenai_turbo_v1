@@ -1,20 +1,25 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { NextResponse } from "next/server";
-import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { getCachedArtwork } from "../utils";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import z from "zod";
 
+const GetSingleArtworkSchema = z.object({
+  art_id: z.string().min(1),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { art_id } = await request.json();
+    const { art_id } = await validateRequestBody(
+      request,
+      GetSingleArtworkSchema,
+    );
     const artwork = await getCachedArtwork(art_id);
 
     return NextResponse.json(

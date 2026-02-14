@@ -10,18 +10,18 @@ import {
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import { ResetPasswordSchema } from "../../utils";
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const { password, id } = await validateRequestBody(
+        request,
+        ResetPasswordSchema,
+      );
       await connectMongoDB();
-
-      const { password, id } = await request.json();
-
       const user = await VerificationCodes.findOne(
         { code: id },
         "author",

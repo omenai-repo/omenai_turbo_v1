@@ -1,5 +1,4 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
@@ -11,17 +10,21 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPasswordRecoveryMail } from "@omenai/shared-emails/src/models/recovery/sendPasswordRecoveryMail";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
-
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+const SendResetLinkSchema = z.object({
+  recoveryEmail: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const { recoveryEmail } = await validateRequestBody(
+        request,
+        SendResetLinkSchema,
+      );
       await connectMongoDB();
-
-      const { recoveryEmail } = await request.json();
-
       const data = await AccountIndividual.findOne(
         { email: recoveryEmail },
         "email user_id name verified name",

@@ -2,26 +2,26 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
-
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-
+import z from "zod";
+const FetchIcomeSchema = z.object({
+  galleryId: z.string(),
+});
 export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
 ) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  const galleryId = searchParams.get("id");
-
-  if (!galleryId) {
-    return NextResponse.json(
-      { message: "Missing gallery id" },
-      { status: 400 },
-    );
-  }
-
+  const galleryIdParams = searchParams.get("id");
   try {
+    const { galleryId } = validateGetRouteParams(FetchIcomeSchema, {
+      galleryId: galleryIdParams,
+    });
     await connectMongoDB();
 
     const pipeline = [

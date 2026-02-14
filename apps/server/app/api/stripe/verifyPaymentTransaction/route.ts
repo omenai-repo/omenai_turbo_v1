@@ -2,7 +2,7 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import {
@@ -18,20 +18,24 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { retry } from "../../util";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { createWorkflow } from "@omenai/upstash-config";
 import { releaseOrderLock } from "@omenai/shared-services/orders/releaseOrderLock";
+import z from "zod";
 
 /* ----------------------------- Route ----------------------------------- */
-
+const VerifyPaymentSchema = z.object({
+  payment_intent_id: z.string(),
+  checkout_session_id: z.string(),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {
-    const { payment_intent_id, checkout_session_id } = await request.json();
+    const { payment_intent_id, checkout_session_id } =
+      await validateRequestBody(request, VerifyPaymentSchema);
 
     const { paymentIntent, meta } = await resolvePaymentIntent({
       payment_intent_id,

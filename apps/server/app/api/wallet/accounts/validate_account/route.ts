@@ -1,24 +1,28 @@
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  bankCode: z.string(),
+  accountNumber: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
-    const { bankCode, accountNumber } = await request.json();
+    const { bankCode, accountNumber } = await validateRequestBody(
+      request,
+      Schema,
+    );
 
     if (!bankCode || !accountNumber)
       throw new BadRequestError(

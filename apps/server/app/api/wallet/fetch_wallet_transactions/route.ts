@@ -1,33 +1,42 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { WalletTransaction } from "@omenai/shared-models/models/wallet/WalletTransactionSchema";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
-
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "zod";
 
+const Schema = z.object({
+  wallet_id: z.string(),
+  year: z.string(),
+  limit: z.string().optional(),
+  status: z.string().toLowerCase().optional(),
+  page: z.string().default("1").optional(),
+});
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
     await connectMongoDB();
     try {
       const url = new URL(request.url);
       const searchParams = url.searchParams;
-      const wallet_id = searchParams.get("id");
-      const year = searchParams.get("year");
-      const limit = searchParams.get("limit");
-      const status = searchParams.get("status")?.toLowerCase(); // make it case-insensitive
-      const page = searchParams.get("page") || 1;
+      const wallet_idParams = searchParams.get("id");
+      const yearParams = searchParams.get("year");
+      const limitParams = searchParams.get("limit");
+      const statusParams = searchParams.get("status")?.toLowerCase(); // make it case-insensitive
+      const pageParams = searchParams.get("page") || "1";
+      const { limit, page, status, wallet_id, year } = validateGetRouteParams(
+        Schema,
+        {
+          wallet_id: wallet_idParams ?? "",
+          limit: limitParams ?? "",
+          year: yearParams ?? "",
+          page: pageParams,
+          status: statusParams,
+        },
+      );
       const skip = (Number(page) - 1) * 10;
-
-      if (!year || !wallet_id)
-        throw new BadRequestError(
-          "Missing url params - year and id is required",
-        );
 
       const numericYear = Number(year);
       const numericLimit = limit ? Number(limit) : 0;

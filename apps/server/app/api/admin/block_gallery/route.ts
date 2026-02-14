@@ -7,7 +7,8 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { sendGalleryBlockedEmail } from "@omenai/shared-emails/src/models/gallery/sendGalleryBlockedEmail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -15,12 +16,20 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const BlockGallerySchema = z.object({
+  gallery_id: z.string(),
+  status: z.string(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { gallery_id, status } = await request.json();
+    const { gallery_id, status } = await validateRequestBody(
+      request,
+      BlockGallerySchema,
+    );
 
     const gallery = await AccountGallery.findOne({ gallery_id }, "name email");
 

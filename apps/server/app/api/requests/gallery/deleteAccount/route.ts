@@ -21,18 +21,25 @@ import {
 } from "../../utils";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
-
+const DeleteAccountSchema = z.object({
+  id: z.string(),
+  reason: z.string(),
+});
 export const DELETE = withRateLimitHighlightAndCsrf(config)(
   async function DELETE(request: Request) {
     try {
       await connectMongoDB();
-      const { id, reason }: DeletionRequestBody = await request.json();
+      const { id, reason } = await validateRequestBody(
+        request,
+        DeleteAccountSchema,
+      );
 
       if (!id || !reason) {
         throw new BadRequestError(

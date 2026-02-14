@@ -14,26 +14,22 @@ import {
   BadRequestError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import { getCurrentDate } from "@omenai/shared-utils/src/getCurrentDate";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   AddressTypes,
-  ArtworkDimensions,
   ArtworkSchemaTypes,
   CombinedConfig,
   CreateOrderModelTypes,
   NotificationPayload,
 } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { validateDHLAddress } from "../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["user"],
@@ -64,7 +60,22 @@ const getSellerData = async (seller_id: string, designation: string) => {
     address: AddressTypes;
   };
 };
-
+const CreateOrderSchema = z.object({
+  buyer_id: z.string(),
+  art_id: z.string(),
+  seller_id: z.string(),
+  save_shipping_address: z.boolean(),
+  shipping_address: z.object({
+    address_line: z.string(),
+    city: z.string(),
+    country: z.string(),
+    countryCode: z.string(),
+    state: z.string(),
+    stateCode: z.string(),
+    zip: z.string(),
+  }),
+  designation: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
@@ -78,19 +89,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       save_shipping_address,
       shipping_address,
       designation,
-    }: {
-      buyer_id: string;
-      art_id: string;
-      seller_id: string;
-      save_shipping_address: boolean;
-      shipping_address: AddressTypes;
-      designation: string;
-    } = await request.json();
-
-    // Basic input validation
-    if (!buyer_id || !art_id || !seller_id) {
-      throw new BadRequestError("Missing required parameters.");
-    }
+    } = await validateRequestBody(request, CreateOrderSchema);
 
     // Fetch buyer & seller data concurrently
     const [buyerData, sellerData] = await Promise.all([

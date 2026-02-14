@@ -7,17 +7,23 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+const VerifyMailSchema = z.object({
+  params: z.string(),
+  token: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     const client = await connectMongoDB();
     const session = await client.startSession();
     try {
-      const { params, token } = await request.json();
+      const { params, token } = await validateRequestBody(
+        request,
+        VerifyMailSchema,
+      );
 
       const user = await AccountArtist.findOne(
         { artist_id: params },

@@ -5,38 +5,40 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
-
+const LogoSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
+    const { id, url } = await validateRequestBody(request, LogoSchema);
     await connectMongoDB();
-
-    const { id, url } = await request.json();
-
     const updateLogo = await AccountGallery.updateOne(
       { gallery_id: id },
-      { $set: { logo: url } }
+      { $set: { logo: url } },
     );
 
     return NextResponse.json(
       {
         message: "Logo updated",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport("gallery: logo", error, error_response.status);
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

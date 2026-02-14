@@ -7,7 +7,8 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { sendArtistBlockedMail } from "@omenai/shared-emails/src/models/artist/sendArtistBlockedMail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -15,12 +16,20 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const BlockArtistSchema = z.object({
+  artist_id: z.string(),
+  status: z.string(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { artist_id, status } = await request.json();
+    const { artist_id, status } = await validateRequestBody(
+      request,
+      BlockArtistSchema,
+    );
 
     const artist = await AccountArtist.findOne({ artist_id }, "name email");
 

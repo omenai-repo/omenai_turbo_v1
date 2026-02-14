@@ -11,7 +11,12 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const CreateLockSchema = z.object({
+  user_id: z.string(),
+  art_id: z.string(),
+});
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -23,7 +28,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     await connectMongoDB();
 
-    const { user_id, art_id } = await request.json();
+    const { user_id, art_id } = await validateRequestBody(
+      request,
+      CreateLockSchema,
+    );
     // Check the availability of the piece
     const is_piece_still_available = await Artworkuploads.findOne(
       { art_id },

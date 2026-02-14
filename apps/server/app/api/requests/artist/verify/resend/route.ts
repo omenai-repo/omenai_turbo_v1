@@ -12,18 +12,24 @@ import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/er
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../../util";
-
+import {
+  createErrorRollbarReport,
+  validateRequestBody,
+} from "../../../../util";
+import z from "zod";
+const ResentSchema = z.object({
+  author: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { author } = await request.json();
+      const { author } = await validateRequestBody(request, ResentSchema);
 
       const { name, email, verified } = await AccountArtist.findOne(
         { artist_id: author },
-        "name email verified"
+        "name email verified",
       ).exec();
 
       if (!name || !email)
@@ -31,7 +37,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (verified)
         throw new ForbiddenError(
-          "This action is not permitted. Account already verified"
+          "This action is not permitted. Account already verified",
         );
 
       const email_token = generateDigit(7);
@@ -64,19 +70,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         {
           message: "Verification code resent",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artist: verify resend",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

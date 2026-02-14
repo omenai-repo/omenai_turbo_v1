@@ -1,26 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import {
-  BadRequestError,
-  ServerError,
-} from "../../../../../custom/errors/dictionary/errorDictionary";
-
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
+import z from "zod";
+const Schema = z.object({
+  countryCode: z.string(),
+});
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-    const countryCode = searchParams.get("countryCode");
+    const countryCodeParams = searchParams.get("countryCode");
     try {
-      if (!countryCode)
-        throw new BadRequestError("Invalid parameters - Country code missing");
-
+      const { countryCode } = validateGetRouteParams(Schema, {
+        countryCode: countryCodeParams,
+      });
       const response = await fetch(
         `https://api.flutterwave.com/v3/banks/${countryCode}`,
         {

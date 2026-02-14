@@ -2,20 +2,24 @@ import { LockMechanism } from "@omenai/shared-models/models/lock/LockSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const CheckLockSchema = z.object({
+  user_id: z.string(),
+  art_id: z.string(),
+});
 
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { user_id, art_id } = await request.json();
+      const { user_id, art_id } = await validateRequestBody(
+        request,
+        CheckLockSchema,
+      );
       const checkIfLockActive = await LockMechanism.findOne({ art_id });
       if (!checkIfLockActive) {
         return NextResponse.json(

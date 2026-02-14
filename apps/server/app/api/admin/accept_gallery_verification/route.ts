@@ -11,7 +11,8 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { redis } from "@omenai/upstash-config";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -19,18 +20,23 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const AcceptGalleryVerificationSchema = z.object({
+  gallery_id: z.string().min(1),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { gallery_id } = await request.json();
+    const { gallery_id } = await validateRequestBody(
+      request,
+      AcceptGalleryVerificationSchema,
+    );
 
-    if (!gallery_id)
-      throw new ServerError("Invalid Parameters - Gallery ID is required");
     const get_gallery = await AccountGallery.findOne(
       { gallery_id },
-      "name, email"
+      "name, email",
     );
     if (!get_gallery)
       throw new NotFoundError("Gallery not found for the given gallery ID");
@@ -39,7 +45,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const verify_gallery = await AccountGallery.updateOne(
       { gallery_id },
-      { $set: { gallery_verified: true } }
+      { $set: { gallery_verified: true } },
     );
 
     if (verify_gallery.modifiedCount === 0)
@@ -54,7 +60,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       createErrorRollbarReport(
         "admin: Accept gallery verification; Unable to invalidate redis cache",
         error,
-        500
+        500,
       );
     }
     await sendGalleryAcceptedMail({
@@ -64,19 +70,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Gallery verification accepted" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin:Accept gallery verification",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

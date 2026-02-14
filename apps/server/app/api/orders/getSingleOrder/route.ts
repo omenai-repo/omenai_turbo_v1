@@ -5,14 +5,21 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const GetSingleOrderSchema = z.object({
+  order_id: z.string().min(1),
+});
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { order_id } = await request.json();
+    const { order_id } = await validateRequestBody(
+      request,
+      GetSingleOrderSchema,
+    );
 
     const order = await CreateOrder.findOne({ order_id }).lean();
 
@@ -23,18 +30,18 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
         message: "Successful",
         data: order,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: get single order",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

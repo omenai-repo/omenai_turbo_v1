@@ -15,13 +15,37 @@ import { sendArtistSignupMail } from "@omenai/shared-emails/src/models/artist/se
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
-import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
 
+const RegisterSchema = z
+  .object({
+    name: z.string(),
+    email: z.email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+    referrerKey: z.string().optional(),
+    inviteCode: z.string().optional(),
+    device_push_token: z.string().optional(),
+    phone: z.string(),
+    art_style: z.string().or(z.array(z.string())),
+    address: z.object({
+      address_line: z.string(),
+      city: z.string(),
+      country: z.string(),
+      countryCode: z.string(),
+      state: z.string(),
+      stateCode: z.string(),
+      zip: z.string(),
+    }),
+    logo: z.file().nullable(),
+    base_currency: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword);
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
@@ -40,12 +64,10 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     await connectMongoDB();
 
-    const data = await request.json();
-
-    const { referrerKey, inviteCode } = data;
+    const data = await validateRequestBody(request, RegisterSchema);
 
     if (isWaitlistFeatureActive) {
-      if (!referrerKey || !inviteCode)
+      if (!data.referrerKey || !data.inviteCode)
         throw new BadRequestError(
           "Invalid request parameters - Please try again or contact support",
         );
@@ -53,8 +75,8 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       // Check referrerKey and Invite code validity
 
       const isWaitlistUserInvitedAndValidated = await Waitlist.exists({
-        referrerKey,
-        inviteCode,
+        referrerKe: data.referrerKey,
+        inviteCode: data.inviteCode,
         email: data.email,
         isInvited: true,
         entity: "artist",

@@ -5,6 +5,7 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { ServerError } from "../../../custom/errors/dictionary/errorDictionary";
 import { DeletionTaskServiceType, EntityType } from "@omenai/shared-types";
+import z from "zod";
 export interface Commitment {
   type: string;
   description: string;
@@ -86,7 +87,7 @@ export function calculateGracePeriod(days: number = 30, fromDate?: Date): Date {
 }
 
 export async function hasActiveStripeBalance(
-  connectedStripeId: string
+  connectedStripeId: string,
 ): Promise<{ isBalance: boolean; balance: any }> {
   try {
     const balance = await stripe.balance.retrieve({
@@ -95,12 +96,12 @@ export async function hasActiveStripeBalance(
 
     // Check if ANY currency bucket in 'available' has a positive amount.
     const hasAvailableFunds = balance.available.some(
-      (b: { amount: number }) => b.amount > 0
+      (b: { amount: number }) => b.amount > 0,
     );
 
     // Check if ANY currency bucket in 'pending' has a positive amount.
     const hasPendingFunds = balance.pending.some(
-      (b: { amount: number }) => b.amount > 0
+      (b: { amount: number }) => b.amount > 0,
     );
 
     // If there are positive funds in ANY currency (available OR pending), block deletion.
@@ -189,7 +190,7 @@ export async function createDeletionRequestAndRespond({
 
   if (!deletionRequest) {
     throw new ServerError(
-      "Account deletion failed, failed to create deletion request"
+      "Account deletion failed, failed to create deletion request",
     );
   }
 
@@ -224,3 +225,7 @@ export const serviceMap: Record<
     "misc_service",
   ],
 };
+export const ResetPasswordSchema = z.object({
+  password: z.string(),
+  id: z.string(),
+});

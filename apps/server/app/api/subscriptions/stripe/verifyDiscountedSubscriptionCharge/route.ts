@@ -1,5 +1,4 @@
 import { Stripe } from "stripe";
-import mongoose, { Connection } from "mongoose";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
@@ -9,7 +8,7 @@ import {
 } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import {
@@ -30,25 +29,25 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { getUploadLimitLookup } from "@omenai/shared-utils/src/uploadLimitUtility";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
-
+const verifyDiscountedSchema = z.object({
+  setupIntentId: z.string(),
+  galleryId: z.string(),
+  planId: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
-    const body = await request.json();
-    const { setupIntentId, galleryId, planId } = body;
-
-    if (!setupIntentId || !galleryId || !planId) {
-      return NextResponse.json(
-        { message: "Invalid parameters - Please try again" },
-        { status: 400 },
-      );
-    }
+    const { setupIntentId, galleryId, planId } = await validateRequestBody(
+      request,
+      verifyDiscountedSchema,
+    );
 
     const isSubscriptionEnabled = (await fetchConfigCatValue(
       "subscription_creation_enabled",

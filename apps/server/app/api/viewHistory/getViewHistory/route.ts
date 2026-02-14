@@ -3,17 +3,21 @@ import { RecentView } from "@omenai/shared-models/models/artworks/RecentlyViewed
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
 
+const Schema = z.object({
+  user_id: z.string(),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { user_id } = await request.json();
+    const { user_id } = await validateRequestBody(request, Schema);
 
     const recentlyViewed = await RecentView.find({ user: user_id })
       .sort({ createdAt: -1 })

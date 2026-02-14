@@ -1,12 +1,11 @@
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { NextResponse } from "next/server";
 import { WaitListTypes } from "@omenai/shared-types";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import {
-  BadRequestError,
   ForbiddenError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -15,22 +14,9 @@ import { SendWaitlistRegistrationEmail } from "@omenai/shared-emails/src/models/
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import z from "zod";
 
 /* ------------------ helpers ------------------ */
-
-function validatePayload(payload: any) {
-  const { name, email, entity } = payload;
-
-  if (!name || !email || !entity) {
-    throw new BadRequestError("Invalid parameters provided");
-  }
-
-  if (!["artist", "gallery"].includes(entity)) {
-    throw new BadRequestError("Invalid entity type");
-  }
-
-  return { name, email, entity };
-}
 
 async function checkIfUserExists(email: string, entity: string) {
   const Model = entity === "artist" ? AccountArtist : AccountGallery;
@@ -84,14 +70,20 @@ async function createWaitlistEntry(
 }
 
 /* ------------------ route ------------------ */
-
+const CreateWaitlistUserSchema = z.object({
+  name: z.string(),
+  email: z.email(),
+  entity: z.enum(["artist", "gallery", "user"]),
+});
 export const POST = withRateLimit(strictRateLimit)(async function POST(
   req: Request,
 ) {
   try {
     await connectMongoDB();
-    const body = await req.json();
-    const { name, email, entity } = validatePayload(body);
+    const { email, entity, name } = await validateRequestBody(
+      req,
+      CreateWaitlistUserSchema,
+    );
     await checkIfUserExists(email, entity);
     await checkWaitlistConflict(name, email, entity);
     await createWaitlistEntry({ name, email, entity });

@@ -14,24 +14,53 @@ import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_con
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { redis } from "@omenai/upstash-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "zod";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+const GetArtworkPriceForArtist = z.object({
+  medium: z.enum([
+    "Photography",
+    "Works on paper",
+    "Acrylic on canvas/linen/panel",
+    "Mixed media on paper/canvas",
+    "Oil on canvas/panel",
+  ]),
+  height: z.string(),
+  width: z.string(),
+  category: z.enum([
+    "Emerging",
+    "Early Mid-Career",
+    "Mid-Career",
+    "Late Mid-Career",
+    "Established",
+    "Elite",
+  ]),
+  currency: z.string(),
+});
 
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-    const medium: ArtworkMediumTypes = searchParams.get(
+    const mediumParams: ArtworkMediumTypes = searchParams.get(
       "medium",
     ) as ArtworkMediumTypes;
 
-    const height = searchParams.get("height") as string;
-    const width = searchParams.get("width") as string;
-    const category: ArtistCategory = searchParams.get(
-      "category",
-    ) as ArtistCategory;
-    const currency = searchParams.get("currency") as string;
+    const heightParams = searchParams.get("height") as string;
+    const widthParams = searchParams.get("width") as string;
+    const categoryParams = searchParams.get("category");
+    const currencyParams = searchParams.get("currency") as string;
 
     try {
+      const { category, currency, height, medium, width } =
+        validateGetRouteParams(GetArtworkPriceForArtist, {
+          category: categoryParams,
+          currency: currencyParams,
+          height: heightParams,
+          width: widthParams,
+          medium: mediumParams,
+        });
       const isArtworkPriceEnabled = (await fetchConfigCatValue(
         "artwork_price_calculation_enabled",
         "high",
@@ -42,17 +71,11 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           "Artwork price calculation is currently disabled",
         );
 
-      if (!medium || !height || !width || !category) {
-        throw new ServerError(
-          "Missing required parameters (medium, height, width, category)",
-        );
-      }
-
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
 
       const price: ArtworkPricing = calculateArtworkPrice({
-        artistCategory: category,
+        artistCategory: category as ArtistCategory,
         medium,
         height: +height,
         width: +width,

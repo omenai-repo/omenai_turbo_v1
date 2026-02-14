@@ -1,29 +1,30 @@
 import { sendIndividualMail } from "@omenai/shared-emails/src/models/individuals/sendIndividualMail";
-
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse } from "next/server";
 import {
-  RateLimitExceededError,
   NotFoundError,
   ForbiddenError,
   ServerError,
 } from "../../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
-
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../../util";
-
+import {
+  createErrorRollbarReport,
+  validateRequestBody,
+} from "../../../../util";
+import z from "zod";
+const ResentSchema = z.object({
+  author: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const { author } = await validateRequestBody(request, ResentSchema);
       await connectMongoDB();
-
-      const { author } = await request.json();
-
       const { name, email, verified } = await AccountIndividual.findOne(
         { user_id: author },
         "name email verified",

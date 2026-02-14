@@ -1,11 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import WaitlistLead from "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel";
+import z from "zod";
+import { validateRequestBody } from "../../util";
+
+const FetchWaitlistKpiUsersSchema = z.object({
+  entity: z.string(),
+  page: z.number().default(1),
+  limit: z.number().default(1),
+  filters: z.object({
+    buying_frequency: z.any().optional(),
+    formal_education: z.any().optional(),
+    source: z.any().optional(),
+    country: z.any().optional(),
+  }),
+});
 
 export async function POST(req: NextRequest) {
   try {
     await connectMongoDB();
-    const { entity, filters, page = 1, limit = 50 } = await req.json();
+    const {
+      entity,
+      filters,
+      page = 1,
+      limit = 50,
+    } = await validateRequestBody(req, FetchWaitlistKpiUsersSchema);
 
     // 1. Build the Match Query (For the User List)
     const matchQuery: any = { entity };

@@ -3,19 +3,21 @@ import { SalesActivity } from "@omenai/shared-models/models/sales/SalesActivity"
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
 
+const GetActivitySchema = z.object({
+  id: z.string(),
+  year: z.string(),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {
+    const { id, year } = await validateRequestBody(request, GetActivitySchema);
     await connectMongoDB();
-
-    const { id, year } = await request.json();
-
     const activities = await SalesActivity.find({
       id,
       year,

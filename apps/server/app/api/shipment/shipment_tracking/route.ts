@@ -1,6 +1,6 @@
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
-import { DHL_API_URL_TEST, getDhlHeaders, getLatLng } from "../resources";
+import { DHL_API_URL_TEST, getDhlHeaders } from "../resources";
 import {
   BadRequestError,
   ForbiddenError,
@@ -12,10 +12,13 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-
+import z from "zod";
+const ShipmentTrackingSchema = z.object({
+  id: z.string(),
+});
 export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
 ) {
@@ -29,7 +32,10 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     const nextRequest = new NextRequest(request);
     const searchParams = nextRequest.nextUrl.searchParams;
 
-    const id = searchParams.get("order_id");
+    const idParams = searchParams.get("order_id");
+    const { id } = validateGetRouteParams(ShipmentTrackingSchema, {
+      id: idParams,
+    });
     if (!id)
       throw new BadRequestError("Invalid parameters - order_id required");
 

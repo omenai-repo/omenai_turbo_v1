@@ -1,33 +1,29 @@
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import {
-  CombinedConfig,
-  SubscriptionModelSchemaTypes,
-  SubscriptionPlanDataTypes,
-  SubscriptionStatus,
-} from "@omenai/shared-types";
+import { CombinedConfig, SubscriptionStatus } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
-import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["gallery"],
 };
+const RetrieveDiscountStatusSchema = z.object({
+  email: z.email(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
-  const { email } = await request.json();
   try {
-    if (!email)
-      throw new BadRequestError(
-        "Invalid data parameters provided. Please try again",
-      );
+    const { email } = await validateRequestBody(
+      request,
+      RetrieveDiscountStatusSchema,
+    );
 
     await connectMongoDB();
 

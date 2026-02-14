@@ -7,25 +7,34 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-
 import { CombinedConfig } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
+const Schema = z.object({
+  user_id: z.string(),
+  address: z.object({
+    address_line: z.string(),
+    city: z.string(),
+    country: z.string(),
+    countryCode: z.string(),
+    state: z.string(),
+    stateCode: z.string(),
+    zip: z.string(),
+  }),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { user_id, address } = await request.json();
-    if (!user_id || !address)
-      throw new BadRequestError("Invalid input parameters");
-
+    const { user_id, address } = await validateRequestBody(request, Schema);
     const payload = {
       type: "delivery",
       countryCode: address.countryCode,

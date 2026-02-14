@@ -6,15 +6,21 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const OrderLockStatusSchema = z.object({
+  order_id: z.string(),
+});
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { order_id } = await request.json();
+    const { order_id } = await validateRequestBody(
+      request,
+      OrderLockStatusSchema,
+    );
 
     const lock_status = await CreateOrder.findOne(
       { order_id },

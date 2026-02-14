@@ -10,17 +10,21 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { sendPasswordRecoveryMail } from "@omenai/shared-emails/src/models/recovery/sendPasswordRecoveryMail";
-
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+const SendResetLinkSchema = z.object({
+  recoveryEmail: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const { recoveryEmail } = await validateRequestBody(
+        request,
+        SendResetLinkSchema,
+      );
       await connectMongoDB();
-
-      const { recoveryEmail } = await request.json();
-
       const data = await AccountGallery.findOne(
         { email: recoveryEmail },
         "email gallery_id admin name verified",

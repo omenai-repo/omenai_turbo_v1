@@ -11,19 +11,27 @@ import {
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["gallery"],
 };
+const UpdateOrderShippingQuote = z.object({
+  quote_data: z.string(),
+  order_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { quote_data, order_id } = await request.json();
+    const { quote_data, order_id } = await validateRequestBody(
+      request,
+      UpdateOrderShippingQuote,
+    );
 
     const updateOrders = await CreateOrder.findOneAndUpdate(
       { order_id },

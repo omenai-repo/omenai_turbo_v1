@@ -15,15 +15,37 @@ import {
 } from "@omenai/shared-types";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import z from "zod";
 import { HTTP_METHOD } from "next/dist/server/web/http";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  owner_id: z.string(),
+  base_currency: z.string(),
+  account_details: z.object({
+    account_number: z.string(),
+    bank_name: z.string(),
+    account_name: z.string(),
+    bank_id: z.string(),
+    bank_code: z.string(),
+    branch: z
+      .object({
+        id: z.string(),
+        branch_code: z.string(),
+        branch_name: z.string(),
+        swift_code: z.string(),
+        bic: z.string(),
+        bank_id: z.string(),
+      })
+      .nullable(),
+    bank_country: z.string(),
+  }),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
@@ -34,15 +56,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServiceUnavailableError("Wallet is temporarily disabled");
     }
     await connectMongoDB();
-    const {
-      owner_id,
-      account_details,
-      base_currency,
-    }: {
-      owner_id: string;
-      account_details: Omit<WithdrawalAccount, "beneficiary_id">;
-      base_currency: string;
-    } = await request.json();
+    const { owner_id, account_details, base_currency } =
+      await validateRequestBody(request, Schema);
 
     const payload = {
       account_bank: account_details.bank_code,

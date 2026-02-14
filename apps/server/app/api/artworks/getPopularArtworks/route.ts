@@ -3,17 +3,20 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-
+import z from "zod";
+const GetPopularArtworksSchema = z.object({
+  id: z.string().min(1),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { id } = await request.json();
+    const { id } = await validateRequestBody(request, GetPopularArtworksSchema);
 
     const popular_artworks = await Artworkuploads.find({ author_id: id })
       .sort({

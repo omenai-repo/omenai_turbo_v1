@@ -4,31 +4,30 @@ import {
   getDhlHeaders,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
 } from "../resources";
-import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
-
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "zod";
+const GetShipmentDocumentsSchema = z.object({
+  trackingNumber: z.string(),
+  typeCode: z.string(),
+  pickupYearAndMonth: z.string(),
+});
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
     const nextRequest = new NextRequest(request);
     const searchParams = nextRequest.nextUrl.searchParams;
-    const trackingNumber = searchParams.get("t_num");
-    const typeCode = searchParams.get("t_code");
-    const pickupYearAndMonth = searchParams.get("y_m");
+    const trackingNumberParams = searchParams.get("t_num");
+    const typeCodeParams = searchParams.get("t_code");
+    const pickupYearAndMonthParams = searchParams.get("y_m");
     const shipperAccountNumber = OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
     try {
-      if (
-        !trackingNumber ||
-        !typeCode ||
-        !pickupYearAndMonth ||
-        !shipperAccountNumber
-      )
-        throw new BadRequestError("Invalid URL parameters");
+      const { pickupYearAndMonth, trackingNumber, typeCode } =
+        validateGetRouteParams(GetShipmentDocumentsSchema, {
+          pickupYearAndMonth: pickupYearAndMonthParams,
+          trackingNumber: trackingNumberParams,
+          typeCode: typeCodeParams,
+        });
       try {
         const requestOptions = {
           method: "GET",

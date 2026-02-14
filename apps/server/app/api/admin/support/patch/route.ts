@@ -2,21 +2,38 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import SupportTicket from "@omenai/shared-models/models/support/SupportTicketSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+  validateRequestBody,
+} from "../../../util";
+import z from "zod";
 
+const SupportPatchGetIdSchema = z.object({
+  ticketId: z.string().min(1).trim(),
+});
+const SupportPatchSchema = z.object({
+  status: z.string().min(1),
+  priority: z.string(),
+});
 // PATCH: Update Status or Priority
 export async function PATCH(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const { ticketId } = validateGetRouteParams(SupportPatchGetIdSchema, {
+      ticketId: id,
+    });
 
-    const body = await req.json();
-    const { status, priority } = body;
+    const { priority, status } = await validateRequestBody(
+      req,
+      SupportPatchSchema,
+    );
 
     await connectMongoDB();
 
     const updatedTicket = await SupportTicket.findOneAndUpdate(
-      { ticketId: id },
+      { ticketId },
       {
         $set: {
           ...(status && { status }),

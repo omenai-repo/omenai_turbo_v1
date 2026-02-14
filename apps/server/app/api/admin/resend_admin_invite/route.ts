@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 import {
   BadRequestError,
   ForbiddenError,
-  ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
 import { CombinedConfig } from "@omenai/shared-types";
@@ -13,23 +12,24 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
 import { sendMemberInviteEmail } from "@omenai/shared-emails/src/models/admin/sendMemberInviteEmail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
+const ResentAdminInviteSchema = z.object({
+  admin_id: z.string().min(1),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
-  const { admin_id } = await request.json();
   try {
-    if (!admin_id) throw new BadRequestError("ID is required");
-
-    if (typeof admin_id !== "string") {
-      throw new BadRequestError("Invalid admin_id format");
-    }
-
+    const { admin_id } = await validateRequestBody(
+      request,
+      ResentAdminInviteSchema,
+    );
     await connectMongoDB();
 
     const is_member_exist = await AccountAdmin.findOne({ admin_id }, "email");
@@ -43,7 +43,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (is_token_exist)
       throw new BadRequestError(
-        "Invitation link still active for this member."
+        "Invitation link still active for this member.",
       );
 
     const token = generateAlphaDigit(32);
@@ -57,18 +57,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Invite resent successfully" },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: resend admin invite",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

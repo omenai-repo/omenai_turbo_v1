@@ -1,14 +1,13 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import {
-  BadRequestError,
   ForbiddenError,
   NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { CombinedConfig, SessionData } from "@omenai/shared-types";
+import { CombinedConfig } from "@omenai/shared-types";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import {
@@ -18,28 +17,29 @@ import {
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { hashEmail } from "@omenai/shared-lib/encryption/encrypt_email";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
+const DeleteAccountSchema = z.object({
+  id: z.string(),
+  reason: z.string(),
+});
 
 export const DELETE = withRateLimitHighlightAndCsrf(config)(
   async function DELETE(request: Request) {
     try {
+      const { id, reason } = await validateRequestBody(
+        request,
+        DeleteAccountSchema,
+      );
       await connectMongoDB();
-      const { id, reason } = await request.json();
-
-      if (!id || !reason) {
-        throw new BadRequestError(
-          "Missing parameters, No ID or Reason provided"
-        );
-      }
-
       const collectorAccount = await AccountIndividual.findOne(
         { user_id: id },
-        "user_id email"
+        "user_id email",
       );
 
       if (!collectorAccount) {
@@ -53,7 +53,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
 
       if (checkActiveDeletionRequest) {
         throw new ForbiddenError(
-          "An active deletion request already exists for this account."
+          "An active deletion request already exists for this account.",
         );
       }
 
@@ -64,7 +64,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
           "order_accepted.status": "accepted",
           "payment_information.status": { $nin: ["pending", "failed"] },
         },
-        "payment_information"
+        "payment_information",
       );
 
       const commitments = generateDeletionCommitments({
@@ -78,7 +78,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
             can_delete: false,
             commitments,
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
 
@@ -86,7 +86,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
 
       if (!hashTargetEmail)
         throw new ServerError(
-          "Unable to create an Account deletion request at this time, please contact support"
+          "Unable to create an Account deletion request at this time, please contact support",
         );
 
       const gracePeriodEnd = await createDeletionRequestAndRespond({
@@ -102,7 +102,7 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
           can_delete: true,
           gracePeriodEnd,
         },
-        { status: 202 }
+        { status: 202 },
       );
     } catch (error) {
       console.error(error);
@@ -110,12 +110,12 @@ export const DELETE = withRateLimitHighlightAndCsrf(config)(
       createErrorRollbarReport(
         "individual: delete count",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

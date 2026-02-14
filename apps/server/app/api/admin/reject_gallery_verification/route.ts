@@ -8,7 +8,8 @@ import { sendGalleryRejectedMail } from "@omenai/shared-emails/src/models/galler
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -16,12 +17,21 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const RejectGalleryVerificationSchema = z.object({
+  gallery_id: z.string().min(1),
+  name: z.string().min(1),
+  email: z.email(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { gallery_id, name, email } = await request.json();
+    const { gallery_id, name, email } = await validateRequestBody(
+      request,
+      RejectGalleryVerificationSchema,
+    );
 
     const add_to_rejected = await RejectedGallery.create({ name, email });
 
@@ -40,18 +50,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Gallery verification rejected" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: reject gallery verification",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

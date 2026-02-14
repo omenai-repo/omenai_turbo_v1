@@ -11,15 +11,20 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+const VerifyMailSchema = z.object({
+  params: z.string(),
+  token: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
-      const { params, token } = await request.json();
-
+      const { params, token } = await validateRequestBody(
+        request,
+        VerifyMailSchema,
+      );
       await connectMongoDB();
-
       const user = await AccountIndividual.findOne(
         { user_id: params },
         "verified",
