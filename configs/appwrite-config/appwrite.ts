@@ -17,7 +17,7 @@ const serverClient = new Client();
 const environment = process.env.APP_ENV as string;
 
 if (!environment) {
-  throw new Error("APPWRITE_ENDPOINT is not defined");
+  throw new Error(`APP environment is not defined: ${environment}`);
 }
 
 const endpoint =
