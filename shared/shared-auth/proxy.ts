@@ -29,6 +29,7 @@ export default async function proxy(req: NextRequest) {
 
   const nonce = crypto.randomUUID();
 
+  // 1. Define CSP with newlines for readability
   const cspHeader = `
   default-src 'self';
 
@@ -104,7 +105,8 @@ export default async function proxy(req: NextRequest) {
   upgrade-insecure-requests;
 `;
 
-  const contentSecurityPolicy = cspHeader.replace(/\s{2,}/g, " ").trim();
+  // 2. 🛡️ CRITICAL FIX: Replace ALL whitespace/newlines with a single space
+  const contentSecurityPolicy = cspHeader.replace(/\s+/g, " ").trim();
 
   // === HELPER: Finalize Response with Headers ===
   const finalizeResponse = (response: NextResponse) => {
@@ -117,7 +119,7 @@ export default async function proxy(req: NextRequest) {
   const nextWithNonce = () => {
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-nonce", nonce);
-    requestHeaders.set("Content-Security-Policy", cspHeader);
+    requestHeaders.set("Content-Security-Policy", contentSecurityPolicy);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
