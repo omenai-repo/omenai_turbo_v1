@@ -34,14 +34,14 @@ function loadKeysFromEnv(): KeyMap {
       // Validate hex format
       if (!/^[0-9a-fA-F]+$/.test(keyHex)) {
         throw new Error(
-          `Key for kid="${kid}" must be valid hexadecimal (found invalid characters)`
+          `Key for kid="${kid}" must be valid hexadecimal (found invalid characters)`,
         );
       }
 
       // Validate hex string is even length (each byte = 2 hex chars)
       if (keyHex.length % 2 !== 0) {
         throw new Error(
-          `Key for kid="${kid}" has invalid hex length (must be even number of characters)`
+          `Key for kid="${kid}" has invalid hex length (must be even number of characters)`,
         );
       }
 
@@ -49,7 +49,7 @@ function loadKeysFromEnv(): KeyMap {
       const keyLengthBytes = keyHex.length / 2;
       if (keyLengthBytes < MIN_KEY_LENGTH_BYTES) {
         throw new Error(
-          `Key for kid="${kid}" is too short: ${keyLengthBytes} bytes (minimum required: ${MIN_KEY_LENGTH_BYTES} bytes)`
+          `Key for kid="${kid}" is too short: ${keyLengthBytes} bytes (minimum required: ${MIN_KEY_LENGTH_BYTES} bytes)`,
         );
       }
     }
@@ -66,7 +66,7 @@ const ACTIVE_KID = process.env.EMAIL_HASH_ACTIVE_KID ?? Object.keys(KEYS)[0];
 
 if (!ACTIVE_KID) {
   throw new Error(
-    "No active kid configured for email hashing (EMAIL_HASH_ACTIVE_KID or EMAIL_HASH_KEYS missing)"
+    "No active kid configured for email hashing (EMAIL_HASH_ACTIVE_KID or EMAIL_HASH_KEYS missing)",
   );
 }
 if (!KEYS[ACTIVE_KID]) {
