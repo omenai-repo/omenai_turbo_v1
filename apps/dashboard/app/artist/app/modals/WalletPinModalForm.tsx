@@ -49,7 +49,7 @@ export default function WalletPinModalForm() {
       const response = await setWalletPin(
         user.wallet_id as string,
         pin,
-        csrf || ""
+        csrf || "",
       );
 
       if (response === undefined || !response?.isOk) {
@@ -131,7 +131,7 @@ export default function WalletPinModalForm() {
               Enter PIN
             </label>
             <PinInput
-              size="lg"
+              size="sm"
               name="pin"
               mask
               type="number"
@@ -151,7 +151,7 @@ export default function WalletPinModalForm() {
             </label>
             <PinInput
               name="confirm"
-              size="lg"
+              size="sm"
               mask
               type="number"
               aria-label="Confirm wallet pin"
@@ -173,7 +173,7 @@ export default function WalletPinModalForm() {
         <button
           disabled={isDisabled() || loading}
           onClick={handlePinChange}
-          className="w-full py-3 rounded bg-dark text-white text-fluid-xxs font-normal transition-all duration-200 hover:bg-dark/80 disabled:bg-dark/20 disabled:text-dark/40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3 rounded bg-dark text-white text-fluid-xxs font-light transition-all duration-200 hover:bg-dark/80 disabled:bg-dark/20 disabled:text-dark/40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading ? <LoadSmall /> : "Create PIN"}
         </button>

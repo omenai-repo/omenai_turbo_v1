@@ -12,13 +12,13 @@ const TransactionHistorySkeleton = () => {
           <div className="flex items-center gap-4">
             <Skeleton height={50} width={50} circle />
             <div className="space-y-2">
-              <Skeleton height={12} width={160} radius="xl" />
-              <Skeleton height={10} width={120} radius="xl" />
+              <Skeleton height={12} width={160} radius="sm" />
+              <Skeleton height={10} width={120} radius="sm" />
             </div>
           </div>
           <div className="text-right space-y-2">
-            <Skeleton height={12} width={60} radius="xl" />
-            <Skeleton height={12} width={40} radius="xl" />
+            <Skeleton height={12} width={60} radius="sm" />
+            <Skeleton height={12} width={40} radius="sm" />
           </div>
         </div>
       ))}

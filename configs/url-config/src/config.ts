@@ -12,29 +12,29 @@ export const session_auth_url = (): string => {
 };
 export const auth_uri = (): string => {
   return process.env.NODE_ENV === "production"
-    ? "https://auth.omenai.app"
+    ? "https://staging.auth.omenai.app"
     : "http://localhost:4000";
 };
 
 export const dashboard_url = (): string => {
   return process.env.NODE_ENV === "production"
-    ? "https://dashboard.omenai.app"
+    ? "https://staging.dashboard.omenai.app"
     : "http://localhost:5000";
 };
 
 export const base_url = (): string => {
   return process.env.NODE_ENV === "production"
-    ? "https://omenai.app"
+    ? "https://staging.omenai.app"
     : "http://localhost:3000";
 };
 export const admin_url = (): string => {
   return process.env.NODE_ENV === "production"
-    ? "https://admin.omenai.app"
+    ? "https://staging.admin.omenai.app"
     : "http://localhost:3001";
 };
 
 export const tracking_url = (): string => {
   return process.env.NODE_ENV === "production"
-    ? "https://tracking.omenai.app"
+    ? "https://staging.tracking.omenai.app"
     : "http://localhost:3002";
 };

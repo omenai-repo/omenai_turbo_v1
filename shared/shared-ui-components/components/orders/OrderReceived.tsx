@@ -1,170 +1,110 @@
 "use client";
 
 import React from "react";
-import {
-  CircleCheckBig,
-  PackageSearch,
-  Calculator,
-  CreditCard,
-  Clock,
-  ArrowRight,
-} from "lucide-react";
+import { PackageSearch, Calculator, CreditCard, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import Link from "next/link";
+import { base_url } from "@omenai/url-config/src/config";
+
 export default function OrderReceived() {
   const { toggleOrderReceivedModal } = actionStore();
 
   const nextSteps = [
     {
       icon: PackageSearch,
-      title: "Order Processing",
-      description:
-        "Your request has been securely placed. We will review and process it within the next 72 hours.",
+      title: "Processing",
+      description: "Request securely logged. Review pending (72h max).",
     },
     {
       icon: Calculator,
-      title: "Validation & Logistics",
-      description:
-        "We validate order details, assess shipping availability to your location, and calculate applicable shipping and tax charges.",
+      title: "Validation",
+      description: "Logistics assessment and final tax calculation.",
     },
     {
       icon: CreditCard,
-      title: "Payment Window",
-      description:
-        "Upon approval, you will receive a payment link. Payment must be completed within 24 hours to secure your purchase",
+      title: "Invoice",
+      description: "Secure payment link sent upon approval (Valid 24h).",
     },
     {
       icon: Clock,
-      title: "Auto-Expiration",
-      description:
-        "If we cannot process the request within 72 hours, the order will be automatically declined, allowing you to retry later.",
+      title: "Expiration",
+      description: "Auto-decline if unprocessed after 72 hours.",
     },
   ];
 
-  // Animation Variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 24 },
-    },
-  };
-
   return (
-    <div className="flex flex-col h-full w-full bg-white overflow-y-scroll">
-      {/* Scrollable Content Region */}
-      <div className="flex-1 overflow-y-scroll pr-2">
-        {/* Animated Header */}
+    <div className="flex h-full w-full flex-col bg-white p-2">
+      {/* 1. HEADER: The Signal */}
+      <div className="mb-8 text-center pt-4">
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
+          initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="pb-6 text-center"
+          transition={{ duration: 0.5 }}
+          className="mx-auto mb-6 flex h-12 w-12 items-center justify-center"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 15,
-              delay: 0.1,
-            }}
-            className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 ring-4 ring-green-50/50"
-          >
-            <CircleCheckBig
-              className="w-7 h-7 text-green-600"
-              strokeWidth={2}
-            />
-          </motion.div>
-
-          <h2 className="text-fluid-sm font-bold text-gray-900 tracking-tight">
-            Order Received
-          </h2>
-
-          <p className="mt-2 text-slate-700 text-fluid-xxs leading-relaxed max-w-xs mx-auto">
-            We've sent a confirmation email
-          </p>
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded h-3 w-3 bg-emerald-500"></span>
+          </span>
         </motion.div>
 
-        <div>
-          <h3 className="text-fluid-xxs font-semibold uppercase tracking-wider text-dark mb-6 flex items-center gap-2">
-            What happens next?
-            <span className="h-px bg-gray-200 flex-1"></span>
-          </h3>
-        </div>
-
-        {/* Animated Timeline */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="pb-4"
-        >
-          <div className="space-y-5 relative pl-2">
-            {/* Vertical Line Connector */}
-            <div
-              className="absolute left-[27px] top-2 bottom-4 w-px bg-gray-100"
-              aria-hidden="true"
-            />
-
-            {nextSteps.map((step, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="relative flex gap-4 group"
-              >
-                <div className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-gray-300 group-hover:scale-110 transition-all duration-300">
-                  <step.icon
-                    className="w-4 h-4 text-gray-600"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <div className="flex-1 pt-0.5">
-                  <h4 className="text-sm font-semibold text-gray-900">
-                    {step.title}
-                  </h4>
-                  <p className="mt-0.5 text-fluid-xxs text-slate-700 leading-relaxed pr-2">
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <h2 className="font-serif text-3xl italic text-dark">
+          Request Initiated.
+        </h2>
+        <p className="mx-auto mt-2 max-w-xs font-sans text-xs text-neutral-500">
+          A confirmation dossier has been sent to your email.
+        </p>
       </div>
 
-      {/* Sticky Footer Action */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="pt-4 mt-scroll border-t border-gray-50 bg-white z-10"
-      >
-        <Link
+      {/* 2. THE PROTOCOL TIMELINE */}
+      <div className="flex-1 overflow-y-auto px-4">
+        <div className="border-l border-neutral-200 pl-8 relative space-y-8 py-2">
+          {nextSteps.map((step, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 + 0.3 }}
+              className="relative"
+            >
+              {/* Timeline Marker */}
+              <div className="absolute -left-[37px] top-1 flex h-4 w-4 items-center justify-center bg-white">
+                <div className="h-1.5 w-1.5 bg-dark rounded" />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[9px] text-neutral-400">
+                    0{index + 1}
+                  </span>
+                  <h4 className="font-mono text-xs uppercase tracking-widest text-dark">
+                    {step.title}
+                  </h4>
+                </div>
+                <p className="font-sans text-xs text-neutral-500 leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. ACTION: Return to Gallery */}
+      <div className="mt-6 border-t border-neutral-100 pt-6">
+        <button
           onClick={(e) => {
             e.preventDefault();
+            window.location.href = `${base_url()}/catalog`;
             toggleOrderReceivedModal(false);
           }}
-          href="/catalog"
-          className="group w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98] cursor-pointer"
+          className="group w-full flex h-12 items-center justify-center bg-dark text-white hover:bg-neutral-800 transition-colors"
         >
-          <span>Continue Browsing</span>
-        </Link>
-      </motion.div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em]">
+            Return to Collection
+          </span>
+        </button>
+      </div>
     </div>
   );
 }

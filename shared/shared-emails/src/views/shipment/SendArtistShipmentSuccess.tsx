@@ -1,7 +1,8 @@
 import { Text, Heading, Link } from "@react-email/components";
 import { dashboard_url } from "@omenai/url-config/src/config";
 import ShipmentLayout from "./ShipmentLayout";
-import ArtworkCard from "./ArtworkCard";
+import EmailArtworkCard from "./EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function SendArtistShipmentSuccess(
   trackingCode: string,
@@ -9,8 +10,9 @@ export default function SendArtistShipmentSuccess(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  artworkPrice: number
+  price: string,
 ) {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <ShipmentLayout
       name={name}
@@ -57,11 +59,11 @@ export default function SendArtistShipmentSuccess(
       >
         <strong>Tracking Code : </strong> {trackingCode}
       </Text>
-      <ArtworkCard
-        artistName={artistName}
+      <EmailArtworkCard
         artwork={artwork}
         artworkImage={artworkImage}
-        artworkPrice={artworkPrice}
+        artistName={artistName}
+        price={price}
       />
 
       <Text
@@ -77,7 +79,7 @@ export default function SendArtistShipmentSuccess(
 
       <div style={{ textAlign: "center", margin: "30px 0" }}>
         <Link
-          href={`${dashboard_url()}/artist/app/orders`}
+          href={`${dashboard_url()}/artist/app/wallet`}
           style={{
             display: "inline-block",
             backgroundColor: "#10b981",

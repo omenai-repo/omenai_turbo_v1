@@ -10,7 +10,6 @@ export async function fetchHighlightData(tag: string, session_id: string) {
   }
   if (tag === "net") {
     const result = await fetchIncomeData(session_id, "gallery");
-    console.log(result);
     return result?.isOk
       ? formatPrice(result.data.netIncome, "USD")
       : formatPrice(0, "USD");

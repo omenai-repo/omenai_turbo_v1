@@ -1,16 +1,21 @@
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { rollbarServerInstance } from "@omenai/rollbar-config";
-import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { verifyAuthVercel } from "../../utils";
 
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     const currentDate = toUTCDate(new Date());
@@ -21,14 +26,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         "exclusivity_status.exclusivity_type": "exclusive",
         "exclusivity_status.exclusivity_end_date": { $lt: currentDate },
       },
-      "art_id"
+      "art_id",
     ).lean();
 
     if (expiredContracts.length === 0) {
-      console.log("No artwork exclusivity contracts expired");
       return NextResponse.json(
         { message: "No expired contracts found" },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -68,17 +72,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       CreateOrder.bulkWrite(updateOrderOps),
     ]);
 
-    console.log(
-      `✅ Updated ${artworkResult.modifiedCount} artworks, ${orderResult.modifiedCount} orders`
-    );
-
     return NextResponse.json(
       {
         message: "Exclusivity contracts updated successfully",
         artworksUpdated: artworkResult.modifiedCount,
         ordersUpdated: orderResult.modifiedCount,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
@@ -86,11 +86,11 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     createErrorRollbarReport(
       "Cron: Artwork Exclusivity Expiration",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

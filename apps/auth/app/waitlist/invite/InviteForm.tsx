@@ -40,7 +40,15 @@ function validateForm(data: InviteFormData, setErrors: Function): boolean {
 
 // Handle API call and navigation
 
-export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
+export default function InviteForm({
+  entity,
+  email,
+  inviteCode,
+}: Readonly<{
+  entity: string;
+  email: string | undefined;
+  inviteCode: string | undefined;
+}>) {
   const auth_url = auth_uri();
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
@@ -50,11 +58,17 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
 
   if (!waitlistActivated) router.replace(`/regiter/${entity}`);
 
-  const { errors, setErrors, isSubmitting, setIsSubmitting, handleChange } =
-    useWaitlistForm<{ email: string; code: string }>({
-      email: "",
-      code: "",
-    });
+  const {
+    form,
+    errors,
+    setErrors,
+    isSubmitting,
+    setIsSubmitting,
+    handleChange,
+  } = useWaitlistForm<{ email: string; code: string }>({
+    email: email ?? "",
+    code: inviteCode ?? "",
+  });
 
   async function processInvite(
     data: InviteFormData,
@@ -113,6 +127,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
             name="email"
             onChange={handleChange}
             disabled={isSubmitting}
+            value={form.email ?? ""}
           />
           {errors?.email && (
             <div className="flex items-center gap-2 text-red-600">
@@ -133,6 +148,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
             name="code"
             onChange={handleChange}
             disabled={isSubmitting}
+            value={form.code ?? ""}
           />
           {errors?.code && (
             <div className="flex items-center gap-2 text-red-600">
@@ -154,7 +170,7 @@ export default function InviteForm({ entity }: Readonly<{ entity: string }>) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
+            className="p-4 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
           >
             {isSubmitting ? (
               <PulseLoader size={5} color="#ffffff" />

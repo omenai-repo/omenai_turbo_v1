@@ -1,15 +1,15 @@
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import { Wallet } from "@omenai/shared-models/models/wallet/WalletSchema";
 import { sendGalleryShipmentSuccessfulMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryShipmentSuccessfulMail";
 import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/artist/sendArtistFundUnlockEmail";
 import { createErrorRollbarReport } from "../../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { trackOrderShipment, verifyAuthVercel } from "../../utils";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -25,27 +25,18 @@ const isDateAtLeastTwoDaysPast = (targetDate: Date): boolean => {
 /**
  * Process a single order: check delivery status and update order/wallet if delivered
  */
+
+async function retrieveTrackingResult(order_id: string) {
+  try {
+    return await trackOrderShipment(order_id);
+  } catch (error) {
+    console.error(`Tracking failed for ${order_id}:`, error);
+    return null;
+  }
+}
 async function processOrder(order: any, dbConnection: any) {
   try {
-    // Fetch the latest shipment status from the tracking API
-    const response = await fetch(
-      `${getApiUrl()}/api/shipment/shipment_tracking?order_id=${order.order_id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Origin: "https://omenai.app",
-        },
-        // Add timeout to prevent hanging requests
-        signal: AbortSignal.timeout(10000), // 10 second timeout
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`API fetch failed with status ${response.status}`);
-    }
-
-    const trackingResult = await response.json();
+    const trackingResult = await retrieveTrackingResult(order.order_id);
 
     // Validate response structure
     if (!trackingResult?.events || !Array.isArray(trackingResult.events)) {
@@ -102,7 +93,7 @@ async function processOrder(order: any, dbConnection: any) {
               "shipping_details.delivery_confirmed": true,
             },
           },
-          { session }
+          { session },
         );
 
         if (orderUpdateResult.matchedCount === 0) {
@@ -115,12 +106,12 @@ async function processOrder(order: any, dbConnection: any) {
           const walletExists = await Wallet.findOne(
             { owner_id: seller_details.id },
             { _id: 1 },
-            { session }
+            { session },
           );
 
           if (!walletExists) {
             throw new Error(
-              `Wallet not found for seller ${seller_details.id}. Escalate to IT support.`
+              `Wallet not found for seller ${seller_details.id}. Escalate to IT support.`,
             );
           }
 
@@ -136,12 +127,12 @@ async function processOrder(order: any, dbConnection: any) {
                 available_balance: wallet_increment_amount,
               },
             },
-            { session }
+            { session },
           );
 
           if (walletUpdateResult.matchedCount === 0) {
             throw new Error(
-              `Insufficient pending balance (${wallet_increment_amount} required) or wallet concurrency issue`
+              `Insufficient pending balance (${wallet_increment_amount} required) or wallet concurrency issue`,
             );
           }
 
@@ -149,13 +140,7 @@ async function processOrder(order: any, dbConnection: any) {
             throw new Error("Wallet update failed - no changes made");
           }
 
-          console.log(
-            `✓ Order ${order.order_id}: Released ${wallet_increment_amount} to seller ${seller_details.id}`
-          );
-          const artworkImage = getImageFileView(order.artwork_data.url, 120);
-          // TODO: Send notification emails
           if (seller_designation === "artist") {
-            // - Artist: Notify about fund unlock
             await sendArtistFundUnlockEmail({
               name: seller_details.name,
               email: seller_details.email,
@@ -167,10 +152,10 @@ async function processOrder(order: any, dbConnection: any) {
               name: seller_details.name,
               email: seller_details.email,
               trackingCode: order.order_id,
-              artistName: order.seller_details.name,
-              artworkImage,
+              artworkImage: order.artwork_data.url,
               artwork: order.artwork_data.title,
-              artworkPrice: order.artwork_data.pricing.usd_price,
+              buyerName: order.buyer_details.name,
+              requestDate: order.createdAt,
             });
           }
         }
@@ -194,7 +179,7 @@ async function processOrder(order: any, dbConnection: any) {
     createErrorRollbarReport(
       "Cron: Check shipment delivery status",
       errorMessage,
-      50
+      50,
     );
     return {
       status: "failed",
@@ -207,10 +192,14 @@ async function processOrder(order: any, dbConnection: any) {
 /**
  * Cron job endpoint to validate shipment deliveries and release funds
  */
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const startTime = Date.now();
 
   try {
+    await verifyAuthVercel(request);
+
     const dbConnection = await connectMongoDB();
 
     // Fetch processing orders with valid shipment IDs
@@ -230,10 +219,8 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         "shipping_details.shipment_information.tracking.delivery_status":
           "In Transit",
       },
-      "order_id shipping_details seller_designation payment_information seller_details"
+      "order_id shipping_details seller_designation payment_information seller_details artwork_data",
     ).lean();
-
-    console.log(`Found ${processingOrders.length} orders in processing status`);
 
     // Filter orders where the estimated delivery date is at least two days past
     const eligibleOrders = processingOrders.filter((order) => {
@@ -243,7 +230,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       if (!estimatedDeliveryDateStr) {
         console.warn(
-          `Order ${order.order_id}: Missing estimated delivery date`
+          `Order ${order.order_id}: Missing estimated delivery date`,
         );
         return false;
       }
@@ -251,18 +238,12 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       try {
         const deliveryDate = toUTCDate(new Date(estimatedDeliveryDateStr));
 
-        console.log(deliveryDate);
-        console.log(isDateAtLeastTwoDaysPast(deliveryDate));
         return isDateAtLeastTwoDaysPast(deliveryDate);
       } catch (error) {
         console.error(`Order ${order.order_id}: Invalid delivery date format`);
         return false;
       }
     });
-
-    console.log(
-      `${eligibleOrders.length} orders eligible for validation (2+ days past delivery date)`
-    );
 
     if (eligibleOrders.length === 0) {
       const res_payload = {
@@ -272,7 +253,6 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         execution_time_ms: Date.now() - startTime,
       };
 
-      console.log(res_payload);
       return NextResponse.json({ ...res_payload }, { status: 200 });
     }
 
@@ -282,12 +262,9 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     for (let i = 0; i < eligibleOrders.length; i += BATCH_SIZE) {
       const batch = eligibleOrders.slice(i, i + BATCH_SIZE);
-      console.log(
-        `Processing batch ${Math.floor(i / BATCH_SIZE) + 1} (${batch.length} orders)`
-      );
 
       const batchPromises = batch.map((order) =>
-        processOrder(order, dbConnection)
+        processOrder(order, dbConnection),
       );
       const batchResults = await Promise.allSettled(batchPromises);
       results.push(...batchResults);
@@ -295,17 +272,17 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     // Aggregate results
     const successful = results.filter(
-      (r) => r.status === "fulfilled" && r.value.status === "success"
+      (r) => r.status === "fulfilled" && r.value.status === "success",
     );
 
     const skipped = results.filter(
-      (r) => r.status === "fulfilled" && r.value.status === "skipped"
+      (r) => r.status === "fulfilled" && r.value.status === "skipped",
     );
 
     const failed = results.filter(
       (r) =>
         r.status === "rejected" ||
-        (r.status === "fulfilled" && r.value.status === "failed")
+        (r.status === "fulfilled" && r.value.status === "failed"),
     );
 
     const totalFundsReleased = successful.reduce((sum, r) => {
@@ -318,21 +295,10 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
             order_id: "unknown",
             reason: r.reason?.message || "Rejected promise",
           }
-        : r.value
+        : r.value,
     );
 
     const executionTime = Date.now() - startTime;
-
-    console.log(`
-Cron Job Summary:
-- Total Processing Orders: ${processingOrders.length}
-- Eligible for Check: ${eligibleOrders.length}
-- Successfully Updated: ${successful.length}
-- Skipped (Not Delivered): ${skipped.length}
-- Failed: ${failed.length}
-- Total Funds Released: ${totalFundsReleased}
-- Execution Time: ${executionTime}ms
-    `);
 
     return NextResponse.json(
       {
@@ -348,7 +314,7 @@ Cron Job Summary:
         },
         failed_orders: failedOrders.length > 0 ? failedOrders : undefined,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Critical cron job error:", error);
@@ -357,7 +323,7 @@ Cron Job Summary:
     createErrorRollbarReport(
       "Cron: Check shipment delivery status",
       error,
-      errorResponse?.status
+      errorResponse?.status,
     );
 
     return NextResponse.json(
@@ -365,7 +331,7 @@ Cron Job Summary:
         message: errorResponse?.message || "Critical cron job failure",
         execution_time_ms: Date.now() - startTime,
       },
-      { status: errorResponse?.status || 500 }
+      { status: errorResponse?.status || 500 },
     );
   }
 });

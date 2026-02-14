@@ -1,70 +1,74 @@
-import { TfiPackage } from "react-icons/tfi";
-import { BsCreditCard2Front } from "react-icons/bs";
-// import { RiAuctionLine } from "react-icons/ri";
-import { IoAlbumsOutline, IoWalletOutline } from "react-icons/io5";
+import { Headphones, LucideIcon } from "lucide-react";
 
+export type SidebarSection = "core" | "finance" | "account";
+
+export type SidebarItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  section: SidebarSection;
+};
+
+// config/sidebar.ts
 import {
-  CiUser,
-  CiSettings,
-  CiLogout,
-  CiGrid41,
-  CiExport,
-} from "react-icons/ci";
-import { FaStripeS } from "react-icons/fa";
-import { FaStripe } from "react-icons/fa6";
+  LayoutDashboard,
+  Package,
+  Image,
+  CreditCard,
+  Wallet,
+  User,
+  Settings,
+} from "lucide-react";
 
-const overview = <CiGrid41 className="text-dark group-hover:text-white" />;
-const order = <TfiPackage className="text-dark group-hover:text-white" />;
-const subscription = (
-  <BsCreditCard2Front className="text-dark group-hover:text-white" />
-);
-// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
-const upload = <CiExport className="text-dark group-hover:text-white" />;
-const profile = <CiUser className="text-dark group-hover:text-white" />;
-const settings = <CiSettings className="text-dark group-hover:text-white" />;
-const logout = <CiLogout className="text-dark group-hover:text-white" />;
-const album = <IoAlbumsOutline className="text-dark group-hover:text-white" />;
-const wallet = <IoWalletOutline className="text-dark group-hover:text-white" />;
-const stripe = <FaStripe className="text-dark group-hover:text-white" />;
-export const navMockData: NavMockData = {
-  general: [
-    { title: "Overview", icon: overview, url: "/gallery/overview" },
-    { title: "Orders", icon: order, url: "/gallery/orders" },
-    {
-      title: "My artworks",
-      icon: album,
-      url: "/gallery/artworks",
-    },
-    {
-      title: "Subscription & Billing",
-      icon: subscription,
-      url: "/gallery/billing",
-    },
-  ],
-  account: [
-    {
-      title: "Payout with Stripe",
-      icon: stripe,
-      url: "/gallery/payouts",
-    },
-    {
-      title: "Profile management",
-      icon: profile,
-      url: "/gallery/profile",
-    },
-    { title: "Settings", icon: settings, url: "/gallery/settings" },
+export const sidebarItems: SidebarItem[] = [
+  {
+    label: "Overview",
+    href: "/gallery/overview",
+    icon: LayoutDashboard,
+    section: "core",
+  },
+  {
+    label: "Orders",
+    href: "/gallery/orders",
+    icon: Package,
+    section: "core",
+  },
+  {
+    label: "My Artworks",
+    href: "/gallery/artworks",
+    icon: Image,
+    section: "core",
+  },
 
-    { title: "Sign out", icon: logout, url: "/" },
-  ],
-};
+  {
+    label: "Subscription & Billing",
+    href: "/gallery/billing",
+    icon: CreditCard,
+    section: "finance",
+  },
+  {
+    label: "Payouts",
+    href: "/gallery/payouts",
+    icon: Wallet,
+    section: "finance",
+  },
 
-type NavMockData = {
-  general: NavMockDataItem[];
-  account: NavMockDataItem[];
-};
-
-type NavMockDataItem = {
-  title: string;
-  icon: React.ReactNode;
-  url: string;
-};
+  {
+    label: "Profile",
+    href: "/gallery/profile",
+    icon: User,
+    section: "account",
+  },
+  {
+    label: "Support tickets",
+    href: "/gallery/support",
+    icon: Headphones,
+    section: "account",
+  },
+  {
+    label: "Settings",
+    href: "/gallery/settings",
+    icon: Settings,
+    section: "account",
+  },
+];

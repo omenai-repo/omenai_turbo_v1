@@ -12,19 +12,25 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
-
+const RequestPasswordCodeSchema = z.object({
+  id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { id } = await request.json();
+    const { id } = await validateRequestBody(
+      request,
+      RequestPasswordCodeSchema,
+    );
 
     const account = await AccountIndividual.findOne({
       user_id: id,
@@ -46,7 +52,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!create_code)
       throw new Error(
-        "Something went wrong with this request, Please contact support."
+        "Something went wrong with this request, Please contact support.",
       );
 
     await sendPasswordConfirmationCodeMail({
@@ -57,19 +63,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Confirmation code sent to email address" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "individual: request password comfirmation code",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -24,6 +24,7 @@
     "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
+    "@omenai/next-security-headers": "*",
     "@omenai/url-config": "*",
     "@omenai/rollbar-config": "*",
     "@types/lodash.debounce": "^4.0.9",

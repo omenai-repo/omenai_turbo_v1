@@ -11,9 +11,9 @@ export default function page() {
       <PageTitle title="Add primary account" />
       <div className="w-full py-8">
         <Paper
-          radius={"lg"}
+          radius={"sm"}
           withBorder
-          className="max-w-lg w-full p-8 flex flex-col space-y-6"
+          className="max-w-full w-full p-8 flex flex-col space-y-6"
         >
           <div>
             <h5 className="font-semibold">Add a primary bank account</h5>

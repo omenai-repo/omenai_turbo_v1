@@ -3,14 +3,18 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { NotificationPayload } from "@omenai/shared-types";
+
+import { mockInvoice } from "./p";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 export async function POST() {
   try {
     const workflowID = await createWorkflow(
-      "/api/workflows",
-      `test_workflow${generateDigit(2)}`
+      "/api/workflows/emails/sendPaymentInvoice",
+      `send_payment_invoice_${mockInvoice.invoiceNumber}_workflow`,
+      JSON.stringify({
+        invoice: mockInvoice,
+      })
     );
     if (!workflowID) throw new ServerError("Workflow failed");
 
@@ -20,7 +24,6 @@ export async function POST() {
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status }

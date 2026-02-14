@@ -37,8 +37,8 @@ export const AtelierSelect = ({
           className={`
             w-full appearance-none rounded-none
             border-b border-neutral-300 bg-transparent py-3 pr-8 
-            font-sans text-sm text-black 
-            focus:border-black focus:outline-none focus:ring-0
+            font-sans text-sm text-dark 
+            focus:border-dark focus:outline-none focus:ring-0
             cursor-pointer z-10 relative
             transition-colors placeholder:text-neutral-400
             ${className || ""} 
@@ -58,7 +58,7 @@ export const AtelierSelect = ({
 
         {/* 4. Icon Pointer Events */}
         {/* <ChevronDown
-          className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none z-0 group-hover:text-black transition-colors"
+          className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none z-0 group-hover:text-dark transition-colors"
           size={16}
         /> */}
       </div>

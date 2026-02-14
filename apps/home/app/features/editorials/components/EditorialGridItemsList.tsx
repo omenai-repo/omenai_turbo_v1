@@ -1,10 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
 import EditorialItemCard from "@omenai/shared-ui-components/components/editorials/EditorialItemCard";
-import useEmblaCarousel from "embla-carousel-react";
-import {
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
 import { EditorialSchemaTypes } from "@omenai/shared-types";
 
 export default function EditorialGridItemsList({
@@ -12,85 +6,30 @@ export default function EditorialGridItemsList({
 }: {
   editorials: EditorialSchemaTypes[];
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    watchDrag: true,
-  });
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  const updateScrollProgress = () => {
-    if (!emblaApi) return;
-    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-    setScrollProgress(progress);
-  };
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    const handleScroll = () => {
-      requestAnimationFrame(updateScrollProgress);
-    };
-
-    emblaApi.on("scroll", handleScroll);
-    emblaApi.on("resize", updateScrollProgress);
-    updateScrollProgress(); // Initial progress update
-
-    return () => {
-      emblaApi.off("scroll", handleScroll);
-      emblaApi.off("resize", updateScrollProgress);
-    };
-  }, [emblaApi]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-    }
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-    }
-  }, [emblaApi]);
   return (
-    <div>
-      <div className="embla" ref={emblaRef}>
-        <div className="embla__container gap-x-5">
-          {editorials.map((editorial, index) => {
-            return (
-              <div className="embla__slide" key={editorial.slug}>
-                <EditorialItemCard editorial={editorial} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+    // Grid Setup: 3 Columns. Rows are fixed to 350px height.
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[350px]">
+      {/* SLICE UPDATED TO 6: 
+          1 Featured (2x2) + 5 Standard (1x1) = Perfect 3x3 Grid Block 
+      */}
+      {editorials.slice(0, 6).map((editorial, index) => {
+        const isFeatured = index === 0;
 
-      <div className="w-full flex gap-x-4 items-center my-3">
-        <div className=" w-full h-[1px] bg-[#fafafa]">
+        return (
           <div
-            className="h-full bg-dark "
-            style={{ width: `${scrollProgress * 100}%` }}
-          ></div>
-        </div>
-
-        <div className="flex items-center justify-center w-fit space-x-2">
-          <button
-            onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] hover:border-dark duration-300 grid place-items-center bg-dark text-white"
+            key={editorial.slug}
+            className={`
+                relative w-full h-full
+                ${isFeatured ? "md:col-span-2 md:row-span-2" : "md:col-span-1 md:row-span-1"}
+            `}
           >
-            <MdOutlineKeyboardArrowLeft />
-          </button>
-          <button
-            onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] hover:border-dark duration-300 grid place-items-center bg-dark text-white"
-          >
-            <MdOutlineKeyboardArrowRight />
-          </button>
-        </div>
-      </div>
-
-      {/* <div className="flex relative gap-x-4 overflow-x-scroll w-full"></div> */}
+            <EditorialItemCard
+              editorial={{ ...editorial }}
+              isFeatured={isFeatured}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

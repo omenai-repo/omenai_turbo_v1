@@ -2,13 +2,12 @@ import {
   Body,
   Container,
   Head,
-  Heading,
   Html,
   Preview,
   Section,
-  Text,
 } from "@react-email/components";
 import React from "react";
+import EmailFooter from "../../components/Footer";
 
 export default function ShipmentLayout({
   preview,
@@ -31,34 +30,8 @@ export default function ShipmentLayout({
           padding: "40px 20px",
         }}
       >
-        <Container style={{ maxWidth: "600px", margin: "0 auto" }}>
-          <Section
-            style={{
-              border: "1px solid #eee",
-              borderRadius: "12px",
-              padding: "32px",
-            }}
-          >
-            {children}
-
-            <Text
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.5",
-                marginTop: "32px",
-              }}
-            >
-              If you have any questions or need assistance, our support team is
-              here to help.
-            </Text>
-
-            <Text style={{ marginTop: "40px", fontSize: "16px" }}>
-              Best regards,
-              <br />
-              The Omenai Team
-            </Text>
-          </Section>
-        </Container>
+        {children}
+        <EmailFooter recipientName={name} />
       </Body>
     </Html>
   );

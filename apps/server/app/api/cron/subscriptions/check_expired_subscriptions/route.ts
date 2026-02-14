@@ -8,6 +8,7 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions/Subscr
 import Stripe from "stripe";
 import pLimit from "p-limit"; // For concurrency control
 import { createErrorRollbarReport } from "../../../util";
+import { verifyAuthVercel } from "../../utils";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -46,7 +47,7 @@ const PAGE_SIZE = 100;
 
 async function renewSubscription(
   sub: LeanExpiredSub,
-  renewalPeriod: string
+  renewalPeriod: string,
 ): Promise<{
   subscriptionId: string;
   email?: string;
@@ -105,7 +106,7 @@ async function renewSubscription(
             subscriptionId: sub._id,
             renewalPeriod,
           }),
-        }
+        },
       );
       return {
         subscriptionId: sub._id,
@@ -138,17 +139,20 @@ async function renewSubscription(
   };
 }
 
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
-  await connectMongoDB();
-
+export const GET = withRateLimit(lenientRateLimit)(async function GET(
+  request: Request,
+) {
   const now = new Date();
   const renewalPeriod = `${now.getUTCFullYear()}-${now.getUTCMonth() + 1}`;
 
   try {
+    await verifyAuthVercel(request);
+
+    await connectMongoDB();
     // 1) Mark overdue subs as expired (ignore canceled ones)
     await Subscriptions.updateMany(
       { expiry_date: { $lte: now }, status: { $ne: "canceled" } },
-      { $set: { status: "expired" } }
+      { $set: { status: "expired" } },
     );
 
     let page = 0;
@@ -159,7 +163,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       // 2) Fetch expired subs to attempt renewal (paginated)
       const expiredSubs: LeanExpiredSub[] = await Subscriptions.find(
         { expiry_date: { $lte: now }, status: "expired" },
-        "_id expiry_date stripe_customer_id customer paymentMethod next_charge_params"
+        "_id expiry_date stripe_customer_id customer paymentMethod next_charge_params",
       )
         .lean<LeanExpiredSub[]>()
         .skip(page * PAGE_SIZE)
@@ -176,21 +180,21 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
       if (emailsToUpdate.length) {
         await AccountGallery.updateMany(
           { email: { $in: emailsToUpdate } },
-          { $set: { "subscription_status.active": false } }
+          { $set: { "subscription_status.active": false } },
         );
       }
 
       // 4) Attempt to renew subs via Stripe (parallel, limited concurrency)
       const limit = pLimit(MAX_CONCURRENT_RENEWALS);
       const renewalPromises = expiredSubs.map((sub) =>
-        limit(() => renewSubscription(sub, renewalPeriod))
+        limit(() => renewSubscription(sub, renewalPeriod)),
       );
       const results = await Promise.allSettled(renewalPromises);
 
       const formattedResults = results.map((r) =>
         r.status === "fulfilled"
           ? r.value
-          : { ok: false, error: "Internal error" }
+          : { ok: false, error: "Internal error" },
       );
 
       allResults = allResults.concat(formattedResults);
@@ -208,21 +212,21 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         attempts: totalAttempts,
         results: allResults,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (e) {
     console.error("[subscription-renewals] fatal error:", e);
     createErrorRollbarReport(
       "Cron: Subscription Renewals - Process expired subscriptions",
       e as any,
-      500
+      500,
     );
     return NextResponse.json(
       {
         message: "Subscription renewal cron failed",
         error: e instanceof Error ? e.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

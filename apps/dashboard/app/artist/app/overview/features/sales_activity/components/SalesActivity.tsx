@@ -1,4 +1,6 @@
 import { ResponsiveLine } from "@nivo/line";
+import Dropdown from "../../../components/Dropdown";
+import { SalesTooltip } from "./Tooltip";
 
 // Calculate Y-axis ticks dynamically based on min and max values
 function calculateYTicks(min: number, max: number, maxTicks = 6) {
@@ -33,90 +35,91 @@ export const SalesActivityChart = ({
   const yTicks = calculateYTicks(minYValue, maxYValue);
 
   return (
-    <ResponsiveLine
-      key={year}
-      data={data}
-      margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
-      xScale={{ type: "point" }}
-      yScale={{
-        type: "linear",
-        min: "auto",
-        max: "auto",
-        stacked: false,
-      }}
-      yFormat=" >-$0,.1~f"
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        tickSize: 0,
-        tickPadding: 12,
-        tickRotation: 0,
-        legend: "Month",
-        legendOffset: 36,
-        legendPosition: "middle",
-        format: (value) => value.substring(0, 3), // prettier month labels
-      }}
-      axisLeft={{
-        tickSize: 0,
-        tickPadding: 12,
-        tickRotation: 0,
-        legend: "Revenue ($)",
-        legendOffset: -50,
-        legendPosition: "middle",
-        tickValues: yTicks,
-        format: (v) => `$${v.toLocaleString()}`,
-      }}
-      enableGridX={false}
-      enableGridY={true}
-      gridYValues={yTicks}
-      theme={{
-        text: {
-          fill: "#0f172a", // slate-300
-        },
-        grid: {
-          line: {
-            stroke: "#0f172a", // slate-800
-            strokeDasharray: "4 6",
+    <div className="h-[450px] rounded bg-white p-6 shadow-sm w-full">
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-fluid-base font-medium">Sales Activity</h3>
+          <p className="text-fluid-xxs text-neutral-500">
+            Annual revenue performance
+          </p>
+        </div>
+        <Dropdown />
+      </div>
+      <ResponsiveLine
+        key={JSON.stringify(data)}
+        data={data}
+        margin={{ top: 10, right: 70, bottom: 90, left: 70 }}
+        xScale={{ type: "point" }}
+        yScale={{
+          type: "linear",
+          min: "auto",
+          max: "auto",
+          stacked: false,
+        }}
+        yFormat=" >-$0,.0f"
+        /* AXES — CLEAN & QUIET */
+        axisTop={null}
+        axisRight={null}
+        axisBottom={{
+          tickSize: 0,
+          tickPadding: 14,
+          legend: "Month",
+          legendOffset: 42,
+          legendPosition: "middle",
+          format: (value) => value.substring(0, 3),
+        }}
+        axisLeft={{
+          tickSize: 0,
+          tickPadding: 14,
+          legendOffset: -46,
+          legendPosition: "middle",
+          tickValues: yTicks,
+          format: (v) => `$${v.toLocaleString()}`,
+        }}
+        /* GRID — SUBTLE */
+        enableGridX={false}
+        enableGridY={true}
+        gridYValues={yTicks}
+        /* VISUAL STYLE */
+        curve="monotoneX"
+        colors={["#0f172a"]}
+        lineWidth={0.7}
+        /* AREA */
+        enableArea={true}
+        areaOpacity={0.8}
+        areaBaselineValue={minYValue}
+        defs={[
+          {
+            id: "areaGradient",
+            type: "linearGradient",
+            colors: [
+              { offset: 0, color: "#0f172a", opacity: 0.18 },
+              { offset: 60, color: "#0f172a", opacity: 0.08 },
+              { offset: 100, color: "#0f172a", opacity: 0.02 },
+            ],
           },
-        },
-        tooltip: {
-          container: {
-            background: "#0f172a", // slate-900
-            color: "white",
-            fontSize: "12px",
-            borderRadius: "8px",
-            padding: "10px 12px",
-            boxShadow: "0 4px 14px rgba(0,0,0,0.4)",
+        ]}
+        fill={[{ match: "*", id: "areaGradient" }]}
+        /* POINTS — HIDDEN (HOVER ONLY) */
+        enablePoints={false}
+        useMesh={true}
+        enableCrosshair={true}
+        crosshairType="x"
+        tooltip={({ point }) => <SalesTooltip point={point} />}
+        theme={{
+          text: {
+            fill: "#475569",
+            fontSize: 12,
           },
-        },
-      }}
-      curve="cardinal"
-      colors={["#0f172a"]}
-      lineWidth={0.6}
-      enableArea={true}
-      areaOpacity={0.15}
-      areaBaselineValue={minYValue}
-      defs={[
-        {
-          id: "gradientLine",
-          type: "linearGradient",
-          colors: [
-            { offset: 0, color: "#c7c7c7" }, // purple-500
-            { offset: 100, color: "#c7c7c7" }, // purple-700
-          ],
-        },
-      ]}
-      fill={[{ match: "*", id: "gradientLine" }]}
-      motionConfig="gentle"
-      useMesh={true}
-      enableCrosshair={true}
-      crosshairType="bottom-left"
-      pointSize={8}
-      pointBorderWidth={2}
-      pointColor="#0f172a"
-      pointBorderColor="#c7c7c7"
-      pointLabelYOffset={-12}
-      pointLabel="data.yFormatted"
-    />
+          grid: {
+            line: {
+              stroke: "#e5e7eb",
+              strokeDasharray: "3 6",
+            },
+          },
+        }}
+        motionConfig="gentle"
+      />
+    </div>
   );
 };

@@ -4,18 +4,24 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["gallery"],
 };
-
+const generateStripeSchema = z.object({
+  account: z.any(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
-    const { account } = await request.json();
+    const { account } = await validateRequestBody(
+      request,
+      generateStripeSchema,
+    );
 
     const accountLink = await stripe.accounts.createLoginLink(account);
 
@@ -23,17 +29,16 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       url: accountLink.url,
     });
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "stripe: generate stripe login link",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

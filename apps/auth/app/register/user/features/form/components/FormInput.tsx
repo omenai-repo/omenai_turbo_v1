@@ -24,19 +24,6 @@ export default function FormInput() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (allKeysEmpty(individualSignupData)) {
-      toast.error("Error notification", {
-        description: "All form fields must be filled out before submission.",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-      return;
-    }
-    setIsLoading();
     const {
       name,
       email,
@@ -50,6 +37,22 @@ export default function FormInput() {
       stateCode,
       phone,
     } = individualSignupData;
+    console.log(individualSignupData);
+    const checkField = { name, email, password, phone };
+
+    if (allKeysEmpty(checkField)) {
+      toast.error("Error notification", {
+        description: "All form fields must be filled out before submission.",
+        style: {
+          background: "red",
+          color: "white",
+        },
+        className: "class",
+      });
+      return;
+    }
+    setIsLoading();
+
     const data: Omit<IndividualRegisterData, "confirmPassword"> & {
       preferences: string[];
     } = {
@@ -69,7 +72,7 @@ export default function FormInput() {
       },
     };
 
-    const response = await registerAccount(data, "individual");
+    const response = await registerAccount(data, "", "", "individual");
 
     if (response.isOk) {
       toast.success("Operation successful", {
@@ -82,7 +85,7 @@ export default function FormInput() {
       });
       if (redirectTo) {
         router.push(
-          `/verify/individual/${response.body.data}?redirect=${redirectTo}`
+          `/verify/individual/${response.body.data}?redirect=${redirectTo}`,
         );
       } else {
         router.push(`/verify/individual/${response.body.data}`);

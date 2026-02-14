@@ -1,5 +1,5 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
-import { AddressTypes } from "@omenai/shared-types";
+import { AddressTypes, ArtworkDimensions } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export const createShippingOrder = async (
@@ -10,7 +10,7 @@ export const createShippingOrder = async (
   shipping_address: AddressTypes,
   origin_address: AddressTypes | null,
   designation: "gallery" | "artist",
-  token: string
+  token: string,
 ) => {
   const url = getApiUrl();
   try {

@@ -20,7 +20,8 @@ import {
 } from "@omenai/shared-types";
 import { sendShipmentPickupReminderMail } from "@omenai/shared-emails/src/models/shipment/sendShipmentPickupReminderMail";
 import { createErrorRollbarReport } from "../../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { verifyAuthVercel } from "../../utils";
 // Run every hour
 // Utility function to send reminder emails
 async function sendReminderEmail(
@@ -35,22 +36,20 @@ async function sendReminderEmail(
   artistName: string,
   artworkImage: string,
   artworkPrice: number,
-  estimatedPickupDate?: string
+  requestDate: string,
+  estimatedPickupDate?: string,
 ): Promise<void> {
   if (isReminded) {
-    console.log(`🔁 Reminder already sent for order_id: ${orderId}, skipping.`);
     return;
   }
-  console.log(`🟡 Sending reminder email for order_id: ${orderId}`);
   // DONE: Implement actual email sending logic here
 
   await ScheduledShipment.updateOne(
     { order_id: orderId },
-    { $set: { reminderSent: true } }
+    { $set: { reminderSent: true } },
   );
 
   const daysLeft = Math.floor(days).toString();
-  const artworkImageUrl = getImageFileView(artworkImage, 120);
   await sendShipmentPickupReminderMail({
     name,
     email,
@@ -60,20 +59,20 @@ async function sendReminderEmail(
     pickupAddress,
     daysLeft,
     estimatedPickupDate,
+    artworkImage,
     artistName,
-    artworkImage: artworkImageUrl,
-    artworkPrice,
+    price: formatPrice(artworkPrice),
   });
 }
 
 // Utility function to update shipment status
 async function updateShipmentStatus(
   orderId: string,
-  status: string
+  status: string,
 ): Promise<void> {
   const result = await ScheduledShipment.updateOne(
     { order_id: orderId },
-    { $set: { status } }
+    { $set: { status } },
   );
   if (result.modifiedCount === 0) {
     throw new Error(`Failed to update status for order_id: ${orderId}`);
@@ -81,11 +80,10 @@ async function updateShipmentStatus(
 }
 
 async function triggerShipmentWorkflow(orderId: string): Promise<void> {
-  console.log(`🚀 Triggering workflow for order_id: ${orderId}`);
   const workflowID = await createWorkflow(
     "/api/workflows/shipment/create_shipment",
     `test_workflow${generateDigit(2)}`,
-    JSON.stringify({ order_id: orderId })
+    JSON.stringify({ order_id: orderId }),
   );
   if (!workflowID) throw new ServerError("Workflow failed");
 }
@@ -99,16 +97,19 @@ function chunkArray<T>(array: T[], size: number): T[][] {
   return result;
 }
 
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+export const GET = withRateLimit(lenientRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
     const nowUTC = toUTCDate(new Date());
     const shipments = await ScheduledShipment.find({ status: "scheduled" });
     if (!shipments.length) {
-      console.log("No scheduled shipments to process.");
       return NextResponse.json(
         { message: "No scheduled shipments." },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -153,7 +154,8 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
               order.seller_details.name,
               order.artwork_data.url,
               order.artwork_data.pricing.usd_price,
-              order.shipping_details.shipment_information.planned_shipping_date
+              order.createdAt,
+              order.shipping_details.shipment_information.planned_shipping_date,
             );
             return;
           }
@@ -165,17 +167,16 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
             // Optionally delete from scheduled collection if it's a one-time operation
             // await ScheduledShipment.deleteOne({ order_id: shipment.order_id });
           }
-        })
+        }),
       );
     }
 
-    console.log("✅ Scheduled shipment batch check completed.");
     return NextResponse.json(
       {
         message: "Scheduled shipment batch check completed.",
         shipmentsCreated: shipments.length,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const errorResponse = handleErrorEdgeCases(error);
@@ -183,11 +184,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     createErrorRollbarReport(
       "Cron: Create shipment at exhibition end date",
       error,
-      errorResponse?.status
+      errorResponse?.status,
     );
     return NextResponse.json(
       { message: errorResponse?.message },
-      { status: errorResponse?.status }
+      { status: errorResponse?.status },
     );
   }
 });

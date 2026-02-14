@@ -1,31 +1,33 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PromotionalModel } from "@omenai/shared-models/models/promotionals/PromotionalSchema";
-import { ObjectId } from "mongoose";
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
 };
-
+const DeletePromotionalSchema = z.object({
+  id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { id }: { id: ObjectId } = await request.json();
+    const { id } = await validateRequestBody(request, DeletePromotionalSchema);
 
     const deletePromotionalData = await PromotionalModel.findByIdAndDelete(id);
 
     if (!deletePromotionalData)
       throw new ServerError(
-        "Something went wrong, please try again or contact support"
+        "Something went wrong, please try again or contact support",
       );
 
     return NextResponse.json({ message: "Promotional data deleted" });
@@ -34,11 +36,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "promotional: delete promotional",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -1,46 +1,53 @@
 import Image from "next/image";
 import React from "react";
 import GalleryLoginForm from "../features/galleryForm/Form";
+import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
+import LoginFormLayout from "../components/LoginFormLayout";
 
 export const dynamic = "force-dynamic";
 
 function Page() {
   return (
-    <section className="h-[100vh] overflow-x-hidden">
-      <div className="w-full h-full md:grid grid-cols-2">
-        {/* Side section */}
-        <div className="h-full w-full relative hidden md:block">
+    <section className="h-screen w-full bg-white overflow-hidden flex flex-col md:flex-row">
+      {/* --- Left Side: The Visual Anchor (40%) --- */}
+      <div className="relative hidden md:flex w-[40%] h-full bg-slate-50 p-6 flex-col justify-between">
+        {/* Logo/Home Link */}
+        <IndividualLogo />
+
+        {/* Framed Image Container */}
+        <div className="relative w-full h-[75%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
           <Image
-            src={"/gallery__banner.png"}
-            alt="Gallery sign up image block"
-            width={960}
-            height={1024}
-            className="absolute inset-0 w-full h-full object-center object-cover"
+            src="/images/gallery_auth.jpg"
+            alt="Omenai Gallery Visual"
+            fill
+            priority
+            className="object-cover transition-transform duration-[10s] hover:scale-110"
           />
+          {/* Subtle overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+          {/* Image Caption - Makes it feel like an editorial */}
+          <div className="absolute bottom-6 left-6 text-white">
+            <p className="text-xs uppercase tracking-widest opacity-80 mb-1">
+              Featured Collection
+            </p>
+            <p className="text-fluid-base font-light">Tetelestai, 2024</p>
+          </div>
         </div>
 
-        <section className="overflow-hidden bg-white flex items-center justify-center relative">
-          {/* --- Background Mesh of Dots (Subtle and Unique) --- */}
-          <div
-            className="absolute inset-0 z-0 opacity-70"
-            style={{
-              // Uses a subtle CSS background image for the dot mesh effect
-              backgroundImage: `radial-gradient(circle, #d4d4d4 1px, transparent 1px)`,
-              backgroundSize: "20px 20px",
-            }}
-          />
-
-          {/* --- Centered Login Form --- */}
-          <div className="relative z-10 w-full max-w-lg p-4">
-            <GalleryLoginForm />
-          </div>
-
-          {/* --- Aesthetic Bottom Corner Branding (Subtle) --- */}
-          <div className="absolute bottom-6 right-6 text-xs text-slate-800 font-mono uppercase tracking-widest z-10 hidden sm:block">
-            OMENAI INC.
-          </div>
-        </section>
+        {/* Footer info for the side section */}
+        <div className="relative z-20">
+          <p className="text-[10px] text-slate-400 max-w-[200px] leading-relaxed uppercase tracking-tighter">
+            Connecting global collectors with the world&apos;s most exceptional
+            artists.
+          </p>
+        </div>
       </div>
+
+      {/* --- Right Side: The Interaction Space (60%) --- */}
+      <LoginFormLayout entity="gallery">
+        <GalleryLoginForm />
+      </LoginFormLayout>
     </section>
   );
 }

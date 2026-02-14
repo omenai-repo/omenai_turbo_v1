@@ -21,44 +21,46 @@ const SubscriptionPaymentFailedMail = (name: string) => {
         <Body className="bg-white my-auto mx-auto font-sans">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
-              src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+              src={
+                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
+              }
               width="120"
               height="20"
               alt="Omenai logo"
               className="mx-auto mt-10"
             />
 
-            <Heading className="text-black text-fluid-md font-semibold text-center p-0 mb-[30px] mx-0">
+            <Heading className="text-dark text-fluid-md font-semibold text-center p-0 mb-[30px] mx-0">
               Action Needed: Update Your Payment Details
             </Heading>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Hello <strong>{name}</strong>,
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               We hope you're doing well. We're reaching out to let you know that
               your recent subscription payment attempt was unsuccessful.
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               To avoid any interruptions in your access, please update your
               payment information at your earliest convenience.
             </Text>
 
             <Button
               href={`${dashboard_url()}/gallery/billing/card`}
-              className="bg-black text-white text-fluid-xxs font-medium px-5 py-3 rounded mt-[20px] mb-[10px] mx-auto block text-center"
+              className="bg-dark text-white text-fluid-xxs font-medium px-5 py-3 rounded mt-[20px] mb-[10px] mx-auto block text-center"
             >
               Update Payment Info
             </Button>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Your account and data remain secure during this time, but
               subscription access will be paused until payment is resolved.
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               For any assistance, please contact our support team at{" "}
               <Link
                 href="mailto:contact@omenani.net"
@@ -69,13 +71,13 @@ const SubscriptionPaymentFailedMail = (name: string) => {
               .
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Thank you for your attention to this matter. We appreciate your
               continued support and look forward to having you back as an active
               subscriber.
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Warm regards, <br />
               Moses from Omenai
             </Text>
@@ -84,7 +86,7 @@ const SubscriptionPaymentFailedMail = (name: string) => {
 
             <Text className="text-dark text-[12px] leading-[24px]">
               Please note: this email is intended solely for{" "}
-              <span className="text-black">{name}</span>. If you received it in
+              <span className="text-dark">{name}</span>. If you received it in
               error, please delete it and notify us immediately. This message
               may contain confidential or legally privileged information.
               Unauthorized use or distribution is strictly prohibited.

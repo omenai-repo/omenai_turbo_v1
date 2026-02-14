@@ -83,13 +83,13 @@ export default function TokenBlock({ token, route }: TokenProps) {
       if (resent.isOk) {
         toast_notif(
           "A new reset token has been sent to your registered email",
-          "success"
+          "success",
         );
       } else {
         toast_notif(
           resent.message ||
             "An error occured while performing this request, please try again or contact support",
-          "error"
+          "error",
         );
       }
       setSeconds(30);
@@ -101,7 +101,7 @@ export default function TokenBlock({ token, route }: TokenProps) {
       }
       toast_notif(
         "Something went wrong. Please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setResentTokenLoading(false);
@@ -144,7 +144,7 @@ export default function TokenBlock({ token, route }: TokenProps) {
         />
         <button
           disabled={isLoading}
-          className=" disabled:bg-dark/10 p-5 rounded min-w-[100px] w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal duration-200"
+          className=" disabled:bg-dark/10 p-5 rounded min-w-[100px] w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light duration-200"
           type={"submit"}
         >
           {isLoading ? <LoadSmall /> : "Submit"}
@@ -174,7 +174,7 @@ export default function TokenBlock({ token, route }: TokenProps) {
           Feel free to contact us should you have any issues on{" "}
           <Link
             href={"mailto:contact@omenai.net"}
-            className="text-dark font-normal underline"
+            className="text-dark font-light underline"
           >
             contact@omenai.net
           </Link>

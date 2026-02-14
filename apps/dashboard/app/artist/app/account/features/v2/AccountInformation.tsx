@@ -11,7 +11,10 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRollbar } from "@rollbar/react";
-import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  INPUT_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function AccountInformation({ profile }: any) {
   const queryClient = useQueryClient();
@@ -46,7 +49,7 @@ export default function AccountInformation({ profile }: any) {
         "artist",
         data,
         user.artist_id,
-        csrf || ""
+        csrf || "",
       );
 
       if (!updateProfileData.isOk) {
@@ -63,7 +66,7 @@ export default function AccountInformation({ profile }: any) {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -80,7 +83,7 @@ export default function AccountInformation({ profile }: any) {
           <Image
             src={image_url}
             alt="Artist Logo"
-            className="object-cover w-[100px] h-[100px] rounded-full"
+            className="object-cover w-[100px] h-[100px] rounded"
             height={100}
             width={100}
           />
@@ -90,7 +93,7 @@ export default function AccountInformation({ profile }: any) {
               className="bg-white text-dark px-4 py-2 rounded flex items-center space-x-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300"
             >
               <Camera className="w-4 h-4" />
-              <span className="text-fluid-xxs font-normal">Update</span>
+              <span className="text-fluid-xxs font-light">Update</span>
             </button>
           </div>
         </div>
@@ -111,7 +114,7 @@ export default function AccountInformation({ profile }: any) {
         <div className="group">
           <label
             htmlFor="name"
-            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+            className="block text-fluid-xxs font-light text-dark/50 mb-2"
           >
             Artist Name
           </label>
@@ -130,7 +133,7 @@ export default function AccountInformation({ profile }: any) {
         <div className="group">
           <label
             htmlFor="email"
-            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+            className="block text-fluid-xxs font-light text-dark/50 mb-2"
           >
             Email Address
           </label>
@@ -149,11 +152,11 @@ export default function AccountInformation({ profile }: any) {
         <div className="group">
           <label
             htmlFor="address"
-            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+            className="block text-fluid-xxs font-light text-dark/50 mb-2"
           >
             Artist Address
           </label>
-          <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded-2xl">
+          <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded">
             <div className="flex items-start space-x-3">
               <MapPin className="w-5 h-5 text-dark/50 mt-1" />
               <div>
@@ -168,8 +171,8 @@ export default function AccountInformation({ profile }: any) {
             </div>
             <button
               onClick={() => updateAddressModalPopup(true)}
-              className="px-4 py-2 bg-dark  rounded-full hover:bg-dark/80 text-white 
-                       transition-all duration-300 text-fluid-xxs font-normal"
+              className="px-4 py-2 bg-dark  rounded hover:bg-dark/80 text-white 
+                       transition-all duration-300 text-fluid-xxs font-light"
             >
               Update Address
             </button>
@@ -180,7 +183,7 @@ export default function AccountInformation({ profile }: any) {
         <div className="group">
           <label
             htmlFor="Biography"
-            className="block text-fluid-xxs font-normal text-dark/50 mb-2"
+            className="block text-fluid-xxs font-light text-dark/50 mb-2"
           >
             Artist Biography
           </label>
@@ -200,7 +203,7 @@ export default function AccountInformation({ profile }: any) {
         <button
           onClick={handleSave}
           disabled={!hasChanges || loading}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-full font-normal text-fluid-xxs
+          className={`flex items-center space-x-2 px-4 py-2 rounded font-light text-fluid-xxs
                     transition-all duration-300 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-dark/30 ${
                       hasChanges
                         ? "bg-dark text-white hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"

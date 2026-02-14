@@ -21,7 +21,7 @@ export default function FormConfirm() {
       {/* <h1 className="text-fluid-xxs sm:text-fluid-base font-semibold mb-4">
         Confirm account creation
       </h1> */}
-      <p className="text-fluid-xxs my-4 font-normal">
+      <p className="text-fluid-xxs my-4 font-light">
         Please read through and confirm that you understand and accept all the
         terms stated
       </p>
@@ -38,7 +38,7 @@ export default function FormConfirm() {
           />
           <Label
             htmlFor="policy-acceptance"
-            className="text-dark/80 text-fluid-xxs font-normal cursor-pointer"
+            className="text-dark/80 text-fluid-xxs font-light cursor-pointer"
           >
             I accept Omenai's{" "}
             <Link

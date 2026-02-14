@@ -41,7 +41,7 @@ export default function EditArtworkWrapper({
   const { csrf, user } = useAuth({ requiredRole: "gallery" });
 
   const handleChange = async (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setData((prevData) => ({
@@ -61,7 +61,7 @@ export default function EditArtworkWrapper({
       const conversion_value = await getCurrencyConversion(
         data.currency.toUpperCase(),
         +value,
-        csrf || ""
+        csrf || "",
       );
 
       if (!conversion_value?.isOk)
@@ -108,7 +108,7 @@ export default function EditArtworkWrapper({
       const update = await updateArtworkPrice(
         filter,
         artwork.art_id,
-        csrf || ""
+        csrf || "",
       );
 
       if (!update?.isOk)
@@ -183,7 +183,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col gap-1">
               <label
                 htmlFor={"currency"}
-                className="text-dark font-normal text-fluid-xxs"
+                className="text-dark font-light text-fluid-xxs"
               >
                 Currency
               </label>
@@ -200,7 +200,7 @@ export default function EditArtworkWrapper({
                       <option
                         key={item.code}
                         value={item.code}
-                        className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
+                        className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
                       >
                         {item.name}
                       </option>
@@ -214,7 +214,7 @@ export default function EditArtworkWrapper({
             <div className="flex flex-col w-full">
               <label
                 htmlFor={"price"}
-                className="text-dark font-normal text-fluid-xxs"
+                className="text-dark font-light text-fluid-xxs"
               >
                 Price
               </label>
@@ -234,11 +234,11 @@ export default function EditArtworkWrapper({
               {data.currency !== "" &&
                 data.price !== "" &&
                 data.usd_price !== "" && (
-                  <span className=" text-dark font-normal">
+                  <span className=" text-dark font-light">
                     Exchange rate:{" "}
                     {`${formatPrice(
                       +data.price,
-                      currency_symbol
+                      currency_symbol,
                     )} = ${formatPrice(+data.usd_price, usd_symbol)}`}
                   </span>
                 )}
@@ -253,7 +253,7 @@ export default function EditArtworkWrapper({
           <div className="flex flex-col gap-1">
             <label
               htmlFor={"shouldShowPrice"}
-              className="text-dark font-normal text-fluid-xxs"
+              className="text-dark font-light text-fluid-xxs"
             >
               Display price value
             </label>
@@ -264,7 +264,7 @@ export default function EditArtworkWrapper({
               disabled={
                 user.subscription_status.type === null ||
                 ["basic", "pro"].includes(
-                  user.subscription_status.type.toLowerCase()
+                  user.subscription_status.type.toLowerCase(),
                 )
               }
               className={SELECT_CLASS}
@@ -273,7 +273,7 @@ export default function EditArtworkWrapper({
                 value={
                   user.subscription_status.type !== null &&
                   ["basic", "pro"].includes(
-                    user.subscription_status.type.toLowerCase()
+                    user.subscription_status.type.toLowerCase(),
                   )
                     ? "Yes"
                     : ""
@@ -281,20 +281,20 @@ export default function EditArtworkWrapper({
               >
                 {user.subscription_status.type !== null &&
                 ["basic", "pro"].includes(
-                  user.subscription_status.type.toLowerCase()
+                  user.subscription_status.type.toLowerCase(),
                 )
                   ? "Yes"
                   : "Select"}
               </option>
               <option
                 value="Yes"
-                className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
+                className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
               >
                 Yes
               </option>
               <option
                 value="No"
-                className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
+                className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
               >
                 No
               </option>
@@ -305,7 +305,7 @@ export default function EditArtworkWrapper({
             <button
               disabled={loading}
               type="submit"
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
             >
               {loading ? <LoadSmall /> : " Update pricing details"}
             </button>
@@ -316,7 +316,7 @@ export default function EditArtworkWrapper({
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-light"
             >
               {deleteLoading ? <LoadSmall /> : " Delete ths artwork"}
             </button>

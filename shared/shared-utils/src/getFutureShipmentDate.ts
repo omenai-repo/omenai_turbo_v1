@@ -35,7 +35,7 @@ function validateInputs(
   days: number,
   countryCode: string,
   withTime: boolean,
-  pickup_earliest_time?: { hours: string; minutes: string }
+  pickup_earliest_time?: { hours: string; minutes: string },
 ): void {
   validateDays(days);
   validateCountryCode(countryCode);
@@ -52,13 +52,13 @@ function isWeekend(date: Date): boolean {
 
 async function checkIfHoliday(
   date: Date,
-  countryCode: string
+  countryCode: string,
 ): Promise<boolean> {
   try {
     return await isHoliday(date, countryCode);
   } catch (error) {
     console.warn(
-      `Holiday check failed for ${countryCode} on ${date.toISOString()}`
+      `Holiday check failed for ${countryCode} on ${date.toISOString()}`,
     );
     return false;
   }
@@ -66,7 +66,7 @@ async function checkIfHoliday(
 
 async function isBusinessDay(
   date: Date,
-  countryCode: string
+  countryCode: string,
 ): Promise<boolean> {
   if (isWeekend(date)) return false;
 
@@ -76,7 +76,7 @@ async function isBusinessDay(
 
 async function findNextBusinessDay(
   startDate: Date,
-  countryCode: string
+  countryCode: string,
 ): Promise<Date> {
   const date = new Date(startDate);
   let attempts = 0;
@@ -93,7 +93,7 @@ async function findNextBusinessDay(
   }
 
   throw new Error(
-    "Unable to find valid shipment date within reasonable time (365 days)"
+    "Unable to find valid shipment date within reasonable time (365 days)",
   );
 }
 
@@ -133,7 +133,7 @@ function getPickupTime(pickup_earliest_time?: {
 function formatDateWithTime(
   date: Date,
   countryCode: string,
-  pickup_earliest_time?: { hours: string; minutes: string }
+  pickup_earliest_time?: { hours: string; minutes: string },
 ): string {
   const dateOnly = formatDateOnly(date);
   const timezone = getTimezone(countryCode);
@@ -146,19 +146,15 @@ export async function getFutureShipmentDate(
   days: number,
   withTime: boolean,
   countryCode: string,
-  pickup_earliest_time?: { hours: string; minutes: string }
+  pickup_earliest_time?: { hours: string; minutes: string },
 ): Promise<string> {
-  // Validate all inputs
   validateInputs(days, countryCode, withTime, pickup_earliest_time);
 
-  // Calculate initial date
   const initialDate = new Date(toUTCDate(new Date()));
   initialDate.setDate(initialDate.getDate() + days);
 
-  // Find next business day
   const validDate = await findNextBusinessDay(initialDate, countryCode);
 
-  // Format and return result
   if (!withTime) {
     return formatDateOnly(validDate);
   }

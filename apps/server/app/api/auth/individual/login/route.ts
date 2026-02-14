@@ -5,7 +5,8 @@ import { NextResponse } from "next/server";
 import {
   ConflictError,
   ServerError,
-} from "../../../../../custom/errors/dictionary/errorDictionary";
+  ForbiddenError,
+} from "../../../../../custom/errors/dictionary/errorDictionary"; // Added ForbiddenError
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -20,15 +21,27 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { createErrorRollbarReport } from "../../../util";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-// SERVER SIDE - Generate a sign-in token/ticket
+import { validateRequestBody } from "../../../util";
+import z from "zod";
+
+export const LoginSchema = z.object({
+  email: z.email(),
+  password: z.string(),
+  device_push_token: z.string().optional(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request, response?: Response) {
     const cookieStore = await cookies();
     try {
-      const { email, password, device_push_token } = await request.json();
+      const data = await validateRequestBody(request, LoginSchema);
+      const { email, password, device_push_token } = data;
+
+      console.log(data);
+
       await connectMongoDB();
 
-      // 1. Your existing authentication logic
+      // 1. Authenticate User
       const user = await AccountIndividual.findOne<IndividualSchemaTypes>({
         email: email.toLowerCase(),
       }).exec();
@@ -37,6 +50,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         throw new ConflictError("Invalid credentials");
       }
 
+      // 2. Prepare Session Data
       const sessionPayload: SessionDataType = {
         id: user.user_id,
         user_id: user.user_id,
@@ -50,32 +64,51 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const userAgent: string | null =
         request.headers.get("User-Agent") || null;
-      const authorization: string | null =
-        request.headers.get("Authorization") || null;
+      const mobileAccessKey: string | null =
+        request.headers.get("X-Access-Key") || null;
 
       if (userAgent && userAgent === process.env.MOBILE_USER_AGENT) {
-        console.log("App user agent detected");
         if (
-          authorization &&
-          authorization === process.env.APP_AUTHORIZATION_SECRET
+          !mobileAccessKey ||
+          mobileAccessKey !== process.env.MOBILE_ACCESS_KEY
         ) {
-          if (device_push_token)
-            await DeviceManagement.updateOne(
-              { auth_id: sessionPayload.user_id },
-              { $set: { device_push_token } },
-              { upsert: true }
-            );
-          return NextResponse.json(
-            {
-              success: true,
-              message: "Login successful",
-              data: { ...sessionPayload, device_push_token },
-            },
-            { status: 200 }
+          throw new ForbiddenError("Invalid App Credentials");
+        }
+
+        // A1. Update Push Token
+        if (device_push_token) {
+          await DeviceManagement.updateOne(
+            { auth_id: sessionPayload.user_id },
+            { $set: { device_push_token } },
+            { upsert: true },
           );
         }
+
+        // A2. CREATE SESSION (Redis Only)
+        // We generate the ID here and store it in Redis.
+        const sessionId = await createSession({
+          userId: user.user_id,
+          userData: sessionPayload,
+          userAgent: userAgent,
+        });
+
+        // A3. RETURN JSON (No Cookie)
+        // The mobile app will save 'access_token' in SecureStore
+        return NextResponse.json(
+          {
+            success: true,
+            message: "Login successful",
+            data: {
+              ...sessionPayload,
+              access_token: sessionId,
+              device_push_token,
+            },
+          },
+          { status: 200 },
+        );
       }
 
+      // B1. Cleanup Deletion Requests (Business Logic)
       try {
         await DeletionRequestModel.deleteOne({
           targetId: user.user_id,
@@ -85,38 +118,38 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         createErrorRollbarReport(
           "auth: Deletion request removal failed",
           error,
-          500
+          500,
         );
       }
 
-      const session = await getSessionFromCookie(cookieStore);
-
+      // B2. CREATE SESSION (Redis)
       const sessionId = await createSession({
         userId: user.user_id,
         userData: sessionPayload,
         userAgent,
       });
 
+      // B3. SAVE COOKIE (Iron Session)
+      const session = await getSessionFromCookie(cookieStore);
       session.sessionId = sessionId;
-
       await session.save();
 
+      // B4. RETURN JSON (Cookie is in headers)
       return NextResponse.json(
         {
           success: true,
           message: "Login successful",
           data: sessionPayload,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error: any) {
       const errorResponse = handleErrorEdgeCases(error);
       createErrorRollbarReport("auth: user login", error, errorResponse.status);
-      console.log(error);
       return NextResponse.json(
         { message: errorResponse?.message },
-        { status: errorResponse?.status }
+        { status: errorResponse?.status },
       );
     }
-  }
+  },
 );

@@ -29,7 +29,7 @@ export async function deleteFromService(
     case "purchase_transaction_service":
       return await purchaseTransactionService(
         targetId,
-        metadata as Record<string, any>
+        metadata
       );
     case "misc_service":
       return await miscServiceDeletionProtocol(targetId);

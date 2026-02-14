@@ -56,7 +56,7 @@ export default function ActivationFormInputs() {
   };
 
   const handleSubmit = async (
-    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
 
@@ -72,7 +72,7 @@ export default function ActivationFormInputs() {
         token,
         form.name,
         form.email,
-        form.password
+        form.password,
       );
 
       if (!response.isOk) {
@@ -91,7 +91,7 @@ export default function ActivationFormInputs() {
 
       toast_notif(
         error_message || "Something went wrong, please contact support",
-        "error"
+        "error",
       );
       console.error("Error activating admin account:", error);
     } finally {
@@ -115,7 +115,7 @@ export default function ActivationFormInputs() {
     focus:ring-0
     rounded
     transition-all duration-300
-    text-fluid-xxs font-normal text-dark
+    text-fluid-xxs font-light text-dark
      disabled:bg-dark/10
     p-3
                 disabled:bg-gray-50
@@ -140,7 +140,7 @@ export default function ActivationFormInputs() {
     focus:ring-0
     rounded
     transition-all duration-300
-    text-fluid-xxs font-normal text-dark
+    text-fluid-xxs font-light text-dark
      disabled:bg-dark/10
     p-3
                 disabled:bg-gray-50
@@ -166,7 +166,7 @@ export default function ActivationFormInputs() {
     focus:ring-0
     rounded
     transition-all duration-300
-    text-fluid-xxs font-normal text-dark
+    text-fluid-xxs font-light text-dark
      disabled:bg-dark/10
     p-3
                 disabled:bg-gray-50
@@ -184,18 +184,7 @@ export default function ActivationFormInputs() {
             name="confirm_password"
             disabled={form.password === ""}
             placeholder="Confirm your password"
-            className="    w-full
-    bg-transparent
-    border
-   border-dark/30
-     focus:border-dark
-    outline-none
-    focus:ring-0
-    rounded
-    transition-all duration-300
-    text-fluid-xxs font-normal text-dark
-     disabled:bg-dark/10
-    p-3
+            className="w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark  disabled:bg-dark/10 p-3
                 disabled:bg-gray-50
                 disabled:border-dark/20
                 disabled:text-slate-700
@@ -204,6 +193,7 @@ export default function ActivationFormInputs() {
           />
           <div className="w-full h-fit flex justify-end mr-5 my-5">
             <button
+              type="button"
               className="text-[12px] font-semibold cursor-pointer underline duration-200"
               onClick={() => setShow(!show)}
             >
@@ -231,7 +221,7 @@ export default function ActivationFormInputs() {
           <button
             disabled={loading || errorList.length > 0}
             type="submit"
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
           >
             {loading ? <LoadSmall /> : "Activate your account"}{" "}
           </button>

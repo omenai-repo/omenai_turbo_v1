@@ -1,89 +1,50 @@
 "use client";
-
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState, useTransition, useCallback } from "react";
-import { toast } from "sonner";
-import { motion } from "framer-motion";
-import { fetchSearchKeyWordResults } from "@omenai/shared-services/search/fetchSearchKeywordResults";
-import { icons } from "./icons";
 import { CiSearch } from "react-icons/ci";
-import debounce from "lodash.debounce";
 
-export default function SearchInput({
-  setIsMobileMenuOpen,
-}: {
-  setIsMobileMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+export default function SearchInput({ setIsMobileMenuOpen }: any) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const debouncedPrefetch = useCallback(
-    debounce((term: string) => {
-      if (!term.trim()) return;
-      queryClient.prefetchQuery({
-        queryKey: ["search_results", term],
-        queryFn: () =>
-          fetchSearchKeyWordResults(term).then((r) => r?.data || []),
-      });
-    }, 500),
-    []
-  );
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    debouncedPrefetch(term);
-  };
 
   const handleSearch = () => {
+    if (!searchTerm.trim()) return;
     setIsMobileMenuOpen(false);
-
-    if (!searchTerm.trim()) {
-      toast.error("Please include a search term");
-      return;
-    }
     startTransition(() => {
       router.push(`/search?searchTerm=${encodeURIComponent(searchTerm)}`);
     });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSearch();
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="relative w-full md:w-72"
-    >
-      {/* Search Input */}
+    <div className="relative w-full group">
+      {/* Search Icon - Moved to left for standard utility feel */}
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-dark  transition-colors pointer-events-none">
+        <CiSearch className="w-5 h-5" />
+      </div>
+
       <input
         type="text"
         value={searchTerm}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Search artworks, artists..."
-        className="w-full py-2 pl-4 pr-10 bg-slate-800 border border-slate-700 rounded-full text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-300 placeholder:text-fluid-xxs placeholder:text-white"
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+        // More descriptive placeholder, no uppercase yelling
+        placeholder="Search artists, artworks, styles..."
+        className="
+            w-full pl-10 pr-4 py-2.5 
+            bg-slate-100 border border-transparent rounded-md 
+            text-sm font-sans text-slate-900 placeholder:text-slate-500 
+            focus:outline-none focus:bg-white focus:border-slate-200 focus:ring-0 focus:border-dark
+            transition-all duration-200
+        "
       />
 
-      {/* Search Button with spinner inside */}
-      <button
-        onClick={handleSearch}
-        disabled={isPending}
-        className="absolute right-1 top-1/2 -translate-y-1/2 p-1 flex items-center justify-center text-white rounded hover:bg-slate-700 transition disabled:opacity-50 w-8 h-8"
-        aria-label="Search"
-      >
-        {isPending ? (
-          <div className="h-4 w-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-        ) : (
-          <CiSearch className="w-5 h-5" />
-        )}
-      </button>
-    </motion.div>
+      {/* Loading Indicator - Right aligned */}
+      {isPending && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="h-4 w-4 border-2 border-[#091830] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+    </div>
   );
 }

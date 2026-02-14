@@ -7,16 +7,14 @@ import { createErrorRollbarReport } from "../../util";
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(): Promise<Response> {
     try {
-      // Replace with your actual logic and response
-
-      return NextResponse.json({});
+      return NextResponse.json({ message: "This ran well" });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport("featured artist", error, error_response.status);
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

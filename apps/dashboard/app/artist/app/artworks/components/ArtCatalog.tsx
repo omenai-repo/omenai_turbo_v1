@@ -1,6 +1,4 @@
 "use client";
-
-import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import { getAllArtworksById } from "@omenai/shared-services/artworks/fetchAllArtworksById";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +8,7 @@ import ArtworkCard from "@omenai/shared-ui-components/components/artworks/Artwor
 import React from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { ArtworkMediumTypes, ArtworkSchemaTypes } from "@omenai/shared-types";
+import { UsersSavedArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersSavedArtworksSkeleton";
 
 export default function ArtCatalog() {
   const { user } = useAuth({ requiredRole: "artist" });
@@ -32,14 +31,14 @@ export default function ArtCatalog() {
   });
 
   if (isLoading) {
-    return <ArtworksListingSkeletonLoader />;
+    return <UsersSavedArtworksSkeleton />;
   }
 
-  const reversedArtworks = [...artworks].reverse();
+  const reversedArtworks = [...artworks];
 
   const arts = catalogChunk(
     reversedArtworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width < 1500 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width < 1500 ? 3 : 4,
   );
   return (
     <div className="py-4 w-full">

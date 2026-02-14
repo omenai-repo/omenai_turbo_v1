@@ -54,7 +54,7 @@ export default function SelectInput({
       updateGallerySignupData("city", "");
       const cities = City.getCitiesOfState(
         gallerySignupData.countryCode,
-        selectedCode as string
+        selectedCode as string,
       );
       updateGallerySignupData("stateCode", selectedCode as string);
       setSelectedCityList(cities);
@@ -73,10 +73,7 @@ export default function SelectInput({
         className="flex flex-col gap-y-1"
       >
         <div className="flex flex-col gap-1">
-          <label
-            htmlFor={name}
-            className="text-dark font-normal text-fluid-xxs"
-          >
+          <label htmlFor={name} className="text-dark font-light text-fluid-xxs">
             {label}
           </label>
           <select
@@ -102,7 +99,7 @@ export default function SelectInput({
                       key={item.code}
                       value={item.name}
                       data-code={item.code}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-light text-dark"
                     >
                       {item.name}
                     </option>
@@ -115,7 +112,7 @@ export default function SelectInput({
                       key={state.isoCode}
                       value={state.name}
                       data-code={state.isoCode}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-light text-dark"
                     >
                       {state.name}
                     </option>
@@ -129,7 +126,7 @@ export default function SelectInput({
                       key={city.name}
                       value={city.name}
                       data-code={city.name}
-                      className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
+                      className="px-3 py-5 my-5 text-fluid-xxs font-light text-dark"
                     >
                       {city.name}
                     </option>

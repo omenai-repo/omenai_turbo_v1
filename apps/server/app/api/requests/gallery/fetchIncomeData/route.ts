@@ -2,22 +2,26 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { createErrorRollbarReport } from "../../../util";
-
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
+const FetchIcomeSchema = z.object({
+  galleryId: z.string(),
+});
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  const galleryId = searchParams.get("id");
-
-  if (!galleryId) {
-    return NextResponse.json(
-      { message: "Missing gallery id" },
-      { status: 400 }
-    );
-  }
-
+  const galleryIdParams = searchParams.get("id");
   try {
+    const { galleryId } = validateGetRouteParams(FetchIcomeSchema, {
+      galleryId: galleryIdParams,
+    });
     await connectMongoDB();
 
     const pipeline = [
@@ -62,24 +66,24 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
           message: "Income data fetched successfully",
           data: { netIncome: 0, salesRevenue: 0 },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
     return NextResponse.json(
       { message: "Income data fetched successfully", data: result[0] },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "gallery: fetch income data",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message || "Unexpected error" },
-      { status: error_response?.status || 500 }
+      { status: error_response?.status || 500 },
     );
   }
 });

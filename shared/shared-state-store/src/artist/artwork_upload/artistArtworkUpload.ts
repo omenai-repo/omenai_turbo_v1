@@ -6,9 +6,8 @@ type ErrorFields = {
   year: string;
   title: string;
   materials: string;
-  width: string;
   height: string;
-  depth?: string;
+  length: string;
 };
 type ArtistArtworkUploadTypes = {
   image: File | null;
@@ -34,16 +33,15 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
       medium: "",
       rarity: "",
       materials: "",
-      width: "",
       height: "",
       weight: "",
-      depth: "",
+      length: "",
       artist_birthyear: "",
       artist_country_origin: "",
       certificate_of_authenticity: "",
       artwork_description: "",
-      framing: "",
       signature: "",
+      packaging_type: "rolled",
     },
     updateArtworkUploadData: (label: string, value: string) => {
       const data: Record<string, any> = get().artworkUploadData;
@@ -65,16 +63,15 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
           medium: "",
           rarity: "",
           materials: "",
-          width: "",
           height: "",
           weight: "",
-          depth: "",
+          length: "",
           artist_birthyear: "",
           artist_country_origin: "",
           certificate_of_authenticity: "",
           artwork_description: "",
-          framing: "",
           signature: "",
+          packaging_type: "rolled",
         },
       });
       set({ image: null });
@@ -84,9 +81,8 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
       year: "",
       title: "",
       materials: "",
-      width: "",
       height: "",
-      depth: "",
+      length: "",
       weight: "",
       artist_birthyear: "",
       artwork_description: "",
@@ -102,5 +98,5 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
         });
       }
     },
-  })
+  }),
 );

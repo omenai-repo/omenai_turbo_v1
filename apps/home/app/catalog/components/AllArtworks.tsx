@@ -12,7 +12,6 @@ import ArtworkCard from "@omenai/shared-ui-components/components/artworks/Artwor
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import StaggerWrapper from "@omenai/shared-ui-components/components/animations/StaggerWrapper";
 
 export default function AllArtworks() {
   const { currentPage, setCurrentPage } = artworkActionStore();
@@ -67,13 +66,11 @@ export default function AllArtworks() {
 
   const arts = catalogChunk(
     artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   return (
     <div className="w-full my-3">
-      <p className="text-fluid-xxs font-bold mb-4">{artwork_total} artworks:</p>
-
       <div className="flex flex-wrap gap-x-4 justify-center">
         {arts.map((artworks: any[], index) => {
           return (

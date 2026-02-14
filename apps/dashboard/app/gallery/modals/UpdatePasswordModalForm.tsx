@@ -165,7 +165,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-3 w-full bg-dark text-white font-normal rounded-full hover:bg-slate-700 hover:text-white transition-colors disabled:bg-dark/10 disabled:cursor-not-allowed  focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs grid place-items-center"
+                className="px-4 py-3 w-full bg-dark text-white font-light rounded hover:bg-slate-700 hover:text-white transition-colors disabled:bg-dark/10 disabled:cursor-not-allowed  focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs grid place-items-center"
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>
@@ -207,7 +207,7 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-dark text-white font-normal rounded-full shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-0 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+            className="w-full py-3 px-6 bg-dark text-white font-light rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-0 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

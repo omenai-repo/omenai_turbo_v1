@@ -18,7 +18,7 @@ export default function ImageUpload() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const [errorList, setErrorList] = useState<string[]>([]);
   const [cover, setCover] = useState<File | null>(
-    (gallerySignupData as Record<string, any>)["logo"]
+    (gallerySignupData as Record<string, any>)["logo"],
   );
   const acceptedFileTypes = ["jpg", "jpeg", "png"];
   const MAX_SIZE_MB = 5; // e.g., 5MB
@@ -72,7 +72,7 @@ export default function ImageUpload() {
       >
         <label
           htmlFor="logo"
-          className="text-dark text-fluid-xxs text-left font-normal sm:text-fluid-xs"
+          className="text-dark text-fluid-xxs text-left font-light sm:text-fluid-xs"
         >
           Upload a logo of your gallery
         </label>

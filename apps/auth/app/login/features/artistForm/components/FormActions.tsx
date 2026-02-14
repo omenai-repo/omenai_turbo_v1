@@ -16,38 +16,52 @@ export default function FormActions() {
 
   return (
     <div className="flex flex-col mt-[1rem] gap-4 w-full">
-      <div className="flex flex-col w-full gap-y-4">
-        <button
-          disabled={isLoading}
-          type="submit"
-          className=" p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
-        >
-          {isLoading ? <LoadSmall /> : "Login to your account"}{" "}
-        </button>
-        <Link href={"/register"}>
-          <button className="focus:ring ring-1 border-0 ring-dark/20 hover:ring-dark duration-300 outline-none focus:outline-none focus:ring-dark rounded-full  p-4 w-full text-center text-fluid-xxs flex items-center justify-center bg-white cursor-pointer">
-            Create an account
-          </button>
-        </Link>
-      </div>
+      <button
+        disabled={isLoading}
+        type="submit"
+        className="h-[48px] rounded w-full flex items-center justify-center gap-3 transition-all duration-300
+                     disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500
+                     bg-dark text-white hover:bg-slate-800 active:scale-[0.98]
+                     text-[11px] uppercase tracking-[0.2em] font-medium shadow-lg shadow-dark/5"
+      >
+        {isLoading ? <LoadSmall /> : "Sign In to Omenai"}
+      </button>
 
-      <div className="flex flex-col gap-y-2 my-6 justify-between items-center">
-        <div className="flex gap-x-6">
-          <p className="font-medium text-fluid-xxs text-dark ">
-            <Link href={`${auth_url}/login/user`} className="text-dark">
-              Sign in as Collector{" "}
-            </Link>
-          </p>
-          <p className="font-medium text-fluid-xxs text-dark">
-            <Link href={`${auth_url}/login/gallery`} className="text-dark">
-              Sign in as Gallery{" "}
-            </Link>
-          </p>
+      <Link href={"/register"} className="w-full">
+        <button
+          className="h-[48px] border border-slate-200 hover:border-dark hover:bg-slate-50 
+                             duration-300 rounded w-full text-[11px] uppercase tracking-[0.2em] 
+                             font-medium text-slate-900 flex items-center justify-center"
+        >
+          Create an account
+        </button>
+      </Link>
+
+      <div className="flex flex-col items-center space-y-6 pt-4">
+        {/* Role Switcher */}
+        <div className="flex items-center gap-6">
+          <Link
+            href={`${auth_url}/login/user`}
+            className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-dark transition-colors font-medium"
+          >
+            Collector Portal
+          </Link>
+          <div className="h-4 w-[1px] bg-slate-200" />{" "}
+          {/* Vertical Separator */}
+          <Link
+            href={`${auth_url}/login/gallery`}
+            className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-dark transition-colors font-medium"
+          >
+            Gallery Portal
+          </Link>
         </div>
 
+        {/* Password Recovery */}
         <button
-          className="text-fluid-xxs text-red-600 cursor-pointer underline font-medium"
-          onClick={() => updateRecoveryModal("artist")}
+          type="button"
+          className="text-[10px] uppercase tracking-widest text-blue-500 hover:text-dark 
+                     transition-colors font-medium border-b border-slate-200 pb-1"
+          onClick={() => updateRecoveryModal("individual")}
         >
           Forgot password?
         </button>

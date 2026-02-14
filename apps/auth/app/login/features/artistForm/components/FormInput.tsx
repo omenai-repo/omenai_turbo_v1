@@ -4,11 +4,9 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import FormActions from "./FormActions";
-import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import { Form } from "@omenai/shared-types";
 import { loginArtist } from "@omenai/shared-services/auth/artist/loginArtist";
 import { auth_uri, dashboard_url } from "@omenai/url-config/src/config";
-import { H } from "@highlight-run/next/client";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
@@ -24,15 +22,6 @@ const INPUT_CONFIG = {
     name: "password",
     placeholder: "Enter your password",
   },
-};
-
-// Extracted helper functions
-const identifyUser = (data: any) => {
-  H.identify(data.email, {
-    id: data.artist_id as string,
-    name: data.name,
-    role: data.role,
-  });
 };
 
 const getRedirectUrl = (data: any, dashboardBaseUrl: string) => {
@@ -75,7 +64,6 @@ export default function FormInput() {
   const handleVerifiedArtist = async (data: any) => {
     try {
       toast_notif("Login successful", "success");
-      identifyUser(data);
 
       const redirectUrl = getRedirectUrl(data, dashboard_base_url);
       router.refresh();
@@ -110,7 +98,7 @@ export default function FormInput() {
   };
 
   const handleSubmit = async (
-    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
     setIsLoading();

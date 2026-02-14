@@ -3,7 +3,6 @@ import { getSalesActivityData } from "@omenai/shared-services/sales/getSalesActi
 import { salesDataAlgorithm } from "@omenai/shared-utils/src/salesDataAlgorithm";
 import { useQuery } from "@tanstack/react-query";
 import { SalesActivityChart } from "./components/SalesActivity";
-import Dropdown from "../../components/Dropdown";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { ChartSkeleton } from "@omenai/shared-ui-components/components/skeletons/ChartSkeleton";
 import React, { useMemo } from "react";
@@ -34,11 +33,7 @@ export default function ActivityWrapper() {
   );
 
   return (
-    <div className="h-[350px] mt-4 pr-4 relative">
-      <div className="flex justify-between items-center">
-        <h1 className="font-medium">Sales Revenue</h1>
-        <Dropdown />
-      </div>
+    <div className="flex flex-col space-y-3 h-[350px] mt-4 relative">
       <div className="h-full w-full grid place-items-center">
         {isLoading ? (
           <ChartSkeleton />

@@ -53,7 +53,6 @@ export async function categorizationService(
         error: "Unable to delete artist categorization",
       };
     } else {
-      console.log(`Delete category successful`);
       return {
         success: true,
         count: { deletedCount },

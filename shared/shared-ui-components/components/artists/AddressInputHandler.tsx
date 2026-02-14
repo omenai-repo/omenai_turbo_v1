@@ -53,7 +53,7 @@ export default function Input({
         {/* Label */}
         <label
           htmlFor={labelText}
-          className="block text-fluid-xxs font-normal text-gray-700"
+          className="block text-fluid-xxs font-light text-gray-700"
         >
           {label}
         </label>

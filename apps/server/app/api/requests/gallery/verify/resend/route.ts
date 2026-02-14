@@ -12,25 +12,29 @@ import {
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../../util";
-
+import {
+  createErrorRollbarReport,
+  validateRequestBody,
+} from "../../../../util";
+import z from "zod";
+const ResentSchema = z.object({
+  author: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
+      const { author } = await validateRequestBody(request, ResentSchema);
       await connectMongoDB();
-
-      const { author } = await request.json();
-
       const gallery = await AccountGallery.findOne(
         { gallery_id: author },
-        "admin email verified"
+        "admin email verified",
       ).exec();
 
       if (!gallery) throw new NotFoundError("Unable to authenticate account");
 
       if (gallery.verified)
         throw new ForbiddenError(
-          "This action is not permitted. Account already verified"
+          "This action is not permitted. Account already verified",
         );
 
       const email_token = generateDigit(7);
@@ -63,20 +67,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         {
           message: "Verification code resent",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-      console.log(error);
       createErrorRollbarReport(
         "gallery: resend verification code",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

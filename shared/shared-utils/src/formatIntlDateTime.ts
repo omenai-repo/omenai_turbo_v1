@@ -1,17 +1,7 @@
 import { toUTCDate } from "./toUtcDate";
 
 export function formatIntlDateTime(inputDate: string | Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  };
-
   const date = toUTCDate(new Date(inputDate));
-  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
 
   // Extract day, month, and year
   const day = date.getDate();
@@ -35,7 +25,7 @@ export function formatIntlDateTime(inputDate: string | Date): string {
 
   //   at ${formattedHour}:${padZero(
   //     minute
-  //   )
+  //   )}`;
 
   return finalFormattedDate;
 }

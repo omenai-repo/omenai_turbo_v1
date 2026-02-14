@@ -2,67 +2,67 @@ import { Pagination } from "@mantine/core";
 import { fetchWalletTransactions } from "@omenai/shared-services/wallet/fetchWalletTransactions";
 import { walletTransactionStore } from "@omenai/shared-state-store/src/artist/wallet/WalletTransactionStateStore";
 import { useRollbar } from "@rollbar/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function TransactionPagination({
   wallet_id,
   pageCount,
+  currentYear,
 }: {
   wallet_id: string;
   pageCount: number;
+  currentYear: string;
 }) {
   const { setTransactions, setTransactionLoading } = walletTransactionStore();
-
-  const now = new Date().getFullYear().toString();
-  const [year, setYear] = useState(now);
   const [page, setPage] = useState(1);
   const rollbar = useRollbar();
+
+  // Reset page to 1 if the year changes
+  useEffect(() => {
+    setPage(1);
+  }, [currentYear]);
+
   const handlePaginationChange = async (pageVal: number) => {
     try {
       setTransactionLoading(true);
-      const wallet_transaction_response = await fetchWalletTransactions(
+      const response = await fetchWalletTransactions(
         wallet_id,
-        year,
+        currentYear, // Uses the year from parent state
         pageVal.toString(),
         "10",
-        "all"
+        "all",
       );
 
-      if (
-        wallet_transaction_response === undefined ||
-        !wallet_transaction_response.isOk
-      )
-        throw new Error(
-          "Error fetching wallet transaction data. Please try again or contact support"
-        );
+      if (!response?.isOk)
+        throw new Error(response?.message || "Error fetching transaction data");
 
-      setTransactions(wallet_transaction_response.data);
+      setTransactions(response.data);
     } catch (error) {
-      if (error instanceof Error) {
-        rollbar.error(error);
-      } else {
-        rollbar.error(new Error(String(error)));
-      }
-      throw new Error("Error fetching transaction data");
+      const err = error instanceof Error ? error : new Error(String(error));
+      rollbar.error(err);
+      toast.error("Error", { description: "Failed to load page" });
     } finally {
       setTransactionLoading(false);
     }
   };
+
   return (
     <div className="w-full flex justify-center">
       <Pagination
-        color="#0f172a"
-        size="md"
-        withEdges
         total={pageCount}
         value={page}
         onChange={(val: number) => {
           setPage(val);
           handlePaginationChange(val);
         }}
-        onNextPage={() => setPage(page + 1)}
-        onPreviousPage={() => setPage(page - 1)}
-        mt="md"
+        size="sm"
+        radius="md"
+        withEdges
+        color="dark"
+        classNames={{
+          control: "border-slate-200 text-slate-600",
+        }}
       />
     </div>
   );

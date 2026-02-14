@@ -10,23 +10,27 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { serverStorage } from "@omenai/appwrite-config";
-import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { redis } from "@omenai/upstash-config";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist", "gallery"],
 };
 
+const DeleteArworkSchema = z.object({
+  art_id: z.string().min(1),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { art_id } = await request.json();
+    const { art_id } = await validateRequestBody(request, DeleteArworkSchema);
 
     const artwork = await Artworkuploads.findOne({ art_id }, "url").exec();
 
@@ -36,7 +40,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (deleteArtwork.deletedCount === 0) {
       throw new ServerError(
-        "We're having some trouble performing your request at this time. Please try again later or contact support"
+        "We're having some trouble performing your request at this time. Please try again later or contact support",
       );
     }
 
@@ -50,7 +54,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         createErrorRollbarReport(
           "artwork: delete artwork-  failed to delete file",
           err as any,
-          500
+          500,
         );
         await saveFailedJob({
           jobId: `artwork:${art_id}`,
@@ -66,18 +70,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Artwork successfully deleted",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: delete artwork",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response!.message },
-      { status: error_response!.status }
+      { status: error_response!.status },
     );
   }
 });

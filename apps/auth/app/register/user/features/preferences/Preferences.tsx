@@ -9,9 +9,7 @@ let artTypes = [
   "Works on paper",
   "Acrylic on canvas/linen/panel",
   "Mixed media on paper/canvas",
-  "Sculpture (Resin/plaster/clay)",
   "Oil on canvas/panel",
-  "Sculpture (Bronze/stone/metal)",
 ];
 function Preferences() {
   const { preferences } = useIndividualAuthStore();
@@ -19,7 +17,7 @@ function Preferences() {
     <AnimatePresence key={7}>
       <div className="">
         <p className="text-fluid-xxs font-medium text-center">
-          Select up to 5 artwork mediums that resonate with you.
+          Select artwork mediums that resonate with you.
         </p>
         <p className="text-center text-fluid-xxs font-semibold my-[1.5rem]">
           Selected: {preferences.length}/5
@@ -49,7 +47,7 @@ function Preferences() {
           </div>
         </motion.div>
       </div>
-      <ActionButton preference_chosen={preferences.length === 5} />
+      <ActionButton preference_chosen={preferences.length > 0} />
     </AnimatePresence>
   );
 }

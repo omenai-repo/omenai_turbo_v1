@@ -1,6 +1,5 @@
 import { AddressTypes, ArtworkSchemaTypes } from "@omenai/shared-types";
 import { sendMailVerification } from "../../controller/emailController";
-import BuyerShipmentEmail from "../../views/shipment/SendBuyerShipmentDetails";
 import ShipmentPickupNotificationEmail from "../../views/shipment/SendShipmentPickupReminder";
 type EmailData = {
   name: string;
@@ -11,9 +10,9 @@ type EmailData = {
   pickupAddress: AddressTypes;
   estimatedPickupDate?: string;
   daysLeft: string;
-  artistName: string;
   artworkImage: string;
-  artworkPrice: number;
+  artistName: string;
+  price: string;
 };
 export const sendShipmentPickupReminderMail = async ({
   name,
@@ -24,15 +23,15 @@ export const sendShipmentPickupReminderMail = async ({
   pickupAddress,
   estimatedPickupDate,
   daysLeft,
-  artistName,
   artworkImage,
-  artworkPrice,
+  artistName,
+  price,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai orders",
     from: "orders",
     to: email,
-    subject: "Your shipment has been created and is ready for pickup",
+    subject: "Shipment Pickup Schedule Reminder - Action Required",
     react: ShipmentPickupNotificationEmail({
       galleryName: name,
       artwork,
@@ -41,9 +40,9 @@ export const sendShipmentPickupReminderMail = async ({
       pickupAddress,
       estimatedPickupDate,
       daysLeft,
-      artistName,
       artworkImage,
-      artworkPrice,
+      artistName,
+      price,
     }),
   });
 };

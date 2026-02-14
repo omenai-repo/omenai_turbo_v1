@@ -50,13 +50,13 @@ export default function WithdrawalModalForm() {
       const rate_response = await getTransferRate(
         user.base_currency,
         "USD",
-        amount_data.amount
+        amount_data.amount,
       );
 
       if (rate_response === undefined || !rate_response.isOk) {
         toast_notif(
           "Something went wrong while fetching the transfer rate. Please try again later.",
-          "error"
+          "error",
         );
 
         return;
@@ -77,7 +77,7 @@ export default function WithdrawalModalForm() {
       }
       toast_notif(
         "Something went wrong while fetching the transfer rate. Please try again later.",
-        "error"
+        "error",
       );
     } finally {
       setTransferRateLoading(false);
@@ -102,7 +102,7 @@ export default function WithdrawalModalForm() {
         toast_notif(
           withdrawal_response.message ||
             "Something went wrong while processing your withdrawal. Please try again later.",
-          "error"
+          "error",
         );
 
         return;
@@ -119,7 +119,7 @@ export default function WithdrawalModalForm() {
       }
       toast_notif(
         "Something went wrong while processing your withdrawal. Please try again later.",
-        "error"
+        "error",
       );
     } finally {
       setWithdrawalLoading(false);
@@ -131,7 +131,7 @@ export default function WithdrawalModalForm() {
       {isWithdrawalSuccessful ? (
         <WithdrawalSuccessScreen />
       ) : (
-        <div className="max-w-lg w-full max-h-[95vh] rounded-2xl overflow-y-auto m-auto">
+        <div className="max-w-lg w-full max-h-[95vh] rounded overflow-y-auto m-auto">
           <div className="bg-white rounded shadow-lg overflow-hidden">
             {/* Header */}
             <div className="bg-dark text-white px-6 py-3">
@@ -168,19 +168,19 @@ export default function WithdrawalModalForm() {
               <div className="space-y-3">
                 <label
                   htmlFor="amount"
-                  className="block text-fluid-xxs font-normal text-slate-700"
+                  className="block text-fluid-xxs font-light text-slate-700"
                 >
                   Withdrawal Amount
                 </label>
 
                 {/* Send Amount */}
-                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div className="bg-slate-50 rounded p-4 border border-slate-200">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-fluid-xxs text-slate-600">
                         You Send
                       </span>
-                      <span className="text-fluid-xxs font-normal text-slate-700">
+                      <span className="text-fluid-xxs font-light text-slate-700">
                         USD
                       </span>
                     </div>
@@ -193,7 +193,7 @@ export default function WithdrawalModalForm() {
                         type="number"
                         placeholder="0.00"
                         onChange={handleAmountChange}
-                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-fluid-xxs font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-0 focus:outline-none transition-colors"
+                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-300 rounded text-fluid-xxs font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-0 focus:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -204,7 +204,7 @@ export default function WithdrawalModalForm() {
                   <button
                     disabled={transferRateLoading || amount_data.amount === 0}
                     onClick={handleAmountConvert}
-                    className="group relative p-2 bg-slate-100 rounded-2xl transition-all transform active:scale-95 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 grid place-items-center"
+                    className="group relative p-2 bg-slate-100 rounded transition-all transform active:scale-95 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 grid place-items-center"
                     aria-label="Convert currency"
                   >
                     {transferRateLoading ? (
@@ -220,21 +220,21 @@ export default function WithdrawalModalForm() {
                 </div>
 
                 {/* Receive Amount */}
-                <div className="bg-green-50 rounded-2xl p-4 border border-green-200">
+                <div className="bg-green-50 rounded p-4 border border-green-200">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-fluid-xxs text-green-700">
                         You Receive
                       </span>
-                      <span className="text-fluid-xxs font-normal text-green-800">
+                      <span className="text-fluid-xxs font-light text-green-800">
                         {user.base_currency}
                       </span>
                     </div>
-                    <div className="bg-white rounded-lg px-4 py-3 border border-green-300">
+                    <div className="bg-white rounded px-4 py-3 border border-green-300">
                       <p className="text-fluid-xxs font-semibold text-green-800">
                         {formatPrice(
                           amount_data.currency_amount,
-                          user.base_currency
+                          user.base_currency,
                         )}
                       </p>
                     </div>
@@ -246,7 +246,7 @@ export default function WithdrawalModalForm() {
               <div className="space-y-2">
                 <label
                   htmlFor="pin"
-                  className="block text-fluid-xxs font-normal text-slate-700"
+                  className="block text-fluid-xxs font-light text-slate-700"
                 >
                   Security PIN
                 </label>
@@ -325,7 +325,7 @@ export default function WithdrawalModalForm() {
               <button
                 onClick={handleWithdrawal}
                 disabled={withdrawalLoading || amount_data.amount === 0}
-                className="w-full py-2 bg-dark text-white font-medium rounded-full shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+                className="w-full py-2 bg-dark text-white font-medium rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
               >
                 {withdrawalLoading ? (
                   <span className="flex items-center justify-center gap-2">

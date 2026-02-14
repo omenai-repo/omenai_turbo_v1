@@ -4,7 +4,6 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import Link from "next/link";
 import React from "react";
 import WaitlistFormLayout from "./WaitlistFormLayout";
-import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { joinWaitlist } from "@omenai/shared-services/auth/waitlist/joinWaitlist";
@@ -20,12 +19,6 @@ import {
 export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
   const auth_url = auth_uri();
   const router = useRouter();
-  const { value: waitlistActivated } = useLowRiskFeatureFlag(
-    "waitlistActivated",
-    true
-  );
-
-  if (!waitlistActivated) router.replace(`/regiter/${entity}`);
 
   const { errors, setErrors, isSubmitting, setIsSubmitting, handleChange } =
     useWaitlistForm<{ email: string; name: string }>({
@@ -118,7 +111,7 @@ export default function WaitlistForm({ entity }: Readonly<{ entity: string }>) {
         <div className="flex flex-col w-full gap-y-4">
           <button
             type="submit"
-            className="p-4 rounded-full w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
+            className="p-4 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-medium"
           >
             {isSubmitting ? (
               <PulseLoader size={5} color="#ffffff" />

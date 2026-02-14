@@ -5,36 +5,42 @@ import { NextResponse } from "next/server";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
-  ForbiddenError,
   ServerError,
   ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-
 import { CombinedConfig } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
+const CreatePaymentMethodSchema = z.object({
+  gallery_id: z.string(),
+  email: z.email(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isSubscriptionEnabled = (await fetchConfigCatValue(
       "subscription_creation_enabled",
-      "high"
+      "high",
     )) as boolean;
 
     if (!isSubscriptionEnabled)
       throw new ServiceUnavailableError("Subscriptions are currently disabled");
 
     await connectMongoDB();
-    const { gallery_id, email } = await request.json();
+    const { gallery_id, email } = await validateRequestBody(
+      request,
+      CreatePaymentMethodSchema,
+    );
     const gallery = (await AccountGallery.findOne(
       { gallery_id },
-      "stripe_customer_id"
+      "stripe_customer_id",
     ).lean()) as unknown as { stripe_customer_id: string };
     if (!gallery)
       throw new ServerError("Something went wrong. Please try again");
@@ -54,7 +60,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       // Update user with Stripe customer ID
       await AccountGallery.updateOne(
         { gallery_id },
-        { $set: { stripe_customer_id: customer.id } }
+        { $set: { stripe_customer_id: customer.id } },
       );
     }
 
@@ -66,20 +72,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
 
     return NextResponse.json({
-      message: "Card Change Intent created",
+      message: "Payment Method setup intent created",
       setupIntent: setupIntent.client_secret,
     });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "subscription: create payment method setup",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

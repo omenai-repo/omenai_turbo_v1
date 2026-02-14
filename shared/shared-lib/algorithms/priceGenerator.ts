@@ -17,9 +17,7 @@ type ArtworkMedium =
   | "Works on paper"
   | "Acrylic on canvas/linen/panel"
   | "Oil on canvas/panel"
-  | "Mixed media on paper/canvas"
-  | "Sculpture (Resin/plaster/clay)"
-  | "Sculpture (Bronze/stone/metal)";
+  | "Mixed media on paper/canvas";
 
 interface ArtworkDetails {
   artistCategory: ArtistCategory;
@@ -41,13 +39,11 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
 
   // Medium hierarchy converted to 0.0 to 1.0 scale
   const mediumFactors: Record<ArtworkMedium, number> = {
-    Photography: 0.0,
+    Photography: 0.05,
     "Works on paper": 0.15,
     "Acrylic on canvas/linen/panel": 0.35,
     "Mixed media on paper/canvas": 0.5,
     "Oil on canvas/panel": 0.7,
-    "Sculpture (Resin/plaster/clay)": 0.85,
-    "Sculpture (Bronze/stone/metal)": 1.0,
   };
 
   const area = artwork.height * artwork.width;
@@ -65,7 +61,7 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
     const veryLargeArea = 20000;
     const normalizedArea = Math.min(
       (area - largeAreaStart) / (veryLargeArea - largeAreaStart),
-      1.0
+      1.0,
     );
     return 0.7 + normalizedArea * 0.3;
   }

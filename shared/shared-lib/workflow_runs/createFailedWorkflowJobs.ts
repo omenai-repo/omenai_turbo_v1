@@ -19,7 +19,6 @@ export async function saveFailedJob(job: {
         $set: { lastAttemptedAt: new Date() },
       }
     );
-    console.log(`Incremented retryCount for existing job ${job.jobId}`);
 
     return updateResult.modifiedCount > 0;
   } else {
@@ -29,7 +28,6 @@ export async function saveFailedJob(job: {
       lastAttemptedAt: new Date(),
       scheduledAt: new Date(),
     });
-    console.log(`Saved new failed job ${job.jobId}`);
 
     return !!createdJob;
   }

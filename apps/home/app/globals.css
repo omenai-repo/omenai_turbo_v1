@@ -4,7 +4,7 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
   height: 5px;
 }
 
@@ -15,7 +15,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #15171e;
+  background: #0f172a;
   /* border-radius: 50%; */
 }
 
@@ -133,4 +133,54 @@
   overflow-y: auto;
   max-height: 100%;
   overscroll-behavior: contain; /* prevents scroll chaining */
+}
+
+/* ================================
+   PREMIUM DATE INPUT STYLING
+================================ */
+
+/* Remove ugly native icon (Chrome) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Ensure clickable area still works */
+input[type="date"] {
+  position: relative;
+}
+
+/* Safari + Chrome calendar popup polish */
+::-webkit-datetime-edit {
+  color: #0f172a;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+::-webkit-datetime-edit-text {
+  color: #94a3b8;
+}
+
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+/* Calendar dropdown container */
+::-webkit-calendar-picker-indicator {
+  background: transparent;
+}
+
+/* Firefox fallback */
+input[type="date"]::-moz-focus-inner {
+  border: 0;
+}
+
+.reactMarkDown {
+  color: blue;
+  font-size: 2em;
 }

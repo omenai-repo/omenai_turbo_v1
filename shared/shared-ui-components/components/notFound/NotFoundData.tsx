@@ -19,21 +19,21 @@ export default function NotFoundData({
     >
       {/* 🟡 Floating Animated Shape #1 */}
       <motion.div
-        className="absolute top-6 left-10 w-10 h-10 rounded-full bg-cyan-500/20"
+        className="absolute top-6 left-10 w-10 h-10 rounded bg-cyan-500/20"
         animate={{ y: [0, -12, 0], x: [0, 6, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* 🔵 Floating Animated Shape #2 */}
       <motion.div
-        className="absolute bottom-10 right-12 w-14 h-14 rounded-full bg-teal-400/20"
+        className="absolute bottom-10 right-12 w-14 h-14 rounded bg-teal-400/20"
         animate={{ y: [0, 10, 0], x: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* 🟣 Floating Animated Shape #3 */}
       <motion.div
-        className="absolute bottom-16 left-1/3 w-8 h-8 rounded-lg bg-indigo-500/20"
+        className="absolute bottom-16 left-1/3 w-8 h-8 rounded bg-indigo-500/20"
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
       />

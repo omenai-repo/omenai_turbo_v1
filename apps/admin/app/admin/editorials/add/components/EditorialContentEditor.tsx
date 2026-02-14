@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 import { Button } from "@mantine/core";
-import { EditorialSchemaTypes } from "@omenai/shared-types";
 
 export function EditorialContentEditor({
   handleEditorialUpload,
@@ -18,6 +17,7 @@ export function EditorialContentEditor({
         apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY!}
         onInit={(_evt, editor) => (editorRef.current = editor)}
         init={{
+          height: 500,
           plugins:
             "preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion",
           editimage_cors_hosts: ["picsum.photos"],
@@ -40,8 +40,10 @@ export function EditorialContentEditor({
 
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
+          branding: false,
+          elementpath: false,
         }}
-        initialValue="Delete this and start writing your content!"
+        initialValue="Start writing your editorial here…"
       />
       <div className="my-6">
         <Button

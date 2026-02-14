@@ -59,9 +59,9 @@ export const AtelierInput = ({
         className={`
           w-full rounded-none
           border border-neutral-300 bg-transparent p-3 
-          font-sans text-sm text-black font-medium
+          font-sans text-sm text-dark font-medium
           placeholder:text-neutral-400
-          focus:border-black focus:outline-none focus:ring-0
+          focus:border-dark focus:outline-none focus:ring-0
           transition-colors
           autofill:bg-transparent
           [-webkit-autofill]:shadow-[0_0_0_30px_white_inset_!important]

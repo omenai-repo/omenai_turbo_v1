@@ -17,8 +17,9 @@ import {
   createDeletionTaskPerService,
   pollExpiredDeletionRequests,
   serviceMap,
-} from "../utils";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+  verifyAuthVercel,
+} from "../../utils";
+
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
@@ -52,7 +53,7 @@ const MAX_EXECUTION_TIME = 55000; // 55 seconds
 // Core Processing Logic
 
 async function processBatch(
-  deletionRequests: LeanDeletionRequest[]
+  deletionRequests: LeanDeletionRequest[],
 ): Promise<BatchResult> {
   const taskCreationOps: TaskCreationOp[] = [];
 
@@ -77,7 +78,7 @@ async function processBatch(
         {
           entityId: targetId,
           entityType: key,
-        }
+        },
       )) as unknown as Promise<ObjectId>;
 
       taskCreationOps.push({
@@ -90,7 +91,7 @@ async function processBatch(
 
   // Execute all task creations in parallel
   const taskResults = await Promise.allSettled(
-    taskCreationOps.map((op) => op.task)
+    taskCreationOps.map((op) => op.task),
   );
 
   const successfulUpdates: { requestId: string; createdTaskId: ObjectId }[] =
@@ -109,7 +110,7 @@ async function processBatch(
       // Log the specific error from the promise
       console.error(
         `Failed to create task for requestId ${requestId} (service: ${taskCreationOps[i].metadata.service}):`,
-        result.reason
+        result.reason,
       );
       failedUpdates.push(taskCreationOps[i]);
     }
@@ -168,7 +169,7 @@ async function processBatch(
         entityType: metadata.entity,
         key: `${metadata.service}:${metadata.entityId}:${metadata.entity}`,
         error: "MongoDB could not create this task at inception",
-      }))
+      })),
     );
   }
 
@@ -180,10 +181,14 @@ async function processBatch(
   };
 }
 
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const startTime = Date.now();
 
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     // Verify cron authorization
@@ -206,23 +211,20 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
       if (elapsedTime > MAX_EXECUTION_TIME) {
         console.warn(
-          `Stopping batch processing: approaching execution time limit (${elapsedTime}ms elapsed)`
+          `Stopping batch processing: approaching execution time limit (${elapsedTime}ms elapsed)`,
         );
         break;
       }
 
       batchNumber++;
 
-      console.log(`Processing batch ${batchNumber}...`);
-
       // Fetch next batch of expired requests
       const expiredRequests = (await pollExpiredDeletionRequests(
-        BATCH_SIZE
+        BATCH_SIZE,
       )) as LeanDeletionRequest[];
 
       // No more requests to process
       if (expiredRequests.length === 0) {
-        console.log("No more expired deletion requests to process");
         break;
       }
 
@@ -235,12 +237,9 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
             status: "processing",
             startedAt: toUTCDate(new Date()),
           },
-        }
+        },
       );
 
-      console.log(
-        `Batch ${batchNumber}: Processing ${expiredRequests.length} requests`
-      );
       // Process this batch
       const batchResult = await processBatch(expiredRequests);
 
@@ -250,23 +249,13 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
       totalFailedTasks += batchResult.failedTaskCreations;
       allFailedRequestIds.push(...batchResult.failedRequestIds);
 
-      console.log(
-        `Batch ${batchNumber} complete: ${batchResult.successfulTaskCreations} successful, ${batchResult.failedTaskCreations} failed`
-      );
-
       // If we got fewer requests than BATCH_SIZE, we've processed everything
       if (expiredRequests.length < BATCH_SIZE) {
-        console.log("Processed all available requests");
         break;
       }
     }
 
     const executionTime = Date.now() - startTime;
-
-    console.log(
-      `Deletion task processing complete in ${executionTime}ms: ` +
-        `${totalProcessedRequests} requests, ${totalSuccessfulTasks} successful tasks, ${totalFailedTasks} failed tasks`
-    );
 
     // Return appropriate status code
     const hasFailures = totalFailedTasks > 0;
@@ -283,14 +272,14 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         failedTaskCreations: totalFailedTasks,
         failedRequestIds: [...new Set(allFailedRequestIds)],
       },
-      { status: hasFailures ? 207 : 200 }
+      { status: hasFailures ? 207 : 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Cron: Deletion Task Creation",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
@@ -298,7 +287,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
         message: error_response?.message || "Internal Server Error",
         error: "Critical failure in deletion task processing",
       },
-      { status: error_response?.status || 500 }
+      { status: error_response?.status || 500 },
     );
   }
 });

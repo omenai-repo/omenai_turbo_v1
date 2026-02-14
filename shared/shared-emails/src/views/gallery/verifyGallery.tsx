@@ -22,29 +22,29 @@ const GalleryVerificationEmail = (galleryName: string, token: string) => {
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
               src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
               }
               width="120"
               height="20"
               alt="Omenai logo"
               className="mx-auto my-10"
             />
-            <Heading className="text-black text-fluid-lg font-normal text-center p-0 mb-[20px] mx-0">
+            <Heading className="text-dark text-fluid-lg font-light text-center p-0 mb-[20px] mx-0">
               Welcome on board to <strong>Omenai for Galleries.</strong>
             </Heading>
-            {/* <Text className="text-black text-fluid-xxs leading-[24px]"></Text> */}
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            {/* <Text className="text-dark text-fluid-xxs leading-[24px]"></Text> */}
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               We, at <strong>Omenai</strong>, are thrilled to have you on board
               and eagerly await the beginning of your journey with us
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Your email verification token is located below. Enter this code
               into the designated input field on the verification page. Please
               be aware that the validity of this token will expire in{" "}
               <strong>10 minutes.</strong>
             </Text>
             <Section className="text-center mt-[32px] mb-[32px]">
-              <Text className="text-black text-fluid-xxs font-normal leading-[24px]">
+              <Text className="text-dark text-fluid-xxs font-light leading-[24px]">
                 <strong>{token}</strong>
               </Text>
             </Section>
@@ -52,7 +52,7 @@ const GalleryVerificationEmail = (galleryName: string, token: string) => {
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               is addressed directly to{" "}
-              <span className="text-black">{galleryName} Gallery </span>. In the
+              <span className="text-dark">{galleryName} Gallery </span>. In the
               event that you were not anticipating the receipt of this email, we
               respectfully request that you refrain from taking any action based
               on its contents. This communication may contain confidential and

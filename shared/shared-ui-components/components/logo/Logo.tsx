@@ -48,7 +48,7 @@ export const AdminLogo = ({ className, theme = "dark" }: LogoProps) => {
           priority={true}
         />
         <span
-          className={`font-normal text-fluid-xxs relative xxs:top-1 ${
+          className={`font-light text-fluid-xxs relative xxs:top-1 ${
             theme === "light" ? "text-white" : "text-black"
           } ${className}`}
         >
@@ -78,6 +78,25 @@ export const IndividualLogo = ({ className }: LogoProps) => {
     </>
   );
 };
+export const OmenaiLogoCut = ({ className }: LogoProps) => {
+  const base_uri = base_url();
+
+  return (
+    <>
+      <Link href={base_uri} className={`flex gap-1 items-end ${className}`}>
+        <Image
+          src={
+            "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/6970ee0f000152b31148/view?project=682272b1001e9d1609a8"
+          }
+          alt="omenai logo"
+          width={30}
+          height={30}
+          priority={true}
+        />
+      </Link>
+    </>
+  );
+};
 export const ArtistLogo = ({ className }: LogoProps) => {
   const base_uri = base_url();
 
@@ -94,7 +113,7 @@ export const ArtistLogo = ({ className }: LogoProps) => {
           priority={true}
         />
 
-        <span className={`font-normal text-fluid-xxs relative xxs:top-1`}>
+        <span className={`font-light text-fluid-xxs relative xxs:top-1`}>
           For Artist
         </span>
       </Link>

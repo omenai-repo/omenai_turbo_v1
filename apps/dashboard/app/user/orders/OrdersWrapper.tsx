@@ -1,11 +1,10 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import OrdersGroup from "./components/OrdersGroup";
 import { getOrdersForUser } from "@omenai/shared-services/orders/getOrdersForUser";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useWindowSize } from "usehooks-ts";
-import OrdersMobileGroup from "./components/OrderMobileTab";
+import { OrdersTab } from "./components/OrdersTab";
+import { UsersOrdersTabSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersOrdersTabSkeleton";
 
 export default function Orders() {
   const { width } = useWindowSize();
@@ -24,17 +23,9 @@ export default function Orders() {
   if (isLoading) {
     return (
       <div className="h-[50vh] w-full grid place-items-center">
-        <Load />
+        <UsersOrdersTabSkeleton />
       </div>
     );
   }
-  return (
-    <>
-      {width > 768 ? (
-        <OrdersGroup orders={orders} />
-      ) : (
-        <OrdersMobileGroup orders={orders} />
-      )}
-    </>
-  );
+  return <OrdersTab orders={orders} />;
 }

@@ -34,34 +34,28 @@ export async function createSession(data: SessionData) {
 
 // Enhanced session cleanup utility
 export async function cleanupSession(sessionId: string, cookieStore?: any) {
-  // Clean up Redis
   await redis.del(`session:${sessionId}`);
 
-  // Clean up cookie if provided
   if (cookieStore) {
-    const session = await getIronSession<{ sessionId: string }>(
-      cookieStore,
-      sessionOptions
-    );
-    session.destroy();
+    try {
+      const session = await getIronSession<{ sessionId: string }>(
+        cookieStore,
+        sessionOptions,
+      );
+      session.destroy();
+    } catch (e) {
+      // Ignore cleanup errors
+    }
   }
 }
 
 // Enhanced getSession with proper cleanup
-export async function getSession(
-  sessionId: string,
-  userAgent: string | null,
-  is_middleware_agent?: boolean,
-  cookieStore?: any
-) {
+export async function getSession(sessionId: string, cookieStore?: any) {
   const sessionDataJSON = await redis.get(`session:${sessionId}`);
 
-  // Check if session exists in Redis
   if (!sessionDataJSON) {
-    // Clean up invalid cookie if provided
-    if (cookieStore) {
-      await cleanupSession(sessionId, cookieStore);
-    }
+    // Only attempt cookie cleanup if cookieStore exists
+    if (cookieStore) await cleanupSession(sessionId, cookieStore);
     return null;
   }
 
@@ -73,21 +67,11 @@ export async function getSession(
         ? JSON.parse(sessionDataJSON)
         : sessionDataJSON;
   } catch (error) {
-    // Invalid session data, destroy it everywhere
-    console.log("Invalid session caught and destroyed");
     await cleanupSession(sessionId, cookieStore);
     return null;
   }
 
-  // **Security:** Basic check to prevent session hijacking
-  // if (!is_middleware_agent) {
-  //   if (!userAgent || sessionData.userAgent !== userAgent) {
-  //     await cleanupSession(sessionId, cookieStore);
-  //     return null;
-  //   }
-  // }
-
-  // Sliding session: reset the TTL on access (only for valid sessions)
+  // Sliding session: reset TTL
   await redis.expire(`session:${sessionId}`, SESSION_TTL);
   return sessionData;
 }
@@ -101,9 +85,34 @@ export async function destroySession(sessionId: string, cookieStore?: any) {
 export async function getSessionFromCookie(cookieStore: any) {
   const session = await getIronSession<{ sessionId: string }>(
     cookieStore,
-    sessionOptions
+    sessionOptions,
   );
   return session;
+}
+
+export async function getSessionIdFromRequest(
+  req: Request,
+  cookieStore: any,
+): Promise<string | undefined> {
+  // 1. Priority: Check Authorization Header (Mobile/API)
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    if (token) return token;
+  }
+
+  // 2. Fallback: Check Cookies (Web)
+  try {
+    const session = await getIronSession<{ sessionId: string }>(
+      cookieStore,
+      sessionOptions,
+    );
+    if (session.sessionId) return session.sessionId;
+  } catch (e) {
+    // Ignore cookie errors if we are just looking for an ID
+  }
+
+  return undefined;
 }
 
 // Utility: Check if session exists without extending TTL
@@ -115,7 +124,7 @@ export async function checkSessionExists(sessionId: string): Promise<boolean> {
 // Utility: Get session data without sliding (for middleware checks)
 export async function getSessionWithoutSliding(
   sessionId: string,
-  userAgent: string | null
+  userAgent: string | null,
 ): Promise<(SessionData & { csrfToken: string }) | null> {
   const sessionDataJSON = await redis.get(`session:${sessionId}`);
 
@@ -143,7 +152,7 @@ export async function getSessionWithoutSliding(
 // Utility: Refresh session with new data
 export async function refreshSession(
   sessionId: string,
-  newData?: Partial<SessionData>
+  newData?: Partial<SessionData>,
 ) {
   const currentSession = await redis.get(`session:${sessionId}`);
   if (!currentSession) return false;

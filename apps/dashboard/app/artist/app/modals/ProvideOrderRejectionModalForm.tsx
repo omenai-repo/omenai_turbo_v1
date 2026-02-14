@@ -14,6 +14,8 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { declineReasonMapping } from "./declineReasonMap";
 import { useRollbar } from "@rollbar/react";
+import Link from "next/link";
+import { base_url } from "@omenai/url-config/src/config";
 export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
     artistActionStore();
@@ -57,7 +59,7 @@ export default function ProvideOrderRejectionModalForm() {
       if (allKeysEmpty(order_modal_metadata)) {
         toast_notif(
           "Invalid request params. Refresh your page. If this error persists, please contact support.",
-          "error"
+          "error",
         );
         return;
       }
@@ -73,7 +75,7 @@ export default function ProvideOrderRejectionModalForm() {
         current_order_id,
         order_modal_metadata.seller_designation,
         order_modal_metadata.art_id,
-        csrf || ""
+        csrf || "",
       );
       if (!response?.isOk) {
         toast.error("Error notification", {
@@ -108,7 +110,7 @@ export default function ProvideOrderRejectionModalForm() {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -151,14 +153,20 @@ export default function ProvideOrderRejectionModalForm() {
                 checked ? "max-h-40 opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
               }`}
             >
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+              <div className="bg-red-50 border border-red-200 rounded p-4 flex items-start gap-3">
                 <AlertTriangle className="text-red-600 w-5 h-5 mt-0.5 flex-shrink-0" />
-                {/* TODO: Add link to terms of use here */}
                 <p className="text-fluid-xxs text-red-600 leading-relaxed">
                   This artwork is still subject to Omenai&apos;s 90-day
-                  exclusivity policy. In accordance with our Terms of Use, a 10%
-                  penalty fee will be deducted from your next successful sale on
-                  the platform.
+                  exclusivity policy. In accordance with our{" "}
+                  <Link
+                    className="underline font-bold"
+                    target="_blank"
+                    href={`${base_url()}/legal?ent=artist`}
+                  >
+                    Terms of Use
+                  </Link>{" "}
+                  , a 10% penalty fee will be deducted from your next successful
+                  sale on the platform.
                 </p>
               </div>
             </div>
@@ -193,7 +201,7 @@ export default function ProvideOrderRejectionModalForm() {
               {/* Other Option */}
 
               {accepted_status.reason && (
-                <div className="mt-5 p-3 bg-red-50 border border-red-100 rounded-lg text-fluid-xxs text-red-700">
+                <div className="mt-5 p-3 bg-red-50 border border-red-100 rounded text-fluid-xxs text-red-700">
                   <strong>Client interpretation:</strong>{" "}
                   {accepted_status.reason}
                 </div>
@@ -212,7 +220,7 @@ export default function ProvideOrderRejectionModalForm() {
                 (accepted_status.reason ?? "").trim() === "")
             }
             type="submit"
-            className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xxs font-normal transition-all duration-200 ease-in-out
+            className={`h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 text-fluid-xxs font-light transition-all duration-200 ease-in-out
               ${
                 (order_modal_metadata.is_current_order_exclusive && checked) ||
                 (!order_modal_metadata.is_current_order_exclusive &&

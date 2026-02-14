@@ -5,7 +5,5 @@ export default function IconWrapper({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <span className={`p-2 w-fit rounded-xl ${className}`}>{children}</span>
-  );
+  return <span className={`p-2 w-fit rounded ${className}`}>{children}</span>;
 }

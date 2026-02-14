@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import GallerySignupPageWrapper from "./GallerySignupPageWrapper";
 
 export default async function GallerySignup({
@@ -9,7 +8,7 @@ export default async function GallerySignup({
   const referrerKey = (await searchParams).referrerKey;
   const email = (await searchParams).email;
   const inviteCode = (await searchParams).inviteCode;
-  if (!referrerKey || !email || !inviteCode) redirect("/register");
+
   return (
     <GallerySignupPageWrapper
       referrerKey={referrerKey}

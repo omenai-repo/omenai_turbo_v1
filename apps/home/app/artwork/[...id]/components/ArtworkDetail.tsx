@@ -1,43 +1,39 @@
 "use client";
 import Dimensions from "./Dimensions";
-import { GrCertificate } from "react-icons/gr";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import { IoHeartOutline } from "react-icons/io5";
-import { GiCheckMark } from "react-icons/gi";
+import { IoHeartOutline, IoHeart } from "react-icons/io5"; // Added filled heart
 import useLikedState from "@omenai/shared-hooks/hooks/useLikedState";
 import { useRouter } from "next/navigation";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import { requestPrice } from "@omenai/shared-services/requests/requestPrice";
 import { toast } from "sonner";
-import { useState } from "react";
-import { PiFrameCornersThin } from "react-icons/pi";
-
+import { useEffect, useState } from "react";
 import { ArtworkResultTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-
+import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehaviour";
 type ArtworkDetailTypes = {
   data: ArtworkResultTypes;
   sessionId: string | undefined;
 };
+
 export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
   const { likedState, handleLike } = useLikedState(
     data.impressions as number,
     data.like_IDs as string[],
     sessionId,
-    data.art_id
+    data.art_id,
   );
 
   const [loading, setLoading] = useState(false);
   const [purchase_click_loading, set_click_loading] = useState(false);
-
   const { toggleLoginModal } = actionStore();
-
   const router = useRouter();
   const { user, csrf } = useAuth({ requiredRole: "user" });
 
   async function handleBuyButtonClick() {
-    if (sessionId === undefined) toggleLoginModal(true);
+    if (sessionId === undefined || !user || user.role !== "user")
+      toggleLoginModal(true);
     else {
       if (data.pricing.shouldShowPrice === "Yes") {
         set_click_loading(true);
@@ -56,134 +52,118 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
           artwork_data,
           user.email,
           user.name,
-          csrf || ""
+          csrf || "",
         );
 
+        setLoading(false);
         if (res?.isOk) {
-          toast.success("Operation successful", {
-            description: "Price data sent. Please check your email inbox",
-            style: {
-              background: "green",
-              color: "white",
-            },
-            className: "class",
+          toast.success("Request Sent", {
+            description: "Our concierge will contact you shortly.",
+            style: { background: "black", color: "white", borderRadius: "0px" },
           });
-          setLoading(false);
         } else {
-          toast.error("Error notification", {
-            description:
-              res?.message ||
-              "Something went wrong, please try again or contact us for assistance.",
-            style: {
-              background: "red",
-              color: "white",
-            },
-            className: "class",
+          toast.error("Error", {
+            description: res?.message || "Transmission failed.",
+            style: { background: "red", color: "white", borderRadius: "0px" },
           });
-          setLoading(false);
         }
       }
     }
   }
+
+  const isSoldOut = !data.availability;
+  const isPriceHidden = data.pricing.shouldShowPrice !== "Yes";
+
   return (
-    <div className="flex flex-col gap-y-4">
-      <div className="text-dark space-y-1">
-        <h1 className="text-fluid-xl  font-bold sm:text-fluid-2xl text-gray-900 leading-tight">
+    <div className="flex flex-col gap-8">
+      {/* 1. HEADER: Title & Artist */}
+      <div className="space-y-4">
+        <h1 className="font-serif text-2xl sm:text-2xl md:text-3xl lg:text-5xl leading-[0.95] md:leading-[0.9] tracking-tight text-slate-900 text-balance break-words hyphens-auto">
           {data.title}
         </h1>
-        <h2 className="text-fluid-base font-normal text-dark/90">
+        <h2 className="font-sans text-lg font-medium text-slate-600">
           {data.artist}
         </h2>
       </div>
-      {/* Medium and Rarity */}
-      <div className="flex items-center space-x-2 text-fluid-xxs font-normal text-gray-700">
-        <span className="px-3 py-1 bg-gray-50 rounded-full border border-dark/10">
+
+      {/* 2. TECHNICAL SPECS ROW */}
+      <div className="flex flex-wrap items-center gap-4 border-y border-slate-100 py-4">
+        <span className="font-sans text-[10px] uppercase tracking-widest text-slate-500">
           {data.medium}
         </span>
-        <div className="w-px h-4 bg-gray-300" />
-        <span className="px-3 py-1 bg-gray-50 rounded-full border border-dark/10">
+        <span className="h-3 w-[1px] bg-slate-300" />
+        <span className="font-sans text-[10px] uppercase tracking-widest text-slate-500">
+          {data.year}
+        </span>
+        <span className="h-3 w-[1px] bg-slate-300" />
+        <span className="font-sans text-[10px] uppercase tracking-widest text-slate-500">
           {data.rarity}
         </span>
       </div>
 
+      {/* 3. DIMENSIONS COMPONENT */}
       <Dimensions dimensions={data.dimensions} />
-      {/* Certificates and Features */}
-      <div className="flex flex-wrap gap-3">
-        {data.certificate_of_authenticity === "Yes" && (
-          <div className="inline-flex items-center gap-2 px-4 py-1 bg-emerald-50 text-emerald-700 rounded-full text-fluid-xxs font-normal border border-emerald-200">
-            <GrCertificate className="w-4 h-4" />
-            <span>Certificate of authenticity</span>
+
+      {/* 4. PRICE & STATUS */}
+      <div className="py-4">
+        <span className="mb-2 block font-sans text-[9px] uppercase tracking-widest text-slate-400">
+          Valuation
+        </span>
+        {isSoldOut ? (
+          <span className="inline-block border border-slate-200 bg-slate-50 px-3 py-1 font-sans text-xs uppercase tracking-widest text-slate-500">
+            Sold
+          </span>
+        ) : (
+          <div className="text-3xl font-light text-dark">
+            {isPriceHidden
+              ? "Price on Request"
+              : formatPrice(data.pricing.usd_price)}
           </div>
         )}
-        <div className="inline-flex items-center gap-2 px-4 py-1 bg-blue-50 text-blue-700 rounded-full text-fluid-xxs font-normal border border-blue-200">
-          <PiFrameCornersThin className="w-4 h-4" />
-          <span>
-            {data.framing === "Framed"
-              ? "Frame included"
-              : "Frame not included"}
-          </span>
-        </div>
       </div>
 
-      <div className="py-4 border-t border-gray-100 text-fluid-xs">
-        <div className="">
-          <p className="text-fluid-xxs text-slate-700 uppercase tracking-wide font-normal">
-            Price
-          </p>
-          {!data.availability ? (
-            <div className="inline-flex items-center px-3 py-1 text-fluid-xs bg-red-50 text-red-700 rounded-full border border-red-200 font-normal">
-              Sold Out
-            </div>
-          ) : (
-            <h2 className="text-fluid-md font-semibold text-gray-900">
-              {data.pricing.shouldShowPrice === "Yes"
-                ? formatPrice(data.pricing.usd_price)
-                : "Price on request"}
-            </h2>
-          )}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-y-3 font-normal w-full text-fluid-xxs">
+      {/* 5. ACTION BUTTONS (Architectural) */}
+      <div className="flex flex-col gap-4">
+        {/* PRIMARY ACTION: Buy / Request */}
         <button
-          disabled={loading || !data.availability || purchase_click_loading}
+          disabled={loading || isSoldOut || purchase_click_loading}
           onClick={handleBuyButtonClick}
-          className="w-full bg-dark py-2 px-4 rounded-full text-white hover:bg-dark/80 disabled:bg-dark/10 disabled:cursor-not-allowed disabled:text-dark/50 hover:text-white hover:duration-200 grid place-items-center group"
+          className="group flex h-14 w-full items-center justify-center gap-3 bg-dark text-white transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
         >
           {loading || purchase_click_loading ? (
             <LoadSmall />
-          ) : data.pricing.shouldShowPrice === "Yes" ? (
-            !data.availability ? (
-              "Artwork Sold"
-            ) : (
-              "Purchase artwork"
-            )
-          ) : !data.availability ? (
-            "Artwork Sold"
           ) : (
-            "Request price"
+            <span className="font-sans text-xs uppercase tracking-[0.2em]">
+              {isSoldOut
+                ? "Unavailable"
+                : isPriceHidden
+                  ? "Inquire for Price"
+                  : "Buy Artwork"}
+            </span>
           )}
         </button>
 
-        {(sessionId === undefined ||
-          (sessionId && !likedState.ids.includes(sessionId))) && (
-          <button
-            onClick={() => handleLike(true)}
-            className="w-full py-2 px-4 justify-center rounded-full flex items-center gap-2  text-dark hover:bg-dark/10 hover:text-dark border border-dark/10 duration-300 group"
-          >
-            <span>Save artwork</span>
-            <IoHeartOutline />
-          </button>
-        )}
-        {sessionId && likedState.ids.includes(sessionId) && (
-          <button
-            onClick={() => handleLike(false)}
-            className="w-full py-2 px-4 rounded-full ring-1 flex justify-center items-center gap-2 hover:bg-dark/5 duration-200 ring-dark text-dark text-fluid-xxs group"
-          >
-            <span>Remove from saved</span>
-            <GiCheckMark />
-          </button>
-        )}
+        {/* SECONDARY ACTION: Save */}
+        <button
+          onClick={() => handleLike(!likedState.ids.includes(sessionId || ""))}
+          className="group flex h-14 w-full items-center justify-center gap-3 border border-slate-200 bg-white text-dark transition-all duration-300 hover:border-dark rounded-none"
+        >
+          {sessionId && likedState.ids.includes(sessionId) ? (
+            <>
+              <span className="font-sans text-xs uppercase tracking-[0.2em]">
+                Saved to Collection
+              </span>
+              <IoHeart className="text-red-600" />
+            </>
+          ) : (
+            <>
+              <span className="font-sans text-xs uppercase tracking-[0.2em]">
+                Save to Collection
+              </span>
+              <IoHeartOutline className="text-slate-400 group-hover:text-dark transition-colors" />
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

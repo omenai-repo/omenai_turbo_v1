@@ -1,7 +1,8 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
+import z from "zod";
 export async function verifyWebhookSignature(
   signature: string | null,
-  secretHash: string
+  secretHash: string,
 ): Promise<boolean> {
   if (!signature) return false;
 
@@ -12,19 +13,19 @@ export async function verifyWebhookSignature(
 
   return crypto.timingSafeEqual(
     new Uint8Array(signatureBuffer),
-    new Uint8Array(secretHashBuffer)
+    new Uint8Array(secretHashBuffer),
   );
 }
 
 export async function verifyFlutterwaveTransaction(
   req: any,
-  url: string
+  url: string,
 ): Promise<any> {
   const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+      Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
     },
   });
 

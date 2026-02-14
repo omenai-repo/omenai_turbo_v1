@@ -7,10 +7,10 @@ import { notFound, useSearchParams } from "next/navigation";
 import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { loadStripe } from "@stripe/stripe-js";
-import InitialPaymentFormWrapper from "./components/InitialPaymentFormWrapper";
 import MigrationUpgradeCheckout from "./components/MigrationUpgradeCheckout";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { retrieveSubscriptionDiscount } from "@omenai/shared-services/subscriptions/retriveSubscriptionDiscount";
+import { SubscriptionPlanDataTypes, WaitListTypes } from "@omenai/shared-types";
 
 export default function SubscriptionCheckout() {
   const searchParams = useSearchParams();
@@ -19,26 +19,34 @@ export default function SubscriptionCheckout() {
   const id = searchParams.get("id");
   const action = searchParams.get("action");
   const charge_type = searchParams.get("charge_type");
-
-  if (
-    plan_id === null ||
-    plan_id === undefined ||
-    interval === null ||
-    interval === undefined ||
-    id === null ||
-    id === undefined
-  )
+  const { user, csrf } = useAuth({ requiredRole: "gallery" });
+  if (!plan_id || !interval || !id || !["monthly", "yearly"].includes(interval))
     notFound();
 
   const { data, isLoading } = useQuery({
     queryKey: ["get_plan_details"],
     queryFn: async () => {
-      const plans = await getSinglePlanData(plan_id);
-      if (!plans?.isOk) throw new Error("Something went wrong");
-      else return { plans: plans.data };
+      const [plan, discount_data] = await Promise.all([
+        getSinglePlanData(plan_id),
+        retrieveSubscriptionDiscount(user.email as string, csrf || ""),
+      ]);
+
+      if (!plan?.isOk || !discount_data.isOk)
+        throw new Error("Something went wrong");
+
+      return {
+        plan: plan.data as SubscriptionPlanDataTypes & {
+          createdAt: string;
+          updatedAt: string;
+        },
+        discount: discount_data.discount as boolean,
+      };
     },
     refetchOnWindowFocus: false,
   });
+
+  const isEligibleForDiscount = (data?.discount &&
+    data?.plan.name.toLowerCase() === "pro") as boolean;
 
   return (
     <div>
@@ -52,27 +60,29 @@ export default function SubscriptionCheckout() {
         <>
           <div className="gap-3 mt-4">
             {action === "null" ? (
-              <div className="">
-                {charge_type === "card_change" ? (
-                  <CardChangeCheckoutItem />
-                ) : (
-                  <CheckoutItem plan={data?.plans} interval={interval} />
-                )}
-                {/* Render card change payment form */}
-                <InitialPaymentFormWrapper
-                  planId={plan_id || ""}
-                  interval={interval}
-                  amount={
-                    interval === "monthly"
-                      ? +data?.plans.pricing.monthly_price
-                      : data?.plans.pricing.yearly_price || 0
+              <div className="space-y-5">
+                <CheckoutItem
+                  discountEligible={isEligibleForDiscount}
+                  plan={
+                    data?.plan as SubscriptionPlanDataTypes & {
+                      createdAt: string;
+                      updatedAt: string;
+                    }
                   }
+                  interval={interval as "monthly" | "yearly"}
+                  planId={plan_id || ""}
                 />
               </div>
             ) : (
               <div className="">
                 <MigrationUpgradeCheckout
-                  plan={data?.plans}
+                  plan={
+                    data?.plan as SubscriptionPlanDataTypes & {
+                      createdAt: string;
+                      updatedAt: string;
+                      _id: string;
+                    }
+                  }
                   interval={interval as "yearly" | "monthly"}
                 />
               </div>

@@ -1,11 +1,9 @@
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import { hashPassword } from "@omenai/shared-lib/hash/hashPassword";
 import { AccountAdmin } from "@omenai/shared-models/models/auth/AccountAdmin";
-import Server from "next/dist/server/base-server";
 import {
   ForbiddenError,
   ServerError,
@@ -14,20 +12,26 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
 import { sendAdminActivationEmail } from "@omenai/shared-emails/src/models/admin/sendAdminActivationEmail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
 };
+const ActivateAdminAccountValidator = z.object({
+  name: z.string(),
+  password: z.string(),
+  token: z.string(),
+  email: z.email(),
+});
 export const POST = withRateLimit(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
-    const { name, password, token, email } = await request.json();
-
-    if (!name || !password || !token || !email)
-      throw new ServerError("Missing required fields");
-
+    const { name, password, token, email } = await validateRequestBody(
+      request,
+      ActivateAdminAccountValidator,
+    );
     await connectMongoDB();
 
     const existingAdmin = await AccountAdmin.findOne({ email }, "email");
@@ -51,7 +55,7 @@ export const POST = withRateLimit(config)(async function POST(
           admin_active: true,
           joinedAt: date,
         },
-      }
+      },
     );
 
     if (activate_admin_user.modifiedCount === 0)
@@ -59,7 +63,6 @@ export const POST = withRateLimit(config)(async function POST(
 
     await AdminInviteToken.deleteOne({ token });
 
-    //TODO - SCOPE CREEP: Send email notification about account activation
     await sendAdminActivationEmail({
       name,
       email,
@@ -74,11 +77,11 @@ export const POST = withRateLimit(config)(async function POST(
     createErrorRollbarReport(
       "admin:Activate admin account",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

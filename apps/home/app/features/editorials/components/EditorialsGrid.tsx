@@ -6,16 +6,14 @@ export default function EditorialsGrid({
 }: {
   editorials: EditorialSchemaTypes[];
 }) {
-  if (
-    editorials === null ||
-    editorials === undefined ||
-    editorials.length === 0
-  )
-    return;
+  if (!editorials || editorials.length === 0) return null;
+
+  // Ensure latest is first
+  const sortedEditorials = editorials.slice().reverse();
 
   return (
-    <>
-      <EditorialGridItemsList editorials={editorials.slice().reverse()} />
-    </>
+    <div className="w-full">
+      <EditorialGridItemsList editorials={sortedEditorials} />
+    </div>
   );
 }

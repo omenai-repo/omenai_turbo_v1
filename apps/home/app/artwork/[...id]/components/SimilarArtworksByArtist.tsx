@@ -36,7 +36,7 @@ export default function SimilarArtworksByArtist({
 
   const arts = catalogChunk(
     artworksArray,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
   return (
     <div className="w-full h-full py-5">
@@ -52,7 +52,7 @@ export default function SimilarArtworksByArtist({
         ))}
 
       <div className="w-full my-5">
-        <div className="flex flex-wrap gap-x-4 justify-center">
+        <div className="grid grid-cols-1 gap-y-12 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
           {arts.map((artworks: any[], index) => {
             return (
               <div className="flex-1 gap-4 space-y-12" key={index}>
@@ -91,7 +91,7 @@ export default function SimilarArtworksByArtist({
                         author_id={art.author_id}
                       />
                     );
-                  }
+                  },
                 )}
               </div>
             );

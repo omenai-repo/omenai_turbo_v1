@@ -3,7 +3,7 @@ import { FormEvent } from "react";
 import FormController from "./FormController";
 import { registerAccount } from "@omenai/shared-services/register/registerAccount";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { storage } from "@omenai/appwrite-config/appwrite";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
@@ -11,7 +11,9 @@ import uploadArtistLogoContent from "../../uploadArtistLogo";
 import { artist_countries_codes_currency } from "@omenai/shared-json/src/artist_onboarding_countries";
 export default function FormInput() {
   const { artistSignupData, setIsLoading, clearData } = useArtistAuthStore();
-
+  const searchParams = useSearchParams();
+  const referrerKey = searchParams.get("referrerKey");
+  const inviteCode = searchParams.get("inviteCode");
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -76,7 +78,12 @@ export default function FormInput() {
         logo: file.fileId,
       };
 
-      const response = await registerAccount(payload, "artist");
+      const response = await registerAccount(
+        payload,
+        referrerKey as string,
+        inviteCode as string,
+        "artist"
+      );
 
       if (response.isOk) {
         toast.success("Operation successful", {

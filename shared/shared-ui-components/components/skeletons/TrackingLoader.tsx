@@ -17,36 +17,36 @@ export default function TrackingLoader() {
         <Group align="center" mb="md">
           <Skeleton height={48} circle />
           <Box>
-            <Skeleton height={8} width="60%" radius="xl" mb={4} />
-            <Skeleton height={8} width="80%" radius="xl" />
+            <Skeleton height={8} width="60%" radius="sm" mb={4} />
+            <Skeleton height={8} width="80%" radius="sm" />
           </Box>
         </Group>
 
         <Divider my="sm" />
 
-        <Stack p="lg">
+        <Stack p="sm">
           {/* Order created */}
           <Box>
-            <Skeleton height={10} width="40%" radius="xl" mb={4} />
-            <Skeleton height={8} width="80%" radius="xl" />
+            <Skeleton height={10} width="40%" radius="sm" mb={4} />
+            <Skeleton height={8} width="80%" radius="sm" />
           </Box>
 
           {/* Shipment picked up */}
           <Box>
-            <Skeleton height={10} width="50%" radius="xl" mb={4} />
-            <Skeleton height={8} width="60%" radius="xl" />
+            <Skeleton height={10} width="50%" radius="sm" mb={4} />
+            <Skeleton height={8} width="60%" radius="sm" />
           </Box>
           <Box>
-            <Skeleton height={10} width="50%" radius="xl" mb={4} />
-            <Skeleton height={8} width="60%" radius="xl" />
+            <Skeleton height={10} width="50%" radius="sm" mb={4} />
+            <Skeleton height={8} width="60%" radius="sm" />
           </Box>
           <Box>
-            <Skeleton height={10} width="50%" radius="xl" mb={4} />
-            <Skeleton height={8} width="60%" radius="xl" />
+            <Skeleton height={10} width="50%" radius="sm" mb={4} />
+            <Skeleton height={8} width="60%" radius="sm" />
           </Box>
           <Box>
-            <Skeleton height={10} width="50%" radius="xl" mb={4} />
-            <Skeleton height={8} width="60%" radius="xl" />
+            <Skeleton height={10} width="50%" radius="sm" mb={4} />
+            <Skeleton height={8} width="60%" radius="sm" />
           </Box>
         </Stack>
       </Paper>

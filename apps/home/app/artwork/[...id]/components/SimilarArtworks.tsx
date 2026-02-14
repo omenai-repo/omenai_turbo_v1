@@ -10,6 +10,7 @@ import { useWindowSize } from "usehooks-ts";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { ArtworkMediumTypes, FilterOptions } from "@omenai/shared-types";
 import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 export default function SimilarArtworks({
   title,
@@ -56,7 +57,7 @@ export default function SimilarArtworks({
 
   const arts = catalogChunk(
     artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   return (
@@ -64,7 +65,7 @@ export default function SimilarArtworks({
       <h1 className="text-dark font-bold text-fluid-sm">Hot recommendations</h1>
 
       <div className="w-full my-5">
-        <div className="flex flex-wrap gap-x-4 justify-center">
+        <div className="grid grid-cols-1 gap-y-12 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
           {arts.map((artworks: any[], index) => {
             return (
               <div className="flex-1 gap-4 space-y-12" key={index}>
@@ -103,7 +104,7 @@ export default function SimilarArtworks({
                         author_id={art.author_id}
                       />
                     );
-                  }
+                  },
                 )}
               </div>
             );
@@ -111,12 +112,13 @@ export default function SimilarArtworks({
         </div>
       </div>
       <div className="flex items-center justify-center py-5">
-        <Link
-          href={`/collections/${encodeMediumForUrl(medium)}`}
-          className="group"
-        >
-          <button className="flex items-center gap-x-2 shadow-[8px_8px_0px_rgba(0,0,0,1)] group-hover:shadow-none duration-200 bg-white ring-1 ring-dark text-dark mt-10 px-8 z-20 rounded-full py-1 text-fluid-xxs">
-            View more
+        <Link href={"/catalog"} className="group relative z-20">
+          <button className="flex items-center gap-4 bg-white px-8 py-4 text-dark transition-all duration-500 ease-out hover:bg-dark hover:text-white border border-neutral-200 hover:border-black">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em]">
+              Enter Full Archive
+            </span>
+
+            <IoIosArrowRoundForward className="text-2xl transition-transform duration-300 group-hover:translate-x-2" />
           </button>
         </Link>
       </div>

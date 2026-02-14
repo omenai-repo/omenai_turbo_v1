@@ -1,9 +1,10 @@
 "use client";
 
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { MdClose } from "react-icons/md";
 
 const DynamicZoomableViewerComponentWithNoSSR = dynamic(
   () =>
@@ -12,27 +13,68 @@ const DynamicZoomableViewerComponentWithNoSSR = dynamic(
     ),
   { ssr: false }
 );
+
 const ZoomableViewerModal = ({ fileUrl }: { fileUrl: string }) => {
-  const {
-    openSeadragonImageViewer,
-    setOpenSeaDragonImageViewer,
-    seaDragonZoomableImageViewerUrl,
-  } = actionStore();
+  const { openSeadragonImageViewer, setOpenSeaDragonImageViewer } =
+    actionStore();
+  const [mounted, setMounted] = useState(false);
 
-  if (!openSeadragonImageViewer) return null;
+  // 1. Wait for mount to access document (Client-side only)
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
-  return (
-    <div className="w-[100vw] h-[100svh] fixed inset-0 z-50 flex items-center justify-center bg-dark">
-      <div className="rounded shadow-lg p-4 max-w-full w-full h-full">
-        <button
-          onClick={() => setOpenSeaDragonImageViewer(false)}
-          className="absolute top-4 right-4 text-white bg-dark p-5 z-50 hover:text-white"
-        >
-          ✕
-        </button>
+  // 2. SCROLL LOCK LOGIC (The Nuclear Option)
+  useEffect(() => {
+    if (openSeadragonImageViewer) {
+      const scrollY = window.scrollY;
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+    } else {
+      const scrollY = document.body.style.top;
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    }
+
+    return () => {
+      const scrollY = document.body.style.top;
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    };
+  }, [openSeadragonImageViewer]);
+
+  // 3. Don't render until client-side mount
+  if (!mounted || !openSeadragonImageViewer) return null;
+
+  // 4. THE PORTAL: Teleports this div to document.body
+  return createPortal(
+    <div className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-dark backdrop-blur-sm">
+      {/* CLOSE BUTTON */}
+      <button
+        onClick={() => setOpenSeaDragonImageViewer(false)}
+        className="absolute right-0 top-0 z-[100000] flex h-16 w-16 items-center justify-center bg-dark text-white hover:bg-neutral-800 transition-colors duration-300"
+      >
+        <MdClose className="text-2xl" />
+      </button>
+
+      {/* VIEWER WRAPPER */}
+      <div className="relative h-full w-full">
         <DynamicZoomableViewerComponentWithNoSSR dziUrl={fileUrl} />
       </div>
-    </div>
+    </div>,
+    document.body // Target container
   );
 };
 

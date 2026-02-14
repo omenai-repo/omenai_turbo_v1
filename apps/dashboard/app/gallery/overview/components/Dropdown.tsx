@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { getDynamicYears } from "@omenai/shared-utils/src/getDynamicYears";
 import { QueryClient } from "@tanstack/react-query";
+import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 export default function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { sales_activity_year, set_sales_activity_year } = artistActionStore();
+  const { sales_activity_year, set_sales_activity_year } = galleryActionStore();
 
   const queryClient = new QueryClient();
   const handleYearChange = (year: string) => {

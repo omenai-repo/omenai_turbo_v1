@@ -11,7 +11,7 @@ export default function ArtworkPricingSkeleton() {
         className="font-bold text-fluid-base"
       />
       <Skeleton
-        radius={"lg"}
+        radius={"sm"}
         className="flex flex-col w-full space-y-4 py-5 my-6"
       >
         <Skeleton h={12} radius={"md"} w={"30%"} />
@@ -20,7 +20,7 @@ export default function ArtworkPricingSkeleton() {
       </Skeleton>
       <Skeleton h={16} w={"80%"} radius={"md"} />
 
-      <Skeleton radius={"lg"} h={100} className="mb-4 mt-8 space-y-2">
+      <Skeleton radius={"sm"} h={100} className="mb-4 mt-8 space-y-2">
         <Skeleton h={16} w={"70%"} radius={"md"} />
         <Skeleton h={16} w={"85%"} radius={"md"} />
       </Skeleton>

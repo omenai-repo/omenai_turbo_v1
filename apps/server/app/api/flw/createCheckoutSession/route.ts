@@ -15,7 +15,7 @@ const config: CombinedConfig = {
   allowedRoles: ["user"],
 };
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isFlwPaymentEnabled =
@@ -23,7 +23,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       false;
     if (!isFlwPaymentEnabled) {
       throw new ServiceUnavailableError(
-        "Flutterwave payment is currently disabled"
+        "Flutterwave payment is currently disabled",
       );
     }
     const data = await request.json();
@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const response = await fetch("https://api.flutterwave.com/v3/payments", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+        Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
@@ -59,12 +59,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "flutterwave: create checkout session",
       error,
-      error_response.status
+      error_response.status,
     );
-    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

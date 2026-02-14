@@ -9,7 +9,6 @@ export default function Payouts() {
 
   return (
     <div>
-      <PageTitle title="Payout with Stripe" />
       {!user.gallery_verified ? (
         <NoVerificationBlock gallery_name={user.name} />
       ) : (

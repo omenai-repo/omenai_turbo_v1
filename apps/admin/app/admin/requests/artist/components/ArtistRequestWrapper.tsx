@@ -1,15 +1,17 @@
 "use client";
-import { Tabs } from "@mantine/core";
+import { Badge, Tabs } from "@mantine/core";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchArtistsOnVerifStatus } from "@omenai/shared-services/admin/fetch_artist_on_verif_status";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { ArtistSchemaTypes, GallerySchemaTypes } from "@omenai/shared-types";
-import PendingArtistRequest from "./PendingArtistRequest";
 import ApprovedArtistRequest from "./ApprovedArtistRequest";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { canAccessRoute } from "../../../../utils/canAccessRoute";
 import ForbiddenPage from "../../../components/ForbiddenPage";
+import Waitlist from "./Waitlist";
+
+import PendingArtistRequests from "./PendingArtistRequest";
 
 export type ArtistType = Pick<
   ArtistSchemaTypes,
@@ -42,24 +44,57 @@ export function ArtistRequestWrapper() {
     (artist: ArtistType) => artist.artist_verified
   );
   return (
-    <Tabs defaultValue="Pending">
-      <Tabs.List>
-        <Tabs.Tab value="Pending">Pending Requests</Tabs.Tab>
-        <Tabs.Tab value="Approved">Approved Artists</Tabs.Tab>
-        {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
-      </Tabs.List>
+    <section className="space-y-6">
+      {/* Header */}
+      <header className="flex flex-col gap-1">
+        <h1 className="text-lg font-semibold text-neutral-900">
+          Artist Requests
+        </h1>
+        <p className="text-sm text-neutral-500">
+          Review, approve, and manage gallery verification requests
+        </p>
+      </header>
 
-      <Tabs.Panel value="Pending" className="mt-4">
-        <PendingArtistRequest artists={pending} />
-      </Tabs.Panel>
+      {/* Tabs Container */}
+      <div className="rounded border border-neutral-200 bg-white p-4 shadow-sm">
+        <Tabs defaultValue="pending" variant="pills" radius="sm">
+          <Tabs.List className="mb-4 flex gap-2">
+            <Tabs.Tab value="pending">
+              <div className="flex items-center gap-2">
+                <span>Pending</span>
+                <Badge size="sm" variant="filled" color="orange">
+                  {pending.length}
+                </Badge>
+              </div>
+            </Tabs.Tab>
 
-      <Tabs.Panel value="Approved" className="mt-4">
-        <ApprovedArtistRequest artists={approved} />
-      </Tabs.Panel>
+            <Tabs.Tab value="approved">
+              <div className="flex items-center gap-2">
+                <span>Approved</span>
+                <Badge size="sm" variant="light" color="green">
+                  {approved.length}
+                </Badge>
+              </div>
+            </Tabs.Tab>
 
-      {/* <Tabs.Panel value="settings">
-        <RejectedGalleryRequests />
-      </Tabs.Panel> */}
-    </Tabs>
+            <Tabs.Tab value="waitlist">
+              <span>Waitlist</span>
+            </Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="pending">
+            <PendingArtistRequests artists={pending} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="approved">
+            <ApprovedArtistRequest artists={approved} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="waitlist">
+            <Waitlist />
+          </Tabs.Panel>
+        </Tabs>
+      </div>
+    </section>
   );
 }

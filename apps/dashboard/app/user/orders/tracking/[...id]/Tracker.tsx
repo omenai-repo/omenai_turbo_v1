@@ -17,14 +17,14 @@ export default function Tracking({ order_id }: { order_id: string }) {
       if (!response?.isOk)
         throw new Error(
           response?.message ||
-            "Tracking data currently unavailable. Please try again"
+            "Tracking data currently unavailable. Please try again",
         );
 
       return {
         events: response.events,
         coordinates: response.coordinates,
         order_date: response.order_date,
-        artwork_data: response.arwork_data,
+        artwork_data: response.artwork_data,
         tracking_number: response.tracking_number,
       };
     },

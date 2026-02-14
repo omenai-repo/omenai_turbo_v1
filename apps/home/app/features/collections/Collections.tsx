@@ -1,15 +1,14 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ArtCollectionCard from "./ArtCollectionCard";
 import {
-  MdArrowRightAlt,
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
-
 import useEmblaCarousel from "embla-carousel-react";
-import Link from "next/link";
 import { collections } from "../../collectionConstants";
+import Link from "next/link";
+import { IoArrowForward } from "react-icons/io5";
 
 export default function Collections({
   isCatalog = false,
@@ -18,126 +17,111 @@ export default function Collections({
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
-    watchDrag: true,
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: true,
   });
-  const [scrollProgress, setScrollProgress] = useState(0);
 
-  const updateScrollProgress = () => {
-    if (!emblaApi) return;
-    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-    setScrollProgress(progress);
-  };
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const onSelect = useCallback((api: any) => {
+    setCanScrollPrev(api.canScrollPrev());
+    setCanScrollNext(api.canScrollNext());
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
 
-    const handleScroll = () => {
-      requestAnimationFrame(updateScrollProgress);
-    };
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-    emblaApi.on("scroll", handleScroll);
-    emblaApi.on("resize", updateScrollProgress);
-    updateScrollProgress(); // Initial progress update
-
-    return () => {
-      emblaApi.off("scroll", handleScroll);
-      emblaApi.off("resize", updateScrollProgress);
-    };
-  }, [emblaApi]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-    }
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-    }
-  }, [emblaApi]);
-  return (
-    <div className="">
-      {isCatalog ? (
-        <>
-          <h1 className="text-fluid-base sm:text-fluid-sm md:text-fluid-lg font-medium mt-6 text-black tracking-tight">
-            Curate creativity and design in the digital realm.
+  // CATALOG MODE
+  if (isCatalog) {
+    return (
+      <div className="w-full bg-white border-b border-neutral-100">
+        <div className="px-6 lg:px-12 py-16">
+          <h1 className="font-serif text-4xl text-dark  mb-2">
+            Browse Collections
           </h1>
+          <p className="font-sans text-sm text-neutral-500">
+            Explore artworks categorized by medium and style.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-          <hr className="w-full border border-dark/10 my-4" />
-        </>
-      ) : (
-        <div className="flex md:flex-row flex-col gap-4 mb-8">
-          <div className="flex justify-between items-start w-full mt-6">
-            <div className="space-y-2">
-              <p className="text-fluid-xxs font-medium text-dark/60 border-b border-dark/10 pb-1 w-fit">
-                Art collections
-              </p>
+  // HOMEPAGE MODE
+  return (
+    <section className="w-full bg-[#f5f5f5] py-8 border-t border-neutral-200">
+      <div className="px-6 lg:px-12">
+        {/* 1. MARKETPLACE HEADER */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+          <div>
+            <span className="block mb-3 text-[9px] font-mono text-dark  tracking-wide uppercase">
+              Featured Collections
+            </span>
+            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+              Browse by medium
+            </h2>
+          </div>
 
-              <p className="text-fluid-base sm:text-fluid-md font-semibold text-black leading-snug max-w-lg">
-                Curated Visions: Explore Omenai's Art Collections
-              </p>
-            </div>
+          {/* Controls - Top Right for Efficiency */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+            >
+              <MdOutlineKeyboardArrowLeft className="text-xl" />
+            </button>
+            <button
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+            >
+              <MdOutlineKeyboardArrowRight className="text-xl" />
+            </button>
+          </div>
+        </div>
 
-            <div className="hidden sm:flex flex-col items-end space-y-0.5 text-right">
-              <p className="text-fluid-base font-semibold text-black">
-                Curated Creativity, All in One Place:
-              </p>
-              <p className="font-normal text-fluid-xxs text-dark/70 leading-snug">
-                Dive Into Diverse Art Collections,
-              </p>
-              <p className="font-normal text-fluid-xxs text-dark/70 leading-snug">
-                Thoughtfully Curated for Your Exploration
-              </p>
+        {/* 2. CAROUSEL */}
+        <div className="embla overflow-hidden" ref={emblaRef}>
+          <div className="embla__container flex gap-4 md:gap-6">
+            {collections.map((collection) => (
+              <div key={collection.title} className="flex-[0_0_auto]">
+                {/* Fixed width cards for consistent browsing rhythm */}
+                <div className="w-[280px] md:w-[320px]">
+                  <ArtCollectionCard
+                    isCatalog={isCatalog}
+                    title={collection.title}
+                    url={collection.url}
+                  />
+                </div>
+              </div>
+            ))}
+            {/* "View All" Card at the end */}
+            <div className="flex-[0_0_auto] flex items-center">
+              <Link
+                href="/catalog"
+                className="group flex h-[400px] w-[200px] flex-col items-center justify-center gap-4 rounded-md border-2 border-dashed border-neutral-300 bg-white p-6 text-center transition-colors hover:border-[#091830]"
+              >
+                <span className="h-12 w-12 rounded-full bg-neutral-100 flex items-center justify-center group-hover:bg-[#091830] group-hover:text-white transition-colors">
+                  <IoArrowForward className="text-xl" />
+                </span>
+                <span className="font-sans text-sm font-semibold text-dark ">
+                  View All Categories
+                </span>
+              </Link>
             </div>
           </div>
         </div>
-      )}
-
-      <div className="embla" ref={emblaRef}>
-        <div className="embla__container flex gap-4 py-2">
-          {collections.map((collection, index) => {
-            return (
-              <div
-                key={collection.title}
-                className="mx-2 transition-transform duration-300 hover:scale-[1.02]"
-              >
-                <ArtCollectionCard
-                  isCatalog={isCatalog}
-                  title={collection.title}
-                  url={collection.url}
-                />
-              </div>
-            );
-          })}
-        </div>
       </div>
-
-      <div className="w-full flex gap-x-4 items-center my-3">
-        <div className=" w-full h-[1px] bg-[#fafafa]">
-          <div
-            className="h-full bg-dark "
-            style={{ width: `${scrollProgress * 100}%` }}
-          ></div>
-        </div>
-
-        <div className="flex items-center justify-center w-fit space-x-2">
-          <button
-            onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowLeft />
-          </button>
-          <button
-            onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowRight />
-          </button>
-        </div>
-      </div>
-
-      {/* <div className="flex relative gap-x-4 overflow-x-scroll w-full"></div> */}
-    </div>
+    </section>
   );
 }

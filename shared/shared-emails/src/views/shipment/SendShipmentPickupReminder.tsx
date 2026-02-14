@@ -5,12 +5,10 @@ import {
   Head,
   Html,
   Img,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
-  Button,
 } from "@react-email/components";
 import * as React from "react";
 import EmailFooter from "../../components/Footer";
@@ -20,7 +18,8 @@ import {
   EMAIL_COLORS,
   EMAIL_SIGNATURES,
 } from "../../constants/constants";
-import ArtworkCard from "./ArtworkCard";
+import EmailArtworkCard from "./EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 interface ShipmentPickupNotificationEmailProps {
   galleryName: string;
@@ -30,9 +29,9 @@ interface ShipmentPickupNotificationEmailProps {
   pickupAddress: AddressTypes;
   estimatedPickupDate?: string;
   daysLeft: string;
-  artistName: string;
   artworkImage: string;
-  artworkPrice: number;
+  artistName: string;
+  price: string;
 }
 
 export const ShipmentPickupNotificationEmail = ({
@@ -43,10 +42,11 @@ export const ShipmentPickupNotificationEmail = ({
   pickupAddress,
   daysLeft,
   estimatedPickupDate = `In the next ${daysLeft} day(s)`,
-  artistName,
   artworkImage,
-  artworkPrice,
+  artistName,
+  price,
 }: ShipmentPickupNotificationEmailProps) => {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <Html>
       <Head />
@@ -93,11 +93,11 @@ export const ShipmentPickupNotificationEmail = ({
                 your gallery address.
               </Text>
 
-              <ArtworkCard
-                artistName={artistName}
+              <EmailArtworkCard
                 artwork={artwork.title}
                 artworkImage={artworkImage}
-                artworkPrice={artworkPrice}
+                artistName={artistName}
+                price={price}
               />
 
               {/* Order Details */}

@@ -30,7 +30,7 @@ export default function CVUploadStep({
   return (
     <div className="flex flex-col items-center">
       <Upload className="w-12 h-12 text-blue-500 mb-6" />
-      <h2 className="text-fluid-xs font-normal text-dark mb-4 text-center">
+      <h2 className="text-fluid-xs font-light text-dark mb-4 text-center">
         {question}
       </h2>
       <button
@@ -64,14 +64,14 @@ export default function CVUploadStep({
           if (!acceptedFileTypes.includes(type[1])) {
             toast_notif(
               "File type is unsupported. Supported file types are: PDF",
-              "error"
+              "error",
             );
             return;
           } else {
             setCv(e.target.files![0]);
             updateOnboardingData(
               "cv" as keyof ArtistOnboardingData,
-              e.target.files![0]
+              e.target.files![0],
             );
             e.target.value = "";
           }

@@ -1,7 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import UpdateAddressModalForm from "./UpdateAddressModalForm";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 

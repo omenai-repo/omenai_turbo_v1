@@ -11,7 +11,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { useRollbar } from "@rollbar/react";
-import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  INPUT_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function AccountInformation({ profile }: { profile: any }) {
   const queryClient = useQueryClient();
@@ -49,7 +52,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
         "gallery",
         data,
         user.gallery_id,
-        csrf || ""
+        csrf || "",
       );
 
       if (!updateProfileData.isOk) {
@@ -66,7 +69,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -76,148 +79,149 @@ export default function AccountInformation({ profile }: { profile: any }) {
   const image_url = getGalleryLogoFileView(profile.logo, 200);
 
   return (
-    <div className="space-y-4 animate-fadeIn p-4 max-w-3xl">
-      {/* Logo Section */}
-      <div className="flex items-center pb-4 space-x-4 border-line">
-        <div className="relative group">
-          <Image
-            src={image_url}
-            alt="Artist Logo"
-            className="w-[100px] h-[100px] rounded-full object-cover"
-            height={100}
-            width={100}
-          />
-          <div className="absolute inset-0 mx-4 bg-dark/60 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+    <div className=" animate-fadeIn">
+      {/* Identity Header */}
+      {/* ================= HERO ================= */}
+      <div className="relative mb-10 rounded bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
+
+        <div className="relative flex items-center gap-8">
+          {/* Avatar */}
+          <div className="relative group">
+            <Image
+              src={image_url}
+              alt="Gallery Logo"
+              width={120}
+              height={120}
+              className="h-[120px] w-[120px] rounded object-cover ring-4 ring-white/20"
+            />
+
             <button
               onClick={() => updateLogoModalPopup(true)}
-              className="bg-white text-dark px-4 py-2 rounded flex items-center space-x-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300"
+              className="mx-4 absolute inset-0 flex items-center justify-center rounded bg-dark/60 opacity-0 group-hover:opacity-100 transition"
             >
-              <Camera className="w-4 h-4" />
-              <span className="text-fluid-xxs font-normal">Update</span>
+              <span className="flex items-center flex-col gap-2 rounded bg-white p-2 text-xs font-light text-slate-900">
+                <Camera className="h-4 w-4" />
+                Update logo
+              </span>
             </button>
           </div>
-        </div>
 
-        <div className="flex-1">
-          <h2 className="text-fluid-base font-medium text-dark mb-1">
-            {user.name}
-          </h2>
-          <p className="text-fluid-xxs text-dark/50">
-            Manage your professional information and public presence
-          </p>
+          {/* Identity */}
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-semibold">{user.name}</h1>
+            <p className="text-sm text-white/70">Public gallery profile</p>
+          </div>
         </div>
       </div>
 
-      {/* Form Fields */}
-      <div className="space-y-6">
-        {/* Artist Name */}
-        <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
-            Gallery Name
-          </label>
-          <input
-            type="text"
-            disabled
-            value={data.name}
-            onChange={(e) => handleInputChange("name", e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="Enter your artist name"
-          />
+      {/* Main Content Grid */}
+      <div className="grid gap-4 grid-cols-12">
+        <div className="lg:col-span-7 space-y-8">
+          {/* About */}
+          <div className="rounded bg-white p-6 shadow-sm">
+            <h3 className="text-sm font-medium text-slate-900 mb-3">
+              About the gallery
+            </h3>
+
+            <textarea
+              value={data.description}
+              onChange={(e) => handleInputChange("description", e.target.value)}
+              rows={4}
+              className={TEXTAREA_CLASS}
+              placeholder="Describe the gallery’s vision, focus, and curatorial approach"
+            />
+          </div>
+
+          {/* Address */}
+          <div className="rounded bg-white p-6 shadow-sm">
+            <h3 className="text-sm font-medium text-slate-900 mb-3">
+              Location
+            </h3>
+
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex gap-3">
+                <MapPin className="h-5 w-5 text-slate-400 mt-1" />
+                <div className="text-sm text-slate-700">
+                  <p>{profile.address.address_line}</p>
+                  <p className="text-slate-500">
+                    {profile.address.city}, {profile.address.state}{" "}
+                    {profile.address.zip}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => updateAddressModalPopup(true)}
+                className="rounded bg-slate-100 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-200"
+              >
+                Edit Address information
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Email */}
-        <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
-            Email Address
-          </label>
-          <input
-            type="email"
-            disabled
-            value={profile.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="your@email.com"
-          />
-        </div>
-        {/* Admin */}
-        <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
-            Gallery Admin
-          </label>
-          <input
-            type="text"
-            value={data.admin}
-            onChange={(e) => handleInputChange("admin", e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="Admin name"
-          />
-        </div>
-
-        {/* Address */}
-        <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
-            Gallery Address
-          </label>
-          <div className="flex items-center justify-between p-4 bg-gray-800 border border-line rounded-2xl">
-            <div className="flex items-start space-x-3">
-              <MapPin className="w-5 h-5 text-dark/50 mt-1" />
+        <div className="col-span-5 space-y-8">
+          <div className="rounded bg-white p-8 shadow-sm">
+            <h3 className="text-sm font-medium text-slate-900 mb-6">
+              Account details
+            </h3>
+            {!hasChanges && (
+              <div className="mb-6 flex justify-center">
+                <span className="rounded bg-slate-100 px-4 py-1.5 text-xs text-slate-600">
+                  You can start typing to edit your information
+                </span>
+              </div>
+            )}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {/* Gallery Name */}
               <div>
-                <p className="text-fluid-xxs text-dark">
-                  {profile.address.address_line}
-                </p>
-                <p className="text-fluid-xxs text-dark/50">
-                  {profile.address.city}, {profile.address.state}, {}
-                  {profile.address.zip}
-                </p>
+                <label className="text-xs text-slate-500 mb-1 block">
+                  Gallery name
+                </label>
+                <input disabled value={data.name} className={INPUT_CLASS} />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="text-xs text-slate-500 mb-1 block">
+                  Email address
+                </label>
+                <input disabled value={profile.email} className={INPUT_CLASS} />
+              </div>
+
+              {/* Admin */}
+              <div className="sm:col-span-2">
+                <label className="text-xs text-slate-500 mb-1 block">
+                  Gallery administrator
+                </label>
+                <input
+                  value={data.admin}
+                  onChange={(e) => handleInputChange("admin", e.target.value)}
+                  className={INPUT_CLASS}
+                />
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      {/* Floating Save Bar */}
+      {hasChanges && (
+        <div className="fixed bottom-6 left-1/2 z-10 w-[90%] max-w-xl -translate-x-1/2 rounded bg-slate-900 px-6 py-3 shadow-xl">
+          <div className="flex items-center justify-between text-white">
+            <p className="text-sm">You have unsaved changes</p>
+
             <button
-              onClick={() => updateAddressModalPopup(true)}
-              className="px-4 py-2 bg-dark  rounded-full hover:bg-dark/80 text-white 
-                       transition-all duration-300 text-fluid-xxs font-normal"
+              onClick={handleSave}
+              disabled={loading}
+              className="flex items-center gap-2 rounded bg-white px-5 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
             >
-              Update Address
+              {loading ? <LoadSmall /> : <Save className="h-4 w-4" />}
+              Save changes
             </button>
           </div>
         </div>
-
-        {/* Bio */}
-        <div className="group">
-          <label className="block text-fluid-xxs font-normal text-dark/50 mb-2">
-            Gallery Description
-          </label>
-          <textarea
-            value={data.description}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            rows={6}
-            className={TEXTAREA_CLASS}
-            placeholder="Tell us a little about the gallery"
-          />
-        </div>
-      </div>
-
-      {/* Save Button */}
-      <div className="flex justify-end border-line">
-        <button
-          onClick={handleSave}
-          disabled={!hasChanges || loading}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-full font-normal text-fluid-xxs
-                    transition-all duration-300 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-dark/30 ${
-                      hasChanges
-                        ? "bg-dark text-white hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                        : "bg-gray-400 text-gray-light cursor-not-allowed"
-                    }`}
-        >
-          {loading ? (
-            <LoadSmall />
-          ) : (
-            <>
-              <Save className="w-4 h-4" />
-              <span>Save Changes</span>{" "}
-            </>
-          )}
-        </button>
-      </div>
+      )}
     </div>
   );
 }

@@ -42,3 +42,5 @@ yarn-error.log*
 
 # folders
 /configs/url-config/
+
+/todos.txt

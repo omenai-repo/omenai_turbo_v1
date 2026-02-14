@@ -14,7 +14,9 @@ export default async function AdminDashboardLayout({
     <div className={`flex flex-col justify-center`}>
       <SessionProvider initialSessionData={initialSessionData}>
         <ModalsProvider>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <LayoutWrapper initialSessionData={initialSessionData}>
+            {children}
+          </LayoutWrapper>
         </ModalsProvider>
       </SessionProvider>
       <Analytics />

@@ -41,14 +41,13 @@ export const FormCard = () => {
         "individual",
         newUpdateData,
         user.id as string,
-        csrf || ""
+        csrf || "",
       );
       if (!isOk) toast_notif(body.message, "error");
       else {
-        // todo: add update session function
         toast_notif(
           `${body.message}... Please log back in to view update`,
-          "success"
+          "success",
         );
         clearData();
       }
@@ -87,7 +86,7 @@ export const FormCard = () => {
       <button
         type="submit"
         disabled={isLoading}
-        className="h-[35px] p-5 rounded-full w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+        className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
       >
         {isLoading ? <LoadSmall /> : "Save edit data"}
       </button>

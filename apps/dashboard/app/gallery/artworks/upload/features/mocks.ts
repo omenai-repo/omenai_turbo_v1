@@ -25,9 +25,7 @@ export const uploadArtworkDetailInputMocks = [
       "Works on paper",
       "Acrylic on canvas/linen/panel",
       "Mixed media on paper/canvas",
-      "Sculpture (Resin/plaster/clay)",
       "Oil on canvas/panel",
-      "Sculpture (Bronze/stone/metal)",
     ],
   },
   {
@@ -60,13 +58,6 @@ export const uploadArtworkDetailInputMocks = [
     options: ["By artist", "By gallery", "No signature"],
   },
   {
-    name: "framing",
-    type: "select",
-    label: "Framing",
-    required: true,
-    options: ["Framed", "Not framed"],
-  },
-  {
     name: "artwork_description",
     type: "textarea",
     label: "Artwork description (optional)",
@@ -77,18 +68,18 @@ export const uploadArtworkDetailInputMocks = [
 
 export const uploadArtworkDimensionInputMocks = [
   {
+    name: "length",
+    type: "text",
+    label: "Length",
+    required: true,
+    placeholder: "e.g 24in",
+  },
+  {
     name: "height",
     type: "text",
     label: "Height",
     required: true,
-    placeholder: "e.g 24cm",
-  },
-  {
-    name: "width",
-    type: "text",
-    label: "Width",
-    required: true,
-    placeholder: "e.g 24cm",
+    placeholder: "e.g 24in",
   },
   {
     name: "weight",
@@ -96,13 +87,6 @@ export const uploadArtworkDimensionInputMocks = [
     label: "Weight",
     required: true,
     placeholder: "e.g 10kg",
-  },
-  {
-    name: "depth",
-    type: "text",
-    label: "Depth (optional)",
-    required: false,
-    placeholder: "e.g 24cm",
   },
 ];
 export const uploadArtworkPriceInputMocks = [

@@ -33,7 +33,7 @@ export default function Input({
         e.target.name,
         e.target.name === "confirmPassword"
           ? individualSignupData.password
-          : undefined
+          : undefined,
       );
 
     if (!success) {
@@ -58,7 +58,7 @@ export default function Input({
       const passwordErrors = errors.filter(
         (err) =>
           err.toLowerCase().includes("password") &&
-          !err.toLowerCase().includes("confirm")
+          !err.toLowerCase().includes("confirm"),
       );
       if (passwordErrors.length > 0) {
         setErrorList(passwordErrors);
@@ -74,7 +74,7 @@ export default function Input({
       const confirmErrors = errors.filter(
         (err) =>
           err.toLowerCase().includes("match") ||
-          err.toLowerCase().includes("confirm")
+          err.toLowerCase().includes("confirm"),
       );
       if (confirmErrors.length > 0) {
         setErrorList(confirmErrors);
@@ -101,7 +101,7 @@ export default function Input({
           {/* Label */}
           <label
             htmlFor={labelText}
-            className="block text-fluid-xxs font-normal text-gray-700"
+            className="block text-fluid-xxs font-light text-gray-700"
           >
             {label}
           </label>

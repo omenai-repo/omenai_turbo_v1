@@ -13,7 +13,7 @@ export const HeroManifesto = () => {
 
         {/* 1. The Hook (Typography) */}
         <div className="mb-16 space-y-8">
-          <h1 className="font-serif text-2xl md:text-3xl lg:text-fluid-4xl xl:text-5xl font-normal leading-[0.9] text-dark tracking-normal text-balance">
+          <h1 className="font-serif text-2xl md:text-3xl lg:text-fluid-4xl xl:text-5xl font-light leading-[0.9] text-dark tracking-normal text-balance">
             Are you ready to shape the new Contemporary African Art landscape?
           </h1>
           {/* Added color accent to the border-l */}
@@ -58,7 +58,7 @@ export const HeroManifesto = () => {
 
               <div>
                 {/* Title - Large, sans, turns Emerald on hover */}
-                <h3 className="font-sans text-3xl md:text-4xl  text-dark group-hover:text-emerald-800 transition-colors duration-300 flex items-center gap-4">
+                <h3 className="font-sans text-2xl md:text-3xl  text-dark group-hover:text-emerald-800 transition-colors duration-300 flex items-center gap-4">
                   {item.title}
                   <ArrowRight
                     className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 text-emerald-500"

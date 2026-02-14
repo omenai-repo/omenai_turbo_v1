@@ -12,18 +12,24 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+const SendPasswordResentLinkSchema = z.object({
+  recoveryEmail: z.email(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { recoveryEmail } = await request.json();
+      const { recoveryEmail } = await validateRequestBody(
+        request,
+        SendPasswordResentLinkSchema,
+      );
 
       const data = await AccountIndividual.findOne(
         { email: recoveryEmail.toLowerCase() },
-        "email user_id name verified"
+        "email user_id name verified",
       ).exec();
 
       if (!data)
@@ -42,7 +48,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (isVerificationTokenActive)
         throw new ForbiddenError(
-          "Token link active. Please visit link to continue"
+          "Token link active. Please visit link to continue",
         );
 
       const storeVerificationCode = await VerificationCodes.create({
@@ -62,19 +68,19 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       return NextResponse.json(
         { message: "Verification link sent" },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: user send password reset link",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

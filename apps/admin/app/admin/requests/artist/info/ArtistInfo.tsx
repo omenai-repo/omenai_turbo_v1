@@ -27,7 +27,7 @@ import { useRollbar } from "@rollbar/react";
 export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   const { artist, request } = data;
   const [recommendation, setRecommedation] = useState<ArtistCategory>(
-    request.categorization.artist_categorization as ArtistCategory
+    request.categorization.artist_categorization as ArtistCategory,
   );
   const [loading, setLoading] = useState(false);
   const { artist_id, name, email } = artist;
@@ -68,7 +68,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
           ? await acceptArtistVerification(
               artist_id,
               recommendation,
-              csrf || ""
+              csrf || "",
             )
           : await rejectArtistVerification(artist_id, name, email, csrf || "");
 
@@ -90,7 +90,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
       }
       toast_notif(
         "An error was encountered, please try again later or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -141,7 +141,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
         <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden mb-4">
           {/* Banner */}
           <div className="h-32 bg-gradient-to-br from-gray-900 to-gray-700 relative">
-            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="absolute inset-0 bg-dark/20"></div>
           </div>
 
           <div className="px-4 pb-4">
@@ -153,24 +153,24 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                   <div className="relative">
                     <Image
                       src={image_href}
-                      className="rounded-full border-4 border-white shadow-xl"
+                      className="rounded border-4 border-white shadow-xl"
                       h={100}
                       w={100}
                       radius="100%"
                     />
-                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center">
+                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded border-4 border-white flex items-center justify-center">
                       <CheckCircle size={14} className="text-white" />
                     </div>
                   </div>
                 ) : (
                   <div className="relative">
-                    <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full border-4 border-white shadow-xl flex items-center justify-center text-white text-fluid-lg 2xl:text-fluid-xl font-semibold">
+                    <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-600 rounded border-4 border-white shadow-xl flex items-center justify-center text-white text-fluid-lg 2xl:text-fluid-xl font-semibold">
                       {artist.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </div>
-                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center">
+                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded border-4 border-white flex items-center justify-center">
                       <CheckCircle size={16} className="text-white" />
                     </div>
                   </div>
@@ -184,11 +184,11 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                 </h1>
 
                 <div className="flex flex-wrap gap-3 mb-4">
-                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded-full text-fluid-xxs font-normal border border-blue-200">
+                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded text-fluid-xxs font-light border border-blue-200">
                     <Palette size={14} />
                     {artist.art_style}
                   </div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-full text-fluid-xxs font-normal border border-green-200">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded text-fluid-xxs font-light border border-green-200">
                     <MapPin size={14} />
                     {artist.address.state}, {artist.address.country}
                   </div>
@@ -213,7 +213,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                     className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded animate-spin" />
                     ) : (
                       <CheckCircle size={14} />
                     )}
@@ -225,7 +225,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
                     className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-red-600 text-white rounded font-medium hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded animate-spin" />
                     ) : (
                       <XCircle size={14} />
                     )}

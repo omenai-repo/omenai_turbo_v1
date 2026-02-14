@@ -3,22 +3,25 @@ import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_mid
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import {
-  BadRequestError,
-  ForbiddenError,
-} from "../../../../custom/errors/dictionary/errorDictionary";
+import { ForbiddenError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { NotificationHistory } from "@omenai/shared-models/models/notifications/NotificationHistorySchema";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "zod";
+const FetchNotificationsSchema = z.object({
+  id: z.string(),
+  access_type: z.string(),
+});
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
-  request: Request
+  request: Request,
 ) {
   const searchParams = new URL(request.url).searchParams;
-  const id = searchParams.get("id");
-  const access_type = searchParams.get("access_type");
+  const id_params = searchParams.get("id");
+  const access_type_params = searchParams.get("access_type");
   try {
-    if (!id || !access_type)
-      throw new BadRequestError("Invalid request parameters");
+    const { access_type, id } = validateGetRouteParams(
+      FetchNotificationsSchema,
+      { id: id_params, access_type: access_type_params },
+    );
     const userAgent: string | null = request.headers.get("User-Agent") || null;
     const authorization: string | null =
       request.headers.get("Authorization") || null;
@@ -40,19 +43,18 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
 
     return NextResponse.json(
       { message: "Notification history fetched", data: notificationHistories },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "notifications: fetch notification",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

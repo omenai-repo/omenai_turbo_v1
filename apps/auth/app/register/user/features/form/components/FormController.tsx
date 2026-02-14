@@ -14,10 +14,10 @@ export default function FormController() {
   return (
     <>
       {currentSignupFormIndex === 0 && <UserSignupStepOne />}
-      {currentSignupFormIndex === 1 && <UserSignupStepTwo />}
-      {currentSignupFormIndex === 2 && <UserSignupStepThree />}
-      {currentSignupFormIndex === 3 && <Preferences />}
-      {currentSignupFormIndex === 4 && <TC />}
+      {/* {currentSignupFormIndex === 1 && <UserSignupStepTwo />} */}
+      {currentSignupFormIndex === 1 && <UserSignupStepThree />}
+      {currentSignupFormIndex === 2 && <Preferences />}
+      {currentSignupFormIndex === 3 && <TC />}
 
       <div className="flex justify-center w-full">
         <div className="mt-12 max-w-[300px] w-full">

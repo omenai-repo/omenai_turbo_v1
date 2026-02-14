@@ -10,7 +10,7 @@ const paymentIcons = {
     "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amazonpay.svg",
   paypal: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/paypal.svg",
   cashapp: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/cashapp.svg",
-  link: "https://cdn.jsdelivr.net/npm/heroicons@2.0.0/24/outline/link.svg",
+  link: "https://cdn.brandfetch.io/link.co/logo.svg",
 };
 
 type PaymentIconType =
@@ -34,10 +34,10 @@ export function PaymentMethodWallet({
           <img
             src={paymentIcons[type as PaymentIconType] ?? ""}
             alt={type}
-            className="h-8 w-auto object-contain"
+            className="h-6 w-auto object-contain text-white  rounded"
           />
           <div>
-            <p className="text-fluid-base font-semibold text-slate-900">
+            <p className="text-fluid-base font-semibold text-slate-300">
               {type === "apple_pay"
                 ? "Apple Pay"
                 : type === "amazon_pay"
@@ -53,8 +53,8 @@ export function PaymentMethodWallet({
       </div>
 
       <div className="mt-3 mb-12 flex flex-col space-y-2">
-        <p className="text-xs text-slate-500">{user.email}</p>
-        <p className="text-xs text-slate-500">{user.name}</p>
+        <p className="text-xs text-slate-300">{user.email}</p>
+        <p className="text-xs text-slate-300">{user.name}</p>
       </div>
     </>
   );

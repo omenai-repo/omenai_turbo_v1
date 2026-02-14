@@ -9,49 +9,54 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendBuyerShipmentSuccessEmail";
 import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
 import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
-import { createErrorRollbarReport } from "../../util";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["user"],
 };
+const ConfirmOrderDeliverySchema = z.object({
+  confirm_delivery: z.string(),
+  order_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { confirm_delivery, order_id } = await request.json();
+    const { confirm_delivery, order_id } = await validateRequestBody(
+      request,
+      ConfirmOrderDeliverySchema,
+    );
 
     const updateOrders = await CreateOrder.updateOne(
       { order_id },
-      { $set: { "shipping_details.delivery_confirmed": confirm_delivery } }
+      { $set: { "shipping_details.delivery_confirmed": confirm_delivery } },
     );
 
     const order = await CreateOrder.findOne({ order_id });
     if (!order) {
       throw new ServerError(
-        "Cannot find order with provided orderID. Please try again"
+        "Cannot find order with provided orderID. Please try again",
       );
     }
 
     if (!updateOrders)
       throw new ServerError(
-        "Delivery confirmation could not be updated. Please try again"
+        "Delivery confirmation could not be updated. Please try again",
       );
 
-    const artworkImage = getImageFileView(order.artwork_data.url, 120);
-
-    // TODO: Send mail to buyer and seller about the order delivery confirmation
     await SendBuyerShipmentSuccessEmail({
       email: order.buyer_details.email,
       name: order.buyer_details.name,
       trackingCode: order_id,
-      artistName: order.seller_details.name,
-      artworkImage,
+      artworkImage: order.artwork_data.url,
       artwork: order.artwork_data.title,
-      artworkPrice: order.artwork_data.pricing.usd_price,
+      artistName: order.artwork_data.artist,
+      price: formatPrice(order.artwork_data.pricing.usd_price),
     });
 
     if (order.seller_designation === "artist") {
@@ -59,20 +64,20 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artistName: order.seller_details.name,
-        artworkImage,
+        artworkImage: order.artwork_data.url,
         artwork: order.artwork_data.title,
-        artworkPrice: order.artwork_data.pricing.usd_price,
+        artistName: order.artwork_data.artist,
+        price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     } else {
       await SendGalleryShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
-        artistName: order.seller_details.name,
-        artworkImage,
+        artworkImage: order.artwork_data.url,
         artwork: order.artwork_data.title,
-        artworkPrice: order.artwork_data.pricing.usd_price,
+        artistName: order.artwork_data.artist,
+        price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     }
 
@@ -80,18 +85,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Successfully confirmed order delivery.",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: confirm order delivery",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

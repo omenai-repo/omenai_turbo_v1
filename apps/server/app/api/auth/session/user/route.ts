@@ -9,34 +9,24 @@ export async function GET(request: Request) {
   try {
     const cookieStore = await cookies();
 
-    const header_is_middleware =
-      request.headers.get("X-From-Middleware") === "true";
-
     const cookieSession = await getSessionFromCookie(cookieStore);
 
     const sessionId = cookieSession.sessionId;
 
-    const userAgent = request.headers.get("user-agent");
-
     if (!sessionId) {
       return NextResponse.json(
         { message: "Session not authenticated" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const userSessionData = await getSession(
-      sessionId,
-      userAgent,
-      header_is_middleware,
-      cookieStore
-    );
+    const userSessionData = await getSession(sessionId, cookieStore);
 
     if (!userSessionData) {
       cookieSession.destroy();
       return NextResponse.json(
         { message: "Session expired or invalid" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -48,7 +38,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ user, csrfToken }, { status: 200 });
   } catch (error) {
     createErrorRollbarReport("auth: user session", error, 500);
-    console.log(error);
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

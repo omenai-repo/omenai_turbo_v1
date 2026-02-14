@@ -6,7 +6,6 @@ import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { NextResponse, NextResponse as res } from "next/server";
 import {
   ConflictError,
-  ForbiddenError,
   ServerError,
   ServiceUnavailableError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
@@ -16,8 +15,28 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../../util";
-import { redis } from "@omenai/upstash-config";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
+const RegisterSchema = z
+  .object({
+    name: z.string(),
+    email: z.email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+    device_push_token: z.string().optional(),
+    phone: z.string(),
+    address: z.object({
+      address_line: z.string(),
+      city: z.string(),
+      country: z.string(),
+      countryCode: z.string(),
+      state: z.string(),
+      stateCode: z.string(),
+      zip: z.string(),
+    }),
+    preferences: z.array(z.string()),
+  })
+  .refine((data) => data.password === data.confirmPassword);
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -27,16 +46,16 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       if (!isCollectorOnboardingEnabled)
         throw new ServiceUnavailableError(
-          "Collector onboarding is currently disabled"
+          "Collector onboarding is currently disabled",
         );
 
       await connectMongoDB();
 
-      const data = await request.json();
+      const data = await validateRequestBody(request, RegisterSchema);
 
       const isAccountRegistered = await AccountIndividual.findOne(
         { email: data.email.toLowerCase() },
-        "email"
+        "email",
       ).exec();
 
       if (isAccountRegistered)
@@ -83,36 +102,25 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         email: saveData.email,
         token: email_token,
       });
-      const tourRedisKey = `tour:${user_id}`;
-
-      try {
-        await redis.set(tourRedisKey, JSON.stringify([]));
-      } catch (error) {
-        createErrorRollbarReport(
-          "Collector Registeration: Error creating redis data for tours",
-          JSON.stringify(error),
-          500
-        );
-      }
 
       return res.json(
         {
           message: "User successfully registered",
           data: user_id,
         },
-        { status: 201 }
+        { status: 201 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: user register",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

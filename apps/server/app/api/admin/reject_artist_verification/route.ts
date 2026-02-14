@@ -8,19 +8,29 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const RejectArtistVerificationSchema = z.object({
+  artist_id: z.string().min(1),
+  name: z.string().min(1),
+  email: z.email(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { artist_id, name, email } = await request.json();
+    const { artist_id, name, email } = await validateRequestBody(
+      request,
+      RejectArtistVerificationSchema,
+    );
 
     const add_to_rejected = await RejectedGallery.create({ name, email });
 
@@ -37,18 +47,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Artist verification rejected" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: reject artist verification",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

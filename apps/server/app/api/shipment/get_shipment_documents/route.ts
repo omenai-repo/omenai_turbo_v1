@@ -1,48 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import {
+  DHL_API,
   getDhlHeaders,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
 } from "../resources";
-import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "zod";
+const GetShipmentDocumentsSchema = z.object({
+  trackingNumber: z.string(),
+  typeCode: z.string(),
+  pickupYearAndMonth: z.string(),
+});
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
     const nextRequest = new NextRequest(request);
     const searchParams = nextRequest.nextUrl.searchParams;
-    const trackingNumber = searchParams.get("t_num");
-    const typeCode = searchParams.get("t_code");
-    const pickupYearAndMonth = searchParams.get("y_m");
+    const trackingNumberParams = searchParams.get("t_num");
+    const typeCodeParams = searchParams.get("t_code");
+    const pickupYearAndMonthParams = searchParams.get("y_m");
     const shipperAccountNumber = OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
     try {
-      if (
-        !trackingNumber ||
-        !typeCode ||
-        !pickupYearAndMonth ||
-        !shipperAccountNumber
-      )
-        throw new BadRequestError("Invalid URL parameters");
+      const { pickupYearAndMonth, trackingNumber, typeCode } =
+        validateGetRouteParams(GetShipmentDocumentsSchema, {
+          pickupYearAndMonth: pickupYearAndMonthParams,
+          trackingNumber: trackingNumberParams,
+          typeCode: typeCodeParams,
+        });
       try {
         const requestOptions = {
           method: "GET",
           headers: getDhlHeaders(),
         };
 
-        const response = await fetch(
-          `https://express.api.dhl.com/mydhlapi/test/shipments/${trackingNumber}/get-image?shipperAccountNumber=${shipperAccountNumber}&typeCode=${typeCode}&pickupYearAndMonth=${pickupYearAndMonth}&encodingFormat=pdf&allInOnePDF=true&compressedPackage=false`,
-          requestOptions
+        const path = `/shipments/${trackingNumber}/get-image?shipperAccountNumber=${shipperAccountNumber}&typeCode=${typeCode}&pickupYearAndMonth=${pickupYearAndMonth}&encodingFormat=pdf&allInOnePDF=true&compressedPackage=false`;
+
+        const API_GET_SHIPMENT_DOC_URL_TEST = `${DHL_API}/test/${path}`;
+
+        const API_GET_SHIPMENT_DOC_URL_PROD = `${DHL_API}/${path}`;
+
+        const url = new URL(
+          `${process.env.APP_ENV === "production" ? API_GET_SHIPMENT_DOC_URL_TEST : API_GET_SHIPMENT_DOC_URL_PROD}`,
         );
+
+        const response = await fetch(url, requestOptions);
         const data = await response.json();
         return NextResponse.json({ message: "Success", data }, { status: 200 });
       } catch (error) {
-        console.log(error);
         return NextResponse.json({ message: "Error", error }, { status: 500 });
       }
     } catch (error) {
@@ -50,13 +56,13 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       createErrorRollbarReport(
         "shipment: get shipment documents",
         error,
-        error_response.status
+        error_response.status,
       );
 
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

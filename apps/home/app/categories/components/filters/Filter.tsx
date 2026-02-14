@@ -39,7 +39,7 @@ export default function Filter({
   } = categoriesStore();
 
   const [width, setWidth] = useState<number>(
-    typeof window !== "undefined" ? window.innerWidth : 0
+    typeof window !== "undefined" ? window.innerWidth : 0,
   );
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function Filter({
       response = await fetchCuratedArtworks(
         currentPage,
         user.preferences,
-        filterOptions
+        filterOptions,
       );
     } else if (page_type === "recent") {
       //update to recent
@@ -106,7 +106,7 @@ export default function Filter({
       response = await fetchCuratedArtworks(
         currentPage,
         user.preferences,
-        emptyFilters
+        emptyFilters,
       );
     } else if (page_type === "recent") {
       //update to recent
@@ -132,10 +132,10 @@ export default function Filter({
             showFilterBlock
               ? "bg-dark text-white"
               : "border-dark/10 border bg-white text-dark"
-          } duration-200 border px-3 py-1 border-dark/10 rounded  flex gap-x-2 items-center text-[13px] font-normal w-fit cursor-pointer`}
+          } duration-200 border px-3 py-1 border-dark/10 rounded  flex gap-x-2 items-center text-[13px] font-light w-fit cursor-pointer`}
           onClick={() => setShowFilterBlock((prev) => !prev)}
         >
-          <span className="text-[13px] font-normal">Filters</span>
+          <span className="text-[13px] font-light">Filters</span>
           {showFilterBlock ? (
             <MdClear />
           ) : (
@@ -153,7 +153,7 @@ export default function Filter({
             <button
               type="button"
               onClick={handleClearAll}
-              className="px-3 py-1 border border-dark/10 rounded hover:bg-dark duration-200 hover:text-white flex gap-x-2 items-center text-[13px] font-normal"
+              className="px-3 py-1 border border-dark/10 rounded hover:bg-dark duration-200 hover:text-white flex gap-x-2 items-center text-[13px] font-light"
             >
               <span>Clear all selections</span>
               <ImBin2 />
@@ -161,7 +161,7 @@ export default function Filter({
             <button
               onClick={handleSubmitFilter}
               disabled={isEmptyFilter(filterOptions)}
-              className="px-3 py-1 bg-dark hover:bg-dark duration-200 text-white rounded flex gap-x-2 items-center text-[13px] font-normal"
+              className="px-3 py-1 bg-dark hover:bg-dark duration-200 text-white rounded flex gap-x-2 items-center text-[13px] font-light"
             >
               <span>Apply filters </span>
               <FaCheckCircle />

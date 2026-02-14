@@ -21,7 +21,8 @@
     "@omenai/shared-services": "*",
     "@omenai/shared-utils": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/upstash-config": "*"
+    "@omenai/upstash-config": "*",
+    "@omenai/next-security-headers": "*"
   },
   "dependencies": {
     "cors": "^2.8.5",

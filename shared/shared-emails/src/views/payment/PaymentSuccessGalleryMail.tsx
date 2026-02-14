@@ -18,7 +18,7 @@ const PaymentSuccessfulGalleryMail = (
   price: string,
   order_id: string,
   order_date: string,
-  transaction_Id: string
+  transaction_Id: string,
 ) => {
   const url = dashboard_url();
   return (
@@ -29,7 +29,7 @@ const PaymentSuccessfulGalleryMail = (
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Img
               src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/68d2ab83002025087b36/view?project=682272b1001e9d1609a8"
+                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
               }
               width="100"
               height="20"
@@ -37,10 +37,10 @@ const PaymentSuccessfulGalleryMail = (
               className="mx-auto mt-10"
             />
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               <strong>Dear {name},</strong>
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               We are excited to inform you that your artwork, titled{" "}
               <strong>{artwork}</strong> with{" "}
               <strong>(Order ID #{order_id})</strong> has been successfully
@@ -48,49 +48,6 @@ const PaymentSuccessfulGalleryMail = (
               processed, and the funds have been deposited into your Stripe
               Connect account.{" "}
             </Text>
-            {/* Transaction Card */}
-            <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
-              <Text className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4 text-center">
-                Transaction Summary
-              </Text>
-
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Artwork</Text>
-                  <Text className="text-gray-900 font-medium text-sm">
-                    {artwork}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Sale Amount</Text>
-                  <Text className="text-gray-900 font-semibold text-sm">
-                    {price}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Order ID</Text>
-                  <Text className="text-gray-900 font-mono text-sm">
-                    #{order_id}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Transaction ID</Text>
-                  <Text className="text-gray-900 font-mono text-sm">
-                    {transaction_Id}
-                  </Text>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
-                  <Text className="text-gray-600 text-sm">Date</Text>
-                  <Text className="text-gray-900 font-medium text-sm">
-                    {order_date}
-                  </Text>
-                </div>
-              </div>
-            </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded p-6 mb-8">
               <Text className="text-blue-900 font-semibold text-base mb-3">
@@ -111,7 +68,7 @@ const PaymentSuccessfulGalleryMail = (
               </div>
             </div>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               As always, if you have any questions, feedback, or concerns
               regarding your Order or any other aspect of our service, please
               feel free to reach out to us at{" "}
@@ -127,11 +84,11 @@ const PaymentSuccessfulGalleryMail = (
               .
             </Text>
 
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Thank you for being a valued member of <strong>Omenai</strong>,
               and we look forward to seeing more of your incredible work!
             </Text>
-            <Text className="text-black text-fluid-xxs leading-[24px]">
+            <Text className="text-dark text-fluid-xxs leading-[24px]">
               Best regards, <br />
               Moses from Omenai
             </Text>
@@ -139,7 +96,7 @@ const PaymentSuccessfulGalleryMail = (
             <Text className="text-dark text-[12px] leading-[24px]">
               Please be advised that the information contained within this email
               was directed exclusively to{" "}
-              <span className="text-black">{name} </span>. In the event that you
+              <span className="text-dark">{name} </span>. In the event that you
               were not anticipating the receipt of this email, we respectfully
               request that you refrain from taking any action based on its
               contents. This communication may contain confidential and legally

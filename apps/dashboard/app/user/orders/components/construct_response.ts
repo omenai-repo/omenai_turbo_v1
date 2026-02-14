@@ -4,12 +4,14 @@ export const renderButtonAction = ({
   tracking_status,
   order_accepted,
   exhibition_active,
+  delivery_status,
 }: {
   status: string | null;
   payment_status: string;
   tracking_status: string | null;
   order_accepted: string;
   exhibition_active: boolean;
+  delivery_status: string | null;
 }) => {
   if (
     (status === "processing" &&
@@ -51,5 +53,18 @@ export const renderButtonAction = ({
     payment_status === "processing"
   ) {
     return "processing";
+  }
+  if (
+    status === "completed" &&
+    delivery_status?.toLowerCase() === "delivered"
+  ) {
+    return "fulfilled";
+  }
+  if (
+    status === "processing" &&
+    order_accepted === "" &&
+    payment_status === "pending"
+  ) {
+    return "in_review";
   }
 };

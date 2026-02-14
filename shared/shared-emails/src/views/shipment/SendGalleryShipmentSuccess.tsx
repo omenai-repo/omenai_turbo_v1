@@ -1,7 +1,8 @@
 import { Text, Heading, Link } from "@react-email/components";
 import { dashboard_url } from "@omenai/url-config/src/config";
 import ShipmentLayout from "./ShipmentLayout";
-import ArtworkCard from "./ArtworkCard";
+import EmailArtworkCard from "./EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function SendGalleryShipmentSuccess(
   name: string,
@@ -9,14 +10,14 @@ export default function SendGalleryShipmentSuccess(
   artwork: string,
   artworkImage: string,
   artistName: string,
-  artworkPrice: number
+  price: string,
 ) {
+  artworkImage = getImageFileView(artworkImage, 400);
   return (
     <ShipmentLayout
       preview="Shipment delivery completed and verified successfully."
       name={name}
     >
-      {" "}
       <Heading
         as="h2"
         style={{
@@ -57,11 +58,11 @@ export default function SendGalleryShipmentSuccess(
           <strong>Tracking Code :</strong> {trackingCode}
         </Text>
       )}
-      <ArtworkCard
-        artistName={artistName}
+      <EmailArtworkCard
         artwork={artwork}
         artworkImage={artworkImage}
-        artworkPrice={artworkPrice}
+        artistName={artistName}
+        price={price}
       />
       <Text
         style={{
@@ -100,6 +101,10 @@ export default function SendGalleryShipmentSuccess(
       >
         Thank you for being part of the Omenai community. We appreciate your
         commitment to delivering exceptional art experiences!
+      </Text>
+      <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
+        Best regards, <br />
+        <strong>Omenai</strong>
       </Text>
     </ShipmentLayout>
   );

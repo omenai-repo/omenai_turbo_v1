@@ -4,7 +4,6 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { NextResponse } from "next/server";
 import {
-  BadRequestError,
   ForbiddenError,
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
@@ -13,22 +12,25 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { generateAlphaDigit } from "@omenai/shared-utils/src/generateToken";
 import { AdminInviteToken } from "@omenai/shared-models/models/auth/verification/AdminInviteTokenSchema";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
+const InviteNewMemberSchema = z.object({
+  email: z.email(),
+  access_role: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
-  const { email, access_role } = await request.json();
   try {
-    if (!email) throw new BadRequestError("Email is required");
-
-    if (typeof email !== "string" || !email.includes("@")) {
-      throw new BadRequestError("Invalid email format");
-    }
+    const { email, access_role } = await validateRequestBody(
+      request,
+      InviteNewMemberSchema,
+    );
 
     const client = await connectMongoDB();
 
@@ -38,13 +40,13 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (is_member_exist)
       throw new ForbiddenError(
-        "This email is already associated to a team member"
+        "This email is already associated to a team member",
       );
 
     const token = generateAlphaDigit(32);
     try {
       session.startTransaction();
-      const create_new_member = await AccountAdmin.create({
+      await AccountAdmin.create({
         email,
         access_role,
       });
@@ -59,7 +61,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       session.abortTransaction();
 
       throw new ServerError(
-        "Unable to process this request. Please contact IT support"
+        "Unable to process this request. Please contact IT support",
       );
     }
 
@@ -67,18 +69,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Invite sent successfully" },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: invite new member",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -5,7 +5,7 @@ import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFo
 import { OrderRequestSkeleton } from "@omenai/shared-ui-components/components/skeletons/OrderRequestSkeleton";
 import React, { useState } from "react";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { OrdersAccordion } from "../../../../components/OrdersAccordion";
+import { OrdersAccordion } from "../../../../../components/OrdersAccordion";
 
 export default function Orders() {
   const { user } = useAuth({ requiredRole: "artist" });
@@ -22,10 +22,10 @@ export default function Orders() {
   });
 
   return (
-    <div className="p-4 min-h-[300px] flex flex-col gap-y-4">
-      <div className="w-full h-full border border-slate-200 p-6 rounded-3xl">
+    <div className="p-4 min-h-[300px] flex flex-col gap-y-4 bg-white rounded shadown-sm">
+      <div className="w-full h-full p-6 rounded">
         <h1 className="font-medium self-start">Order Requests</h1>
-        <div className="grid place-items-center w-full h-full">
+        <div className="py-5 w-full h-full">
           {isLoading ? (
             <OrderRequestSkeleton />
           ) : (

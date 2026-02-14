@@ -7,7 +7,7 @@ import {
 } from "../utils";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
-import { AccessRoleTypes, ArtistSchemaTypes } from "@omenai/shared-types";
+import { AccessRoleTypes } from "@omenai/shared-types";
 import { serverStorage, storage } from "@omenai/appwrite-config";
 
 type AccountType = Exclude<AccessRoleTypes, "admin">;
@@ -116,7 +116,6 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
         error: `Unable to anonymize ${accountType} account`,
       };
     } else {
-      console.log(`Anonymize ${config.displayName} Account successful`);
       return {
         success: true,
         note: "Deletion protocol successfully completed",

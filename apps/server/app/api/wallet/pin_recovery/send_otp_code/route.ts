@@ -9,19 +9,22 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  artist_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { artist_id } = await request.json();
+    const { artist_id } = await validateRequestBody(request, Schema);
 
     const account = await AccountArtist.findOne({
       artist_id,
@@ -41,7 +44,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!create_code)
       throw new Error(
-        "Something went wrong with this request, Please contact support."
+        "Something went wrong with this request, Please contact support.",
       );
 
     await sendPinUpdateCode({
@@ -52,19 +55,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Pin reset otp code sent to email address" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "wallet: pin recovery -> sent otp code",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

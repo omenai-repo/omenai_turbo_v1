@@ -5,7 +5,7 @@ import {
 } from "@omenai/appwrite-config/appwrite";
 
 // Define quality presets for different use cases
-const QUALITY_PRESETS = {
+export const QUALITY_PRESETS = {
   thumbnail: 40,
   low: 50,
   medium: 70,
@@ -14,7 +14,7 @@ const QUALITY_PRESETS = {
 };
 
 // Define size presets
-const SIZE_PRESETS = {
+export const SIZE_PRESETS = {
   thumbnail: { width: 300 },
   small: { width: 500 },
   medium: { width: 800 },
@@ -26,27 +26,24 @@ export const getImageFileView = (
   fileId: string,
   width: number,
   height?: number,
-  quality: number = 70 // Default to 70 instead of 100
+  quality: number = 70, // Default to 70 instead of 100
 ) => {
-  const fileData = storage.getFilePreview({
-    bucketId:process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+  return storage.getFilePreview({
+    bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
     fileId,
     width, // width, will be resized using this value.
-    height: height|| 0, // height, ignored when 0
-    gravity:appwrite_image_gravity.Center, // crop center
+    height: height || 0, // height, ignored when 0
+    gravity: appwrite_image_gravity.Center, // crop center
     quality, // slight compression
-    output:appwrite_image_format.Webp
-  }
-  );
-
-  return fileData;
+    output: appwrite_image_format.Webp,
+  });
 };
 
 // Convenience function with presets
 export const getOptimizedImage = (
   fileId: string,
   preset: "thumbnail" | "small" | "medium" | "large" | "xlarge" = "small",
-  customQuality?: number
+  customQuality?: number,
 ) => {
   const size = SIZE_PRESETS[preset];
 

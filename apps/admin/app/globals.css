@@ -4,3 +4,23 @@
 html {
   font-size: 16px;
 }
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #0f172a;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #15171e;
+}

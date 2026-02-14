@@ -4,9 +4,16 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
 import { serverStorage, storage } from "@omenai/appwrite-config";
 import { createErrorRollbarReport } from "../../../util";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { verifyAuthVercel } from "../../utils";
 
-export async function GET() {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     const failed_appwrite_jobs = await FailedJob.find({
@@ -17,6 +24,7 @@ export async function GET() {
       return NextResponse.json({ message: "No Failed appwrite uploads found" });
 
     const taskPromise: { payload: any; fn: Promise<void | {}> }[] = [];
+
     for (const job of failed_appwrite_jobs) {
       const { payload } = job;
 
@@ -29,9 +37,8 @@ export async function GET() {
           .catch((err) => {
             console.error(
               `❌ Failed to delete file ${payload.appwriteId}:`,
-              err.message
+              err.message,
             );
-            console.log(`Bucked ID: ${process.env.APPWRITE_BUCKET_ID!}`);
           }),
 
         payload,
@@ -43,7 +50,7 @@ export async function GET() {
 
     if (taskPromise.length > 0) {
       const result = await Promise.allSettled(
-        taskPromise.map((task) => task.fn)
+        taskPromise.map((task) => task.fn),
       );
 
       result.forEach((res: any, index: number) => {
@@ -56,17 +63,19 @@ export async function GET() {
       });
     }
 
+    // TODO: Delete fulfilled jobs from DB
+
     return NextResponse.json({ message: fulfilledJobs, rejectedUpdates });
   } catch (error) {
     const errorResponse = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "Cron: Delete from Appwrite failed jobs",
       error,
-      errorResponse?.status
+      errorResponse?.status,
     );
     return NextResponse.json(
       { message: errorResponse?.message },
-      { status: errorResponse?.status }
+      { status: errorResponse?.status },
     );
   }
-}
+});

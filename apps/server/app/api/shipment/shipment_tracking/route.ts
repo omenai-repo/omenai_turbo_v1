@@ -1,6 +1,12 @@
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
-import { DHL_API_URL_TEST, getDhlHeaders, getLatLng } from "../resources";
+import {
+  DHL_API,
+  DHL_API_URL_PROD,
+  DHL_API_URL_TEST,
+  getDhlHeaders,
+  getLatLng,
+} from "../resources";
 import {
   BadRequestError,
   ForbiddenError,
@@ -9,12 +15,23 @@ import {
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
+const ShipmentTrackingSchema = z.object({
+  id: z.string(),
+});
+import { ShipmentCoords } from "@omenai/shared-types";
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   try {
     const isShipmentTrackingEnabled =
       (await fetchConfigCatValue("shipment_tracking_enabled", "low")) ?? false;
@@ -25,7 +42,10 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     const nextRequest = new NextRequest(request);
     const searchParams = nextRequest.nextUrl.searchParams;
 
-    const id = searchParams.get("order_id");
+    const idParams = searchParams.get("order_id");
+    const { id } = validateGetRouteParams(ShipmentTrackingSchema, {
+      id: idParams,
+    });
     if (!id)
       throw new BadRequestError("Invalid parameters - order_id required");
 
@@ -37,7 +57,7 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     await connectMongoDB();
     const order = await CreateOrder.findOne(
       { ...filter },
-      "shipping_details createdAt artwork_data"
+      "shipping_details createdAt artwork_data",
     );
 
     if (!order)
@@ -48,40 +68,36 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     if (!tracking_number)
       throw new NotFoundError(
-        "No tracking number found for the given order id"
+        "No tracking number found for the given order id",
       );
 
-    // TODO: Fix this
+    const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
+    const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
+    const get_origin_geo_location = await getLatLng(origin_location);
+    await sleep(1200);
+    const get_destination_geo_location = await getLatLng(destination_location);
 
-    // const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
-    // const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
-    // const get_origin_geo_location = await getLatLng(origin_location);
-    // await sleep(1100);
-    // const get_destination_geo_location = await getLatLng(destination_location);
+    const API_URL_TEST = `${DHL_API}/shipments/9356579890/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
 
-    // if (!get_origin_geo_location || !get_destination_geo_location)
-    //   throw new ServerError("Unable to determine geo location coordinates");
+    const API_URL_PROD = `${DHL_API}/shipments/${tracking_number}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
 
-    // TODO: Change this url to the proper production url
-    const API_URL = `${DHL_API_URL_TEST}/shipments/9356579890/tracking`;
-
-    const url = new URL(API_URL);
+    const url = new URL(
+      `${process.env.APP_ENV === "production" ? API_URL_PROD : API_URL_TEST}`,
+    );
     const requestOptions = {
       method: "GET",
       headers: getDhlHeaders(),
     };
 
-    console.log(requestOptions);
-
     try {
       const response = await fetch(url.toString(), requestOptions);
-      console.log("fetched");
       const data = await response.json();
-      console.log(data);
+
+      console.log(process.env.APP_ENV);
 
       if (!response.ok)
         throw new ServerError(
-          "Unable to fetch shipment event at the moment. Please try again later or contact support"
+          "Unable to fetch shipment event at the moment. Please try again later or contact support",
         );
 
       const timeStamp = data.shipments[0].shipmentTimeStamp;
@@ -91,20 +107,18 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
           message: "Successfully fetched shipment events",
           events: data.shipments[0].events,
           timeStamp,
-          cordinates: {},
           order_date: formatISODate(order.createdAt),
           artwork_data: order.artwork_data,
           shipping_details: order.shipping_details,
           tracking_number,
-          // coordinates: {
-          //   origin: get_origin_geo_location,
-          //   destination: get_destination_geo_location,
-          // },
+          coordinates: {
+            origin: get_origin_geo_location,
+            destination: get_destination_geo_location,
+          } as ShipmentCoords | null,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
-      console.log(error);
       return NextResponse.json({ message: "Error", error }, { status: 500 });
     }
   } catch (error) {
@@ -112,12 +126,12 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
     createErrorRollbarReport(
       "shipment: shipment tracking",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -6,14 +6,23 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { createErrorRollbarReport } from "../../util";
-
-export const GET = withAppRouterHighlight(async function GET(request: Request) {
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
+const RetrieveSinglePlanSchema = z.object({
+  plan_id: z.string(),
+});
+export const GET = withRateLimit(standardRateLimit)(async function GET(
+  request: Request,
+) {
   const searchParam = new URL(request.url).searchParams;
-  const plan_id = searchParam.get("plan_id");
+  const plan_id_params = searchParam.get("plan_id");
 
   try {
+    const { plan_id } = validateGetRouteParams(RetrieveSinglePlanSchema, {
+      plan_id: plan_id_params,
+    });
     if (!plan_id) throw new BadRequestError("No plan id provided");
     await connectMongoDB();
     const plan = await SubscriptionPlan.findOne({ plan_id }).lean();
@@ -22,19 +31,18 @@ export const GET = withAppRouterHighlight(async function GET(request: Request) {
 
     return NextResponse.json(
       { message: "Successfull", data: plan },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "subscription: retrieve single plan",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

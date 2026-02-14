@@ -1,62 +1,70 @@
 import { TrendingArtistCard } from "@omenai/shared-ui-components/components/artists/TrendingArtistCard";
-import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
 import useEmblaCarousel from "embla-carousel-react";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
+
 export default function TrendingArtist({ artists }: { artists: any }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    watchDrag: true,
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: true,
   });
-  const [scrollProgress, setScrollProgress] = useState(0);
 
-  const updateScrollProgress = () => {
-    if (!emblaApi) return;
-    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-    setScrollProgress(progress);
-  };
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const onSelect = useCallback((api: any) => {
+    setCanScrollPrev(api.canScrollPrev());
+    setCanScrollNext(api.canScrollNext());
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
 
-    const handleScroll = () => {
-      requestAnimationFrame(updateScrollProgress);
-    };
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-    emblaApi.on("scroll", handleScroll);
-    emblaApi.on("resize", updateScrollProgress);
-    updateScrollProgress(); // Initial progress update
+  if (!artists || artists.length === 0) return null;
 
-    return () => {
-      emblaApi.off("scroll", handleScroll);
-      emblaApi.off("resize", updateScrollProgress);
-    };
-  }, [emblaApi]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-    }
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-    }
-  }, [emblaApi]);
   return (
-    <div>
-      {artists.length > 0 ? (
-        <div className="embla mb-6" ref={emblaRef}>
-          <div className="embla__container space-x-3">
-            {artists.map((artist: any, index: number) => {
-              return (
-                <div className="embla__slide" key={artist.author_id}>
+    <div className="w-full relative group/carousel">
+      {/* CONTROLS - Floating on Desktop, hidden on mobile (swipe enabled) */}
+      <div className="hidden lg:flex absolute -top-20 right-0 gap-2">
+        <button
+          onClick={scrollPrev}
+          disabled={!canScrollPrev}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+        >
+          <MdOutlineKeyboardArrowLeft className="text-xl" />
+        </button>
+        <button
+          onClick={scrollNext}
+          disabled={!canScrollNext}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+        >
+          <MdOutlineKeyboardArrowRight className="text-xl" />
+        </button>
+      </div>
+
+      {/* CAROUSEL VIEWPORT */}
+      <div className="embla overflow-hidden" ref={emblaRef}>
+        <div className="embla__container flex gap-6">
+          {artists.map((artist: any) => {
+            return (
+              <div
+                className="embla__slide min-w-0 flex-[0_0_auto]"
+                key={artist.author_id}
+              >
+                {/* Fixed Width Card */}
+                <div className="w-[280px] md:w-[320px]">
                   <TrendingArtistCard
-                    key={artist.author_id}
                     artist={artist.artist}
                     likes={artist.totalLikes}
                     url={artist.mostLikedArtwork.url}
@@ -65,37 +73,11 @@ export default function TrendingArtist({ artists }: { artists: any }) {
                     artist_id={artist.author_id}
                   />
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
-
-      <div className="w-full flex gap-x-4 items-center my-3">
-        <div className=" w-full h-[1px] bg-[#fafafa]">
-          <div
-            className="h-full bg-dark "
-            style={{ width: `${scrollProgress * 100}%` }}
-          ></div>
-        </div>
-
-        <div className="flex items-center justify-center w-fit space-x-2">
-          <button
-            onClick={scrollPrev}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowLeft />
-          </button>
-          <button
-            onClick={scrollNext}
-            className="h-[35px] w-[40px] rounded-full border border-[#e0e0e0] bg-dark text-white hover:border-dark duration-300 grid place-items-center"
-          >
-            <MdOutlineKeyboardArrowRight />
-          </button>
+              </div>
+            );
+          })}
         </div>
       </div>
-
-      {/* <div className="flex relative gap-x-4 overflow-x-scroll w-full"></div> */}
     </div>
   );
 }

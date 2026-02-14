@@ -25,7 +25,7 @@ export default function ArtworkSelectInput({
   };
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-dark font-normal text-fluid-xxs">
+      <label htmlFor={name} className="text-dark font-light text-fluid-xxs">
         {label}
       </label>
       <select
@@ -40,7 +40,7 @@ export default function ArtworkSelectInput({
             <option
               key={item}
               value={item}
-              className="px-3 py-5 my-5 font-normal text-fluid-xxs text-dark"
+              className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
             >
               {item}
             </option>

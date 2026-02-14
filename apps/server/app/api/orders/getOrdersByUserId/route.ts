@@ -3,20 +3,19 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const GetOrderByUserIdSchema = z.object({
+  id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { id } = await request.json();
+      const { id } = await validateRequestBody(request, GetOrderByUserIdSchema);
 
       const orders = await CreateOrder.find({ "buyer_details.id": id })
         .sort({ updatedAt: -1 })
@@ -30,19 +29,19 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
           message: "Successful",
           data: orders,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: get order by user id",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

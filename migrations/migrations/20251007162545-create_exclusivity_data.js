@@ -6,9 +6,7 @@ export async function up(db, client) {
     result.setDate(result.getDate() + days);
     return toUTCDate(result);
   }
-  console.log(
-    'initializing migration "20251007162545-create_exclusivity_data.js"...'
-  );
+
   const session = client.startSession();
 
   try {
@@ -86,22 +84,12 @@ export async function up(db, client) {
         const result = await db
           .collection("createorders")
           .bulkWrite(bulkOrderWrites, { session });
-        console.log(
-          `CreateOrders: Updated ${result.modifiedCount} of ${bulkOrderWrites.length} documents`
-        );
-      } else {
-        console.log("CreateOrders: No documents to update");
       }
 
       if (bulkArtworkWrites.length > 0) {
         const result = await db
           .collection("artworkuploads")
           .bulkWrite(bulkArtworkWrites, { session });
-        console.log(
-          `Artworkuploads: Updated ${result.modifiedCount} of ${bulkArtworkWrites.length} documents`
-        );
-      } else {
-        console.log("Artworkuploads: No documents to update");
       }
     });
   } finally {
@@ -136,8 +124,6 @@ export async function down(db, client) {
       await db
         .collection("artworkuploads")
         .updateMany({}, { $unset: { exclusivity_status: "" } }, { session });
-
-      console.log("Migration rolled back successfully");
     });
   } finally {
     await session.endSession();

@@ -12,7 +12,7 @@ const NexusTreshold = ({ state }: NexusTresholdEmailProps) => {
     <AdminEmailLayout previewText={previewText}>
       {/* Welcome Badge */}
       <Section className="text-center mb-8">
-        <div className="dark:text-white text-[#0f172a] text-sm font-semibold px-4 py-2 rounded-full">
+        <div className="dark:text-white text-[#0f172a] text-sm font-semibold px-4 py-2 rounded">
           Nexus Threshold Breach Notification
         </div>
       </Section>

@@ -18,7 +18,5 @@ export async function createWorkflow(
     });
 
     return workflowRunId;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }

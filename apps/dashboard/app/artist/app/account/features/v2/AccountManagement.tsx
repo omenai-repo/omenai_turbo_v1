@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchArtistProfile } from "@omenai/shared-services/artist/fetchArtistProfile";
 import { fetchArtistCredentials } from "@omenai/shared-services/artist/fetchArtistCredentials";
-import { AccountManagementSkeleton } from "@omenai/shared-ui-components/components/skeletons/AccountManagementSkeleton";
+import { ArtistProfileSkeleton } from "@omenai/shared-ui-components/components/skeletons/ArtistProfileSkeleton";
 import {
   ArtistCategorizationAnswerTypes,
   ArtistCategory,
@@ -51,11 +51,11 @@ const AccountManagement = () => {
     enabled: !!user.artist_id,
   });
 
-  if (isLoading) return <AccountManagementSkeleton />;
+  if (isLoading) return <ArtistProfileSkeleton />;
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-6xl">
+      <div className="max-w-full">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-fluid-sm font-bold text-dark mb-2">
@@ -70,7 +70,7 @@ const AccountManagement = () => {
         <div className="flex space-x-1 mb-4 bg-gray-400 p-1 rounded">
           <button
             onClick={() => setActiveTab("account")}
-            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded text-fluid-xxs font-normal 
+            className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded text-fluid-xxs font-light 
                      transition-all duration-300 ${
                        activeTab === "account"
                          ? "bg-white text-dark shadow-md"
@@ -82,7 +82,7 @@ const AccountManagement = () => {
           </button>
           <button
             onClick={() => setActiveTab("credentials")}
-            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xxs font-normal 
+            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xxs font-light 
                      transition-all duration-300 ${
                        activeTab === "credentials"
                          ? "bg-white text-dark shadow-md"
@@ -94,7 +94,7 @@ const AccountManagement = () => {
           </button>
           <button
             onClick={() => setActiveTab("settings")}
-            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xxs font-normal 
+            className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded text-fluid-xxs font-light 
                      transition-all duration-300 ${
                        activeTab === "settings"
                          ? "bg-white text-dark shadow-md"

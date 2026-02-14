@@ -3,7 +3,7 @@ import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema"
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
@@ -18,7 +18,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -27,7 +27,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const updatedData = await AccountGallery.findOneAndUpdate(
       { gallery_id: data.id },
-      { $set: { ...data } }
+      { $set: { ...data } },
     );
 
     if (!updatedData) throw new ServerError("An unexpected error has occured.");
@@ -37,18 +37,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         message: "Profile data updated",
         data: updatedData,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "updates: gallery profile",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

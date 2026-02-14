@@ -9,28 +9,36 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
+const UpdatePasswordSchema = z.object({
+  id: z.string(),
+  password: z.string(),
+  code: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { id, password, code } = await request.json();
+    const { id, password, code } = await validateRequestBody(
+      request,
+      UpdatePasswordSchema,
+    );
 
     const account = await AccountArtist.findOne(
       {
         artist_id: id,
       },
-      "password"
+      "password",
     );
 
     if (!account) throw new ServerError("Something went wrong");
@@ -46,19 +54,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (isPasswordMatch)
       throw new ConflictError(
-        "Your password cannot be identical to your previous password"
+        "Your password cannot be identical to your previous password",
       );
 
     const hashedPassword = await hashPassword(password);
 
     const updatePassword = await AccountArtist.updateOne(
       { artist_id: id },
-      { $set: { password: hashedPassword } }
+      { $set: { password: hashedPassword } },
     );
 
     if (updatePassword.modifiedCount === 0)
       throw new ServerError(
-        "Something went wrong with this request, Please contact support."
+        "Something went wrong with this request, Please contact support.",
       );
 
     const delete_code = await VerificationCodes.deleteOne({
@@ -67,24 +75,23 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!delete_code)
       throw new Error(
-        "Something went wrong with this request, Please contact support."
+        "Something went wrong with this request, Please contact support.",
       );
 
     return NextResponse.json(
       { message: "Password updated successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artist: update password",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

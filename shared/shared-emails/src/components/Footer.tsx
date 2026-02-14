@@ -53,7 +53,7 @@ export const EmailFooter: React.FC<EmailFooterProps> = ({
               {COMPANY_INFO.address}
             </Text>
             <Text style={EMAIL_STYLES.text.small} className="m-0">
-              {COMPANY_INFO.email} • {COMPANY_INFO.phone}
+              {COMPANY_INFO.email}
             </Text>
           </Column>
         </Row>

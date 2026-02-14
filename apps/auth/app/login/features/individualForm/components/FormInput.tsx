@@ -8,7 +8,6 @@ import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import { Form } from "@omenai/shared-types";
 import { loginUser } from "@omenai/shared-services/auth/individual/loginUser";
 import { auth_uri, base_url } from "@omenai/url-config/src/config";
-import { H } from "@highlight-run/next/client";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
@@ -27,19 +26,6 @@ const INPUT_CONFIG = {
   },
 };
 
-// Helper functions
-const identifyUser = (data: any) => {
-  H.identify(data.email, {
-    id: data.user_id as string,
-    name: data.name,
-    role: data.role,
-  });
-};
-
-const shouldUseDefaultRedirect = (url: string | null) => {
-  return url === "" || url === null;
-};
-
 const showErrorToast = () => {
   toast.error("Error notification", {
     description: "Something went wrong, please try again or contact support",
@@ -56,15 +42,10 @@ export default function FormInput() {
   const redirectTo = params.get("redirect");
 
   const { setIsLoading } = individualLoginStore();
-  const [redirect_uri, set_redirect_uri] = useLocalStorage(
-    "redirect_uri_on_login",
-    ""
-  );
 
   const { signOut } = useAuth({ requiredRole: "user" });
   const rollbar = useRollbar();
 
-  const url = useReadLocalStorage("redirect_uri_on_login") as string;
   const [form, setForm] = useState<Form>({ email: "", password: "" });
 
   const handleUnverifiedUser = async () => {
@@ -82,18 +63,15 @@ export default function FormInput() {
     try {
       toast_notif(
         "Login successful... We'll redirect you in a moment",
-        "success"
+        "success",
       );
 
       if (redirectTo) {
         router.replace(redirectTo);
       } else {
-        set_redirect_uri("");
-        identifyUser(data);
         router.refresh();
         router.replace(base_uri);
       }
-      identifyUser(data);
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
@@ -124,7 +102,7 @@ export default function FormInput() {
   };
 
   const handleSubmit = async (
-    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
     setIsLoading();

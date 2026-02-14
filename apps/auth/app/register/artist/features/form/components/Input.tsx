@@ -53,19 +53,19 @@ export default function Input({
         e.target.name,
         e.target.name === "confirmPassword"
           ? artistSignupData.password
-          : undefined
+          : undefined,
       );
     if (!success) {
       setIsFieldDirty(
         e.target.name as keyof ArtistSignupData & AddressTypes,
-        true
+        true,
       );
       setErrorList(errors);
     } else {
       setErrorList([]);
       setIsFieldDirty(
         e.target.name as keyof ArtistSignupData & AddressTypes,
-        false
+        false,
       );
     }
   };
@@ -83,7 +83,7 @@ export default function Input({
       const passwordErrors = errors.filter(
         (err) =>
           err.toLowerCase().includes("password") &&
-          !err.toLowerCase().includes("confirm")
+          !err.toLowerCase().includes("confirm"),
       );
       if (passwordErrors.length > 0) {
         setErrorList(passwordErrors);
@@ -96,7 +96,7 @@ export default function Input({
       const confirmErrors = errors.filter(
         (err) =>
           err.toLowerCase().includes("match") ||
-          err.toLowerCase().includes("confirm")
+          err.toLowerCase().includes("confirm"),
       );
       if (confirmErrors.length > 0) {
         setErrorList(confirmErrors);
@@ -119,7 +119,7 @@ export default function Input({
           {/* Label */}
           <label
             htmlFor={labelText}
-            className="block text-fluid-xxs font-normal text-gray-700"
+            className="block text-fluid-xxs font-light text-gray-700"
           >
             {label}
           </label>
@@ -128,7 +128,7 @@ export default function Input({
           <div className="relative group">
             <input
               type={type === "password" ? (show ? "text" : type) : type}
-              className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed   
+              className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed   
                 ${
                   errorList.length > 0
                     ? "border-red-300 focus:border-red-500 focus:ring-red-500/10"

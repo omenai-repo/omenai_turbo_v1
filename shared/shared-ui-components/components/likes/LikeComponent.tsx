@@ -18,7 +18,7 @@ export default function LikeComponent({
     impressions,
     likeIds,
     sessionId,
-    art_id
+    art_id,
   );
 
   return (

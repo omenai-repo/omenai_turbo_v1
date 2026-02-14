@@ -1,4 +1,6 @@
+import { InvoiceLineItemsData } from "./../../node_modules/@omenai/shared-types/index.d";
 import { Stripe } from "stripe";
+import z from "zod";
 // Create discriminated union with role as discriminator
 export type SessionDataType = (
   | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password" | "phone">)
@@ -109,13 +111,19 @@ export type GallerySchemaTypes = {
   role: AccessRoleTypes;
   logo?: string;
   phone?: string;
-  subscription_status: {
-    type: "basic" | "premium" | "pro" | null;
-    active: boolean;
-  };
+  subscription_status: SubscriptionStatus;
   status: "active" | "blocked";
   connected_account_id: string | null;
   stripe_customer_id: string | null;
+};
+
+type SubscriptionStatus = {
+  type: "basic" | "premium" | "pro" | null;
+  active: boolean;
+  discount: {
+    active: boolean;
+    plan: "pro";
+  };
 };
 
 export type IndividualSchemaTypes = {
@@ -226,10 +234,10 @@ export type ArtworkSchemaTypes = {
   artist_country_origin: string;
   certificate_of_authenticity: string;
   artwork_description?: string;
-  framing: string;
   signature: string;
   should_show_on_sub_active?: boolean;
   availability: boolean;
+  packaging_type: ArtworkPackagingType;
   role_access: RoleAccess;
   exclusivity_status: {
     exclusivity_type: "exclusive" | "non-exclusive" | null;
@@ -244,10 +252,9 @@ export type RoleAccess = {
 };
 
 export type ArtworkDimensions = {
-  width: string;
   height: string;
-  depth?: string;
   weight: string;
+  length: string;
 };
 
 export type ArtworkPricing = {
@@ -262,9 +269,7 @@ export type ArtworkMediumTypes =
   | "Works on paper"
   | "Acrylic on canvas/linen/panel"
   | "Mixed media on paper/canvas"
-  | "Sculpture (Resin/plaster/clay)"
-  | "Oil on canvas/panel"
-  | "Sculpture (Bronze/stone/metal)";
+  | "Oil on canvas/panel";
 
 export type ArtworkPriceFilterData = {
   "pricing.price": number;
@@ -308,8 +313,7 @@ export type ArtworkUploadStateTypes = {
   rarity: string;
   materials: string;
   height: string;
-  width: string;
-  depth?: string;
+  length: string;
   weight: string;
   price: number;
   usd_price: number;
@@ -318,15 +322,23 @@ export type ArtworkUploadStateTypes = {
   artist_country_origin: string;
   certificate_of_authenticity: string;
   artwork_description?: string;
-  framing: string;
   signature: string;
   currency: string;
+  packaging_type: ArtworkPackagingType;
 };
+type ArtworkPackagingType = "rolled" | "stretched";
 
 export type CreateOrderModelTypes = {
   artwork_data: Pick<
     ArtworkSchemaTypes,
-    "artist" | "pricing" | "title" | "url" | "art_id" | "role_access"
+    | "artist"
+    | "pricing"
+    | "title"
+    | "url"
+    | "art_id"
+    | "role_access"
+    | "dimensions"
+    | "packaging_type"
   > & {
     _id: ObjectId;
     exclusivity_status: Omit<
@@ -407,6 +419,15 @@ export type ScheduledShipments = {
   status: "scheduled" | "resolved";
 };
 
+export type ShipmentCoords = {
+  origin: CoordsType;
+  destination: CoordsType;
+};
+type CoordsType = {
+  lat: number;
+  lng: number;
+};
+
 type OrderBuyerAndSellerDetails = {
   id: string;
   name: string;
@@ -440,8 +461,55 @@ export type AddressTypes = {
 export type PaymentStatusTypes = {
   status: "pending" | "completed" | "processing" | "failed";
   transaction_value: number;
-  transaction_date: string;
+  transaction_date: Date;
   transaction_reference: string;
+  invoice_reference?: string;
+  artist_wallet_increment?: number;
+};
+
+export type PaymentLedgerTypes = {
+  provider: PurchaseTransactionModelSchemaTypes["provider"];
+  provider_tx_id: string;
+  status: string;
+  payment_date: Date;
+  amount: number;
+  currency: "USD";
+  order_id: string;
+  payload: PaymentLedgerPayloadTypes;
+  payment_fulfillment: PaymentFulfillmentStatusTypes;
+  payment_fulfillment_checks_done: boolean;
+  reconciliation_attempts: number;
+  needs_manual_review: boolean;
+  last_reconciliation_at?: Date;
+};
+
+export type MetaSchema = {
+  buyer_id: string;
+  buyer_email: string;
+  seller_email: string;
+  seller_name: string;
+  seller_id: string;
+  artwork_name: string;
+  art_id: string;
+  shipping_cost: number;
+  unit_price: number;
+  tax_fees: number;
+  seller_designation: string;
+};
+
+export type PaymentLedgerPayloadTypes = {
+  meta: any;
+  paymentObj: any;
+  provider: PaymentLedgerTypes["provider"];
+  pricing: PurchaseTransactionPricing;
+};
+
+export type PaymentFulfillmentStatusTypes = {
+  artwork_marked_sold: "done" | "failed";
+  transaction_created: "done" | "failed";
+  sale_record_created: "done" | "failed";
+  mass_orders_updated: "done" | "failed";
+  seller_wallet_updated?: "done" | "failed";
 };
 
 export type LockModelTypes = {
@@ -463,6 +531,7 @@ export type GalleryProfileUpdateData = {
 export type IndividualProfileUpdateData = {
   name?: string;
   preferences?: string[];
+  phone?: string;
 };
 
 export type ArtistProfileUpdateData = {
@@ -516,6 +585,7 @@ export type WalletModelSchemaTypes = {
   wallet_currency: string;
   base_currency: string;
   wallet_pin: string | null;
+  applied_payment_refs: string[];
 };
 export type WalletTransactionModelSchemaTypes = {
   wallet_id: string;
@@ -552,6 +622,9 @@ export type PurchaseTransactionModelSchemaTypes = {
   trans_date: Date;
   trans_recipient_role: "gallery" | "artist";
   status: "successful" | "processing" | "failed";
+  provider: "flutterwave" | "stripe";
+  order_id: string;
+  invoice_reference?: string;
   createdBy?: "webhook" | "verification"; // Who created this record
   verifiedAt?: Date; // When verification route processed it
   webhookReceivedAt?: Date; // When webhook received
@@ -599,6 +672,14 @@ export type SubscriptionModelSchemaTypes = {
   };
   next_charge_params: NextChargeParams;
   upload_tracker: UploadTrackingTypes;
+};
+
+export type SubscriptionMetaData = {
+  name: string;
+  email: string;
+  gallery_id: string;
+  plan_id: string;
+  plan_interval: string;
 };
 
 export type UploadTrackingTypes = {
@@ -898,6 +979,7 @@ export type ShipmentRequestDataTypes = {
     fullname: string;
   };
   invoice_number: string;
+  artwork_price: number;
 };
 
 type ShipmentDeliveryValidation = {
@@ -1216,10 +1298,6 @@ export type InvoiceStorageData = {
 };
 
 export type BuyingFrequency = "frequently" | "regularly" | "rarely";
-
-import mongoose, { Schema, Document, Model } from "mongoose";
-
-// 1. Interface for Type Safety
 export interface IWaitlistLead extends Document {
   email: string;
   name: string;
@@ -1229,11 +1307,34 @@ export interface IWaitlistLead extends Document {
   kpi: KpiMetrics;
   marketing: Omit<ICampaignVisit, "createdAt">;
   survey: IWaitlistLeadSurveyData;
+  survey: IWaitlistLeadSurveyData;
   device: WaitlistCampaignDevice;
   hasConvertedToPaid: boolean;
   createdAt: Date;
 }
+export type KpiMetrics = {
+  collector_type: string | null;
+  years_of_collecting?: string | null;
+  buying_frequency?: BuyingFrequency;
+  age?: string;
+  years_of_practice?: string | null;
+  formal_education?: "degree" | "workshop" | "self-taught" | null;
+};
 
+export type WaitlistCampaignDevice = {
+  device: {
+    type: string; // 'mobile', 'tablet', 'console', 'smarttv', 'wearable', 'embedded'
+    vendor: string; // 'Apple', 'Samsung'
+    model: string; // 'iPhone', 'Galaxy S9'
+  };
+  os: {
+    name: string; // 'iOS', 'Android', 'Windows'
+    version: string; // '14.0', '10'
+  };
+  browser: {
+    name: string; // 'Chrome', 'Safari'
+  };
+};
 export interface ICampaignVisit extends Document {
   source: string; // utm_source (e.g., 'twitter')
   medium: string; // utm_medium (e.g., 'social')
@@ -1250,6 +1351,12 @@ export type MarketingData = {
   campaign: string; // utm_campaign
   referrer: string; // document.referrer
   visitorId: string; // (Optional) To de-duplicate refeshes
+};
+
+export type IWaitlistSurveyData = {
+  art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES;
+  current_challenges: CURRENT_CHALLENGES_TYPES;
+  app_value_drivers: APP_VALUE_DRIVERS_TYPES;
 };
 
 export type IWaitlistSurveyData = {
@@ -1286,6 +1393,9 @@ export interface WaitlistStateData extends Partial<KpiMetrics> {
   email: string;
   language: string;
   country: string;
+  art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES | null;
+  current_challenges: CURRENT_CHALLENGES_TYPES | null;
+  app_value_drivers: APP_VALUE_DRIVERS_TYPES | null;
   art_discovery_or_share_method: ART_DISCOVERY_METHOD_TYPES | null;
   current_challenges: CURRENT_CHALLENGES_TYPES | null;
   app_value_drivers: APP_VALUE_DRIVERS_TYPES | null;
@@ -1342,3 +1452,66 @@ export const SURVEY_VALUE_MAP = {
     "EARLY_ACCESS",
   ],
 } as const;
+
+export type DeletePromise = Promise<
+  | {
+      success: boolean;
+      jobId: string;
+      error?: undefined;
+    }
+  | {
+      success: boolean;
+      jobId: string;
+      error: string;
+    }
+>;
+
+export type SupportCategory =
+  | "GENERAL"
+  | "PAYMENT" // Buyer paying for art
+  | "ORDER"
+  | "SUBSCRIPTION" // Gallery paying Omenai (Billing)
+  | "PAYOUT" // Gallery receiving money (Stripe Connect)
+  | "WALLET"
+  | "AUTH"
+  | "UPLOAD"
+  | "CHECKOUT";
+
+export type TicketPriority = "LOW" | "NORMAL" | "HIGH" | "CRITICAL";
+
+export type TicketStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+
+export interface ISupportTicket {
+  _id?: string; // MongoDB ID
+  userId?: string; // Link to User/Artist/Gallery ID if logged in
+  userEmail: string; // REQUIRED: Either from session or typed by Guest
+  userType: "GUEST" | "USER" | "ARTIST" | "GALLERY";
+
+  // The Core Issue
+  category: SupportCategory;
+  subject?: string; // Optional summary (can default to Category name)
+  message: string; // The "Description"
+
+  // Context Data (The "Smart" stuff)
+  referenceId?: string; // OrderID, TransactionRef, etc.
+  pageUrl: string; // Where were they?
+
+  // The Context Container
+  meta: {
+    referenceType?: string; // e.g. "ORDER_NUMBER", "STRIPE_PAYOUT_ID"
+    transactionDate?: string;
+    browser?: string; // captured automatically
+    device?: string; // captured automatically
+    [key: string]: any; // Flexible for future needs (e.g. "upload_error_code")
+  };
+
+  // Triage Metadata
+  priority: TicketPriority;
+  status: TicketStatus;
+  ticketId: string; // New Field: e.g., "OM-88421"
+
+  // Timestamps
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt?: Date; // Good for tracking turnaround time later
+}

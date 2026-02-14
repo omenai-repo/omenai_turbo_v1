@@ -1,19 +1,16 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { fetchUserSaveArtworks } from "@omenai/shared-services/artworks/fetchUserSavedArtworks";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
-import { auth_uri } from "@omenai/url-config/src/config";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import { userDashboardActionStore } from "@omenai/shared-state-store/src/dashboard/individual/userDashboardActionState";
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
-import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { FilterOptions } from "@omenai/shared-types";
+import { UsersSavedArtworksSkeleton } from "@omenai/shared-ui-components/components/skeletons/UsersSavedArtworksSkeleton";
 
 export default function Saves() {
   const {
@@ -42,7 +39,6 @@ export default function Saves() {
         setPageCount(response?.count);
       }
 
-      console.log(response);
       return response.data;
     },
     refetchOnWindowFocus: false,
@@ -50,7 +46,7 @@ export default function Saves() {
   });
 
   if (loading || isLoading) {
-    return <ArtworksListingSkeletonLoader />;
+    return <UsersSavedArtworksSkeleton />;
   }
 
   if (!artworksArray || artworksArray.length === 0 || artworks.length === 0) {
@@ -62,7 +58,7 @@ export default function Saves() {
   }
   const arts = catalogChunk(
     artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   const filterOptions: FilterOptions = {
@@ -75,6 +71,14 @@ export default function Saves() {
   return (
     <div className="pb-5">
       <>
+        <div className="my-5">
+          <h1 className="text-2xl font-light text-slate-900">
+            Your Favorite Artworks
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Overview of your saved artworks
+          </p>
+        </div>
         <p className="text-fluid-xxs font-bold my-4">
           {artwork_total} artworks:
         </p>

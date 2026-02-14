@@ -1,16 +1,11 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
+import { SubscriptionMetaData } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createSubscriptionPaymentIntent(
   amount: number,
   gallery_id: string,
-  meta: {
-    name: string;
-    email: string;
-    gallery_id: string;
-    plan_id: string;
-    plan_interval: string;
-  },
+  meta: SubscriptionMetaData,
   token: string
 ) {
   try {

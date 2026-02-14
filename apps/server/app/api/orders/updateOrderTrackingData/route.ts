@@ -3,24 +3,27 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const UpdateOrderTrackingSchema = z.object({
+  data: z.any(),
+  order_id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { data, order_id } = await request.json();
+      const { data, order_id } = await validateRequestBody(
+        request,
+        UpdateOrderTrackingSchema,
+      );
 
       const updateOrders = await CreateOrder.findOneAndUpdate(
         { order_id },
-        { $set: { "shipping_details.shipment_information.tracking": data } }
+        { $set: { "shipping_details.shipment_information.tracking": data } },
       );
 
       if (!updateOrders)
@@ -30,19 +33,19 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         {
           message: "Successfully updated tracking information",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: update order tracking data",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

@@ -7,7 +7,8 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { sendGalleryBlockedEmail } from "@omenai/shared-emails/src/models/gallery/sendGalleryBlockedEmail";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -15,41 +16,48 @@ const config: CombinedConfig = {
   allowedAdminAccessRoles: ["Admin", "Owner"],
 };
 
+const BlockGallerySchema = z.object({
+  gallery_id: z.string(),
+  status: z.string(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { gallery_id, status } = await request.json();
+    const { gallery_id, status } = await validateRequestBody(
+      request,
+      BlockGallerySchema,
+    );
 
     const gallery = await AccountGallery.findOne({ gallery_id }, "name email");
 
     const block_gallery = await AccountGallery.updateOne(
       { gallery_id },
-      { $set: { status } }
+      { $set: { status } },
     );
 
     if (block_gallery.modifiedCount === 0)
       throw new ServerError("Something went wrong");
 
-    // TODO: Send mail to gallery
     await sendGalleryBlockedEmail({ name: gallery.name, email: gallery.email });
 
     return NextResponse.json(
       { message: "Gallery status updated" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "admin: block gallery",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

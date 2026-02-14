@@ -1,95 +1,121 @@
 "use client";
-import React from "react";
-import { Accordion, ScrollArea } from "@mantine/core";
+import React, { useMemo, useState } from "react";
+import {
+  Accordion,
+  ScrollArea,
+  Select,
+  Loader,
+  Text,
+  Badge,
+} from "@mantine/core";
 import { WalletTransactionModelSchemaTypes } from "@omenai/shared-types";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import Link from "next/link";
 import { walletTransactionStore } from "@omenai/shared-state-store/src/artist/wallet/WalletTransactionStateStore";
 import TransactionHistorySkeleton from "@omenai/shared-ui-components/components/skeletons/TransactionHistorySkeleton";
+import { fetchWalletTransactions } from "@omenai/shared-services/wallet/fetchWalletTransactions";
+import { useRollbar } from "@rollbar/react";
+import { toast } from "sonner";
+import { Calendar, Check, ChevronDown, Clock, X } from "lucide-react";
 
-export default function TransactionTable() {
-  const { transactions, transactionLoading } = walletTransactionStore();
+interface TransactionTableProps {
+  walletId: string;
+  currentYear: string;
+  onYearChange: (year: string, pageCount: number) => void;
+}
+
+export default function TransactionTable({
+  walletId,
+  currentYear,
+  onYearChange,
+}: TransactionTableProps) {
+  const {
+    transactions,
+    transactionLoading,
+    setTransactions,
+    setTransactionLoading,
+  } = walletTransactionStore();
+  const rollbar = useRollbar();
+
+  // Calculate Year Options (2025 -> Today)
+  const yearOptions = useMemo(() => {
+    const startYear = 2025;
+    const todayYear = new Date().getFullYear();
+    const years = [];
+    for (let y = startYear; y <= todayYear; y++) {
+      years.push(y.toString());
+    }
+    return years.reverse(); // Newest first
+  }, []);
+
+  const handleYearSelect = async (val: string | null) => {
+    if (!val || val === currentYear) return;
+
+    try {
+      setTransactionLoading(true);
+      const response = await fetchWalletTransactions(
+        walletId,
+        val,
+        "1", // Reset to page 1
+        "10",
+        "all",
+      );
+
+      if (!response?.isOk)
+        throw new Error(response?.message || "Failed to fetch");
+
+      setTransactions(response.data);
+      onYearChange(val, response.pageCount); // Update parent state
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      rollbar.error(err);
+      toast.error("Error", {
+        description: "Could not fetch transactions for this year",
+      });
+    } finally {
+      setTransactionLoading(false);
+    }
+  };
 
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "PENDING":
         return {
-          color: "text-amber-600",
+          color: "text-amber-700",
+          badgeColor: "yellow",
           bgColor: "bg-amber-50",
-          borderColor: "border-amber-200",
-          icon: (
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          ),
+          border: "border-amber-100",
+          icon: <Clock size={16} />,
           label: "Processing",
           message:
-            "Your funds are on their way to your bank account. This may take a little time—thank you for your patience.",
+            "Funds are on the way. This may take up to 24 hours or more depending on your bank's processing time.",
         };
       case "SUCCESSFUL":
         return {
-          color: "text-green-600",
-          bgColor: "bg-green-50",
-          borderColor: "border-green-200",
-          icon: (
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          ),
-          label: "Completed",
-          message:
-            "Your funds have been successfully deposited into your bank account",
+          color: "text-emerald-700",
+          bgColor: "bg-emerald-50",
+          badgeColor: "green",
+          border: "border-emerald-100",
+          icon: <Check size={16} />,
+          label: "Successful",
+          message: "Funds have been deposited successfully.",
         };
       case "FAILED":
         return {
-          color: "text-red-600",
+          color: "text-red-700",
           bgColor: "bg-red-50",
-          borderColor: "border-red-200",
-          icon: (
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          ),
+          badgeColor: "red",
+          border: "border-red-100",
+          icon: <X size={16} />,
           label: "Failed",
           message:
-            "Your funds transfer was unsuccessful. Please check your bank details or contact support for assistance",
+            "Transaction failed and funds have been added back to your wallet. Please contact support if you need assistance.",
         };
       default:
         return {
           color: "text-slate-600",
           bgColor: "bg-slate-50",
-          borderColor: "border-slate-200",
+          border: "border-slate-200",
           icon: null,
           label: status,
           message: "",
@@ -97,229 +123,145 @@ export default function TransactionTable() {
     }
   };
 
-  const items = transactions.map(
-    (
-      transaction: WalletTransactionModelSchemaTypes & {
-        createdAt: string;
-        updatedAt: string;
-      }
-    ) => {
-      const statusConfig = getStatusConfig(transaction.trans_status);
-
-      return (
-        <Accordion.Item
-          key={transaction.trans_id}
-          value={transaction.trans_id}
-          className="border border-slate-200 rounded mb-3 overflow-hidden hover:shadow-md transition-shadow duration-200"
-        >
-          <Accordion.Control className="hover:bg-slate-50 transition-colors">
-            <div className="flex items-center justify-between px-4 py-2">
-              <div className="flex items-center gap-4">
-                {/* Status Icon */}
-                <div
-                  className={`p-3 rounded ${statusConfig.bgColor} ${statusConfig.color}`}
-                >
-                  {statusConfig.icon || (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7 11l5-5m0 0l5 5m-5-5v12"
-                      />
-                    </svg>
-                  )}
-                </div>
-
-                {/* Transaction Info */}
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-fluid-xxs text-dark">
-                      Withdrawal
-                    </h3>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded ${statusConfig.bgColor} ${statusConfig.color} font-medium`}
-                    >
-                      {statusConfig.label}
-                    </span>
-                  </div>
-                  <p className="text-fluid-xxs text-slate-500">
-                    {formatISODate(transaction.createdAt)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Amount */}
-              <div className="text-right">
-                <p className="text-fluid-base font-semibold text-dark">
-                  {formatPrice(transaction.trans_amount, "USD")}
-                </p>
-              </div>
-            </div>
-          </Accordion.Control>
-
-          <Accordion.Panel className="border-t border-slate-200 bg-slate-50">
-            <div className="p-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Left Column */}
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                      Transaction ID
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <p className="font-mono text-sm text-dark">
-                        {transaction.trans_id}
-                      </p>
-                      <button
-                        onClick={() =>
-                          navigator.clipboard.writeText(transaction.trans_id)
-                        }
-                        className="p-1 rounded hover:bg-slate-200 transition-colors"
-                        title="Copy ID"
-                      >
-                        <svg
-                          className="w-4 h-4 text-slate-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                      Reference
-                    </span>
-                    <p className="font-mono text-sm text-dark">
-                      {transaction.trans_flw_ref_id}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right Column */}
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                      Amount
-                    </span>
-                    <p className="text-lg font-semibold text-dark">
-                      {formatPrice(transaction.trans_amount)}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                      Date
-                    </span>
-                    <p className="text-sm text-dark">
-                      {formatISODate(transaction.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Status Message */}
-              <div
-                className={`mt-6 p-4 rounded ${statusConfig.bgColor} border ${statusConfig.borderColor}`}
-              >
-                <div className="flex gap-3">
-                  <div className={`flex-shrink-0 ${statusConfig.color}`}>
-                    {statusConfig.icon}
-                  </div>
-                  <div className="">
-                    <p
-                      className={`font-medium text-fluid-xxs ${statusConfig.color}`}
-                    >
-                      {transaction.trans_status}
-                    </p>
-                    <p className="text-fluid-xxs text-slate-600">
-                      {statusConfig.message}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Accordion.Panel>
-        </Accordion.Item>
-      );
-    }
-  );
-
   return (
-    <div className="w-full">
-      {transactionLoading ? (
-        <TransactionHistorySkeleton />
-      ) : (
-        <>
-          {transactions.length === 0 ? (
-            <div className="bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 p-12">
-              <div className="text-center max-w-sm mx-auto">
-                <div className="w-16 h-16 bg-slate-100 rounded flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-8 h-8 text-slate-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
+    <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[650px]">
+      {/* Header */}
+      <div className="p-5 border-b border-slate-100 bg-white flex flex-row items-center justify-between sticky top-0 z-10">
+        <div>
+          <h2 className="text-lg font-bold text-slate-800">
+            Transaction History
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Your withdrawal activity
+          </p>
+        </div>
+        <div className="w-32">
+          <Select
+            value={currentYear}
+            onChange={handleYearSelect}
+            data={yearOptions}
+            allowDeselect={false}
+            disabled={transactionLoading}
+            rightSection={
+              transactionLoading ? (
+                <Loader size={14} />
+              ) : (
+                <ChevronDown size={14} />
+              )
+            }
+            leftSection={<Calendar size={14} />}
+            size="xs"
+            classNames={{
+              input:
+                "font-medium border-slate-200 text-slate-700 focus:border-slate-400",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-hidden relative">
+        {transactionLoading ? (
+          <div className="p-4">
+            <TransactionHistorySkeleton />
+          </div>
+        ) : transactions.length === 0 ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+              <Calendar size={24} className="text-slate-300" />
+            </div>
+            <h3 className="text-sm font-semibold text-slate-900">
+              No records found
+            </h3>
+            <p className="text-xs text-slate-500 mt-1 max-w-[200px]">
+              We couldn't find any transactions for {currentYear}.
+            </p>
+          </div>
+        ) : (
+          <ScrollArea className="h-full">
+            <Accordion
+              variant="separated"
+              radius="none"
+              className="space-y-0"
+              styles={{
+                item: {
+                  borderBottom: "1px solid #f1f5f9",
+                  backgroundColor: "transparent",
+                },
+                content: { padding: 0 },
+                control: { padding: "12px 20px" },
+                chevron: { color: "#cbd5e1" },
+              }}
+            >
+              {transactions.map((transaction: any) => {
+                const config = getStatusConfig(transaction.trans_status);
+                return (
+                  <Accordion.Item
+                    key={transaction.trans_id}
+                    value={transaction.trans_id}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-dark mb-2">
-                  No Transactions Yet
-                </h3>
-                <p className="text-sm text-slate-600">
-                  Your withdrawal history will appear here once you make your
-                  first transaction.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="border border-slate-200 rounded-3xl p-4">
-              <div className=" flex items-center px-4 justify-between">
-                <h2 className="text-fluid-sm font-semibold text-dark">
-                  Transaction History
-                </h2>
-              </div>
-              <ScrollArea h={600} className="pr-4">
-                <Accordion
-                  variant="separated"
-                  radius="md"
-                  className="space-y-0"
-                  styles={{
-                    content: { padding: 0 },
-                    control: { padding: 0 },
-                    item: {
-                      backgroundColor: "transparent",
-                      border: "none",
-                    },
-                  }}
-                >
-                  {items}
-                </Accordion>
-              </ScrollArea>
-            </div>
-          )}
-        </>
-      )}
+                    <Accordion.Control className="hover:bg-slate-50 transition-colors">
+                      <div className="flex items-center justify-between w-full pr-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${config.bgColor} ${config.color}`}
+                          >
+                            {config.icon}
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-slate-800">
+                              Withdrawal
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              {formatISODate(transaction.createdAt)}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-bold text-slate-800">
+                            {formatPrice(transaction.trans_amount, "USD")}
+                          </p>
+                          <Badge
+                            size="xs"
+                            variant="light"
+                            color={config.badgeColor}
+                            className="mt-0.5 font-light"
+                          >
+                            {config.label}
+                          </Badge>
+                        </div>
+                      </div>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <div className="px-5 py-4 bg-slate-50/50 space-y-3">
+                        <div className="flex justify-between text-xs border-b border-slate-100 pb-2">
+                          <span className="text-slate-500">Transaction ID</span>
+                          <span className="font-mono text-slate-700">
+                            {transaction.trans_id}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs border-b border-slate-100 pb-2">
+                          <span className="text-slate-500">Reference</span>
+                          <span className="font-mono text-slate-700">
+                            {transaction.trans_flw_ref_id}
+                          </span>
+                        </div>
+                        {config.message && (
+                          <div
+                            className={`text-xs p-2 rounded ${config.bgColor} ${config.color} border ${config.border}`}
+                          >
+                            {config.message}
+                          </div>
+                        )}
+                      </div>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                );
+              })}
+            </Accordion>
+          </ScrollArea>
+        )}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,8 @@
 import NextTopLoader from "nextjs-toploader";
 import { QueryProvider } from "@omenai/package-provider";
 import { Toaster } from "sonner";
+import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
+import { Suspense } from "react";
 
 export default function LayoutWrapper({
   children,
@@ -20,7 +22,12 @@ export default function LayoutWrapper({
         />
         <div className=" w-full h-screen">
           <NextTopLoader color="#0f172a" height={6} />
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <Suspense fallback={null}>
+              <SupportWidget />
+            </Suspense>
+          </QueryProvider>
         </div>
       </>
     </div>

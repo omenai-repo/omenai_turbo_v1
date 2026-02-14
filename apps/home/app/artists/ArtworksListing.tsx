@@ -3,9 +3,9 @@ import { useWindowSize } from "usehooks-ts";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
-
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
+
 export default function ArtworkListing({
   artworks,
 }: {
@@ -14,30 +14,30 @@ export default function ArtworkListing({
   const { user } = useAuth({ requiredRole: "user" });
   const { width } = useWindowSize();
 
-  if (!artworks || artworks.length === 0 || artworks.length === 0) {
+  if (!artworks || artworks.length === 0) {
     return (
-      <div className="w-full h-full grid place-items-center my-12">
-        <NotFoundData />
+      <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50">
+        <div className="scale-75 opacity-60">
+          <NotFoundData />
+        </div>
+        <p className="mt-4 font-sans text-sm font-medium text-neutral-400">
+          No works listed in the archive yet.
+        </p>
       </div>
     );
   }
 
-  const arts = catalogChunk(
-    artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
-  );
+  // Column logic: Matches standard marketplace grid
+  const columns = width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4;
+  const arts = catalogChunk(artworks, columns);
 
   return (
-    <div className="w-full my-3">
-      <p className="text-fluid-xxs font-bold mb-4">
-        {artworks.length} artworks:
-      </p>
-
-      <div className="flex flex-wrap gap-x-4 justify-center">
-        {arts.map((artworks: any[], index) => {
+    <div className="w-full">
+      <div className="flex flex-wrap justify-center gap-x-8">
+        {arts.map((column: any[], colIndex) => {
           return (
-            <div className="flex-1 gap-2 space-y-6" key={index}>
-              {artworks.map((art: any) => {
+            <div className="flex flex-1 flex-col gap-12" key={colIndex}>
+              {column.map((art: any) => {
                 return (
                   <ArtworkCard
                     key={art.art_id}
@@ -46,8 +46,8 @@ export default function ArtworkListing({
                     artist={art.artist}
                     art_id={art.art_id}
                     pricing={art.pricing}
-                    impressions={art.impressions as number}
-                    likeIds={art.like_IDs as string[]}
+                    impressions={art.impressions}
+                    likeIds={art.like_IDs}
                     sessionId={user ? user.id : undefined}
                     availability={art.availability}
                     medium={art.medium}
@@ -58,9 +58,7 @@ export default function ArtworkListing({
             </div>
           );
         })}
-        {/* first */}
       </div>
     </div>
   );
 }
-// grid xxm:grid-cols-2 md:grid-cols-3 2lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-7 justify-center md:space-y-4 space-x-2 items-end

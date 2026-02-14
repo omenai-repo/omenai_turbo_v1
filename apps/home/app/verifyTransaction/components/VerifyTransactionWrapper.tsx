@@ -196,7 +196,7 @@ const SuccessState = ({
 const verifyTransaction = async (
   transactionId: string,
   apiUrl: string,
-  rollbar: Rollbar
+  rollbar: Rollbar,
 ) => {
   try {
     const response = await fetch(
@@ -205,7 +205,7 @@ const verifyTransaction = async (
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transaction_id: transactionId }),
-      }
+      },
     );
 
     if (!response.ok) {
@@ -216,7 +216,7 @@ const verifyTransaction = async (
     return {
       message: result.message,
       isOk: result.ok,
-      status: result.status,
+      status: result.status || response.ok ? "successful" : "failed",
       success: result.success,
     };
   } catch (error) {

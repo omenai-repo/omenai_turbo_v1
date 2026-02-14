@@ -12,6 +12,8 @@ import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
 import PayoutSkeleton from "@omenai/shared-ui-components/components/skeletons/PayoutSkeleton";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
+import { TransactionFilters } from "./TransactionFilters";
+import { PayoutSummary } from "./PayoutSummary";
 export default function PayoutDashboard() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
@@ -74,21 +76,43 @@ export default function PayoutDashboard() {
     <div>
       {!isConfirmed?.isSubmitted ? (
         <div className="h-[85vh] w-full grid place-items-center">
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col items-center space-y-2">
             <LoadIcon />
-            <p className="text-fluid-xxs font-semibold">
-              Redirecting...Please wait
+            <p className="text-sm font-medium text-slate-600">
+              Preparing your payout dashboard…
             </p>
           </div>
         </div>
       ) : (
-        <div className="my-10">
-          <PayoutDashBoardContent
-            account={isConfirmed.id}
-            balance={isConfirmed.balance}
-          />
-          <div className="my-6">
-            <TransactionTable table={isConfirmed.table_data} />
+        <div className="">
+          {/* Header */}
+          <div className="mb-4">
+            <h1 className="text-fluid-sm font-semibold text-slate-900">
+              Payouts
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Track your balance and payout activity
+            </p>
+          </div>
+
+          {/* Summary */}
+          <PayoutSummary table={isConfirmed.table_data} currency="USD" />
+
+          {/* Main layout */}
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+            {/* Balance */}
+            <div className="lg:col-span-1">
+              <PayoutDashBoardContent
+                account={isConfirmed.id}
+                balance={isConfirmed.balance}
+              />
+            </div>
+
+            {/* Ledger */}
+            <div className="lg:col-span-2">
+              <TransactionFilters onFilterChange={() => {}} />
+              <TransactionTable table={isConfirmed.table_data} />
+            </div>
           </div>
         </div>
       )}

@@ -155,7 +155,7 @@ export default function CategorizationAnswers({
 
                     {/* Answer */}
                     <div className="inline-flex items-center gap-2">
-                      <span className="text-fluid-xxs font-normal text-slate-700">
+                      <span className="text-fluid-xxs font-light text-slate-700">
                         Response:
                       </span>
                       <Badge

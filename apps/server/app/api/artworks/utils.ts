@@ -48,13 +48,13 @@ export async function fetchArtworksFromCache(artIds: string[]) {
         redis
           .set(`artwork:${doc.art_id}`, JSON.stringify(doc))
           .catch((err) =>
-            console.error(`Failed to set cache for artwork:${doc.art_id}`, err)
+            console.error(`Failed to set cache for artwork:${doc.art_id}`, err),
           );
       }
     });
   }
 
-  return [...artworks].reverse()
+  return [...artworks];
 }
 
 // Helper function to fetch gallery IDs with caching
@@ -99,8 +99,6 @@ export async function getCachedArtwork(art_id: string) {
     const cached = await redis.get(cacheKey);
 
     if (cached) {
-      console.log(`Cache Hit: ${cacheKey}`);
-
       try {
         artworkJsonData =
           typeof cached === "string" ? JSON.parse(cached) : cached;
@@ -110,13 +108,8 @@ export async function getCachedArtwork(art_id: string) {
     }
 
     if (!artworkJsonData) {
-      console.log(`Cache Miss: ${cacheKey}`);
-
       const artwork = await Artworkuploads.findOne({ art_id }).lean().exec();
-      console.log(artwork, art_id);
       if (!artwork) throw new NotFoundError("Artwork not found");
-
-      console.log(artwork);
 
       artworkJsonData = artwork;
 
@@ -136,4 +129,21 @@ export async function getCachedArtwork(art_id: string) {
   }
 
   return artworkJsonData;
+}
+
+export async function purgeArtworkCache() {
+  let cursor = 0;
+
+  do {
+    const result = await redis.scan(cursor, {
+      match: "artwork:*",
+      count: 100,
+    });
+
+    cursor = Number(result[0]);
+
+    if (result[1].length) {
+      await redis.del(...result[1]);
+    }
+  } while (cursor !== 0);
 }

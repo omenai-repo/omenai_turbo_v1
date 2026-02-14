@@ -1,7 +1,7 @@
 "use client";
 import { use } from "react";
 import PageTitle from "../../../components/PageTitle";
-import QuoteForm from "../components/QuoteForm";
+import QuoteForm from "../components/QuoteFormV2";
 type Params = Promise<{ id: string }>;
 
 export default function QuoteFormWrapper(props: { params: Params }) {
@@ -9,7 +9,6 @@ export default function QuoteFormWrapper(props: { params: Params }) {
   const order_id = param_data.id;
   return (
     <div>
-      <PageTitle title={"Orders"} />
       <QuoteForm order_id={order_id} />
     </div>
   );

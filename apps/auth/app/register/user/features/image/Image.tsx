@@ -1,17 +1,40 @@
+import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import Image from "next/image";
 
 export default function ImageBlock() {
   return (
-    <aside className="h-full w-full relative flex-1 hidden md:block">
-      <Image
-        src={"/user_banner.png"}
-        alt="Individual sign up image block"
-        width={500}
-        height={500}
-        className="absolute inset-0 w-full h-full object-center object-cover"
-      />
+    <div className="relative hidden md:flex w-[40%] h-full bg-slate-50 p-6 flex-col justify-between">
+      {/* Logo/Home Link */}
+      <IndividualLogo />
 
-      <div className="absolute inset-0 bg-dark opacity-50 z-10" />
-    </aside>
+      {/* Framed Image Container */}
+      <div className="relative w-full h-[75%] rounded overflow-hidden shadow-2xl border-[12px] border-white">
+        <Image
+          src={"/images/collector_auth.jpg"}
+          alt="Individual sign up image block"
+          fill
+          priority
+          className="object-cover transition-transform duration-[10s] hover:scale-110"
+        />
+        {/* Subtle overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+        {/* Image Caption - Makes it feel like an editorial */}
+        <div className="absolute bottom-6 left-6 text-white">
+          <p className="text-xs uppercase tracking-widest opacity-80 mb-1">
+            Featured Collection
+          </p>
+          <p className="text-fluid-base font-light">Sister Journeying, 2023</p>
+        </div>
+      </div>
+
+      {/* Footer info for the side section */}
+      <div className="relative z-20">
+        <p className="text-[10px] text-slate-400 max-w-[200px] leading-relaxed uppercase tracking-tighter">
+          Connecting global collectors with the world&apos;s most exceptional
+          artists.
+        </p>
+      </div>
+    </div>
   );
 }

@@ -15,6 +15,8 @@ import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 
+/* ---------------- types ---------------- */
+
 type Payload = {
   services: DeletionTaskServiceType[];
   targetId: string;
@@ -35,98 +37,121 @@ type TaskSummary = {
   error_message?: string;
 };
 
+/* ---------------- helpers ---------------- */
+
+function buildServiceOperations(
+    services: DeletionTaskServiceType[],
+    targetId: string,
+    entityType: EntityType,
+    requestId: string
+) {
+  return services.map((service) => ({
+    service,
+    fn: deleteFromService(service, targetId, { entityType, requestId }),
+  }));
+}
+
+function normalizeTaskResult(
+    service: DeletionTaskServiceType,
+    result: PromiseSettledResult<any>
+): TaskSummary {
+  const completedAt = toUTCDate(new Date());
+
+  if (result.status === "fulfilled") {
+    const { success, note, count, error } = result.value;
+    const status = success ? "complete" : "incomplete";
+
+    return {
+      service,
+      status,
+      note,
+      deletedRecordSummary: count,
+      completedAt,
+      ...(status !== "complete" && {
+        error_message: error || "An error occurred during deletion",
+      }),
+    };
+  }
+
+  return {
+    service,
+    status: "incomplete",
+    note: "The service runner threw an unhandled exception. Manual intervention required",
+    deletedRecordSummary: {},
+    completedAt,
+    error_message:
+        (result.reason as Error)?.message || "Unknown error",
+  };
+}
+
+function buildAuditLog(
+    payload: Payload,
+    taskSummaries: TaskSummary[]
+): Omit<DeletionAuditLog, "signature"> {
+  return {
+    deletion_request_id: payload.requestId,
+    target_ref: {
+      target_id: payload.targetId,
+      target_email_hash: hashEmail(payload.targetEmail),
+    },
+    initiated_by: payload.deletionInitiatedBy,
+    tasks_summary: taskSummaries,
+    requested_at: payload.deletionRequestDate,
+    retention_expired_at: payload.dataRetentionExpiry,
+  };
+}
+
+function signAuditLog(
+    auditLog: Omit<DeletionAuditLog, "signature">
+) {
+  const secretKey = process.env.DATA_DELETION_LOG_SIGNING_KEY;
+
+  if (!secretKey) {
+    throw new Error("Server configuration error: Missing signing key.");
+  }
+
+  return createSignature(auditLog, secretKey);
+}
+
+/* ---------------- workflow ---------------- */
+
 export const { POST } = serve<Payload>(async (ctx) => {
-  const payload: Payload = ctx.requestPayload;
-  const {
-    services,
-    targetId,
-    entityType,
-    requestId,
-    targetEmail,
-    dataRetentionExpiry,
-    deletionRequestDate,
-    deletionInitiatedBy,
-  } = payload;
+  const payload = ctx.requestPayload;
 
   await ctx.run("deletion_workflow", async () => {
     await connectMongoDB();
-    const serviceOps = services.map((service) => ({
-      meta: { targetId, entityType, requestId, service },
-      fn: deleteFromService(service, targetId, { entityType, requestId }),
-    }));
 
-    const results = await Promise.allSettled(serviceOps.map((op) => op.fn));
+    const serviceOps = buildServiceOperations(
+        payload.services,
+        payload.targetId,
+        payload.entityType,
+        payload.requestId
+    );
 
-    // 1. Create ONE array to hold all task summaries
-    const taskSummaries: TaskSummary[] = [];
+    const results = await Promise.allSettled(
+        serviceOps.map((op) => op.fn)
+    );
 
-    results.forEach((item, index) => {
-      const { service } = serviceOps[index].meta;
-      const completedAt = toUTCDate(new Date());
+    const taskSummaries = results.map((result, index) =>
+        normalizeTaskResult(serviceOps[index].service, result)
+    );
 
-      if (item.status === "fulfilled") {
-        const { success, note, count, error } = item.value;
-        const status = success ? "complete" : "incomplete";
+    const auditLog = buildAuditLog(payload, taskSummaries);
+    const signature = signAuditLog(auditLog);
 
-        taskSummaries.push({
-          service,
-          status,
-          note,
-          deletedRecordSummary: count,
-          completedAt,
-          ...(status !== "complete" && {
-            error_message: error || "An error occurred during deletion",
-          }),
-        });
-      } else {
-        // This else block will never be hit as all functions are configured to return a positive response. But we log just in case
-        taskSummaries.push({
-          service,
-          status: "incomplete",
-          note: "The service runner threw an unhandled exception. Manual intervention required",
-          completedAt,
-          deletedRecordSummary: {},
-          error_message: (item.reason as Error)?.message || "Unknown error",
-        });
-      }
+    await DeletionAuditLogModel.create({
+      ...auditLog,
+      signature,
     });
 
-    // 3. Create ONE master audit log document
-    const deletionLog: Omit<DeletionAuditLog, "signature"> = {
-      deletion_request_id: requestId,
-      target_ref: {
-        target_id: targetId,
-        target_email_hash: hashEmail(targetEmail),
-      },
-      initiated_by: deletionInitiatedBy,
-      tasks_summary: taskSummaries,
-      requested_at: deletionRequestDate,
-      retention_expired_at: dataRetentionExpiry,
-    };
-
-    // 4. Load your REAL key from a secret manager (NOT process.env)
-    const secretKey = process.env.DATA_DELETION_LOG_SIGNING_KEY;
-    if (!secretKey) {
-      throw new Error("Server configuration error: Missing signing key.");
-    }
-
-    const signature = createSignature(deletionLog, secretKey);
-
-    // 6. Create the final log and insert it
-    const finalAuditLog = {
-      ...deletionLog,
-      signature,
-    };
-
-    await DeletionAuditLogModel.create(finalAuditLog);
     await DeletionRequestModel.updateOne(
-      { requestId },
-      { $set: { status: "completed" } }
+        { requestId: payload.requestId },
+        { $set: { status: "completed" } }
     );
   });
 
   return NextResponse.json(
-    { data: "Successfully ran deletion workflow" },
-    { status: 200 }
+      { data: "Successfully ran deletion workflow" },
+      { status: 200 }
   );
 });

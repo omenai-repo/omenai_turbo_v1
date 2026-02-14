@@ -2,8 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useWindowSize } from "usehooks-ts";
-// import Pagination from "./Pagination";
-
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { fetchArtworksByCriteria } from "@omenai/shared-services/artworks/fetchArtworksByCriteria";
 import { collectionsFilterStore } from "@omenai/shared-state-store/src/collections/collectionsFilterStore";
@@ -12,6 +10,8 @@ import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/comp
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
+import { useEffect } from "react";
+import { HiViewGrid } from "react-icons/hi";
 
 export function ArtworksListing({
   medium,
@@ -21,7 +21,6 @@ export function ArtworksListing({
   sessionId: string | undefined;
 }) {
   const {
-    isLoading,
     setArtworks,
     artworks,
     currentPage,
@@ -36,12 +35,12 @@ export function ArtworksListing({
   const { width } = useWindowSize();
 
   const { data: artworksArray, isLoading: loading } = useQuery({
-    queryKey: ["get_artworks_by_collection", medium],
+    queryKey: ["get_artworks_by_collection", medium, currentPage],
     queryFn: async () => {
       const response = await fetchArtworksByCriteria(
         currentPage,
         filterOptions,
-        medium
+        medium,
       );
 
       if (response?.data) {
@@ -53,37 +52,51 @@ export function ArtworksListing({
     },
     refetchOnWindowFocus: false,
     staleTime: 0,
-    gcTime: 0,
   });
+
+  // Reset page when medium changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [medium, setCurrentPage]);
 
   if (loading) {
     return <ArtworksListingSkeletonLoader />;
   }
-  if (
-    !artworksArray ||
-    artworksArray.data.length === 0 ||
-    artworks.length === 0
-  ) {
+
+  if (!artworks || artworks.length === 0) {
     return (
-      <div className="w-full h-full grid place-items-center">
-        <NotFoundData />
+      <div className="flex h-96 w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-neutral-50">
+        <div className="scale-75 opacity-50">
+          <NotFoundData />
+        </div>
       </div>
     );
   }
+
   const arts = catalogChunk(
     artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4
+    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
   );
 
   return (
-    <div className="w-full mb-5 mt-3">
-      <p className="text-fluid-xxs font-bold mb-4">{artwork_total} artworks:</p>
+    <div className="w-full">
+      {/* 1. Results Header */}
+      <div className="mb-8 flex items-center justify-between border-b border-neutral-100 pb-4">
+        <div className="flex items-center gap-2">
+          <HiViewGrid className="text-neutral-400" />
+          <span className="font-sans text-sm font-medium text-neutral-500">
+            Showing <strong className="text-dark ">{artwork_total}</strong>{" "}
+            results
+          </span>
+        </div>
+      </div>
 
-      <div className="flex flex-wrap gap-x-4 justify-center">
-        {arts.map((artworks: any[], index) => {
+      {/* 2. The Masonry Grid */}
+      <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+        {arts.map((column: any[], colIndex) => {
           return (
-            <div className="flex-1 gap-2 space-y-6" key={index}>
-              {artworks.map((art: any) => {
+            <div className="flex flex-1 flex-col gap-8" key={colIndex}>
+              {column.map((art: any) => {
                 return (
                   <ArtworkCard
                     key={art.art_id}
@@ -104,18 +117,20 @@ export function ArtworksListing({
             </div>
           );
         })}
-        {/* first */}
       </div>
 
-      <Pagination
-        total={pageCount}
-        fn={fetchArtworksByCriteria}
-        fnArgs={[filterOptions, medium]}
-        setArtworks={setArtworks}
-        setCurrentPage={setCurrentPage}
-        setIsLoading={setIsLoading}
-        currentPage={currentPage}
-      />
+      {/* 3. Pagination */}
+      <div className="mt-20 border-t border-neutral-100 pt-12 flex justify-center">
+        <Pagination
+          total={pageCount}
+          fn={fetchArtworksByCriteria}
+          fnArgs={[filterOptions, medium]}
+          setArtworks={setArtworks}
+          setCurrentPage={setCurrentPage}
+          setIsLoading={setIsLoading}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 }

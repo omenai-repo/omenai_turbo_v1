@@ -6,7 +6,7 @@ import TrendingArtworks from "./TrendingArtworks";
 import { fetchAllArtworkImpressions } from "@omenai/shared-services/artworks/fetchArtworkImpressions";
 import { SectionLoaderContainers } from "../loaders/SectionLoaderContainers";
 import Link from "next/link";
-import { MdArrowRightAlt } from "react-icons/md";
+import { HiArrowTrendingUp } from "react-icons/hi2";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 export default function TrendingArtworkWrapper({
@@ -18,50 +18,49 @@ export default function TrendingArtworkWrapper({
     queryKey: ["trending"],
     queryFn: async () => {
       const data = await fetchAllArtworkImpressions(1);
-
       if (!data?.isOk) throw new Error("Something went wrong");
       return data.data;
     },
-    staleTime: 30 * 60 * 1000, // Data is fresh for 5 minutes
-    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    staleTime: 30 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false, // Don't refetch if we have cached data
+    refetchOnMount: false,
   });
 
-  if (isLoading) return <SectionLoaderContainers title="Trending artworks" />;
+  if (isLoading) return <SectionLoaderContainers title="Loading Trends" />;
+
   return (
-    <>
-      <div className="flex md:flex-row flex-col gap-4 mb-5">
-        <div className="flex justify-between items-center w-full my-5">
+    <section className="w-full py-16 md:py-24 bg-white border-t border-neutral-100">
+      <div className="px-4">
+        {/* 1. MARKETPLACE HEADER */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <p className="text-fluid-xxs font-normal text-dark border-b border-dark/20 pb-1 my-5 w-fit">
-              Trending artworks
-            </p>
-            <p className="text-fluid-base sm:text-fluid-md font-semibold text-[#000000] mt-[20px]">
-              Hot on the Canvas: Trending Artworks You Need to See
-            </p>
-          </div>
-
-          <div className="hidden sm:flex flex-col items-end">
-            <p className="text-fluid-base font-semibold">
-              Spotlight on Today&apos;s Must-Have Pieces:
-            </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
-              On the Rise: Discover the Art
-            </p>
-            <p className="justify-self-end font-normal leading-snug text-fluid-xxs">
-              Everyone&apos;s Talking About
+            <div className="flex items-center gap-2 mb-3">
+              <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
+                <HiArrowTrendingUp size={14} />
+              </span>
+              <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
+                Trending works
+              </span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+              Trending Now
+            </h2>
+            <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
+              Works capturing collector attention this week.
             </p>
           </div>
         </div>
+
+        {/* 2. CONTENT */}
+        {artworks?.length === 0 ? (
+          <div className="h-64 w-full place-items-center grid border border-dashed border-neutral-200 rounded-lg">
+            <NotFoundData />
+          </div>
+        ) : (
+          <TrendingArtworks artworks={artworks} sessionId={sessionId} />
+        )}
       </div>
-      {artworks?.length === 0 && (
-        <div className="h-[500px] w-full place-items-center grid">
-          <NotFoundData />
-        </div>
-      )}
-
-      <TrendingArtworks artworks={artworks} sessionId={sessionId} />
-    </>
+    </section>
   );
 }

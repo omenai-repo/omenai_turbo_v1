@@ -24,9 +24,9 @@ export default function VerificationBlockerModal({ open }: { open: boolean }) {
         radius={"md"}
         centered
         p={16}
-        size={"lg"}
+        size={"sm"}
       >
-        <div className="bg-white text-black dark:bg-[#0f172a] dark:text-white w-full text-center p-8">
+        <div className="bg-white text-dark dark:bg-[#0f172a] dark:text-white w-full text-center p-8">
           <h2 className="text-fluid-sm md:text-fluid-md font-semibold mb-4">
             Verification in Progress
           </h2>
@@ -38,7 +38,7 @@ export default function VerificationBlockerModal({ open }: { open: boolean }) {
           <div className="w-full flex justify-center mt-8">
             <button
               onClick={async () => await handleSignOut()}
-              className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
             >
               Logout
             </button>

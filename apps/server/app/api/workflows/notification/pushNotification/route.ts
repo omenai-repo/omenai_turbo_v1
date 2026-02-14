@@ -5,10 +5,6 @@ import { ServerError } from "../../../../../custom/errors/dictionary/errorDictio
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { pushNotification } from "@omenai/shared-lib/notifications/sendMobileNotification";
 
-/**
- * Calls the notification creation API with a timeout.
- * Throws a ServerError on failure.
- */
 async function callCreateNotificationApi(data: any): Promise<any> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
@@ -20,11 +16,11 @@ async function callCreateNotificationApi(data: any): Promise<any> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
+          Origin: process.env.INTERNAL_SECRET as string,
         },
         body: JSON.stringify(data),
         signal: controller.signal,
-      }
+      },
     );
     clearTimeout(timeout);
 
@@ -33,7 +29,7 @@ async function callCreateNotificationApi(data: any): Promise<any> {
 
     if (!response.ok) {
       throw new ServerError(
-        result?.message || "Unable to create notification record"
+        result?.message || "Unable to create notification record",
       );
     }
 
@@ -45,7 +41,7 @@ async function callCreateNotificationApi(data: any): Promise<any> {
       throw new ServerError("Notification API request timed out");
     }
     throw new ServerError(
-      `Failed to create notification: ${error?.message || error}`
+      `Failed to create notification: ${error?.message || error}`,
     );
   }
 }
@@ -66,13 +62,9 @@ export const { POST } = serve<NotificationPayload>(async (ctx) => {
       ]);
 
       // Check both succeeded
-      if (
-        !createNotificationHistory ||
-        !sendNotification ||
-        sendNotification.success !== true
-      ) {
+      if (!createNotificationHistory || sendNotification?.success !== true) {
         throw new ServerError(
-          `Notification failed: history=${!!createNotificationHistory}, send=${sendNotification?.success}`
+          `Notification failed: history=${!!createNotificationHistory}, send=${sendNotification?.success}`,
         );
       }
 

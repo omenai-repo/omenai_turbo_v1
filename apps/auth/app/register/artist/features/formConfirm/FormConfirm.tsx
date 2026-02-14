@@ -23,12 +23,12 @@ export default function FormConfirm() {
       exit={{ y: -100 }}
       transition={{ duration: 0.33 }}
     >
-      <p className="text-fluid-xxs my-4 font-normal text-dark/70">
+      <p className="text-fluid-xxs my-4 font-light text-dark/70">
         Review the following terms and confirm your agreement to proceed with
         account creation
       </p>
 
-      <div className="bg-white border border-dark/10 rounded-lg p-6 my-6">
+      <div className="bg-white border border-dark/10 rounded p-6 my-6">
         <h3 className="text-fluid-xxs font-semibold text-dark mb-4">
           Platform Terms
         </h3>
@@ -37,7 +37,7 @@ export default function FormConfirm() {
           <li className="flex items-start gap-3">
             <span className="text-dark font-medium mt-0.5">•</span>
             <span>
-              A 35% commission applies to all artwork sales, covering marketing,
+              A 39% commission applies to all artwork sales, covering marketing,
               platform visibility, payment processing, shipping coordination,
               and dedicated customer support.
             </span>
@@ -64,7 +64,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="terms-confirmation"
-              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
+              className="text-fluid-xxs font-light text-dark/70 cursor-pointer"
             >
               I have reviewed and accept the terms outlined above
             </Label>
@@ -81,7 +81,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="policy-acceptance"
-              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
+              className="text-fluid-xxs font-light text-dark/70 cursor-pointer"
             >
               I accept Omenai's{" "}
               <Link
@@ -113,7 +113,7 @@ export default function FormConfirm() {
             />
             <Label
               htmlFor="mailing-consent"
-              className="text-fluid-xxs font-normal text-dark/70 cursor-pointer"
+              className="text-fluid-xxs font-light text-dark/70 cursor-pointer"
             >
               I'd like to receive updates, promotions, and news from Omenai
               (optional)

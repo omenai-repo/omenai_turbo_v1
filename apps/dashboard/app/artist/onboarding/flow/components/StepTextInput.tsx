@@ -1,6 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { StepComponentProps } from "../OnboardingContainer";
-import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  INPUT_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import React from "react";
 
@@ -24,7 +27,7 @@ export default function TextStep({
   const isValueTextString = typeof currentValue === "string";
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const strippedValue = e.target.value.replace(/^0+/, "");
 
@@ -33,7 +36,7 @@ export default function TextStep({
 
   return (
     <div className="flex flex-col items-center w-full max-w-xl">
-      <h2 className="text-fluid-xs font-normal text-slate-800 mb-8 text-center">
+      <h2 className="text-fluid-xs font-light text-slate-800 mb-8 text-center">
         {question}
       </h2>
       {isBio ? (

@@ -4,33 +4,31 @@ import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   CombinedConfig,
   SubscriptionModelSchemaTypes,
   SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["gallery"],
 };
-
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+const RetrieveSubDataSchema = z.object({
+  gallery_id: z.string(),
+});
+export const POST = withRateLimit(config)(async function POST(
+  request: Request,
 ) {
   try {
+    const { gallery_id } = await validateRequestBody(
+      request,
+      RetrieveSubDataSchema,
+    );
     await connectMongoDB();
-
-    const { gallery_id } = await request.json();
-    if (!gallery_id) {
-      return NextResponse.json(
-        { message: "Missing gallery_id parameter" },
-        { status: 400 }
-      );
-    }
-
     // Fetch subscription and ALL plans concurrently.
     const [subscription_data, allPlans] = await Promise.all([
       Subscriptions.findOne({
@@ -42,7 +40,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!subscription_data) {
       return NextResponse.json(
         { message: "No subscription data found", data: null },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -50,7 +48,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     // Local filter on the set of plans returned by find()
     const matchedPlan = Array.isArray(allPlans)
       ? ((allPlans as SubscriptionPlanDataTypes[]).find(
-          (plan) => plan.name === planType
+          (plan) => plan.name === planType,
         ) ?? null)
       : null;
 
@@ -60,18 +58,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         data: subscription_data,
         plan: matchedPlan,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "subscription: retrieve sub data",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

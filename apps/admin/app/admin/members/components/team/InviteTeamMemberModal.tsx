@@ -1,290 +1,153 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, TextInput, Select, Button } from "@mantine/core";
+import {
+  Modal,
+  TextInput,
+  Select,
+  Button,
+  Stack,
+  Text,
+  Alert,
+} from "@mantine/core";
+import { Shield, UserRoundPen, Eye, Send, Info } from "lucide-react";
 import { TeamMember } from "@omenai/shared-types";
-import { Shield, UserRoundPen, Eye, Send } from "lucide-react";
 import { inviteNewMember } from "@omenai/shared-services/admin/invite_new_member";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRollbar } from "@rollbar/react";
+
 interface InviteTeamMemberModalProps {
   opened: boolean;
   onClose: () => void;
 }
 
-const roleOptions = [
-  {
-    value: "Admin",
-    label: "Admin",
-    icon: <Shield size={20} absoluteStrokeWidth />,
-  },
-  {
-    value: "Editor",
-    label: "Editor",
-    icon: <UserRoundPen size={20} absoluteStrokeWidth />,
-  },
-  {
-    value: "Viewer",
-    label: "Viewer",
-    icon: <Eye size={20} absoluteStrokeWidth />,
-  },
+const ROLE_OPTIONS = [
+  { value: "Admin", label: "Admin", icon: <Shield size={16} /> },
+  { value: "Editor", label: "Editor", icon: <UserRoundPen size={16} /> },
+  { value: "Viewer", label: "Viewer", icon: <Eye size={16} /> },
 ];
 
-// Helper to check if an email address belongs to the allowed domain
-function isAllowedDomainEmail(email: string): boolean {
-  // Add allowed domains here (expand array if needed)
-  const allowedDomain = "omenai.net";
-  const parts = email.split("@");
-  if (parts.length !== 2) return false;
-  return parts[1].toLowerCase() === allowedDomain;
+const ALLOWED_DOMAIN = ["omenai.net", "omenai.app"];
+
+function isValidOrgEmail(email: string) {
+  const [_, domain] = email.split("@");
+  return ALLOWED_DOMAIN.includes(domain?.toLowerCase());
 }
 
 export default function InviteTeamMemberModal({
   opened,
   onClose,
 }: InviteTeamMemberModalProps) {
-  const queryClient = useQueryClient();
-  const [email, setEmail] = useState("");
-  const rollbar = useRollbar();
-  const [role, setRole] = useState<TeamMember["access_role"]>("Viewer");
   const { csrf } = useAuth({ requiredRole: "admin" });
-  const [loading, setLoading] = useState<boolean>(false);
-  const handleSubmit = async () => {
+  const queryClient = useQueryClient();
+  const rollbar = useRollbar();
+
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<TeamMember["access_role"]>("Viewer");
+  const [loading, setLoading] = useState(false);
+
+  const resetAndClose = () => {
+    setEmail("");
+    setRole("Viewer");
+    onClose();
+  };
+
+  const handleInvite = async () => {
+    if (!email) return;
+
+    // if (!isValidOrgEmail(email)) {
+    //   toast_notif(
+    //     `Only ${ALLOWED_DOMAIN} email addresses can be invited.`,
+    //     "error",
+    //   );
+    //   return;
+    // }
+
     setLoading(true);
-    if (email) {
-      try {
-        if (!isAllowedDomainEmail(email)) {
-          toast_notif(
-            "You can only invite members of your organization to this team",
-            "error"
-          );
+    try {
+      const response = await inviteNewMember(email, role, csrf || "");
 
-          return;
-        }
-        const response = await inviteNewMember(email, role, csrf || "");
-
-        if (!response.isOk) {
-          toast_notif(response.message, "error");
-          return;
-        } else {
-          toast_notif(response.message, "success");
-          await queryClient.invalidateQueries({
-            queryKey: ["fetch_all_teamMembers"],
-          });
-          setEmail("");
-          setRole("Viewer");
-          onClose();
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          rollbar.error(error);
-        } else {
-          rollbar.error(new Error(String(error)));
-        }
-        toast_notif("Something went wrong, please contact support", "error");
+      if (!response.isOk) {
+        toast_notif(response.message, "error");
         return;
-      } finally {
-        setLoading(false);
       }
+
+      toast_notif(response.message, "success");
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch_all_teamMembers"],
+      });
+
+      resetAndClose();
+    } catch (err) {
+      rollbar.error(err instanceof Error ? err : new Error(String(err)));
+      toast_notif("Something went wrong. Please contact support.", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Modal
       opened={opened}
-      onClose={onClose}
-      title="Invite Team Member"
+      onClose={resetAndClose}
       centered
       size="md"
-      radius="sm"
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      styles={{
-        root: {
-          ".mantineModalContent": {
-            backgroundColor: "#ffffff",
-            border: "1px solid rgba(0, 0, 0, 0.08)",
-            boxShadow:
-              "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          },
-          ".mantineModalHeader": {
-            backgroundColor: "#ffffff",
-            borderBottom: "1px solid #f3f4f6",
-            padding: "1.5rem 2rem",
-          },
-          ".mantineModalTitle": {
-            color: "#111827",
-            fontSize: "1.5rem",
-            fontWeight: 700,
-            letterSpacing: "-0.025em",
-          },
-          ".mantineModalClose": {
-            color: "#6b7280",
-            backgroundColor: "#f9fafb",
-            borderRadius: "0.5rem",
-            "&:hover": {
-              backgroundColor: "#f3f4f6",
-              color: "#111827",
-            },
-          },
-          ".mantineModalBody": {
-            padding: "2rem",
-          },
-        },
-      }}
+      radius="md"
+      title="Invite team member"
+      overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
     >
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <p className="text-sm text-gray-600">
-            Invite a new member to collaborate with your team
-          </p>
-        </div>
+      <Stack gap="sm">
+        <Text size="sm" c="dimmed">
+          Invite a colleague to join your team and assign their access level.
+        </Text>
 
         <TextInput
-          label="Email Address"
-          placeholder="colleague@omenai.net"
+          label="Work email"
+          placeholder={`name@${ALLOWED_DOMAIN}`}
           value={email}
-          radius="md"
-          variant="filled"
           onChange={(e) => setEmail(e.currentTarget.value)}
-          styles={{
-            label: {
-              color: "#374151",
-              marginBottom: "0.5rem",
-              fontSize: "0.875rem",
-              fontWeight: 600,
-            },
-            input: {
-              backgroundColor: "#f9fafb",
-              border: "1px solid #e0e0e0",
-              color: "#111827",
-              fontSize: "1rem",
-              height: "3rem",
-              transition: "all 0.2s ease",
-              "&:focus": {
-                borderColor: "#3b82f6",
-                backgroundColor: "#ffffff",
-              },
-              "&::placeholder": {
-                color: "#9ca3af",
-              },
-            },
-          }}
+          radius="md"
+          required
         />
 
         <Select
           label="Role"
           value={role}
           onChange={(val) => setRole(val as TeamMember["access_role"])}
-          data={roleOptions}
-          variant="filled"
+          data={ROLE_OPTIONS}
+          leftSection={ROLE_OPTIONS.find((r) => r.value === role)?.icon}
           radius="md"
-          leftSection={
-            <div className="text-gray-600">
-              {roleOptions.find((r) => r.value === role)?.icon ?? null}
-            </div>
-          }
-          styles={{
-            label: {
-              color: "#374151",
-              marginBottom: "0.5rem",
-              fontSize: "0.8rem",
-              fontWeight: 600,
-            },
-            input: {
-              backgroundColor: "#f9fafb",
-              border: "1px solid #e0e0e0",
-              height: "3rem",
-              fontSize: "1rem",
-              transition: "all 0.2s ease",
-              "&:focus": {
-                borderColor: "#3b82f6",
-                backgroundColor: "#ffffff",
-              },
-            },
-            dropdown: {
-              backgroundColor: "white",
-              border: "1px solid #e5e7eb",
-              borderRadius: "0.75rem",
-              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-            },
-            option: {
-              fontSize: "0.95rem",
-              padding: "0.75rem 1rem",
-              "&[dataHovered]": {
-                backgroundColor: "#f3f4f6",
-              },
-              "&[dataSelected]": {
-                backgroundColor: "#3b82f6",
-                color: "white",
-              },
-            },
-          }}
         />
 
-        <div className="bg-blue-50 border border-blue-200 rounded p-4">
-          <p className="text-sm text-blue-800">
-            The invited member will receive an email with instructions to join
-            your team.
-          </p>
-        </div>
+        <Alert icon={<Info size={16} />} color="blue" variant="light">
+          The invited member will receive an email with instructions to join
+          your team.
+        </Alert>
 
         <div className="flex gap-3 pt-2">
           <Button
-            onClick={onClose}
-            disabled={loading}
             variant="subtle"
             fullWidth
-            size="sm"
-            radius="md"
-            styles={{
-              root: {
-                color: "#6b7280",
-                backgroundColor: "#f9fafb",
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  backgroundColor: "#f3f4f6",
-                  color: "#111827",
-                },
-              },
-            }}
+            disabled={loading}
+            onClick={resetAndClose}
           >
             Cancel
           </Button>
+
           <Button
-            onClick={handleSubmit}
             fullWidth
-            size="sm"
-            radius="md"
-            disabled={!email || loading}
             loading={loading}
-            leftSection={<Send size={16} absoluteStrokeWidth />}
-            styles={{
-              root: {
-                backgroundColor: "#0f172a",
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  backgroundColor: "#2563eb",
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 4px 12px rgba(59, 130, 246, 0.4)",
-                },
-                "&:disabled": {
-                  backgroundColor: "#e5e7eb",
-                  color: "#9ca3af",
-                },
-              },
-            }}
+            disabled={!email}
+            leftSection={<Send size={16} />}
+            onClick={handleInvite}
+            color="dark"
           >
-            Send Invite
+            Send invite
           </Button>
         </div>
-      </div>
+      </Stack>
     </Modal>
   );
 }

@@ -16,16 +16,16 @@ export default function ForbiddenPage({
     <div className="min-h-[90svh] bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-4 -right-4 w-72 h-72 bg-red-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-gray-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-orange-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
+        <div className="absolute -top-4 -right-4 w-72 h-72 bg-red-100 rounded mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-gray-200 rounded mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-orange-100 rounded mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
       </div>
 
       <div className="relative max-w-md w-full">
         {/* Main card */}
         <div className="bg-white rounded shadow-2xl border border-gray-200/50 p-8 text-center">
           {/* Icon */}
-          <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
+          <div className="mx-auto w-20 h-20 bg-red-100 rounded flex items-center justify-center mb-6">
             <ShieldX className="w-10 h-10 text-red-600" />
           </div>
 

@@ -1,24 +1,32 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
+const GetUserCurratedArtworks = z.object({
+  page: z.number(),
+  preferences: z.any(),
+  filters: z.any(),
+});
 
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
-  const PAGE_SIZE = 30;
+  const PAGE_SIZE = 20;
   try {
     await connectMongoDB();
 
-    const { page, preferences, filters } = await request.json();
+    const { page, preferences, filters } = await validateRequestBody(
+      request,
+      GetUserCurratedArtworks,
+    );
     const skip = (page - 1) * PAGE_SIZE;
 
     const galleries = await getCachedGalleryIds();
@@ -73,18 +81,18 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
         pageCount: Math.ceil(total / PAGE_SIZE),
         total,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: get user curated Artwork",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -3,146 +3,98 @@ import {
   CircleDollarSign,
   Cog,
   Landmark,
-  LogOut,
   Newspaper,
   Palette,
   Proportions,
   UserRoundPen,
+  ChartColumnBig,
+  Headset,
+  Image,
 } from "lucide-react";
-import { KeyList } from "../utils/canAccessRoute";
+// types/sidebar.ts
+import { LucideIcon } from "lucide-react";
+export type SidebarSection = "actions" | "management" | "activity" | "account";
 
-export const gallery = (
-  <Landmark
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-export const artist = (
-  <Palette
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-
-// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
-const profile = (
-  <UserRoundPen
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const editorials = (
-  <Newspaper
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const settings = (
-  <Cog
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const logout = (
-  <LogOut
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const taxes = (
-  <CircleDollarSign
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-export const promotionals = (
-  <Proportions
-    size={20}
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-
-export const navMockData: NavMockData = {
-  actions: [
-    {
-      title: "Gallery requests",
-      icon: gallery,
-      url: "/admin/requests/gallery",
-      key: "requests",
-    },
-    {
-      title: "Artist requests",
-      icon: artist,
-      url: "/admin/requests/artist",
-      key: "requests",
-    },
-  ],
-  activity: [
-    {
-      title: "Upload promotionals",
-      icon: promotionals,
-      url: "/admin/promotionals",
-      key: "promotionals",
-    },
-    {
-      title: "Upload editorials",
-      icon: editorials,
-      url: "/admin/editorials",
-      key: "editorials",
-    },
-    {
-      title: "Revenue and tax activity",
-      icon: taxes,
-      url: "/admin/taxes",
-      key: "taxes",
-    },
-  ],
-  management: [
-    {
-      title: "Team members",
-      icon: profile,
-      url: "/admin/members",
-      key: "team",
-    },
-  ],
-  account: [
-    {
-      title: "Settings",
-      icon: settings,
-      url: "/admin/settings",
-      key: "settings",
-    },
-
-    { title: "Sign out", icon: logout, url: "/", key: "logout" },
-  ],
-};
-
-export type NavMockData = {
-  actions: NavMockDataItem[];
-  activity: NavMockDataItem[];
-  management: NavMockDataItem[];
-  account: NavMockDataItem[];
-};
-
-type NavMockDataItem = {
-  title: string;
-  icon: React.ReactNode;
-  url: string;
+export type SidebarItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  section: SidebarSection;
   key: KeyList;
 };
+
+import { KeyList } from "../utils/canAccessRoute";
+
+export const sidebarItems: SidebarItem[] = [
+  {
+    label: "Gallery requests",
+    icon: Landmark,
+    href: "/admin/requests/gallery",
+    section: "actions",
+    key: "requests",
+  },
+  {
+    label: "Artist requests",
+    icon: Palette,
+    href: "/admin/requests/artist",
+    section: "actions",
+    key: "requests",
+  },
+  {
+    label: "Support tickets",
+    icon: Headset,
+    href: "/admin/support",
+    section: "actions",
+    key: "support",
+  },
+
+  {
+    label: "Artworks",
+    icon: Image,
+    href: "/admin/artworks",
+    section: "actions",
+    key: "artworks",
+  },
+  {
+    label: "Upload promotionals",
+    icon: Proportions,
+    href: "/admin/promotionals",
+    section: "activity",
+    key: "promotionals",
+  },
+  {
+    label: "Upload editorials",
+    icon: Newspaper,
+    href: "/admin/editorials",
+    section: "activity",
+    key: "editorials",
+  },
+  {
+    label: "Revenue and tax activity",
+    icon: CircleDollarSign,
+    href: "/admin/taxes",
+    section: "activity",
+    key: "taxes",
+  },
+  {
+    label: "Team members",
+    icon: UserRoundPen,
+    href: "/admin/members",
+    section: "management",
+    key: "team",
+  },
+  {
+    label: "Mission Control",
+    icon: ChartColumnBig,
+    href: "/admin/analytics",
+    section: "management",
+    key: "analytics",
+  },
+  {
+    label: "Settings",
+    icon: Cog,
+    href: "/admin/settings",
+    section: "account",
+    key: "settings",
+  },
+];

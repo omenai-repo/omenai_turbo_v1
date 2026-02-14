@@ -12,19 +12,22 @@ import { sendPasswordConfirmationCodeMail } from "@omenai/shared-emails/src/mode
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
-
+const RequestPasswordSchema = z.object({
+  id: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
+    const { id } = await validateRequestBody(request, RequestPasswordSchema);
     await connectMongoDB();
-    const { id } = await request.json();
 
     const account = await AccountGallery.findOne({
       gallery_id: id,
@@ -47,7 +50,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (!create_code)
       throw new Error(
-        "Something went wrong with this request, Please contact support."
+        "Something went wrong with this request, Please contact support.",
       );
 
     await sendPasswordConfirmationCodeMail({
@@ -58,19 +61,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Confirmation code sent to email address" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "gallery: request password confirmation",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -1,6 +1,10 @@
 // Enhanced validateCsrf with proper cleanup
 import { cookies } from "next/headers";
-import { getSessionFromCookie, getSession } from "./session";
+import {
+  getSessionFromCookie,
+  getSession,
+  getSessionIdFromRequest,
+} from "./session";
 import {
   AccountAdminSchemaTypes,
   AdminAccessRoleTypes,
@@ -25,9 +29,9 @@ export async function validateCsrf({
   sessionData?: SessionData & { csrfToken: string };
 }> {
   try {
+    const authorization = req.headers.get("Authorization") ?? "";
     const cookieStore = await cookies();
-    const cookieSession = await getSessionFromCookie(cookieStore);
-    const sessionId = cookieSession.sessionId;
+    const sessionId = await getSessionIdFromRequest(req, cookieStore);
 
     if (!sessionId) {
       return {
@@ -36,18 +40,10 @@ export async function validateCsrf({
       };
     }
 
-    const userAgent = req.headers.get("user-agent") || "";
-
-    // Pass cookieStore for automatic cleanup if session is invalid
-    const sessionData = await getSession(
-      sessionId,
-      userAgent,
-      false,
-      cookieStore
-    );
+    // Pass cookieStore for automatic cleanup if session is invalid or session refresh
+    const sessionData = await getSession(sessionId, cookieStore);
 
     if (!sessionData) {
-      // Session was already cleaned up by getSession
       return {
         valid: false,
         message: "Session expired or invalid. Please log back in",
@@ -56,7 +52,10 @@ export async function validateCsrf({
 
     const incomingToken = req.headers.get("X-Csrf-token");
 
-    if (!incomingToken || incomingToken !== sessionData.csrfToken) {
+    if (
+      !authorization &&
+      (!incomingToken || incomingToken !== sessionData.csrfToken)
+    ) {
       return { valid: false, message: "Invalid session token, please login" };
     }
 
@@ -72,11 +71,11 @@ export async function validateCsrf({
     if ((allowedAdminAccessRoles?.length ?? 0) > 0) {
       const adminAccessRole = (
         sessionData.userData as unknown as AccountAdminSchemaTypes
-      ).access_role as AdminAccessRoleTypes;
+      ).access_role;
 
       if (
         !(allowedAdminAccessRoles as AdminAccessRoleTypes[]).includes(
-          adminAccessRole
+          adminAccessRole,
         )
       ) {
         return {
@@ -93,7 +92,6 @@ export async function validateCsrf({
   }
 }
 
-// Optional: Add a simpler auth check for non-CSRF routes
 export async function validateSession(req: Request): Promise<{
   valid: boolean;
   message?: string;
@@ -101,28 +99,26 @@ export async function validateSession(req: Request): Promise<{
 }> {
   try {
     const cookieStore = await cookies();
-    const cookieSession = await getSessionFromCookie(cookieStore);
-    const sessionId = cookieSession?.sessionId;
+    const sessionId = await getSessionIdFromRequest(req, cookieStore);
 
-    if (!sessionId) {
-      return { valid: false, message: "Session ID missing or invalid" };
-    }
+    // 1. Guest User: No Session ID -> Allow Access (Valid)
+    if (!sessionId) return { valid: true };
 
-    const userAgent = req.headers.get("user-agent") || "";
-    const sessionData = await getSession(
-      sessionId,
-      userAgent,
-      false,
-      cookieStore
-    );
+    // 2. Logged In User: Refresh Session
+    // Since you removed userAgent/middleware args, we just pass the ID and Store
+    const sessionData = await getSession(sessionId, cookieStore);
 
+    // 3. Stale/Invalid Session -> Allow Access as Guest (Soft Fail)
+    // getSession has already cleaned up the invalid Redis key/Cookie
     if (!sessionData) {
-      return { valid: false, message: "Session expired or invalid" };
+      return { valid: true, message: "Session expired or invalid" };
     }
 
+    // 4. Active Session -> Return Data
     return { valid: true, sessionData };
   } catch (err) {
     console.error("Session validation error:", err);
+    // On internal error, we default to blocking to prevent security bypass
     return { valid: false, message: "Internal server error" };
   }
 }

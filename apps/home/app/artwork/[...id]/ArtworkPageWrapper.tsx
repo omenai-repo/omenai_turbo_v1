@@ -3,7 +3,7 @@
 import { fetchSingleArtwork } from "@omenai/shared-services/artworks/fetchSingleArtwork";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import { useQuery } from "@tanstack/react-query";
-import ArtistInformation from "./components/ArtistInformation";
+import { ArtistInformation } from "./components/ArtistInformation";
 import FullArtworkDetails from "./components/FullArtworkDetails";
 import ProductBox from "./components/ProductBox";
 import SimilarArtworks from "./components/SimilarArtworks";
@@ -15,41 +15,42 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 export default function ArtworkPageWrapper({ param }: { param: string }) {
   const { user } = useAuth({ requiredRole: "user" });
 
-const { data: artworkDetails, isLoading } = useQuery({
-  queryKey: ["fetch_single_artwork_data", param],
-  queryFn: async () => {
-    const artworkDetails = await fetchSingleArtwork(param);
-    if (!artworkDetails?.isOk) {
-      throw new Error('Failed to fetch artwork'); // Properly handle errors
-    } else {
-      return artworkDetails.data;
-    }
-  },
-  staleTime: 0, // Data is immediately stale - forces refetch
-  gcTime: 0, // Don't keep in cache at all
-  refetchOnWindowFocus: false,
-  refetchOnMount: true, // Always refetch when component mounts
-  enabled: !!param, // Only fetch if we have a param id
-});
+  const { data: artworkDetails, isLoading } = useQuery({
+    queryKey: ["fetch_single_artwork_data", param],
+    queryFn: async () => {
+      const artworkDetails = await fetchSingleArtwork(param);
+      if (!artworkDetails?.isOk) {
+        throw new Error("Failed to fetch artwork");
+      } else {
+        return artworkDetails.data;
+      }
+    },
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    enabled: !!param,
+  });
 
   if (isLoading) {
     return <Load />;
   }
 
   return (
-    <div className="relative">
-      <div>
-        <DesktopNavbar />
+    <div className="min-h-screen bg-white text-dark relative">
+      <DesktopNavbar />
+      <main className="pt-4 pb-8 relative">
+        <ProductBox
+          data={artworkDetails}
+          sessionId={user ? user.id : undefined}
+        />
 
-        <div className="my-5">
-          <ProductBox
-            data={artworkDetails}
-            sessionId={user ? user.id : undefined}
-          />
-          <hr className="border-dark/10 my-5" />
-          <div className="grid sm:grid-cols-2 gap-6">
+        <div className="mt-24 grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-neutral-200 pt-12">
+          <div className="lg:col-span-7 space-y-12">
             <FullArtworkDetails data={artworkDetails} />
+          </div>
 
+          <div className="lg:col-span-5">
             <ArtistInformation
               name={artworkDetails.artist}
               year={artworkDetails.artist_birthyear}
@@ -57,18 +58,21 @@ const { data: artworkDetails, isLoading } = useQuery({
             />
           </div>
         </div>
-        <SimilarArtworks
-          title={artworkDetails.title}
-          sessionId={user ? user.id : undefined}
-          medium={artworkDetails.medium}
-        />
-        <SimilarArtworksByArtist
-          sessionId={user ? user.id : undefined}
-          artist={artworkDetails.artist}
-        />
 
-        <Footer />
-      </div>
+        <div className="mt-32 space-y-24">
+          <SimilarArtworks
+            title={artworkDetails.title}
+            sessionId={user ? user.id : undefined}
+            medium={artworkDetails.medium}
+          />
+          <SimilarArtworksByArtist
+            sessionId={user ? user.id : undefined}
+            artist={artworkDetails.artist}
+          />
+        </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

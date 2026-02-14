@@ -130,19 +130,19 @@ export default function ArtworkCanvas({
 
         <div className=" bg-transparent pr-3 py-1 w-full">
           <div className="flex flex-col my-2">
-            <p className="font-normal  text-fluid-xxs text-dark text-ellipsis overflow-hidden whitespace-nowrap">
+            <p className="font-light  text-fluid-xxs text-dark text-ellipsis overflow-hidden whitespace-nowrap">
               {name}
             </p>
 
             <div className="flex justify-between items-center">
-              <p className="font-normal  text-[#707070] italic text-fluid-xxs text-ellipsis overflow-hidden whitespace-nowrap">
+              <p className="font-light  text-[#707070] italic text-fluid-xxs text-ellipsis overflow-hidden whitespace-nowrap">
                 {artist}
               </p>
               {/* <HiPencil /> */}
               {isDashboard && (
                 <Link href={`/gallery/artworks/edit?id=${name}`}>
                   <button
-                    className={`disabled:cursor-not-allowed disabled:text-dark/20 text-fluid-xxs font-normal underline cursor-pointer`}
+                    className={`disabled:cursor-not-allowed disabled:text-dark/20 text-fluid-xxs font-light underline cursor-pointer`}
                   >
                     Edit artwork
                   </button>

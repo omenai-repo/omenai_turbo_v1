@@ -28,7 +28,6 @@ const INITIAL_WAITLIST_STATE: WaitlistStateData = {
   years_of_practice: null,
   formal_education: null,
 };
-
 type UserType = "collector" | "artist";
 
 export const RegistrationTerminal = () => {
@@ -183,13 +182,13 @@ export const RegistrationTerminal = () => {
           {step === 2 && (
             <button
               onClick={() => setStep(1)}
-              className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-neutral-400 hover:text-black transition-colors"
+              className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-neutral-400 hover:text-dark transition-colors"
             >
               <ArrowLeft size={12} /> Edit Profile
             </button>
           )}
         </div>
-        <h2 className="font-serif text-3xl md:text-4xl text-black">
+        <h2 className="font-serif text-2xl md:text-3xl text-black">
           {step === 1
             ? "Join the waitlist."
             : "Complete your waitlist profile."}
@@ -223,7 +222,7 @@ export const RegistrationTerminal = () => {
                       type="button"
                       onClick={() => handleSetUserType(r)}
                       className={`flex-1 py-3 text-center font-mono text-[10px] uppercase tracking-[0.2em] transition-all
-                          ${userType === r ? "bg-black text-white shadow-sm border border-neutral-100" : "text-black bg-white border-neutral-100 hover:text-neutral-600"}
+                          ${userType === r ? "bg-dark text-white shadow-sm border border-neutral-100" : "text-dark bg-white border-neutral-100 hover:text-neutral-600"}
                         `}
                     >
                       {r}
@@ -262,7 +261,7 @@ export const RegistrationTerminal = () => {
                     <CountryDropdown
                       value={waitlistData.country}
                       onChange={(val: string) => handleCountrySelect(val)}
-                      className="w-full appearance-none border-b border-neutral-300 bg-transparent py-3 font-sans focus:ring-0 text-sm text-black focus:border-black focus:outline-none transition-colors rounded-none"
+                      className="w-full appearance-none border-b border-neutral-300 bg-transparent py-3 font-sans focus:ring-0 text-sm text-dark focus:border-dark focus:outline-none transition-colors rounded-none"
                     />
                   </div>
                   <AtelierInput
@@ -370,7 +369,7 @@ export const RegistrationTerminal = () => {
               <div className="pt-8">
                 <button
                   type="submit"
-                  className="group w-full bg-black text-white h-14 flex items-center justify-between px-6 hover:bg-neutral-800 transition-colors"
+                  className="group w-full bg-dark text-white h-14 flex items-center justify-between px-6 hover:bg-neutral-800 transition-colors"
                 >
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">
                     Proceed

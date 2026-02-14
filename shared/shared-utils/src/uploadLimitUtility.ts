@@ -3,6 +3,7 @@
  */
 type PlanName = "Basic" | "Pro" | "Premium";
 type PlanInterval = "monthly" | "yearly";
+
 const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
   Basic: { monthly: 5, yearly: 75 },
   Pro: { monthly: 15, yearly: 225 },
@@ -11,9 +12,18 @@ const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
     yearly: Number.MAX_SAFE_INTEGER,
   },
 };
+
 export function getUploadLimitLookup(
   planName: PlanName,
-  planInterval: PlanInterval
+  planInterval: PlanInterval,
+  count?: number,
 ): number {
-  return uploadLimits[planName][planInterval];
+  const limit = uploadLimits[planName][planInterval];
+
+  // If count is provided and the limit is not "Unlimited", multiply the limit
+  if (count && limit !== Number.MAX_SAFE_INTEGER) {
+    return limit * count;
+  }
+
+  return limit;
 }

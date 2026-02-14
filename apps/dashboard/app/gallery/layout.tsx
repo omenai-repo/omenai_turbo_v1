@@ -1,7 +1,5 @@
 "use client";
 import NextTopLoader from "nextjs-toploader";
-import PageLayout from "./features/PageLayout";
-import Appbar from "./components/Appbar";
 import { useWindowSize } from "usehooks-ts";
 import { UploadOrderRejectionReason } from "./modals/ProvideOrderRejectionReason";
 import { DeleteAccountConfirmationModal } from "./modals/DeleteAccountConfirmationMdal";
@@ -9,12 +7,15 @@ import { UpdatePasswordModal } from "./modals/UpdatePasswordModal";
 import GetStartedWithStripe from "./modals/GetStartedWithStripe";
 import { useQuery } from "@tanstack/react-query";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
-import { HomeLoad } from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { UpdateAddressModal } from "./modals/UpdateAddressModal";
 import { UpdateLogoModal } from "./modals/UpdateLogoModal";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import NoMobileView from "../artist/components/NoMobileView";
+import { DesktopSidebar } from "./features/Sidebar";
+import { MobileSidebar } from "./features/MobileLayout";
+import { MainContent } from "./features/MainContent";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -28,7 +29,6 @@ export default function GalleryDashboardLayout({
     queryFn: async () => {
       const acc = await getAccountId(user.gallery_id as string, csrf || "");
 
-      console.log(acc);
       if (!acc?.isOk)
         toast_notif("Something went wrong, Please refresh the page", "error");
       else return acc.data;
@@ -37,7 +37,7 @@ export default function GalleryDashboardLayout({
   });
 
   if (isLoading) {
-    return <HomeLoad />;
+    return <Load />;
   }
 
   const isNotStripeConnected = account.connected_account_id === null;
@@ -46,35 +46,37 @@ export default function GalleryDashboardLayout({
 
   return (
     <>
-      {width < 1024 ? (
+      {width < 1280 ? (
         <NoMobileView />
       ) : (
-        <div className=" w-full h-full">
+        <div className="flex h-full overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
-          <main className="flex h-full">
-            <PageLayout />
 
-            <div
-              className={`w-full xl:ml-[19rem] md:ml-[15rem] rounded relative duration-200`}
-            >
-              <Appbar />
-              <div className="h-auto rounded relative my-5">
-                {val ? (
-                  <GetStartedWithStripe />
-                ) : (
-                  <>
-                    <UploadOrderRejectionReason />
-                    <UpdatePasswordModal />
-                    <DeleteAccountConfirmationModal />
-                    <UpdateAddressModal />
-                    <UpdateLogoModal />
+          <DesktopSidebar />
 
-                    {children}
-                  </>
-                )}
-              </div>
-            </div>
-          </main>
+          <div className="flex flex-1 flex-col md:ml-16">
+            {/* Mobile header */}
+            <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
+              <MobileSidebar />
+              <span className="text-sm font-medium">Dashboard</span>
+            </header>
+
+            <MainContent>
+              {val ? (
+                <GetStartedWithStripe />
+              ) : (
+                <>
+                  <UploadOrderRejectionReason />
+                  <UpdatePasswordModal />
+                  <DeleteAccountConfirmationModal />
+                  <UpdateAddressModal />
+                  <UpdateLogoModal />
+
+                  {children}
+                </>
+              )}
+            </MainContent>
+          </div>
         </div>
       )}
     </>

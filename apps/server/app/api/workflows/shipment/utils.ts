@@ -8,7 +8,6 @@ export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
-    console.log("This has begun running");
     const fileUploaded = await storage.createFile({
       bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
       fileId: ID.unique(),
@@ -36,7 +35,10 @@ export async function handleWorkflowError(error: any, payload: Payload) {
 
 import { Buffer } from "buffer";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { CreateOrderModelTypes } from "@omenai/shared-types";
+import {
+  CreateOrderModelTypes,
+  ShipmentRequestDataTypes,
+} from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import {
   generateAlphaDigit,
@@ -49,7 +51,7 @@ import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCa
 
 export const base64ToPDF = (
   base64: string,
-  filename = "waybilldoc.pdf"
+  filename = "waybilldoc.pdf",
 ): File => {
   const byteArray = Buffer.from(base64, "base64");
   return new File([byteArray], filename, { type: "application/pdf" });
@@ -65,10 +67,12 @@ export async function getMongoClient() {
 }
 
 export function buildShipmentData(
-  order: CreateOrderModelTypes & { createdAt: string; updatedAt: string }
-) {
+  order: CreateOrderModelTypes & { createdAt: string; updatedAt: string },
+): Omit<ShipmentRequestDataTypes, "originCountryCode"> {
   return {
-    specialInstructions: order.shipping_details.additional_information,
+    specialInstructions:
+      order.shipping_details.additional_information ??
+      "Please contact me to confirm availability",
     artwork_name: order.artwork_data.title,
     seller_details: {
       address: order.shipping_details.addresses.origin,
@@ -85,18 +89,19 @@ export function buildShipmentData(
       phone: order.buyer_details.phone,
       fullname: order.buyer_details.name,
     },
-    invoice_number: order.order_id,
+    invoice_number: `OMENAI-INV-${order.order_id}`,
+    artwork_price: Number(order.artwork_data.pricing.usd_price),
   };
 }
 
 // Utility function to upload waybill document and update the order
 export async function handleWaybillUpload(
   waybillBase64: string,
-  orderId: string
+  orderId: string,
 ): Promise<string> {
   const waybillFile = base64ToPDF(
     waybillBase64,
-    `waybilldoc_${generateAlphaDigit(6)}.pdf`
+    `waybilldoc_${generateAlphaDigit(6)}.pdf`,
   );
   const uploadedDoc = await uploadWaybillDocument(waybillFile);
 
@@ -116,7 +121,7 @@ export async function handleWaybillUpload(
         "shipping_details.shipment_information.waybill_document":
           waybillDocLink,
       },
-    }
+    },
   );
 
   if (updateResult.modifiedCount === 0) {
@@ -137,7 +142,8 @@ export async function sendShipmentEmailWorkflow(
   fileContent: string,
   artwork: string,
   artworkImage: string,
-  artworkPrice: number
+  artworkPrice: number,
+  artistName: string,
 ) {
   await createWorkflow(
     "/api/workflows/emails/sendShipmentEmail",
@@ -152,6 +158,7 @@ export async function sendShipmentEmailWorkflow(
       artwork,
       artworkImage,
       artworkPrice,
-    })
+      artistName,
+    }),
   );
 }

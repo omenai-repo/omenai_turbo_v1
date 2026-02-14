@@ -3,22 +3,28 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const OrderLockStatusSchema = z.object({
+  order_id: z.string(),
+});
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
 
-    const { order_id } = await request.json();
+    const { order_id } = await validateRequestBody(
+      request,
+      OrderLockStatusSchema,
+    );
 
     const lock_status = await CreateOrder.findOne(
       { order_id },
-      "lock_purchase artwork_data"
+      "lock_purchase artwork_data",
     );
 
     if (!lock_status)
@@ -29,18 +35,18 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
         message: "Successful",
         data: lock_status,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "order: retrieve order lock status",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

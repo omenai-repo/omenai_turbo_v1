@@ -6,9 +6,7 @@ export async function fetchAllArtworksForSeo() {
     const url = getApiUrl();
     const res = await fetch(`${url}/api/seoFetch/fetchArtIds`, {
       method: "GET",
-      headers: {
-        Origin: "https://omenai.app",
-      },
+      headers: {},
     });
 
     const result = await res.json();

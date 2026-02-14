@@ -1,4 +1,5 @@
 import { logRollbarServerError } from "@omenai/rollbar-config";
+import { MetaSchema } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
 export async function createFlwCheckoutSession(
@@ -6,18 +7,7 @@ export async function createFlwCheckoutSession(
   customer: { email: string },
   fullname: string,
   tx_ref: string,
-  meta: {
-    buyer_id: string;
-    buyer_email: string;
-    seller_email: string;
-    seller_name: string;
-    seller_id: string;
-    artwork_name: string;
-    art_id: string;
-    shipping_cost: number;
-    unit_price: number;
-    tax_fees: number;
-  },
+  meta: MetaSchema,
   redirect: string,
   token: string
 ) {

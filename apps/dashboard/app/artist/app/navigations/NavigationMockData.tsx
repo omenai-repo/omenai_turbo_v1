@@ -1,97 +1,54 @@
-import {
-  ImageUp,
-  Kanban,
-  LogOut,
-  Settings,
-  ShoppingBasket,
-  UserRoundPen,
-  Wallet,
-} from "lucide-react";
-const overview = (
-  <Kanban
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const order = (
-  <ShoppingBasket
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
+import { Headphones, LucideIcon } from "lucide-react";
 
-// const auction = <RiAuctionLine className="text-dark group-hover:text-white" />;
-const wallet = (
-  <Wallet
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const profile = (
-  <UserRoundPen
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const settings = (
-  <Settings
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const logout = (
-  <LogOut
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
-const artworks = (
-  <ImageUp
-    strokeWidth={1.5}
-    absoluteStrokeWidth
-    className="text-dark group-hover:text-white"
-  />
-);
+export type SidebarSection = "core" | "finance" | "account";
 
-export const navMockData: NavMockData = {
-  general: [
-    { title: "Overview", icon: overview, url: "/artist/app/overview" },
-    { title: "Orders", icon: order, url: "/artist/app/orders" },
-    {
-      title: "My artworks",
-      icon: artworks,
-      url: "/artist/app/artworks",
-    },
-    {
-      title: "Wallet",
-      icon: wallet,
-      url: "/artist/app/wallet",
-    },
-  ],
-  account: [
-    {
-      title: "Account management",
-      icon: profile,
-      url: "/artist/app/account",
-    },
-
-    { title: "Sign out", icon: logout, url: "/" },
-  ],
+export type SidebarItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  section: SidebarSection;
 };
 
-type NavMockData = {
-  general: NavMockDataItem[];
-  account: NavMockDataItem[];
-};
+// config/sidebar.ts
+import { LayoutDashboard, Package, Image, Wallet, User } from "lucide-react";
 
-type NavMockDataItem = {
-  title: string;
-  icon: React.ReactNode;
-  url: string;
-};
+export const sidebarItems: SidebarItem[] = [
+  {
+    label: "Overview",
+    href: "/artist/app/overview",
+    icon: LayoutDashboard,
+    section: "core",
+  },
+  {
+    label: "Orders",
+    href: "/artist/app/orders",
+    icon: Package,
+    section: "core",
+  },
+  {
+    label: "My Artworks",
+    href: "/artist/app/artworks",
+    icon: Image,
+    section: "core",
+  },
+
+  {
+    label: "Wallet",
+    href: "/artist/app/wallet",
+    icon: Wallet,
+    section: "finance",
+  },
+  {
+    label: "Support tickets",
+    href: "/artist/app/support",
+    icon: Headphones,
+    section: "account",
+  },
+
+  {
+    label: "Account Management",
+    href: "/artist/app/account",
+    icon: User,
+    section: "account",
+  },
+];

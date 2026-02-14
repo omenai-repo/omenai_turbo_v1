@@ -95,9 +95,14 @@ export default function UpdateAddressModalForm() {
         return;
       }
       toast_notif(
-        `${updateAddressResponse.message || "Address information updated successfully"}. Please refresh your page`,
+        `${updateAddressResponse.message || "Address information updated successfully"}`,
         "success"
       );
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch_gallery_info"],
+        exact: false,
+      });
+      router.refresh();
     } catch (error) {
       if (error instanceof Error) {
         rollbar.error(error);
@@ -108,12 +113,6 @@ export default function UpdateAddressModalForm() {
         "Something went wrong, please try again or contact support",
         "error"
       );
-
-      await queryClient.invalidateQueries({
-        queryKey: ["fetch_gallery_info"],
-        exact: false,
-      });
-      router.refresh();
     } finally {
       setLoading(false);
       updateAddressModalPopup(false);

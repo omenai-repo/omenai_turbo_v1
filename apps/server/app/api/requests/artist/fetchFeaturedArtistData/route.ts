@@ -4,28 +4,36 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { BadRequestError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
+import z from "zod";
+const FetchFeaturedArtistSchema = z.object({
+  artist_id: z.string(),
+});
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET(request: Request) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-    const artist_id = searchParams.get("id");
-    const page = searchParams.get("page") || 1;
+    const id = searchParams.get("id");
+    // const page = searchParams.get("page") || 1;
 
     try {
       await connectMongoDB();
-
+      const { artist_id } = validateGetRouteParams(FetchFeaturedArtistSchema, {
+        artist_id: id,
+      });
       const artist_data = await AccountArtist.findOne(
         { artist_id },
-        "logo name bio documentation"
+        "logo name bio documentation address",
       );
 
       if (!artist_data || artist_data.length === 0) {
         return NextResponse.json(
           { message: "Artist not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
       const artworksForArtist = await Artworkuploads.find({
@@ -44,12 +52,12 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       createErrorRollbarReport(
         "artist: fetch Featured Artist data",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

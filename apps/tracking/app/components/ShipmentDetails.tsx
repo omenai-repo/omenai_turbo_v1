@@ -1,4 +1,3 @@
-// ShipmentDetails.tsx - Display shipment details card
 "use client";
 
 import { Package, Truck, Hash, Clock } from "lucide-react";
@@ -16,71 +15,66 @@ export default function ShipmentDetails({
   date,
   time,
 }: ShipmentDetailsProps) {
-  // const formatDate = (timestamp: string) => {
-  //   return new Date(timestamp).toLocaleDateString("en-US", {
-  //     month: "long",
-  //     day: "numeric",
-  //     year: "numeric",
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //   });
-  // };
-
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-4">
-      <div className="bg-white rounded shadow-lg border border-gray-100 overflow-hidden">
+    <div className="w-full max-w-5xl mx-auto px-4 mb-8">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-slate-200 px-4 md:px-6 py-3 md:py-4">
-          <h3 className="text-fluid-base font-medium text-[#0f172a] flex items-center gap-2">
-            <Package className="w-4 h-4 md:w-5 md:h-5" />
-            Shipment Details
-          </h3>
+        <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+          <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100">
+            <Package className="w-5 h-5 text-blue-600" />
+          </div>
+          <h3 className="font-semibold text-slate-900">Shipment Overview</h3>
         </div>
 
         {/* Details Grid */}
-        <div className="grid grid-cols-1 xxs:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
           {/* Tracking ID */}
-          <div className="flex items-start gap-3 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded flex items-center justify-center flex-shrink-0">
-              <Hash className="w-4 h-4  text-white" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-fluid-base text-gray-600 mb-1 font-normal">
-                Tracking ID
-              </p>
-              <p className="text-fluid-xxs md:text-fluid-base font-medium text-[#0f172a] break-all">
-                {trackingId}
-              </p>
+          <div className="p-6 group hover:bg-slate-50/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <Hash className="w-5 h-5" />
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                  Tracking ID
+                </p>
+                <p className="text-sm font-bold text-slate-900 break-all font-mono">
+                  {trackingId}
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Service Type */}
-          <div className="flex items-start gap-3 p-2 bg-gradient-to-br from-purple-50 to-pink-50 rounded">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded flex items-center justify-center flex-shrink-0">
-              <Truck className="w-4 h-4  text-white" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-fluid-xxs md:text-fluid-base text-gray-600 mb-1 font-normal">
-                Service Type
-              </p>
-              <p className="text-fluid-xxs font-medium text-[#0f172a] break-words">
-                {service}
-              </p>
+          <div className="p-6 group hover:bg-slate-50/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <Truck className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                  Carrier Service
+                </p>
+                <p className="text-sm font-bold text-slate-900">{service}</p>
+              </div>
             </div>
           </div>
 
           {/* Last Update */}
-          <div className="flex items-start gap-3 p-3 bg-gradient-to-br from-teal-50 to-cyan-50 rounded xxs:col-span-2 md:col-span-1">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-cyan-500 rounded flex items-center justify-center flex-shrink-0">
-              <Clock className="w-4 h-4  text-white" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-fluid-xxs md:text-fluid-base text-gray-600 mb-1 font-normal">
-                Last Updated
-              </p>
-              <p className="text-fluid-xxs md:text-fluid-base font-medium text-[#0f172a] break-words">
-                {date} at {time}
-              </p>
+          <div className="p-6 group hover:bg-slate-50/50 transition-colors">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <Clock className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                  Last Updated
+                </p>
+                <p className="text-sm font-bold text-slate-900">
+                  {date} <span className="text-slate-400 font-normal">at</span>{" "}
+                  {time}
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -26,6 +26,7 @@ import "leaflet/dist/leaflet.css";
 
 import { Provider as RollbarProvider } from "@rollbar/react";
 import { clientConfig } from "@omenai/rollbar-config";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Omenai Tracking",
@@ -52,6 +53,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const initialSessionData = await getServerSession();
+  const nonce = (await headers()).get("x-nonce") || "";
 
   return (
     <RollbarProvider config={clientConfig}>

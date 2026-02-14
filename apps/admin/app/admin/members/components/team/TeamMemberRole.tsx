@@ -2,48 +2,58 @@
 
 import { useState } from "react";
 import { Avatar, ActionIcon } from "@mantine/core";
-
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import { TeamMember } from "@omenai/shared-types";
-import RoleDropdown from "./RoleDropdown";
 import { Trash } from "lucide-react";
+import { TeamMember } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import RoleDropdown from "./RoleDropdown";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 interface TeamMemberRowProps {
   member: TeamMember;
 }
 
 export default function TeamMemberRow({ member }: TeamMemberRowProps) {
+  const { user } = useAuth({ requiredRole: "admin" });
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const { user } = useAuth({ requiredRole: "admin" });
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
+  const formatDate = (date: Date) =>
+    new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
     }).format(date);
-  };
 
   const canDelete =
-    member.access_role !== "Owner" && // Owner can never be deleted
-    (user.access_role === "Owner" || // Owner can delete anyone (except other Owners)
+    member.access_role !== "Owner" &&
+    (user.access_role === "Owner" ||
       (user.access_role === "Admin" &&
         ["Editor", "Viewer"].includes(member.access_role)));
 
-  console.log(member);
   return (
     <>
-      <div className="grid grid-cols-12 gap-4 p-6 items-center">
-        <div className="col-span-5 flex items-center gap-3">
-          <Avatar color="initials" name={member.name} />
-          <div>
-            <p className="font-medium text-fluid-xxs text-white">
+      <div
+        className="
+          grid grid-cols-12 gap-4 px-6 py-4 items-center
+          hover:bg-gray-50 transition-colors
+        "
+      >
+        {/* Member */}
+        <div className="col-span-5 flex items-center gap-3 min-w-0">
+          <Avatar size={36} radius="sm">
+            {member.name?.charAt(0)}
+          </Avatar>
+
+          <div className="min-w-0">
+            <p className="font-medium text-fluid-xxs text-slate-900 truncate">
               {member.name || "Anonymous"}
             </p>
-            <p className="text-fluid-xxs text-gray-400">{member.email}</p>
+            <p className="text-fluid-xxs text-slate-500 truncate">
+              {member.email}
+            </p>
           </div>
         </div>
+
+        {/* Role */}
         <div className="col-span-3">
           <RoleDropdown
             value={member.access_role}
@@ -51,36 +61,36 @@ export default function TeamMemberRow({ member }: TeamMemberRowProps) {
             member_id={member.admin_id}
           />
         </div>
+
+        {/* Joined */}
         <div className="col-span-2">
-          <p className="text-gray-400 text-fluid-xxs">
-            {member.joinedAt ? (
-              formatDate(new Date(member.joinedAt))
-            ) : (
-              <span className=" text-amber-500">Pending</span>
-            )}
-          </p>
+          {member.joinedAt ? (
+            <p className="text-fluid-xxs text-slate-600">
+              {formatDate(new Date(member.joinedAt))}
+            </p>
+          ) : (
+            <span className="text-fluid-xxs font-medium text-amber-600">
+              Pending
+            </span>
+          )}
         </div>
-        {canDelete && (
-          <div className="col-span-2 flex justify-end">
+
+        {/* Actions */}
+        <div className="col-span-2 flex justify-end">
+          {canDelete && (
             <ActionIcon
               onClick={() => setDeleteModalOpen(true)}
-              size="lg"
               variant="subtle"
               color="red"
-              styles={{
-                root: {
-                  "&:hover": {
-                    backgroundColor: "#2a2a2a",
-                  },
-                },
-              }}
+              aria-label={`Remove ${member.name}`}
             >
-              <Trash size={20} absoluteStrokeWidth />
+              <Trash size={18} />
             </ActionIcon>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
+      {/* Delete modal */}
       <DeleteConfirmationModal
         opened={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}

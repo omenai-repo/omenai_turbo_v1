@@ -14,29 +14,28 @@ import { isRepeatingOrConsecutive } from "@omenai/shared-utils/src/checkIfPinRep
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
-
+const Schema = z.object({
+  wallet_id: z.string(),
+  pin: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { wallet_id, pin } = await request.json();
-
-    // ✅ Basic input validation
-    if (!wallet_id || !pin) {
-      throw new ForbiddenError("Wallet ID and pin are required");
-    }
+    const { wallet_id, pin } = await validateRequestBody(request, Schema);
 
     // ✅ Check for repeating/consecutive pin
     if (isRepeatingOrConsecutive(pin)) {
       throw new ForbiddenError(
-        "Wallet pin cannot be repeating or consecutive. Please try again"
+        "Wallet pin cannot be repeating or consecutive. Please try again",
       );
     }
 
@@ -53,7 +52,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       const isPinMatch = bcrypt.compareSync(pin, wallet.wallet_pin);
       if (isPinMatch) {
         throw new ConflictError(
-          "Your pin cannot be identical to your previous wallet pin"
+          "Your pin cannot be identical to your previous wallet pin",
         );
       }
     }
@@ -64,12 +63,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     // ✅ Update wallet
     const updateResult = await Wallet.updateOne(
       { wallet_id },
-      { $set: { wallet_pin: hashedPin } }
+      { $set: { wallet_pin: hashedPin } },
     );
 
     if (updateResult.modifiedCount === 0) {
       throw new ServerError(
-        "An error was encountered while updating your wallet pin. Please try again or contact IT support"
+        "An error was encountered while updating your wallet pin. Please try again or contact IT support",
       );
     }
 
@@ -77,7 +76,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     return NextResponse.json(
       { message: "Wallet pin updated successfully" },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
@@ -85,11 +84,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "wallet: update wallet pin",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

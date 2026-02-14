@@ -19,7 +19,7 @@ export default function SelectStep({
 
   return (
     <div className="flex flex-col items-center w-full max-w-lg">
-      <h2 className="text-fluid-xs font-normal text-dark mb-10 text-center">
+      <h2 className="text-fluid-xs font-light text-dark mb-10 text-center">
         {question}
       </h2>
 
@@ -28,13 +28,13 @@ export default function SelectStep({
           <button
             key={index}
             onClick={() => handleSelect(option)}
-            className={`relative font-normal transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 text-fluid-xs w-full ring-0 border  p-4 text-left rounded border-dark transition duration-200 flex items-center justify-between shadow-md  ${
+            className={`relative font-light transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 text-fluid-xs w-full ring-0 border  p-4 text-left rounded border-dark transition duration-200 flex items-center justify-between shadow-md  ${
               currentValue.toLowerCase() === option.toLowerCase()
                 ? "bg-slate-900 text-white shadow-md focus:ring-slate-500"
                 : "bg-white text-slate-700 border border-slate-300 hover:border-slate-400 focus:ring-slate-400"
             }`}
           >
-            <span className="font-normal">{option}</span>
+            <span className="font-light">{option}</span>
             {currentValue.toLowerCase() === option.toLowerCase() && (
               <CheckCircle className="w-5 h-5 text-white" />
             )}

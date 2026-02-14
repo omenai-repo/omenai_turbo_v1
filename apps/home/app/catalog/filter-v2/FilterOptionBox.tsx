@@ -47,28 +47,25 @@ export default function FilterOptionBox({
   return (
     <div className="w-full">
       <div
-        className="overflow-hidden transition-all duration-300 mt-1"
+        className="overflow-hidden transition-all duration-500"
         style={{ height: height }}
       >
-        <div
-          ref={contentRef}
-          className="flex flex-col p-2 gap-1 border border-dark/10 rounded bg-white"
-        >
+        <div ref={contentRef} className="flex flex-col py-4 gap-1 bg-white">
           {filters.map((filter) => (
             <label
               key={filter.option}
-              className="flex items-center p-2 rounded hover:bg-gray-100 cursor-pointer"
+              className="flex items-center justify-between py-2 group cursor-pointer"
             >
+              <span className="text-[11px] tracking-wider text-slate-600 group-hover:text-dark transition-colors">
+                {filter.option}
+              </span>
               <input
                 type="checkbox"
                 checked={hasFilterValue(selectedFilters, filter.option)}
                 value={JSON.stringify(filter.value)}
                 onChange={(e) => handleChange(e, filter.option)}
-                className="w-4 h-4 text-dark bg-gray-100 border-dark/10 rounded focus:ring-dark focus:ring-2"
+                className="w-3 h-3 appearance-none border border-slate-400 checked:bg-dark checked:border-dark transition-all cursor-pointer rounded-none"
               />
-              <span className="ml-2 text-fluid-xxs font-normal">
-                {filter.option}
-              </span>
             </label>
           ))}
         </div>

@@ -18,8 +18,8 @@ export default function Pill({ text }: PillProps) {
         relative
         px-4 
         py-2 
-        rounded-full 
-        font-normal 
+        rounded 
+        font-light 
         text-fluid-xs
         transition-all 
         duration-200
@@ -60,7 +60,7 @@ export default function Pill({ text }: PillProps) {
       {preferences.includes(text) && (
         <motion.div
           layoutId={`pill-bg-${text}`}
-          className="absolute inset-0 bg-dark rounded-full"
+          className="absolute inset-0 bg-dark rounded"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

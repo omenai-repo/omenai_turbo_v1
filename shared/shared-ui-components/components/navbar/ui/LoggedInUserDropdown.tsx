@@ -39,7 +39,7 @@ const LoggedInUserDropDown = ({
             <span className="md:block font-medium whitespace-nowrap text-fluid-xxs hidden">
               {user}
             </span>
-            <span className="md:block font-normal whitespace-nowrap text-fluid-xxs hidden">
+            <span className="md:block font-light whitespace-nowrap text-fluid-xxs hidden">
               {email}
             </span>
           </div>
@@ -163,7 +163,7 @@ const Option = ({
           <motion.li
             variants={itemVariants}
             onClick={async () => await handleSignOut()}
-            className="flex items-center gap-2 w-full p-3 text-fluid-xxs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded"
+            className="flex items-center gap-2 w-full p-3 text-fluid-xxs font-light whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded"
           >
             <motion.span variants={actionIconVariants}>{Icon}</motion.span>
             <span>{text}</span>
@@ -177,7 +177,7 @@ const Option = ({
               setSelectedTab(text.toLowerCase());
               setOpen(false);
             }}
-            className="flex items-center gap-2 w-full p-3 text-fluid-xxs font-normal whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded"
+            className="flex items-center gap-2 w-full p-3 text-fluid-xxs font-light whitespace-nowrap hover:bg-dark text-slate-700 hover:text-white transition-colors cursor-pointer rounded"
           >
             <motion.span variants={actionIconVariants}>{Icon}</motion.span>
             <span>{text}</span>

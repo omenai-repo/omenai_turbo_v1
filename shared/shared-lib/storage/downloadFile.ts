@@ -8,3 +8,12 @@ export const downloadFile = async (fileId: string) => {
 
   return fileData;
 };
+
+export const downloadInvoiceFile = (file: string) => {
+  if (!file) return;
+  const fileDownload = storage.getFileDownload({
+    bucketId: process.env.NEXT_PUBLIC_APPWRITE_INVOICE_BUCKET_ID!,
+    fileId: file,
+  });
+  return fileDownload;
+};

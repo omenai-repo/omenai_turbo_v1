@@ -1,22 +1,30 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
-import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { fetchArtworksFromCache, getCachedGalleryIds } from "../utils";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
+const GetTrendingArtworkSchema = z.object({
+  page: z.number().default(1),
+  filters: z.any(),
+});
+
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
-    const PAGE_SIZE = 30;
+    const PAGE_SIZE = 16;
     try {
       await connectMongoDB();
-      const { page = 1, filters } = await request.json();
+      const { page = 1, filters } = await validateRequestBody(
+        request,
+        GetTrendingArtworkSchema,
+      );
       const skip = (page - 1) * PAGE_SIZE;
       const galleries = await getCachedGalleryIds();
 
@@ -67,21 +75,21 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           pageCount: Math.ceil(total / 30),
           total,
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "artwork: get trending Artwork",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );
 // impressions: { $gt: 0 },
 //       .sort({

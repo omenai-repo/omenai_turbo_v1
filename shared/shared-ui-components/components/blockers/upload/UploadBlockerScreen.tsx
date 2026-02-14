@@ -68,9 +68,9 @@ export default function ArtworkUploadBlocker({
     <div className="relative min-h-[90vh] w-full bg-[#0f172a] overflow-hidden font-sans flex items-center justify-center selection:bg-[#2A9EDF] selection:text-white">
       {/* --- Artistic Background Effects --- */}
       {/* Rotating Aurora Blob 1 */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#2A9EDF]/20 rounded-full blur-[120px] animate-pulse duration-[8000ms]" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#2A9EDF]/20 rounded blur-[120px] animate-pulse duration-[8000ms]" />
       {/* Rotating Aurora Blob 2 */}
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-[#2A9EDF]/10 rounded-full blur-[100px] animate-pulse duration-[10000ms] delay-1000" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-[#2A9EDF]/10 rounded blur-[100px] animate-pulse duration-[10000ms] delay-1000" />
 
       {/* Grid Pattern Overlay */}
       <div
@@ -85,8 +85,8 @@ export default function ArtworkUploadBlocker({
       <div className="relative z-10 w-full max-w-3xl px-6 md:px-12 flex flex-col items-center text-center">
         {/* 1. The Icon / Art Piece */}
         <div className="mb-8 relative group">
-          <div className="absolute inset-0 bg-[#2A9EDF]/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-700"></div>
-          <div className="relative w-20 h-20 md:w-24 md:h-24 bg-[#0f172a] border border-[#47748E]/30 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-2xl">
+          <div className="absolute inset-0 bg-[#2A9EDF]/20 rounded blur-xl group-hover:blur-2xl transition-all duration-700"></div>
+          <div className="relative w-20 h-20 md:w-24 md:h-24 bg-[#0f172a] border border-[#47748E]/30 rounded flex items-center justify-center backdrop-blur-md shadow-2xl">
             <Palette
               className="w-10 h-10 md:w-12 md:h-12 text-[#2A9EDF] animate-[spin_10s_linear_infinite]"
               style={{ animationDuration: "20s" }}
@@ -121,7 +121,7 @@ export default function ArtworkUploadBlocker({
             <div className="grid grid-cols-3 gap-4 md:gap-8">
               {/* Hours */}
               <div className="flex flex-col items-center">
-                <div className="relative bg-[#0f172a]/50 border border-[#47748E]/20 rounded-lg w-full h-20 md:h-24 flex items-center justify-center overflow-hidden">
+                <div className="relative bg-[#0f172a]/50 border border-[#47748E]/20 rounded w-full h-20 md:h-24 flex items-center justify-center overflow-hidden">
                   <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-light text-white tabular-nums">
                     {timeLeft.hours}
                   </span>
@@ -134,7 +134,7 @@ export default function ArtworkUploadBlocker({
 
               {/* Minutes */}
               <div className="flex flex-col items-center">
-                <div className="relative bg-[#0f172a]/50 border border-[#47748E]/20 rounded-lg w-full h-20 md:h-24 flex items-center justify-center overflow-hidden">
+                <div className="relative bg-[#0f172a]/50 border border-[#47748E]/20 rounded w-full h-20 md:h-24 flex items-center justify-center overflow-hidden">
                   <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-light text-white tabular-nums">
                     {timeLeft.minutes}
                   </span>
@@ -147,7 +147,7 @@ export default function ArtworkUploadBlocker({
 
               {/* Seconds */}
               <div className="flex flex-col items-center">
-                <div className="relative bg-[#0f172a]/50 border border-[#2A9EDF]/30 rounded-lg w-full h-20 md:h-24 flex items-center justify-center overflow-hidden shadow-[0_0_15px_rgba(42,158,223,0.15)]">
+                <div className="relative bg-[#0f172a]/50 border border-[#2A9EDF]/30 rounded w-full h-20 md:h-24 flex items-center justify-center overflow-hidden shadow-[0_0_15px_rgba(42,158,223,0.15)]">
                   <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-medium text-[#2A9EDF] tabular-nums">
                     {timeLeft.seconds}
                   </span>
@@ -163,7 +163,7 @@ export default function ArtworkUploadBlocker({
 
         {/* 5. Expired State (If timer runs out but flag is still on) */}
         {timeLeft.isExpired && expiryTimestamp && (
-          <div className="mt-6 py-3 px-6 bg-[#2A9EDF]/10 border border-[#2A9EDF]/20 rounded-full">
+          <div className="mt-6 py-3 px-6 bg-[#2A9EDF]/10 border border-[#2A9EDF]/20 rounded">
             <p className="text-[#2A9EDF] font-medium animate-pulse">
               We are coming back online any moment now...
             </p>

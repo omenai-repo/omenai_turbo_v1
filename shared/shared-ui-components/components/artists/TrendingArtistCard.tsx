@@ -1,11 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import { base_url } from "@omenai/url-config/src/config";
+import { MdNorthEast, MdFavorite } from "react-icons/md";
 
 export function TrendingArtistCard({
   url,
@@ -22,49 +20,56 @@ export function TrendingArtistCard({
   country: string;
   artist_id: string;
 }) {
-  const image_href = getOptimizedImage(url, "thumbnail", 40);
+  const image_href = getOptimizedImage(url, "medium", 40);
   const base_uri = base_url();
-  return (
-    <div
-      className="        group relative
-        rounded-2xl overflow-hidden
-        transition-all duration-700
-        cursor-pointer"
-    >
-      <Link
-        href={`${base_uri}/artists/?id=${artist_id}&url=${url}&artist=${artist}`}
-        className="block"
-      >
-        <article className="relative">
-          {/* Image with Aspect Ratio */}
-          <div className="relative aspect-[4/3] w-[300px] w-full overflow-hidden rounded bg-slate-100">
-            <Image
-              src={image_href}
-              alt={artist + " image"}
-              height={200}
-              width={300}
-              loading="lazy"
-              quality={100}
-              placeholder="blur"
-              blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
-              className="rounded w-[300px] h-full object-cover object-center cursor-pointer"
-            />
-          </div>
 
-          {/* Info Below Image */}
-          <div className="mt-4 space-y-2 px-2">
-            <h3 className="text-fluid-base font-semibold  text-slate-900 leading-tight">
+  return (
+    <Link
+      href={`${base_uri}/artists/?id=${artist_id}&url=${url}&artist=${artist}`}
+      className="group block h-full w-full cursor-pointer"
+    >
+      <article className="flex flex-col gap-4">
+        {/* IMAGE FRAME: Removed grayscale, added rounding */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
+          <Image
+            src={image_href}
+            alt={artist}
+            fill
+            loading="lazy"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+
+          {/* Subtle gradient at bottom for potential white text overlay if needed, 
+              but mostly just to add depth */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        </div>
+
+        {/* METADATA SECTION */}
+        <div className="flex flex-col gap-1">
+          {/* Name & Arrow */}
+          <div className="flex items-center justify-between">
+            <h3 className="font-serif text-lg text-dark  leading-tight group-hover:underline decoration-neutral-300 underline-offset-4">
               {artist}
             </h3>
-            <div className="flex items-center justify-between">
-              <p className="text-fluid-xxs text-dark">
-                {country} • Born {birthyear}
-              </p>
-              <span className="text-fluid-xxs text-dark">{likes} likes</span>
+            <MdNorthEast className="text-neutral-300 transition-colors group-hover:text-dark " />
+          </div>
+
+          {/* Location & Stats */}
+          <div className="flex items-center justify-between mt-1">
+            <p className="font-sans text-xs font-medium text-neutral-500">
+              {country}
+            </p>
+
+            {/* Likes Badge */}
+            <div className="flex items-center gap-1.5 bg-neutral-100 px-2 py-0.5 rounded-full">
+              <MdFavorite className="text-xs text-dark " />
+              <span className="font-sans text-[10px] font-bold text-dark ">
+                {likes}
+              </span>
             </div>
           </div>
-        </article>
-      </Link>
-    </div>
+        </div>
+      </article>
+    </Link>
   );
 }

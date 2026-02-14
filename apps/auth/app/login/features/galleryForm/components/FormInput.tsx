@@ -28,10 +28,6 @@ const INPUT_CONFIG = {
   },
 };
 
-const shouldUseDefaultRedirect = (url: string | null) => {
-  return url === "" || url === null;
-};
-
 const showErrorToast = () => {
   toast.error("Error notification", {
     description: "Something went wrong, please try again or contact support",
@@ -44,12 +40,6 @@ export default function FormInput() {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const dashboard_base_url = dashboard_url();
-
-  const [redirect_uri, set_redirect_uri] = useLocalStorage(
-    "redirect_uri_on_login",
-    ""
-  );
-  const url = useReadLocalStorage("redirect_uri_on_login") as string;
 
   const { setIsLoading } = galleryLoginStore();
   const { signOut } = useAuth({ requiredRole: "gallery" });
@@ -71,17 +61,11 @@ export default function FormInput() {
     try {
       toast_notif(
         "Login successful... We'll redirect you in a moment",
-        "success"
+        "success",
       );
 
-      if (shouldUseDefaultRedirect(url)) {
-        set_redirect_uri("");
-        router.refresh();
-        router.replace(`${dashboard_base_url}/gallery/overview`);
-      } else {
-        router.replace(url);
-        set_redirect_uri("");
-      }
+      router.refresh();
+      router.replace(`${dashboard_base_url}/gallery/overview`);
     } catch (clerkError) {
       if (clerkError instanceof Error) {
         rollbar.error(clerkError);
@@ -112,7 +96,7 @@ export default function FormInput() {
   };
 
   const handleSubmit = async (
-    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+    e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
     setIsLoading();

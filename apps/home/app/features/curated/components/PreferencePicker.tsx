@@ -1,58 +1,62 @@
 "use client";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
-import React, { useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 
-type PreferencePickerProps = {
+type CuratorialManifestProps = {
   preferences: string[];
   setIsFading: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export default function PreferencePicker({
+
+export default function CuratorialManifest({
   preferences,
   setIsFading,
-}: PreferencePickerProps) {
+}: CuratorialManifestProps) {
   const { curated_preference, set_curated_preference } = actionStore();
+
   const handleFilterChange = (medium: string) => {
-    setIsFading(true); // Trigger fade-out
+    if (curated_preference === medium) return;
+    setIsFading(true);
     setTimeout(() => {
       set_curated_preference(medium);
-      setIsFading(false); // Trigger fade-in
-    }, 300); // Match the fade-out duration
+      setIsFading(false);
+    }, 400);
   };
+
+  const categories = ["All", ...preferences];
+
   return (
-    <div className="w-full flex justify-center items-center mb-8">
-      <div>
-        <ul className="flex flex-wrap justify-center gap-5 text-dark font-normal text-fluid-sm">
-          <li>
+    <div className="mb-12 border-y border-slate-100 py-4">
+      <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 md:justify-start">
+        <span className="font-sans text-slate-400 font-light text-fluid-xxs">
+          Filter By:
+        </span>
+        {categories.map((item) => {
+          const isActive = curated_preference === item;
+          return (
             <button
-              type="button"
-              onClick={() => handleFilterChange("All")}
-              className={`rounded w-fit border font-normal border-dark/30 hover:ring-1 hover:ring-dark/80 text-fluid-xxs transition-all ease-linear duration-100 px-4 py-2 ${
-                curated_preference === "All"
-                  ? "bg-dark text-white"
-                  : "bg-transparent text-dark"
-              }`}
+              key={item}
+              onClick={() => handleFilterChange(item)}
+              className="group relative"
             >
-              All
+              <span
+                className={`font-sans text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  isActive ? "text-dark" : "text-slate-600 hover:text-slate-800"
+                }`}
+              >
+                {item}
+              </span>
+              {/* Active Indicator Line */}
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute -bottom-4 left-0 h-[1px] w-full bg-dark"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
             </button>
-          </li>
-          {preferences.map((preference) => {
-            return (
-              <li key={preference}>
-                <button
-                  type="button"
-                  onClick={() => handleFilterChange(preference)}
-                  className={`rounded w-fit border font-normal border-dark/30 hover:ring-1 hover:ring-dark/80 text-fluid-xxs transition-all ease-linear duration-100 px-4 py-2 ${
-                    curated_preference === preference
-                      ? "bg-dark text-white"
-                      : "bg-transparent text-dark"
-                  }`}
-                >
-                  {preference}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+          );
+        })}
       </div>
     </div>
   );

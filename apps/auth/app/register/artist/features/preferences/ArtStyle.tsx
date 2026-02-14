@@ -9,16 +9,14 @@ let artTypes = [
   "Works on paper",
   "Acrylic on canvas/linen/panel",
   "Mixed media on paper/canvas",
-  "Sculpture (Resin/plaster/clay)",
   "Oil on canvas/panel",
-  "Sculpture (Bronze/stone/metal)",
 ];
 function ArtStyle() {
   const { artistSignupData } = useArtistAuthStore();
   return (
     <AnimatePresence key={7}>
       <div className="">
-        <p className="text-fluid-xxs font-normal text-center">
+        <p className="text-fluid-xxs font-light text-center">
           Choose an art style that best represents your work.
         </p>
         <p className="text-center text-fluid-xxs font-semibold my-[1.5rem]">

@@ -1,14 +1,14 @@
 "use client";
 import { fetchSearchKeyWordResults } from "@omenai/shared-services/search/fetchSearchKeywordResults";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import NotFoundSearchResult from "./NotFoundSearchResult";
 import SearchResultDetails from "./SearchResultDetails";
-import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { ArtworksListingSkeletonLoader } from "@omenai/shared-ui-components/components/loader/ArtworksListingSkeletonLoader";
 import { useQuery } from "@tanstack/react-query";
+import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
+import Footer from "@omenai/shared-ui-components/components/footer/Footer";
+
 export default function SearchResultWrapper() {
   const searchParams = useSearchParams();
   const searchTerm = searchParams.get("searchTerm");
@@ -27,12 +27,14 @@ export default function SearchResultWrapper() {
     enabled: !!searchTerm,
   });
 
-  if (isLoading) return <ArtworksListingSkeletonLoader />;
-
   return (
-    <>
-      <div className="w-full">
-        {artworks.length === 0 ? (
+    <div className="min-h-screen bg-white flex flex-col justify-between">
+      <DesktopNavbar />
+
+      <main className="container mx-auto px-4 pb-20 flex-grow">
+        {isLoading ? (
+          <ArtworksListingSkeletonLoader />
+        ) : !artworks || artworks.length === 0 ? (
           <NotFoundSearchResult />
         ) : (
           <SearchResultDetails
@@ -41,7 +43,9 @@ export default function SearchResultWrapper() {
             sessionId={user && user.role === "user" ? user.id : undefined}
           />
         )}
-      </div>
-    </>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

@@ -88,7 +88,7 @@ export default function RefreshStripe() {
       ) : (
         <div className="grid place-items-center h-[78vh]">
           <div className="bg-white border border-[#E0E0E0] text-dark p-6 rounded w-full max-w-xl shadow-xl cursor-default relative">
-            <h1 className="text-fluid-xxs font-normal text-dark mb-1">
+            <h1 className="text-fluid-xxs font-light text-dark mb-1">
               Looks like you didn&apos;t complete your Stripe Onboarding.
             </h1>
             <p className="font-bold text-fluid-sm">
@@ -98,7 +98,7 @@ export default function RefreshStripe() {
             <div className="flex flex-col mt-3">
               <div className="relative w-full">
                 <label
-                  className="text-dark font-normal text-fluid-xxs"
+                  className="text-dark font-light text-fluid-xxs"
                   htmlFor="name"
                 >
                   Name
@@ -112,7 +112,7 @@ export default function RefreshStripe() {
               </div>
               <div className="relative w-full">
                 <label
-                  className="text-dark font-normal text-fluid-xxs"
+                  className="text-dark font-light text-fluid-xxs"
                   htmlFor="email"
                 >
                   Email
@@ -133,7 +133,7 @@ export default function RefreshStripe() {
             </>
             <button
               disabled={accountLinkCreatePending}
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
               onClick={handleAccountLink}
             >
               {accountLinkCreatePending ? (

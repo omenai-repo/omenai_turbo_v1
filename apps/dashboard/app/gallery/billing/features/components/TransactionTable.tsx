@@ -2,15 +2,11 @@
 
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { fetchSubscriptionTransactions } from "@omenai/shared-services/transactions/fetchSubscriptionTransactions";
-import Load, {
-  LoadIcon,
-} from "@omenai/shared-ui-components/components/loader/Load";
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import { useContext } from "react";
 
 export default function TransactionTable() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
@@ -29,75 +25,98 @@ export default function TransactionTable() {
     gcTime: 0,
   });
 
-  if (isLoading) return <Load />;
+  if (isLoading)
+    return (
+      <div className="h-full bg-white rounded border border-slate-100 p-8 flex items-center justify-center">
+        <Load />
+      </div>
+    );
 
-  const reversedTransactions = transactions.slice().reverse();
+  const reversedTransactions = transactions?.slice().reverse() || [];
+
   return (
-    <div className=" bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-      <h2 className="text-fluid-xs font-medium text-dark mb-6">
-        Recent Transaction Activity
-      </h2>
+    <div className="h-full  bg-white rounded border border-slate-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
+      <div className="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-slate-900">
+          Transaction History
+        </h2>
+        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded">
+          {reversedTransactions.length} Records
+        </span>
+      </div>
 
-      <div className="max-h-full h-full overflow-y-auto pr-2 space-y-3">
+      <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
         {reversedTransactions.length > 0 ? (
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-200"></div>
+          <div className="relative space-y-0">
+            {/* Vertical Line */}
+            <div className="absolute left-[19px] top-2 bottom-6 w-px bg-slate-200" />
 
-            {/* Transaction Items */}
-            {reversedTransactions.map((transaction: any, index: number) => (
+            {reversedTransactions.map((transaction: any) => (
               <div
                 key={transaction.trans_id}
-                className="relative flex items-start gap-4 pb-6 last:pb-0"
+                className="relative pl-12 pb-8 last:pb-0 group"
               >
                 {/* Timeline Dot */}
-                <div className="relative z-10 flex-shrink-0">
-                  <div className="w-10 h-10 bg-white border-2 border-slate-300 rounded-full flex items-center justify-center">
-                    <span className="text-fluid-xxs font-medium text-slate-600">
-                      {index + 1}
-                    </span>
-                  </div>
+                <div
+                  className={`absolute left-0 top-1 w-10 h-10 rounded border-4 border-white flex items-center justify-center z-10 shadow-sm transition-colors ${
+                    transaction.status === "successful"
+                      ? "bg-emerald-50 text-emerald-600"
+                      : transaction.status === "failed"
+                        ? "bg-red-50 text-red-600"
+                        : "bg-amber-50 text-amber-600"
+                  }`}
+                >
+                  <div
+                    className={`w-2.5 h-2.5 rounded ${
+                      transaction.status === "successful"
+                        ? "bg-emerald-500"
+                        : transaction.status === "failed"
+                          ? "bg-red-500"
+                          : "bg-amber-500"
+                    }`}
+                  />
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 bg-slate-50 rounded p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-fluid-xxs font-medium text-slate-500 mt-0.5">
-                        #{transaction.trans_id}
-                      </p>
-                      <p
-                        className={`text-fluid-xxs font-medium ${
-                          transaction.status === "successful"
-                            ? "text-green-600"
-                            : transaction.status === "failed"
-                              ? "text-red-600"
-                              : "text-amber-600"
-                        }`}
-                      >
-                        {transaction.status === "successful"
-                          ? "Payment processed successfully"
-                          : transaction.status === "failed"
-                            ? "Payment failed"
-                            : "Payment pending"}
-                      </p>
-                      <p className="text-fluid-xxs text-slate-600 mt-1">
-                        {formatISODate(transaction.date)}
-                      </p>
-                    </div>
-                    <p className="font-semibold text-fluid-xs text-dark">
+                {/* Card Body */}
+                <div className="flex justify-between items-start p-4 rounded border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-sm transition-all">
+                  <div>
+                    <p className="text-xs font-medium text-slate-400 mb-1">
+                      {formatISODate(transaction.date)}
+                    </p>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {transaction.status === "successful"
+                        ? "Subscription Payment"
+                        : "Attempted Charge"}
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-wide font-mono">
+                      TRANSACTION ID: {transaction.trans_id}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-slate-900">
                       {formatPrice(transaction.amount, "USD")}
                     </p>
+                    <span
+                      className={`text-[10px] font-medium px-2 py-0.5 rounded capitalize mt-1 inline-block ${
+                        transaction.status === "successful"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : transaction.status === "failed"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
+                      {transaction.status}
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="h-full flex flex-col items-center justify-center text-center">
             <NotFoundData />
-            <p className="text-fluid-xxs text-slate-500 mt-2">
-              No transactions found
+            <p className="text-sm text-slate-500 mt-4">
+              No transaction history available
             </p>
           </div>
         )}

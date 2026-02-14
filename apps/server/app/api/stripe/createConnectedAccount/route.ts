@@ -7,21 +7,28 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { redis } from "@omenai/upstash-config";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["gallery"],
 };
+const CreateConnectedAccountSchema = z.object({
+  customer: z.any(),
+});
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
-    const { customer } = await request.json();
+    const { customer } = await validateRequestBody(
+      request,
+      CreateConnectedAccountSchema,
+    );
 
     const account = await stripe.accounts.create({
       metadata: customer,
@@ -55,7 +62,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         email: customer.email,
       },
-      { $set: { connected_account_id: account.id } }
+      { $set: { connected_account_id: account.id } },
     );
 
     if (update_connected_id.modifiedCount === 0)
@@ -69,7 +76,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         gallery_verified: true,
       };
       await redis.del(`accountId:${customer.customer_id}`);
-      await redis.set(`accountId:${customer.customer_id}`, JSON.stringify(accountData));
+      await redis.set(
+        `accountId:${customer.customer_id}`,
+        JSON.stringify(accountData),
+      );
     } catch (error) {
       rollbarServerInstance.error({
         context: "Redis deletion: Connected account ID",
@@ -81,19 +91,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         message: "Connected account created",
         account_id: account.id,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "stripe: create connected account",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

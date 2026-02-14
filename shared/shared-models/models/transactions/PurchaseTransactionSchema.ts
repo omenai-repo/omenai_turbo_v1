@@ -5,19 +5,26 @@ import mongoose, { Schema } from "mongoose";
 const purchase_transactions = new Schema<PurchaseTransactionModelSchemaTypes>(
   {
     trans_id: { type: String, default: () => `PAY_OM_${generateDigit(7)}` },
-    trans_reference: { type: String, required: true },
+    trans_reference: {
+      type: String,
+      required: true,
+      index: true,
+      unique: true,
+    },
     trans_pricing: { type: Schema.Types.Mixed, required: true },
     trans_date: { type: Date, required: true },
     trans_initiator_id: { type: String, required: true, index: true },
     trans_recipient_id: { type: String, required: true, index: true },
     trans_recipient_role: { type: String, required: true },
+    order_id: { type: String, required: true },
     status: { type: String, required: true },
+    provider: { type: String, enum: ["flutterwave, stripe"], required: true },
     verifiedAt: { type: Date },
-    webhookReceivedAt: { type: Date },
     createdBy: { type: String },
+    webhookReceivedAt: { type: Date },
     webhookConfirmed: { type: Boolean },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const PurchaseTransactions =

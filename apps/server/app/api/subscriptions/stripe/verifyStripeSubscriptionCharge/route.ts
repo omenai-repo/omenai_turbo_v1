@@ -26,6 +26,7 @@ import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { ForbiddenError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
+import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -299,6 +300,10 @@ async function processSuccessfulPayment(
     { $set: { subscription_status: { type: plan.name, active: true } } },
     { session }
   );
+  await Waitlist.updateOne(
+    { entityId: gallery_id, entity: "gallery" },
+    { $set: { discount: null } }
+  ).session(session);
 }
 
 function getEmailForStatus(

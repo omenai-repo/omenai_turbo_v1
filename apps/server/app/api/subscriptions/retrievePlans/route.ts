@@ -1,3 +1,4 @@
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { SubscriptionPlan } from "@omenai/shared-models/models/subscriptions/PlanSchema";
 import { NextResponse } from "next/server";
@@ -6,14 +7,15 @@ import {
   ServerError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import { redis } from "@omenai/upstash-config";
 import { createErrorRollbarReport } from "../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-export const GET = withAppRouterHighlight(async function GET() {
+export const GET = withRateLimit(standardRateLimit)(async function GET() {
   try {
     await connectMongoDB();
 
@@ -53,12 +55,12 @@ export const GET = withAppRouterHighlight(async function GET() {
     createErrorRollbarReport(
       "subscription: retrieve plans",
       error,
-      error_response.status
+      error_response.status,
     );
 
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });
@@ -74,7 +76,7 @@ async function fetchAndSetCache() {
     createErrorRollbarReport(
       "subscription: retrieve plans: Redis write Error",
       redisWriteErr as any,
-      500
+      500,
     );
   }
 

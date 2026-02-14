@@ -2,16 +2,20 @@ import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_con
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../util";
 import { redis } from "@omenai/upstash-config";
-
+import z from "zod";
+const tourSchema = z.object({
+  id: z.string(),
+});
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
-  request: Request
+  request: Request,
 ) {
   const url = request.url;
-  const id = new URL(url).searchParams.get("id");
+  const idParams = new URL(url).searchParams.get("id");
   try {
     let toursData: string[] = [];
+    const { id } = validateGetRouteParams(tourSchema, { id: idParams });
     try {
       const storedTours = await redis.smembers(`tours:${id}`);
 
@@ -30,11 +34,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
     createErrorRollbarReport(
       "transactions: create transaction",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -1,40 +1,49 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { WalletTransaction } from "@omenai/shared-models/models/wallet/WalletTransactionSchema";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+import z from "zod";
 
+const Schema = z.object({
+  wallet_id: z.string(),
+  year: z.string(),
+  limit: z.string().optional(),
+  status: z.string().toLowerCase().optional(),
+  page: z.string().default("1").optional(),
+});
 export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function GET(request: Request) {
     await connectMongoDB();
     try {
       const url = new URL(request.url);
       const searchParams = url.searchParams;
-      const wallet_id = searchParams.get("id");
-      const year = searchParams.get("year");
-      const limit = searchParams.get("limit");
-      const status = searchParams.get("status")?.toLowerCase(); // make it case-insensitive
-      const page = searchParams.get("page") || 1;
+      const wallet_idParams = searchParams.get("id");
+      const yearParams = searchParams.get("year");
+      const limitParams = searchParams.get("limit");
+      const statusParams = searchParams.get("status")?.toLowerCase(); // make it case-insensitive
+      const pageParams = searchParams.get("page") || "1";
+      const { limit, page, status, wallet_id, year } = validateGetRouteParams(
+        Schema,
+        {
+          wallet_id: wallet_idParams ?? "",
+          limit: limitParams ?? "",
+          year: yearParams ?? "",
+          page: pageParams,
+          status: statusParams,
+        },
+      );
       const skip = (Number(page) - 1) * 10;
-
-      if (!year || !wallet_id)
-        throw new BadRequestError(
-          "Missing url params - year and id is required"
-        );
 
       const numericYear = Number(year);
       const numericLimit = limit ? Number(limit) : 0;
 
       if (Number.isNaN(numericYear) || (limit && Number.isNaN(numericLimit)))
         throw new BadRequestError(
-          "Invalid param type. 'year' and 'limit' should be numerical."
+          "Invalid param type. 'year' and 'limit' should be numerical.",
         );
 
       // Build the query
@@ -48,7 +57,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
       if (status && status !== "all") {
         if (!validStatuses.includes(status)) {
           throw new BadRequestError(
-            "Invalid 'status' param. Accepted values: pending, failed, successful, all"
+            "Invalid 'status' param. Accepted values: pending, failed, successful, all",
           );
         }
         query.trans_status = status.toUpperCase(); // Assuming status in DB is in uppercase
@@ -64,7 +73,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
 
       const fetch_wallet_transactions = await mongoQuery.exec();
 
-      const total = await WalletTransaction.countDocuments({ wallet_id });
+      const total = await WalletTransaction.countDocuments(query);
 
       return NextResponse.json(
         {
@@ -72,19 +81,19 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
           data: fetch_wallet_transactions,
           pageCount: Math.ceil(total / 10),
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "wallet: fetch wallet transactions",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

@@ -19,7 +19,7 @@ export default function AccountSettings() {
       </div>
 
       {/* Security Section */}
-      <div className="bg-gradient-to-br from-gray-800 to-white p-6 rounded-2xl border border-line">
+      <div className="bg-gradient-to-br from-gray-800 to-white p-6 rounded border border-line">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-dark/10 rounded flex items-center justify-center">
@@ -36,8 +36,8 @@ export default function AccountSettings() {
           </div>
           <button
             onClick={() => updatePasswordModalPopup(true)}
-            className="px-4 py-2 bg-dark text-white rounded-full hover:bg-dark/90 
-                           transition-all duration-300 text-fluid-xxs font-normal"
+            className="px-4 py-2 bg-dark text-white rounded hover:bg-dark/90 
+                           transition-all duration-300 text-fluid-xxs font-light"
           >
             Update Password
           </button>
@@ -45,7 +45,7 @@ export default function AccountSettings() {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-red-50 border-2 border-red-200 p-6 rounded-2xl">
+      <div className="bg-red-50 border-2 border-red-200 p-6 rounded">
         <h3 className="text-fluid-xxs font-medium text-red-900 mb-4 flex items-center space-x-2">
           <AlertCircle className="w-5 h-5" />
           <span>Danger Zone</span>
@@ -61,8 +61,8 @@ export default function AccountSettings() {
           </div>
           <button
             onClick={() => updateDeleteArtistAccountModalPopup(true)}
-            className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 
-                           transition-all duration-300 text-fluid-xxs font-normal flex items-center space-x-2"
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 
+                           transition-all duration-300 text-fluid-xxs font-light flex items-center space-x-2"
           >
             <Trash2 className="w-4 h-4" />
             <span>Delete Account</span>

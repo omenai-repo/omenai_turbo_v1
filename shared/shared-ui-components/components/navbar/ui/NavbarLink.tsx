@@ -3,36 +3,37 @@ import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore"
 import Link from "next/link";
 import { CiLock } from "react-icons/ci";
 
-type NavbarLinkProps = {
+export default function NavbarLink({
+  disabled,
+  text,
+  link,
+}: {
   disabled: boolean;
   text: string;
   link: string;
-};
-export default function NavbarLink({ disabled, text, link }: NavbarLinkProps) {
+}) {
   const { updateOpenSideNav } = actionStore();
 
   return (
-    <>
+    <li className="relative list-none">
       {disabled ? (
-        <>
-          <li className="relative text-fluid-xs text-dark font-normal">
-            <p
-              className="cursor-not-allowed whitespace-nowrap text-fluid-xxs"
-              aria-disabled
-            >
-              {text}
-            </p>
-            <CiLock className="absolute right-[-15px] top-[-5px]" />
-          </li>
-        </>
-      ) : (
-        <li className="text-fluid-xs w-fit text-dark whitespace-nowrap font-normal flex flex-col group">
-          <Link href={link} onClick={() => updateOpenSideNav(false)}>
+        <div className="flex items-center gap-1 opacity-40 cursor-not-allowed">
+          <span className="text-sm font-sans font-medium text-neutral-400">
             {text}
-          </Link>
-          <div className="h-1 bg-dark w-0 group-hover:w-full duration-300" />
-        </li>
+          </span>
+          <CiLock className="w-3 h-3 text-neutral-400" />
+        </div>
+      ) : (
+        <Link
+          href={link}
+          onClick={() => updateOpenSideNav(false)}
+          className="group flex items-center gap-1"
+        >
+          <span className="text-sm font-sans font-medium text-neutral-600 group-hover:text-dark  transition-colors duration-200">
+            {text}
+          </span>
+        </Link>
       )}
-    </>
+    </li>
   );
 }

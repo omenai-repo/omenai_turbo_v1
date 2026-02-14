@@ -1,15 +1,18 @@
 "use client";
-import { Tabs } from "@mantine/core";
+
+import { Tabs, Badge } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+
 import PendingGalleryRequests from "./PendingGalleryRequests";
 import ApprovedGalleryRequests from "./ApprovedGalleryRequests";
-import { useQuery } from "@tanstack/react-query";
+import Waitlist from "./Waitlist";
+
 import { fetchGalleriesOnVerifStatus } from "@omenai/shared-services/admin/fetch_galleries_on_verif_status";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { GallerySchemaTypes } from "@omenai/shared-types";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { canAccessRoute } from "../../../../utils/canAccessRoute";
 import ForbiddenPage from "../../../components/ForbiddenPage";
-import Waitlist from "./Waitlist";
 
 export type GalleryType = Pick<
   GallerySchemaTypes,
@@ -23,57 +26,85 @@ export type GalleryType = Pick<
   | "status"
   | "gallery_verified"
 >;
+
 export function GalleryRequestWrapper() {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  // Check permissions
   if (!canAccessRoute(user.access_role, "requests")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
-  const { data: galleries, isLoading: loading } = useQuery({
+
+  const { data: galleries = [], isLoading } = useQuery({
     queryKey: ["fetch_galleries_on_verif_status"],
     queryFn: async () => {
       const response = await fetchGalleriesOnVerifStatus();
-
       if (!response.isOk) throw new Error(response.message);
       return response.data;
     },
   });
 
-  if (loading) return <Load />;
+  if (isLoading) return <Load />;
 
-  const pending: GalleryType[] = galleries.filter(
+  const pending = galleries.filter(
     (gallery: GalleryType) => !gallery.gallery_verified
   );
-  console.log(pending);
 
-  const approved: GalleryType[] = galleries.filter(
+  const approved = galleries.filter(
     (gallery: GalleryType) => gallery.gallery_verified
   );
+
   return (
-    <Tabs defaultValue="Pending">
-      <Tabs.List>
-        <Tabs.Tab value="Pending">Pending Requests</Tabs.Tab>
-        <Tabs.Tab value="Approved">Approved Galleries</Tabs.Tab>
-        <Tabs.Tab value="Waitlist">Waitlist</Tabs.Tab>
-        {/* <Tabs.Tab value="settings">Rejected Galleries</Tabs.Tab> */}
-      </Tabs.List>
+    <section className="space-y-6">
+      {/* Header */}
+      <header className="flex flex-col gap-1">
+        <h1 className="text-lg font-semibold text-neutral-900">
+          Gallery Requests
+        </h1>
+        <p className="text-sm text-neutral-500">
+          Review, approve, and manage gallery verification requests
+        </p>
+      </header>
 
-      <Tabs.Panel value="Pending" className="mt-4">
-        <PendingGalleryRequests galleries={pending} />
-      </Tabs.Panel>
+      {/* Tabs Container */}
+      <div className="rounded border border-neutral-200 bg-white p-4 shadow-sm">
+        <Tabs defaultValue="pending" variant="pills" radius="sm">
+          <Tabs.List className="mb-4 flex gap-2">
+            <Tabs.Tab value="pending">
+              <div className="flex items-center gap-2">
+                <span>Pending</span>
+                <Badge size="sm" variant="filled" color="orange">
+                  {pending.length}
+                </Badge>
+              </div>
+            </Tabs.Tab>
 
-      <Tabs.Panel value="Approved" className="mt-4">
-        <ApprovedGalleryRequests galleries={approved} />
-      </Tabs.Panel>
+            <Tabs.Tab value="approved">
+              <div className="flex items-center gap-2">
+                <span>Approved</span>
+                <Badge size="sm" variant="light" color="green">
+                  {approved.length}
+                </Badge>
+              </div>
+            </Tabs.Tab>
 
-      <Tabs.Panel value="Waitlist" className="mt-4">
-        <Waitlist />
-      </Tabs.Panel>
+            <Tabs.Tab value="waitlist">
+              <span>Waitlist</span>
+            </Tabs.Tab>
+          </Tabs.List>
 
-      {/* <Tabs.Panel value="settings">
-        <RejectedGalleryRequests />
-      </Tabs.Panel> */}
-    </Tabs>
+          <Tabs.Panel value="pending">
+            <PendingGalleryRequests galleries={pending} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="approved">
+            <ApprovedGalleryRequests galleries={approved} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="waitlist">
+            <Waitlist />
+          </Tabs.Panel>
+        </Tabs>
+      </div>
+    </section>
   );
 }

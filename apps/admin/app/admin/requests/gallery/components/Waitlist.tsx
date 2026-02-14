@@ -1,224 +1,232 @@
 "use client";
-import { Button } from "@mantine/core";
-import { Mail } from "lucide-react";
-import React, { useState } from "react";
 
-const statusConfig = {
-  selected: {
-    borderColor: "border-emerald-200",
-    bgColor: "bg-gradient-to-r from-emerald-50/80 to-green-50/60",
-    shadowColor: "shadow-emerald-100/50",
-    indicatorColor: "green",
-    glowColor: "ring-emerald-200/50",
-  },
-  waitlisted: {
-    borderColor: "border-amber-200",
-    bgColor: "bg-gradient-to-r from-amber-50/80 to-orange-50/60",
-    shadowColor: "shadow-amber-100/50",
-    indicatorColor: "red",
-    glowColor: "ring-amber-200/50",
-  },
-};
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Mail } from "lucide-react";
+import React, { useState, useMemo } from "react";
+
+import { fetchWaitlistUsers } from "@omenai/shared-services/admin/fetch_waitlist_users";
+import { inviteWaitlistUsers } from "@omenai/shared-services/admin/invite_waitlist_users";
+import { WaitListTypes } from "@omenai/shared-types";
+
+import Load from "@omenai/shared-ui-components/components/loader/Load";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+
+import { InviteEntityModal } from "../../InviteEntityModal";
+import { WaitlistHeader } from "../../WaitlistHeader";
 
 export default function Waitlist() {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
+  const { user, csrf } = useAuth({ requiredRole: "admin" });
+  const queryClient = useQueryClient();
 
-  const createGallery = (id: string, name: string, email: string) => ({
-    waitlistId: id,
-    name,
-    email,
+  const { data: galleries, isLoading } = useQuery<WaitListTypes[]>({
+    queryKey: ["fetch_gallery_waitlist_users", "gallery"],
+    queryFn: async () => {
+      const response = await fetchWaitlistUsers("gallery", csrf || "");
+      if (!response.isOk) throw new Error(response.message);
+      return response.data;
+    },
+    enabled: user.access_role === "Admin" || user.access_role === "Owner",
+    refetchOnWindowFocus: false,
   });
 
-  const galleries = [
-    createGallery("1", "Visage of Beauty", "dantereus1@gmail.com"),
-    createGallery("2", "Modern Art Gallery", "contact@modernart.com"),
-    createGallery("3", "Gallery Nouveau", "info@gallerynouveau.com"),
-    createGallery("4", "The Art Space", "hello@theartspace.net"),
-    createGallery("5", "Contemporary Visions", "admin@contemporaryvisions.com"),
-    createGallery("6", "Urban Canvas", "contact@urbancanvas.org"),
-    createGallery("7", "Studio Gallery", "info@studiogallery.com"),
-    createGallery("8", "Artisan Collective", "team@artisancollective.com"),
-    createGallery("9", "Spectrum Gallery", "hello@spectrumgallery.net"),
-  ];
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [discountToggles, setDiscountToggles] = useState<Map<string, boolean>>(
+    new Map()
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isInviting, setIsInviting] = useState(false);
+  const [modalOpened, setModalOpened] = useState(false);
+
+  const selectedGalleries = useMemo(() => {
+    if (!galleries) return [];
+    return galleries
+      .filter((g) => selectedIds.has(g.waitlistId))
+      .map((g) => ({
+        waitlistId: g.waitlistId,
+        name: g.name,
+        email: g.email,
+        discount: discountToggles.get(g.waitlistId) || false,
+      }));
+  }, [galleries, selectedIds, discountToggles]);
+
+  if (isLoading) return <Load />;
+  if (!galleries || galleries.length === 0) return <NotFoundData />;
+
   const filteredGalleries = galleries.filter(
-    (gallery) =>
-      gallery.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      gallery.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (g) =>
+      g.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      g.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSelectAll = () => {
-    if (selectedIds.size === filteredGalleries.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filteredGalleries.map((g) => g.waitlistId)));
-    }
+    setSelectedIds(
+      selectedIds.size === filteredGalleries.length
+        ? new Set()
+        : new Set(filteredGalleries.map((g) => g.waitlistId))
+    );
   };
 
   const handleSelectItem = (id: string) => {
-    const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
+    const next = new Set(selectedIds);
+    if (next.has(id)) {
+      next.delete(id);
+      const discounts = new Map(discountToggles);
+      discounts.delete(id);
+      setDiscountToggles(discounts);
     } else {
-      newSelected.add(id);
+      next.add(id);
     }
-    setSelectedIds(newSelected);
+    setSelectedIds(next);
   };
 
-  const handleRowKeyDown = (e: React.KeyboardEvent, id: string) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleSelectItem(id);
+  const handleToggleDiscount = (id: string, checked: boolean) => {
+    setDiscountToggles(new Map(discountToggles.set(id, checked)));
+    if (checked && !selectedIds.has(id)) {
+      setSelectedIds(new Set(selectedIds).add(id));
     }
   };
 
   const allSelected =
-    selectedIds.size === galleries.length && galleries.length > 0;
+    selectedIds.size === filteredGalleries.length &&
+    filteredGalleries.length > 0;
   const someSelected =
-    selectedIds.size > 0 && selectedIds.size < galleries.length;
+    selectedIds.size > 0 && selectedIds.size < filteredGalleries.length;
+
+  async function inviteGalleryUsers() {
+    if (selectedIds.size === 0) return;
+    setIsInviting(true);
+
+    const payload = Array.from(selectedIds).map((id) => ({
+      waitlistId: id,
+      discount: discountToggles.get(id) || false,
+    }));
+
+    const response = await inviteWaitlistUsers(payload, csrf ?? "");
+    if (response.isOk) {
+      queryClient.invalidateQueries({
+        queryKey: ["fetch_gallery_waitlist_users", "gallery"],
+      });
+      setSelectedIds(new Set());
+      setDiscountToggles(new Map());
+      setModalOpened(false);
+      toast_notif(
+        `Invitations sent — ${response.modifiedCount} invited`,
+        "success"
+      );
+    } else {
+      toast_notif(response.message, "error");
+    }
+
+    setIsInviting(false);
+  }
 
   return (
-    <div className="w-full p-1 flex flex-col gap-6">
-      {/* Select All Header */}
-      <div className="flex items-center justify-between gap-3 px-4">
-        <label className="flex items-center gap-2 cursor-pointer group">
-          <input
-            type="checkbox"
-            checked={allSelected}
-            ref={(input) => {
-              if (input) input.indeterminate = someSelected;
-            }}
-            onChange={handleSelectAll}
-            aria-label={
-              allSelected
-                ? "Deselect all items"
-                : someSelected
-                  ? "Select all items (some currently selected)"
-                  : "Select all items"
-            }
-            className="w-5 h-5 rounded border border-black text-slate-900 
-    focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
-    cursor-pointer transition-all duration-200
-    group-hover:border-slate-400"
+    <section className="space-y-4">
+      <InviteEntityModal
+        opened={modalOpened}
+        close={() => setModalOpened(false)}
+        selectedEntity={selectedGalleries}
+        onConfirmInvite={inviteGalleryUsers}
+        isInviting={isInviting}
+      />
+
+      <div className="rounded border border-neutral-200 bg-white shadow-sm">
+        <div className="border-b border-neutral-100 px-4 py-3">
+          <WaitlistHeader
+            allSelected={allSelected}
+            someSelected={someSelected}
+            filteredItemsLength={filteredGalleries.length}
+            selectedCount={selectedIds.size}
+            isInviting={isInviting}
+            searchQuery={searchQuery}
+            onSelectAll={handleSelectAll}
+            onSearchChange={setSearchQuery}
+            onInviteClick={() => setModalOpened(true)}
           />
-          <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-            Select All
-          </span>
-        </label>
-        <div className="flex gap-8 items-center">
-          <div>
-            <input
-              type="text"
-              className={
-                "w-full bg-transparent border border-slate-300 focus:border-dark outline-none focus:ring-0 rounded-full transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 px-4 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed"
-              }
-              placeholder="Search by name or email"
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button
-            variant="gradient"
-            gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
-            size="xs"
-            radius="sm"
-            className="
-                  font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
-                  transition-all duration-300 hover:scale-105 active:scale-95
-                  ring-1 ring-blue-200/50 hover:ring-blue-300/70
-                  transform-gpu
-                "
-            styles={{
-              root: {
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                },
-              },
-            }}
-          >
-            Invite Selected
-          </Button>
         </div>
+
+        <div className="divide-y divide-neutral-100">
+          {filteredGalleries.map((gallery) => (
+            <WaitlistRow
+              key={gallery.waitlistId}
+              gallery={gallery}
+              isSelected={selectedIds.has(gallery.waitlistId)}
+              hasDiscount={discountToggles.get(gallery.waitlistId) || false}
+              onSelect={() => handleSelectItem(gallery.waitlistId)}
+              onToggleDiscount={(checked) =>
+                handleToggleDiscount(gallery.waitlistId, checked)
+              }
+            />
+          ))}
+        </div>
+
+        {filteredGalleries.length === 0 && (
+          <div className="p-6">
+            <NotFoundData />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function WaitlistRow({
+  gallery,
+  isSelected,
+  hasDiscount,
+  onSelect,
+  onToggleDiscount,
+}: {
+  gallery: WaitListTypes;
+  isSelected: boolean;
+  hasDiscount: boolean;
+  onSelect: () => void;
+  onToggleDiscount: (checked: boolean) => void;
+}) {
+  return (
+    <div
+      className={`
+        relative flex items-center gap-4 px-4 py-3
+        transition
+        ${isSelected ? "bg-emerald-50/60" : "hover:bg-neutral-50"}
+      `}
+    >
+      {isSelected && (
+        <div className="absolute left-0 top-0 h-full w-1 bg-emerald-500" />
+      )}
+
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={onSelect}
+        className="h-4 w-4 rounded border-neutral-300"
+      />
+
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-sm font-medium text-neutral-900 truncate">
+          {gallery.name}
+        </span>
+        <span className="flex items-center gap-1.5 text-xs text-neutral-500 truncate">
+          <Mail size={13} />
+          {gallery.email}
+        </span>
       </div>
 
-      {filteredGalleries.map((gallery) => {
-        const isSelected = selectedIds.has(gallery.waitlistId);
-        const currentStyle =
-          statusConfig[isSelected ? "selected" : "waitlisted"];
-        return (
-          <div
-            key={gallery.waitlistId}
-            role="button"
-            tabIndex={0}
-            onClick={() => handleSelectItem(gallery.waitlistId)}
-            onKeyDown={(e) => handleRowKeyDown(e, gallery.waitlistId)}
-            aria-label={`${isSelected ? "Deselect" : "Select"} ${gallery.name}`}
-            className={`
-          group relative rounded border 2xl:py-3 py-2 ${currentStyle.borderColor} ${currentStyle.bgColor} 
-          backdrop-blur-sm transition-all duration-500 ${currentStyle.shadowColor}
-          ${currentStyle.glowColor}
-          transform-gpu cursor-pointer
-          ${isSelected ? "ring-2 ring-slate-400" : ""}
-          focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2
-          hover:shadow-lg
-        `}
-          >
-            {/* Main content */}
-            <div className="relative z-10 flex justify-between items-center px-4 py-2 pointer-events-none">
-              <div className="pointer-events-auto">
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={() => handleSelectItem(gallery.waitlistId)}
-                  onClick={(e) => e.stopPropagation()}
-                  aria-label={`Select ${gallery.name}`}
-                  tabIndex={-1}
-                  className="w-5 h-5 rounded border border-black text-slate-900 
-                    focus:ring-2 focus:ring-slate-500 focus:ring-offset-0 
-                    cursor-pointer transition-all duration-200
-                    hover:border-slate-400"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <h4 className="text-fluid-xs font-medium text-gray-900 transition-colors duration-300 ">
-                  {gallery.name}
-                </h4>
-              </div>
-              <div className="flex items-center gap-x-1.5 text-fluid-xxs text-dark">
-                <Mail size={18} />
-                <span className="font-medium text-fluid-xs">
-                  {gallery.email}
-                </span>
-              </div>
-              <Button
-                variant="gradient"
-                gradient={{ from: "#0f172a", to: "#0f172a", deg: 45 }}
-                size="xs"
-                radius="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Add your invite logic here
-                }}
-                className="
-                  font-normal text-fluid-xxs px-4 py-2.5 shadow-lg hover:shadow-xl
-                  transition-all duration-300 hover:scale-105 active:scale-95
-                  ring-1 ring-blue-200/50 hover:ring-blue-300/70
-                  transform-gpu pointer-events-auto
-                "
-                styles={{
-                  root: {
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                    },
-                  },
-                }}
-              >
-                Invite
-              </Button>
-            </div>
-          </div>
-        );
-      })}
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-neutral-600">Discount</span>
+        <label className="relative inline-flex h-5 w-9 cursor-pointer items-center">
+          <input
+            type="checkbox"
+            checked={hasDiscount}
+            onChange={(e) => onToggleDiscount(e.target.checked)}
+            className="peer sr-only"
+          />
+          <span className="absolute inset-0 rounded bg-neutral-300 transition peer-checked:bg-neutral-900" />
+          <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded bg-white transition peer-checked:translate-x-4" />
+        </label>
+      </div>
     </div>
   );
 }

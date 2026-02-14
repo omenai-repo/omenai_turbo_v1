@@ -5,21 +5,27 @@ import { sendPriceEmail } from "@omenai/shared-emails/src/models/orders/requestP
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { createErrorRollbarReport } from "../../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["user"],
 };
-
+const RequestPriceSchema = z.object({
+  data: z.any(),
+  email: z.email(),
+  name: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
+    const { data, email, name } = await validateRequestBody(
+      request,
+      RequestPriceSchema,
+    );
     await connectMongoDB();
-
-    const { data, email, name } = await request.json();
-
     await sendPriceEmail({
       name,
       email,
@@ -30,19 +36,18 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         message: "Successful",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    console.log(error);
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "pricing: request price",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

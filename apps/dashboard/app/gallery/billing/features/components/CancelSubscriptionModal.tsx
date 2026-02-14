@@ -70,7 +70,7 @@ export default function CancelSubscriptionModal({
                 {/* Header */}
                 <div className="bg-red-50 px-6 py-5 border-b border-red-100">
                   <div className="flex items-start gap-4">
-                    <div className="p-2 bg-red-100 rounded-full">
+                    <div className="p-2 bg-red-100 rounded">
                       <svg
                         className="w-6 h-6 text-red-600"
                         fill="none"
@@ -93,24 +93,6 @@ export default function CancelSubscriptionModal({
                         This action cannot be undone
                       </p>
                     </div>
-                    <button
-                      onClick={() => updateOpenModal()}
-                      className="p-1 rounded hover:bg-red-100 transition-colors"
-                    >
-                      <svg
-                        className="w-5 h-5 text-slate-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
                   </div>
                 </div>
 

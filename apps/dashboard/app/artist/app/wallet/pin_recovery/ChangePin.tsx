@@ -51,7 +51,7 @@ export default function WalletPinResetForm() {
     }
     if (isRepeatingOrConsecutive(pin)) {
       handleError(
-        "Wallet pin cannot be repeating or consecutive. Please try again."
+        "Wallet pin cannot be repeating or consecutive. Please try again.",
       );
       return false;
     }
@@ -67,13 +67,13 @@ export default function WalletPinResetForm() {
       const response = await setWalletPin(
         user.wallet_id as string,
         pin,
-        csrf || ""
+        csrf || "",
       );
 
       if (!response?.isOk) {
         handleError(
           response?.message ||
-            "Something went wrong. Please try again or contact support."
+            "Something went wrong. Please try again or contact support.",
         );
         return;
       }
@@ -109,7 +109,7 @@ export default function WalletPinResetForm() {
             Enter new wallet pin
           </span>
           <PinInput
-            size="lg"
+            size="sm"
             mask
             type="number"
             aria-label="Wallet pin"
@@ -124,7 +124,7 @@ export default function WalletPinResetForm() {
             Confirm new wallet pin
           </span>
           <PinInput
-            size="lg"
+            size="sm"
             mask
             type="number"
             aria-label="Confirm wallet pin"
@@ -144,7 +144,7 @@ export default function WalletPinResetForm() {
         <button
           disabled={isDisabled}
           onClick={handlePinChange}
-          className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
+          className="h-[35px] p-5 rounded w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
         >
           {loading ? <LoadSmall /> : "Update wallet pin"}
         </button>

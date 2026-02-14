@@ -1,7 +1,4 @@
-import {
-  lenientRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -15,24 +12,24 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       await connectMongoDB();
       const admins = await AccountAdmin.find(
         {},
-        "name email access_role admin_id joinedAt verified"
+        "name email access_role admin_id joinedAt verified",
       );
 
       return NextResponse.json(
         { message: "Successfully fetched all admins", data: admins },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "admin: fetch admins",
         error,
-        error_response?.status
+        error_response?.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

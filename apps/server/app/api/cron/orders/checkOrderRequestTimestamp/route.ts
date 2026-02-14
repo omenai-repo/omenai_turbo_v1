@@ -15,6 +15,7 @@ import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtw
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createErrorRollbarReport } from "../../../util";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { verifyAuthVercel } from "../../utils";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -28,15 +29,10 @@ interface ProcessedCounts {
   emailErrors: number;
 }
 
-/**
- * Auto-declines orders older than 96 hours and sends notification emails
- */
 async function processAutoDeclines(
   hours96Ago: Date,
-  processedCounts: ProcessedCounts
+  processedCounts: ProcessedCounts,
 ): Promise<void> {
-  // Use findOneAndUpdate in a loop to atomically process each order
-  // This prevents race conditions and ensures we only email orders we actually updated
   const autoDeclinedOrders: CreateOrderModelTypes[] = [];
 
   let foundOrder;
@@ -53,7 +49,7 @@ async function processAutoDeclines(
             "Seller did not respond within the designated timeframe",
         },
       },
-      { new: true } // Return updated document
+      { new: true }, // Return updated document
     );
 
     if (foundOrder) {
@@ -66,8 +62,6 @@ async function processAutoDeclines(
   if (autoDeclinedOrders.length === 0) {
     return;
   }
-
-  console.log(`Auto-declined ${autoDeclinedOrders.length} orders`);
 
   // Update artwork rejection counts and check for breaches
   await updateArtworkRejectionCounts(autoDeclinedOrders);
@@ -84,7 +78,7 @@ async function processAutoDeclines(
               declineReason:
                 "Seller did not respond within the designated timeframe",
               artwork: order.artwork_data,
-            })
+            }),
           );
           return {
             from: "Orders ",
@@ -92,7 +86,7 @@ async function processAutoDeclines(
             subject: "Your order has been declined",
             html,
           };
-        })
+        }),
       ),
       // Seller emails
       Promise.all(
@@ -101,7 +95,7 @@ async function processAutoDeclines(
             OrderAutoDeclinedEmail({
               name: order.seller_details.name,
               artwork: order.artwork_data,
-            })
+            }),
           );
           return {
             from: "Orders ",
@@ -109,7 +103,7 @@ async function processAutoDeclines(
             subject: "Order has been auto declined",
             html,
           };
-        })
+        }),
       ),
     ]);
 
@@ -118,10 +112,6 @@ async function processAutoDeclines(
       resend.batch.send(buyerEmailPayload),
       resend.batch.send(sellerEmailPayload),
     ]);
-
-    console.log(
-      `Successfully sent auto-decline emails for ${autoDeclinedOrders.length} orders`
-    );
   } catch (error) {
     console.error("Failed to send auto-decline emails:", error);
     processedCounts.emailErrors += autoDeclinedOrders.length * 2; // Buyer + seller emails
@@ -134,7 +124,7 @@ async function processAutoDeclines(
 async function sendWarningEmails(
   hours72Ago: Date,
   hours96Ago: Date,
-  processedCounts: ProcessedCounts
+  processedCounts: ProcessedCounts,
 ): Promise<void> {
   const orders72 = await CreateOrder.find({
     updatedAt: {
@@ -148,13 +138,11 @@ async function sendWarningEmails(
     return;
   }
 
-  console.log(`Sending warnings for ${orders72.length} orders`);
-
   try {
     const warningEmailPayload = await Promise.all(
       orders72.map(async (order) => {
         const html = await render(
-          OrderDeclinedWarning({ name: order.seller_details.name })
+          OrderDeclinedWarning({ name: order.seller_details.name }),
         );
         return {
           from: "Orders <omenai@omenai.app>",
@@ -162,12 +150,11 @@ async function sendWarningEmails(
           subject: "Notice: Potential Order Request Decline",
           html,
         };
-      })
+      }),
     );
 
     await resend.batch.send(warningEmailPayload);
     processedCounts.warningsSent = orders72.length;
-    console.log(`Successfully sent ${orders72.length} warning emails`);
   } catch (error) {
     console.error("Failed to send warning emails:", error);
     processedCounts.emailErrors += orders72.length;
@@ -180,7 +167,7 @@ async function sendWarningEmails(
 async function sendReminderEmails(
   hours24Ago: Date,
   hours72Ago: Date,
-  processedCounts: ProcessedCounts
+  processedCounts: ProcessedCounts,
 ): Promise<void> {
   const orders24 = await CreateOrder.find({
     updatedAt: {
@@ -194,14 +181,12 @@ async function sendReminderEmails(
     return;
   }
 
-  console.log(`Sending reminders for ${orders24.length} orders`);
-
   try {
     // Use consistent rendering approach
     const reminderEmailPayload = await Promise.all(
       orders24.map(async (order) => {
         const html = await render(
-          OrderRequestReminder(order.seller_details.name)
+          OrderRequestReminder(order.seller_details.name),
         );
         return {
           from: "Orders <omenai@omenai.app>",
@@ -209,12 +194,11 @@ async function sendReminderEmails(
           subject: "Order Request Reminder",
           html,
         };
-      })
+      }),
     );
 
     await resend.batch.send(reminderEmailPayload);
     processedCounts.remindersSent = orders24.length;
-    console.log(`Successfully sent ${orders24.length} reminder emails`);
   } catch (error) {
     console.error("Failed to send reminder emails:", error);
     processedCounts.emailErrors += orders24.length;
@@ -222,10 +206,14 @@ async function sendReminderEmails(
 }
 
 // NOTE: Run every day at 00:00 UTC
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+export const GET = withRateLimit(lenientRateLimit)(async function GET(
+  request: Request,
+) {
   const startTime = Date.now();
 
   try {
+    await verifyAuthVercel(request);
+
     await connectMongoDB();
 
     const currentDate = toUTCDate(new Date());
@@ -251,10 +239,6 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     await sendReminderEmails(hours24Ago, hours72Ago, processedCounts);
 
     const duration = Date.now() - startTime;
-    console.log(
-      `Order management completed in ${duration}ms:`,
-      processedCounts
-    );
 
     return NextResponse.json(
       {
@@ -262,7 +246,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         duration,
         ...processedCounts,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const duration = Date.now() - startTime;
@@ -272,7 +256,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
     createErrorRollbarReport(
       "Cron: Check order request timestamp - update artwork rejection counts",
       error,
-      error_response?.status
+      error_response?.status,
     );
 
     return NextResponse.json(
@@ -280,13 +264,13 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         message: "Order management cron job failed",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });
 
 async function updateArtworkRejectionCounts(
-  autoDeclinedOrders: CreateOrderModelTypes[]
+  autoDeclinedOrders: CreateOrderModelTypes[],
 ): Promise<void> {
   try {
     // Step 1: Bulk increment rejection counts for all artworks
@@ -308,10 +292,6 @@ async function updateArtworkRejectionCounts(
       ordered: false, // Continue on errors
     });
 
-    console.log(
-      `Updated rejection counts for ${artworkUpdateResult.modifiedCount} artworks`
-    );
-
     // Step 2: Find all artworks that now have count >= 3
     const artworkQueries = autoDeclinedOrders.map((order) => ({
       art_id: order.artwork_data.art_id,
@@ -324,7 +304,6 @@ async function updateArtworkRejectionCounts(
     }).select("author_id");
 
     if (breachedArtworks.length === 0) {
-      console.log("No artworks reached breach threshold");
       return;
     }
 
@@ -361,29 +340,15 @@ async function updateArtworkRejectionCounts(
         artistBulkWrites,
         {
           ordered: false, // Continue on errors
-        }
+        },
       );
 
-      console.log(
-        `Marked ${artistUpdateResult.modifiedCount} artists as breached (${breachedArtworks.length} artworks exceeded threshold)`
-      );
-    } else {
-      console.log("No bulk writes to update breach status was run");
-    }
-
-    if (availabilityBulkWrites.length > 0) {
-      const availabilityUpdateResult = await Artworkuploads.bulkWrite(
-        availabilityBulkWrites,
-        { ordered: false }
-      );
-
-      console.log(
-        `Marked ${availabilityUpdateResult.modifiedCount} artworks as sold (${breachedArtworks.length}`
-      );
-    } else {
-      console.log(
-        "No bulk writes to update artwork availability status was run"
-      );
+      if (availabilityBulkWrites.length > 0) {
+        const availabilityUpdateResult = await Artworkuploads.bulkWrite(
+          availabilityBulkWrites,
+          { ordered: false },
+        );
+      }
     }
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
@@ -392,7 +357,7 @@ async function updateArtworkRejectionCounts(
     createErrorRollbarReport(
       "Cron: Check order request timestamp - update artwork rejection counts",
       error,
-      error_response?.status
+      error_response?.status,
     );
   }
 }

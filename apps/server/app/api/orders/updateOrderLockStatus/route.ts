@@ -3,24 +3,31 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { NextResponse } from "next/server";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
+
 import {
   standardRateLimit,
   strictRateLimit,
 } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const UpdateOrderLockStatusSchema = z.object({
+  art_id: z.string(),
+  lock_status: z.string(),
+});
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { art_id, lock_status } = await request.json();
+      const { art_id, lock_status } = await validateRequestBody(
+        request,
+        UpdateOrderLockStatusSchema,
+      );
 
       const locked = await CreateOrder.updateMany(
         { "artwork_data.art_id": art_id },
-        { $set: { lock_purchase: lock_status } }
+        { $set: { lock_purchase: lock_status } },
       );
 
       if (!locked) throw new ServerError("An error occured");
@@ -29,19 +36,19 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         {
           message: "Successful",
         },
-        { status: 200 }
+        { status: 200 },
       );
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "order: update order lock status",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

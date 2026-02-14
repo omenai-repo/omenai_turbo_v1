@@ -3,14 +3,16 @@ import { FormEvent } from "react";
 import FormController from "./FormController";
 import { registerAccount } from "@omenai/shared-services/register/registerAccount";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import uploadGalleryLogoContent from "../../uploadGalleryLogo";
 import { storage } from "@omenai/appwrite-config/appwrite";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 export default function FormInput() {
   const { gallerySignupData, setIsLoading, clearData } = useGalleryAuthStore();
-
+  const searchParams = useSearchParams();
+  const referrerKey = searchParams.get("referrerKey") as string;
+  const inviteCode = searchParams.get("inviteCode") as string;
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -46,8 +48,6 @@ export default function FormInput() {
       phone,
     } = gallerySignupData;
 
-    console.log(gallerySignupData);
-
     if (logo === null) return;
 
     const fileUploaded = await uploadGalleryLogoContent(logo);
@@ -76,7 +76,12 @@ export default function FormInput() {
         logo: file.fileId,
       };
 
-      const response = await registerAccount(payload, "gallery");
+      const response = await registerAccount(
+        payload,
+        referrerKey,
+        inviteCode,
+        "gallery"
+      );
 
       if (response.isOk) {
         toast.success("Operation successful", {
@@ -91,10 +96,10 @@ export default function FormInput() {
         router.push(`/verify/gallery/${response.body.data}`);
         clearData();
       } else {
-        await storage.deleteFile(
-          process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
-          file.fileId
-        );
+        await storage.deleteFile({
+          bucketId: process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
+          fileId: file.fileId,
+        });
         toast.error("Error notification", {
           description: response.body.message,
           style: {

@@ -15,18 +15,17 @@ export default function Tracking({ order_id }: { order_id: string }) {
     queryFn: async () => {
       const response = await getTrackingData(order_id);
 
-      console.log(response);
       if (!response?.isOk)
         throw new Error(
           response?.message ||
-            "Tracking data currently unavailable. Please try again"
+            "Tracking data currently unavailable. Please try again",
         );
 
       return {
         events: response.events,
         coordinates: response.coordinates,
         order_date: response.order_date,
-        artwork_data: response.arwork_data,
+        artwork_data: response.artwork_data,
         tracking_number: response.tracking_number,
       };
     },

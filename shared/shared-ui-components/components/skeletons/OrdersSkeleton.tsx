@@ -6,7 +6,7 @@ export const OrderSkeleton = () => {
       <div className="w-1/6">
         {Array.from({ length: 3 }).map((_, idx) => (
           <div className="mb-6" key={idx}>
-            <Skeleton height={40} mt={10} width="100%" radius="xl" />
+            <Skeleton height={40} mt={10} width="100%" radius="sm" />
           </div>
         ))}
       </div>
@@ -21,8 +21,8 @@ export const OrderSkeleton = () => {
               mb="sm"
             />
 
-            <Skeleton height={20} width="10%" radius="xl" />
-            <Skeleton height={20} mt={6} width="20%" radius="xl" />
+            <Skeleton height={20} width="10%" radius="sm" />
+            <Skeleton height={20} mt={6} width="20%" radius="sm" />
           </div>
         ))}
       </div>

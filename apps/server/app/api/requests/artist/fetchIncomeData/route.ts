@@ -1,21 +1,30 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
-import { withAppRouterHighlight } from "@omenai/shared-lib/highlight/app_router_highlight";
-import { createErrorRollbarReport } from "../../../util";
 
-export const GET = withAppRouterHighlight(async function GET(
+import {
+  createErrorRollbarReport,
+  validateGetRouteParams,
+} from "../../../util";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import z from "zod";
+const FetchIcomeSchema = z.object({
+  artistId: z.string(),
+});
+export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
-  context: { params: Promise<Record<string, string>> }
 ) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
 
-  const artistId = searchParams.get("id");
+  const id = searchParams.get("id");
   try {
     await connectMongoDB();
-
+    const { artistId } = validateGetRouteParams(FetchIcomeSchema, {
+      artistId: id,
+    });
     const pipeline = [
       {
         $match: {
@@ -30,7 +39,7 @@ export const GET = withAppRouterHighlight(async function GET(
           netIncome: {
             $sum: {
               $add: [
-                { $ifNull: ["$trans_pricing.amount_total", 0] },
+                { $ifNull: ["$trans_pricing.unit_price", 0] },
                 {
                   $multiply: [
                     { $ifNull: ["$trans_pricing.commission", 0] },
@@ -64,25 +73,24 @@ export const GET = withAppRouterHighlight(async function GET(
           message: "Income data fetched successfully",
           data: { netIncome: 0, salesRevenue: 0 },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
     return NextResponse.json(
       { message: "Income data fetched successfully", data: result[0] },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    console.log(error);
     createErrorRollbarReport(
       "artist: fetch income data",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

@@ -50,6 +50,16 @@ export const lenientRateLimit = {
   },
 };
 
+export const looseLimit = {
+  maxTokens: 300,
+  refillRate: 50,
+  keyGenerator: async (request: Request, userId?: string) => {
+    const id = await getClientIdentifier(request, userId);
+    const path = sanitizePath(new URL(request.url).pathname);
+    return `lenient-${path}:${id}`;
+  },
+};
+
 /**
  * Currency conversion specific rate limit (expensive)
  * 20 requests per minute

@@ -53,7 +53,6 @@ async function anonymizeTransactions(
         .lean();
 
       if (batch.length === 0) {
-        console.log("No more documents to process");
         break;
       }
       batchNumber++;
@@ -67,8 +66,6 @@ async function anonymizeTransactions(
 
       stats.totalMatched += result.matchedCount;
       stats.totalModified += result.modifiedCount;
-
-      console.log(`Batch processed, ${stats.totalModified} total so far`);
 
       if (batch.length === 0) break;
     }
@@ -90,9 +87,6 @@ async function anonymizeTransactions(
       successfulJobCreations: failedJobCreations,
     };
 
-    console.log(
-      `Completed: Anonymized ${summary.anonymized} transactions, skipped ${summary.skipped}`
-    );
     return {
       success: true,
       count: { ...summary },

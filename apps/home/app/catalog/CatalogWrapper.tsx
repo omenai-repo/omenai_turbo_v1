@@ -8,37 +8,61 @@ import { FilterDrawerProvider } from "./filter-v2/FilterDrawerProvider";
 import ActiveFilterPills from "./filter-v2/ActiveFilterPills";
 import FilterDrawer from "./filter-v2/FilterDrawer";
 import FilterToggleButton from "./filter-v2/FilterToggleButton";
+import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkStore";
 
 export default function CatalogWrapper() {
+  const { artwork_total } = artworkStore();
   return (
-    <main className="relative" suppressHydrationWarning>
+    <main className="relative bg-white min-h-screen" suppressHydrationWarning>
       <DesktopNavbar />
-      <>
-        <h1 className="text-fluid-base sm:text-fluid-sm md:text-fluid-lg font-medium mt-6 text-black tracking-tight">
-          Curate creativity and design in the digital realm.
-        </h1>
 
-        <hr className="w-full border border-dark/10 my-4" />
-      </>
-      {/* <div className="">
-        <Collections isCatalog={true} />
-      </div> */}
+      {/* 1. THE ARCHIVE HEADER */}
+      <header className=" py-4 max-w-[1800px] mx-auto">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-8 h-[1px] bg-dark"></span>
+              <span className="text-[10px] font-sans font-bold tracking-[0.4em] uppercase text-slate-400">
+                All works
+              </span>
+            </div>
+            <h1 className="text-xl md:text-3xl font-serif leading-[1.1] text-dark">
+              Discover works <br /> from artist across Africa & it's diaspora.
+            </h1>
+          </div>
 
-      {/* <Hero /> */}
-      <div className="">
-        {/* <Filter /> */}
-        <FilterDrawerProvider>
-          <div className="flex justify-between items-center gap-x-4 mb-4">
-            <FilterToggleButton />
-            <ActiveFilterPills />
+          {/* Metadata/Stats block - Adds "Atelier" technical feel */}
+          <div className="hidden lg:block text-right border-l border-slate-100 pl-12 pb-2">
+            <p className="text-xs font-sans font-bold uppercase tracking-widest text-dark">
+              {Math.floor(artwork_total / 10) * 10}+ Works
+            </p>
+          </div>
+        </div>
+      </header>
+
+      {/* 3. STUDIO CONTROLS (Filters) */}
+      <FilterDrawerProvider>
+        <div className="max-w-[1800px] mx-auto">
+          {/* Refined Filter Bar */}
+          <div className=" z-20 bg-white/80 backdrop-blur-md py-4 border-b border-slate-100 flex flex-wrap gap-4 mb-6">
+            <div className="flex md:flex-row flex-col md:items-center gap-6">
+              <FilterToggleButton />
+              <div className="h-4 w-[1px] bg-slate-200 hidden md:block"></div>
+              <ActiveFilterPills />
+            </div>
           </div>
 
           <FilterDrawer />
-          <AllArtworks />
-        </FilterDrawerProvider>
-        <AppStoreAd />
-        <Footer />
-      </div>
+
+          {/* 4. THE GRID */}
+          <div className="pb-24">
+            <AllArtworks />
+          </div>
+        </div>
+      </FilterDrawerProvider>
+
+      <AppStoreAd />
+      <Footer />
     </main>
   );
 }

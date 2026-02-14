@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
-import {TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import { TEXTAREA_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function ProvideOrderRejectionModalForm() {
   const { toggleDeclineOrderModal, current_order_id, order_modal_metadata } =
@@ -28,7 +28,7 @@ export default function ProvideOrderRejectionModalForm() {
   const [loading, setLoading] = useState(false);
 
   function handleInputChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     const { name, value } = e.target;
     setAcceptedStatus((prev) => ({
@@ -47,7 +47,7 @@ export default function ProvideOrderRejectionModalForm() {
       if (allKeysEmpty(order_modal_metadata)) {
         toast_notif(
           "Invalid request params. Refresh your page. If this error persists, please contact support.",
-          "error"
+          "error",
         );
         return;
       }
@@ -56,7 +56,7 @@ export default function ProvideOrderRejectionModalForm() {
         current_order_id,
         order_modal_metadata.seller_designation,
         order_modal_metadata.art_id,
-        csrf || ""
+        csrf || "",
       );
       if (!response?.isOk) {
         toast.error("Error notification", {
@@ -92,7 +92,7 @@ export default function ProvideOrderRejectionModalForm() {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -125,7 +125,7 @@ export default function ProvideOrderRejectionModalForm() {
           <button
             disabled={loading}
             type="submit"
-            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-normal"
+            className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-light"
           >
             {loading ? <LoadSmall /> : " Decline order"}
           </button>

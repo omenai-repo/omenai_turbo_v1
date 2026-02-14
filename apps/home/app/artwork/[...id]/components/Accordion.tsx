@@ -1,42 +1,43 @@
 import { useState } from "react";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdAdd, MdRemove } from "react-icons/md";
 
 type AccordionPropTypes = {
   header: string;
-  items: { icon?: React.ReactNode; content: string }[];
+  items: { content: string }[]; // Removed Icon prop for cleanliness
 };
-export default function Accordion({ header, items }: AccordionPropTypes) {
-  const [open, setOpen] = useState(true);
-  return (
-    <div className="relative">
-      <div className="text-dark">
-        <hr className="border-1 border-[#e0e0e0]" />
-        <div className="py-4 cursor-pointer" onClick={() => setOpen(!open)}>
-          <div className="flex justify-between items-center cursor-pointer">
-            <p className="text-fluid-base font-medium  ">{header}</p>
-            <MdOutlineKeyboardArrowDown
-              className={`${open ? "rotate-180" : "rotate-[-180]"} duration-300`}
-            />
-          </div>
 
-          {/* Accordion content */}
-          <div className={`my-4 ${open ? "block" : "hidden"}`}>
-            <ul className="flex flex-col space-y-4">
-              {items.map((item, index) => {
-                return (
-                  <li
-                    className="flex items-center gap-x-2 text-fluid-xxs"
-                    key={index + item.content}
-                  >
-                    {item.icon && item.icon}
-                    {item.content}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-        <hr className="border-1 border-[#e0e0e0]" />
+export default function Accordion({ header, items }: AccordionPropTypes) {
+  const [open, setOpen] = useState(false); // Default closed for cleaner look
+
+  return (
+    <div className="border-b border-neutral-200">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between py-4 text-left group"
+      >
+        <span className="font-sans text-xs font-medium uppercase tracking-wide text-neutral-600 group-hover:text-dark transition-colors">
+          {header}
+        </span>
+        {open ? (
+          <MdRemove className="text-neutral-400" />
+        ) : (
+          <MdAdd className="text-neutral-400" />
+        )}
+      </button>
+
+      <div
+        className={`overflow-hidden transition-all duration-300 ${open ? "max-h-48 opacity-100 pb-4" : "max-h-0 opacity-0"}`}
+      >
+        <ul className="space-y-2">
+          {items.map((item, index) => (
+            <li
+              key={index}
+              className="font-sans text-xs text-neutral-500 pl-4 border-l border-neutral-200"
+            >
+              {item.content}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

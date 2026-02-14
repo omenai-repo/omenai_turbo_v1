@@ -12,8 +12,13 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { SubscriptionModelSchemaTypes } from "@omenai/shared-types";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { createErrorRollbarReport } from "../../util";
-
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import z from "zod";
+const CreatePaymentIntentSchema = z.object({
+  amount: z.number(),
+  seller_id: z.string(),
+  meta: z.any(),
+});
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
     try {
@@ -21,11 +26,14 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         (await fetchConfigCatValue("stripe_payment_enabled", "high")) ?? false;
       if (!isStripePaymentEnabled) {
         throw new ServiceUnavailableError(
-          "Stripe payment is currently disabled"
+          "Stripe payment is currently disabled",
         );
       }
       await connectMongoDB();
-      const { amount, seller_id, meta } = await request.json();
+      const { amount, seller_id, meta } = await validateRequestBody(
+        request,
+        CreatePaymentIntentSchema,
+      );
 
       const [gallery, active_subscription] = await Promise.all([
         AccountGallery.findOne({ gallery_id: seller_id })
@@ -45,7 +53,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         active_subscription.status !== "active"
       ) {
         throw new ForbiddenError(
-          "Cannot proceed with this purchase at the moment. Please try again later or contact support if this persists"
+          "Cannot proceed with this purchase at the moment. Please try again later or contact support if this persists",
         );
       }
       // Determine commission rate by plan type
@@ -62,7 +70,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         (meta.unit_price * commissionRate +
           meta.shipping_cost +
           meta.tax_fees) *
-          100
+          100,
       );
 
       const paymentIntent = await stripe.paymentIntents.create({
@@ -84,29 +92,22 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         },
       });
 
-      console.log("Created payment intent:", paymentIntent);
-      console.log("Created Payment Intent ID:", paymentIntent.id);
-      console.log(
-        "Created Payment Intent Client Secret:",
-        paymentIntent.client_secret
-      );
-
       return NextResponse.json({
         paymentIntent: paymentIntent.client_secret,
         publishableKey: process.env.NEXT_PUBLIC_STRIPE_PK!,
+        paymentIntentId: paymentIntent.id,
       });
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
-      console.log(error);
       createErrorRollbarReport(
         "stripe: create payment intent",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

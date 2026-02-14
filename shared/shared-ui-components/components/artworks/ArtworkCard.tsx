@@ -1,25 +1,23 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-
 import Link from "next/link";
-import LikeComponent from "../likes/LikeComponent";
-
 import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
-
 import Image from "next/image";
 import { base_url } from "@omenai/url-config/src/config";
-import { ArtworkMediumTypes } from "@omenai/shared-types";
-import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
-import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
-import { useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
-import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { LoadSmall } from "../loader/Load";
 import FadeUpCard from "../animations/FadeUpCard";
+import { ArtworkMediumTypes } from "@omenai/shared-types";
+import { Download } from "lucide-react";
+import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import { toast } from "sonner";
+import LikeComponent from "../likes/LikeComponent";
+import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
+import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
+import { LoadSmall } from "../loader/Load";
 
 export default function ArtworkCard({
   image,
@@ -36,6 +34,8 @@ export default function ArtworkCard({
   medium,
   trending = false,
   countdown,
+  isAdmin = false,
+  handleDownload,
 }: {
   image: string;
   artist: string;
@@ -56,6 +56,8 @@ export default function ArtworkCard({
   medium: ArtworkMediumTypes;
   trending?: boolean;
   countdown?: Date | null;
+  isAdmin?: boolean;
+  handleDownload?: (url: string, title: string) => void;
 }) {
   const queryClient = useQueryClient();
 
@@ -67,7 +69,7 @@ export default function ArtworkCard({
   const { csrf } = useAuth({ requiredRole: "gallery" });
   const expiryDate = useMemo(
     () => (countdown ? new Date(countdown) : null),
-    [countdown]
+    [countdown],
   );
 
   async function deleteUploadArtwork() {
@@ -100,57 +102,50 @@ export default function ArtworkCard({
     setDeleteLoading(false);
   }
 
+  console.log(expiryDate);
   return (
     <FadeUpCard>
-      <div className="group relative bg-white rounded-3xl border border-gray-100 hover:border-dark/20 overflow-hidden transition-all duration-300">
-        <div className="relative">
+      <div className="group relative w-full flex flex-col gap-3">
+        {/* 1. IMAGE CONTAINER */}
+        <div className="relative w-full overflow-hidden rounded-md bg-slate-100">
           <Link
             href={`${base_uri}/artwork/${encoded_url}`}
-            className="block relative"
+            className="block w-full"
           >
-            {/* Image Container - Natural Aspect Ratio */}
-            <div className="relative overflow-hidden">
+            <div className="relative">
               <Image
                 src={image_href}
-                alt={name + " image"}
-                height={500}
+                alt={name}
                 width={500}
-                loading="lazy"
-                quality={100}
-                placeholder="blur"
-                blurDataURL="data:image/webp;base64,UklGRl4CAABXRUJQVlA4WAoAAAAgAAAA2wAApAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggcAAAAHALAJ0BKtwApQA+bTaZSaQjIqEgSACADYlpbuF2sRtAE9r0VcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBkENVSa7bRcIMghqqTXbaLhBjkAA/v+8dAAAAAAAAAA="
-                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                height={600}
+                // Removed the slatescale filter on sold items so they shine fully
+                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
 
-              {/* Subtle overlay for better text contrast */}
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300" />
+              {/* STATUS BADGE: Discrete, Premium, Non-Obstructive */}
+              {!availability && !isDashboard && (
+                <div className="absolute top-2 left-2 z-20">
+                  <span className="inline-flex items-center justify-center bg-[#091830] px-2.5 py-1 rounded text-[10px] font-sans font-light uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
+                    Sold
+                  </span>
+                </div>
+              )}
             </div>
           </Link>
 
-          {/* Top Left Badge */}
-          <div className="absolute top-4 left-4 z-10">
-            {isDashboard && dashboard_type === "gallery" ? (
-              // <Link href={`/gallery/artworks/edit?id=${art_id}`}>
-              // </Link>
+          {/* Floating Actions (Only if available or if you want users to like sold items too) */}
+          <div className="absolute top-4 right-4 z-10">
+            {isDashboard && dashboard_type === "gallery" && (
               <button
                 onClick={deleteUploadArtwork}
                 disabled={deleteLoading}
-                className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-normal shadow-sm border border-gray-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white"
+                className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white"
               >
                 {deleteLoading ? <LoadSmall /> : " Delete artwork"}
               </button>
-            ) : isDashboard && dashboard_type === "artist" ? null : (
-              <Link href={`/collections/${encodeMediumForUrl(medium)}`}>
-                <button className="px-4 py-1 bg-white text-dark rounded-full duration-300 backdrop-blur-xl bg-white/20 border border-white/30 rounded-full px-4 py-1.5 text-white shadow-sm">
-                  <span className="font-normal text-fluid-xxs ">{medium}</span>
-
-                  {/* Button glow effect */}
-                  <div className="absolute inset-0 rounded bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
-                </button>
-              </Link>
             )}
           </div>
-
           {/* Top Right Actions */}
           <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
             {trending && (
@@ -158,7 +153,7 @@ export default function ArtworkCard({
                 {impressions} {impressions > 1 ? "likes" : "like"}
               </div>
             )}
-            {isDashboard ? null : (
+            {isDashboard || isAdmin ? null : (
               <LikeComponent
                 impressions={impressions}
                 likeIds={likeIds}
@@ -167,81 +162,79 @@ export default function ArtworkCard({
               />
             )}
           </div>
+          {isAdmin && handleDownload && (
+            <div
+              className="absolute hover:text-white top-4 right-2 z-20 transition-opacity duration-300 cursor-pointer"
+              onClick={() => handleDownload(image, name)}
+            >
+              <div className="bg-white/95 hover:bg-dark backdrop-blur-sm rounded-full shadow-sm p-2 transition-colors">
+                <Download size={18} />
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Content Section */}
-        <div className="p-4 space-y-2">
-          {/* Artwork Details */}
-          <div className="space-y-1">
-            <h3 className="font-bold text-dark font-medium text-fluid-xs leading-tight line-clamp-2">
-              {name}
+        {/* 2. PRODUCT DETAILS */}
+        <div className="flex flex-col gap-0.5 px-1">
+          <div className="flex justify-between items-start gap-4">
+            <h3 className="font-serif text-md text-dark  leading-snug group-hover:underline decoration-slate-300 underline-offset-4 line-clamp-2">
+              <Link href={`${base_uri}/artwork/${encoded_url}`}>{name}</Link>
             </h3>
 
-            <p className="text-dark/90 font-normal text-fluid-xxs">
-              {artist.length > 25 ? `${artist.substring(0, 25)}...` : artist}
-            </p>
+            {/* PRICE / STATUS */}
+            <div className="text-right shrink-0">
+              {!availability ? (
+                <span className="font-sans text-xs font-semibold text-dark uppercase tracking-wider">
+                  Sold
+                </span>
+              ) : pricing?.shouldShowPrice === "Yes" ? (
+                <span className="font-sans text-fluid-base font-bold text-dark ">
+                  {formatPrice(pricing.usd_price)}
+                </span>
+              ) : (
+                <span className="font-sans text-xs font-medium text-slate-500">
+                  On Request
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Price and Actions */}
-          {!trending && (
-            <div className="flex items-center justify-between">
-              {/* Price */}
-              <div className="flex flex-col">
+          <div className="flex justify-between items-center mt-1">
+            <p className="font-sans text-fluid-xs text-slate-500 max-w-[70%]">
+              {artist}
+            </p>
+            <p className="font-sans text-[10px] text-slate-400 uppercase truncate tracking-wide">
+              {medium}
+            </p>
+          </div>
+        </div>
+
+        {isDashboard && (
+          <div className="space-y-4">
+            <div className="mt-4 pt-4 border-t border-slate-100">
+              <div className="flex items-center justify-between text-fluid-xxs">
+                <span className="text-slate-600 text-fluid-xxs">Status:</span>
                 {!availability ? (
-                  <span className="inline-flex items-center px-3 rounded-full text-fluid-xxs font-medium bg-red-50 text-red-700 border border-red-200">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
                     Sold
                   </span>
                 ) : (
-                  <div className="text-[#0f172a] font-semibold text-fluid-xxs">
-                    {pricing?.price && pricing.shouldShowPrice === "Yes"
-                      ? formatPrice(pricing.usd_price)
-                      : "Price on request"}
-                  </div>
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                    Available
+                  </span>
                 )}
               </div>
-
-              {/* Action Button */}
-              {availability && !isDashboard && (
-                <Link
-                  href={`${base_uri}/artwork/${encoded_url}`}
-                  className="flex items-center gap-x-2  shadow-[8px_8px_0px_rgba(0,0,0,0.9)] group-hover:shadow-none duration-200 bg-white border border-dark/30 text-dark rounded-2xl px-8 py-1 text-fluid-xxs"
-                >
-                  {pricing?.price && pricing.shouldShowPrice === "Yes"
-                    ? "Purchase"
-                    : "Inquire"}
-                </Link>
-              )}
             </div>
-          )}
-
-          {/* Dashboard-specific price display */}
-          {isDashboard && (
-            <div className="space-y-4">
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <div className="flex items-center justify-between text-fluid-xxs">
-                  <span className="text-gray-600 text-fluid-xxs">Status:</span>
-                  {!availability ? (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
-                      Sold
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                      Available
-                    </span>
-                  )}
-                </div>
-              </div>
-              {/* Exclusivity countdown */}
-              {dashboard_type === "artist" && expiryDate && availability && (
-                <ArtistExclusivityCountdown
-                  key={expiryDate.getTime()}
-                  expiresAt={expiryDate}
-                  art_id={art_id}
-                />
-              )}
-            </div>
-          )}
-        </div>
+            {/* Exclusivity countdown */}
+            {dashboard_type === "artist" && expiryDate && availability && (
+              <ArtistExclusivityCountdown
+                key={expiryDate.getTime()}
+                expiresAt={expiryDate}
+                art_id={art_id}
+              />
+            )}
+          </div>
+        )}
       </div>
     </FadeUpCard>
   );

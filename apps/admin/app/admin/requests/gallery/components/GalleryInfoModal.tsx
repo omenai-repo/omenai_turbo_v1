@@ -46,7 +46,7 @@ export function GalleryInfoModal({
       onClose={close}
       centered
       size="md"
-      radius="lg"
+      radius="sm"
       overlayProps={{
         backgroundOpacity: 0.55,
         blur: 3,
@@ -88,7 +88,7 @@ export function GalleryInfoModal({
                     src={image_href}
                     alt={`${gallery.name} logo`}
                     className="w-full h-full object-cover rounded"
-                    radius="lg"
+                    radius="sm"
                   />
                 </div>
               </div>

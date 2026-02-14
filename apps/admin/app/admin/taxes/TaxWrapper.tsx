@@ -12,10 +12,31 @@ export default function TaxWrapper() {
   if (!canAccessRoute(user.access_role, "taxes")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
+
   return (
-    <div className="my-5 flex flex-col space-y-5 py-4">
-      <h4 className="text-fluid-md font-semibold">Nexus states in the USA</h4>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+    <section className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-fluid-md font-semibold text-slate-900">
+          Nexus states
+        </h1>
+        <p className="text-sm text-slate-600 max-w-2xl">
+          States where Omenai is monitoring sales activity to determine tax
+          nexus thresholds and compliance obligations.
+        </p>
+      </div>
+
+      {/* Grid container */}
+      <div
+        className="
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          lg:grid-cols-3
+          2xl:grid-cols-4
+          gap-6
+        "
+      >
         {nexus_states.map((state) => (
           <NexusState
             key={state.code}
@@ -25,6 +46,6 @@ export default function TaxWrapper() {
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

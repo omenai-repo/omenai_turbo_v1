@@ -182,43 +182,6 @@ export function validateTargetId(targetId: string) {
   return { success: true };
 }
 
-/**
- * This is an irreversible anonymized user ID using HMAC-SHA256.
- */
-export function anonymizeUserId(userId: string, secret: string): string {
-  const hash = crypto.createHmac("sha256", secret).update(userId).digest("hex");
-
-  return `omenai_${hash.slice(0, 16)}`;
-}
-
-/**
- * A function to generate a display name like "Deleted User #4821 for anonymized user name"
- */
-export function anonymizeUsername(userId?: string): string {
-  const suffix = userId
-    ? Math.abs(hashCode(userId)).toString().slice(0, 4)
-    : crypto.randomInt(0, 10000).toString().padStart(4, "0");
-
-  return `Deleted User #${suffix}`;
-}
-
-function hashCode(str: string): number {
-  let hash = 0;
-
-  if (str.length === 0) {
-    return hash;
-  }
-
-  for (const char of str) {
-    const chr = char.codePointAt(0)!;
-
-    hash = (hash << 5) - hash + chr;
-    hash |= 0;
-  }
-
-  return hash;
-}
-
 export interface DeletionReturnType {
   success: boolean;
   note: string;

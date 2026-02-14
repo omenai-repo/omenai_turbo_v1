@@ -115,21 +115,21 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
       <div className="relative w-full h-full">
         {/* Loading spinner */}
         {isLoading && (
-          <div className="absolute z-10 flex items-center justify-center w-full h-full">
+          <div className="absolute z-[50] flex items-center justify-center w-full h-full">
             <div className="w-[100px] h-[100px] p-5 grid place-items-center bg-white rounded shadow-lg">
               <LoadIcon />
             </div>
           </div>
         )}
         <div
-          className="w-full h-full"
+          className="w-full h-full cursor-pointer"
           id="openseadragon-viewer"
           ref={viewerRef}
         />
       </div>
 
       {/* Zoom slider */}
-      <div className="flex translate-x-[-50%] absolute bottom-[30px] left-[50%] max-h-[100%]">
+      <div className="flex translate-x-[-50%] z-[60] absolute bottom-[30px] left-[50%] max-h-[100%]">
         <div className="w-[240px] h-[35px] rounded-[2px] bg-dark/60 flex justify-center items-center">
           <div className="relative align-middle flex">
             <input

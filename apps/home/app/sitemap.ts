@@ -4,9 +4,7 @@ import { fetchAllArtworksForSeo } from "@omenai/shared-services/seo/fetchArtIds"
 const collections = [
   "photography",
   "acrylic-on-canvas-linen-panel",
-  "sculpture-bronze-stone-metal",
   "mixed-media-on-paper-canvas",
-  "sculpture-resin-plaster-clay",
   "oil-on-canvas-panel",
 ];
 
@@ -19,8 +17,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const artworksRes = await fetchAllArtworksForSeo();
-
-  console.log(artworksRes);
 
   const artworkUrls =
     artworksRes.isOk && artworksRes.data.length > 0
