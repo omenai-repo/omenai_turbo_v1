@@ -27,7 +27,6 @@ const RegisterSchema = z
     name: z.string(),
     email: z.email(),
     password: z.string(),
-    confirmPassword: z.string(),
     referrerKey: z.string().optional(),
     inviteCode: z.string().optional(),
     device_push_token: z.string().optional(),
@@ -45,7 +44,6 @@ const RegisterSchema = z
     logo: z.file().nullable(),
     base_currency: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword);
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
