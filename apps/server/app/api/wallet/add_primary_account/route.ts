@@ -80,7 +80,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       return {
         method: method.toUpperCase(),
         headers: {
-          Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
       };

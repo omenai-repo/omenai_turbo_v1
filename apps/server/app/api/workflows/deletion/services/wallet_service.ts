@@ -7,7 +7,7 @@ import {
 import { anonymizeUserId } from "../../../util";
 
 export async function deleteFlutterwaveBeneficiary(
-  beneficiary_id: string
+  beneficiary_id: string,
 ): Promise<{ success: boolean; error?: string; deletedCount: number }> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
@@ -18,11 +18,11 @@ export async function deleteFlutterwaveBeneficiary(
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+          Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
         signal: controller.signal,
-      }
+      },
     );
 
     clearTimeout(timeout);
@@ -55,7 +55,7 @@ export async function deleteFlutterwaveBeneficiary(
  * Handles wallet anonymization and beneficiary deletion on account deletion.
  */
 export async function walletDeletionProtocol(
-  targetId: string
+  targetId: string,
 ): Promise<DeletionReturnType> {
   const stats = {
     failedJobCreations: 0,
@@ -72,7 +72,7 @@ export async function walletDeletionProtocol(
     // Step 2: Find user wallet
     const wallet = await Wallet.findOne(
       { owner_id: targetId },
-      "primary_withdrawal_account"
+      "primary_withdrawal_account",
     ).lean<{
       primary_withdrawal_account?: { beneficiary_id?: string };
     } | null>();
@@ -114,7 +114,7 @@ export async function walletDeletionProtocol(
           primary_withdrawal_account: null,
           base_currency: "",
         },
-      }
+      },
     );
 
     if (anonymizeWallet.modifiedCount === 1) {
@@ -140,7 +140,7 @@ export async function walletDeletionProtocol(
   } catch (error) {
     console.error(
       `Unable to execute wallet deletion protocol for user: ${targetId}`,
-      (error as Error).message
+      (error as Error).message,
     );
 
     return {

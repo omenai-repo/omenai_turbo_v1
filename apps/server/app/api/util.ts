@@ -3,7 +3,11 @@ import { ServerError } from "../../custom/errors/dictionary/errorDictionary";
 import z, { ZodType } from "zod";
 import crypto from "node:crypto";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
-import { getDhlHeaders, getUserFriendlyError } from "./shipment/resources";
+import {
+  DHL_API,
+  getDhlHeaders,
+  getUserFriendlyError,
+} from "./shipment/resources";
 import { BadRequestError } from "../../custom/errors/dictionary/errorDictionary";
 
 import {
@@ -144,15 +148,22 @@ import { ShipmentAddressValidationType } from "@omenai/shared-types";
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
 
+  const path = `/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${false}`;
+
+  const API_URL_TEST = `${DHL_API}/test/${path}`;
+
+  const API_URL_PROD = `${DHL_API}/${path}`;
+
+  const url = new URL(
+    `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_PROD}`,
+  );
+
   const requestOptions = {
     method: "GET",
     headers: getDhlHeaders(),
   };
 
-  const response = await fetch(
-    `https://express.api.dhl.com/mydhlapi/test/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${false}`,
-    requestOptions,
-  );
+  const response = await fetch(url, requestOptions);
 
   const result = await response.json();
   console.log(result);

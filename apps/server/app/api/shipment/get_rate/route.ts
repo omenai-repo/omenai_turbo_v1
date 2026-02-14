@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import {
+  DHL_API,
   DHL_API_URL_TEST,
   getDhlHeaders,
   getUserFriendlyError,
   OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
+  RATES_API_URL,
   selectAppropriateDHLProduct,
 } from "../resources";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
@@ -18,7 +20,6 @@ import {
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport } from "../../util";
-const API_URL = `${DHL_API_URL_TEST}/rates`;
 
 export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
   async function POST(request: Request) {
@@ -77,7 +78,8 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
           ? OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT
           : OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
 
-      const url = new URL(API_URL);
+      const url = new URL(RATES_API_URL);
+
       url.searchParams.append("accountNumber", account_to_use);
       url.searchParams.append("originCountryCode", originCountryCode);
       url.searchParams.append("originCityName", originCityName);
@@ -117,8 +119,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         throw new NotFoundError(
           "No DHL product found for this shipment. Please contact support",
         );
-
-      //DONE: Save relevant data to database before returning response
 
       return NextResponse.json(
         { message: "Success", appropriateDHLProduct },

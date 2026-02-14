@@ -89,7 +89,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     // --- MONEY IS NOW DEDUCTED. WE PROCEED TO FLUTTERWAVE ---
 
-    const transaction_ref = `OMENAI_TRANSFER_${generateAlphaDigit(12)}_PMCKDU_1`;
+    const transaction_ref = `OMENAI_TRANSFER_${generateAlphaDigit(12)}`;
 
     const payload = {
       account_bank: get_wallet.primary_withdrawal_account.bank_code,
@@ -113,7 +113,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const options = {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+        Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),

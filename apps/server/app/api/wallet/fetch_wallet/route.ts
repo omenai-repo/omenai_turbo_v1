@@ -9,11 +9,8 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import {
-  createErrorRollbarReport,
-  validateGetRouteParams,
-  validateRequestBody,
-} from "../../util";
+import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
+
 import z from "zod";
 
 export const ZFetchWalletSchema = z.object({

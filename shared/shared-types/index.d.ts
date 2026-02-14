@@ -419,6 +419,15 @@ export type ScheduledShipments = {
   status: "scheduled" | "resolved";
 };
 
+export type ShipmentCoords = {
+  origin: CoordsType;
+  destination: CoordsType;
+};
+type CoordsType = {
+  lat: number;
+  lng: number;
+};
+
 type OrderBuyerAndSellerDetails = {
   id: string;
   name: string;

@@ -1,7 +1,5 @@
-// middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 
-// 1. Use a Set for O(1) lookups and exact matching (No startsWith!)
 const ALLOWED_ORIGINS = new Set([
   "https://staging.auth.omenai.app",
   "https://staging.dashboard.omenai.app",
@@ -30,6 +28,12 @@ export default async function proxy(req: NextRequest) {
   const userAgent = req.headers.get("user-agent") ?? "";
   const referer = req.headers.get("referer");
   const mobileKey = req.headers.get("x-access-key") ?? "";
+
+  if (
+    req.headers.get("x-internal-secret") === process.env.INTERNAL_API_SECRET
+  ) {
+    return NextResponse.next();
+  }
 
   if (
     req.nextUrl.pathname.startsWith("/api/webhook") ||

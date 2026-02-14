@@ -1,13 +1,10 @@
 "use client";
 import React from "react";
 import MapView from "../components/Mapview";
-import PageTitle from "../../../components/PageTitle";
 import EventTimeline from "../components/EventTimeline";
 import { useQuery } from "@tanstack/react-query";
 import { getTrackingData } from "@omenai/shared-services/orders/getTrackingData";
-import Load from "@omenai/shared-ui-components/components/loader/Load";
 import TrackingLoader from "@omenai/shared-ui-components/components/skeletons/TrackingLoader";
-import { use } from "react";
 
 export default function Tracking({ order_id }: { order_id: string }) {
   const { data: tracking_data, isLoading: loading } = useQuery({
@@ -18,14 +15,14 @@ export default function Tracking({ order_id }: { order_id: string }) {
       if (!response?.isOk)
         throw new Error(
           response?.message ||
-            "Tracking data currently unavailable. Please try again"
+            "Tracking data currently unavailable. Please try again",
         );
 
       return {
         events: response.events,
         coordinates: response.coordinates,
         order_date: response.order_date,
-        artwork_data: response.arwork_data,
+        artwork_data: response.artwork_data,
         tracking_number: response.tracking_number,
       };
     },

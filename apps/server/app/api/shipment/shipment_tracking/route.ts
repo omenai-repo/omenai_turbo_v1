@@ -1,6 +1,12 @@
 import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
-import { DHL_API_URL_TEST, getDhlHeaders } from "../resources";
+import {
+  DHL_API,
+  DHL_API_URL_PROD,
+  DHL_API_URL_TEST,
+  getDhlHeaders,
+  getLatLng,
+} from "../resources";
 import {
   BadRequestError,
   ForbiddenError,
@@ -19,6 +25,10 @@ import z from "zod";
 const ShipmentTrackingSchema = z.object({
   id: z.string(),
 });
+import { ShipmentCoords } from "@omenai/shared-types";
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
 ) {
@@ -61,21 +71,19 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
         "No tracking number found for the given order id",
       );
 
-    // TODO: Fix this
+    const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
+    const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
+    const get_origin_geo_location = await getLatLng(origin_location);
+    await sleep(1200);
+    const get_destination_geo_location = await getLatLng(destination_location);
 
-    // const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
-    // const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
-    // const get_origin_geo_location = await getLatLng(origin_location);
-    // await sleep(1100);
-    // const get_destination_geo_location = await getLatLng(destination_location);
+    const API_URL_TEST = `${DHL_API}/shipments/9356579890/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
 
-    // if (!get_origin_geo_location || !get_destination_geo_location)
-    //   throw new ServerError("Unable to determine geo location coordinates");
+    const API_URL_PROD = `${DHL_API}/shipments/${tracking_number}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
 
-    // TODO: Change this url to the proper production url
-    const API_URL = `${DHL_API_URL_TEST}/shipments/9356579890/tracking`;
-
-    const url = new URL(API_URL);
+    const url = new URL(
+      `${process.env.APP_ENV === "production" ? API_URL_PROD : API_URL_TEST}`,
+    );
     const requestOptions = {
       method: "GET",
       headers: getDhlHeaders(),
@@ -84,6 +92,8 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     try {
       const response = await fetch(url.toString(), requestOptions);
       const data = await response.json();
+
+      console.log(process.env.APP_ENV);
 
       if (!response.ok)
         throw new ServerError(
@@ -97,15 +107,14 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
           message: "Successfully fetched shipment events",
           events: data.shipments[0].events,
           timeStamp,
-          cordinates: {},
           order_date: formatISODate(order.createdAt),
           artwork_data: order.artwork_data,
           shipping_details: order.shipping_details,
           tracking_number,
-          // coordinates: {
-          //   origin: get_origin_geo_location,
-          //   destination: get_destination_geo_location,
-          // },
+          coordinates: {
+            origin: get_origin_geo_location,
+            destination: get_destination_geo_location,
+          } as ShipmentCoords | null,
         },
         { status: 200 },
       );

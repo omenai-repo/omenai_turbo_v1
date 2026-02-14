@@ -25,7 +25,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+            Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
           },
         },
       );

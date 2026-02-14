@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import {
+  DHL_API,
   getDhlHeaders,
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
 } from "../resources";
@@ -34,10 +35,17 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
           headers: getDhlHeaders(),
         };
 
-        const response = await fetch(
-          `https://express.api.dhl.com/mydhlapi/test/shipments/${trackingNumber}/get-image?shipperAccountNumber=${shipperAccountNumber}&typeCode=${typeCode}&pickupYearAndMonth=${pickupYearAndMonth}&encodingFormat=pdf&allInOnePDF=true&compressedPackage=false`,
-          requestOptions,
+        const path = `/shipments/${trackingNumber}/get-image?shipperAccountNumber=${shipperAccountNumber}&typeCode=${typeCode}&pickupYearAndMonth=${pickupYearAndMonth}&encodingFormat=pdf&allInOnePDF=true&compressedPackage=false`;
+
+        const API_GET_SHIPMENT_DOC_URL_TEST = `${DHL_API}/test/${path}`;
+
+        const API_GET_SHIPMENT_DOC_URL_PROD = `${DHL_API}/${path}`;
+
+        const url = new URL(
+          `${process.env.APP_ENV === "production" ? API_GET_SHIPMENT_DOC_URL_TEST : API_GET_SHIPMENT_DOC_URL_PROD}`,
         );
+
+        const response = await fetch(url, requestOptions);
         const data = await response.json();
         return NextResponse.json({ message: "Success", data }, { status: 200 });
       } catch (error) {

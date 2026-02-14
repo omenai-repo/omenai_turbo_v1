@@ -8,7 +8,7 @@ export function MarkerWithOpenPopup({
   message,
 }: {
   position: [number, number];
-  icon?: L.Icon;
+  icon?: L.DivIcon;
   message: string;
 }) {
   const markerRef = useRef<L.Marker>(null);
@@ -17,7 +17,8 @@ export function MarkerWithOpenPopup({
   useEffect(() => {
     const marker = markerRef.current;
     if (marker) {
-      marker.openPopup();
+      // Small delay ensures map is ready before opening popup
+      setTimeout(() => marker.openPopup(), 500);
     }
   }, [map]);
 
@@ -26,7 +27,7 @@ export function MarkerWithOpenPopup({
       <Popup
         autoClose={false}
         closeOnClick={false}
-        className="custom-leaflet-popup"
+        className="font-medium text-slate-800 text-xs"
       >
         {message}
       </Popup>

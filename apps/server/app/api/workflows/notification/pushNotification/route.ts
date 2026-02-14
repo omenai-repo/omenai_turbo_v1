@@ -16,7 +16,7 @@ async function callCreateNotificationApi(data: any): Promise<any> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://omenai.app",
+          Origin: process.env.INTERNAL_SECRET as string,
         },
         body: JSON.stringify(data),
         signal: controller.signal,

@@ -38,7 +38,7 @@ const client = new Taxjar({
 
 const API_URL = getApiUrl();
 const HEADERS = {
-  Origin: "https://omenai.app",
+  Origin: process.env.INTERAL_SECRET as string,
   "Content-Type": "application/json",
 };
 

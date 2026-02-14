@@ -40,7 +40,7 @@ const MetaSchema = z.object({
 /* ------------------------------ Helpers ---------------------------------- */
 
 async function verifyFlutterwaveTransaction(transactionId: string) {
-  const key = process.env.FLW_TEST_SECRET_KEY;
+  const key = process.env.FLW_SECRET_KEY;
   if (!key) throw new Error("Flutterwave secret key not configured");
 
   const res = await fetch(

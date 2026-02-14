@@ -60,7 +60,7 @@ async function callShipmentAPI(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Origin: "https://omenai.app",
+        "x-internal_secret": process.env.INTERNAL_SECRET as string,
       },
       body: JSON.stringify(data),
       signal: controller.signal,

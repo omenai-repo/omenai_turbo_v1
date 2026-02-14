@@ -29,15 +29,10 @@ interface ProcessedCounts {
   emailErrors: number;
 }
 
-/**
- * Auto-declines orders older than 96 hours and sends notification emails
- */
 async function processAutoDeclines(
   hours96Ago: Date,
   processedCounts: ProcessedCounts,
 ): Promise<void> {
-  // Use findOneAndUpdate in a loop to atomically process each order
-  // This prevents race conditions and ensures we only email orders we actually updated
   const autoDeclinedOrders: CreateOrderModelTypes[] = [];
 
   let foundOrder;

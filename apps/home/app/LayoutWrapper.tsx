@@ -10,7 +10,6 @@ import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "@omenai/package-provider";
 import LenisProvider from "@omenai/package-provider/ScrollProvider";
 import { ClientSessionData } from "@omenai/shared-types";
-import { AuthGuard } from "@omenai/package-provider/AuthGuard";
 import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
 
 export const LayoutWrapper = ({
@@ -20,12 +19,12 @@ export const LayoutWrapper = ({
   sessionData: ClientSessionData | null;
   children: React.ReactNode;
 }) => {
-  useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST as string,
-      autocapture: false,
-    });
-  }, []);
+  // useEffect(() => {
+  //   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
+  //     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST as string,
+  //     autocapture: false,
+  //   });
+  // }, []);
 
   return (
     <>

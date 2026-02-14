@@ -14,7 +14,7 @@ import {
 const client = new Client();
 const serverClient = new Client();
 
-const endpoint = "https://fra.cloud.appwrite.io/v1";
+const endpoint = process.env.APPWRITE_ENDPOINT as string;
 
 client
   .setEndpoint(endpoint)

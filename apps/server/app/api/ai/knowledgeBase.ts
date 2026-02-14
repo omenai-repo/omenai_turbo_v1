@@ -7,7 +7,7 @@
 const IDENTITY = `
 - **What is Omenai?**: A curated global art Platform connecting artists, galleries, and collectors.
 - **Mission**: To simplify showcasing, discovering, and collecting unique artworks with confidence.
-- **Vibe**: Primary focus on African Contemporary Artworks, but open to global creators.
+- **Vibe**: Primary focus on Contemporary African Art, but open to global creators.
 - **Target Audience Details**:
   - *Artists/Galleries*: We simplify everything from listings to sales, tax handling, and international shipping.
   - *Collectors*: Discover authentic artworks, secure buying experience, transparent pricing, and real-time shipment tracking.
@@ -17,7 +17,7 @@ const IDENTITY = `
 const FINANCIALS = `
 - **Currency**: Payments are settled in USD. (Crypto is in the works, but not live).
 - **Listing Fees**: None.
-- **Artist Commission**: Omenai takes a **35% commission** on every successful sale.
+- **Artist Commission**: Omenai takes a **39% commission** on every successful sale.
 - **Gallery Model (Subscription Based)**:
   1. **Basic**: $150/mo ($1500/yr). 
      - 25% Platform Commission. (Gallery keeps 75%).
@@ -30,7 +30,6 @@ const FINANCIALS = `
      - 15% Platform Commission.
      - Unlimited uploads.
      - **Exclusive Feature**: "Price on Demand" masking for high-value pieces.
-     - Feature: Placements in exclusive collections.
 `;
 
 // --- SECTOR 3: PRICING LOGIC (CRITICAL) ---

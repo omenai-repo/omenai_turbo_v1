@@ -184,11 +184,11 @@ export async function verifyAuthVercel(request: Request) {
 
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import {
+  DHL_API,
   DHL_API_URL_TEST,
   getDhlHeaders,
   getUserFriendlyError,
 } from "../shipment/resources";
-import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 
 export async function trackOrderShipment(order_id: string) {
   // 1. Fetch Order directly from DB
@@ -204,12 +204,15 @@ export async function trackOrderShipment(order_id: string) {
     throw new BadRequestError("Tracking ID not found for this order");
   }
 
-  const API_URL = `${DHL_API_URL_TEST}/shipments/9356579890/tracking`;
-  // TODO: Change during live switch
-  const PROD_API_URL = `https://express.api.dhl.com/mydhlapi/test/shipments/${trackingId}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
+  const API_URL_TEST = `${DHL_API}/shipments/9356579890/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
 
+  const API_URL_PROD = `${DHL_API}/shipments/${trackingId}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
+
+  const url = new URL(
+    `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_PROD}`,
+  );
   // 2. Call DHL API directly
-  const response = await fetch(`${API_URL}`, {
+  const response = await fetch(url, {
     method: "GET",
     headers: getDhlHeaders(),
   });

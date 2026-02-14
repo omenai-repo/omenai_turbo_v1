@@ -1,20 +1,17 @@
-// lib/isHoliday.ts
-
 const holidayCache = new Map<string, boolean>();
 
 export async function isHoliday(
   date: Date,
-  countryCode: string
+  countryCode: string,
 ): Promise<boolean> {
-  const apiKey =
-    process.env.CALENDARIFIC_API_KEY || "QQowDk3rKdlhZuyPHQO7aoKk0JWkZpVq";
+  const apiKey = process.env.CALENDARIFIC_API_KEY as string;
   if (!apiKey) {
     console.warn("Calendarific API key not set.");
     return false;
   }
 
   const year = date.getFullYear();
-  const month = date.getMonth() + 1; // JS months are 0-based
+  const month = date.getMonth() + 1;
   const day = date.getDate();
 
   const cacheKey = `${countryCode}-${year}-${month}-${day}`;
@@ -38,8 +35,8 @@ export async function isHoliday(
     // Keep only major holidays (exclude observances, seasons, local)
     const majorHolidays = holidays.filter((h: any) =>
       h.type?.some((t: string) =>
-        ["National holiday", "Public holiday", "Bank holiday"].includes(t)
-      )
+        ["National holiday", "Public holiday", "Bank holiday"].includes(t),
+      ),
     );
 
     const isHoliday = majorHolidays.length > 0;

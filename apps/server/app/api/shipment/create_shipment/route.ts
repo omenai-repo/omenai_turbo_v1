@@ -153,21 +153,21 @@ export const POST = withRateLimit(strictRateLimit)(async function POST(
         splitInvoiceAndReceipt: false,
         receiptAndLabelsInOneImage: true,
       },
-      // TODO: Don't put this in prod
+
       customerDetails: {
         shipperDetails: {
           postalAddress: {
-            postalCode: "60616",
-            cityName: "Illinois",
-            countryCode: "US",
-            addressLine1: "2035 S State St",
+            postalCode: process.env.DHL_SHIPPER_POSTAL_CODE as string,
+            cityName: process.env.DHL_SHIPPER_STATE as string,
+            countryCode: process.env.DHL_SHIPPER_COUNTRY as string,
+            addressLine1: process.env.DHL_SHIPPER_ADDRESS as string,
             countryName: "UNITED STATES OF AMERICA",
           },
           contactInformation: {
-            email: "gbenro@omenai.net",
-            phone: " +7733521307",
-            companyName: "Omenai",
-            fullName: "OMENAI Incorporated",
+            email: process.env.DHL_SHIPPER_EMAIL as string,
+            phone: process.env.DHL_SHIPPER_PHONE as string,
+            companyName: process.env.DHL_SHIPPER_COMPANY as string,
+            fullName: process.env.DHL_SHIPPER_NAME as string,
           },
         },
         receiverDetails: {

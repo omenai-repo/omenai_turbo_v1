@@ -469,7 +469,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         `https://api.flutterwave.com/v3/transactions/${body.data.id}/verify`,
         {
           headers: {
-            Authorization: `Bearer ${process.env.FLW_TEST_SECRET_KEY}`,
+            Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
           },
         },
       ).then((r) => r.json());

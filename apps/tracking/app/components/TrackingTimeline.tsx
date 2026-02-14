@@ -1,13 +1,13 @@
-// TrackingTimeline.tsx - Timeline showing shipment events
 "use client";
 
 import { TrackingEvent } from "@omenai/shared-types";
 import {
   CheckCircle2,
   Circle,
-  Calendar,
+  Clock,
   ChevronDown,
-  Package,
+  MapPin,
+  Truck,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -23,158 +23,143 @@ export default function TrackingTimeline({
   const INITIAL_DISPLAY_COUNT = 5;
   const [showAll, setShowAll] = useState(false);
 
+  // Deep copy and reverse to show newest first
   const reversedEvents = [...events].reverse();
   const displayedEvents = showAll
     ? reversedEvents
     : reversedEvents.slice(0, INITIAL_DISPLAY_COUNT);
   const hasMore = reversedEvents.length > INITIAL_DISPLAY_COUNT;
 
-  const getStatusStyles = (index: number) => {
-    if (index === 0) {
-      return {
-        bg: "bg-gradient-to-br from-emerald-500 to-teal-600",
-        ring: "ring-4 ring-emerald-100",
-        icon: "text-white",
-      };
-    }
-    return {
-      bg: "bg-gradient-to-br from-slate-700 to-slate-800",
-      ring: "ring-2 ring-slate-200",
-      icon: "text-white",
-    };
-  };
-
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      {/* Current Status Card */}
-      <div className="relative mb-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded p-4 text-white shadow-2xl overflow-hidden">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded -mr-20 -mt-20" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded -ml-16 -mb-16" />
-
-        <div className="relative">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded flex items-center justify-center">
-              <Package className="w-6 h-6" />
+    <div className="w-full max-w-5xl mx-auto px-4 pb-12">
+      {/* Container */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        {/* Header / Current Status */}
+        <div className="bg-slate-900 p-6 md:p-8 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+          <div className="relative z-10">
+            <h2 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">
+              Current Status
+            </h2>
+            <div className="flex items-center gap-3">
+              <span className="flex h-3 w-3 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <p className="text-xl md:text-2xl font-semibold tracking-tight">
+                {currentStatus}
+              </p>
             </div>
-            <h2 className="text-fluid-base font-medium">Current Status</h2>
           </div>
-          <p className="text-fluid-xs text-white/90 ml-15 font-light">
-            {currentStatus}
-          </p>
         </div>
-      </div>
 
-      {/* Timeline Header */}
-      <div className="mb-8">
-        <h3 className="text-fluid-sm font-semibold text-slate-900 mb-1">
-          Shipment Journey
-        </h3>
-        <p className="text-fluid-xs text-slate-600">
-          Follow your artwork's journey from origin to destination
-        </p>
-      </div>
+        {/* Timeline Body */}
+        <div className="p-6 md:p-10">
+          <div className="relative">
+            {/* Vertical Line */}
+            <div className="absolute left-[19px] top-2 bottom-0 w-[2px] bg-slate-100"></div>
 
-      {/* Timeline */}
-      <div className="relative space-y-6">
-        {/* Vertical connecting line */}
-        <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-gradient-to-b from-slate-300 via-slate-200 to-transparent" />
+            <div className="space-y-8">
+              {displayedEvents.map((event, index) => {
+                const isLatest = index === 0;
 
-        {displayedEvents.map((event, index) => {
-          const isLatest = index === 0;
-          const styles = getStatusStyles(index);
-
-          return (
-            <div
-              key={index}
-              className="relative"
-              style={{
-                animation: `fadeIn 0.4s ease-out ${index * 0.1}s both`,
-              }}
-            >
-              <div className="flex gap-3 group">
-                {/* Timeline Node */}
-                <div className="relative flex-shrink-0 z-10">
+                return (
                   <div
-                    className={`w-12 h-12 rounded ${styles.bg} ${styles.ring} flex items-center justify-center shadow-sm group-hover:scale-110 transition-all duration-300`}
+                    key={index}
+                    className="relative flex gap-6 md:gap-10 group"
                   >
-                    {isLatest ? (
-                      <CheckCircle2 className={`w-6 h-6 ${styles.icon}`} />
-                    ) : (
-                      <Circle
-                        className={`w-4 h-4 ${styles.icon} fill-current`}
-                      />
-                    )}
-                  </div>
-                  {isLatest && (
-                    <div className="absolute inset-0 rounded bg-emerald-500 animate-ping opacity-20" />
-                  )}
-                </div>
-
-                {/* Event Card */}
-                <div className="flex-1 pb-2">
-                  <div className="bg-white rounded border-2 border-slate-100 hover:border-slate-300 hover:shadow-xl transition-all duration-300 p-5 group-hover:-translate-y-1">
-                    {/* Date Badge */}
-                    <div className="inline-flex items-center gap-2 bg-slate-50 rounded px-2 py-1.5">
-                      <Calendar className="w-4 h-4 text-slate-600" />
-                      <span className="text-fluid-xxs font-light text-slate-700">
-                        {event.date} at {event.time}
-                      </span>
+                    {/* Icon Column */}
+                    <div className="flex flex-col items-center flex-shrink-0 z-10">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-colors duration-300 ${
+                          isLatest
+                            ? "bg-blue-600 border-blue-100 text-white shadow-lg shadow-blue-200"
+                            : "bg-white border-slate-100 text-slate-300"
+                        }`}
+                      >
+                        {isLatest ? (
+                          <Truck className="w-4 h-4" />
+                        ) : (
+                          <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+                        )}
+                      </div>
                     </div>
 
-                    {/* Status Title */}
-                    <h4 className="text-fluid-xs font-medium text-slate-900 mb-2">
-                      {event.serviceArea[0].description ||
-                        event.typeCode ||
-                        "Status Update"}
-                    </h4>
+                    {/* Content Column */}
+                    <div className="flex-1 pt-1">
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2 md:gap-8">
+                        {/* Status & Desc */}
+                        <div className="flex-1">
+                          <h4
+                            className={`text-base font-semibold mb-1 ${isLatest ? "text-slate-900" : "text-slate-700"}`}
+                          >
+                            {event.serviceArea[0].description ||
+                              event.typeCode ||
+                              "Status Update"}
+                          </h4>
+                          <p className="text-sm text-slate-500 leading-relaxed">
+                            {event.description}
+                          </p>
+                          {/* Mobile Date (Visible only on small screens) */}
+                          <div className="md:hidden mt-2 flex items-center gap-2 text-xs text-slate-400">
+                            <Clock className="w-3 h-3" />
+                            <span>
+                              {event.date} • {event.time}
+                            </span>
+                          </div>
+                        </div>
 
-                    {/* Description */}
-                    {event.description && (
-                      <p className="text-fluid-xs text-slate-600 leading-relaxed">
-                        {event.description}
-                      </p>
-                    )}
+                        {/* Desktop Date/Location Badge */}
+                        <div className="hidden md:flex flex-col items-end text-right">
+                          <span className="text-sm font-bold text-slate-900">
+                            {event.date}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">
+                            {event.time}
+                          </span>
+                          {event.serviceArea[0].description && (
+                            <div className="mt-1 inline-flex items-center gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                              <MapPin className="w-3 h-3" />
+                              {event.serviceArea[0].description} // Assuming
+                              this is location data
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
-          );
-        })}
 
-        {/* Show More/Less Button */}
-        {hasMore && (
-          <div className="flex justify-center pt-4">
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="group flex items-center gap-2 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-slate-300 rounded px-6 py-3 text-fluid-xs font-medium text-slate-700 transition-all duration-300 shadow-sm hover:shadow-md"
-            >
-              <span>
-                {showAll
-                  ? "Show Less"
-                  : `Show ${reversedEvents.length - INITIAL_DISPLAY_COUNT} More Events`}
-              </span>
-              <ChevronDown
-                className={`w-4 h-4 transition-transform duration-300 ${
-                  showAll ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+            {/* Expand Button */}
+            {hasMore && (
+              <div className="relative pt-8 pl-16">
+                {/* Fade out effect */}
+                {!showAll && (
+                  <div className="absolute -top-12 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                )}
+
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  {showAll ? (
+                    <>
+                      Show Less <ChevronDown className="w-4 h-4 rotate-180" />
+                    </>
+                  ) : (
+                    <>
+                      View {reversedEvents.length - INITIAL_DISPLAY_COUNT} older
+                      updates <ChevronDown className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }
