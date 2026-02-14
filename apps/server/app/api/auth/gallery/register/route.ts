@@ -22,30 +22,27 @@ import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import z from "zod";
 
-const RegisterSchema = z
-  .object({
-    name: z.string(),
-    email: z.email(),
-    password: z.string(),
-    confirmPassword: z.string(),
-    referrerKey: z.string().optional(),
-    inviteCode: z.string().optional(),
-    device_push_token: z.string().optional(),
-    phone: z.string(),
-    address: z.object({
-      address_line: z.string(),
-      city: z.string(),
-      country: z.string(),
-      countryCode: z.string(),
-      state: z.string(),
-      stateCode: z.string(),
-      zip: z.string(),
-    }),
-    logo: z.file().nullable(),
-    admin: z.string(),
-    description: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword);
+const RegisterSchema = z.object({
+  name: z.string(),
+  email: z.email(),
+  password: z.string(),
+  referrerKey: z.string().optional(),
+  inviteCode: z.string().optional(),
+  device_push_token: z.string().optional(),
+  phone: z.string(),
+  address: z.object({
+    address_line: z.string(),
+    city: z.string(),
+    country: z.string(),
+    countryCode: z.string(),
+    state: z.string(),
+    stateCode: z.string(),
+    zip: z.string(),
+  }),
+  logo: z.file().nullable(),
+  admin: z.string(),
+  description: z.string(),
+});
 
 export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
   async function POST(request: Request) {
