@@ -1,4 +1,3 @@
-// apps/web/middleware.ts
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import {
@@ -29,104 +28,93 @@ export default async function proxy(req: NextRequest) {
 
   const nonce = crypto.randomUUID();
 
+  // 1. Define CSP with newlines for readability
   const cspHeader = `
-    default-src 'self';
+  default-src 'self';
 
-    script-src 'self' 'unsafe-eval' 'nonce-${nonce}' 
-        https://js.stripe.com 
-        https://checkout.flutterwave.com 
-        https://*.rollbar.com 
-        https://*.highlight.io 
-        https://*.posthog.com 
-        https://us.i.posthog.com 
-        https://eu.i.posthog.com 
-        https://va.vercel-scripts.com 
-        https://vitals.vercel-insights.com;
-        
-    style-src 'self' 'unsafe-inline' 
-        https://fonts.googleapis.com;
-        
-    img-src 'self' blob: data: 
-        https://fra.cloud.appwrite.io 
-        https://cloud.appwrite.io 
-        https://res.cloudinary.com 
-        https://flagcdn.com
-        https://upload.wikimedia.org
-        https://*.stripe.com 
-        https://*.rollbar.com 
-        https://*.openstreetmap.org 
-        https://*.tile.openstreetmap.org;
+  script-src
+    'self'
+    'unsafe-eval'
+    'nonce-${nonce}'
+    https://js.stripe.com
+    https://checkout.flutterwave.com
+    https://*.rollbar.com
+    https://*.highlight.io
+    https://*.posthog.com
+    https://us.i.posthog.com
+    https://eu.i.posthog.com
+    https://va.vercel-scripts.com
+    https://vitals.vercel-insights.com;
 
-    font-src 'self' data: 
-        https://fonts.gstatic.com;
+  style-src
+    'self'
+    'unsafe-inline'
+    https://fonts.googleapis.com;
 
-    connect-src 'self' 
-        http://localhost:3000
-        http://localhost:3001
-        http://localhost:3002
-        http://localhost:3003
-        http://localhost:4000
-        http://localhost:5000
-        http://localhost:8001
-        https://staging.auth.omenai.app
-        https://staging.dashboard.omenai.app
-        https://staging.admin.omenai.app
-        https://staging.omenai.app
-        https://staging.api.omenai.app
-        https://staging.tracking.omenai.app
-        https://auth.omenai.app
-        https://dashboard.omenai.app
-        https://admin.omenai.app
-        https://omenai.app
-        https://join.omenai.app
-        https://api.omenai.app
-        https://tracking.omenai.app
-        https://fra.cloud.appwrite.io 
-        https://cloud.appwrite.io 
-        https://api.stripe.com 
-        https://api.flutterwave.com 
-        https://*.rollbar.com 
-        https://*.highlight.io 
-        https://*.posthog.com 
-        https://us.i.posthog.com 
-        https://eu.i.posthog.com 
-        https://cdn-global.configcat.com 
-        https://api.positionstack.com 
-        https://generativelanguage.googleapis.com 
-        https://vitals.vercel-insights.com
-        ws: wss:;
-  if (
-    pathname.startsWith("/privacy") &&
-    (host === "omenai.app" || host === "www.omenai.app")
-  )
-    return NextResponse.next();
+  img-src
+    'self'
+    blob:
+    data:
+    https://sfo.cloud.appwrite.io
+    https://fra.cloud.appwrite.io
+    https://cloud.appwrite.io
+    https://res.cloudinary.com
+    https://flagcdn.com
+    https://upload.wikimedia.org
+    https://*.stripe.com
+    https://*.rollbar.com
+    https://*.openstreetmap.org
+    https://*.tile.openstreetmap.org;
 
-  // Check if we are on the root domain (not 'join')
-  if (host === "omenai.app" || host === "www.omenai.app") {
-    // 1. Create the destination URL
-    const targetUrl = new URL("https://join.omenai.app");
+  font-src
+    'self'
+    data:
+    https://fonts.gstatic.com;
 
-    frame-src 'self' 
-        https://js.stripe.com 
-        https://hooks.stripe.com 
-        https://checkout.flutterwave.com
-        https://www.omenaiinsider.com
-        https://*.substack.com
-        https://substack.com;
+  connect-src
+'self'
+    http://localhost:*
+    https://staging.api.omenai.app
+    https://api.omenai.app
+    https://sfo.cloud.appwrite.io
+    https://fra.cloud.appwrite.io
+    https://cloud.appwrite.io
+    https://api.stripe.com
+    https://api.flutterwave.com
+    https://*.rollbar.com
+    https://*.highlight.io
+    https://*.posthog.com
+    https://us.i.posthog.com
+    https://eu.i.posthog.com
+    https://cdn-global.configcat.com
+    https://api.positionstack.com
+    https://generativelanguage.googleapis.com
+    https://vitals.vercel-insights.com
+    ws:
+    wss:;
 
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    block-all-mixed-content;
-    upgrade-insecure-requests;
-`
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  frame-src
+    'self'
+    https://js.stripe.com
+    https://hooks.stripe.com
+    https://checkout.flutterwave.com
+    https://www.omenaiinsider.com
+    https://*.substack.com
+    https://substack.com;
+
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'none';
+  upgrade-insecure-requests;
+`;
+
+  // 2. 🛡️ CRITICAL FIX: Replace ALL whitespace/newlines with a single space
+  const contentSecurityPolicy = cspHeader.replace(/\s+/g, " ").trim();
 
   // === HELPER: Finalize Response with Headers ===
   const finalizeResponse = (response: NextResponse) => {
-    response.headers.set("Content-Security-Policy", cspHeader);
+    response.headers.set("Content-Security-Policy", contentSecurityPolicy);
     return response;
   };
 
@@ -135,7 +123,7 @@ export default async function proxy(req: NextRequest) {
   const nextWithNonce = () => {
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-nonce", nonce);
-    requestHeaders.set("Content-Security-Policy", cspHeader);
+    requestHeaders.set("Content-Security-Policy", contentSecurityPolicy);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -148,15 +136,6 @@ export default async function proxy(req: NextRequest) {
     (host === "omenai.app" || host === "www.omenai.app")
   )
     return finalizeResponse(nextWithNonce());
-
-  // === HOST REDIRECT ===
-  // if (host === "omenai.app" || host === "www.omenai.app") {
-  //   const targetUrl = new URL("https://join.omenai.app");
-  //   req.nextUrl.searchParams.forEach((value, key) => {
-  //     targetUrl.searchParams.set(key, value);
-  //   });
-  //   return NextResponse.redirect(targetUrl);
-  // }
 
   const app_auth_uri = auth_uri();
 
