@@ -65,6 +65,12 @@ const nextConfig = {
         hostname: "upload.wikimedia.org",
         port: "",
       },
+      {
+        protocol: "https" as const,
+        hostname: "sfo.cloud.appwrite.io",
+        port: "",
+        pathname: "/v1/**",
+      },
     ],
   },
 };

@@ -67,6 +67,12 @@ const nextConfig = {
         hostname: "flagcdn.com",
         port: "",
       },
+      {
+        protocol: "https" as const,
+        hostname: "sfo.cloud.appwrite.io",
+        port: "",
+        pathname: "/v1/**",
+      },
     ],
   },
 };
