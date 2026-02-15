@@ -14,21 +14,19 @@ import {
 const client = new Client();
 const serverClient = new Client();
 
-const environment = process.env.APP_ENV as string;
-
-const endpoint =
-  environment === "production"
-    ? "https://sfo.cloud.appwrite.io/v1"
-    : "https://fra.cloud.appwrite.io/v1";
+const serverEndpoint = process.env.APPWRITE_ENDPOINT as string;
+const clientEndPoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT as string;
 
 client
-  .setEndpoint(endpoint)
+  .setEndpoint(clientEndPoint)
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_CLIENT_ID!);
 
-serverClient.setEndpoint(endpoint).setProject(process.env.APPWRITE_CLIENT_ID!);
+serverClient
+  .setEndpoint(serverEndpoint)
+  .setProject(process.env.APPWRITE_CLIENT_ID!);
 
 export const nodeAppwriteClient = new ServerClient()
-  .setEndpoint(endpoint)
+  .setEndpoint(serverEndpoint)
   .setProject(process.env.APPWRITE_CLIENT_ID!)
   .setKey(process.env.APPWRITE_STORAGE_API_KEY!);
 
