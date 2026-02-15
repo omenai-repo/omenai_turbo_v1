@@ -47,14 +47,15 @@ export default async function AdminDashboardRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const nonce = (await headers()).get("x-nonce") || "";
+  const headersList = await headers();
+  const nonce = headersList.get("x-nonce") || "";
 
   return (
     <RollbarProvider config={clientConfig}>
       <html lang="en" {...mantineHtmlProps}>
         <head>
           <meta name="color-scheme" content="light" />
-          <ColorSchemeScript defaultColorScheme="light" />
+          <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
         </head>
         <body className={`${work_sans.variable} flex flex-col justify-center`}>
           <Toaster

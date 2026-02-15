@@ -56,7 +56,8 @@ export default async function DashboardRootLayout({
   children: React.ReactNode;
 }) {
   const initialSessionData = await getServerSession();
-  const nonce = (await headers()).get("x-nonce") || "";
+  const headersList = await headers();
+  const nonce = headersList.get("x-nonce") || "";
 
   return (
     <RollbarProvider config={clientConfig}>
@@ -64,9 +65,8 @@ export default async function DashboardRootLayout({
         <html lang="en" {...mantineHtmlProps}>
           <head>
             <meta name="color-scheme" content="light" />
-            <ColorSchemeScript defaultColorScheme="light" />
+            <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
 
-            {/* Favicon fallback for localhost/dev */}
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" href="/favicon.ico" />
             <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
