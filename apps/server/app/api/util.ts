@@ -150,14 +150,10 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
 
   const path = `/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${false}`;
 
-  const API_URL_TEST = `${DHL_API}/test/${path}`;
-
-  const API_URL_PROD = `${DHL_API}/${path}`;
+  const API_URL = `${DHL_API}/${path}`;
 
   // TODO: Change to Prod
-  const url = new URL(
-    `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_TEST}`,
-  );
+  const url = new URL(API_URL);
 
   const requestOptions = {
     method: "GET",

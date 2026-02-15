@@ -80,7 +80,7 @@ export default function FormInput() {
         payload,
         referrerKey,
         inviteCode,
-        "gallery"
+        "gallery",
       );
 
       if (response.isOk) {
