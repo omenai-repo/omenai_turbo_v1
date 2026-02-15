@@ -36,6 +36,7 @@ export default async function proxy(req: NextRequest) {
     'self'
     'unsafe-eval'
     'nonce-${nonce}'
+    https://cdn.tiny.cloud
     https://js.stripe.com
     https://checkout.flutterwave.com
     https://*.rollbar.com
@@ -49,12 +50,14 @@ export default async function proxy(req: NextRequest) {
   style-src
     'self'
     'unsafe-inline'
+    https://cdn.tiny.cloud
     https://fonts.googleapis.com;
 
   img-src
     'self'
     blob:
     data:
+    https://cdn.tiny.cloud
     https://sfo.cloud.appwrite.io
     https://fra.cloud.appwrite.io
     https://cloud.appwrite.io
@@ -69,10 +72,11 @@ export default async function proxy(req: NextRequest) {
   font-src
     'self'
     data:
+    https://cdn.tiny.cloud
     https://fonts.gstatic.com;
 
   connect-src
-'self'
+    'self'
     http://localhost:*
     https://staging.api.omenai.app
     https://admin.omenai.app
@@ -80,6 +84,7 @@ export default async function proxy(req: NextRequest) {
     https://sfo.cloud.appwrite.io
     https://fra.cloud.appwrite.io
     https://cloud.appwrite.io
+    https://cdn.tiny.cloud
     https://api.stripe.com
     https://api.flutterwave.com
     https://*.rollbar.com
