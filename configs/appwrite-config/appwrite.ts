@@ -28,8 +28,8 @@ export const identifier = ID;
 // 2. SERVER-SIDE SETUP (Lazy Loaded)
 // -----------------------------------------------------------------------------
 
-let serverClient: any = null;
-let serverStorage: any = null;
+let sClient: any = null;
+let sStorage: any = null;
 
 if (typeof window === "undefined") {
   const { Client: NodeClient, Storage: NodeStorage } = require("node-appwrite");
@@ -42,9 +42,9 @@ if (typeof window === "undefined") {
     .setProject(process.env.APPWRITE_CLIENT_ID!)
     .setKey(process.env.APPWRITE_STORAGE_API_KEY!);
 
-  serverClient = internalClient;
-  serverStorage = new NodeStorage(internalClient);
+  sClient = internalClient;
+  sStorage = new NodeStorage(internalClient);
 }
 
-export const nodeAppwriteClient = serverClient;
-export const nodeAppwriteStorage = serverStorage;
+export const serverClient = sClient;
+export const serverStorage = sStorage;
