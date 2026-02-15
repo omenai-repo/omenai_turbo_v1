@@ -75,6 +75,7 @@ export default async function proxy(req: NextRequest) {
 'self'
     http://localhost:*
     https://staging.api.omenai.app
+    https://admin.omenai.app
     https://api.omenai.app
     https://sfo.cloud.appwrite.io
     https://fra.cloud.appwrite.io

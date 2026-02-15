@@ -57,6 +57,12 @@ const nextConfig = {
         hostname: "plus.unsplash.com",
         port: "",
       },
+      {
+        protocol: "https" as const,
+        hostname: "sfo.cloud.appwrite.io",
+        port: "",
+        pathname: "/v1/**",
+      },
     ],
   },
 };
