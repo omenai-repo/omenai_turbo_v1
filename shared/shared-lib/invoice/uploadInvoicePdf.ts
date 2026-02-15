@@ -1,4 +1,4 @@
-import { nodeAppwriteStorage } from "@omenai/appwrite-config";
+import { serverStorage } from "@omenai/appwrite-config";
 import { ID } from "node-appwrite";
 
 export async function uploadInvoicePdf({
@@ -14,7 +14,7 @@ export async function uploadInvoicePdf({
     type: "application/pdf",
   });
 
-  const uploaded = await nodeAppwriteStorage.createFile({
+  const uploaded = await serverStorage.createFile({
     bucketId,
     fileId: ID.unique(),
     file,
