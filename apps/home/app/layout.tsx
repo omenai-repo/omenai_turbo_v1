@@ -55,7 +55,6 @@ export default async function RootLayout({
     <html lang="en" {...mantineHtmlProps}>
       <head>
         <meta name="color-scheme" content="light" />
-        {/* 2. Pass nonce to Mantine Script */}
         <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
 
         <link rel="icon" href="/favicon.ico" />
