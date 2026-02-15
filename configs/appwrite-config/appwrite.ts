@@ -28,7 +28,6 @@ export const identifier = ID;
 // 2. SERVER-SIDE SETUP (Lazy Loaded)
 // -----------------------------------------------------------------------------
 
-let sClient: any = null;
 let sStorage: any = null;
 
 if (typeof window === "undefined") {
@@ -36,15 +35,12 @@ if (typeof window === "undefined") {
 
   const internalClient = new NodeClient();
 
-  // Use the PRIVATE server variables here
   internalClient
     .setEndpoint(process.env.APPWRITE_ENDPOINT!)
     .setProject(process.env.APPWRITE_CLIENT_ID!)
     .setKey(process.env.APPWRITE_STORAGE_API_KEY!);
 
-  sClient = internalClient;
   sStorage = new NodeStorage(internalClient);
 }
 
-export const serverClient = sClient;
 export const serverStorage = sStorage;

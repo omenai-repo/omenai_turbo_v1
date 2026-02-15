@@ -24,7 +24,7 @@ interface AccountConfig {
 
 export async function accountService(
   targetId: string,
-  metadata: Record<string, any>
+  metadata: Record<string, any>,
 ): Promise<DeletionReturnType> {
   const checkIdvalidity = validateTargetId(targetId);
   if (!checkIdvalidity.success) throw new Error("Invalid targetId");
@@ -83,10 +83,10 @@ async function anonymizeAccount(targetId: string, accountType: AccountType) {
           bucketId: process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!,
           fileId: account.documentation.cv,
         })
-        .catch(async (err) => {
+        .catch(async (err: any) => {
           console.error(
             `❌ Failed to delete file ${account.documentation.cv}:`,
-            err.message
+            err.message,
           );
           await createFailedTaskJob({
             error: `Unable to create job for ${accountType} Account for deleting documentation`,

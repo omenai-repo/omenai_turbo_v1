@@ -34,7 +34,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
             bucketId: process.env.APPWRITE_BUCKET_ID!,
             fileId: payload.appwriteId,
           })
-          .catch((err) => {
+          .catch((err: any) => {
             console.error(
               `❌ Failed to delete file ${payload.appwriteId}:`,
               err.message,
