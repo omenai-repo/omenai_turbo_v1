@@ -81,8 +81,9 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
 
     const API_URL_PROD = `${DHL_API}/shipments/${tracking_number}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
 
+    // TODO: Change to prod
     const url = new URL(
-      `${process.env.APP_ENV === "production" ? API_URL_PROD : API_URL_TEST}`,
+      `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_TEST}`,
     );
     const requestOptions = {
       method: "GET",
