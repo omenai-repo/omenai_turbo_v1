@@ -154,8 +154,9 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
 
   const API_URL_PROD = `${DHL_API}/${path}`;
 
+  // TODO: Change to Prod
   const url = new URL(
-    `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_PROD}`,
+    `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_TEST}`,
   );
 
   const requestOptions = {

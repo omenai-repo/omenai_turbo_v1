@@ -18,6 +18,7 @@ import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime"
 import { useQuery } from "@tanstack/react-query";
 import { fetchNexusData } from "@omenai/shared-services/admin/fetch_nexus_data";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 
 // Risk level configuration
 const RISK_LEVELS = [
@@ -230,7 +231,7 @@ export const PerformanceWrapper = () => {
   const { user } = useAuth({ requiredRole: "admin" });
   const stateCode = useSearchParams().get("code");
 
-  if (!stateCode) return notFound();
+  if (!stateCode) return <NotFoundData />;
 
   const thresholds = nexus_thresholds.find(
     (nexus) => nexus.stateCode === stateCode,
@@ -253,7 +254,7 @@ export const PerformanceWrapper = () => {
   });
 
   if (loading) return <Load />;
-  if (!nexus_data) return notFound();
+  if (!nexus_data) return <NotFoundData />;
 
   const { calculation, nexus_rule } = nexus_data;
   const salesPercentage = calculation.sales_exposure_percentage;

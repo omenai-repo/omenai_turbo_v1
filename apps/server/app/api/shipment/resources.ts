@@ -25,7 +25,8 @@ export const getDhlHeaders = () => {
 export const DHL_API_URL_PROD = "https://express.api.dhl.com/mydhlapi";
 export const DHL_API_URL_TEST = "https://express.api.dhl.com/mydhlapi/test";
 
-export const DHL_API = `${process.env.APP_ENV === "production" ? DHL_API_URL_PROD : DHL_API_URL_TEST}`;
+// TODO: Change to prod
+export const DHL_API = `${process.env.APP_ENV === "production" ? DHL_API_URL_TEST : DHL_API_URL_TEST}`;
 
 export const SHIPMENT_API_URL = `${DHL_API}/shipments`;
 export const RATES_API_URL = `${DHL_API}/rates`;
