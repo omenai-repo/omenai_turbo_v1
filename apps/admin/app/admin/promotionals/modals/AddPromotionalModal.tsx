@@ -114,7 +114,7 @@ function PromotionalModalForm({ close }: { close: () => void }) {
 
       const response = await createPromotionalData(
         { ...promotionalData, image: uploaded.$id },
-        csrf || ""
+        csrf || "",
       );
 
       if (!response.isOk) {
