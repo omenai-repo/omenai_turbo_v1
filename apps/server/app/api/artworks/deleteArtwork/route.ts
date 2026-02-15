@@ -49,7 +49,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         bucketId: process.env.APPWRITE_BUCKET_ID!,
         fileId: artwork.url,
       })
-      .catch(async (err) => {
+      .catch(async (err: any) => {
         console.error(`❌ Failed to delete file ${artwork.url}:`, err.message);
         createErrorRollbarReport(
           "artwork: delete artwork-  failed to delete file",

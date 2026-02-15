@@ -31,7 +31,7 @@ export async function uploadToCloudinary(url: string, id: string) {
 async function processInBatches<T>(
   items: T[],
   handler: (item: T) => Promise<any>,
-  limit = CONCURRENCY_LIMIT
+  limit = CONCURRENCY_LIMIT,
 ) {
   const results: any[] = [];
   const executing: Promise<any>[] = [];
@@ -42,7 +42,7 @@ async function processInBatches<T>(
 
     if (limit <= items.length) {
       const e: Promise<any> = p.then(() =>
-        executing.splice(executing.indexOf(e), 1)
+        executing.splice(executing.indexOf(e), 1),
       );
       executing.push(e);
       if (executing.length >= limit) await Promise.race(executing);
@@ -53,16 +53,16 @@ async function processInBatches<T>(
 }
 
 export async function batchResizeAndUpload(
-  images: { id: string; url: string }[]
+  images: { id: string; url: string }[],
 ) {
   const results = await processInBatches(images, (image) =>
-    uploadToCloudinary(image.url, image.id)
+    uploadToCloudinary(image.url, image.id),
   );
 
   const successful = results
     .filter(
       (
-        r
+        r,
       ): r is PromiseFulfilledResult<{
         appwriteId: string;
         cloudinaryUrl?: string;
@@ -72,14 +72,14 @@ export async function batchResizeAndUpload(
         r.status === "fulfilled" &&
         !!r.value &&
         !r.value.failed &&
-        !!r.value.cloudinaryUrl
+        !!r.value.cloudinaryUrl,
     )
     .map((r) => r.value as { cloudinaryUrl: string; appwriteId: string });
 
   const failed = results
     .filter(
       (
-        r
+        r,
       ): r is PromiseFulfilledResult<{
         appwriteId: string;
         cloudinaryUrl?: string;
@@ -88,7 +88,7 @@ export async function batchResizeAndUpload(
       }> =>
         r.status === "fulfilled" &&
         !!r.value &&
-        (r.value.failed || !r.value.cloudinaryUrl)
+        (r.value.failed || !r.value.cloudinaryUrl),
     )
     .map((r) => ({
       appwriteId: r.value.appwriteId,
@@ -106,7 +106,7 @@ export async function deleteFilesInBatches(fileIds: string[]) {
   for (const fileId of fileIds) {
     const task = serverStorage
       .deleteFile({ bucketId: process.env.APPWRITE_BUCKET_ID!, fileId })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error(`❌ Failed to delete file ${fileId}:`, err.message);
         return { failed: true, fileId, reason: err.message };
       });
@@ -129,12 +129,12 @@ export async function deleteFilesInBatches(fileIds: string[]) {
   const failed = results
     .filter(
       (
-        r
+        r,
       ): r is PromiseFulfilledResult<{
         failed: true;
         fileId: string;
         reason: string;
-      }> => r.status === "fulfilled" && r.value?.failed
+      }> => r.status === "fulfilled" && r.value?.failed,
     )
     .map((r) => r.value);
 
