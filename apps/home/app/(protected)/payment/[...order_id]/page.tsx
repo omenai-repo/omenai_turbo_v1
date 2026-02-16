@@ -5,7 +5,7 @@ export default async function OrderPayment({
 }: {
   params: Promise<{ order_id: string }>;
 }) {
-  const slug = (await params).order_id[0];
+  const slug = (await params).order_id;
 
   return <OrderPaymentClientWrapper order_id={slug} />;
 }

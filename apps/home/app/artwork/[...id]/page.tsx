@@ -5,7 +5,7 @@ export default async function Artwork_Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const slug = (await params).id[0];
+  const slug = (await params).id;
   const request_param = decodeURIComponent(slug);
 
   if (slug === undefined) throw new Error("Something went wrong");

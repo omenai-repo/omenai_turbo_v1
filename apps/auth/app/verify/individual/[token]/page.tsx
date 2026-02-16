@@ -9,7 +9,7 @@ export default async function VerifyEmail({
 }: {
   params: Promise<{ token: string }>;
 }) {
-  const slug = (await params).token[0];
+  const slug = (await params).token;
   const auth_url = auth_uri();
   // Check if user is verified and then redirect
   return (
