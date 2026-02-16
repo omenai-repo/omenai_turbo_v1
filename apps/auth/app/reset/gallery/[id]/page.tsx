@@ -9,7 +9,7 @@ export default async function ResetPassword({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const slug = (await params).id;
+  const slug = (await params).id[0];
   const auth_url = auth_uri();
   // Check if user is verified and then redirect
   return (

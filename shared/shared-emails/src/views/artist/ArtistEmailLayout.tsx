@@ -40,10 +40,10 @@ export default function ArtistEmailLayout({
               If you have any questions or need assistance, feel free to reach
               out to us at{" "}
               <Link
-                href="mailto:contact@omenai.net"
+                href="mailto:support@omenai.app"
                 className="text-dark font-bold underline"
               >
-                contact@omenai.net
+                support@omenai.app
               </Link>
             </Text>
             <Text className="text-fluid-xxs leading-[24px]">

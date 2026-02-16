@@ -9,6 +9,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function WalletPinModalForm() {
   const queryClient = useQueryClient();
@@ -173,7 +174,7 @@ export default function WalletPinModalForm() {
         <button
           disabled={isDisabled() || loading}
           onClick={handlePinChange}
-          className="w-full py-3 rounded bg-dark text-white text-fluid-xxs font-light transition-all duration-200 hover:bg-dark/80 disabled:bg-dark/20 disabled:text-dark/40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className={BUTTON_CLASS}
         >
           {loading ? <LoadSmall /> : "Create PIN"}
         </button>

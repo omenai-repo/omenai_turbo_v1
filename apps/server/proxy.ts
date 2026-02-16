@@ -44,6 +44,8 @@ export default async function proxy(req: NextRequest) {
     if (mobileKey !== process.env.MOBILE_ACCESS_KEY) {
       return NextResponse.json({ message: "Invalid App Key" }, { status: 403 });
     }
+
+    return NextResponse.next();
   } else {
     const validOrigin = origin && ALLOWED_ORIGINS.has(origin);
     const validReferer =

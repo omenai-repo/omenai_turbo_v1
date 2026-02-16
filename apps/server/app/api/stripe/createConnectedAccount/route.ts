@@ -17,7 +17,12 @@ const config: CombinedConfig = {
   allowedRoles: ["gallery"],
 };
 const CreateConnectedAccountSchema = z.object({
-  customer: z.any(),
+  customer: z.object({
+    name: z.string(),
+    email: z.string(),
+    customer_id: z.string(),
+    country: z.string(),
+  }),
 });
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(

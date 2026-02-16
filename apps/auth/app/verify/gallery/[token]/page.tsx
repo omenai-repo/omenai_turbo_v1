@@ -8,7 +8,7 @@ export default async function VerifyEmail({
 }: {
   params: Promise<{ token: string }>;
 }) {
-  const slug = (await params).token;
+  const slug = (await params).token[0];
   // Check if gallery is verified and then redirect
   return (
     <div className="w-full h-full font-dark p-5">

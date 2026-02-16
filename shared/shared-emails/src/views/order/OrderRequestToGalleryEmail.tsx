@@ -35,7 +35,7 @@ const OrderRequestToGalleryMail = (
 ) => {
   const url = base_url();
   const dashboard_uri = dashboard_url();
-  const image = getOptimizedImage(artwork_data.url, "thumbnail", 40);
+  const image = getOptimizedImage(artwork_data.url, "thumbnail", 90);
   return (
     <Html>
       <Head />
@@ -297,10 +297,10 @@ const OrderRequestToGalleryMail = (
               >
                 Our gallery support team is ready to assist. Contact us at{" "}
                 <Link
-                  href="mailto:contact@omenai.net"
+                  href="mailto:support@omenai.app"
                   style={{ color: "#1e40af", textDecoration: "underline" }}
                 >
-                  contact@omenai.net
+                  support@omenai.app
                 </Link>
               </Text>
             </Section>
@@ -326,7 +326,7 @@ const OrderRequestToGalleryMail = (
                 className="text-sm m-0"
                 style={{ color: "#4b5563", lineHeight: "1.5" }}
               >
-                contact@omenai.net • +123456789
+                support@omenai.app • +123456789
               </Text>
             </Section>
 
