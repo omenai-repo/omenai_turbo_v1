@@ -3,6 +3,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 import { MdError } from "react-icons/md";
 import { usePasswordReset } from "@omenai/shared-hooks/hooks/usePasswordReset";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function UpdatePasswordModalForm() {
   const {
@@ -168,7 +169,7 @@ export default function UpdatePasswordModalForm() {
                   info.password === "" ||
                   codeLoading
                 }
-                className="px-4 py-2 grid place-items-center w-full bg-dark text-white font-light rounded hover:bg-dark/80 hover:text-white transition-colors disabled:bg-dark/10 disabled:text-dark disabled:cursor-not-allowed disabled:bg-slate-200 focus:outline-none focus:ring-1 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
+                className={BUTTON_CLASS}
               >
                 {codeLoading ? <LoadSmall /> : "Send Code"}
               </button>
@@ -210,12 +211,11 @@ export default function UpdatePasswordModalForm() {
               info.password === ""
             }
             type="submit"
-            className="w-full py-3 px-6 bg-slate-900 text-white font-light rounded shadow-sm transition-all transform active:scale-95 disabled:cursor-not-allowed disabled:transform-none disabled:bg-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:ring-offset-2 text-fluid-xxs"
+            className={BUTTON_CLASS}
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <LoadSmall />
-                Updating Password...
               </span>
             ) : (
               <span className="flex items-center justify-center gap-2">

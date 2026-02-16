@@ -15,6 +15,7 @@ import { useRollbar } from "@rollbar/react";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 import { Country, ICountry } from "country-state-city";
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export const address_inputs = [
   {
@@ -81,20 +82,20 @@ export default function UpdateAddressModalForm() {
       const updateAddressResponse = await updateAddress(
         user.user_id,
         address,
-        csrf || ""
+        csrf || "",
       );
 
       if (!updateAddressResponse.isOk) {
         toast_notif(
           updateAddressResponse.message ||
             "Something went wrong, please try again or contact support",
-          "error"
+          "error",
         );
         return;
       }
       toast_notif(
         `${updateAddressResponse.message || "Address information updated successfully"}`,
-        "success"
+        "success",
       );
 
       await queryClient.invalidateQueries({
@@ -109,7 +110,7 @@ export default function UpdateAddressModalForm() {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -167,9 +168,7 @@ export default function UpdateAddressModalForm() {
         <button
           onClick={handleAddressUpdate}
           disabled={loading || allKeysEmpty({ ...address })}
-          className="flex-1 px-4 py-2 bg-dark text-white rounded hover:bg-dark/90 
-          disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-dark/30
-                             transition-all duration-300 text-fluid-xxs font-medium flex items-center justify-center space-x-2"
+          className={BUTTON_CLASS}
         >
           {loading ? (
             <LoadSmall />

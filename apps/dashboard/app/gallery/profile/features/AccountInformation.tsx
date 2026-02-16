@@ -12,6 +12,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/gallery_actions/GalleryActionStore";
 import { useRollbar } from "@rollbar/react";
 import {
+  BUTTON_CLASS,
   INPUT_CLASS,
   TEXTAREA_CLASS,
 } from "@omenai/shared-ui-components/components/styles/inputClasses";
@@ -214,7 +215,7 @@ export default function AccountInformation({ profile }: { profile: any }) {
             <button
               onClick={handleSave}
               disabled={loading}
-              className="flex items-center gap-2 rounded bg-white px-5 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100"
+              className={BUTTON_CLASS}
             >
               {loading ? <LoadSmall /> : <Save className="h-4 w-4" />}
               Save changes

@@ -70,23 +70,23 @@ export const uploadArtworkDimensionInputMocks = [
   {
     name: "length",
     type: "text",
-    label: "Length",
+    label: "Length (in inches)",
     required: true,
     placeholder: "e.g 24in",
   },
   {
     name: "height",
     type: "text",
-    label: "Height",
+    label: "Height (in inches)",
     required: true,
     placeholder: "e.g 24in",
   },
   {
     name: "weight",
     type: "text",
-    label: "Weight",
+    label: "Weight (in pound)",
     required: true,
-    placeholder: "e.g 10kg",
+    placeholder: "e.g 10lb",
   },
 ];
 export const uploadArtworkPriceInputMocks = [

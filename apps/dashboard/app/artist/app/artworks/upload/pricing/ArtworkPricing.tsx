@@ -18,6 +18,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { base_url } from "@omenai/url-config/src/config";
 import { useRollbar } from "@rollbar/react";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 // --- Helper Functions ---
 function extractNumberString(str: string) {
@@ -319,7 +320,7 @@ export default function ArtworkPricing() {
             <button
               type="submit"
               disabled={loading || !canProceed}
-              className={`w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-3.5 rounded-lg font-medium text-sm text-white shadow-lg transition-all duration-200
+              className={`${BUTTON_CLASS}
                 ${
                   loading || !canProceed
                     ? "bg-slate-300 cursor-not-allowed shadow-none"

@@ -9,37 +9,45 @@ import { SalesTooltip } from "./Tooltip";
 // you'll often use just a few of them.
 
 // Calculate Y-axis ticks dynamically based on min and max values
+// Calculate Y-axis ticks dynamically based on min and max values
 function calculateYTicks(min: number, max: number, maxTicks = 6) {
   // Handle case where min and/or max is 0
   if (min === 0 && max === 0) {
-    return []; // No data to show
+    return [0]; // Return single tick instead of empty to prevent graph collapse
   }
 
   // If only one of min or max is 0, set it to a small value to avoid division by 0
   if (min === 0 && max > 0) {
-    min = 1; // Ensure a small starting value
-  }
-
-  if (max === 0 && min > 0) {
-    max = min; // Set max equal to min to avoid invalid range
+    min = 0; // Keep min at 0 for charts usually
   }
 
   const range = max - min;
-  const step = Math.round(range / maxTicks);
+  const step = range / maxTicks; // Don't round step yet to maintain precision
 
-  const ticks = [];
+  const ticks: number[] = [];
 
-  // Calculate the ticks based on the step, rounding to the nearest thousand
-  for (let i = Math.floor(min / 1000) * 1000; i <= max; i += step) {
-    ticks.push(Math.round(i / 1000) * 1000); // Round to nearest thousand
+  // Calculate the ticks
+  for (let i = min; i <= max; i += step) {
+    // Only round to 1000 if the numbers are actually large (> 1000)
+    // Otherwise, just round to nearest integer
+    const val = max > 1000 ? Math.round(i / 1000) * 1000 : Math.round(i);
+
+    ticks.push(val);
   }
 
-  // Ensure that we don't exceed maxTicks
-  if (ticks.length > maxTicks) {
-    ticks.length = maxTicks;
+  // Ensure we include the max value if missed
+  if (ticks[ticks.length - 1] < max) {
+    const lastVal =
+      max > 1000 ? Math.round(max / 1000) * 1000 : Math.round(max);
+    ticks.push(lastVal);
   }
 
-  return ticks;
+  // 🛡️ CRITICAL FIX: Remove Duplicates and Sort
+  // This prevents the "same key" error
+  const uniqueTicks = [...new Set(ticks)].sort((a, b) => a - b);
+
+  // Limit to maxTicks
+  return uniqueTicks.slice(0, maxTicks);
 }
 
 export const SalesActivityChart = ({

@@ -15,7 +15,6 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
 ) {
   try {
     await connectMongoDB();
-
     const { order_id } = await validateRequestBody(
       request,
       GetSingleOrderSchema,

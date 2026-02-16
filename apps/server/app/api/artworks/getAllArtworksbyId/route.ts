@@ -8,14 +8,14 @@ import { fetchArtworksFromCache } from "../utils";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
 const GetAllArtworkByIdSchema = z.object({
-  author_id: z.string().min(1),
+  id: z.string().min(1),
 });
 export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function POST(request: Request) {
     try {
       await connectMongoDB();
 
-      const { author_id } = await validateRequestBody(
+      const { id: author_id } = await validateRequestBody(
         request,
         GetAllArtworkByIdSchema,
       );

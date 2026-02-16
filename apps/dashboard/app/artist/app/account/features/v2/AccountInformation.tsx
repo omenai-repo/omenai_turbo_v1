@@ -12,6 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useRollbar } from "@rollbar/react";
 import {
+  BUTTON_CLASS,
   INPUT_CLASS,
   TEXTAREA_CLASS,
 } from "@omenai/shared-ui-components/components/styles/inputClasses";
@@ -203,12 +204,11 @@ export default function AccountInformation({ profile }: any) {
         <button
           onClick={handleSave}
           disabled={!hasChanges || loading}
-          className={`flex items-center space-x-2 px-4 py-2 rounded font-light text-fluid-xxs
-                    transition-all duration-300 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-dark/30 ${
-                      hasChanges
-                        ? "bg-dark text-white hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                        : "bg-gray-400 text-gray-light cursor-not-allowed"
-                    }`}
+          className={`${BUTTON_CLASS} ${
+            hasChanges
+              ? "bg-dark text-white hover:bg-dark/90 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              : "bg-gray-400 text-gray-light cursor-not-allowed"
+          }`}
         >
           {loading ? (
             <LoadSmall />

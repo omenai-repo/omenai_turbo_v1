@@ -10,8 +10,8 @@ type Data =
   | (Omit<IndividualRegisterData, "confirmPassword"> & {
       preferences: string[];
     })
-  | Omit<GallerySignupData, "confirmPassword">
-  | Omit<ArtistSignupData, "confirmPassword">;
+  | (Omit<ArtistSignupData, "confirmPassword" | "logo"> & { logo: string })
+  | (Omit<GallerySignupData, "confirmPassword" | "logo"> & { logo: string });
 
 export async function parseRegisterData(data: Data) {
   // Validate data before extracting password

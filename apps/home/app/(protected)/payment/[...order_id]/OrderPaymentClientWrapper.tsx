@@ -10,7 +10,7 @@ import {
 } from "next/navigation";
 import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getApiUrl, auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
@@ -24,7 +24,7 @@ export default function OrderPaymentClientWrapper({
   const url = getApiUrl();
   const [redirect_uri, set_redirect_uri] = useLocalStorage(
     "redirect_uri_on_login",
-    ""
+    "",
   );
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const searchParams = useSearchParams();

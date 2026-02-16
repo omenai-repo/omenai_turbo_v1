@@ -8,13 +8,13 @@ export const validateWeight = (value: string): string[] => {
   // Validate if the value is not blank and follows the weight format
   if (
     !schema
-      .regex(/^\d+(\.\d+)?\s*(lbs?)$/i, {
+      .regex(/^\d+(\.\d+)?\s*(lb?)$/i, {
         message: "Invalid weight format",
       })
       .safeParse(value).success
   ) {
     errors.push(
-      "Invalid weight detected 🚫. We need real measurements like '5lbs' or '25lbs', not vibes.",
+      "Invalid weight detected 🚫. We need real measurements like '5lb' or '25lb', not vibes.",
     );
   }
 

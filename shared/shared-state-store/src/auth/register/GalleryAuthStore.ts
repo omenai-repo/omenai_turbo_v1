@@ -139,5 +139,5 @@ export const useGalleryAuthStore = create<GalleryAuthStoreTypes>(
         },
       }));
     },
-  })
+  }),
 );

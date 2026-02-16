@@ -27,8 +27,8 @@ import z from "zod";
 
 /* ----------------------------- Route ----------------------------------- */
 const VerifyPaymentSchema = z.object({
-  payment_intent_id: z.string(),
-  checkout_session_id: z.string(),
+  payment_intent_id: z.string().optional(),
+  checkout_session_id: z.string().optional(),
 });
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,

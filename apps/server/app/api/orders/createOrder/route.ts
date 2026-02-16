@@ -316,6 +316,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     console.error("Order creation error:", error);
 
+    console.log(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status },

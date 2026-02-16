@@ -5,7 +5,7 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function updateAddress(
   user_id: string,
   address: AddressTypes,
-  token: string
+  token: string,
 ) {
   const url = getApiUrl();
 

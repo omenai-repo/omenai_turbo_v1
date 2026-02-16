@@ -8,7 +8,7 @@ import {
 } from "appwrite";
 
 // -----------------------------------------------------------------------------
-// 1. CLIENT-SIDE SETUP (Always runs)
+// 1. CLIENT-SIDE SETUP
 // -----------------------------------------------------------------------------
 const client = new Client();
 
@@ -25,7 +25,7 @@ export const appwrite_image_gravity = ImageGravity;
 export const identifier = ID;
 
 // -----------------------------------------------------------------------------
-// 2. SERVER-SIDE SETUP (Lazy Loaded)
+// 2. SERVER-SIDE SETUP
 // -----------------------------------------------------------------------------
 
 let sStorage: any = null;

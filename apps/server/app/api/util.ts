@@ -1,5 +1,8 @@
 import { rollbarServerInstance } from "@omenai/rollbar-config";
-import { ServerError } from "../../custom/errors/dictionary/errorDictionary";
+import {
+  NotFoundError,
+  ServerError,
+} from "../../custom/errors/dictionary/errorDictionary";
 import z, { ZodType } from "zod";
 import crypto from "node:crypto";
 import { base_url, getApiUrl } from "@omenai/url-config/src/config";
@@ -7,6 +10,10 @@ import {
   DHL_API,
   getDhlHeaders,
   getUserFriendlyError,
+  OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT,
+  OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT,
+  RATES_API_URL,
+  selectAppropriateDHLProduct,
 } from "./shipment/resources";
 import { BadRequestError } from "../../custom/errors/dictionary/errorDictionary";
 
@@ -16,7 +23,6 @@ import {
   CreateOrderModelTypes,
   ExclusivityUpholdStatus,
   MetaSchema,
-  PaymentLedgerTypes,
   ShipmentDimensions,
   ShipmentRateRequestTypes,
 } from "@omenai/shared-types";
@@ -144,6 +150,8 @@ export function buildPricing(
 }
 
 import { ShipmentAddressValidationType } from "@omenai/shared-types";
+import { validateShipmentRateRequest } from "@omenai/shared-lib/validations/api/shipment/validateShipmentRateRequestData";
+import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
 
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
@@ -264,7 +272,6 @@ export async function validateRequestBody<T>(
   // 1. Safe JSON Parsing
   try {
     body = await request.json();
-    console.log("safely parsed");
   } catch (error) {
     throw new BadRequestError(
       "Invalid JSON syntax: Request body could not be parsed.",
@@ -273,7 +280,6 @@ export async function validateRequestBody<T>(
 
   // 2. Zod Validation & Sanitization
   const validationResult = schema.safeParse(body);
-  console.log(validationResult);
 
   if (!validationResult.success) {
     const errorMessage = validationResult.error.issues
@@ -283,7 +289,6 @@ export async function validateRequestBody<T>(
     throw new BadRequestError(`Validation Failed: ${errorMessage}`);
   }
 
-  // 3. Return Clean Data (Typed automatically)
   return validationResult.data;
 }
 
@@ -295,4 +300,117 @@ export function validateGetRouteParams<T>(schema: ZodType<T>, data: T): T {
   }
 
   return data;
+}
+
+/**
+ * Custom error class to handle DHL API specific errors
+ * preserving the status code from the upstream provider.
+ */
+export class DhlProviderError extends Error {
+  status: number;
+  data: any;
+
+  constructor(message: string, status: number, data?: any) {
+    super(message);
+    this.name = "DhlProviderError";
+    this.status = status;
+    this.data = data;
+  }
+}
+
+export async function getShipmentRates(params: ShipmentRateRequestTypes) {
+  const {
+    originCountryCode,
+    originCityName,
+    originPostalCode,
+    destinationCountryCode,
+    destinationCityName,
+    destinationPostalCode,
+    weight,
+    length,
+    width,
+    height,
+  } = params;
+
+  // 1. Validate inputs
+  // (Moved from the catch block to ensure it actually runs before the API call)
+  const requestValidation = validateShipmentRateRequest({
+    originCountryCode,
+    originCityName,
+    originPostalCode,
+    destinationCountryCode,
+    destinationCityName,
+    destinationPostalCode,
+    weight,
+    length,
+    width,
+    height,
+  });
+
+  if (requestValidation) {
+    throw new BadRequestError(requestValidation);
+  }
+
+  // 2. Prepare DHL Request
+  const requestOptions = {
+    method: "GET",
+    headers: getDhlHeaders(),
+  };
+
+  const plannedShippingDate = await getFutureShipmentDate(
+    5,
+    false,
+    originCountryCode,
+  );
+
+  const account_to_use =
+    originCountryCode === destinationCountryCode
+      ? OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT
+      : OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
+
+  const url = new URL(RATES_API_URL);
+
+  url.searchParams.append("accountNumber", account_to_use);
+  url.searchParams.append("originCountryCode", originCountryCode);
+  url.searchParams.append("originCityName", originCityName);
+  url.searchParams.append("destinationCountryCode", destinationCountryCode);
+  url.searchParams.append("destinationCityName", destinationCityName);
+  url.searchParams.append("weight", weight.toString());
+  url.searchParams.append("length", length.toString());
+  url.searchParams.append("width", width.toString());
+  url.searchParams.append("height", height.toString());
+  url.searchParams.append("plannedShippingDate", plannedShippingDate);
+  url.searchParams.append(
+    "isCustomsDeclarable",
+    (originCountryCode !== destinationCountryCode).toString(),
+  );
+  url.searchParams.append("originPostalCode", originPostalCode);
+  url.searchParams.append("destinationPostalCode", destinationPostalCode);
+  url.searchParams.append("unitOfMeasurement", "metric");
+  url.searchParams.append("strictValidation", "false");
+
+  // 3. Execute Fetch
+  const response = await fetch(url.toString(), requestOptions);
+  const data = await response.json();
+
+  // 4. Handle Upstream Errors
+  if (!response.ok) {
+    const error_message = getUserFriendlyError(data.detail);
+    // Instead of returning JSON, we throw a typed error
+    throw new DhlProviderError(error_message, data.status || 500, data);
+  }
+
+  // 5. Select Product
+  const appropriateDHLProduct = await selectAppropriateDHLProduct(
+    data.products,
+  );
+
+  if (appropriateDHLProduct === null) {
+    throw new NotFoundError(
+      "No DHL product found for this shipment. Please contact support",
+    );
+  }
+
+  // 6. Return Data Directly
+  return appropriateDHLProduct;
 }

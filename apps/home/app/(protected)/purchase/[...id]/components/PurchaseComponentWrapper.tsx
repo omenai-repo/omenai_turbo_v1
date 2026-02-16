@@ -31,7 +31,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
   const { set_address_on_order, address } = orderStore();
 
   const { data: artwork, isLoading: loading } = useQuery({
-    queryKey: ["fetch_artwork_on purchase"],
+    queryKey: ["fetch_artwork_on purchase", slug],
     queryFn: async () => {
       const [userData, artwork] = await Promise.all([
         fetchUserData(user.id),
@@ -53,6 +53,8 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
         return artwork.data;
       }
     },
+    refetchOnWindowFocus: false,
+    enabled: !!user.id && !!slug,
   });
 
   if (loading) {

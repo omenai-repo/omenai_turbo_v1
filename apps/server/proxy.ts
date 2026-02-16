@@ -29,9 +29,7 @@ export default async function proxy(req: NextRequest) {
   const referer = req.headers.get("referer");
   const mobileKey = req.headers.get("x-access-key") ?? "";
 
-  if (
-    req.headers.get("x-internal-secret") === process.env.INTERNAL_API_SECRET
-  ) {
+  if (req.headers.get("x-internal-secret") === process.env.INTERNAL_SECRET) {
     return NextResponse.next();
   }
 
@@ -163,7 +161,7 @@ function setCorsHeaders(res: NextResponse, origin: string) {
   );
   res.headers.set(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Csrf-Token, X-Requested-With, Sentry-Trace, Baggage",
+    "Content-Type, Authorization, X-Csrf-Token, X-Requested-With, Sentry-Trace, Baggage, x-internal-secret",
   );
 }
 

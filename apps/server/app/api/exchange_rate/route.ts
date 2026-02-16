@@ -10,7 +10,7 @@ const config: CombinedConfig = {
   allowedRoles: ["artist", "gallery"],
 };
 const ExchangeRateSchema = z.object({
-  currency: z.number(),
+  currency: z.string(),
   amount: z.number(),
 });
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(

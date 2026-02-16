@@ -8,7 +8,10 @@ import {
   ServiceUnavailableError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { trimWhiteSpace } from "@omenai/shared-utils/src/trimWhitePace";
 import { CombinedConfig, ExclusivityUpholdStatus } from "@omenai/shared-types";
@@ -17,16 +20,43 @@ import { redis } from "@omenai/upstash-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import { ArtworkMedium } from "@omenai/shared-lib/algorithms/priceGenerator";
 
 const config: CombinedConfig = {
-  ...strictRateLimit,
+  ...standardRateLimit,
   allowedRoles: ["artist", "gallery"],
 };
 
 const UploadSchema = z.object({
   author_id: z.string(),
   title: z.string(),
-  role_access: z.object({ role: z.string() }),
+  artist: z.string(),
+  pricing: z.object({
+    price: z.number(),
+    usd_price: z.number(),
+    shouldShowPrice: z.string(),
+    currency: z.string(),
+  }),
+  materials: z.string(),
+  medium: z.string(),
+  year: z.number(),
+  rarity: z.string(),
+  url: z.string(),
+  artist_birthyear: z.string(),
+  artist_country_origin: z.string(),
+  certificate_of_authenticity: z.string(),
+  artwork_description: z.string(),
+  signature: z.string(),
+  packaging_type: z.string(),
+  role_access: z.object({
+    role: z.string(),
+    designation: z.string().nullable(),
+  }),
+  dimensions: z.object({
+    height: z.string(),
+    length: z.string(),
+    weight: z.string(),
+  }),
 });
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
@@ -40,8 +70,9 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ServiceUnavailableError("Artwork upload is currently disabled");
     }
 
-    await connectMongoDB();
     const data = await validateRequestBody(request, UploadSchema);
+
+    await connectMongoDB();
 
     const { role_access, title } = data;
 

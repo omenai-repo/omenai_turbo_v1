@@ -16,7 +16,7 @@ export default function ArtistSignupPageWrapper({
   inviteCode: string | undefined;
 }>) {
   const { value: collectorOnboardingEnabled } = useLowRiskFeatureFlag(
-    "collectoronboardingenabled",
+    "artistonboardingenabled",
     false,
   );
   const { isLoading } = useWaitlistValidation({

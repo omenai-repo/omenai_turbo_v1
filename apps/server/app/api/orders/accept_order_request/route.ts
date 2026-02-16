@@ -27,7 +27,11 @@ import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
-import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import {
+  createErrorRollbarReport,
+  getShipmentRates,
+  validateRequestBody,
+} from "../../util";
 import z from "zod";
 
 const client = new Taxjar({
@@ -38,7 +42,7 @@ const client = new Taxjar({
 
 const API_URL = getApiUrl();
 const HEADERS = {
-  Origin: process.env.INTERAL_SECRET as string,
+  "x-internal-secret": process.env.INTERAL_SECRET as string,
   "Content-Type": "application/json",
 };
 
@@ -90,11 +94,13 @@ const AcceptOrderRequestSchema = z.object({
     height: z.number(),
     weight: z.number(),
   }),
-  exhibition_status: z.object({
-    is_on_exhibition: z.boolean(),
-    exhibition_end_date: z.string().or(z.date()),
-    status: z.enum(["pending", "scheduled"]),
-  }),
+  exhibition_status: z
+    .object({
+      is_on_exhibition: z.boolean(),
+      exhibition_end_date: z.string().or(z.date()),
+      status: z.enum(["pending", "scheduled"]),
+    })
+    .nullable(),
 });
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
@@ -112,6 +118,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     await validateSellerSubscription(order);
 
     const shipping_rate_data = await getShippingRate(order, data.dimensions);
+
     const shipment_information = await buildShipmentInformation(
       order,
       data.dimensions,
@@ -210,19 +217,9 @@ async function getShippingRate(
   };
 
   try {
-    const response = await fetch(`${API_URL}/api/shipment/get_rate`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: HEADERS,
-    });
+    const appropriateDHLProduct = await getShipmentRates(payload);
 
-    const json = await response.json();
-
-    if (!response.ok) {
-      throw new Error(json?.message);
-    }
-
-    return json.appropriateDHLProduct;
+    return appropriateDHLProduct;
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
