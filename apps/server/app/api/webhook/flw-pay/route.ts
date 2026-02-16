@@ -9,7 +9,6 @@ import {
 } from "@omenai/shared-types";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
@@ -20,6 +19,7 @@ import {
   ZMetaSchema,
   retry,
   buildPricing,
+  record_tax_transaction,
 } from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
@@ -27,6 +27,7 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+
 /* ----------------------------- Schema ------------------------------------- */
 
 /* ----------------------------- Utilities ---------------------------------- */
@@ -328,6 +329,12 @@ async function handlePurchaseTransaction(
     { order_id: order_info.order_id },
     { $set: { payment_information, hold_status: null } },
   );
+
+  const calculation_id =
+    order_info.shipping_details.shipment_information.quote.tax_calculation_id;
+  const order_id = order_info.order_id;
+
+  await record_tax_transaction(calculation_id, order_id);
 
   if (updateOrder.modifiedCount === 0) {
     rollbarServerInstance.error({

@@ -40,7 +40,10 @@ import { sendSubscriptionPaymentSuccessfulMail } from "@omenai/shared-emails/src
 import { sendSubscriptionPaymentFailedMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentFailedMail";
 import { sendSubscriptionPaymentPendingMail } from "@omenai/shared-emails/src/models/subscription/sendSubscriptionPaymentPendingMail";
 
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  record_tax_transaction,
+} from "../../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { redis } from "@omenai/upstash-config";
 import { NextResponse } from "next/server";
@@ -270,6 +273,12 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
       { status: 400 },
     );
   }
+
+  const calculation_id =
+    order.shipping_details.shipment_information.quote.tax_calculation_id;
+  const order_id = order.order_id;
+
+  await record_tax_transaction(calculation_id, order_id);
 
   return processPurchaseTransaction(paymentObj, meta, order);
 }

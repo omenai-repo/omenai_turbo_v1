@@ -17,7 +17,10 @@ import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { NextResponse } from "next/server";
-import { createErrorRollbarReport } from "../../../util";
+import {
+  createErrorRollbarReport,
+  record_tax_transaction,
+} from "../../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
@@ -182,6 +185,13 @@ async function handleCheckoutCompleted(event: any) {
       { status: 400 },
     );
   }
+
+  const calculation_id =
+    order.shipping_details.shipment_information.quote.tax_calculation_id;
+  const order_id = order.order_id;
+
+  await record_tax_transaction(calculation_id, order_id);
+
   return processStripePayment(paymentObj, meta, order);
 }
 
@@ -197,10 +207,10 @@ async function processStripePayment(
     currency: string;
   },
   meta: any,
-  order_info: any,
+  order: any,
 ) {
   try {
-    await runPostPaymentWorkflows(paymentIntent, order_info, meta);
+    await runPostPaymentWorkflows(paymentIntent, order, meta);
 
     try {
       await releaseOrderLock(meta.art_id, meta.buyer_id);
@@ -230,34 +240,34 @@ export async function runPostPaymentWorkflows(
     id: string;
     currency: string;
   },
-  order_info: CreateOrderModelTypes,
+  order: CreateOrderModelTypes,
   meta: MetaSchema & { commission: number },
 ) {
   const amount = paymentIntent.amount_received ?? paymentIntent.amount;
   const currency = getCurrencySymbol(paymentIntent.currency.toUpperCase());
   const price = formatPrice(Math.round(Number(meta.unit_price)), currency);
-  const buyerAddress = order_info.shipping_details.addresses.destination;
-  const buyerName = order_info.buyer_details.name;
-  const buyerEmail = order_info.buyer_details.email;
-  const buyerId = order_info.buyer_details.id;
+  const buyerAddress = order.shipping_details.addresses.destination;
+  const buyerName = order.buyer_details.name;
+  const buyerEmail = order.buyer_details.email;
+  const buyerId = order.buyer_details.id;
   const { tax_fees, unit_price, shipping_cost } = meta;
 
   const invoice: Omit<
     InvoiceTypes,
     "storage" | "document_created" | "receipt_sent"
   > = {
-    invoiceNumber: `OMENAI-INV-${order_info.order_id}`,
+    invoiceNumber: `OMENAI-INV-${order.order_id}`,
     recipient: {
       address: buyerAddress,
       name: buyerName,
       email: buyerEmail,
       userId: buyerId,
     },
-    orderId: order_info.order_id,
+    orderId: order.order_id,
     currency: paymentIntent.currency.toUpperCase(),
     lineItems: [
       {
-        description: order_info.artwork_data.title,
+        description: order.artwork_data.title,
         quantity: 1,
         unitPrice: Math.round(Number(unit_price)),
       },
@@ -279,11 +289,11 @@ export async function runPostPaymentWorkflows(
 
   const [buyer_push, seller_push] = await Promise.all([
     DeviceManagement.findOne(
-      { auth_id: order_info.buyer_details.id },
+      { auth_id: order.buyer_details.id },
       "device_push_token",
     ),
     DeviceManagement.findOne(
-      { auth_id: order_info.seller_details.id },
+      { auth_id: order.seller_details.id },
       "device_push_token",
     ),
   ]);
@@ -294,22 +304,22 @@ export async function runPostPaymentWorkflows(
     const payload: NotificationPayload = {
       to: buyer_push.device_push_token,
       title: "Payment successful",
-      body: `Your payment for ${order_info.artwork_data.title} has been confirmed`,
+      body: `Your payment for ${order.artwork_data.title} has been confirmed`,
       data: {
         type: "orders",
         access_type: "collector",
         metadata: {
-          orderId: order_info.order_id,
+          orderId: order.order_id,
           date: toUTCDate(new Date()),
         },
-        userId: order_info.buyer_details.id,
+        userId: order.buyer_details.id,
       },
     };
 
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_buyer_${order_info.order_id}_workflow`,
+        `notif_buyer_${order.order_id}_workflow`,
         JSON.stringify(payload),
       ),
     );
@@ -320,24 +330,24 @@ export async function runPostPaymentWorkflows(
       to: seller_push.device_push_token,
       title: "Payment received",
       body: `A payment of ${formatPrice(
-        order_info.artwork_data.pricing.usd_price,
+        order.artwork_data.pricing.usd_price,
         "USD",
       )} has been made for your artpiece`,
       data: {
         type: "orders",
-        access_type: order_info.seller_designation as "artist",
+        access_type: order.seller_designation as "artist",
         metadata: {
-          orderId: order_info.order_id,
+          orderId: order.order_id,
           date: toUTCDate(new Date()),
         },
-        userId: order_info.seller_details.id,
+        userId: order.seller_details.id,
       },
     };
 
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
-        `notif_seller_${order_info.order_id}_workflow`,
+        `notif_seller_${order.order_id}_workflow`,
         JSON.stringify(payload),
       ),
     );
@@ -346,22 +356,22 @@ export async function runPostPaymentWorkflows(
   await Promise.all([
     createWorkflow(
       "/api/workflows/shipment/create_shipment",
-      `create_shipment_${order_info.order_id}_workflow`,
-      JSON.stringify({ order_id: order_info.order_id }),
+      `create_shipment_${order.order_id}_workflow`,
+      JSON.stringify({ order_id: order.order_id }),
     ),
     createWorkflow(
       "/api/workflows/emails/sendPaymentSuccessMail",
-      `send_payment_success_mail_${order_info.order_id}_workflow`,
+      `send_payment_success_mail_${order.order_id}_workflow`,
       JSON.stringify({
-        buyer_email: order_info.buyer_details.email,
-        buyer_name: order_info.buyer_details.name,
-        artwork_title: order_info.artwork_data.title,
-        order_id: order_info.order_id,
-        order_date: order_info.createdAt,
+        buyer_email: order.buyer_details.email,
+        buyer_name: order.buyer_details.name,
+        artwork_title: order.artwork_data.title,
+        order_id: order.order_id,
+        order_date: order.createdAt,
         transaction_id: paymentIntent.id,
         price,
-        seller_email: order_info.seller_details.email,
-        seller_name: order_info.seller_details.name,
+        seller_email: order.seller_details.email,
+        seller_name: order.seller_details.name,
         seller_entity: "gallery",
       }),
     ),
@@ -370,7 +380,7 @@ export async function runPostPaymentWorkflows(
       `stripe_payment_workflow_${paymentIntent.id}_workflow`,
       JSON.stringify({
         provider: "stripe",
-        meta: { ...meta, order_id: order_info.order_id },
+        meta: { ...meta, order_id: order.order_id },
         paymentIntent,
       }),
     ),

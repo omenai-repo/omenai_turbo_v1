@@ -57,16 +57,6 @@ export default function TrendingArtistWrapper() {
             <TrendingArtist artists={artists} />
           )}
         </div>
-
-        {/* Mobile View All */}
-        <div className="mt-10 flex md:hidden justify-center">
-          <Link
-            href="/artists"
-            className="w-full py-3 text-center rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
-          >
-            View All Artists
-          </Link>
-        </div>
       </div>
     </section>
   );

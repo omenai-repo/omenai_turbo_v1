@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import {
-  AddressTypes,
   CombinedConfig,
   CreateOrderModelTypes,
   NotificationPayload,
   OrderArtworkExhibitionStatus,
   ShipmentDimensions,
   ShipmentRateRequestTypes,
+  AddressTypes,
 } from "@omenai/shared-types";
 import {
   BadRequestError,
@@ -21,7 +21,10 @@ import Taxjar from "taxjar";
 import { NexusTransactions } from "@omenai/shared-models/models/transactions/NexusModelSchema";
 import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
@@ -33,51 +36,73 @@ import {
   validateRequestBody,
 } from "../../util";
 import z from "zod";
-
-const client = new Taxjar({
-  apiKey: process.env.TAXJAR_API_KEY!,
-  // TODO: Change to production endpoint
-  apiUrl: "https://api.sandbox.taxjar.com",
-});
-
-const API_URL = getApiUrl();
-const HEADERS = {
-  "x-internal-secret": process.env.INTERAL_SECRET as string,
-  "Content-Type": "application/json",
-};
+import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 
 const calculate_taxes = async (
   origin_address: AddressTypes,
   destination_address: AddressTypes,
   amount: number,
   shipping: number,
-): Promise<number> => {
+  order_id: string,
+): Promise<{ taxes: number; tax_calculation_id: string }> => {
   if (
-    origin_address.countryCode !== "US" &&
-    destination_address.countryCode !== "US"
-  )
-    return 0;
+    origin_address.countryCode.toLowerCase() !== "us" &&
+    destination_address.countryCode.toLowerCase() !== "us"
+  ) {
+    return { taxes: 0, tax_calculation_id: "" };
+  }
 
-  const nexus_state = await NexusTransactions.findOne({
-    stateCode: origin_address.stateCode,
-  });
+  // STEP 1: Dollars to Cents
+  const safeAmount = Math.round(amount * 100);
+  const safeShipping = Math.round(shipping * 100);
 
-  if (!nexus_state) return 0;
+  try {
+    const calculation = await stripe.tax.calculations.create({
+      currency: "usd",
+      line_items: [
+        {
+          amount: safeAmount,
+          reference: order_id,
+          tax_behavior: "exclusive",
+          quantity: 1,
+          tax_code: "txcd_99999999",
+        },
+      ],
+      shipping_cost: {
+        amount: safeShipping,
+        tax_behavior: "exclusive",
+      },
+      customer_details: {
+        address: {
+          line1: destination_address.address_line,
+          city: destination_address.city,
+          state: destination_address.stateCode,
+          postal_code: destination_address.zip,
+          country: destination_address.countryCode,
+        },
+        address_source: "shipping",
+      },
+      ship_from_details: {
+        address: {
+          line1: origin_address.address_line,
+          city: origin_address.city,
+          state: origin_address.stateCode,
+          postal_code: origin_address.zip,
+          country: origin_address.countryCode,
+        },
+      },
+      expand: ["line_items"],
+    });
 
-  if (!nexus_state.is_nexus_breached) return 0;
-
-  const res = await client.taxForOrder({
-    to_country: destination_address.countryCode,
-    to_zip: destination_address.zip,
-    to_state: destination_address.stateCode,
-    from_country: origin_address.countryCode,
-    from_zip: origin_address.zip,
-    from_state: origin_address.stateCode,
-    amount,
-    shipping,
-  });
-
-  return res.tax?.amount_to_collect;
+    //  STEP 2: Cents to Dollars
+    return {
+      taxes: calculation.tax_amount_exclusive / 100,
+      tax_calculation_id: calculation.id,
+    };
+  } catch (error) {
+    console.error("Stripe Tax Calculation Failed:", error);
+    return { taxes: 0, tax_calculation_id: "" };
+  }
 };
 
 const config: CombinedConfig = {
@@ -243,11 +268,12 @@ async function buildShipmentInformation(
   const origin = order.shipping_details.addresses.origin;
   const destination = order.shipping_details.addresses.destination;
 
-  const taxes = await calculate_taxes(
+  const { taxes, tax_calculation_id } = await calculate_taxes(
     origin,
     destination,
     order.artwork_data.pricing.usd_price,
     Number(rate.chargeable_price_in_usd),
+    order.order_id,
   );
 
   return {
@@ -258,6 +284,7 @@ async function buildShipmentInformation(
     quote: {
       fees: Number(rate.chargeable_price_in_usd),
       taxes: Number(taxes),
+      tax_calculation_id,
     },
   };
 }
