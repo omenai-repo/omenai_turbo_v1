@@ -107,7 +107,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
       {/* 4. PRICE & STATUS */}
       <div className="py-4">
         <span className="mb-2 block font-sans text-[9px] uppercase tracking-widest text-slate-400">
-          Valuation
+          Price
         </span>
         {isSoldOut ? (
           <span className="inline-block border border-slate-200 bg-slate-50 px-3 py-1 font-sans text-xs uppercase tracking-widest text-slate-500">
