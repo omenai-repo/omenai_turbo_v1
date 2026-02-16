@@ -23,7 +23,6 @@ export const filterStore = create<FilterStoreTypes>((set, get) => ({
     price: [],
     year: [],
     medium: [],
-    rarity: [],
   },
 
   updateFilter: (label: string, value: string) => {
@@ -84,17 +83,17 @@ export const filterStore = create<FilterStoreTypes>((set, get) => ({
     const currentFilterSelection = get().selectedFilters;
 
     const currentSelectedFilter = currentFilterSelection.find(
-      (filter) => filter.name === name
+      (filter) => filter.name === name,
     );
     const removeFilterValue = get().removeFilter;
 
     removeFilterValue(
       currentSelectedFilter!.label,
-      currentSelectedFilter!.value
+      currentSelectedFilter!.value,
     );
 
     const removeSelectedFilter = currentFilterSelection.filter(
-      (element) => element.name !== name
+      (element) => element.name !== name,
     );
 
     set({ selectedFilters: removeSelectedFilter });
@@ -106,7 +105,6 @@ export const filterStore = create<FilterStoreTypes>((set, get) => ({
         price: [],
         year: [],
         medium: [],
-        rarity: [],
       },
     });
     set({ selectedFilters: [] });
