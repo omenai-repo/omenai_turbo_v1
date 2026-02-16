@@ -9,7 +9,6 @@ import { useWindowSize } from "usehooks-ts";
 import { MdClear } from "react-icons/md";
 import PriceFilter from "./PriceFilter";
 import YearFilter from "./YearFilter";
-import RarityFilter from "./RarityFilter";
 import { fetchArtworksByCriteria } from "@omenai/shared-services/artworks/fetchArtworksByCriteria";
 import { collectionsFilterStore } from "@omenai/shared-state-store/src/collections/collectionsFilterStore";
 import { collectionsStore } from "@omenai/shared-state-store/src/collections/collectionsStore";
@@ -67,7 +66,6 @@ export default function Filter({ medium }: { medium: string }) {
       price: [],
       year: [],
       medium: [],
-      rarity: [],
     };
 
     const response = await fetchArtworksByCriteria(
@@ -141,7 +139,6 @@ export default function Filter({ medium }: { medium: string }) {
         <PriceFilter filterOptions={filterOptions} />
         <YearFilter filterOptions={filterOptions} />
         {/* <MediumFilter filterOptions={filterOptions} /> */}
-        <RarityFilter filterOptions={filterOptions} />
       </div>
     </div>
   );

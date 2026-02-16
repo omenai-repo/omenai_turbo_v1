@@ -8,7 +8,6 @@ export type Filter = {
     max: number;
   }[];
   medium: string[];
-  rarity: string[];
 };
 
 export function isEmptyFilter(filters: Filter): boolean {

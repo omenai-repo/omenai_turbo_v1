@@ -133,137 +133,143 @@ async function processSubscriptionSuccess(
   const nowUTC = toUTCDate(new Date());
   const stripeCustomerId = paymentMethod.customer as string;
 
-  // Use a transaction session to ensure either ALL updates happen or NONE happen
+  // 1. Start the session
   const session = await client.startSession();
-  session.startTransaction();
 
   try {
-    const [plan, existingSubscription, account] = await Promise.all([
-      SubscriptionPlan.findOne({ plan_id: planId }).session(session),
-      Subscriptions.findOne({ stripe_customer_id: stripeCustomerId }).session(
-        session,
-      ),
-      AccountGallery.findOne({ gallery_id }).session(session),
-    ]);
+    // 2. Use withTransaction helper (Fixes the NoSuchTransaction/Retry error)
+    await session.withTransaction(async () => {
+      const [plan, existingSubscription, account] = await Promise.all([
+        SubscriptionPlan.findOne({ plan_id: planId }).session(session),
+        Subscriptions.findOne({ stripe_customer_id: stripeCustomerId }).session(
+          session,
+        ),
+        AccountGallery.findOne({ gallery_id }).session(session),
+      ]);
 
-    if (!plan) {
-      throw new BadRequestError(
-        "Invalid plan selected - Please contact support",
-      );
-    }
+      if (!plan) {
+        throw new BadRequestError(
+          "Invalid plan selected - Please contact support",
+        );
+      }
 
-    if (!account) {
-      throw new BadRequestError("Gallery account not found");
-    }
+      if (!account) {
+        throw new BadRequestError("Gallery account not found");
+      }
 
-    // SECURITY CHECK: Ensure the Stripe Customer ID matches the Account
-    if (
-      account.stripe_customer_id &&
-      account.stripe_customer_id !== stripeCustomerId
-    ) {
-      throw new ForbiddenError(
-        "Payment method does not belong to this gallery account",
-      );
-    }
+      // SECURITY CHECK: Ensure the Stripe Customer ID matches the Account
+      if (
+        account.stripe_customer_id &&
+        account.stripe_customer_id !== stripeCustomerId
+      ) {
+        throw new ForbiddenError(
+          "Payment method does not belong to this gallery account",
+        );
+      }
 
-    // LOGIC CHECK: Enforce "New Subscribers Only"
-    if (existingSubscription) {
-      throw new ConflictError(
-        "This discount is valid for new subscribers only.",
-      );
-    }
+      // LOGIC CHECK: Enforce "New Subscribers Only"
+      if (existingSubscription) {
+        throw new ConflictError(
+          "This discount is valid for new subscribers only.",
+        );
+      }
 
-    const expiryDate = getSubscriptionExpiryDate("monthly", 2);
-    const payment_ref = `discount:${stripeCustomerId}:${planId}`;
+      const expiryDate = getSubscriptionExpiryDate("monthly", 2);
+      const payment_ref = `discount:${stripeCustomerId}:${planId}`;
 
-    const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
-      amount: 0,
-      payment_ref,
-      date: nowUTC,
-      gallery_id,
-      status: "successful",
-      stripe_customer_id: stripeCustomerId,
-    };
+      const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> =
+        {
+          amount: 0,
+          payment_ref,
+          date: nowUTC,
+          gallery_id,
+          status: "successful",
+          stripe_customer_id: stripeCustomerId,
+        };
 
-    const subscriptionPayload: Omit<
-      SubscriptionModelSchemaTypes,
-      "subscription_id"
-    > = {
-      start_date: nowUTC,
-      expiry_date: expiryDate,
-      stripe_customer_id: stripeCustomerId,
-      customer: {
-        name: account.name,
-        email: account.email,
-        gallery_id,
-      },
-      status: "active",
-      plan_details: {
-        type: plan.name,
-        value: plan.pricing,
-        currency: plan.currency,
-        interval: "monthly",
-      },
-      paymentMethod: paymentMethod as any,
-      next_charge_params: {
-        value: Number(plan.pricing.monthly_price),
-        currency: "USD",
-        type: plan.name,
-        interval: "monthly",
-        id: planId,
-      },
-      upload_tracker: {
-        limit: getUploadLimitLookup(plan.name, "monthly", 2),
-        next_reset_date: expiryDate.toISOString(),
-        upload_count: 0,
-      },
-    };
+      const subscriptionPayload: Omit<
+        SubscriptionModelSchemaTypes,
+        "subscription_id"
+      > = {
+        start_date: nowUTC,
+        expiry_date: expiryDate,
+        stripe_customer_id: stripeCustomerId,
+        customer: {
+          name: account.name,
+          email: account.email,
+          gallery_id,
+        },
+        status: "active",
+        plan_details: {
+          type: plan.name,
+          value: plan.pricing,
+          currency: plan.currency,
+          interval: "monthly",
+        },
+        paymentMethod: paymentMethod as any,
+        next_charge_params: {
+          value: Number(plan.pricing.monthly_price),
+          currency: "USD",
+          type: plan.name,
+          interval: "monthly",
+          id: planId,
+        },
+        upload_tracker: {
+          limit: getUploadLimitLookup(plan.name, "monthly", 2),
+          next_reset_date: expiryDate.toISOString(),
+          upload_count: 0,
+        },
+      };
 
-    // 1. Create Transaction Record
-    await SubscriptionTransactions.create([txnData], { session });
+      // 1. Create Transaction Record
+      await SubscriptionTransactions.create([txnData], { session });
 
-    // 2. Create Subscription Record
-    await Subscriptions.create([subscriptionPayload], { session });
+      // 2. Create Subscription Record
+      await Subscriptions.create([subscriptionPayload], { session });
 
-    // 3. Update Gallery Account Status
-    await AccountGallery.updateOne(
-      { gallery_id },
-      {
-        $set: {
-          subscription_status: {
-            type: plan.name,
-            active: true,
-            discount: { active: false, plan: "pro" },
+      // 3. Update Gallery Account Status
+      await AccountGallery.updateOne(
+        { gallery_id },
+        {
+          $set: {
+            subscription_status: {
+              type: plan.name,
+              active: true,
+              discount: { active: false, plan: "pro" },
+            },
           },
         },
-      },
-    ).session(session);
+      ).session(session);
 
-    // 4. Remove Discount from Waitlist
-    await Waitlist.updateOne(
-      { entityId: gallery_id, entity: "gallery" },
-      { $set: { discount: null } },
-    ).session(session);
+      // 4. Remove Discount from Waitlist
+      await Waitlist.updateOne(
+        { entityId: gallery_id, entity: "gallery" },
+        { $set: { discount: null } },
+      ).session(session);
+    });
 
-    await session.commitTransaction();
+    // 3. Email Logic (Safe to run after transaction confirms)
 
-    try {
-      await sendSubscriptionPaymentSuccessfulMail({
-        name: account.name ?? "",
-        email: account.email ?? "",
-      });
-    } catch (emailError) {
-      createErrorRollbarReport(
-        "subscription success email failed",
-        emailError,
-        500,
-      );
+    const accountForEmail = await AccountGallery.findOne({ gallery_id });
+
+    if (accountForEmail) {
+      try {
+        await sendSubscriptionPaymentSuccessfulMail({
+          name: accountForEmail.name ?? "",
+          email: accountForEmail.email ?? "",
+        });
+      } catch (emailError) {
+        createErrorRollbarReport(
+          "subscription success email failed",
+          emailError,
+          500,
+        );
+      }
     }
   } catch (error) {
-    await session.abortTransaction();
     console.log(error);
     throw error;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }

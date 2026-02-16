@@ -79,7 +79,7 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
                 Step 01 / 02
               </span>
               <h1 className="font-serif text-2xl text-dark mt-2">
-                Shipping & Acquisition Details.
+                Shipping & Purchase Details.
               </h1>
             </div>
 
