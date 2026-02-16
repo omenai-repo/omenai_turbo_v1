@@ -4,7 +4,6 @@ import { useState } from "react";
 import PriceFilter from "./PriceFilter";
 import YearFilter from "./YearFilter";
 import MediumFilter from "./MediumFilter";
-import RarityFilter from "./RarityFilter";
 
 export default function FilterSections() {
   const [openSection, setOpenSection] = useState<string | null>(null);
@@ -28,11 +27,6 @@ export default function FilterSections() {
       <MediumFilter
         open={openSection === "medium"}
         toggleOpen={() => handleToggle("medium")}
-      />
-      <div className="h-[1px] w-full bg-neutral-100" />
-      <RarityFilter
-        open={openSection === "rarity"}
-        toggleOpen={() => handleToggle("rarity")}
       />
     </div>
   );

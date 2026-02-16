@@ -296,7 +296,6 @@ export type FilterOptions = {
     max: number;
   }[];
   medium: string[];
-  rarity: string[];
 };
 
 export type ArtworkResultTypes = ArtworkSchemaTypes & {
@@ -837,7 +836,6 @@ export type filterOptionsType = {
     max: number;
   }[];
   medium: string[];
-  rarity: string[];
 };
 
 export type ProrationSchemaTypes = {

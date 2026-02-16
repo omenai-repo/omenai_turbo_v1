@@ -17,7 +17,6 @@ export default function FilterPill({ filter }: { filter: string }) {
         price: [],
         year: [],
         medium: [],
-        rarity: [],
       });
       if (response?.isOk) {
         setArtworks(response.data);

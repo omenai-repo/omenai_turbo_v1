@@ -25,7 +25,6 @@ export default function SimilarArtworks({
   const filter: FilterOptions = {
     price: [],
     year: [],
-    rarity: [],
     medium: [],
   };
 

@@ -22,7 +22,6 @@ export default function ActiveFilterPills() {
       price: filterOptions.price,
       year: filterOptions.year,
       medium: filterOptions.medium,
-      rarity: filterOptions.rarity,
     };
 
     const response = await fetchPaginatedArtworks(currentPage, filtersToApply);

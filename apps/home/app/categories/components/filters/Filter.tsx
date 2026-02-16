@@ -10,7 +10,6 @@ import { fetchTrendingArtworks } from "@omenai/shared-services/artworks/fetchTre
 import PriceFilter from "./PriceFilter";
 import YearFilter from "./YearFilter";
 import MediumFilter from "./MediumFilter";
-import RarityFilter from "./RarityFilter";
 import { fetchCuratedArtworks } from "@omenai/shared-services/artworks/fetchedCuratedArtworks";
 import { fetchPaginatedArtworks } from "@omenai/shared-services/artworks/fetchPaginatedArtworks";
 import { categoriesFilterStore } from "@omenai/shared-state-store/src/categories/categoriesFilterStore";
@@ -96,7 +95,6 @@ export default function Filter({
       price: [],
       year: [],
       medium: [],
-      rarity: [],
     };
 
     if (page_type === "trending") {
@@ -178,7 +176,6 @@ export default function Filter({
         <PriceFilter filterOptions={filterOptions} />
         <YearFilter filterOptions={filterOptions} />
         <MediumFilter filterOptions={filterOptions} />
-        <RarityFilter filterOptions={filterOptions} />
       </div>
     </div>
   );
