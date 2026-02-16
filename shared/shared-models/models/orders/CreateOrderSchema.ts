@@ -21,6 +21,11 @@ const createOrder = new Schema<CreateOrderModelTypes>(
 
       exclusivity_status: { type: Schema.Types.Mixed },
       deletedEntity: { type: Boolean, default: false },
+      packaging_type: {
+        type: String,
+        enum: ["rolled", "stretched"],
+        required: true,
+      },
     },
     buyer_details: { type: Schema.Types.Mixed, required: true },
     seller_details: { type: Schema.Types.Mixed, required: true },

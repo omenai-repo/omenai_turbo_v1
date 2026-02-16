@@ -16,7 +16,7 @@ async function callCreateNotificationApi(data: any): Promise<any> {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: process.env.INTERNAL_SECRET as string,
+          "x-internal-secret": process.env.INTERNAL_SECRET as string,
         },
         body: JSON.stringify(data),
         signal: controller.signal,

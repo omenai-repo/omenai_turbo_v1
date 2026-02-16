@@ -17,6 +17,7 @@ import { galleryActionStore } from "@omenai/shared-state-store/src/gallery/galle
 import { country_codes } from "@omenai/shared-json/src/country_alpha_2_codes";
 import { useRollbar } from "@rollbar/react";
 import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export const address_inputs = [
   {
@@ -83,20 +84,20 @@ export default function UpdateAddressModalForm() {
       const updateAddressResponse = await updateAddress(
         user.gallery_id,
         address,
-        csrf || ""
+        csrf || "",
       );
 
       if (!updateAddressResponse.isOk) {
         toast_notif(
           updateAddressResponse.message ||
             "Something went wrong, please try again or contact support",
-          "error"
+          "error",
         );
         return;
       }
       toast_notif(
         `${updateAddressResponse.message || "Address information updated successfully"}`,
-        "success"
+        "success",
       );
       await queryClient.invalidateQueries({
         queryKey: ["fetch_gallery_info"],
@@ -111,7 +112,7 @@ export default function UpdateAddressModalForm() {
       }
       toast_notif(
         "Something went wrong, please try again or contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -167,17 +168,18 @@ export default function UpdateAddressModalForm() {
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}
-          className="flex-1 px-4 py-2 bg-gray-300 text-dark rounded hover:bg-gray-400 
-                       transition-all duration-300 text-fluid-xxs font-medium"
+          className={
+            "flex h-10 w-full items-center justify-center gap-3 bg-white text-dark font-light text-fluid-xs transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
+          }
         >
           Cancel
         </button>
         <button
           onClick={handleAddressUpdate}
           disabled={loading || allKeysEmpty({ ...address })}
-          className="flex-1 px-4 py-2 bg-dark text-white rounded hover:bg-dark/90 
-          disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-dark/30
-                             transition-all duration-300 text-fluid-xxs font-medium flex items-center justify-center space-x-2"
+          className={
+            "flex h-10 w-full items-center justify-center gap-3 bg-dark text-white font-light text-fluid-xs transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
+          }
         >
           {loading ? (
             <LoadSmall />

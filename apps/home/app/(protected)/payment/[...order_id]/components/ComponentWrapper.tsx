@@ -30,7 +30,7 @@ export default function ComponentWrapper({
       if (data?.isOk) {
         const lock_status = await checkLockStatus(
           data.data.artwork_data.art_id,
-          user.id
+          user.id,
         );
 
         return { order: data.data, locked: lock_status?.data.locked };

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 const steps = {
   0: ["name", "email", "admin"],
   1: ["country", "address_line", "state", "city", "zip"],
@@ -63,7 +64,7 @@ export default function () {
       else {
         toast_notif(
           "Address verification for pickup capability was successful",
-          "success"
+          "success",
         );
         handleClickNext();
       }
@@ -75,7 +76,7 @@ export default function () {
       }
       toast_notif(
         "Something went wrong. Could be us, please contact support",
-        "error"
+        "error",
       );
     } finally {
       setLoading(false);
@@ -117,14 +118,14 @@ export default function () {
       <button
         className={`${
           currentGallerySignupFormIndex > 0 ? "block" : "hidden"
-        } border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowedfocus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
+        } ${BUTTON_CLASS}`}
         type={"button"}
         onClick={handleClickPrev}
       >
         Back
       </button>
       <button
-        className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
+        className={BUTTON_CLASS}
         type={"button"}
         disabled={
           (currentGallerySignupFormIndex === 1 && loading) ||

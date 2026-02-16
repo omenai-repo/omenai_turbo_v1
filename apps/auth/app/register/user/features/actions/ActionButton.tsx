@@ -1,6 +1,7 @@
 import { validateAddress } from "@omenai/shared-services/address_validation/validateAddress";
 import { useIndividualAuthStore } from "@omenai/shared-state-store/src/auth/register/IndividualAuthStore";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { shouldDisableNext } from "@omenai/shared-utils/src/should_disable_next_button";
 import { useRollbar } from "@rollbar/react";
 import React, { useState } from "react";
@@ -133,14 +134,14 @@ export default function ({
       <button
         className={`${
           currentSignupFormIndex > 0 ? "block" : "hidden"
-        }  border border-slate-400   bg-transparent text-dark hover:border-slate-800 disabled:cursor-not-allowed focus:ring-0 duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer`}
+        }  ${BUTTON_CLASS}`}
         type={"button"}
         onClick={handleClickPrev}
       >
         Back
       </button>
       <button
-        className="bg-dark whitespace-nowrap hover:bg-dark/80 disabled:cursor-not-allowed text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none disabled:bg-dark/10 disabled:text-white rounded h-[35px] p-5 w-full text-center text-fluid-xxs flex items-center justify-center hover:ring-white cursor-pointer"
+        className={BUTTON_CLASS}
         type={"button"}
         disabled={currentSignupFormIndex === 0 && isFieldDirty["phone"]}
         onClick={handleClickNext}

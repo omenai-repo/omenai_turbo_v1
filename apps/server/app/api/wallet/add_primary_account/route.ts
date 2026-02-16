@@ -31,7 +31,7 @@ const Schema = z.object({
     account_number: z.string(),
     bank_name: z.string(),
     account_name: z.string(),
-    bank_id: z.string(),
+    bank_id: z.number(),
     bank_code: z.string(),
     branch: z
       .object({

@@ -2,6 +2,7 @@
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { generateStripeLoginLink } from "@omenai/shared-services/stripe/generateStripeLoginLink";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
@@ -75,7 +76,7 @@ export default function BalanceBox({
         <button
           onClick={generateLoginLink}
           disabled={generatingLoginLink}
-          className="inline-flex items-center justify-center rounded bg-white px-5 py-3 text-sm font-medium text-slate-900 transition hover:bg-white/90 disabled:opacity-60"
+          className={`flex h-12 w-full items-center justify-center gap-3 bg-white text-dark font-light text-fluid-xs transition-all duration-300 hover:bg-white/80 hover:text-dark disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded`}
         >
           {generatingLoginLink ? <LoadSmall /> : "Open Stripe dashboard"}
         </button>

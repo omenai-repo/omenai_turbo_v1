@@ -6,7 +6,7 @@ export async function updateAddress(
   artist_id: string,
   address: AddressTypes,
   base_currency: string,
-  token: string
+  token: string,
 ) {
   const url = getApiUrl();
 

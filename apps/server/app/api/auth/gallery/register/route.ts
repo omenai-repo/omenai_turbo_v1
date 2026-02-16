@@ -26,8 +26,8 @@ const RegisterSchema = z.object({
   name: z.string(),
   email: z.email(),
   password: z.string(),
-  referrerKey: z.string().optional(),
-  inviteCode: z.string().optional(),
+  referrerKey: z.string().optional().nullable(),
+  inviteCode: z.string().optional().nullable(),
   device_push_token: z.string().optional(),
   phone: z.string(),
   address: z.object({
@@ -39,7 +39,7 @@ const RegisterSchema = z.object({
     stateCode: z.string(),
     zip: z.string(),
   }),
-  logo: z.file().nullable(),
+  logo: z.string(),
   admin: z.string(),
   description: z.string(),
 });
@@ -169,6 +169,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         error,
         error_response.status,
       );
+      console.log(error);
       return NextResponse.json(
         { message: error_response?.message },
         { status: error_response?.status },

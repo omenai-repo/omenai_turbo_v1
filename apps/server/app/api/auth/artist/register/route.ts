@@ -22,28 +22,27 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import z from "zod";
 
-const RegisterSchema = z
-  .object({
-    name: z.string(),
-    email: z.email(),
-    password: z.string(),
-    referrerKey: z.string().optional(),
-    inviteCode: z.string().optional(),
-    device_push_token: z.string().optional(),
-    phone: z.string(),
-    art_style: z.string().or(z.array(z.string())),
-    address: z.object({
-      address_line: z.string(),
-      city: z.string(),
-      country: z.string(),
-      countryCode: z.string(),
-      state: z.string(),
-      stateCode: z.string(),
-      zip: z.string(),
-    }),
-    logo: z.file().nullable(),
-    base_currency: z.string(),
-  })
+const RegisterSchema = z.object({
+  name: z.string(),
+  email: z.email(),
+  password: z.string(),
+  referrerKey: z.string().optional().nullable(),
+  inviteCode: z.string().optional().nullable(),
+  device_push_token: z.string().optional(),
+  phone: z.string(),
+  art_style: z.string(),
+  address: z.object({
+    address_line: z.string(),
+    city: z.string(),
+    country: z.string(),
+    countryCode: z.string(),
+    state: z.string(),
+    stateCode: z.string(),
+    zip: z.string(),
+  }),
+  logo: z.string(),
+  base_currency: z.string(),
+});
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {

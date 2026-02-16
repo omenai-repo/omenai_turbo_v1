@@ -22,7 +22,10 @@ import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { TEXTAREA_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  BUTTON_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 // --- Imported Components ---
 import PackagingSelector from "./PackagingSelector";
@@ -90,7 +93,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
 
   // 2. State Management
   const [packagingType, setPackagingType] = useState<"rolled" | "stretched">(
-    "stretched",
+    order_data?.data?.artwork_data?.packaging_type || "rolled",
   );
   const [package_details, setPackageDetails] = useState({
     height: "",
@@ -341,7 +344,7 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
                     (exhibition_status !== null &&
                       !exhibition_status.exhibition_end_date)
                   }
-                  className="w-full flex items-center justify-center gap-2 rounded bg-slate-900 px-8 py-4 text-white shadow-lg shadow-slate-900/10 hover:bg-dark/80 hover:shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className={BUTTON_CLASS}
                 >
                   {loading ? (
                     <>

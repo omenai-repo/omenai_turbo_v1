@@ -4,7 +4,7 @@ import { ID } from "appwrite";
 const uploadGalleryLogoContent = async (file: File) => {
   if (!file) return;
   const fileUploaded = await storage.createFile({
-    bucketId: process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
+    bucketId: process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID as string,
     fileId: ID.unique(),
     file,
   });

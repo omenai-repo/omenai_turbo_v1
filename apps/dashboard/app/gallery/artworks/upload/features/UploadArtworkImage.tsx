@@ -15,6 +15,7 @@ import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
 import { Radio, Group, Text, Stack } from "@mantine/core";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
@@ -289,10 +290,10 @@ export default function UploadArtworkImage() {
       </div>
 
       {/* 3. Submit Action */}
-      <div className="flex justify-center w-full">
+      <div className="flex justify-center w-full max-w-lg">
         <button
           disabled={loading || !image}
-          className="h-12 px-8 rounded bg-dark text-white text-sm font-medium shadow-lg shadow-slate-900/10 hover:bg-dark/90 hover:shadow-slate-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+          className={BUTTON_CLASS}
           type="submit"
         >
           {loading ? <LoadSmall /> : "Upload Artwork"}

@@ -5,7 +5,7 @@ import {
 
 export async function fetchConfigCatValue(
   featureKeyword: string,
-  riskType: "high" | "low"
+  riskType: "high" | "low",
 ): Promise<boolean> {
   const isFeatureEnabled = await (
     riskType === "high" ? highRiskconfigCatClient : lowRiskConfigCatClient

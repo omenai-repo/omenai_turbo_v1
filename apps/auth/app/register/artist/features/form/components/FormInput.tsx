@@ -8,7 +8,7 @@ import { storage } from "@omenai/appwrite-config/appwrite";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register/ArtistAuthStore";
 import uploadArtistLogoContent from "../../uploadArtistLogo";
-import { artist_countries_codes_currency } from "@omenai/shared-json/src/artist_onboarding_countries";
+
 export default function FormInput() {
   const { artistSignupData, setIsLoading, clearData } = useArtistAuthStore();
   const searchParams = useSearchParams();
@@ -51,7 +51,7 @@ export default function FormInput() {
 
     if (logo === null) return;
 
-    const fileUploaded = await uploadArtistLogoContent(logo);
+    const fileUploaded = await uploadArtistLogoContent(logo as File);
 
     if (fileUploaded) {
       let file: { bucketId: string; fileId: string } = {
@@ -82,7 +82,7 @@ export default function FormInput() {
         payload,
         referrerKey as string,
         inviteCode as string,
-        "artist"
+        "artist",
       );
 
       if (response.isOk) {
@@ -100,7 +100,7 @@ export default function FormInput() {
       } else {
         await storage.deleteFile(
           process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID!,
-          file.fileId
+          file.fileId,
         );
         toast.error("Error notification", {
           description: response.body.message,

@@ -4,21 +4,42 @@ import { SalesTooltip } from "./Tooltip";
 
 // Calculate Y-axis ticks dynamically based on min and max values
 function calculateYTicks(min: number, max: number, maxTicks = 6) {
-  if (min === 0 && max === 0) return [];
-  if (min === 0 && max > 0) min = 1;
-  if (max === 0 && min > 0) max = min;
+  // 1. Handle edge case: No data
+  if (min === 0 && max === 0) return [0];
+
+  // 2. Ensure we have a valid range
+  if (min === max) return [min];
 
   const range = max - min;
-  const step = Math.round(range / maxTicks);
-  const ticks = [];
 
-  for (let i = Math.floor(min / 1000) * 1000; i <= max; i += step) {
-    ticks.push(Math.round(i / 1000) * 1000);
+  // 3. Prevent infinite loops if range is small (step must be > 0)
+  const step = Math.max(1, Math.round(range / maxTicks));
+
+  // 4. Use a SET to automatically remove duplicates
+  const ticks = new Set<number>();
+
+  // 5. Adaptive Rounding: Only round to 1000s if max > 2000
+  const shouldRoundToThousands = max > 2000;
+
+  for (let i = min; i <= max; i += step) {
+    const value = shouldRoundToThousands
+      ? Math.round(i / 1000) * 1000
+      : Math.round(i); // Keep precision for small numbers
+
+    ticks.add(value);
   }
 
-  if (ticks.length > maxTicks) ticks.length = maxTicks;
+  // 6. Ensure the max value is included if it makes sense
+  if (shouldRoundToThousands) {
+    ticks.add(Math.round(max / 1000) * 1000);
+  } else {
+    ticks.add(Math.round(max));
+  }
 
-  return ticks;
+  // 7. Convert to sorted array and slice to maxTicks
+  return Array.from(ticks)
+    .sort((a, b) => a - b)
+    .slice(0, maxTicks);
 }
 
 export const SalesActivityChart = ({

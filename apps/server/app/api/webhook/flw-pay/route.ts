@@ -7,7 +7,6 @@ import {
   NotificationPayload,
   PaymentStatusTypes,
 } from "@omenai/shared-types";
-import { z } from "zod";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
