@@ -1,7 +1,7 @@
 import { NotificationPayload } from "@omenai/shared-types";
 
 export async function pushNotification(
-  payload: NotificationPayload
+  payload: NotificationPayload,
 ): Promise<{ success: boolean }> {
   const res = await fetch(process.env.EXPO_NOTIFICATION_ENDPOINT!, {
     method: "POST",

@@ -2,7 +2,11 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport, validateRequestBody } from "../../util";
+import {
+  createErrorRollbarReport,
+  record_tax_transaction,
+  validateRequestBody,
+} from "../../util";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
 import {
@@ -189,6 +193,11 @@ async function verifyStripeTransaction(
     throw new ServerError("Order update failed");
   }
 
+  const calculation_id =
+    order.shipping_details.shipment_information.quote.tax_calculation_id;
+  const order_id = order.order_id;
+
+  await record_tax_transaction(calculation_id, order_id);
   await runPurchasePostWorkflows(paymentObj, order, meta);
 
   try {

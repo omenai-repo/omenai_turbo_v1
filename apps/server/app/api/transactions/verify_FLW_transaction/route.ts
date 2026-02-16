@@ -13,7 +13,11 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { buildPricing, createErrorRollbarReport } from "../../util";
+import {
+  buildPricing,
+  createErrorRollbarReport,
+  record_tax_transaction,
+} from "../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
@@ -370,6 +374,12 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         { status: 200 },
       );
     }
+
+    const calculation_id =
+      order_info.shipping_details.shipment_information.quote.tax_calculation_id;
+    const order_id = order_info.order_id;
+
+    await record_tax_transaction(calculation_id, order_id);
 
     const buyerAddress = order_info.shipping_details.addresses.destination;
     const buyerName = order_info.buyer_details.name;

@@ -6,6 +6,6 @@ export default async function page({
 }: {
   params: Promise<{ id: string[] }>;
 }) {
-  const slug = (await params).id;
+  const slug = (await params).id[0];
   return <CollectionWrapper id={slug[0]} />;
 }

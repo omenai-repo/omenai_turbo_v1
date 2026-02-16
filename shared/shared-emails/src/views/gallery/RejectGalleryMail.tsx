@@ -46,10 +46,10 @@ const RejectGalleryMail = (gallery_name?: string) => {
               decision was made in error or if you would like to discuss your
               account further, please contact our support team at{" "}
               <Link
-                href="mailto:contact@omenai.net"
+                href="mailto:support@omenai.app"
                 className="text-dark font-bold underline"
               >
-                contact@omenai.net
+                support@omenai.app
               </Link>
               , and we will be happy to assist you.
             </Text>

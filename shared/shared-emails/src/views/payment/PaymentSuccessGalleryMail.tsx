@@ -80,7 +80,7 @@ const PaymentSuccessfulGalleryMail = (
               </Link>
               . Our dedicated customer support team is available to assist you
               and ensure your experience remains exceptional.{" "}
-              <Link href={"mailto:contact@omenai.net"}>contact@omenai.net</Link>
+              <Link href={"mailto:support@omenai.app"}>support@omenai.app</Link>
               .
             </Text>
 

@@ -304,10 +304,10 @@ export default function ArtworkPricing() {
           </div>
 
           {/* --- Section 3: Action Buttons --- */}
-          <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-2">
+          <div className="grid grid-cols-12 gap-4 mt-2">
             <Link
               href={"/artist/app/artworks/upload"}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto col-span-4"
             >
               <button
                 type="button"
@@ -320,7 +320,7 @@ export default function ArtworkPricing() {
             <button
               type="submit"
               disabled={loading || !canProceed}
-              className={`${BUTTON_CLASS}
+              className={`${BUTTON_CLASS} col-span-8
                 ${
                   loading || !canProceed
                     ? "bg-slate-300 cursor-not-allowed shadow-none"

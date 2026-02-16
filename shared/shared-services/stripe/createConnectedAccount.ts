@@ -8,7 +8,7 @@ export async function createConnectedAccount(
     customer_id: string;
     country: string;
   },
-  token: string
+  token: string,
 ) {
   try {
     const url = getApiUrl();

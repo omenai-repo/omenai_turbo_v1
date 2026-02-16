@@ -448,6 +448,7 @@ export type TrackingInformationTypes = {
 export type ShippingQuoteTypes = {
   fees: number;
   taxes: number;
+  tax_calculation_id: string;
 };
 export type AddressTypes = {
   address_line: string;

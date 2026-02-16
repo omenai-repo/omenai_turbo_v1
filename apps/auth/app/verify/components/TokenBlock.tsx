@@ -10,7 +10,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  BUTTON_CLASS,
+  INPUT_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { RouteIdentifier } from "@omenai/shared-types";
 
 type TokenProps = {
@@ -142,11 +145,7 @@ export default function TokenBlock({ token, route }: TokenProps) {
             setTokenValue(e.target.value)
           }
         />
-        <button
-          disabled={isLoading}
-          className=" disabled:bg-dark/10 p-5 rounded min-w-[100px] w-fit flex items-center justify-center gap-3 disabled:cursor-not-allowed  disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light duration-200"
-          type={"submit"}
-        >
+        <button disabled={isLoading} className={BUTTON_CLASS} type={"submit"}>
           {isLoading ? <LoadSmall /> : "Submit"}
         </button>
       </form>
@@ -173,10 +172,10 @@ export default function TokenBlock({ token, route }: TokenProps) {
         <p className="text-center text-fluid-xxs">
           Feel free to contact us should you have any issues on{" "}
           <Link
-            href={"mailto:contact@omenai.net"}
+            href={"mailto:support@omenai.app"}
             className="text-dark font-light underline"
           >
-            contact@omenai.net
+            support@omenai.app
           </Link>
           . We are always happy to help.
         </p>

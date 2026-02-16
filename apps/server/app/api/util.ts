@@ -152,6 +152,7 @@ export function buildPricing(
 import { ShipmentAddressValidationType } from "@omenai/shared-types";
 import { validateShipmentRateRequest } from "@omenai/shared-lib/validations/api/shipment/validateShipmentRateRequestData";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
+import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
@@ -414,3 +415,20 @@ export async function getShipmentRates(params: ShipmentRateRequestTypes) {
   // 6. Return Data Directly
   return appropriateDHLProduct;
 }
+
+export const record_tax_transaction = async (
+  calculation_id: string,
+  reference_id: string,
+): Promise<void> => {
+  try {
+    await stripe.tax.transactions.createFromCalculation({
+      calculation: calculation_id,
+      reference: reference_id,
+    });
+  } catch (error) {
+    console.error("Failed to record tax transaction:", error);
+    rollbarServerInstance.error({ context: "Stripe tax record error", error });
+    // CRITICAL: You should log this to a manual review queue.
+    // TODO: Send a mail to admin and dev
+  }
+};

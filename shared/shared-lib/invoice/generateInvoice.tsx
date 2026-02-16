@@ -34,7 +34,7 @@ export async function generateInvoicePdf(
   invoice: Omit<InvoiceTypes, "storage" | "document_created" | "receipt_sent">,
 ): Promise<Buffer> {
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595, 842]); // A4
+  const page = pdfDoc.addPage([595, 842]);
   const { width, height } = page.getSize();
 
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -103,9 +103,9 @@ export async function generateInvoicePdf(
     page,
     [
       "Omenai Inc.",
-      "2035 S State St",
-      "Illinois, US 60616",
-      "contact@omenai.app",
+      "122 S. Michigan Avenue, Suite 1390-H73",
+      "Chicago, Illinois, IL 60603",
+      "support@omenai.app",
     ],
     leftMargin,
     addressY - 20,
