@@ -1,5 +1,7 @@
 export const getApiUrl = (): string => {
-  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
     return "https://api.omenai.app";
   } else {
     return process.env.NODE_ENV === "production"
