@@ -33,7 +33,7 @@ export const uploadArtworkDetailInputMocks = [
     type: "select",
     label: "Rarity",
     required: true,
-    options: ["Unique", "Limited edition", "Open edition", "Uknown edition"],
+    options: ["Unique"],
   },
 
   {

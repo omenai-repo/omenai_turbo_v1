@@ -404,13 +404,13 @@ async function handlePurchaseTransaction(
       ),
     );
     // Create shipment workflow
-    await fireAndForget(
-      createWorkflow(
-        "/api/workflows/shipment/create_shipment",
-        `create_shipment_${order_info.order_id}_workflow`,
-        JSON.stringify({ order_id: order_info.order_id }),
-      ),
-    );
+    // await fireAndForget(
+    //   createWorkflow(
+    //     "/api/workflows/shipment/create_shipment",
+    //     `create_shipment_${order_info.order_id}_workflow`,
+    //     JSON.stringify({ order_id: order_info.order_id }),
+    //   ),
+    // );
 
     await fireAndForget(
       createWorkflow(

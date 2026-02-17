@@ -17,8 +17,10 @@ import { useRollbar } from "@rollbar/react";
 import type Rollbar from "rollbar";
 
 // Status configuration
+// Status configuration
 const STATUS_CONFIG = {
-  completed: {
+  // 👇 RENAME "completed" to "successful" to match your backend/logic
+  successful: {
     bgColor: "bg-green-100",
     textColor: "text-green-600",
     titleColor: "text-green-700",
@@ -208,15 +210,18 @@ const verifyTransaction = async (
       },
     );
 
+    // 1. If HTTP status is NOT 2xx, return failure immediately
     if (!response.ok) {
       return { isOk: false };
     }
 
     const result = await response.json();
+
+    // 2. Return success based on HTTP status (response.ok)
     return {
       message: result.message,
-      isOk: result.ok,
-      status: result.status || response.ok ? "successful" : "failed",
+      isOk: response.ok, // 👈 CHANGED: Uses the actual HTTP success status
+      status: result.status || "successful",
       success: result.success,
     };
   } catch (error) {

@@ -5,7 +5,7 @@ export default async function page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const slug = (await params).id[0];
+  const slug = (await params).id;
 
   return (
     <div>

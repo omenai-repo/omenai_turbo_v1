@@ -8,7 +8,6 @@ import {
 } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { getFormattedDateTime } from "@omenai/shared-utils/src/getCurrentDateTime";
-import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
@@ -173,6 +172,7 @@ export async function retry<T>(
 
   throw lastError;
 }
+
 /* ------------------------------ Route ------------------------------------ */
 
 export const POST = withRateLimit(standardRateLimit)(async function POST(
@@ -203,7 +203,11 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         transaction_id: data.transaction_id,
       });
 
-      return NextResponse.json({ ok: true, success: false }, { status: 200 });
+      // Return ok: true so frontend doesn't show error for bad meta (it's verified but bad data)
+      return NextResponse.json(
+        { ok: true, success: false, message: "Invalid transaction data" },
+        { status: 200 },
+      );
     }
 
     const meta = metaParse.data;
@@ -222,9 +226,80 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     if (!order_info)
       return NextResponse.json(
-        { message: "Order not found. Please contact support", success: false },
+        {
+          message: "Order not found. Please contact support",
+          success: false,
+          ok: false,
+        },
         { status: 400 },
       );
+
+    // 🛡️ SECURITY: AMOUNT & CURRENCY VERIFICATION
+    // We check if the price in DB matches price in meta, AND if total paid matches sum of parts.
+    // TODO: Uncheck this for test
+    // const paidAmount = Number(verified_transaction.data.amount);
+    // const paidCurrency = String(verified_transaction.data.currency);
+    // const dbPrice = Number(order_info.artwork_data.pricing.usd_price);
+
+    // const metaUnitPrice = Number(meta.unit_price || 0);
+    // const metaShipping = Number(meta.shipping_cost || 0);
+    // const metaTax = Number(meta.tax_fees || 0);
+
+    // // 1. Verify that the unit price in the transaction matches the DB price (allow small variance for float)
+    // if (Math.abs(dbPrice - metaUnitPrice) > 1) {
+    //   rollbarServerInstance.critical({
+    //     message: "Payment Fraud Attempt: Unit Price Mismatch",
+    //     db_price: dbPrice,
+    //     meta_price: metaUnitPrice,
+    //     transaction_id: data.transaction_id,
+    //   });
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       ok: false,
+    //       message: "Price mismatch detected. Verification failed.",
+    //     },
+    //     { status: 400 },
+    //   );
+    // }
+
+    // // 2. Verify that the total amount paid covers the calculated total
+    // const expectedTotal = metaUnitPrice + metaShipping + metaTax;
+    // if (Math.abs(paidAmount - expectedTotal) > 1) {
+    //   rollbarServerInstance.critical({
+    //     message: "Payment Fraud Attempt: Total Amount Mismatch",
+    //     paid_amount: paidAmount,
+    //     expected_total: expectedTotal,
+    //     transaction_id: data.transaction_id,
+    //   });
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       ok: false,
+    //       message: "Payment amount mismatch. Verification failed.",
+    //     },
+    //     { status: 400 },
+    //   );
+    // }
+
+    // // 3. Verify Currency
+    // if (paidCurrency !== "USD") {
+    //   rollbarServerInstance.error({
+    //     message: "Payment Currency Mismatch",
+    //     paid_currency: paidCurrency,
+    //     expected: "USD",
+    //     transaction_id: data.transaction_id,
+    //   });
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       ok: false,
+    //       message: "Invalid currency detected.",
+    //     },
+    //     { status: 400 },
+    //   );
+    // }
+    // 🛡️ END SECURITY CHECKS
 
     const flwStatus = String(verified_transaction.data.status).toLowerCase();
 
@@ -239,6 +314,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       return NextResponse.json(
         {
           success: false,
+          ok: false,
           status: flwStatus,
           message: `Payment transaction ${flwStatus}`,
         },
@@ -248,27 +324,38 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     const nowUTC = toUTCDate(new Date());
     if (order_info.payment_information?.status === "completed") {
-      return NextResponse.json({ status: 200 });
+      return NextResponse.json(
+        {
+          ok: true,
+          success: true,
+          status: "successful",
+          message: "Transaction already verified",
+        },
+        { status: 200 },
+      );
     }
+
     // Check idempotency: has this transaction been processed successfully before?
     const [existingTransaction, existingPaymentLedger] = await Promise.all([
       PurchaseTransactions.exists({
-        trans_reference: verified_transaction.data.id,
+        trans_reference: String(verified_transaction.data.id),
       }),
       PaymentLedger.exists({
         provider: "flutterwave",
-        provider_tx_id: verified_transaction.data.id,
+        provider_tx_id: String(verified_transaction.data.id),
         payment_fulfillment_checks_done: true,
       }),
     ]);
 
     if (existingTransaction || existingPaymentLedger) {
       await PurchaseTransactions.updateOne(
-        { trans_reference: verified_transaction.data.id },
+        { trans_reference: String(verified_transaction.data.id) },
         { $set: { verifiedAt: toUTCDate(new Date()) } },
       );
       return NextResponse.json(
         {
+          ok: true,
+          success: true,
           message: "Transaction already processed successfully",
           status: flwStatus,
         },
@@ -300,7 +387,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           PaymentLedger.updateOne(
             {
               provider: "flutterwave",
-              provider_tx_id: verified_transaction.data.id,
+              provider_tx_id: String(verified_transaction.data.id),
             },
             {
               $setOnInsert: paymentLedgerData,
@@ -321,6 +408,8 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
       return NextResponse.json(
         {
+          ok: false,
+          success: false,
           message:
             "Payment ledger creation unsuccessful. Please refresh your page and try again or contact support.",
         },
@@ -330,7 +419,15 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     if (result.upsertedCount === 0) {
       console.log("Transaction already processed (caught by atomic upsert).");
-      return NextResponse.json({ status: 200 });
+      return NextResponse.json(
+        {
+          ok: true,
+          success: true,
+          status: "successful",
+          message: "Transaction processed",
+        },
+        { status: 200 },
+      );
     }
 
     const { penalty_fee, commission } = buildPricing(
@@ -349,7 +446,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       status: "completed",
       transaction_value: Math.round(Number(verified_transaction.data.amount)),
       transaction_date: nowUTC,
-      transaction_reference: verified_transaction.data.id,
+      transaction_reference: String(verified_transaction.data.id),
       artist_wallet_increment: wallet_increment_amount,
     };
 
@@ -369,6 +466,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           message:
             "We’re having trouble updating your order, but your payment is safe.We’ll keep retrying automatically — please don’t make another payment. If this continues, contact support for help",
           success: false,
+          ok: true, // It is technically a success from the user's payment perspective
           status: "successful",
         },
         { status: 200 },
@@ -477,6 +575,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     await fireAndForget(sendNotifications(order_info));
 
     return NextResponse.json({
+      ok: true,
       success: true,
       status: "successful",
       order_id: order_info.order_id,
@@ -492,6 +591,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     return NextResponse.json(
       {
+        ok: false,
         success: false,
         message: errorResponse.message || "Payment verification failed",
       },

@@ -51,7 +51,7 @@ export default function ProductItem({
         <div className="border-t border-neutral-200 pt-6">
           <div className="flex justify-between items-end mb-4">
             <span className="font-sans text-xs uppercase tracking-wide text-neutral-500">
-              Acquisition Price
+              Purchase Price
             </span>
             <span className="font-sans text-sm text-dark">
               {formatPrice(artwork.pricing.usd_price)}

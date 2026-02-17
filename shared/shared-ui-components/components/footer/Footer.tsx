@@ -118,7 +118,7 @@ export default function Footer() {
                   href="mailto:support@omenai.app"
                   className="hover:text-dark  transition-colors block py-1"
                 >
-                  Contact Concierge
+                  Contact us
                 </Link>
               </li>
               <li>

@@ -65,7 +65,6 @@ export default function Saves() {
     price: [],
     year: [],
     medium: [],
-    rarity: [],
   };
 
   return (

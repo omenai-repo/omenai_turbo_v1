@@ -33,7 +33,6 @@ export default function FilterActions() {
       price: [],
       year: [],
       medium: [],
-      rarity: [],
     });
     if (response?.isOk) {
       setArtworks(response.data);
