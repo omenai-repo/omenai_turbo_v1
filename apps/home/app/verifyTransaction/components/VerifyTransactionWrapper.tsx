@@ -17,8 +17,10 @@ import { useRollbar } from "@rollbar/react";
 import type Rollbar from "rollbar";
 
 // Status configuration
+// Status configuration
 const STATUS_CONFIG = {
-  completed: {
+  // 👇 RENAME "completed" to "successful" to match your backend/logic
+  successful: {
     bgColor: "bg-green-100",
     textColor: "text-green-600",
     titleColor: "text-green-700",
