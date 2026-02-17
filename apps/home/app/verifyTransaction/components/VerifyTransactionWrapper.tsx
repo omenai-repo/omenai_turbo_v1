@@ -208,15 +208,18 @@ const verifyTransaction = async (
       },
     );
 
+    // 1. If HTTP status is NOT 2xx, return failure immediately
     if (!response.ok) {
       return { isOk: false };
     }
 
     const result = await response.json();
+
+    // 2. Return success based on HTTP status (response.ok)
     return {
       message: result.message,
-      isOk: result.ok,
-      status: result.status || response.ok ? "successful" : "failed",
+      isOk: response.ok, // 👈 CHANGED: Uses the actual HTTP success status
+      status: result.status || "successful",
       success: result.success,
     };
   } catch (error) {
