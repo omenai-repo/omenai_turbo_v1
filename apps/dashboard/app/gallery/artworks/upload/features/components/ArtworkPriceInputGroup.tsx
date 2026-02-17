@@ -166,16 +166,10 @@ export default function ArtworkPriceInputGroup() {
                 required={uploadArtworkPriceInputMocks[2].required}
                 items={uploadArtworkPriceInputMocks[2].options}
                 disabled={
-                  user.subscription_status.type === null ||
-                  ["basic", "pro"].includes(
-                    user.subscription_status.type.toLowerCase(),
-                  )
+                  user?.subscription_status?.type?.toLowerCase() !== "premium"
                 }
               />
-              {(user.subscription_status.type === null ||
-                ["basic", "pro"].includes(
-                  user.subscription_status.type.toLowerCase(),
-                )) && (
+              {user?.subscription_status?.type?.toLowerCase() !== "premium" && (
                 <p className="text-[10px] text-slate-400 mt-2 italic">
                   * Upgrade your plan to unlock advanced pricing visibility
                   options.

@@ -35,7 +35,9 @@ export default async function proxy(req: NextRequest) {
 
   if (
     req.nextUrl.pathname.startsWith("/api/webhook") ||
-    req.nextUrl.pathname.startsWith("/api/cron")
+    req.nextUrl.pathname.startsWith("/api/cron") ||
+    req.headers.has("upstash-workflow-sdk-version") ||
+    userAgent.includes("Upstash-QStash")
   ) {
     return NextResponse.next();
   }
