@@ -28,7 +28,6 @@ export default async function proxy(req: NextRequest) {
 
   const nonce = crypto.randomUUID();
 
-  // 1. Define CSP with newlines for readability
   const cspHeader = `
   default-src 'self';
 
@@ -115,7 +114,6 @@ export default async function proxy(req: NextRequest) {
   upgrade-insecure-requests;
 `;
 
-  // 2. 🛡️ CRITICAL FIX: Replace ALL whitespace/newlines with a single space
   const contentSecurityPolicy = cspHeader.replace(/\s+/g, " ").trim();
 
   // === HELPER: Finalize Response with Headers ===
@@ -143,6 +141,16 @@ export default async function proxy(req: NextRequest) {
   )
     return finalizeResponse(nextWithNonce());
 
+  if (
+    host.startsWith("auth.omenai.app") ||
+    host.startsWith("dashboard.omenai.app")
+  ) {
+    return NextResponse.next();
+  }
+
+  if (host.startsWith("omenai.app")) {
+    return NextResponse.redirect(new URL("https://join.omenai.app", req.url));
+  }
   const app_auth_uri = auth_uri();
 
   // === PUBLIC ROUTE CHECK ===
