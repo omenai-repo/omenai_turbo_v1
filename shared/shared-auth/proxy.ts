@@ -24,7 +24,7 @@ const PROTECTED_PATHS = [
 
 export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-  const host = req.headers.get("host");
+  const host = req.headers.get("host") as string;
 
   const nonce = crypto.randomUUID();
 
