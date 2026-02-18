@@ -8,6 +8,7 @@ import {
   handleWorkflowError,
   sendShipmentEmailWorkflow,
   SHIPMENT_API_URL,
+  UPS_SHIPMENT_API_URL, // IMPORTED NEW URL
 } from "../utils";
 import {
   NotFoundError,
@@ -27,7 +28,7 @@ import { createErrorRollbarReport } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
-/*                                   TYPES                                    */
+/* TYPES                                   */
 /* -------------------------------------------------------------------------- */
 
 type Payload = {
@@ -46,17 +47,24 @@ type ShipmentAction =
   | "CREATE_SHIPMENT";
 
 /* -------------------------------------------------------------------------- */
-/*                             SHIPMENT API CALL                               */
+/* SHIPMENT API CALL                               */
 /* -------------------------------------------------------------------------- */
 
 async function callShipmentAPI(
-  data: Omit<ShipmentRequestDataTypes, "originCountryCode">,
+  data: Omit<ShipmentRequestDataTypes, "originCountryCode"> & {
+    carrier: string;
+  },
 ): Promise<any> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
+  const apiUrl =
+    data.carrier.toUpperCase() === "UPS"
+      ? UPS_SHIPMENT_API_URL
+      : SHIPMENT_API_URL;
+
   try {
-    const response = await fetch(SHIPMENT_API_URL, {
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +88,7 @@ async function callShipmentAPI(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                               WAYBILL HELPERS                               */
+/* WAYBILL HELPERS                                */
 /* -------------------------------------------------------------------------- */
 
 async function finalizeWaybill(orderId: string, pdfBase64: string) {
@@ -90,7 +98,7 @@ async function finalizeWaybill(orderId: string, pdfBase64: string) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                             ORDER STATE HANDLERS                            */
+/* ORDER STATE HANDLERS                             */
 /* -------------------------------------------------------------------------- */
 
 async function cleanupLock(order: OrderWithTimestamps) {
@@ -194,14 +202,6 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
   }
 
   await Promise.all([
-    // sendShipmentScheduledEmail({
-    //   email: order.buyer_details.email,
-    //   name: order.buyer_details.name,
-    //   artwork: order.artwork_data.title,
-    //   artworkImage,
-    //   buyerName: order.buyer_details.name,
-    //   requestDate: order.createdAt,
-    // }),
     sendShipmentScheduledEmail({
       email: order.seller_details.email,
       name: order.seller_details.name,
@@ -215,11 +215,13 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                            SHIPMENT CREATION FLOW                           */
+/* SHIPMENT CREATION FLOW                            */
 /* -------------------------------------------------------------------------- */
 
 async function createShipment(order: OrderWithTimestamps, orderId: string) {
   const shipmentData = buildShipmentData(order);
+
+  // This will now internally route to UPS or DHL based on shipmentData.carrier
   const shipment = await callShipmentAPI(shipmentData);
 
   await ScheduledShipment.deleteOne({ order_id: order.order_id });
@@ -264,7 +266,7 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                  WORKFLOW                                   */
+/* WORKFLOW                                 */
 /* -------------------------------------------------------------------------- */
 
 export const { POST } = serve<Payload>(async (ctx) => {

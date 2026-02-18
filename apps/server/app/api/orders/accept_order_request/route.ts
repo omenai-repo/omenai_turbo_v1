@@ -16,15 +16,10 @@ import {
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
-import { getApiUrl } from "@omenai/url-config/src/config";
-import Taxjar from "taxjar";
-import { NexusTransactions } from "@omenai/shared-models/models/transactions/NexusModelSchema";
+
 import { sendOrderAcceptedMail } from "@omenai/shared-emails/src/models/orders/orderAcceptedMail";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import {
-  standardRateLimit,
-  strictRateLimit,
-} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
@@ -32,12 +27,16 @@ import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow"
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 import {
   createErrorRollbarReport,
-  getShipmentRates,
+  getShipmentRates, // Existing DHL Function
   validateRequestBody,
 } from "../../util";
 import z from "zod";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
+import { getUPSRates } from "../../ups_service";
 
+// --------------------------------------------------------------------------
+// STRIPE TAX CALCULATION
+// --------------------------------------------------------------------------
 const calculate_taxes = async (
   origin_address: AddressTypes,
   destination_address: AddressTypes,
@@ -142,6 +141,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     await validateSellerSubscription(order);
 
+    // ROUTER LOGIC HAPPENS INSIDE HERE
     const shipping_rate_data = await getShippingRate(order, data.dimensions);
 
     const shipment_information = await buildShipmentInformation(
@@ -189,7 +189,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 });
 
 /* -------------------------------------------------------------------------- */
-/*                                HELPERS                                     */
+/* HELPERS                                  */
 /* -------------------------------------------------------------------------- */
 
 function validatePayload(data: any) {
@@ -223,40 +223,52 @@ async function validateSellerSubscription(order: CreateOrderModelTypes) {
   }
 }
 
+/**
+ * Calculates shipping rate based on the carrier assigned to the order.
+ * Now supports both DHL (legacy) and UPS (new).
+ */
 async function getShippingRate(
   order: CreateOrderModelTypes,
   dimensions: ShipmentDimensions,
 ) {
-  const payload: ShipmentRateRequestTypes = {
-    originCountryCode: order.shipping_details.addresses.origin.countryCode,
-    originCityName: order.shipping_details.addresses.origin.city,
-    originPostalCode: order.shipping_details.addresses.origin.zip,
-    destinationCountryCode:
-      order.shipping_details.addresses.destination.countryCode,
-    destinationCityName: order.shipping_details.addresses.destination.city,
-    destinationPostalCode: order.shipping_details.addresses.destination.zip,
-    weight: dimensions.weight,
-    length: dimensions.length,
-    width: dimensions.width,
-    height: dimensions.height,
-  };
+  const carrier = order.shipping_details.shipment_information.carrier;
+  const origin = order.shipping_details.addresses.origin;
+  const destination = order.shipping_details.addresses.destination;
 
   try {
+    // ----------------------
+    // UPS ROUTE
+    // ----------------------
+    if (carrier === "UPS") {
+      // getUPSRates handles the API call and returns a normalized object
+      // matching { chargeable_price_in_usd, productName, productCode }
+      // It also handles Metric -> Imperial conversion internally
+      const upsRate = await getUPSRates(origin, destination, dimensions);
+      return upsRate;
+    }
+
+    // ----------------------
+    // DHL ROUTE (Existing)
+    // ----------------------
+    const payload: ShipmentRateRequestTypes = {
+      originCountryCode: origin.countryCode,
+      originCityName: origin.city,
+      originPostalCode: origin.zip,
+      destinationCountryCode: destination.countryCode,
+      destinationCityName: destination.city,
+      destinationPostalCode: destination.zip,
+      weight: dimensions.weight,
+      length: dimensions.length,
+      width: dimensions.width,
+      height: dimensions.height,
+    };
+
     const appropriateDHLProduct = await getShipmentRates(payload);
 
     return appropriateDHLProduct;
   } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "order: calculate shipping rate",
-      error,
-      error_response.status,
-    );
-
-    return NextResponse.json(
-      { message: error_response.message },
-      { status: error_response.status },
-    );
+    // We must throw here to stop execution, but wrapping in response format for upstream handler
+    throw error;
   }
 }
 
@@ -276,9 +288,21 @@ async function buildShipmentInformation(
     order.order_id,
   );
 
+  // Determine Carrier Name
+  // If it's DHL, your old code did "DHL " + productName.
+  // If it's UPS, our service returns "UPS Ground".
+  let carrierName = rate.productName;
+  if (
+    !carrierName.toUpperCase().includes("UPS") &&
+    !carrierName.toUpperCase().includes("DHL")
+  ) {
+    // Fallback for DHL if the rate object just returns "Express Worldwide"
+    carrierName = `DHL ${rate.productName}`;
+  }
+
   return {
     ...order.shipping_details.shipment_information,
-    carrier: `DHL ${rate.productName}`,
+    carrier: carrierName,
     shipment_product_code: rate.productCode,
     dimensions,
     quote: {

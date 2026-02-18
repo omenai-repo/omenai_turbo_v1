@@ -236,69 +236,68 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     // 🛡️ SECURITY: AMOUNT & CURRENCY VERIFICATION
     // We check if the price in DB matches price in meta, AND if total paid matches sum of parts.
-    // TODO: Uncheck this for test
-    // const paidAmount = Number(verified_transaction.data.amount);
-    // const paidCurrency = String(verified_transaction.data.currency);
-    // const dbPrice = Number(order_info.artwork_data.pricing.usd_price);
+    const paidAmount = Number(verified_transaction.data.amount);
+    const paidCurrency = String(verified_transaction.data.currency);
+    const dbPrice = Number(order_info.artwork_data.pricing.usd_price);
 
-    // const metaUnitPrice = Number(meta.unit_price || 0);
-    // const metaShipping = Number(meta.shipping_cost || 0);
-    // const metaTax = Number(meta.tax_fees || 0);
+    const metaUnitPrice = Number(meta.unit_price || 0);
+    const metaShipping = Number(meta.shipping_cost || 0);
+    const metaTax = Number(meta.tax_fees || 0);
 
-    // // 1. Verify that the unit price in the transaction matches the DB price (allow small variance for float)
-    // if (Math.abs(dbPrice - metaUnitPrice) > 1) {
-    //   rollbarServerInstance.critical({
-    //     message: "Payment Fraud Attempt: Unit Price Mismatch",
-    //     db_price: dbPrice,
-    //     meta_price: metaUnitPrice,
-    //     transaction_id: data.transaction_id,
-    //   });
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       ok: false,
-    //       message: "Price mismatch detected. Verification failed.",
-    //     },
-    //     { status: 400 },
-    //   );
-    // }
+    // 1. Verify that the unit price in the transaction matches the DB price (allow small variance for float)
+    if (Math.abs(dbPrice - metaUnitPrice) > 1) {
+      rollbarServerInstance.critical({
+        message: "Payment Fraud Attempt: Unit Price Mismatch",
+        db_price: dbPrice,
+        meta_price: metaUnitPrice,
+        transaction_id: data.transaction_id,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          ok: false,
+          message: "Price mismatch detected. Verification failed.",
+        },
+        { status: 400 },
+      );
+    }
 
-    // // 2. Verify that the total amount paid covers the calculated total
-    // const expectedTotal = metaUnitPrice + metaShipping + metaTax;
-    // if (Math.abs(paidAmount - expectedTotal) > 1) {
-    //   rollbarServerInstance.critical({
-    //     message: "Payment Fraud Attempt: Total Amount Mismatch",
-    //     paid_amount: paidAmount,
-    //     expected_total: expectedTotal,
-    //     transaction_id: data.transaction_id,
-    //   });
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       ok: false,
-    //       message: "Payment amount mismatch. Verification failed.",
-    //     },
-    //     { status: 400 },
-    //   );
-    // }
+    // 2. Verify that the total amount paid covers the calculated total
+    const expectedTotal = metaUnitPrice + metaShipping + metaTax;
+    if (Math.abs(paidAmount - expectedTotal) > 1) {
+      rollbarServerInstance.critical({
+        message: "Payment Fraud Attempt: Total Amount Mismatch",
+        paid_amount: paidAmount,
+        expected_total: expectedTotal,
+        transaction_id: data.transaction_id,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          ok: false,
+          message: "Payment amount mismatch. Verification failed.",
+        },
+        { status: 400 },
+      );
+    }
 
-    // // 3. Verify Currency
-    // if (paidCurrency !== "USD") {
-    //   rollbarServerInstance.error({
-    //     message: "Payment Currency Mismatch",
-    //     paid_currency: paidCurrency,
-    //     expected: "USD",
-    //     transaction_id: data.transaction_id,
-    //   });
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       ok: false,
-    //       message: "Invalid currency detected.",
-    //     },
-    //     { status: 400 },
-    //   );
-    // }
+    // 3. Verify Currency
+    if (paidCurrency !== "USD") {
+      rollbarServerInstance.error({
+        message: "Payment Currency Mismatch",
+        paid_currency: paidCurrency,
+        expected: "USD",
+        transaction_id: data.transaction_id,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          ok: false,
+          message: "Invalid currency detected.",
+        },
+        { status: 400 },
+      );
+    }
     // 🛡️ END SECURITY CHECKS
 
     const flwStatus = String(verified_transaction.data.status).toLowerCase();

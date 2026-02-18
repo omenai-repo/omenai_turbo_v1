@@ -5,7 +5,7 @@
       "schedule": "0 0 * * *"
     },
     {
-      "path": "/api/cron/subscriptions/check_expired_subs_status",
+      "path": "/api/cron/subscriptions/change_expired_subs_status",
       "schedule": "0 0 * * *"
     },
     {
@@ -34,6 +34,22 @@
     },
     {
       "path": "/api/cron/deletion/allocateDeletionTaskToWorker",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/failedJobs/deletionServices",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/failedJobs/deleteFromAppwrite",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/artwork/expireExclusivity",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/payment/resolvePaymentFulfillments",
       "schedule": "0 0 * * *"
     }
   ],

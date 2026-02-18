@@ -6,7 +6,10 @@ import {
 } from "../resources";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
 import { ServerError } from "../../../../custom/errors/dictionary/errorDictionary";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  standardRateLimit,
+  strictRateLimit,
+} from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -52,7 +55,7 @@ const CreatePickupSchema = z.object({
   artwork_name: z.string(),
   artwork_price: z.number(),
 });
-export const POST = withRateLimit(strictRateLimit)(async function POST(
+export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {

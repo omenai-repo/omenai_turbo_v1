@@ -130,7 +130,10 @@
     "NEXT_PUBLIC_APP_ENV",
     "INTERNAL_SECRET",
     "API_HEADER_ORIGIN",
-    "APPWRITE_ENDPOINT"
+    "APPWRITE_ENDPOINT",
+    "UPS_CLIENT_SECRET",
+    "UPS_ACCOUNT_NUMBER",
+    "UPS_CLIENT_ID"
   ],
 
   "tasks": {
@@ -265,7 +268,10 @@
         "APP_ENV",
         "NEXT_PUBLIC_APP_ENV",
         "INTERNAL_SECRET",
-        "API_HEADER_ORIGIN"
+        "API_HEADER_ORIGIN",
+        "UPS_CLIENT_ID",
+        "UPS_CLIENT_SECRET",
+        "UPS_ACCOUNT_NUMBER"
       ]
     },
     "lint": {

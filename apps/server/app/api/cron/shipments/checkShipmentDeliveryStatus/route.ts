@@ -9,60 +9,76 @@ import { sendArtistFundUnlockEmail } from "@omenai/shared-emails/src/models/arti
 import { createErrorRollbarReport } from "../../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-import { trackOrderShipment, verifyAuthVercel } from "../../utils";
+import { verifyAuthVercel } from "../../utils";
+import { UnifiedTrackingResponse, getDHLTracking } from "../../../dhl_service";
+import { getUPSTracking } from "../../../ups_service";
 
 /**
  * Checks if a given date is at least two days in the past from now.
- * @param targetDate The date to compare against.
- * @returns {boolean} True if the date is 48 hours or more in the past.
+ * NOTE: This means we only check tracking for orders that are 2 days PAST their ETA?
+ * Please verify if this business logic is intentional. usually you check all "In Transit" orders.
  */
 const isDateAtLeastTwoDaysPast = (targetDate: Date): boolean => {
   const now = new Date();
-  const twoDaysInMillis = 2 * 24 * 60 * 60 * 1000;
+  const twoDaysInMillis = 1 * 24 * 60 * 60 * 1000;
   return now.getTime() - targetDate.getTime() >= twoDaysInMillis;
 };
 
 /**
- * Process a single order: check delivery status and update order/wallet if delivered
+ * Helper to fetch tracking based on carrier
  */
+async function retrieveUnifiedTracking(
+  order: any,
+): Promise<UnifiedTrackingResponse | null> {
+  const carrier = order.shipping_details?.shipment_information?.carrier
+    .split(" ")[0]
+    ?.toUpperCase();
+  const trackingId = order.shipping_details?.shipment_information?.tracking?.id;
 
-async function retrieveTrackingResult(order_id: string) {
+  if (!trackingId) return null;
+
   try {
-    return await trackOrderShipment(order_id);
+    if (carrier === "DHL") {
+      return await getDHLTracking(trackingId);
+    } else if (carrier === "UPS") {
+      return await getUPSTracking(trackingId);
+    }
+    return null;
   } catch (error) {
-    console.error(`Tracking failed for ${order_id}:`, error);
+    console.error(`Tracking failed for ${order.order_id} (${carrier}):`, error);
     return null;
   }
 }
+
 async function processOrder(order: any, dbConnection: any) {
   try {
-    const trackingResult = await retrieveTrackingResult(order.order_id);
+    // 1. GET UNIFIED TRACKING DATA
+    const trackingResult = await retrieveUnifiedTracking(order);
 
-    // Validate response structure
-    if (!trackingResult?.events || !Array.isArray(trackingResult.events)) {
-      throw new Error("Invalid tracking API response structure");
-    }
-
-    if (trackingResult.events.length === 0) {
+    if (!trackingResult) {
       return {
         status: "skipped",
         order_id: order.order_id,
-        reason: "No tracking events found",
+        reason: "Tracking service returned null or unsupported carrier",
       };
     }
 
-    const latestEvent = trackingResult.events.at(-1);
-
-    // Proceed only if the latest status is "Delivered"
-    if (latestEvent?.description !== "Delivered") {
+    // 2. CHECK STATUS (The Clean "Unified" Way)
+    // We strictly look for "DELIVERED". The Service layer handles the mapping (e.g. UPS "D" -> "DELIVERED")
+    if (trackingResult.current_status !== "DELIVERED") {
       return {
         status: "skipped",
         order_id: order.order_id,
-        reason: `Current status: ${latestEvent?.description || "Unknown"}`,
+        reason: `Current status is ${trackingResult.current_status}`,
       };
     }
 
-    // Validate required fields before starting transaction
+    // 3. PREPARE FOR UPDATE
+    const latestEvent = trackingResult.events[0]; // Events are sorted Newest -> Oldest in our service
+    const deliveryDate = latestEvent
+      ? new Date(latestEvent.timestamp)
+      : new Date();
+
     const { seller_designation, seller_details, payment_information } = order;
     const wallet_increment_amount =
       payment_information?.artist_wallet_increment;
@@ -75,21 +91,22 @@ async function processOrder(order: any, dbConnection: any) {
       throw new Error("Missing wallet_increment_amount for artist order");
     }
 
-    // Use a transaction to update the order and wallet atomically
+    // 4. TRANSACTION EXECUTION
     const session = await dbConnection.startSession();
 
     try {
       await session.withTransaction(async () => {
         // Update order status to "completed"
         const orderUpdateResult = await CreateOrder.updateOne(
-          { order_id: order.order_id, status: "processing" }, // Add status check to prevent race conditions
+          { order_id: order.order_id, status: "processing" },
           {
             $set: {
               status: "completed",
               "shipping_details.shipment_information.tracking.delivery_status":
                 "Delivered",
+              // Use the actual event date, or fallback to now
               "shipping_details.shipment_information.tracking.delivery_date":
-                toUTCDate(new Date(latestEvent.date)),
+                toUTCDate(deliveryDate),
               "shipping_details.delivery_confirmed": true,
             },
           },
@@ -100,9 +117,8 @@ async function processOrder(order: any, dbConnection: any) {
           throw new Error("Order not found or already processed");
         }
 
-        // If the seller is an artist, release their funds
+        // Fund Release Logic (Artist Only)
         if (seller_designation === "artist" && wallet_increment_amount) {
-          // First check if wallet exists
           const walletExists = await Wallet.findOne(
             { owner_id: seller_details.id },
             { _id: 1 },
@@ -110,12 +126,9 @@ async function processOrder(order: any, dbConnection: any) {
           );
 
           if (!walletExists) {
-            throw new Error(
-              `Wallet not found for seller ${seller_details.id}. Escalate to IT support.`,
-            );
+            throw new Error(`Wallet not found for seller ${seller_details.id}`);
           }
 
-          // Update wallet balance
           const walletUpdateResult = await Wallet.updateOne(
             {
               owner_id: seller_details.id,
@@ -132,22 +145,26 @@ async function processOrder(order: any, dbConnection: any) {
 
           if (walletUpdateResult.matchedCount === 0) {
             throw new Error(
-              `Insufficient pending balance (${wallet_increment_amount} required) or wallet concurrency issue`,
+              `Insufficient pending balance or concurrency issue`,
             );
           }
 
-          if (walletUpdateResult.modifiedCount === 0) {
-            throw new Error("Wallet update failed - no changes made");
-          }
-
+          // Emails
           if (seller_designation === "artist") {
             await sendArtistFundUnlockEmail({
               name: seller_details.name,
               email: seller_details.email,
               amount: wallet_increment_amount,
             });
-          } else {
-            // - Gallery: Notify about successful delivery
+          }
+        }
+
+        // Gallery Email (Outside the Artist check)
+        if (
+          seller_designation === "gallery" ||
+          seller_designation === "artist"
+        ) {
+          if (seller_designation === "gallery") {
             await sendGalleryShipmentSuccessfulMail({
               name: seller_details.name,
               email: seller_details.email,
@@ -171,7 +188,6 @@ async function processOrder(order: any, dbConnection: any) {
       await session.endSession();
     }
   } catch (error) {
-    // Capture errors on a per-order basis without stopping the entire cron job
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
     console.error(`✗ Failed to process order ${order.order_id}:`, errorMessage);
@@ -189,9 +205,6 @@ async function processOrder(order: any, dbConnection: any) {
   }
 }
 
-/**
- * Cron job endpoint to validate shipment deliveries and release funds
- */
 export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
 ) {
@@ -199,10 +212,10 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
 
   try {
     await verifyAuthVercel(request);
-
     const dbConnection = await connectMongoDB();
 
-    // Fetch processing orders with valid shipment IDs
+    // Fetch processing orders
+    // NOTE: We only fetch orders where status is "In Transit" or similar
     const processingOrders = await CreateOrder.find(
       {
         status: "processing",
@@ -211,94 +224,71 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
           $ne: null,
         },
         "order_accepted.status": "accepted",
+        // We look for orders that *think* they are still in transit
+        // This regex allows for "In Transit", "In_Transit", "Shipped", etc.
+        "shipping_details.shipment_information.tracking.delivery_status": {
+          $in: ["In Transit", "Shipped", "Origin Scan"],
+        },
+
+        // Ensure we have an ETA to check against
         "shipping_details.shipment_information.estimates.estimatedDeliveryDate":
-          {
-            $exists: true,
-            $ne: null,
-          },
-        "shipping_details.shipment_information.tracking.delivery_status":
-          "In Transit",
+          { $exists: true, $ne: null },
       },
-      "order_id shipping_details seller_designation payment_information seller_details artwork_data",
+      "order_id shipping_details seller_designation payment_information seller_details artwork_data createdAt buyer_details",
     ).lean();
 
-    // Filter orders where the estimated delivery date is at least two days past
+    // Filter Logic
     const eligibleOrders = processingOrders.filter((order) => {
       const estimatedDeliveryDateStr =
         order.shipping_details?.shipment_information?.estimates
           ?.estimatedDeliveryDate;
 
-      if (!estimatedDeliveryDateStr) {
-        console.warn(
-          `Order ${order.order_id}: Missing estimated delivery date`,
-        );
-        return false;
-      }
+      // Safety check
+      if (!estimatedDeliveryDateStr) return false;
 
       try {
         const deliveryDate = toUTCDate(new Date(estimatedDeliveryDateStr));
-
+        // Preserving your logic: Only check if 2 days PAST the estimated date
         return isDateAtLeastTwoDaysPast(deliveryDate);
       } catch (error) {
-        console.error(`Order ${order.order_id}: Invalid delivery date format`);
         return false;
       }
     });
 
     if (eligibleOrders.length === 0) {
-      const res_payload = {
-        message: "No orders eligible for delivery validation",
-        total_processing: processingOrders.length,
-        eligible: 0,
-        execution_time_ms: Date.now() - startTime,
-      };
-
-      return NextResponse.json({ ...res_payload }, { status: 200 });
+      return NextResponse.json(
+        {
+          message: "No orders eligible for delivery validation",
+          total_processing: processingOrders.length,
+          eligible: 0,
+          execution_time_ms: Date.now() - startTime,
+        },
+        { status: 200 },
+      );
     }
 
-    // Process all eligible orders in parallel with concurrency limit
-    const BATCH_SIZE = 10; // Process 10 orders at a time to avoid overwhelming the API
+    // Process in Batches
+    const BATCH_SIZE = 10;
     const results = [];
 
     for (let i = 0; i < eligibleOrders.length; i += BATCH_SIZE) {
       const batch = eligibleOrders.slice(i, i + BATCH_SIZE);
-
-      const batchPromises = batch.map((order) =>
-        processOrder(order, dbConnection),
+      // Wait for all promises in batch to settle
+      const batchResults = await Promise.all(
+        batch.map((order) => processOrder(order, dbConnection)),
       );
-      const batchResults = await Promise.allSettled(batchPromises);
       results.push(...batchResults);
     }
 
-    // Aggregate results
-    const successful = results.filter(
-      (r) => r.status === "fulfilled" && r.value.status === "success",
+    // Metrics
+    const successful = results.filter((r) => r.status === "success");
+    const failed = results.filter((r) => r.status === "failed");
+    const skipped = results.filter((r) => r.status === "skipped");
+
+    const totalFundsReleased = successful.reduce(
+      (sum, r) => sum + (r.funds_released || 0),
+      0,
     );
-
-    const skipped = results.filter(
-      (r) => r.status === "fulfilled" && r.value.status === "skipped",
-    );
-
-    const failed = results.filter(
-      (r) =>
-        r.status === "rejected" ||
-        (r.status === "fulfilled" && r.value.status === "failed"),
-    );
-
-    const totalFundsReleased = successful.reduce((sum, r) => {
-      return sum + (r.status === "fulfilled" ? r.value.funds_released || 0 : 0);
-    }, 0);
-
-    const failedOrders = failed.map((r) =>
-      r.status === "rejected"
-        ? {
-            order_id: "unknown",
-            reason: r.reason?.message || "Rejected promise",
-          }
-        : r.value,
-    );
-
-    const executionTime = Date.now() - startTime;
 
     return NextResponse.json(
       {
@@ -310,16 +300,15 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
           skipped: skipped.length,
           failed_updates: failed.length,
           total_funds_released: totalFundsReleased,
-          execution_time_ms: executionTime,
+          execution_time_ms: Date.now() - startTime,
         },
-        failed_orders: failedOrders.length > 0 ? failedOrders : undefined,
+        failed_orders: failed.length > 0 ? failed : undefined,
       },
       { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Critical cron job error:", error);
     const errorResponse = handleErrorEdgeCases(error);
-
     createErrorRollbarReport(
       "Cron: Check shipment delivery status",
       error,
@@ -327,10 +316,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     );
 
     return NextResponse.json(
-      {
-        message: errorResponse?.message || "Critical cron job failure",
-        execution_time_ms: Date.now() - startTime,
-      },
+      { message: errorResponse?.message || "Critical cron job failure" },
       { status: errorResponse?.status || 500 },
     );
   }

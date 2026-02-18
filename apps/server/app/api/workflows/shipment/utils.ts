@@ -2,37 +2,6 @@ import { storage } from "@omenai/appwrite-config/appwrite";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-
-export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
-
-export const uploadWaybillDocument = async (file: File) => {
-  if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
-  try {
-    const fileUploaded = await storage.createFile({
-      bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
-      fileId: ID.unique(),
-      file,
-    });
-
-    if (fileUploaded) return fileUploaded;
-  } catch (error) {
-    throw new Error("Appwrite Exception: Something went wrong on Appwrite");
-  }
-};
-
-export default uploadWaybillDocument;
-
-export async function handleWorkflowError(error: any, payload: Payload) {
-  const error_response = handleErrorEdgeCases(error);
-  await saveFailedJob({
-    jobId: payload.order_id,
-    jobType: "create_shipment",
-    payload,
-    reason: error_response.message,
-  });
-  throw new Error("RetryableError: " + error_response.message);
-}
-
 import { Buffer } from "buffer";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import {
@@ -49,12 +18,61 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
 
-export const base64ToPDF = (
+export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
+// NEW: Define UPS URL
+export const UPS_SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_ups_shipment`;
+
+export const uploadWaybillDocument = async (file: File) => {
+  if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
+  try {
+    const fileUploaded = await storage.createFile({
+      bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+      fileId: ID.unique(),
+      file,
+    });
+
+    if (fileUploaded) return fileUploaded;
+  } catch (error) {
+    throw new Error("Appwrite Exception: Something went wrong on Appwrite");
+  }
+};
+
+export async function handleWorkflowError(error: any, payload: Payload) {
+  const error_response = handleErrorEdgeCases(error);
+  await saveFailedJob({
+    jobId: payload.order_id,
+    jobType: "create_shipment",
+    payload,
+    reason: error_response.message,
+  });
+  throw new Error("RetryableError: " + error_response.message);
+}
+
+export const base64ToFile = (
   base64: string,
-  filename = "waybilldoc.pdf",
+  filenamePrefix = "waybilldoc",
 ): File => {
   const byteArray = Buffer.from(base64, "base64");
-  return new File([byteArray], filename, { type: "application/pdf" });
+
+  // Default to PDF
+  let type = "application/pdf";
+  let extension = "pdf";
+
+  // Check Magic Numbers (File Signatures)
+  // GIF87a or GIF89a starts with "R0lGOD" in Base64
+  if (base64.startsWith("R0lGOD")) {
+    type = "image/gif";
+    extension = "gif";
+  }
+  // PDF starts with "%PDF" -> "JVBERi" in Base64
+  else if (base64.startsWith("JVBERi")) {
+    type = "application/pdf";
+    extension = "pdf";
+  }
+
+  const filename = `${filenamePrefix}.${extension}`;
+
+  return new File([byteArray], filename, { type });
 };
 
 let mongoClient: any;
@@ -66,9 +84,10 @@ export async function getMongoClient() {
   return mongoClient;
 }
 
+// UPDATE: Added carrier to return type
 export function buildShipmentData(
   order: CreateOrderModelTypes & { createdAt: string; updatedAt: string },
-): Omit<ShipmentRequestDataTypes, "originCountryCode"> {
+): Omit<ShipmentRequestDataTypes, "originCountryCode"> & { carrier: string } {
   return {
     specialInstructions:
       order.shipping_details.additional_information ??
@@ -91,15 +110,15 @@ export function buildShipmentData(
     },
     invoice_number: `OMENAI-INV-${order.order_id}`,
     artwork_price: Number(order.artwork_data.pricing.usd_price),
+    carrier: order.shipping_details.shipment_information.carrier,
   };
 }
 
-// Utility function to upload waybill document and update the order
 export async function handleWaybillUpload(
   waybillBase64: string,
   orderId: string,
 ): Promise<string> {
-  const waybillFile = base64ToPDF(
+  const waybillFile = base64ToFile(
     waybillBase64,
     `waybilldoc_${generateAlphaDigit(6)}.pdf`,
   );
@@ -132,7 +151,6 @@ export async function handleWaybillUpload(
   return waybillDocLink;
 }
 
-// Utility function to create a workflow for sending shipment emails
 export async function sendShipmentEmailWorkflow(
   buyerName: string,
   buyerEmail: string,
