@@ -2,14 +2,17 @@
 import ArtworkDimensionsInputGroup from "./components/ArtworkDimensionsInputGroup";
 import ArtworkInfoInputGroup from "./components/ArtworkInfoInputGroup";
 import ArtworkPriceInputGroup from "./components/ArtworkPriceInputGroup";
-import { BsArrowRight } from "react-icons/bs";
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import ArtistInfoInputGroup from "./components/ArtistInfoInputGroup";
-export default function UploadArtworkDetails() {
+export default function UploadArtworkDetails({
+  isPremium,
+}: {
+  isPremium: boolean;
+}) {
   const router = useRouter();
   const { errorFields, artworkUploadData } = galleryArtworkUploadStore();
 
@@ -49,7 +52,7 @@ export default function UploadArtworkDetails() {
         <ArtworkInfoInputGroup />
         <ArtistInfoInputGroup />
         <ArtworkDimensionsInputGroup />
-        <ArtworkPriceInputGroup />
+        <ArtworkPriceInputGroup isPremium={isPremium} />
         <div className="w-full flex justify-center mb-4 text-fluid-xxs">
           <button
             type="submit"

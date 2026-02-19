@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import PasswordBlock from "./components/PasswordBlock";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { auth_uri } from "@omenai/url-config/src/config";
+import PasswordBlock from "../../components/PasswordBlock";
 
 export default async function ResetPassword({
   params,
@@ -11,7 +11,6 @@ export default async function ResetPassword({
 }) {
   const slug = (await params).id;
   const auth_url = auth_uri();
-  // Check if user is verified and then redirect
   return (
     <div className="w-full h-full font-dark p-5">
       <div className="container lg:w-50% my-4">
@@ -24,7 +23,7 @@ export default async function ResetPassword({
           </Link>
         </div>
         {/* Body */}
-        <PasswordBlock token={slug} />
+        <PasswordBlock token={slug} route="individual" />
       </div>
     </div>
   );

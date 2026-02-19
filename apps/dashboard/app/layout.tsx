@@ -19,7 +19,6 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { clientConfig } from "@omenai/rollbar-config";
 import { Provider as RollbarProvider } from "@rollbar/react";
-import SupportWidget from "@omenai/shared-ui-components/components/support/SupportWidget";
 import { headers } from "next/headers";
 
 export const viewport: Viewport = {
@@ -56,8 +55,7 @@ export default async function DashboardRootLayout({
   children: React.ReactNode;
 }) {
   const initialSessionData = await getServerSession();
-  const headersList = await headers();
-  const nonce = headersList.get("x-nonce") || "";
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <RollbarProvider config={clientConfig}>
@@ -65,8 +63,6 @@ export default async function DashboardRootLayout({
         <html lang="en" {...mantineHtmlProps}>
           <head>
             <meta name="color-scheme" content="light" />
-            <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
-
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" href="/favicon.ico" />
             <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

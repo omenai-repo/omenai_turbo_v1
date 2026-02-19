@@ -94,8 +94,8 @@ export default function MigrationUpgradeCheckoutItem({
               </p>
             ) : (
               <p className="text-gray-400 text-fluid-base max-w-sm">
-                Switch to a simpler plan that fits your current needs, while
-                keeping full access to your existing work.
+                Switch to a plan that fits your current needs, while keeping
+                full access to your existing work.
               </p>
             )}
           </div>

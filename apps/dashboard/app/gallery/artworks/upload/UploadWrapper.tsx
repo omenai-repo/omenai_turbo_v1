@@ -46,6 +46,7 @@ export default function UploadArtwork() {
           isSubmitted: response.details_submitted,
           id: acc.data.connected_account_id,
           isSubActive: sub_check?.data?.status === "active",
+          isPremium: sub_check?.data?.plan_details.type === "premium" || false,
         };
       } catch (error) {
         if (error instanceof Error) {
@@ -85,7 +86,7 @@ export default function UploadArtwork() {
       )}
       {(user.gallery_verified as boolean) && isConfirmed?.isSubActive && (
         <div className="pb-5">
-          <UploadArtworkDetails />
+          <UploadArtworkDetails isPremium={isConfirmed.isPremium} />
         </div>
       )}
     </div>

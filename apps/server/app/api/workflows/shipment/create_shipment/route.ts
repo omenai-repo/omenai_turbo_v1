@@ -221,7 +221,6 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
 async function createShipment(order: OrderWithTimestamps, orderId: string) {
   const shipmentData = buildShipmentData(order);
 
-  // This will now internally route to UPS or DHL based on shipmentData.carrier
   const shipment = await callShipmentAPI(shipmentData);
 
   await ScheduledShipment.deleteOne({ order_id: order.order_id });
@@ -254,7 +253,7 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
     shipmentData.receiver_data.email,
     shipmentData.seller_details.fullname,
     shipmentData.seller_details.email,
-    shipment.data.shipmentTrackingNumber,
+    order.order_id,
     shipment.data.documents[0].content,
     shipmentData.artwork_name,
     order.artwork_data.url,

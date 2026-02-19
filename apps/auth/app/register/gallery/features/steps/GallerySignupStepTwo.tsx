@@ -13,7 +13,7 @@ export default function GallerySignupStepTwo() {
   }
   return (
     <div className="flex flex-col space-y-5">
-      <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+      <div className="space-y-4">
         {gallery_signup_step_two.map((form_step, index) => {
           return (
             <div key={index}>

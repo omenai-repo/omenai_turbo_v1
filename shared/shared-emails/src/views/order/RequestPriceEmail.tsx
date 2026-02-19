@@ -29,10 +29,10 @@ const RequestPriceEmail = (
   artwork_data: Pick<
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url" | "medium"
-  >
+  >,
 ) => {
   const image = storage.getFileView({
-    bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+    bucketId: process.env.APPWRITE_BUCKET_ID!,
     fileId: artwork_data.url,
   });
 

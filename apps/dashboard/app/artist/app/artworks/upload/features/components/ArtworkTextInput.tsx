@@ -29,7 +29,7 @@ export default function ArtworkTextInput({
   value,
   type = "text",
 }: ArtworkTextInputProps) {
-  const { updateArtworkUploadData, updateErrorField, artworkUploadData } =
+  const { updateArtworkUploadData, updateErrorField } =
     artistArtworkUploadStore();
   const { user } = useAuth({ requiredRole: "artist" });
 
@@ -43,6 +43,8 @@ export default function ArtworkTextInput({
     const trimmedValue = trimWhiteSpace(value);
 
     setErrorList([]);
+
+    if (trimmedValue === "") return;
     const { success, errors }: { success: boolean; errors: string[] | [] } =
       validate(label, trimmedValue);
     if (!success) {

@@ -16,7 +16,6 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import LikeComponent from "../likes/LikeComponent";
 import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
-import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 import { LoadSmall } from "../loader/Load";
 
 export default function ArtworkCard({
@@ -193,7 +192,7 @@ export default function ArtworkCard({
                 </span>
               ) : (
                 <span className="font-sans text-xs font-medium text-slate-500">
-                  On Request
+                  Price on Request
                 </span>
               )}
             </div>

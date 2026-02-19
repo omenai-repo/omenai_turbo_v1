@@ -17,7 +17,7 @@ import TrackingLoading from "./TrackingLoading";
 export default function TrackingPage() {
   const [searchedNumber, setSearchedNumber] = useState<string>("");
   const searchParams = useSearchParams();
-  const queryId = searchParams.get("order_id"); // Changed to order_id to match backend
+  const queryId = searchParams.get("tracking_id");
 
   useEffect(() => {
     if (queryId) setSearchedNumber(queryId);

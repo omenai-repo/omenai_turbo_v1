@@ -31,7 +31,6 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       medium: "",
       rarity: "",
       materials: "",
-      width: "",
       height: "",
       weight: "",
       price: 0,
