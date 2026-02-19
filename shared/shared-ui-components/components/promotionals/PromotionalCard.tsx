@@ -53,7 +53,7 @@ export default function PromotionalCard({
 
       {/* 2. THE TYPOGRAPHY SECTION (Placard) */}
       {/* Kept exactly the same as the previous atelier version */}
-      <div className="flex h-[45%] w-full flex-col justify-center bg-accentLight p-8 md:h-full md:w-[40%] md:px-12 lg:px-16 z-20">
+      <div className="flex h-[45%] w-full flex-col justify-center bg-[#FCFCFA] p-8 md:h-full md:w-[40%] md:px-12 lg:px-16 z-20">
         <div className="flex flex-col items-start gap-5">
           {/* Subtle Metadata */}
           <div className="flex items-center gap-4 text-neutral-400">
