@@ -29,8 +29,8 @@ const bucketId =
 export const getImageFileView = (
   fileId: string,
   width: number,
-  quality: number = 70, // Default to 70 instead of 100
   height?: number,
+  quality: number = 70, // Default to 70 instead of 100
 ) => {
   return storage.getFilePreview({
     bucketId,
