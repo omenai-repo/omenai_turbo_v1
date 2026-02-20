@@ -22,14 +22,18 @@ export const SIZE_PRESETS = {
   xlarge: { width: 1920 },
 };
 
+const bucketId =
+  process.env.APPWRITE_BUCKET_ID ||
+  (process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID as string);
+
 export const getImageFileView = (
   fileId: string,
   width: number,
-  height?: number,
   quality: number = 70, // Default to 70 instead of 100
+  height?: number,
 ) => {
   return storage.getFilePreview({
-    bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+    bucketId,
     fileId,
     width, // width, will be resized using this value.
     height: height || 0, // height, ignored when 0

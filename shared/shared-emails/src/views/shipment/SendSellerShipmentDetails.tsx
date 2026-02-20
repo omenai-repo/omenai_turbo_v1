@@ -2,7 +2,10 @@
 import { Container, Section, Text, Heading } from "@react-email/components";
 import EmailArtworkCard from "./EmailArtworkCard";
 import ShipmentLayout from "./ShipmentLayout";
-import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import {
+  getImageFileView,
+  getOptimizedImage,
+} from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function SellerShipmentEmail(
   name: string,
@@ -11,7 +14,7 @@ export default function SellerShipmentEmail(
   artistName: string,
   price: string,
 ) {
-  artworkImage = getImageFileView(artworkImage, 400);
+  const artworkImageUrl = getOptimizedImage(artworkImage, "small");
   return (
     <ShipmentLayout
       preview="Your shipment has been created and is ready for pickup"
@@ -45,13 +48,13 @@ export default function SellerShipmentEmail(
               marginBottom: "16px",
             }}
           >
-            A shipment has been successfully created for your piece. DHL’s
-            courier service will reach out shortly to schedule a pickup from
-            your location.
+            A shipment has been successfully created for your piece. Our courier
+            partner will reach out shortly to schedule a pickup from your
+            location.
           </Text>
           <EmailArtworkCard
             artwork={artwork}
-            artworkImage={artworkImage}
+            artworkImage={artworkImageUrl}
             artistName={artistName}
             price={price}
           />
@@ -67,7 +70,7 @@ export default function SellerShipmentEmail(
             email — kindly print it and attach it to the package before pickup.{" "}
             <strong>
               Also kindly attach the certificate of authenticity to the package
-              or hand this over to the courier to ensure smooth
+              or hand this over to the courier to ensure smooth{" "}
             </strong>
             delivery.
           </Text>

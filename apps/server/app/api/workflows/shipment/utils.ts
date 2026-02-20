@@ -1,4 +1,4 @@
-import { storage } from "@omenai/appwrite-config/appwrite";
+import { serverStorage } from "@omenai/appwrite-config/appwrite";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
@@ -25,8 +25,8 @@ export const UPS_SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_ups_ship
 export const uploadWaybillDocument = async (file: File) => {
   if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
   try {
-    const fileUploaded = await storage.createFile({
-      bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
+    const fileUploaded = await serverStorage.createFile({
+      bucketId: process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!,
       fileId: ID.unique(),
       file,
     });
@@ -58,14 +58,10 @@ export const base64ToFile = (
   let type = "application/pdf";
   let extension = "pdf";
 
-  // Check Magic Numbers (File Signatures)
-  // GIF87a or GIF89a starts with "R0lGOD" in Base64
   if (base64.startsWith("R0lGOD")) {
     type = "image/gif";
     extension = "gif";
-  }
-  // PDF starts with "%PDF" -> "JVBERi" in Base64
-  else if (base64.startsWith("JVBERi")) {
+  } else if (base64.startsWith("JVBERi")) {
     type = "application/pdf";
     extension = "pdf";
   }
@@ -82,6 +78,49 @@ export async function getMongoClient() {
     mongoClient = await connectMongoDB();
   }
   return mongoClient;
+}
+
+export async function handleWaybillUpload(
+  waybillBase64: string,
+  orderId: string,
+): Promise<string> {
+  const waybillFile = base64ToFile(
+    waybillBase64,
+    `waybilldoc_${generateAlphaDigit(6)}`,
+  );
+
+  const uploadedDoc = await uploadWaybillDocument(waybillFile);
+
+  if (!uploadedDoc) {
+    throw new ServerError("Waybill document upload failed on Appwrite");
+  }
+
+  const endpoint =
+    process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
+  const projectId = process.env.APPWRITE_CLIENT_ID!;
+  const bucketId = process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!;
+  const fileId = uploadedDoc.$id;
+
+  // Construct the raw URL string
+
+  const waybillDocLink = `${endpoint}/storage/buckets/${bucketId}/files/${fileId}/view?project=${projectId}&mode=admin`;
+
+  const updateResult = await CreateOrder.updateOne(
+    { order_id: orderId },
+    {
+      $set: {
+        "shipping_details.shipment_information.waybill_document":
+          waybillDocLink,
+      },
+    },
+  );
+
+  if (updateResult.modifiedCount === 0) {
+    throw new Error("Unable to update order waybill document");
+  }
+
+  await WaybillCache.deleteOne({ order_id: orderId });
+  return waybillDocLink;
 }
 
 // UPDATE: Added carrier to return type
@@ -112,43 +151,6 @@ export function buildShipmentData(
     artwork_price: Number(order.artwork_data.pricing.usd_price),
     carrier: order.shipping_details.shipment_information.carrier,
   };
-}
-
-export async function handleWaybillUpload(
-  waybillBase64: string,
-  orderId: string,
-): Promise<string> {
-  const waybillFile = base64ToFile(
-    waybillBase64,
-    `waybilldoc_${generateAlphaDigit(6)}.pdf`,
-  );
-  const uploadedDoc = await uploadWaybillDocument(waybillFile);
-
-  if (!uploadedDoc) {
-    throw new ServerError("Waybill document upload failed on Appwrite");
-  }
-
-  const waybillDocLink = storage.getFileView({
-    bucketId: uploadedDoc.bucketId,
-    fileId: uploadedDoc.$id,
-  });
-
-  const updateResult = await CreateOrder.updateOne(
-    { order_id: orderId },
-    {
-      $set: {
-        "shipping_details.shipment_information.waybill_document":
-          waybillDocLink,
-      },
-    },
-  );
-
-  if (updateResult.modifiedCount === 0) {
-    throw new Error("Unable to update order waybill document");
-  }
-
-  await WaybillCache.deleteOne({ order_id: orderId });
-  return waybillDocLink;
 }
 
 export async function sendShipmentEmailWorkflow(

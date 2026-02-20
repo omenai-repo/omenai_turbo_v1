@@ -18,9 +18,9 @@ type Payload = {
 };
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload: Payload = ctx.requestPayload;
-  await connectMongoDB();
-  await Promise.all([
-    ctx.run("sendSellerShipmentEmail", async () => {
+
+  await ctx.run("sendEmails", async () => {
+    await Promise.all([
       await sendSellerShipmentEmail({
         name: payload.sellerName,
         email: payload.sellerEmail,
@@ -29,9 +29,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
         artworkImage: payload.artworkImage,
         artistName: payload.artistName,
         price: formatPrice(payload.artworkPrice),
-      });
-    }),
-    ctx.run("sendBuyerShipmentEmail", async () => {
+      }),
       await sendBuyerShipmentEmail({
         name: payload.buyerName,
         email: payload.buyerEmail,
@@ -40,7 +38,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
         artwork: payload.artwork,
         artworkImage: payload.artworkImage,
         artworkPrice: formatPrice(payload.artworkPrice),
-      });
-    }),
-  ]);
+      }),
+    ]);
+  });
 });

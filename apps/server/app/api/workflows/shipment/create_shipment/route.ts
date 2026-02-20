@@ -59,7 +59,7 @@ async function callShipmentAPI(
   const timeout = setTimeout(() => controller.abort(), 10000);
 
   const apiUrl =
-    data.carrier.toUpperCase() === "UPS"
+    data.carrier.split(" ")[0].toUpperCase() === "UPS"
       ? UPS_SHIPMENT_API_URL
       : SHIPMENT_API_URL;
 
@@ -117,7 +117,10 @@ async function handleCompletedShipment(
 }
 
 async function handleWaybillRecovery(orderId: string) {
-  const cache = await WaybillCache.findOne({ order_id: orderId }, "pdf_base64");
+  const cache = (await WaybillCache.findOne(
+    { order_id: orderId },
+    "pdf_base64",
+  ).lean()) as { pdf_base64: string } | null;
 
   if (!cache) {
     throw new Error("Waybill missing. Contact support.");
@@ -201,17 +204,15 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
     await session.endSession();
   }
 
-  await Promise.all([
-    sendShipmentScheduledEmail({
-      email: order.seller_details.email,
-      name: order.seller_details.name,
-      artwork: order.artwork_data.title,
-      artworkImage: order.artwork_data.url,
-      artistname: order.artwork_data.artist,
-      artworkId: order.artwork_data.art_id,
-      price: formatPrice(order.artwork_data.pricing.usd_price),
-    }),
-  ]);
+  await sendShipmentScheduledEmail({
+    email: order.seller_details.email,
+    name: order.seller_details.name,
+    artwork: order.artwork_data.title,
+    artworkImage: order.artwork_data.url,
+    artistname: order.artwork_data.artist,
+    artworkId: order.artwork_data.art_id,
+    price: formatPrice(order.artwork_data.pricing.usd_price),
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -238,8 +239,9 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
         "shipping_details.shipment_information.tracking.id":
           shipment.data.shipmentTrackingNumber,
         "shipping_details.shipment_information.tracking.link": `${tracking_url()}?tracking_id=${shipment.data.shipmentTrackingNumber}`,
-        "shipping_details.shipment_information.estimates":
-          shipment.data.estimatedDeliveryDate,
+        "shipping_details.shipment_information.estimates": {
+          estimatedDeliveryDate: shipment.data.estimatedDeliveryDate,
+        },
         "shipping_details.shipment_information.planned_shipping_date":
           shipment.data.plannedShippingDateAndTime,
         "shipping_details.shipment_information.tracking.delivery_status":
@@ -271,13 +273,12 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
 export const { POST } = serve<Payload>(async (ctx) => {
   const { order_id } = ctx.requestPayload;
 
-  return ctx.run("create_shipment", async () => {
-    const client = await getMongoClient();
-
+  await ctx.run("create_shipment", async () => {
     try {
+      const client = await getMongoClient();
       const order = (await CreateOrder.findOne({
         order_id,
-      })) as OrderWithTimestamps;
+      }).lean()) as OrderWithTimestamps | null;
 
       if (!order) {
         throw new NotFoundError(`Order with order_id ${order_id} not found`);
@@ -288,8 +289,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
       const action = resolveShipmentAction(order);
 
       await executeShipmentAction(action, order, order_id, client);
-
-      return true;
     } catch (error: any) {
       createErrorRollbarReport(
         "Shipment creation workflow — unexpected error",
@@ -297,7 +296,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
         500,
       );
 
-      return handleWorkflowError(error, { order_id });
+      await handleWorkflowError(error, { order_id });
     }
   });
 });

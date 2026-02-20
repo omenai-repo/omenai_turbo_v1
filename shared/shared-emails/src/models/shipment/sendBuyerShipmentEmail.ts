@@ -22,7 +22,7 @@ export const sendBuyerShipmentEmail = async ({
     prefix: "Omenai orders",
     from: "orders",
     to: email,
-    subject: "Your artwork is on the way.",
+    subject: "Your artwork is on it's way.",
     react: BuyerShipmentEmail(
       trackingCode,
       name,
