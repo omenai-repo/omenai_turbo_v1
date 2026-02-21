@@ -45,14 +45,14 @@ export default function InitialPaymentFormWrapper({
 
         if (!response.isOk) {
           throw new Error(
-            response.message || "Failed to create payment intent"
+            response.message || "Failed to create payment intent",
           );
         }
 
         return response.client_secret;
       },
       refetchOnWindowFocus: false,
-    }
+    },
   );
 
   if (paymentIntentLoading)
@@ -83,20 +83,20 @@ async function handleApiCall(
     email: string;
     amount: number;
     meta: SubscriptionMetaData;
-  }
+  },
 ): Promise<{ isOk: boolean; message: string; client_secret?: string }> {
   if (isDiscounted) {
     return await createPaymentMethodSetupIntent(
       payload.gallery_id,
       payload.email,
-      payload.token
+      payload.token,
     );
   } else {
     return await createSubscriptionPaymentIntent(
       payload.amount,
       payload.gallery_id,
       payload.meta,
-      payload.token
+      payload.token,
     );
   }
 }

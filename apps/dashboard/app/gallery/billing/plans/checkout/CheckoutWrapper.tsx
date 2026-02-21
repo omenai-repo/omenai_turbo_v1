@@ -22,7 +22,7 @@ export default function SubscriptionCheckout() {
     notFound();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get_plan_details"],
+    queryKey: ["get_plan_details", plan_id],
     queryFn: async () => {
       const [plan, discount_data] = await Promise.all([
         getSinglePlanData(plan_id),

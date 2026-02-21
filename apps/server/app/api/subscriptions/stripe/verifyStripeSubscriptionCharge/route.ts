@@ -283,7 +283,15 @@ async function processSuccessfulPayment(
 
   await AccountGallery.updateOne(
     { gallery_id },
-    { $set: { subscription_status: { type: plan.name, active: true } } },
+    {
+      $set: {
+        subscription_status: {
+          type: plan.name,
+          active: true,
+          discount: { active: false, plan: null },
+        },
+      },
+    },
     { session },
   );
   await Waitlist.updateOne(
