@@ -6,9 +6,9 @@ type PlanChangeResult = {
 };
 
 const planTiers = {
-  premium: { monthlyPrice: 400, yearlyPrice: 4000 },
-  pro: { monthlyPrice: 250, yearlyPrice: 2500 },
-  basic: { monthlyPrice: 150, yearlyPrice: 1500 },
+  premium: { monthlyPrice: 250, yearlyPrice: 2400 },
+  pro: { monthlyPrice: 150, yearlyPrice: 1440 },
+  basic: { monthlyPrice: 75, yearlyPrice: 720 },
 };
 
 export function determinePlanChange(
@@ -16,7 +16,7 @@ export function determinePlanChange(
   currentInterval: "monthly" | "yearly",
   newPrice: number,
   newInterval: "monthly" | "yearly",
-  status: SubscriptionModelSchemaTypes["status"]
+  status: SubscriptionModelSchemaTypes["status"],
 ): PlanChangeResult {
   const currentPlanData = planTiers[currentPlan as keyof typeof planTiers];
   const currentPrice = currentPlanData[`${currentInterval}Price`];
@@ -26,7 +26,7 @@ export function determinePlanChange(
   const newPlanIndex = planOrder.findIndex(
     (plan) =>
       planTiers[plan as keyof typeof planTiers][`${newInterval}Price`] ===
-      newPrice
+      newPrice,
   );
 
   const isUpgrade = newPlanIndex >= currentPlanIndex;

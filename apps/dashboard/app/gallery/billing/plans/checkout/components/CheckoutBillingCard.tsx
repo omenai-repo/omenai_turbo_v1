@@ -18,6 +18,7 @@ import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import BillingCard from "../../../features/components/BillingCard";
 import { PaymentMethod } from "@stripe/stripe-js";
+import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
@@ -54,14 +55,14 @@ export default function CheckoutBillingCard({
   if (!stripe)
     toast_notif(
       "Stripe not loaded yet. Please refresh or contact support if issue persists",
-      "error"
+      "error",
     );
 
   const router = useRouter();
 
   const handlePaymentResponse = async (
     stripe: Stripe,
-    data: { status: string; client_secret: string; paymentIntentId: string }
+    data: { status: string; client_secret: string; paymentIntentId: string },
   ) => {
     const { status, client_secret, paymentIntentId } = data;
 
@@ -69,7 +70,7 @@ export default function CheckoutBillingCard({
       case "succeeded":
         // ✅ Payment complete
         router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
         );
         break;
 
@@ -77,13 +78,13 @@ export default function CheckoutBillingCard({
         // ⚠️ Needs customer authentication (3DS)
         await stripe.confirmCardPayment(client_secret);
         router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
         );
         break;
 
       case "requires_payment_method":
         router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
         );
         break;
 
@@ -91,7 +92,7 @@ export default function CheckoutBillingCard({
         // ⏳ Still pending
 
         router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
         );
         break;
 
@@ -121,13 +122,13 @@ export default function CheckoutBillingCard({
         plan_id: plan.plan_id,
         plan_interval: interval,
       },
-      csrf || ""
+      csrf || "",
     );
 
     if (!tokenize_card?.isOk)
       toast_notif(
         "Unable to initiate card charge. Please contact support",
-        "error"
+        "error",
       );
     else {
       const { client_secret, status, paymentIntentId } = tokenize_card;
@@ -164,7 +165,7 @@ export default function CheckoutBillingCard({
       data,
       user.gallery_id as string,
       typeof plan_action === "string" ? plan_action : "",
-      csrf || ""
+      csrf || "",
     );
 
     if (!migrate?.isOk)
@@ -215,7 +216,7 @@ export default function CheckoutBillingCard({
         <button
           onClick={shouldCharge ? handlePayNow : handleMigrateToPlan}
           disabled={migrationLoading || loading}
-          className="w-full py-3 bg-dark grid place-items-center text-white text-fluid-xxs font-medium rounded disabled:bg-dark/30 disabled:cursor-not-allowed hover:bg-dark/90 transition-colors"
+          className={BUTTON_CLASS}
         >
           {loading || migrationLoading ? (
             <LoadSmall />
