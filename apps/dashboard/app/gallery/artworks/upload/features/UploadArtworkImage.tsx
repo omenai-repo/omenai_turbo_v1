@@ -41,7 +41,7 @@ export default function UploadArtworkImage() {
   // Accepted types should match standard MIME types parts
   const acceptedFileTypes = ["jpg", "jpeg", "png", "webp"];
 
-  const MAX_SIZE_MB = 5;
+  const MAX_SIZE_MB = 10;
   const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,7 +205,7 @@ export default function UploadArtworkImage() {
               Click to upload artwork image
             </span>
             <span className="text-xs text-slate-500 mt-2 text-center max-w-xs">
-              Supports JPG, JPEG, PNG (Max 5MB). High resolution recommended.
+              Supports JPG, JPEG, PNG (Max 10MB). High resolution recommended.
             </span>
           </button>
         )}

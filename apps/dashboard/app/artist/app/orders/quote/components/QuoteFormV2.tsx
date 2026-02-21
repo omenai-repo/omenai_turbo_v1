@@ -1,32 +1,37 @@
 "use client";
 
 import { acceptOrderRequest } from "@omenai/shared-services/orders/acceptOrderRequest";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState, FormEvent, useMemo } from "react";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Load, {
-  LoadSmall,
-} from "@omenai/shared-ui-components/components/loader/Load";
+
+import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { allKeysEmpty } from "@omenai/shared-utils/src/checkIfObjectEmpty";
 import {
-  ShipmentDimensions,
   CreateOrderModelTypes,
+  OrderArtworkExhibitionStatus,
+  ShipmentDimensions,
 } from "@omenai/shared-types";
-import WarningAlert from "./WarningAlert";
 import { getSingleOrder } from "@omenai/shared-services/orders/getSingleOrder";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import {
-  BUTTON_CLASS,
-  TEXTAREA_CLASS,
-} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
-// Components
+// --- Imported Sub-Components ---
 import PackagingSelector from "./PackagingSelector";
 import OrderSummary from "./OrderSummary";
-import NotFoundData from "@omenai/shared-ui-components/components/notFound/NotFoundData";
+import CarrierInterventionCard from "./CarrierInterventionCard";
+import TermsAndSubmitSection from "./TermsAndSubmitSection";
 
-// Icons
+// --- Utilities ---
+import {
+  checkCarrierLimit,
+  checkIfRolledPassesLimit,
+} from "@omenai/shared-utils/src/shippingLimits"; // IMPORT MATH
+import { init } from "rollbar";
+
+// Icon for the section header
 const RulerIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
@@ -43,52 +48,55 @@ const RulerIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const CheckIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2}
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-  </svg>
-);
-
-// Helper to safely parse dimension strings (e.g. "32in" -> 32)
 const parseDim = (val: string | number | undefined) => {
   if (!val) return 0;
   const str = String(val);
-  // Remove everything that is NOT a digit or a decimal point
   const cleanStr = str.replace(/[^\d.]/g, "");
   return Number(cleanStr) || 0;
 };
 
 export default function QuoteForm({ order_id }: { order_id: string }) {
-  const { csrf } = useAuth({ requiredRole: "artist" });
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  // 1. Fetch Order Data
   const { data: order_data, isLoading } = useQuery({
-    queryKey: ["get_single_order"],
+    queryKey: ["get_single_order", order_id],
     queryFn: async () => {
       const response = await getSingleOrder(order_id);
-      if (!response?.isOk)
-        throw new Error(response?.message || "Order retrieval failed");
-      return {
-        data: response.data as CreateOrderModelTypes & {
-          createdAt: string;
-          updatedAt: string;
-        },
-      };
+      return response?.isOk
+        ? { data: response.data as CreateOrderModelTypes }
+        : undefined;
     },
-    refetchOnWindowFocus: false,
+    enabled: !!order_id,
   });
 
-  // 2. State
+  // 1. Handle Loading
+  if (isLoading) return <Load />;
+
+  // 2. Handle Not Found
+  if (!order_data) return <NotFoundData />;
+
+  // 3. Render the actual form, passing the GUARANTEED data
+  return <QuoteFormContent order_id={order_id} order_data={order_data.data} />;
+}
+
+function QuoteFormContent({
+  order_id,
+  order_data,
+}: {
+  order_id: string;
+  order_data: CreateOrderModelTypes;
+}) {
+  const { csrf } = useAuth({ requiredRole: "artist" });
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const packaging_type_from_order = order_data.artwork_data.packaging_type;
+  const initial_packaging_type =
+    packaging_type_from_order === "rolled" ||
+    packaging_type_from_order === "stretched"
+      ? packaging_type_from_order
+      : "rolled"; // Default to "rolled" if the value from the order is invalid
+  // 2. State Management
   const [packagingType, setPackagingType] = useState<"rolled" | "stretched">(
-    order_data?.data.artwork_data.packaging_type || "rolled",
+    initial_packaging_type,
   );
   const [package_details, setPackageDetails] = useState({
     height: "",
@@ -97,187 +105,209 @@ export default function QuoteForm({ order_id }: { order_id: string }) {
     length: "",
   });
   const [specialInstructions, setSpecialInstructions] = useState("");
-  const [loading, setLoading] = useState(false);
   const [terms_checked, set_terms_checked] = useState(false);
+  const [exhibition_status, set_exhibition_status] =
+    useState<OrderArtworkExhibitionStatus | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Inside QuoteForm.tsx
+  // Intervention States
+  const [hasDeclinedRolled, setHasDeclinedRolled] = useState(false);
+  const [forceCustomToggle, setForceCustomToggle] = useState(0);
 
+  // 3. Computed Values & Math
+  // 3. Computed Values & Math
   const artDims = useMemo(() => {
-    const dims = order_data?.data?.artwork_data?.dimensions;
+    const dims = order_data.artwork_data?.dimensions;
     if (!dims) return { length: 0, height: 0 };
 
+    // We MUST use parseDim to strip letters and get the real numbers
     return {
-      // Canvas Length
-      length: parseDim(dims.length),
-      // Canvas Height
+      length: parseDim(dims.width),
       height: parseDim(dims.height),
-      // Note: We deliberately IGNORE depth/width here as discussed
     };
   }, [order_data]);
 
-  // 4. Conditional Returns (Now safe to place here)
-  if (isLoading) return <Load />;
-  if (order_data === undefined)
-    return (
-      <div className="h-[75vh] grid place-items-center bg-slate-50">
-        <NotFoundData />
-      </div>
+  const carrier =
+    order_data.shipping_details?.shipment_information?.carrier?.toUpperCase() ||
+    "";
+
+  // UNIVERSAL LIMIT CHECK
+  const isCurrentlyOversized = useMemo(() => {
+    if (!carrier) return false;
+
+    // Fallback: If custom fields are blank, check inherent canvas size (using standard depth of 5cm)
+    if (
+      !package_details.length ||
+      !package_details.width ||
+      !package_details.height
+    ) {
+      return checkCarrierLimit(
+        artDims.length * 2.54,
+        artDims.height * 2.54,
+        5,
+        10,
+        carrier,
+      );
+    }
+
+    return checkCarrierLimit(
+      Number(package_details.length),
+      Number(package_details.width),
+      Number(package_details.height),
+      Number(package_details.weight || 0),
+      carrier,
     );
-  // 3. Handlers
-  const handleDimensionUpdate = (details: {
-    length: string;
-    width: string;
-    height: string;
-    weight: string;
-  }) => {
-    setPackageDetails(details);
-  };
+  }, [carrier, package_details, artDims]);
 
-  const handleSubmitQuoteFees = async (e: FormEvent<HTMLFormElement>) => {
+  // LOOKAHEAD CHECK: Does rolling it actually solve the problem?
+  const canBeRolled = useMemo(() => {
+    return checkIfRolledPassesLimit(
+      artDims.length * 2.54,
+      artDims.height * 2.54,
+      carrier,
+    );
+  }, [artDims, carrier]);
+
+  // Submit Button Lock Logic
+  const isSubmitDisabled =
+    loading ||
+    !terms_checked ||
+    (exhibition_status !== null && !exhibition_status.exhibition_end_date);
+
+  // 4. Handlers
+  const handleSubmitQuoteFees = async (e: FormEvent) => {
     e.preventDefault();
-    const { height, weight, width, length } = package_details;
+    if (allKeysEmpty(package_details)) {
+      toast_notif(
+        "All packaging fields must be filled out before submission.",
+        "error",
+      );
+      return;
+    }
 
-    if (allKeysEmpty({ height, weight, width, length })) {
-      toast.error("Required Field", {
-        description: "Please select a packaging option.",
-        style: { background: "red", color: "white" },
-      });
+    if (exhibition_status !== null && !exhibition_status.exhibition_end_date) {
+      toast_notif(
+        "Please input the date of the exhibition closure to proceed",
+        "error",
+      );
       return;
     }
 
     setLoading(true);
+
     const numerical_dimensions: ShipmentDimensions = {
-      height: Number(height),
-      width: Number(width),
-      weight: Number(weight),
-      length: Number(length),
+      height: Number(package_details.height),
+      width: Number(package_details.width),
+      weight: Number(package_details.weight),
+      length: Number(package_details.length),
     };
 
     const response = await acceptOrderRequest(
-      order_data!.data.order_id,
+      order_data.order_id,
       numerical_dimensions,
-      null,
+      exhibition_status,
       csrf || "",
       specialInstructions,
     );
 
     if (!response?.isOk) {
-      toast.error("Error", {
+      toast.error("Error notification", {
         description: response?.message,
-        style: { background: "red", color: "white" },
+        style: { background: "#ef4444", color: "white", border: "none" },
       });
-      setLoading(false);
     } else {
-      toast.success("Success", {
+      toast.success("Operation successful", {
         description: response.message,
-        style: { background: "green", color: "white" },
+        style: { background: "#10b981", color: "white", border: "none" },
       });
       queryClient.invalidateQueries({ queryKey: ["fetch_orders_by_category"] });
       router.replace("/artist/app/orders");
     }
+    setLoading(false);
   };
 
   return (
     <div className="h-[calc(100vh-6rem)] overflow-hidden bg-slate-50/50">
       <div className="grid lg:grid-cols-12 h-full">
-        {/* LEFT SIDE: SCROLLABLE FORM */}
-        <div className="lg:col-span-7 xl:col-span-8 h-full overflow-y-auto custom-scrollbar">
-          <div className="py-4 space-y-8">
-            {/* Header */}
-            <div>
-              <h1 className="text-fluid-lg font-bold tracking-tight text-slate-900">
-                Confirm Logistics
-              </h1>
-              <p className="mt-2 text-fluid-xs text-slate-600">
-                Select the appropriate packaging to calculate accurate shipping
-                rates.
-              </p>
-            </div>
+        {/* LEFT SIDE */}
+        <div className="lg:col-span-7 xl:col-span-8 h-full overflow-y-auto custom-scrollbar p-4 md:p-8 space-y-8">
+          <div>
+            <h1 className="text-fluid-md font-bold tracking-tight text-slate-900">
+              Confirm Logistics
+            </h1>
+            <p className="mt-2 text-fluid-xs text-slate-600">
+              Please verify the artwork dimensions, exhibition status, and
+              packaging details.
+            </p>
+          </div>
 
-            <form onSubmit={handleSubmitQuoteFees} className="space-y-8">
-              {/* Packaging Selector */}
-              <div className="bg-white rounded shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden">
-                <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3">
-                  <div className="p-2 bg-white rounded shadow-sm border border-slate-100">
-                    <RulerIcon className="w-5 h-5 text-indigo-600" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-slate-900">
-                      Packaging Selection
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                      Choose a preset based on artwork size
-                    </p>
-                  </div>
+          <form onSubmit={handleSubmitQuoteFees} className="space-y-8">
+            {/* Packaging Selector */}
+            <div className="bg-white rounded shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden">
+              <div className="p-4 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3">
+                <div className="p-2 bg-white rounded shadow-sm border border-slate-100">
+                  <RulerIcon className="w-5 h-5 text-indigo-600" />
                 </div>
-
-                <div className="p-8">
-                  <PackagingSelector
-                    artDimensions={artDims}
-                    packagingType={packagingType}
-                    onTypeChange={setPackagingType}
-                    onUpdate={handleDimensionUpdate}
-                  />
+                <div>
+                  <h2 className="font-semibold text-slate-900">
+                    Package Dimensions
+                  </h2>
                 </div>
               </div>
 
-              {/* Instructions */}
-              <div className="bg-white rounded shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-slate-100 p-8">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Special Instructions (Optional)
-                </label>
-                <textarea
-                  onChange={(e) => setSpecialInstructions(e.target.value)}
-                  placeholder="Add pickup notes, gate codes, or handling requirements..."
-                  rows={3}
-                  className={`${TEXTAREA_CLASS} !rounded !border-slate-200 focus:!border-dark focus:!ring-dark resize-none py-3 px-4 text-sm`}
+              <div className="p-4 md:p-6">
+                <PackagingSelector
+                  artDimensions={artDims}
+                  packagingType={packagingType}
+                  packagingTypeFromOrder={packaging_type_from_order}
+                  carrier={carrier}
+                  forceCustomToggle={forceCustomToggle}
+                  onTypeChange={setPackagingType}
+                  onUpdate={(details) => {
+                    setPackageDetails(details);
+                    setHasDeclinedRolled(false);
+                  }}
                 />
               </div>
+            </div>
 
-              {/* Actions */}
-              <div className="space-y-6 pt-2 px-4 pb-10">
-                {order_data.data.artwork_data.exclusivity_status
-                  .exclusivity_type === "non-exclusive" && <WarningAlert />}
-
-                <div
-                  onClick={() => set_terms_checked(!terms_checked)}
-                  className="flex items-start gap-3 p-4 rounded border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer bg-white"
-                >
-                  <input
-                    type="checkbox"
-                    checked={terms_checked}
-                    readOnly
-                    className="mt-1 h-5 w-5 rounded border-slate-600 text-dark focus:ring-dark cursor-pointer"
-                  />
-                  <div className="text-sm leading-6">
-                    <span className="font-medium text-slate-900">
-                      Acknowledge Terms
-                    </span>
-                    <p className="text-slate-500">
-                      I confirm the selected packaging is sufficient and ready
-                      for pickup.
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading || !terms_checked}
-                  className={BUTTON_CLASS}
-                >
-                  {loading ? <LoadSmall /> : <CheckIcon className="w-5 h-5" />}
-                  <span>
-                    {loading ? "Processing..." : "Confirm & Accept request"}
-                  </span>
-                </button>
+            {isCurrentlyOversized || hasDeclinedRolled ? (
+              // ROUTE A: Size limits failed. Show the Intervention Card.
+              <CarrierInterventionCard
+                orderId={order_id}
+                carrier={carrier}
+                hasDeclined={hasDeclinedRolled}
+                canBeRolled={canBeRolled}
+                onDecline={() => setHasDeclinedRolled(true)}
+                onSwitchToRolled={() => {
+                  setPackagingType("rolled");
+                  setHasDeclinedRolled(false);
+                }}
+                onTryCustomCrate={() =>
+                  setForceCustomToggle((prev) => prev + 1)
+                }
+              />
+            ) : (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <TermsAndSubmitSection
+                  termsChecked={terms_checked}
+                  onTermsChange={set_terms_checked}
+                  loading={loading}
+                  isDisabled={isSubmitDisabled}
+                  isExclusive={
+                    order_data.artwork_data.exclusivity_status
+                      .exclusivity_type === "exclusive"
+                  }
+                />
               </div>
-            </form>
-          </div>
+            )}
+          </form>
         </div>
 
+        {/* RIGHT SIDE */}
         <div className="lg:col-span-5 xl:col-span-4 h-full border-l border-slate-200 bg-white overflow-hidden relative shadow-xl z-20">
           <div className="w-full h-full p-6 lg:p-8 overflow-y-auto">
-            <OrderSummary order_data={order_data.data} />
+            <OrderSummary order_data={order_data} />
           </div>
         </div>
       </div>

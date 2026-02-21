@@ -46,8 +46,10 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
     "Oil on canvas/panel": 0.7,
   };
 
-  const area = artwork.height * artwork.width;
-  const maxDimension = Math.max(artwork.height, artwork.width);
+  const height = artwork.height * 2.54; // Convert inches to cm
+  const width = artwork.width * 2.54; // Convert inches to cm
+  const area = height * width;
+  const maxDimension = Math.max(height, width);
 
   function getSizeFactor(): number {
     if (maxDimension <= 40 && area <= 1200) {

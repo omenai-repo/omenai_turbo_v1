@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ShipmentRequestDataTypes } from "@omenai/shared-types";
 import { createUPSShipment } from "../../ups_service";
 
-const MOCK_SHIPMENT_DATA: ShipmentRequestDataTypes = {
+export const MOCK_SHIPMENT_DATA: ShipmentRequestDataTypes = {
   // Metadata
   artwork_name: "Test Abstract Painting",
   invoice_number: `TEST-INV-${Date.now()}`, // Unique ID to avoid dupe errors

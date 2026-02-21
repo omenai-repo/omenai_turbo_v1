@@ -8,7 +8,7 @@ type ErrorFields = {
   materials: string;
   height: string;
   price: string;
-  length: string;
+  width: string;
 };
 type GalleryArtworkUploadTypes = {
   image: File | null;
@@ -36,7 +36,7 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       price: 0,
       usd_price: 0,
       shouldShowPrice: "Yes",
-      length: "",
+      width: "",
       artist_birthyear: "",
       artist_country_origin: "",
       certificate_of_authenticity: "",
@@ -70,7 +70,7 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
           usd_price: 0,
           weight: "",
           shouldShowPrice: "",
-          length: "",
+          width: "",
           artist_birthyear: "",
           artist_country_origin: "",
           certificate_of_authenticity: "",
@@ -89,7 +89,7 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       materials: "",
       height: "",
       price: "",
-      length: "",
+      width: "",
       weight: "",
       artist_birthyear: "",
       artwork_description: "",

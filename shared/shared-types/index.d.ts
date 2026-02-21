@@ -254,7 +254,7 @@ export type RoleAccess = {
 export type ArtworkDimensions = {
   height: string;
   weight: string;
-  length: string;
+  width: string;
 };
 
 export type ArtworkPricing = {
@@ -312,7 +312,7 @@ export type ArtworkUploadStateTypes = {
   rarity: string;
   materials: string;
   height: string;
-  length: string;
+  width: string;
   weight: string;
   price: number;
   usd_price: number;

@@ -588,6 +588,8 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       { upsert: true, new: true, session },
     );
 
+    const limit = getUploadLimitLookup(plan.name, planInterval, false);
+    console.log(limit);
     const subPayload = {
       start_date: nowUTC,
       expiry_date: expiryDate,
@@ -615,7 +617,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
         id: plan.plan_id,
       },
       upload_tracker: {
-        limit: getUploadLimitLookup(plan.name, planInterval, false),
+        limit,
         next_reset_date: expiryDate.toISOString(),
         upload_count: existingSubscription?.upload_tracker?.upload_count ?? 0,
       },

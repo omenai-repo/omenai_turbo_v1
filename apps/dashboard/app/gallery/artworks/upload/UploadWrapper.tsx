@@ -74,7 +74,6 @@ export default function UploadArtwork() {
 
   return (
     <div className="relative">
-      <PageTitle title="Upload an artwork" />
       {!user.gallery_verified && !isConfirmed?.isSubActive && (
         <NoVerificationBlock gallery_name={user.name as string} />
       )}

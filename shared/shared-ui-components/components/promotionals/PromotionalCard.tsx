@@ -18,7 +18,7 @@ export default function PromotionalCard({
     <Link
       href={cta}
       //Kept the shorter desktop height from previous iteration
-      className="group flex h-[500px] w-full flex-col overflow-hidden border border-neutral-100 bg-[#FCFCFA] md:h-[460px] md:flex-row"
+      className="group flex h-[500px] w-full flex-col overflow-hidden border border-neutral-200 bg-[#FCFCFA] md:h-[420px] md:flex-row"
     >
       {/* 1. THE ARTWORK SECTION */}
       {/* Added relative and overflow-hidden to contain the blurred background */}

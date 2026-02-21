@@ -60,17 +60,12 @@ export default function ArtworkTextInput({
   const getUnit = (labelText: string) => {
     const l = labelText.toLowerCase();
     // Check for dimension keywords
-    if (
-      l.includes("length") ||
-      l.includes("height") ||
-      l.includes("width") ||
-      l.includes("depth")
-    ) {
+    if (l.includes("height") || l.includes("width")) {
       return "in";
     }
     // Check for weight
     if (l.includes("weight")) {
-      return "lb";
+      return "lbs";
     }
     return null;
   };
