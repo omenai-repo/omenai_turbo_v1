@@ -27,6 +27,7 @@ import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch
 import { ForbiddenError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { createErrorRollbarReport } from "../../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
+import { getUploadLimitLookup } from "@omenai/shared-utils/src/uploadLimitUtility";
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -68,21 +69,6 @@ const MetadataSchema = z.object({
 /* -------------------------------------------------------------------------- */
 /*                             UPLOAD LIMIT LOOKUP                            */
 /* -------------------------------------------------------------------------- */
-const uploadLimits: Record<PlanName, Record<PlanInterval, number>> = {
-  Basic: { monthly: 5, yearly: 75 },
-  Pro: { monthly: 15, yearly: 225 },
-  Premium: {
-    monthly: Number.MAX_SAFE_INTEGER,
-    yearly: Number.MAX_SAFE_INTEGER,
-  },
-};
-
-function getUploadLimitLookup(
-  planName: PlanName,
-  planInterval: PlanInterval
-): number {
-  return uploadLimits[planName][planInterval];
-}
 
 /* -------------------------------------------------------------------------- */
 /*                                  HELPERS                                   */
@@ -92,7 +78,7 @@ function badRequest(errors: unknown) {
 }
 
 function mapStripeStatusToDomain(
-  status: Stripe.PaymentIntent.Status
+  status: Stripe.PaymentIntent.Status,
 ): "successful" | "processing" | "failed" {
   if (status === "succeeded") return "successful";
   if (status === "processing") return "processing";
@@ -119,7 +105,7 @@ async function retrievePaymentIntent(paymentIntentId: string) {
 
 function resolveMetadata(
   rawMeta: z.infer<typeof MetadataSchema>,
-  pi: Stripe.PaymentIntent
+  pi: Stripe.PaymentIntent,
 ) {
   return {
     plan_id: rawMeta.plan_id ?? rawMeta.planId,
@@ -136,7 +122,7 @@ function resolveMetadata(
 async function checkExistingTransaction(paymentRef: string) {
   return await SubscriptionTransactions.findOne(
     { payment_ref: paymentRef },
-    "status"
+    "status",
   )
     .lean<{ status?: string }>()
     .exec();
@@ -145,7 +131,7 @@ async function checkExistingTransaction(paymentRef: string) {
 function buildTransactionData(
   pi: Stripe.PaymentIntent,
   gallery_id: string,
-  customer: string
+  customer: string,
 ): Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> {
   const amountInUnits = Number(pi.amount) / 100;
   const nowUTC = toUTCDate(new Date());
@@ -165,10 +151,10 @@ function buildUploadTracker(
   planName: PlanName,
   planInterval: PlanInterval,
   expiryDate: Date,
-  existingSubscription: any
+  existingSubscription: any,
 ): UploadTracker {
   return {
-    limit: getUploadLimitLookup(planName, planInterval),
+    limit: getUploadLimitLookup(planName, planInterval, false),
     next_reset_date: expiryDate.toISOString(),
     upload_count: existingSubscription?.upload_tracker?.upload_count ?? 0,
   };
@@ -184,13 +170,13 @@ function buildSubscriptionPayload(
   gallery_id: string,
   plan: any,
   plan_interval: PlanInterval,
-  existingSubscription: any
+  existingSubscription: any,
 ) {
   const uploadTracker = buildUploadTracker(
     plan.name,
     plan_interval,
     expiryDate,
-    existingSubscription
+    existingSubscription,
   );
 
   return {
@@ -233,7 +219,7 @@ async function upsertSubscription(
   customer: string,
   subPayload: any,
   existingSubscription: any,
-  session: ClientSession
+  session: ClientSession,
 ) {
   if (!existingSubscription) {
     await Subscriptions.create([subPayload], { session });
@@ -244,13 +230,13 @@ async function upsertSubscription(
     await Subscriptions.updateOne(
       { stripe_customer_id: customer },
       { $set: { ...subPayload, upload_tracker: subPayload.upload_tracker } },
-      { session }
+      { session },
     );
   } else {
     await Subscriptions.updateOne(
       { stripe_customer_id: customer },
       { $set: subPayload },
-      { session }
+      { session },
     );
   }
 }
@@ -259,7 +245,7 @@ async function processSuccessfulPayment(
   pi: Stripe.PaymentIntent,
   metadata: ReturnType<typeof resolveMetadata>,
   paymentMethod: Stripe.PaymentMethod | null,
-  session: ClientSession
+  session: ClientSession,
 ) {
   const { plan_id, plan_interval, customer, name, email, gallery_id } =
     metadata;
@@ -290,7 +276,7 @@ async function processSuccessfulPayment(
     gallery_id,
     plan,
     plan_interval,
-    existingSubscription
+    existingSubscription,
   );
 
   await upsertSubscription(customer, subPayload, existingSubscription, session);
@@ -298,11 +284,11 @@ async function processSuccessfulPayment(
   await AccountGallery.updateOne(
     { gallery_id },
     { $set: { subscription_status: { type: plan.name, active: true } } },
-    { session }
+    { session },
   );
   await Waitlist.updateOne(
     { entityId: gallery_id, entity: "gallery" },
-    { $set: { discount: null } }
+    { $set: { discount: null } },
   ).session(session);
 }
 
@@ -310,7 +296,7 @@ function getEmailForStatus(
   status: Stripe.PaymentIntent.Status,
   shouldSendSuccess: boolean,
   name: string,
-  email: string
+  email: string,
 ) {
   if (status === "succeeded" && shouldSendSuccess) {
     return () => sendSubscriptionPaymentSuccessfulMail({ name, email });
@@ -323,18 +309,18 @@ function getEmailForStatus(
 
 function getResponseForStatus(
   status: Stripe.PaymentIntent.Status,
-  pi: Stripe.PaymentIntent
+  pi: Stripe.PaymentIntent,
 ) {
   if (status === "succeeded") {
     return NextResponse.json(
       { message: "Payment succeeded and processed", pi },
-      { status: 200 }
+      { status: 200 },
     );
   }
   if (status === "processing") {
     return NextResponse.json(
       { message: "Payment is processing", pi },
-      { status: 200 }
+      { status: 200 },
     );
   }
   return NextResponse.json({ message: "Payment failed", pi }, { status: 400 });
@@ -344,12 +330,12 @@ function getResponseForStatus(
 /*                                  HANDLER                                   */
 /* -------------------------------------------------------------------------- */
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     const isSubscriptionEnabled = (await fetchConfigCatValue(
       "subscription_creation_enabled",
-      "high"
+      "high",
     )) as boolean;
 
     if (!isSubscriptionEnabled)
@@ -368,7 +354,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!pi) {
       return NextResponse.json(
         { message: "PaymentIntent not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -383,7 +369,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!metadata.gallery_id) {
       return NextResponse.json(
         { message: "Missing gallery_id in PaymentIntent metadata" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -392,7 +378,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (existingTxn?.status === "successful") {
       return NextResponse.json(
         { message: "Transaction processed successfully", pi },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -400,7 +386,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const txnData = buildTransactionData(
       pi,
       metadata.gallery_id,
-      metadata.customer
+      metadata.customer,
     );
 
     // Process payment in atomic transaction
@@ -414,7 +400,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       await SubscriptionTransactions.findOneAndUpdate(
         { payment_ref: pi.id },
         { $set: txnData },
-        { upsert: true, new: true, session }
+        { upsert: true, new: true, session },
       );
 
       // Process successful payment
@@ -438,7 +424,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       pi.status,
       shouldSendSuccessEmail,
       metadata.name,
-      metadata.email
+      metadata.email,
     );
     void safeSendEmail(emailFn);
 
@@ -450,11 +436,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     createErrorRollbarReport(
       "subscription: verify stripe subscription charge",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message ?? "Internal error" },
-      { status: error_response?.status ?? 500 }
+      { status: error_response?.status ?? 500 },
     );
   }
 });
