@@ -82,7 +82,7 @@ async function updateShipmentStatus(
 async function triggerShipmentWorkflow(orderId: string): Promise<void> {
   const workflowID = await createWorkflow(
     "/api/workflows/shipment/create_shipment",
-    `test_workflow${generateDigit(2)}`,
+    `create_shipment${generateDigit(2)}`,
     JSON.stringify({ order_id: orderId }),
   );
   if (!workflowID) throw new ServerError("Workflow failed");

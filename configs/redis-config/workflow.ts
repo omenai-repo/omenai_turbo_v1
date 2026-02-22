@@ -6,7 +6,7 @@ const client = new Client({ token: process.env.QSTASH_TOKEN });
 export async function createWorkflow(
   task_route: string,
   workflowRun_id: string,
-  params?: string
+  params?: string,
 ) {
   try {
     const { workflowRunId } = await client.trigger({
@@ -14,7 +14,7 @@ export async function createWorkflow(
       body: params,
       workflowRunId: workflowRun_id,
       headers: { Origin: "https://omenai.app" },
-      retries: 3, // Optional retries for the initial request
+      retries: 3,
     });
 
     return workflowRunId;

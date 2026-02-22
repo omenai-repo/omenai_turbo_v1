@@ -6,11 +6,11 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
-import { SendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendBuyerShipmentSuccessEmail";
-import { SendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendArtistShipmentSuccessEmail";
-import { SendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/SendGalleryShipmentSuccessEmail";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
+import { sendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToGallery";
+import { sendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToArtist";
+import { sendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToBuyer";
 import z from "zod";
 
 const config: CombinedConfig = {
@@ -49,7 +49,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         "Delivery confirmation could not be updated. Please try again",
       );
 
-    await SendBuyerShipmentSuccessEmail({
+    await sendBuyerShipmentSuccessEmail({
       email: order.buyer_details.email,
       name: order.buyer_details.name,
       trackingCode: order_id,
@@ -60,7 +60,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
 
     if (order.seller_designation === "artist") {
-      await SendArtistShipmentSuccessEmail({
+      await sendArtistShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,
@@ -70,7 +70,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         price: formatPrice(order.artwork_data.pricing.usd_price),
       });
     } else {
-      await SendGalleryShipmentSuccessEmail({
+      await sendGalleryShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
         trackingCode: order_id,

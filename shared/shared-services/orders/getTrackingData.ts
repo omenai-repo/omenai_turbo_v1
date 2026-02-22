@@ -14,12 +14,13 @@ export const getTrackingData = async (order_id: string) => {
     return {
       isOk: res.ok,
       message: result.message,
-      events: result.events,
-      coordinates: result.coordinates,
-      order_date: result.order_date,
-      artwork_data: result.artwork_data,
-      tracking_number: result.tracking_number,
-      shipping_details: result.shipping_details,
+      data: result.data,
+      // events: result.events,
+      // coordinates: result.coordinates,
+      // order_date: result.order_date,
+      // artwork_data: result.artwork_data,
+      // tracking_number: result.tracking_number,
+      // shipping_details: result.shipping_details,
     };
   } catch (error: any) {
     logRollbarServerError(error);

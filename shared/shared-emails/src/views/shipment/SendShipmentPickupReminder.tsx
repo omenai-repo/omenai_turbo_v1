@@ -9,16 +9,12 @@ import {
   Section,
   Tailwind,
   Text,
+  Hr,
 } from "@react-email/components";
 import * as React from "react";
 import EmailFooter from "../../components/Footer";
-import {
-  EMAIL_STYLES,
-  COMPANY_INFO,
-  EMAIL_COLORS,
-  EMAIL_SIGNATURES,
-} from "../../constants/constants";
-import EmailArtworkCard from "./EmailArtworkCard";
+import { COMPANY_INFO } from "../../constants/constants";
+import EmailArtworkCard from "../components/EmailArtworkCard";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 interface ShipmentPickupNotificationEmailProps {
@@ -32,6 +28,7 @@ interface ShipmentPickupNotificationEmailProps {
   artworkImage: string;
   artistName: string;
   price: string;
+  email?: string;
 }
 
 export const ShipmentPickupNotificationEmail = ({
@@ -41,26 +38,45 @@ export const ShipmentPickupNotificationEmail = ({
   buyerName,
   pickupAddress,
   daysLeft,
-  estimatedPickupDate = `In the next ${daysLeft} day(s)`,
+  estimatedPickupDate = `Within ${daysLeft} day(s)`,
   artworkImage,
   artistName,
   price,
 }: ShipmentPickupNotificationEmailProps) => {
-  artworkImage = getImageFileView(artworkImage, 400);
+  const optimizedImage = getImageFileView(artworkImage, 400);
+
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .bg-box { background-color: #1f2937 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .advisory-box { background-color: #3f3f46 !important; border-left-color: #d4d4d8 !important; }
+            }
+          `}
+        </style>
+      </Head>
       <Preview>
-        Action Required: Prepare {artwork.title} for courier pickup
+        Dispatch Advisory: Prepare {artwork.title} for scheduled courier pickup.
       </Preview>
       <Tailwind>
-        <Body className="bg-gray-50 font-sans">
+        <Body
+          className="body-bg font-sans bg-gray-50"
+          style={{ margin: "0", padding: "0" }}
+        >
           <Container
-            style={EMAIL_STYLES.container}
-            className="my-10 rounded shadow-sm"
+            className="container-bg bg-white my-10 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "600px" }}
           >
             {/* Header Section */}
-            <Section className="px-8 py-6 text-center border-b border-gray-200">
+            <Section className="px-8 py-8 text-center border-b border-gray-100 border-divider">
               <Img
                 src={COMPANY_INFO.logo}
                 width="140"
@@ -70,153 +86,94 @@ export const ShipmentPickupNotificationEmail = ({
               />
             </Section>
 
-            {/* Urgent Banner */}
-            <Section className="bg-amber-50 px-8 py-4 border-b-4 border-amber-400">
+            {/* Elevated Advisory Banner */}
+            <Section className="bg-box bg-gray-50 px-8 py-5 border-b border-gray-200 border-divider">
               <Text
-                className="text-center font-semibold m-0"
-                style={{ color: EMAIL_COLORS.warning, fontSize: "18px" }}
+                className="heading-main text-center m-0 text-gray-900"
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  letterSpacing: "0.5px",
+                  textTransform: "uppercase",
+                }}
               >
-                📦 Shipment Pickup Schedule Reminder - Action Required
+                Logistics Dispatch Advisory
               </Text>
             </Section>
 
             {/* Main Content */}
             <Section className="px-8 py-8">
-              <Text style={EMAIL_STYLES.text.base}>
-                Dear <strong>{galleryName}</strong> Team,
+              <Text className="text-main text-gray-800" style={textStyle}>
+                Dear <strong>{galleryName}</strong>,
               </Text>
 
-              <Text style={EMAIL_STYLES.text.base}>
-                We're writing to inform you that a shipment request for the
-                following artwork will be created within the next {daysLeft}{" "}
-                day(s). A courier will be scheduled to collect the piece from
-                your gallery address.
+              <Text className="text-main text-gray-800" style={textStyle}>
+                A logistics dispatch has been initiated for your recent sale. A
+                designated premium courier will arrive at your gallery within
+                the next <strong>{daysLeft} day(s)</strong> to securely collect
+                the piece.
               </Text>
 
               <EmailArtworkCard
                 artwork={artwork.title}
-                artworkImage={artworkImage}
+                artworkImage={optimizedImage}
                 artistName={artistName}
                 price={price}
               />
 
-              {/* Order Details */}
-              <Section className="my-8 p-6 bg-gray-50 rounded">
+              {/* Order Details Grid */}
+              <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-200 border-divider">
                 <Text
-                  style={{ ...EMAIL_STYLES.heading.h2, marginBottom: "16px" }}
+                  className="heading-main text-gray-900"
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    marginBottom: "20px",
+                  }}
                 >
-                  Shipment Details
+                  Dispatch Manifest
                 </Text>
 
                 <table
                   className="w-full"
-                  style={{
-                    borderCollapse: "separate",
-                    borderSpacing: "0 12px",
-                  }}
+                  style={{ borderCollapse: "collapse" }}
                 >
-                  <tr>
-                    <td
-                      style={{
-                        paddingRight: "16px",
-                        verticalAlign: "top",
-                        width: "140px",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          fontWeight: "600",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
+                  <tbody>
+                    <tr style={rowStyle}>
+                      <td
+                        style={labelCell}
+                        className="text-muted text-gray-500"
                       >
-                        Order ID:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
+                        Reference ID:
+                      </td>
+                      <td
+                        style={valueCell}
+                        className="text-main text-gray-900 font-medium"
                       >
                         {orderId}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          fontWeight: "600",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
+                      </td>
+                    </tr>
+                    <tr style={rowStyle}>
+                      <td
+                        style={labelCell}
+                        className="text-muted text-gray-500"
                       >
-                        Artwork:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>{artwork.title}</strong> by {artwork.artist}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          fontWeight: "600",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
-                      >
-                        Buyer:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
+                        Collector:
+                      </td>
+                      <td style={valueCell} className="text-main text-gray-900">
                         {buyerName}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          fontWeight: "600",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
+                      </td>
+                    </tr>
+                    <tr style={rowStyle}>
+                      <td
+                        style={labelCell}
+                        className="text-muted text-gray-500"
                       >
-                        Pickup Location:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                          lineHeight: "1.5",
-                        }}
+                        Collection Point:
+                      </td>
+                      <td
+                        style={valueCell}
+                        className="text-main text-gray-900 leading-relaxed"
                       >
                         {pickupAddress.address_line}
                         <br />
@@ -224,242 +181,137 @@ export const ShipmentPickupNotificationEmail = ({
                         {pickupAddress.zip}
                         <br />
                         {pickupAddress.country}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      style={{
-                        paddingRight: "16px",
-                        paddingTop: "8px",
-                        verticalAlign: "top",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          fontWeight: "600",
-                          color: EMAIL_COLORS.warning,
-                        }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{ ...labelCell, paddingTop: "12px" }}
+                        className="text-muted text-gray-500"
                       >
-                        Pickup Timeline:
-                      </Text>
-                    </td>
-                    <td style={{ paddingTop: "8px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          fontWeight: "600",
-                          color: EMAIL_COLORS.warning,
-                        }}
+                        Est. Arrival:
+                      </td>
+                      <td
+                        style={{ ...valueCell, paddingTop: "12px" }}
+                        className="text-main text-gray-900 font-semibold"
                       >
                         {estimatedPickupDate}
-                      </Text>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </Section>
 
               {/* Preparation Checklist */}
-              <Section className="my-8 p-6 bg-blue-50 rounded">
+              <Text
+                className="heading-main text-gray-900"
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  marginTop: "32px",
+                  marginBottom: "16px",
+                }}
+              >
+                Mandatory Preparation Protocol
+              </Text>
+
+              <Section className="mb-8">
                 <Text
-                  style={{
-                    ...EMAIL_STYLES.text.base,
-                    marginBottom: "16px",
-                    fontWeight: "600",
-                  }}
+                  className="text-main text-gray-800"
+                  style={{ ...textStyle, marginBottom: "24px" }}
                 >
-                  ✅ Required Preparation Checklist:
+                  To prevent collection refusal or transit damage, the artwork
+                  must be prepared prior to the courier's arrival:
                 </Text>
 
-                <table style={{ width: "100%" }}>
-                  <tr>
-                    <td
-                      style={{
-                        paddingBottom: "12px",
-                        verticalAlign: "top",
-                        width: "30px",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.success,
-                        }}
-                      >
-                        □
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "12px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Professional Packaging:</strong> Wrap artwork
-                        securely with appropriate protective materials (bubble
-                        wrap, corner protectors, etc.)
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingBottom: "12px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.success,
-                        }}
-                      >
-                        □
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "12px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Outer Crating:</strong> Place in sturdy wooden
-                        crate or heavy-duty cardboard box suitable for artwork
-                        transportation
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingBottom: "12px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.success,
-                        }}
-                      >
-                        □
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "12px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Documentation:</strong> Attach invoice, packing
-                        list, and certificate of authenticity in waterproof
-                        envelope to the outside of package
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingBottom: "12px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.success,
-                        }}
-                      >
-                        □
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "12px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Labeling:</strong> Clearly mark package with
-                        "FRAGILE - ARTWORK" and handling instructions on all
-                        sides
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.success,
-                        }}
-                      >
-                        □
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Photos:</strong> Take photos of the packaged
-                        artwork before pickup for your records
-                      </Text>
-                    </td>
-                  </tr>
-                </table>
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded-md p-4 mb-3">
+                  <Text
+                    className="heading-main text-gray-900 font-semibold m-0 mb-1"
+                    style={{ fontSize: "15px" }}
+                  >
+                    1. Professional Padding
+                  </Text>
+                  <Text
+                    className="text-muted text-gray-600 m-0"
+                    style={{ fontSize: "14px", lineHeight: "1.5" }}
+                  >
+                    Wrap the artwork securely with acid-free materials, bubble
+                    wrap, and structural corner protectors.
+                  </Text>
+                </div>
+
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded-md p-4 mb-3">
+                  <Text
+                    className="heading-main text-gray-900 font-semibold m-0 mb-1"
+                    style={{ fontSize: "15px" }}
+                  >
+                    2. Outer Packing
+                  </Text>
+                  <Text
+                    className="text-muted text-gray-600 m-0 mb-3"
+                    style={{ fontSize: "14px", lineHeight: "1.5" }}
+                  >
+                    Place the padded piece in a heavy-duty double-walled
+                    cardboard box or tube suitable for international transit.
+                  </Text>
+                </div>
+
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded-md p-4 mb-3">
+                  <Text
+                    className="heading-main text-gray-900 font-semibold m-0 mb-1"
+                    style={{ fontSize: "15px" }}
+                  >
+                    3. External Documentation
+                  </Text>
+                  <Text
+                    className="text-muted text-gray-600 m-0"
+                    style={{ fontSize: "14px", lineHeight: "1.5" }}
+                  >
+                    Attach the commercial invoice, packing list, and Certificate
+                    of Authenticity in a clear, waterproof pouch on the package
+                    exterior.
+                  </Text>
+                </div>
               </Section>
 
-              {/* Important Notice */}
-              <Section className="my-6 p-4 bg-amber-50 rounded border-l-4 border-amber-400">
+              {/* Standard Operating Procedure Notice */}
+              <Section className="advisory-box bg-gray-100 rounded-r-lg p-5 border-l-4 border-gray-800 my-8">
                 <Text
-                  style={{
-                    ...EMAIL_STYLES.text.small,
-                    marginBottom: "8px",
-                    color: EMAIL_COLORS.warning,
-                  }}
+                  className="heading-main text-gray-900 font-semibold m-0 mb-2"
+                  style={{ fontSize: "15px" }}
                 >
-                  <strong>⚠️ Important:</strong>
+                  Standard Courier Protocol
                 </Text>
                 <Text
-                  style={{
-                    ...EMAIL_STYLES.text.small,
-                    margin: "0",
-                    color: EMAIL_COLORS.warning,
-                  }}
+                  className="text-main text-gray-700 m-0"
+                  style={{ fontSize: "14px", lineHeight: "1.6" }}
                 >
-                  • The courier will only wait 15 minutes during pickup window
+                  • Couriers are strictly allotted a 15-minute wait window upon
+                  arrival.
                   <br />
-                  • Ensure someone is available to hand over the package
-                  <br />
-                  • Keep the artwork in a secure, easily accessible location
-                  <br />• You will receive tracking information once the
-                  shipment is collected
+                  • An authorized representative must be present to hand over
+                  the manifest and package.
+                  <br />• Your tracking dashboard will update automatically once
+                  the piece is scanned at collection.
                 </Text>
               </Section>
 
-              <Text style={EMAIL_STYLES.text.base}>
-                We will send you a confirmation email with the exact pickup date
-                and time window once the shipment request is finalized. Please
-                ensure the artwork is ready for collection by then.
-              </Text>
+              <Hr
+                className="border-divider border-gray-200"
+                style={{ margin: "32px 0" }}
+              />
 
-              <Text style={EMAIL_STYLES.text.base}>
-                Thank you for your prompt attention to this matter. Your
-                cooperation ensures a smooth delivery experience for our valued
-                collectors.
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                Best regards,
+              <Text
+                className="text-muted text-gray-600"
+                style={{ fontSize: "14px", lineHeight: "1.6" }}
+              >
+                We will send a final confirmation email specifying the exact
+                pickup time window once scheduling is finalized with the
+                carrier.
                 <br />
-                <strong>
-                  {EMAIL_SIGNATURES.default.name}
-                  <br />
-                  Logistics Team, {EMAIL_SIGNATURES.default.company}
+                Warmly,
+                <br />
+                <strong className="heading-main text-gray-900">
+                  Omenai Logistics Team
                 </strong>
               </Text>
             </Section>
@@ -467,14 +319,37 @@ export const ShipmentPickupNotificationEmail = ({
             {/* Reusable Footer */}
             <EmailFooter
               recipientName={galleryName}
-              supportTitle="Need shipping assistance?"
-              supportMessage="Our logistics team is available to help with packaging questions or special requirements. Contact us at"
+              supportTitle="Require logistics assistance?"
+              supportMessage="Our advisory team is available to help with crating guidelines or customs requirements. Contact us at"
             />
           </Container>
         </Body>
       </Tailwind>
     </Html>
   );
+};
+
+// Shared Styles
+const textStyle = {
+  fontSize: "16px",
+  lineHeight: "1.6",
+  marginBottom: "16px",
+};
+
+const labelCell = {
+  width: "130px",
+  paddingBottom: "12px",
+  fontSize: "14px",
+  verticalAlign: "top",
+};
+
+const valueCell = {
+  paddingBottom: "12px",
+  fontSize: "15px",
+  verticalAlign: "top",
+};
+const rowStyle = {
+  borderBottom: "1px solid #f3f4f6",
 };
 
 export default ShipmentPickupNotificationEmail;

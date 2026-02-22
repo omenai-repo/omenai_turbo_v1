@@ -12,16 +12,17 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 export default function Balances({
   available,
   pending,
-  currency,
   withdrawal_account,
+  isPinSet,
 }: {
   available: number;
   pending: number;
-  currency: string;
   withdrawal_account: WithdrawalAccount | null;
+  isPinSet: boolean;
 }) {
   const [showBalance, setShowBalance] = useState(false);
-  const { toggleWithdrawalFormPopup } = artistActionStore();
+  const { toggleWithdrawalFormPopup, toggleWalletPinPopup } =
+    artistActionStore();
 
   const toggleForm = () => {
     if (withdrawal_account === null) {
@@ -102,10 +103,12 @@ export default function Balances({
           </div>
           <div>
             <button
-              onClick={toggleForm}
+              onClick={isPinSet ? toggleForm : () => toggleWalletPinPopup(true)}
               className="px-4 py-2 bg-white text-dark font-light rounded shadow-sm transition-all transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-fluid-xxs"
             >
-              <span className="flex items-center gap-2">Withdraw Funds</span>
+              <span className="flex items-center gap-2">
+                {!isPinSet ? "Create wallet pin" : "Withdraw Funds"}
+              </span>
             </button>
           </div>
         </div>
@@ -177,6 +180,11 @@ export default function Balances({
           </div>
         </div>
       </div>
+      {!isPinSet && (
+        <span className="text-xs text-red-600 italic text-center my-2 block">
+          Wallet pin not configured. Add a pin to enable withdrawals.
+        </span>
+      )}
     </div>
   );
 }

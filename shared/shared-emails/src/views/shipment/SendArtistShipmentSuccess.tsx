@@ -1,110 +1,141 @@
-import { Text, Heading, Link } from "@react-email/components";
+import { Text, Heading, Link, Section, Hr } from "@react-email/components";
 import { dashboard_url } from "@omenai/url-config/src/config";
 import ShipmentLayout from "./ShipmentLayout";
-import EmailArtworkCard from "./EmailArtworkCard";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import EmailArtworkCard from "../components/EmailArtworkCard";
 
-export default function SendArtistShipmentSuccess(
-  trackingCode: string,
-  name: string,
-  artwork: string,
-  artworkImage: string,
-  artistName: string,
-  price: string,
-) {
-  artworkImage = getImageFileView(artworkImage, 400);
+interface SendArtistShipmentSuccessProps {
+  trackingCode: string;
+  name: string;
+  artwork: string;
+  artworkImage: string;
+  artistName: string;
+  price: string;
+}
+
+export default function SendArtistShipmentSuccess({
+  trackingCode,
+  name,
+  artwork,
+  artworkImage,
+  artistName,
+  price,
+}: SendArtistShipmentSuccessProps) {
+  const optimizedImage = getImageFileView(artworkImage, 400);
+
   return (
     <ShipmentLayout
       name={name}
-      preview="Great news! Your artwork has been delivered and funds are available for
-        withdrawal."
+      preview="Your artwork has been delivered. Your funds are now available."
     >
-      <Heading
-        as="h2"
-        style={{
-          color: "#0f172a",
-          fontSize: "24px",
-          marginBottom: "20px",
-        }}
-      >
-        Artwork Delivered Successfully!
-      </Heading>
-
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "16px",
-        }}
-      >
-        Hi {name},
-      </Text>
-
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "16px",
-        }}
-      >
-        Congratulations! Your artwork has been successfully delivered to the
-        buyer.
-      </Text>
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "16px",
-        }}
-      >
-        <strong>Tracking Code : </strong> {trackingCode}
-      </Text>
-      <EmailArtworkCard
-        artwork={artwork}
-        artworkImage={artworkImage}
-        artistName={artistName}
-        price={price}
-      />
-
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "24px",
-        }}
-      >
-        Your earnings from this sale are now available in your account and ready
-        to be withdrawn at any time.
-      </Text>
-
-      <div style={{ textAlign: "center", margin: "30px 0" }}>
-        <Link
-          href={`${dashboard_url()}/artist/app/wallet`}
+      <Section style={{ padding: "10px 0" }}>
+        <Heading
+          as="h2"
           style={{
-            display: "inline-block",
-            backgroundColor: "#10b981",
-            color: "#ffffff",
-            padding: "12px 24px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontSize: "16px",
+            color: "#111827",
+            fontSize: "24px",
+            fontWeight: "600",
+            letterSpacing: "-0.5px",
+            marginBottom: "24px",
+            fontFamily: "Inter, sans-serif",
           }}
         >
-          Withdraw Funds
-        </Link>
-      </div>
+          Your art has arrived.
+        </Heading>
 
-      <Text
-        style={{
-          fontSize: "14px",
-          lineHeight: "1.5",
-          color: "#64748b",
-          marginTop: "24px",
-        }}
-      >
-        Thank you for being part of the Omenai community. We're thrilled to see
-        your art finding new homes!
-      </Text>
+        <Text style={textStyle}>Hi {name},</Text>
+
+        <Text style={textStyle}>
+          The collector has successfully received your piece. Thank you for
+          trusting Omenai to connect your exceptional work with its new home.
+        </Text>
+
+        {/* Stylized Tracking Box */}
+        <Section
+          style={{
+            backgroundColor: "#f9fafb",
+            borderRadius: "8px",
+            padding: "16px",
+            margin: "24px 0",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <Text style={{ ...textStyle, margin: "0", color: "#4b5563" }}>
+            <strong style={{ color: "#111827" }}>Delivery Confirmed:</strong>{" "}
+            {trackingCode}
+          </Text>
+        </Section>
+
+        <EmailArtworkCard
+          artwork={artwork}
+          artworkImage={optimizedImage}
+          artistName={artistName}
+          price={price}
+        />
+
+        <Hr
+          style={{
+            borderColor: "#e5e7eb",
+            margin: "32px 0",
+          }}
+        />
+
+        <Heading
+          as="h3"
+          style={{
+            color: "#111827",
+            fontSize: "18px",
+            fontWeight: "600",
+            marginBottom: "16px",
+          }}
+        >
+          Your funds are ready
+        </Heading>
+
+        <Text style={textStyle}>
+          Your earnings from this sale have been released to your Omenai wallet
+          and are available for immediate withdrawal.
+        </Text>
+
+        <Section style={{ textAlign: "center", margin: "32px 0" }}>
+          <Link
+            href={`${dashboard_url()}/artist/app/wallet`}
+            style={{
+              display: "inline-block",
+              backgroundColor: "#000000",
+              color: "#ffffff",
+              padding: "14px 28px",
+              borderRadius: "6px",
+              textDecoration: "none",
+              fontSize: "15px",
+              fontWeight: "500",
+              letterSpacing: "0.3px",
+            }}
+          >
+            Go to Wallet
+          </Link>
+        </Section>
+
+        <Text
+          style={{
+            fontSize: "13px",
+            lineHeight: "1.6",
+            color: "#6b7280",
+            marginTop: "32px",
+          }}
+        >
+          Thank you for elevating the Omenai community. We look forward to your
+          next masterpiece.
+        </Text>
+      </Section>
     </ShipmentLayout>
   );
 }
+
+// Shared text style for consistency
+const textStyle = {
+  fontSize: "16px",
+  lineHeight: "1.6",
+  color: "#374151",
+  marginBottom: "16px",
+};

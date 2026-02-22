@@ -52,7 +52,7 @@ export default function OrderReceived() {
           Request Initiated.
         </h2>
         <p className="mx-auto mt-2 max-w-xs font-sans text-xs text-neutral-500">
-          A confirmation dossier has been sent to your email.
+          A confirmation mail has been sent to your email.
         </p>
       </div>
 

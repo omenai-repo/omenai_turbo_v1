@@ -215,7 +215,7 @@ async function processSubscriptionSuccess(
           id: planId,
         },
         upload_tracker: {
-          limit: getUploadLimitLookup(plan.name, "monthly", 2),
+          limit: getUploadLimitLookup(plan.name, "monthly", true),
           next_reset_date: expiryDate.toISOString(),
           upload_count: 0,
         },

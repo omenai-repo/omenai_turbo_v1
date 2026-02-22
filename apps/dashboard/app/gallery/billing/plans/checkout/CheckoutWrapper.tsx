@@ -4,9 +4,7 @@ import CheckoutItem from "./components/CheckoutItem";
 import { getSinglePlanData } from "@omenai/shared-services/subscriptions/getSinglePlanData";
 import { useQuery } from "@tanstack/react-query";
 import { notFound, useSearchParams } from "next/navigation";
-import CardChangeCheckoutItem from "./components/CardChangeCheckoutItem";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { loadStripe } from "@stripe/stripe-js";
 import MigrationUpgradeCheckout from "./components/MigrationUpgradeCheckout";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { retrieveSubscriptionDiscount } from "@omenai/shared-services/subscriptions/retriveSubscriptionDiscount";
@@ -18,13 +16,13 @@ export default function SubscriptionCheckout() {
   const interval = searchParams.get("interval");
   const id = searchParams.get("id");
   const action = searchParams.get("action");
-  const charge_type = searchParams.get("charge_type");
+
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   if (!plan_id || !interval || !id || !["monthly", "yearly"].includes(interval))
     notFound();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get_plan_details"],
+    queryKey: ["get_plan_details", plan_id],
     queryFn: async () => {
       const [plan, discount_data] = await Promise.all([
         getSinglePlanData(plan_id),

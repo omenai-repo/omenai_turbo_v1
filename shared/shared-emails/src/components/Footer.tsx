@@ -1,6 +1,6 @@
-import { Section, Text, Row, Column, Img, Link } from "@react-email/components";
+import { Section, Text, Img, Link, Hr } from "@react-email/components";
 import * as React from "react";
-import { EMAIL_STYLES, COMPANY_INFO } from "../constants/constants";
+import { COMPANY_INFO } from "../constants/constants";
 
 interface EmailFooterProps {
   recipientName?: string;
@@ -10,62 +10,135 @@ interface EmailFooterProps {
 }
 
 export const EmailFooter: React.FC<EmailFooterProps> = ({
-  recipientName,
+  recipientName = "Valued Collector",
   showSupportSection = true,
-  supportTitle = "Need assistance?",
-  supportMessage = "Our support team is here to help. Feel free to reach out at",
+  supportTitle = "Client Services",
+  supportMessage = "Our advisory team is available to assist you. Reach out at",
 }) => {
   return (
     <>
+      <style>
+        {`
+          @media (prefers-color-scheme: dark) {
+            .footer-divider { border-color: #374151 !important; }
+            .footer-support-box { background-color: #111827 !important; border-color: #374151 !important; }
+            .footer-text-main { color: #d1d5db !important; }
+            .footer-text-muted { color: #6b7280 !important; }
+            .footer-text-tiny { color: #4b5563 !important; }
+            .footer-link { color: #ffffff !important; text-decoration: underline !important; }
+          }
+        `}
+      </style>
+
       {/* Support Section */}
       {showSupportSection && (
-        <Section className="my-8 mx-8 p-6 bg-gray-50 rounded">
-          <Text style={{ ...EMAIL_STYLES.text.base, marginBottom: "8px" }}>
-            <strong>{supportTitle}</strong>
+        <Section
+          className="footer-support-box"
+          style={{
+            margin: "32px auto 0",
+            padding: "24px",
+            backgroundColor: "#f9fafb",
+            borderRadius: "8px",
+            border: "1px solid #e5e7eb",
+            textAlign: "center",
+            maxWidth: "560px",
+          }}
+        >
+          <Text
+            className="footer-text-main"
+            style={{
+              margin: "0 0 8px 0",
+              fontSize: "15px",
+              fontWeight: "600",
+              color: "#111827",
+              letterSpacing: "0.3px",
+            }}
+          >
+            {supportTitle}
           </Text>
-          <Text style={{ ...EMAIL_STYLES.text.small, marginBottom: "0" }}>
+          <Text
+            className="footer-text-muted"
+            style={{
+              margin: "0",
+              fontSize: "14px",
+              lineHeight: "1.6",
+              color: "#4b5563",
+            }}
+          >
             {supportMessage}{" "}
             <Link
               href={`mailto:${COMPANY_INFO.email}`}
-              style={EMAIL_STYLES.link}
+              className="footer-link"
+              style={{
+                color: "#111827",
+                fontWeight: "500",
+                textDecoration: "none",
+                borderBottom: "1px solid #d1d5db",
+              }}
             >
               {COMPANY_INFO.email}
             </Link>
-            {supportMessage.includes("questions")
-              ? "."
-              : " with any questions or concerns."}
+            .
           </Text>
         </Section>
       )}
 
-      {/* Footer Section */}
-      <Section className="px-8 py-6 bg-gray-50 border-t border-gray-200">
-        <Row>
-          <Column>
-            <Img
-              src={COMPANY_INFO.logo}
-              width="100"
-              height="20"
-              alt={`${COMPANY_INFO.name} logo`}
-              className="mb-4"
-            />
-            <Text style={EMAIL_STYLES.text.small} className="m-0">
-              {COMPANY_INFO.address}
-            </Text>
-            <Text style={EMAIL_STYLES.text.small} className="m-0">
-              {COMPANY_INFO.email}
-            </Text>
-          </Column>
-        </Row>
+      {/* Main Footer & Identity */}
+      <Section style={{ padding: "40px 20px 20px", textAlign: "center" }}>
+        <Img
+          src={COMPANY_INFO.logo}
+          width="120"
+          height="auto"
+          alt={`${COMPANY_INFO.name} Logo`}
+          style={{ margin: "0 auto 24px", display: "block" }}
+        />
+        <Text
+          className="footer-text-muted"
+          style={{
+            margin: "0 0 8px 0",
+            fontSize: "13px",
+            color: "#6b7280",
+            letterSpacing: "0.5px",
+          }}
+        >
+          {COMPANY_INFO.address}
+        </Text>
+        <Text
+          className="footer-text-muted"
+          style={{ margin: "0", fontSize: "13px", color: "#6b7280" }}
+        >
+          {COMPANY_INFO.email}
+        </Text>
       </Section>
 
+      <Hr
+        className="footer-divider"
+        style={{
+          borderColor: "#f3f4f6",
+          margin: "16px auto",
+          width: "100%",
+          maxWidth: "560px",
+        }}
+      />
+
       {/* Legal Notice */}
-      <Section className="px-8 py-4 bg-gray-100">
-        <Text style={EMAIL_STYLES.text.tiny} className="text-center m-0">
-          This email is intended solely for <strong>{recipientName}</strong> and
-          may contain confidential information. If you received this message in
-          error, please notify us immediately and delete it from your system.
-          Unauthorized use or distribution is prohibited.
+      <Section style={{ padding: "0 20px 32px", textAlign: "center" }}>
+        <Text
+          className="footer-text-tiny"
+          style={{
+            margin: "0",
+            fontSize: "11px",
+            lineHeight: "1.6",
+            color: "#9ca3af",
+            maxWidth: "480px",
+            display: "inline-block",
+          }}
+        >
+          This communication is intended securely for{" "}
+          <strong style={{ fontWeight: "500" }}>{recipientName}</strong> and may
+          contain confidential information. If you received this message in
+          error, please notify us immediately. Unauthorized distribution is
+          prohibited.
         </Text>
       </Section>
     </>

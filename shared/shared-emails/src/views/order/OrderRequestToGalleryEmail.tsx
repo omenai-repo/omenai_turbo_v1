@@ -1,13 +1,5 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import {
-  base_url,
-  dashboard_url,
-  getApiUrl,
-} from "@omenai/url-config/src/config";
-import {
-  getImageFileView,
-  getOptimizedImage,
-} from "@omenai/shared-lib/storage/getImageFileView";
+import { base_url, dashboard_url } from "@omenai/url-config/src/config";
 import {
   Body,
   Button,
@@ -23,331 +15,240 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import * as React from "react";
+import EmailFooter from "../../components/Footer";
+import EmailArtworkCard from "../components/EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { COMPANY_INFO } from "../../constants/constants";
 
-const OrderRequestToGalleryMail = (
-  name: string,
-  buyer: string,
-  date: string,
+interface OrderRequestToGalleryMailProps {
+  name: string;
+  buyer: string;
+  date: string;
   artwork_data: Pick<
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
-  >,
-) => {
+  >;
+  email?: string;
+}
+
+export const OrderRequestToGalleryMail = ({
+  name,
+  buyer,
+  date,
+  artwork_data,
+}: OrderRequestToGalleryMailProps) => {
   const url = base_url();
   const dashboard_uri = dashboard_url();
-  const image = getOptimizedImage(artwork_data.url, "thumbnail", 90);
+  const optimizedImage = getImageFileView(artwork_data.url, 400);
+
   return (
     <Html>
-      <Head />
-      <Preview>New order request for {artwork_data.title}</Preview>
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .btn-main { background-color: #ffffff !important; color: #000000 !important; }
+              .bg-box { background-color: #111827 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .advisory-box { background-color: #1f2937 !important; border-left-color: #3b82f6 !important; }
+            }
+          `}
+        </style>
+      </Head>
+      <Preview>
+        New Acquisition Inquiry: A collector is interested in{" "}
+        {artwork_data.title}.
+      </Preview>
       <Tailwind>
-        <Body className="bg-gray-50 font-sans">
-          <Container className="mx-auto my-10 bg-white rounded shadow-sm max-w-[600px]">
-            {/* Header Section */}
-            <Section className="px-8 py-6 text-center border-b border-gray-200">
-              <Img
-                src={
-                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
-                }
-                width="140"
-                height="24"
-                alt="Omenai logo"
-                className="mx-auto"
-              />
-            </Section>
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
+          <Container
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "600px", margin: "40px auto", padding: "24px" }}
+          >
+            <Heading
+              className="heading-main text-gray-900"
+              style={{
+                fontSize: "22px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+              }}
+            >
+              New Order request
+            </Heading>
 
-            {/* Notification Banner */}
-            <Section className="bg-blue-50 px-8 py-4 border-b-4 border-blue-500">
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Hello <strong>{name}</strong>,
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              We are pleased to inform you that a collector has expressed formal
+              interest in acquiring a piece from your listings on Omenai.
+            </Text>
+
+            <EmailArtworkCard
+              artwork={artwork_data.title}
+              artistName={artwork_data.artist}
+              price={`$${artwork_data.pricing.price.toLocaleString()}`}
+              artworkImage={optimizedImage}
+            />
+
+            {/* Acquisition Manifest */}
+            <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-100 border-divider">
               <Text
-                className="text-center font-semibold m-0"
-                style={{ color: "#1e40af", fontSize: "18px" }}
+                className="heading-main text-gray-900"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.8px",
+                }}
               >
-                🎨 New Artwork Order Request
-              </Text>
-            </Section>
-
-            {/* Main Content */}
-            <Section className="px-8 py-8">
-              <Text
-                className="text-base mb-4"
-                style={{ color: "#0f172a", lineHeight: "1.6" }}
-              >
-                Dear <strong>{name}</strong>,
+                Order Manifest
               </Text>
 
-              <Text
-                className="text-base mb-6"
-                style={{ color: "#0f172a", lineHeight: "1.6" }}
-              >
-                Exciting news! A collector has expressed interest in purchasing{" "}
-                <Link
-                  href={`${url}/artwork/${artwork_data.title}`}
-                  style={{ color: "#1e40af", textDecoration: "underline" }}
-                >
-                  {artwork_data.title}
-                </Link>
-                .
-              </Text>
-
-              {/* Artwork Preview Card */}
-              <Section className="my-8 p-6 bg-gray-50 rounded">
-                <div className="text-center">
-                  <Img
-                    src={image}
-                    alt={artwork_data.title}
-                    className="mx-auto rounded shadow-md"
-                    style={{
-                      maxWidth: "280px",
-                      width: "100%",
-                      height: "auto",
-                      maxHeight: "320px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-
-                {/* Order Details */}
-                <table
-                  className="w-full mt-6"
-                  style={{ borderCollapse: "separate", borderSpacing: "0 8px" }}
-                >
-                  <tr>
-                    <td style={{ padding: "8px 0", width: "120px" }}>
-                      <Text
-                        className="text-sm font-semibold m-0"
-                        style={{ color: "#4b5563" }}
-                      >
-                        Artwork:
-                      </Text>
+              <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                <tbody>
+                  <tr style={{ borderBottom: "1px solid #f3f4f6" }}>
+                    <td style={labelCell} className="text-muted text-gray-500">
+                      Interested Buyer:
                     </td>
-                    <td style={{ padding: "8px 0" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#0f172a" }}
-                      >
-                        {artwork_data.title}
-                      </Text>
+                    <td
+                      style={valueCell}
+                      className="text-main text-gray-900 font-medium"
+                    >
+                      {buyer}
                     </td>
                   </tr>
-                  <tr>
-                    <td style={{ padding: "8px 0" }}>
-                      <Text
-                        className="text-sm font-semibold m-0"
-                        style={{ color: "#4b5563" }}
-                      >
-                        Buyer:
-                      </Text>
-                    </td>
-                    <td style={{ padding: "8px 0" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#0f172a" }}
-                      >
-                        {buyer}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ padding: "8px 0" }}>
-                      <Text
-                        className="text-sm font-semibold m-0"
-                        style={{ color: "#4b5563" }}
-                      >
-                        Request Date:
-                      </Text>
-                    </td>
-                    <td style={{ padding: "8px 0" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#0f172a" }}
-                      >
-                        {date}
-                      </Text>
-                    </td>
-                  </tr>
-                </table>
-              </Section>
-
-              {/* CTA Button */}
-              <Section className="text-center my-8">
-                <Link
-                  className="px-8 py-4 rounded font-medium text-white inline-block"
-                  style={{
-                    backgroundColor: "#0f172a",
-                    color: "#ffffff",
-                    textDecoration: "none",
-                  }}
-                  href={`${dashboard_uri}/gallery/orders`}
-                >
-                  Review Order Details
-                </Link>
-              </Section>
-
-              {/* Action Items */}
-              <Section className="my-6 p-6 bg-blue-50 rounded">
-                <Text
-                  className="text-base mb-4 font-semibold"
-                  style={{ color: "#0f172a" }}
-                >
-                  Next steps:
-                </Text>
-                <table style={{ width: "100%" }}>
                   <tr>
                     <td
                       style={{
-                        paddingBottom: "8px",
-                        verticalAlign: "top",
-                        width: "30px",
+                        ...labelCell,
+                        paddingTop: "12px",
+                        borderBottom: "none",
                       }}
+                      className="text-muted text-gray-500"
                     >
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#059669" }}
-                      >
-                        ✓
-                      </Text>
+                      Received Date:
                     </td>
-                    <td style={{ paddingBottom: "8px" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#4b5563", lineHeight: "1.5" }}
-                      >
-                        Review complete order details and buyer information
-                      </Text>
+                    <td
+                      style={{
+                        ...valueCell,
+                        paddingTop: "12px",
+                        borderBottom: "none",
+                      }}
+                      className="text-main text-gray-900"
+                    >
+                      {date}
                     </td>
                   </tr>
-                  <tr>
-                    <td style={{ paddingBottom: "8px", verticalAlign: "top" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#059669" }}
-                      >
-                        ✓
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "8px" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#4b5563", lineHeight: "1.5" }}
-                      >
-                        Accept or decline with a personalized response
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ verticalAlign: "top" }}>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#059669" }}
-                      >
-                        ✓
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        className="text-sm m-0"
-                        style={{ color: "#4b5563", lineHeight: "1.5" }}
-                      >
-                        Provide shipping quote and applicable taxes
-                      </Text>
-                    </td>
-                  </tr>
-                </table>
-              </Section>
+                </tbody>
+              </table>
+            </Section>
 
-              {/* Time Reminder */}
-              <Section className="my-6 p-4 bg-amber-50 rounded border-l-4 border-amber-400">
-                <Text
-                  className="text-sm m-0"
-                  style={{ color: "#92400e", lineHeight: "1.5" }}
+            <Section style={{ textAlign: "center", margin: "32px 0" }}>
+              <Button
+                href={`${dashboard_uri}/gallery/orders`}
+                className="btn-main"
+                style={{
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  fontSize: "15px",
+                  fontWeight: "500",
+                  padding: "16px 36px",
+                  borderRadius: "6px",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  letterSpacing: "0.3px",
+                }}
+              >
+                Review Full Details
+              </Button>
+            </Section>
+
+            {/* Response Timeline Advisory */}
+            <Section className="advisory-box bg-blue-50 rounded-r-lg p-5 border-l-4 border-blue-600 mb-8">
+              <Text
+                className="text-main text-gray-800 m-0"
+                style={{ fontSize: "14px", lineHeight: "1.6" }}
+              >
+                <strong
+                  className="heading-main text-gray-900"
+                  style={{ fontWeight: "600" }}
                 >
-                  <strong>⏰ Time-sensitive:</strong> Please respond within 48
-                  hours to maintain buyer interest and ensure a positive
-                  experience.
-                </Text>
-              </Section>
-
-              <Text
-                className="text-base mb-4"
-                style={{ color: "#0f172a", lineHeight: "1.6" }}
-              >
-                Your prompt response helps build trust with collectors and
-                increases the likelihood of successful sales. We're here to
-                support you throughout the transaction process.
-              </Text>
-
-              <Text
-                className="text-base"
-                style={{ color: "#0f172a", lineHeight: "1.6" }}
-              >
-                Best regards,
-                <br />
-                <strong>Moses from Omenai</strong>
+                  Note:
+                </strong>{" "}
+                To maintain a premium collector experience, we recommend
+                responding with confirmation within 48 hours.
               </Text>
             </Section>
 
-            {/* Support Section */}
-            <Section className="my-8 mx-8 p-6 bg-gray-50 rounded">
-              <Text className="text-base mb-2" style={{ color: "#0f172a" }}>
-                <strong>Need help?</strong>
-              </Text>
-              <Text
-                className="text-sm m-0"
-                style={{ color: "#4b5563", lineHeight: "1.5" }}
-              >
-                Our gallery support team is ready to assist. Contact us at{" "}
-                <Link
-                  href="mailto:support@omenai.app"
-                  style={{ color: "#1e40af", textDecoration: "underline" }}
-                >
-                  support@omenai.app
-                </Link>
-              </Text>
-            </Section>
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Our team is available to assist you with any logistical questions
+              or special handling requirements for this potential placement.
+            </Text>
 
-            {/* Footer Section */}
-            <Section className="px-8 py-6 bg-gray-50 border-t border-gray-200">
-              <Img
-                src={
-                  "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
-                }
-                width="100"
-                height="20"
-                alt="Omenai logo"
-                className="mb-4"
-              />
-              <Text
-                className="text-sm m-0"
-                style={{ color: "#4b5563", lineHeight: "1.5" }}
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
+            >
+              Warmly,
+              <br />
+              <br />
+              <span
+                className="text-muted text-gray-500"
+                style={{ fontSize: "14px" }}
               >
-                123 Main Street Anytown, CA 12345
-              </Text>
-              <Text
-                className="text-sm m-0"
-                style={{ color: "#4b5563", lineHeight: "1.5" }}
-              >
-                support@omenai.app • +123456789
-              </Text>
-            </Section>
+                The Omenai Team,
+              </span>
+            </Text>
 
-            {/* Legal Notice */}
-            <Section className="px-8 py-4 bg-gray-100">
-              <Text
-                className="text-xs text-center m-0"
-                style={{ color: "#4b5563", lineHeight: "1.5" }}
-              >
-                This email is intended solely for <strong>{name}</strong> and
-                may contain confidential information. If you received this
-                message in error, please notify us immediately and delete it
-                from your system. Unauthorized use or distribution is
-                prohibited.
-              </Text>
-            </Section>
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+
+            <EmailFooter
+              recipientName={name}
+              showSupportSection={true}
+              supportTitle="Require assistance?"
+              supportMessage="Our gallery support team is ready to help you finalize this sale. Reach out at"
+            />
           </Container>
         </Body>
       </Tailwind>
     </Html>
   );
+};
+
+// Shared Styles
+const textStyle = {
+  fontSize: "15px",
+  lineHeight: "1.6",
+  margin: "0 0 16px 0",
+};
+
+const labelCell = {
+  width: "140px",
+  paddingBottom: "12px",
+  fontSize: "13px",
+  verticalAlign: "top",
+};
+
+const valueCell = {
+  paddingBottom: "12px",
+  fontSize: "14px",
+  verticalAlign: "top",
 };
 
 export default OrderRequestToGalleryMail;

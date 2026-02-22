@@ -47,6 +47,13 @@ export const sidebarItems: SidebarItem[] = [
     section: "actions",
     key: "support",
   },
+  {
+    label: "Shipments",
+    icon: Headset,
+    href: "/admin/shipments",
+    section: "actions",
+    key: "shipments",
+  },
 
   {
     label: "Artworks",

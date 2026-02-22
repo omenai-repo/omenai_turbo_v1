@@ -4,7 +4,6 @@ import {
   INPUT_CLASS,
   TEXTAREA_CLASS,
 } from "@omenai/shared-ui-components/components/styles/inputClasses";
-import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import React from "react";
 
 export default function TextStep({
@@ -29,9 +28,14 @@ export default function TextStep({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const strippedValue = e.target.value.replace(/^0+/, "");
-
-    updateData(label, strippedValue);
+    if (isExhibitionCount) {
+      const strippedValue = e.target.value.replace(/^0+(\d)/, "$1");
+      if (Number(strippedValue) < 0) return;
+      updateData(label, strippedValue);
+    } else {
+      const strippedValue = e.target.value.replace(/^0+/, "");
+      updateData(label, strippedValue);
+    }
   };
 
   return (

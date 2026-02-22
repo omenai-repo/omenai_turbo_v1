@@ -14,7 +14,7 @@ export const sendSubscriptionPaymentPendingMail = async ({
     prefix: "Omenai subscriptions",
     from: "transactions",
     to: email,
-    subject: "Notfication: Pending Subscription Payment",
-    react: SubscriptionPaymentPendingEmail(name),
+    subject: "Notification: Pending Subscription Payment",
+    react: SubscriptionPaymentPendingEmail({ name }),
   });
 };

@@ -40,7 +40,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       "password",
     );
 
-    if (!account) throw new ServerError("Something went wrong");
+    if (!account)
+      throw new ServerError(
+        "Invalid request. No valid user account found for this request.",
+      );
 
     const check_code_existence = await VerificationCodes.findOne({
       code,

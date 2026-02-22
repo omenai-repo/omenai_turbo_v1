@@ -20,7 +20,7 @@ export function createUploadedArtworkData(
     artist: data.artist,
     dimensions: {
       height: data.height,
-      length: data.length,
+      width: data.width,
       weight: data.weight,
     },
     pricing: {

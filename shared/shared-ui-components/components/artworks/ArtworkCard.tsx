@@ -4,7 +4,7 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import Link from "next/link";
 import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
-import { base_url } from "@omenai/url-config/src/config";
+import { base_url, dashboard_url } from "@omenai/url-config/src/config";
 import FadeUpCard from "../animations/FadeUpCard";
 import { ArtworkMediumTypes } from "@omenai/shared-types";
 import { Download } from "lucide-react";
@@ -16,7 +16,6 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import LikeComponent from "../likes/LikeComponent";
 import ArtistExclusivityCountdown from "./ArtistExclusivityCountdown";
-import { encodeMediumForUrl } from "@omenai/shared-utils/src/encodeMediumUrl";
 import { LoadSmall } from "../loader/Load";
 
 export default function ArtworkCard({
@@ -72,36 +71,6 @@ export default function ArtworkCard({
     [countdown],
   );
 
-  async function deleteUploadArtwork() {
-    setDeleteLoading(true);
-    const deleteArtworkData = await deleteArtwork(art_id, csrf || "");
-
-    if (!deleteArtworkData?.isOk)
-      toast.error("Error notification", {
-        description: deleteArtworkData?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    else {
-      toast.success("Operation successful", {
-        description: deleteArtworkData.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["fetch_artworks_by_id"],
-      });
-      router.replace("/gallery/artworks");
-    }
-    setDeleteLoading(false);
-  }
-
   console.log(expiryDate);
   return (
     <FadeUpCard>
@@ -136,14 +105,14 @@ export default function ArtworkCard({
 
           {/* Floating Actions (Only if available or if you want users to like sold items too) */}
           <div className="absolute top-4 right-4 z-10">
-            {isDashboard && dashboard_type === "gallery" && (
-              <button
-                onClick={deleteUploadArtwork}
-                disabled={deleteLoading}
-                className="bg-white/90 backdrop-blur-sm text-dark rounded-full px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white"
+            {isDashboard && dashboard_type === "gallery" && availability && (
+              <Link
+                href={`${dashboard_url()}/gallery/artworks/edit?id=${art_id}`}
               >
-                {deleteLoading ? <LoadSmall /> : " Delete artwork"}
-              </button>
+                <button className="bg-white/90 backdrop-blur-sm text-dark rounded-md px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white">
+                  Edit artwork
+                </button>
+              </Link>
             )}
           </div>
           {/* Top Right Actions */}
@@ -193,7 +162,7 @@ export default function ArtworkCard({
                 </span>
               ) : (
                 <span className="font-sans text-xs font-medium text-slate-500">
-                  On Request
+                  Price on Request
                 </span>
               )}
             </div>

@@ -172,7 +172,6 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const response = await fetch(url, requestOptions);
 
   const result = await response.json();
-  console.log(result);
 
   if (!response.ok) {
     const error_message = getUserFriendlyError(result.detail);
@@ -244,14 +243,11 @@ export async function calculateShipmentRate(
   };
 
   // 2. CALL DHL DIRECTLY (This bypasses your middleware)
-  const response = await fetch(
-    "https://express.api.dhl.com/mydhlapi/test/rates?strictValidation=true",
-    {
-      method: "POST",
-      headers: getDhlHeaders(),
-      body: JSON.stringify(payload),
-    },
-  );
+  const response = await fetch(RATES_API_URL, {
+    method: "POST",
+    headers: getDhlHeaders(),
+    body: JSON.stringify(payload),
+  });
 
   const data = await response.json();
 
@@ -270,7 +266,6 @@ export async function validateRequestBody<T>(
 ): Promise<T> {
   let body: any;
 
-  // 1. Safe JSON Parsing
   try {
     body = await request.json();
   } catch (error) {
@@ -286,6 +281,8 @@ export async function validateRequestBody<T>(
     const errorMessage = validationResult.error.issues
       .map((e: any) => `${e.path.join(".")}: ${e.message}`)
       .join(", ");
+
+    console.error("Validation Failed:", errorMessage);
 
     throw new BadRequestError(`Validation Failed: ${errorMessage}`);
   }

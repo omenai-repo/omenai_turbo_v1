@@ -81,10 +81,10 @@ export default function Wallet() {
             <Balances
               available={wallet_data?.wallet.available_balance}
               pending={wallet_data?.wallet.pending_balance}
-              currency={wallet_data?.wallet.base_currency}
               withdrawal_account={
                 wallet_data?.wallet.primary_withdrawal_account
               }
+              isPinSet={!!wallet_data?.wallet.wallet_pin}
             />
             <PrimaryWithdrawalAccount
               withdrawal_account={

@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllPlanData } from "@omenai/shared-services/subscriptions/getAllPlanData";
 import PlanWrapper from "./PlanWrapper";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
-import { getApiUrl } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useHighRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFeatureFlag";
 import SubscriptionBillingBlocker from "@omenai/shared-ui-components/components/blockers/payments/SubscriptionDowntimeBlocker";

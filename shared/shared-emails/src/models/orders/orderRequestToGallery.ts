@@ -20,6 +20,6 @@ export const sendOrderRequestToGalleryMail = async ({
     from: "transactions",
     to: email,
     subject: "Notification of order request for Your Artwork",
-    react: OrderRequestToGalleryMail(name, buyer, date, artwork_data),
+    react: OrderRequestToGalleryMail({ name, buyer, date, artwork_data }),
   });
 };

@@ -56,6 +56,7 @@ export default async function proxy(req: NextRequest) {
     'self'
     blob:
     data:
+    https://cdn.jsdelivr.net
     https://cdn.tiny.cloud
     https://sfo.cloud.appwrite.io
     https://fra.cloud.appwrite.io

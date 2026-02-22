@@ -27,7 +27,7 @@ export default function TrackingSearch({
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-10 space-y-4">
-        <div className="inline-flex justify-center items-center p-3 bg-white rounded-2xl shadow-sm border border-slate-100 mb-2">
+        <div className="inline-flex justify-center items-center p-3 bg-white rounded-2xl shadow-sm mb-2">
           <div className="bg-gradient-to-br from-slate-800 to-slate-950 p-2.5 rounded-xl">
             <Package className="w-6 h-6 text-white" />
           </div>
@@ -48,9 +48,8 @@ export default function TrackingSearch({
       <form onSubmit={handleSubmit} className="relative max-w-2xl mx-auto">
         <div className="relative group">
           {/* Glow Effect */}
-          <div className="absolute -inset-1 bg-dark rounded-2xl opacity-50 group-hover:opacity-100 transition duration-500"></div>
 
-          <div className="relative flex items-center bg-white rounded-xl border border-slate-200  transition-all duration-300 overflow-hidden p-1.5">
+          <div className="relative flex items-center ring-slate-400 focus:ring-dark ring-1 outline-none bg-white rounded-xl transition-all duration-300 overflow-hidden p-1.5">
             <div className="pl-4 pr-3 text-slate-400">
               <Search className="w-5 h-5" />
             </div>
@@ -59,7 +58,7 @@ export default function TrackingSearch({
               type="text"
               value={trackingNumber}
               onChange={(e) => setTrackingNumber(e.target.value)}
-              placeholder="Enter Order ID or Tracking Number"
+              placeholder="Enter Order ID"
               className="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 focus:border-none text-slate-900 placeholder:text-slate-400 text-base py-3 px-2 font-medium"
               disabled={isLoading}
             />

@@ -8,6 +8,7 @@ import {
   handleWorkflowError,
   sendShipmentEmailWorkflow,
   SHIPMENT_API_URL,
+  UPS_SHIPMENT_API_URL, // IMPORTED NEW URL
 } from "../utils";
 import {
   NotFoundError,
@@ -27,7 +28,7 @@ import { createErrorRollbarReport } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 /* -------------------------------------------------------------------------- */
-/*                                   TYPES                                    */
+/* TYPES                                   */
 /* -------------------------------------------------------------------------- */
 
 type Payload = {
@@ -46,17 +47,24 @@ type ShipmentAction =
   | "CREATE_SHIPMENT";
 
 /* -------------------------------------------------------------------------- */
-/*                             SHIPMENT API CALL                               */
+/* SHIPMENT API CALL                               */
 /* -------------------------------------------------------------------------- */
 
 async function callShipmentAPI(
-  data: Omit<ShipmentRequestDataTypes, "originCountryCode">,
+  data: Omit<ShipmentRequestDataTypes, "originCountryCode"> & {
+    carrier: string;
+  },
 ): Promise<any> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
+  const apiUrl =
+    data.carrier.split(" ")[0].toUpperCase() === "UPS"
+      ? UPS_SHIPMENT_API_URL
+      : SHIPMENT_API_URL;
+
   try {
-    const response = await fetch(SHIPMENT_API_URL, {
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +88,7 @@ async function callShipmentAPI(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                               WAYBILL HELPERS                               */
+/* WAYBILL HELPERS                                */
 /* -------------------------------------------------------------------------- */
 
 async function finalizeWaybill(orderId: string, pdfBase64: string) {
@@ -90,7 +98,7 @@ async function finalizeWaybill(orderId: string, pdfBase64: string) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                             ORDER STATE HANDLERS                            */
+/* ORDER STATE HANDLERS                             */
 /* -------------------------------------------------------------------------- */
 
 async function cleanupLock(order: OrderWithTimestamps) {
@@ -109,7 +117,10 @@ async function handleCompletedShipment(
 }
 
 async function handleWaybillRecovery(orderId: string) {
-  const cache = await WaybillCache.findOne({ order_id: orderId }, "pdf_base64");
+  const cache = (await WaybillCache.findOne(
+    { order_id: orderId },
+    "pdf_base64",
+  ).lean()) as { pdf_base64: string } | null;
 
   if (!cache) {
     throw new Error("Waybill missing. Contact support.");
@@ -193,33 +204,24 @@ async function scheduleShipment(order: OrderWithTimestamps, client: any) {
     await session.endSession();
   }
 
-  await Promise.all([
-    // sendShipmentScheduledEmail({
-    //   email: order.buyer_details.email,
-    //   name: order.buyer_details.name,
-    //   artwork: order.artwork_data.title,
-    //   artworkImage,
-    //   buyerName: order.buyer_details.name,
-    //   requestDate: order.createdAt,
-    // }),
-    sendShipmentScheduledEmail({
-      email: order.seller_details.email,
-      name: order.seller_details.name,
-      artwork: order.artwork_data.title,
-      artworkImage: order.artwork_data.url,
-      artistname: order.artwork_data.artist,
-      artworkId: order.artwork_data.art_id,
-      price: formatPrice(order.artwork_data.pricing.usd_price),
-    }),
-  ]);
+  await sendShipmentScheduledEmail({
+    email: order.seller_details.email,
+    name: order.seller_details.name,
+    artwork: order.artwork_data.title,
+    artworkImage: order.artwork_data.url,
+    artistname: order.artwork_data.artist,
+    artworkId: order.artwork_data.art_id,
+    price: formatPrice(order.artwork_data.pricing.usd_price),
+  });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                            SHIPMENT CREATION FLOW                           */
+/* SHIPMENT CREATION FLOW                            */
 /* -------------------------------------------------------------------------- */
 
 async function createShipment(order: OrderWithTimestamps, orderId: string) {
   const shipmentData = buildShipmentData(order);
+
   const shipment = await callShipmentAPI(shipmentData);
 
   await ScheduledShipment.deleteOne({ order_id: order.order_id });
@@ -237,8 +239,9 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
         "shipping_details.shipment_information.tracking.id":
           shipment.data.shipmentTrackingNumber,
         "shipping_details.shipment_information.tracking.link": `${tracking_url()}?tracking_id=${shipment.data.shipmentTrackingNumber}`,
-        "shipping_details.shipment_information.estimates":
-          shipment.data.estimatedDeliveryDate,
+        "shipping_details.shipment_information.estimates": {
+          estimatedDeliveryDate: shipment.data.estimatedDeliveryDate,
+        },
         "shipping_details.shipment_information.planned_shipping_date":
           shipment.data.plannedShippingDateAndTime,
         "shipping_details.shipment_information.tracking.delivery_status":
@@ -252,7 +255,7 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
     shipmentData.receiver_data.email,
     shipmentData.seller_details.fullname,
     shipmentData.seller_details.email,
-    shipment.data.shipmentTrackingNumber,
+    order.order_id,
     shipment.data.documents[0].content,
     shipmentData.artwork_name,
     order.artwork_data.url,
@@ -264,19 +267,18 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                  WORKFLOW                                   */
+/* WORKFLOW                                 */
 /* -------------------------------------------------------------------------- */
 
 export const { POST } = serve<Payload>(async (ctx) => {
   const { order_id } = ctx.requestPayload;
 
-  return ctx.run("create_shipment", async () => {
-    const client = await getMongoClient();
-
+  await ctx.run("create_shipment", async () => {
     try {
+      const client = await getMongoClient();
       const order = (await CreateOrder.findOne({
         order_id,
-      })) as OrderWithTimestamps;
+      }).lean()) as OrderWithTimestamps | null;
 
       if (!order) {
         throw new NotFoundError(`Order with order_id ${order_id} not found`);
@@ -287,8 +289,6 @@ export const { POST } = serve<Payload>(async (ctx) => {
       const action = resolveShipmentAction(order);
 
       await executeShipmentAction(action, order, order_id, client);
-
-      return true;
     } catch (error: any) {
       createErrorRollbarReport(
         "Shipment creation workflow — unexpected error",
@@ -296,7 +296,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
         500,
       );
 
-      return handleWorkflowError(error, { order_id });
+      await handleWorkflowError(error, { order_id });
     }
   });
 });

@@ -4,21 +4,16 @@ import {
   Head,
   Html,
   Img,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
-  Button,
+  Link,
+  Hr,
 } from "@react-email/components";
 import * as React from "react";
 import EmailFooter from "../../components/Footer";
-import {
-  EMAIL_STYLES,
-  COMPANY_INFO,
-  EMAIL_COLORS,
-  EMAIL_SIGNATURES,
-} from "../../constants/constants";
+import { COMPANY_INFO } from "../../constants/constants";
 
 interface PaymentFailedEmailProps {
   recipientName: string;
@@ -28,6 +23,7 @@ interface PaymentFailedEmailProps {
   accountUrl?: string;
   lastFourDigits?: string;
   cardType?: string;
+  email?: string;
 }
 
 export const PaymentFailedEmail = ({
@@ -35,25 +31,44 @@ export const PaymentFailedEmail = ({
   subscriptionPlan,
   lastPaymentAttemptDate,
   amountDue,
-  accountUrl = "/account/billing",
+  accountUrl = "https://omenai.com/account/billing",
   lastFourDigits,
   cardType,
 }: PaymentFailedEmailProps) => {
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .bg-box { background-color: #1f2937 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .advisory-box { background-color: #3f3f46 !important; border-left-color: #fbbf24 !important; }
+              .btn-main { background-color: #ffffff !important; color: #000000 !important; }
+            }
+          `}
+        </style>
+      </Head>
       <Preview>
-        Action required: Update your payment method to continue your
-        subscription
+        Action Required: Please update your payment method to maintain your
+        Omenai subscription.
       </Preview>
       <Tailwind>
-        <Body className="bg-gray-50 font-sans">
+        <Body
+          className="body-bg font-sans bg-gray-50"
+          style={{ margin: "0", padding: "0" }}
+        >
           <Container
-            style={EMAIL_STYLES.container}
-            className="my-10 rounded shadow-sm"
+            className="container-bg bg-white my-10 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "600px" }}
           >
             {/* Header Section */}
-            <Section className="px-8 py-6 text-center border-b border-gray-200">
+            <Section className="px-8 py-8 text-center border-b border-gray-100 border-divider">
               <Img
                 src={COMPANY_INFO.logo}
                 width="140"
@@ -63,341 +78,215 @@ export const PaymentFailedEmail = ({
               />
             </Section>
 
-            {/* Alert Banner */}
-            <Section className="bg-red-50 px-8 py-4 border-b-4 border-red-500">
+            {/* Elevated Advisory Banner - Swapped from Red to Amber/Slate */}
+            <Section className="bg-box bg-gray-50 px-8 py-5 border-b border-gray-200 border-divider">
               <Text
-                className="text-center font-semibold m-0"
-                style={{ color: EMAIL_COLORS.error, fontSize: "18px" }}
+                className="heading-main text-center m-0 text-gray-900"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  letterSpacing: "0.5px",
+                  textTransform: "uppercase",
+                }}
               >
-                ⚠️ Payment Failed - Action Required
+                Billing Advisory
               </Text>
             </Section>
 
             {/* Main Content */}
             <Section className="px-8 py-8">
-              <Text style={EMAIL_STYLES.heading.h1}>
-                We couldn't process your payment
+              <Heading
+                as="h2"
+                className="heading-main text-gray-900"
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  letterSpacing: "-0.5px",
+                  marginBottom: "24px",
+                }}
+              >
+                Action Required: Billing Update
+              </Heading>
+
+              <Text className="text-main text-gray-800" style={textStyle}>
+                Hello <strong>{recipientName}</strong>,
               </Text>
 
-              <Text style={EMAIL_STYLES.text.base}>
-                Hi <strong>{recipientName}</strong>,
+              <Text className="text-main text-gray-800" style={textStyle}>
+                We were unable to process the recent charge for your{" "}
+                {COMPANY_INFO.name} subscription. To ensure uninterrupted access
+                to your dashboard and premium features, please update your
+                payment method.
               </Text>
 
-              <Text style={EMAIL_STYLES.text.base}>
-                We were unable to charge your payment method for your{" "}
-                {COMPANY_INFO.name} subscription. To continue enjoying
-                uninterrupted access to our platform, please update your payment
-                information and resubscribe.
-              </Text>
-
-              {/* Payment Details */}
-              <Section className="my-8 p-6 bg-gray-50 rounded">
+              {/* Payment Details Grid */}
+              <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-200 border-divider">
                 <Text
+                  className="heading-main text-gray-900"
                   style={{
-                    ...EMAIL_STYLES.text.base,
-                    marginBottom: "16px",
+                    fontSize: "16px",
                     fontWeight: "600",
+                    marginBottom: "20px",
                   }}
                 >
-                  Payment Details:
+                  Invoice Overview
                 </Text>
 
                 <table
                   className="w-full"
-                  style={{
-                    borderCollapse: "separate",
-                    borderSpacing: "0 12px",
-                  }}
+                  style={{ borderCollapse: "collapse" }}
                 >
-                  <tr>
-                    <td
-                      style={{
-                        paddingRight: "16px",
-                        verticalAlign: "top",
-                        width: "160px",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
+                  <tbody>
+                    <tr style={rowStyle}>
+                      <td
+                        style={labelCell}
+                        className="text-muted text-gray-500"
                       >
-                        Subscription Plan:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                          fontWeight: "600",
-                        }}
+                        Plan:
+                      </td>
+                      <td
+                        style={valueCell}
+                        className="text-main text-gray-900 font-medium"
                       >
                         {subscriptionPlan}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
-                      >
-                        Amount Due:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                          fontWeight: "600",
-                        }}
-                      >
-                        {amountDue}
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingRight: "16px", verticalAlign: "top" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.gray[600],
-                        }}
-                      >
-                        Last Attempt:
-                      </Text>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        {lastPaymentAttemptDate}
-                      </Text>
-                    </td>
-                  </tr>
-                  {lastFourDigits && cardType && (
-                    <tr>
-                      <td
-                        style={{ paddingRight: "16px", verticalAlign: "top" }}
-                      >
-                        <Text
-                          style={{
-                            ...EMAIL_STYLES.text.small,
-                            margin: "0",
-                            color: EMAIL_COLORS.gray[600],
-                          }}
-                        >
-                          Payment Method:
-                        </Text>
-                      </td>
-                      <td>
-                        <Text
-                          style={{
-                            ...EMAIL_STYLES.text.small,
-                            margin: "0",
-                            color: EMAIL_COLORS.primary,
-                          }}
-                        >
-                          {cardType} ending in {lastFourDigits}
-                        </Text>
                       </td>
                     </tr>
-                  )}
+                    <tr style={rowStyle}>
+                      <td
+                        style={labelCell}
+                        className="text-muted text-gray-500"
+                      >
+                        Amount Due:
+                      </td>
+                      <td
+                        style={valueCell}
+                        className="text-main text-gray-900 font-semibold"
+                      >
+                        {amountDue}
+                      </td>
+                    </tr>
+                    <tr style={rowStyle}>
+                      <td
+                        style={labelCell}
+                        className="text-muted text-gray-500"
+                      >
+                        Last Attempt:
+                      </td>
+                      <td style={valueCell} className="text-main text-gray-900">
+                        {lastPaymentAttemptDate}
+                      </td>
+                    </tr>
+                    {lastFourDigits && cardType && (
+                      <tr>
+                        <td
+                          style={{
+                            ...labelCell,
+                            paddingTop: "12px",
+                            borderBottom: "none",
+                          }}
+                          className="text-muted text-gray-500"
+                        >
+                          Method:
+                        </td>
+                        <td
+                          style={{
+                            ...valueCell,
+                            paddingTop: "12px",
+                            borderBottom: "none",
+                          }}
+                          className="text-main text-gray-900"
+                        >
+                          {cardType} ending in •••• {lastFourDigits}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
               </Section>
 
-              {/* Action Steps */}
-              <Section className="my-8 p-6 bg-blue-50 rounded">
+              {/* Suspension Notice */}
+              <Section className="advisory-box bg-amber-50 rounded-r-lg p-5 border-l-4 border-amber-400 mb-8">
                 <Text
-                  style={{
-                    ...EMAIL_STYLES.text.base,
-                    marginBottom: "16px",
-                    fontWeight: "600",
-                  }}
+                  className="text-main text-gray-800 m-0"
+                  style={{ fontSize: "14px", lineHeight: "1.6" }}
                 >
-                  To restore your subscription:
+                  <strong
+                    className="text-gray-900 heading-main"
+                    style={{ fontWeight: "600" }}
+                  >
+                    Please Note:
+                  </strong>{" "}
+                  Your subscription benefits are temporarily paused. Updating
+                  your billing information will immediately restore full access
+                  to your account.
                 </Text>
-
-                <table style={{ width: "100%" }}>
-                  <tr>
-                    <td
-                      style={{
-                        paddingBottom: "12px",
-                        verticalAlign: "top",
-                        width: "40px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "24px",
-                          height: "24px",
-                          borderRadius: "50%",
-                          backgroundColor: EMAIL_COLORS.link,
-                          color: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "12px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        1
-                      </div>
-                    </td>
-                    <td style={{ paddingBottom: "12px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Update your payment method</strong> in your
-                        account settings
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingBottom: "12px", verticalAlign: "top" }}>
-                      <div
-                        style={{
-                          width: "24px",
-                          height: "24px",
-                          borderRadius: "50%",
-                          backgroundColor: EMAIL_COLORS.link,
-                          color: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "12px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        2
-                      </div>
-                    </td>
-                    <td style={{ paddingBottom: "12px" }}>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Resubscribe</strong> to your preferred plan
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ verticalAlign: "top" }}>
-                      <div
-                        style={{
-                          width: "24px",
-                          height: "24px",
-                          borderRadius: "50%",
-                          backgroundColor: EMAIL_COLORS.link,
-                          color: "white",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "12px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        3
-                      </div>
-                    </td>
-                    <td>
-                      <Text
-                        style={{
-                          ...EMAIL_STYLES.text.small,
-                          margin: "0",
-                          color: EMAIL_COLORS.primary,
-                        }}
-                      >
-                        <strong>Continue enjoying</strong> all premium features
-                      </Text>
-                    </td>
-                  </tr>
-                </table>
               </Section>
 
-              {/* CTA Button */}
-              <Section className="text-center my-8">
-                <Button
+              {/* Centralized CTA */}
+              <Section style={{ textAlign: "center", margin: "32px 0" }}>
+                <Link
                   href={accountUrl}
+                  className="btn-main"
                   style={{
-                    ...EMAIL_STYLES.button.primary,
-                    backgroundColor: EMAIL_COLORS.error,
+                    display: "inline-block",
+                    backgroundColor: "#000000",
+                    color: "#ffffff",
+                    padding: "14px 32px",
+                    borderRadius: "6px",
+                    textDecoration: "none",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    letterSpacing: "0.3px",
                   }}
                 >
-                  Update Payment Method
-                </Button>
+                  Manage Billing Settings
+                </Link>
               </Section>
 
-              {/* Warning Notice */}
-              <Section className="my-6 p-4 bg-amber-50 rounded border-l-4 border-amber-400">
-                <Text
-                  style={{
-                    ...EMAIL_STYLES.text.small,
-                    marginBottom: "0",
-                    color: EMAIL_COLORS.warning,
-                  }}
-                >
-                  <strong>Note:</strong> Your subscription benefits have been
-                  temporarily suspended. Update your payment method soon to
-                  avoid losing access to your account data and premium features.
-                </Text>
-              </Section>
+              <Hr
+                className="border-divider border-gray-200"
+                style={{ margin: "32px 0" }}
+              />
 
-              {/* Common Issues */}
+              {/* Troubleshooting Context */}
               <Text
+                className="text-main text-gray-900"
                 style={{
-                  ...EMAIL_STYLES.text.small,
-                  marginBottom: "8px",
-                  color: EMAIL_COLORS.gray[600],
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginBottom: "12px",
                 }}
               >
-                <strong>Common reasons for payment failure:</strong>
+                Common reasons for payment failure:
               </Text>
               <Text
+                className="text-muted text-gray-600"
                 style={{
-                  ...EMAIL_STYLES.text.small,
-                  marginBottom: "16px",
-                  color: EMAIL_COLORS.gray[600],
+                  fontSize: "14px",
+                  lineHeight: "1.6",
+                  margin: "0 0 24px 0",
                 }}
               >
-                • Insufficient funds • Expired card • Card limit reached • Bank
-                security hold
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                We value having you as part of the {COMPANY_INFO.name} community
-                and hope to resolve this quickly. If you need assistance or have
-                decided not to continue your subscription, please let us know.
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                Best regards,
+                • Insufficient funds or card limit reached
                 <br />
-                <strong>
-                  {EMAIL_SIGNATURES.default.name}
-                  <br />
-                  Billing Team, {EMAIL_SIGNATURES.default.company}
+                • Expired credit card details
+                <br />• Bank security holds on automated or international
+                charges
+              </Text>
+
+              <Text
+                className="text-muted text-gray-600"
+                style={{ fontSize: "14px", lineHeight: "1.6" }}
+              >
+                We highly value your presence in the Omenai community. If you
+                require assistance or wish to discuss your subscription, please
+                do not hesitate to reach out.
+                <br />
+                <br />
+                Warmly,
+                <br />
+                <strong className="heading-main text-gray-900">
+                  The Omenai Billing Team
                 </strong>
               </Text>
             </Section>
@@ -405,8 +294,8 @@ export const PaymentFailedEmail = ({
             {/* Reusable Footer */}
             <EmailFooter
               recipientName={recipientName}
-              supportTitle="Having trouble updating your payment?"
-              supportMessage="Our billing support team is here to help. Contact us at"
+              supportTitle="Having trouble with your payment?"
+              supportMessage="Our client services team is ready to assist you. Contact us at"
             />
           </Container>
         </Body>
@@ -414,5 +303,36 @@ export const PaymentFailedEmail = ({
     </Html>
   );
 };
+
+// Shared Styles
+const textStyle = {
+  fontSize: "16px",
+  lineHeight: "1.6",
+  marginBottom: "16px",
+};
+
+const labelCell = {
+  width: "120px",
+  paddingBottom: "12px",
+  fontSize: "14px",
+  verticalAlign: "top",
+};
+
+const valueCell = {
+  paddingBottom: "12px",
+  fontSize: "15px",
+  verticalAlign: "top",
+};
+
+const rowStyle = {
+  borderBottom: "1px solid #f3f4f6",
+};
+
+// For React Email Heading component if not globally imported
+const Heading = ({ as: Tag = "h1", style, className, children }: any) => (
+  <Tag style={style} className={className}>
+    {children}
+  </Tag>
+);
 
 export default PaymentFailedEmail;

@@ -20,7 +20,6 @@ import { redis } from "@omenai/upstash-config";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
-import { ArtworkMedium } from "@omenai/shared-lib/algorithms/priceGenerator";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -37,6 +36,11 @@ const UploadSchema = z.object({
     shouldShowPrice: z.string(),
     currency: z.string(),
   }),
+  dimensions: z.object({
+    height: z.string(),
+    width: z.string(),
+    weight: z.string().optional(),
+  }),
   materials: z.string(),
   medium: z.string(),
   year: z.number(),
@@ -51,11 +55,6 @@ const UploadSchema = z.object({
   role_access: z.object({
     role: z.string(),
     designation: z.string().nullable(),
-  }),
-  dimensions: z.object({
-    height: z.string(),
-    length: z.string(),
-    weight: z.string(),
   }),
 });
 

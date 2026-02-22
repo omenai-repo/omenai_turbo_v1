@@ -13,8 +13,8 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
     availability: { type: Boolean, default: () => true },
     dimensions: {
       height: { type: String, required: true },
-      weight: { type: String, required: true },
-      length: { type: String, required: true },
+      weight: { type: String, required: false },
+      width: { type: String, required: true },
     },
     pricing: {
       price: { type: Number, required: true },

@@ -18,6 +18,6 @@ export const sendOrderRequestReceivedMail = async ({
     from: "transactions",
     to: email,
     subject: "Acknowledgement of order request",
-    react: OrderRequestReceivedEmail(name, artwork_data, orderId),
+    react: OrderRequestReceivedEmail({ name, artwork: artwork_data, orderId }),
   });
 };

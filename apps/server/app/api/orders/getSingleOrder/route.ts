@@ -7,18 +7,18 @@ import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_mid
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
-const GetSingleOrderSchema = z.object({
+export const GetSingleOrderSchema = z.object({
   order_id: z.string().min(1),
 });
 export const POST = withRateLimit(lenientRateLimit)(async function POST(
   request: Request,
 ) {
   try {
-    await connectMongoDB();
     const { order_id } = await validateRequestBody(
       request,
       GetSingleOrderSchema,
     );
+    await connectMongoDB();
 
     const order = await CreateOrder.findOne({ order_id }).lean();
 

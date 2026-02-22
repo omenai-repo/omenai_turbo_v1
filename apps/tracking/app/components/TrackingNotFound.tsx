@@ -41,7 +41,7 @@ export default function TrackingNotFound({
           <ul className="space-y-3">
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0"></span>
-              The carrier hasn't scanned the package yet (wait 24h).
+              The carrier hasn't scanned the package yet (wait 24 to 48h).
             </li>
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0"></span>
@@ -49,7 +49,7 @@ export default function TrackingNotFound({
             </li>
             <li className="flex items-start gap-3 text-sm text-slate-600">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0"></span>
-              The order was just placed and is being packed.
+              The order was just placed and is being prepared for shipment.
             </li>
           </ul>
         </div>

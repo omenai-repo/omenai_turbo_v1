@@ -1,26 +1,16 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-
-import { currencies } from "@omenai/shared-json/src/currency_select";
-
-import { toast } from "sonner";
-
-import { updateArtworkPrice } from "@omenai/shared-services/artworks/updateArtworkPrice";
+import React, { FormEvent, useState } from "react";
+import { updateArtwork } from "@omenai/shared-services/artworks/updateArtwork";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
-import { getCurrencyConversion } from "@omenai/shared-services/exchange_rate/getCurrencyConversion";
-import {
-  ArtworkSchemaTypes,
-  ArtworkPriceFilterData,
-} from "@omenai/shared-types";
+import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
-import { getCurrencySymbol } from "@omenai/shared-utils/src/getCurrencySymbol";
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import {
-  INPUT_CLASS,
-  SELECT_CLASS,
+  TEXTAREA_CLASS,
+  BUTTON_CLASS,
 } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 export default function EditArtworkWrapper({
@@ -31,297 +21,150 @@ export default function EditArtworkWrapper({
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
-  const [data, setData] = useState({
-    price: "",
-    currency: "",
-    usd_price: "",
-    shouldShowPrice: "",
-  });
+  const [description, setDescription] = useState(
+    artwork.artwork_description ?? "",
+  );
 
-  const { csrf, user } = useAuth({ requiredRole: "gallery" });
-
-  const handleChange = async (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = event.target;
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    if (name === "currency") {
-      setData((prevData) => ({
-        ...prevData,
-        price: "",
-        usd_price: "",
-      }));
-    }
-
-    if (name === "price") {
-      const conversion_value = await getCurrencyConversion(
-        data.currency.toUpperCase(),
-        +value,
-        csrf || "",
-      );
-
-      if (!conversion_value?.isOk)
-        toast.error("Error notification", {
-          description: "Unable to retrieve exchange rate value at this time.",
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      else {
-        setData((prevData) => ({
-          ...prevData,
-          usd_price: conversion_value.data.toString(),
-        }));
-      }
-    }
-  };
-
+  const { csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
-    if (Object.values(data).some((value) => value === "")) {
-      setLoading(false);
-      toast.error("Error notification", {
-        description: "Invalid field inputs",
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    } else {
-      const filter: ArtworkPriceFilterData = {
-        "pricing.price": +data.price,
-        "pricing.usd_price": +data.usd_price,
-        "pricing.shouldShowPrice": data.shouldShowPrice,
-        "pricing.currency": data.currency,
-      };
 
-      const update = await updateArtworkPrice(
-        filter,
+    if (description.trim() === "") {
+      toast_notif("Please fill in the description field to proceed", "error");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const update = await updateArtwork(
+        { artwork_description: description },
         artwork.art_id,
         csrf || "",
       );
 
-      if (!update?.isOk)
-        toast.error("Error notification", {
-          description: update?.message,
-          style: {
-            background: "red",
-            color: "white",
-          },
-          className: "class",
-        });
-      else {
-        toast.success("Operation successful", {
-          description: update.message,
-          style: {
-            background: "green",
-            color: "white",
-          },
-          className: "class",
-        });
+      if (!update?.isOk) {
+        toast_notif(update.message, "error");
+      } else {
+        toast_notif(update.message, "success");
         queryClient.invalidateQueries({ queryKey: ["fetch_artworks_by_id"] });
         router.replace("/gallery/artworks");
       }
+    } catch (error) {
+      toast_notif(
+        "An error occurred. Please try again or contact support",
+        "error",
+      );
+    } finally {
       setLoading(false);
     }
   }
 
   async function deleteUploadArtwork() {
-    setDeleteLoading(true);
-    const deleteArtworkData = await deleteArtwork(artwork.art_id, csrf || "");
+    // Added a safeguard confirmation so users don't accidentally delete art
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this artwork? This action cannot be undone.",
+    );
+    if (!confirmed) return;
 
-    if (!deleteArtworkData?.isOk)
-      toast.error("Error notification", {
-        description: deleteArtworkData?.message,
-        style: {
-          background: "red",
-          color: "white",
-        },
-        className: "class",
-      });
-    else {
-      toast.success("Operation successful", {
-        description: deleteArtworkData.message,
-        style: {
-          background: "green",
-          color: "white",
-        },
-        className: "class",
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["fetch_artworks_by_id"],
-      });
-      router.replace("/gallery/artworks");
+    setDeleteLoading(true);
+    try {
+      const deleteArtworkData = await deleteArtwork(artwork.art_id, csrf || "");
+
+      if (!deleteArtworkData?.isOk) {
+        toast_notif(deleteArtworkData.message, "error");
+      } else {
+        toast_notif(deleteArtworkData.message, "success");
+        queryClient.invalidateQueries({ queryKey: ["fetch_artworks_by_id"] });
+        router.replace("/gallery/artworks");
+      }
+    } catch (error) {
+      toast_notif(
+        "An error occurred. Please try again or contact support",
+        "error",
+      );
+    } finally {
+      setDeleteLoading(false);
     }
-    setDeleteLoading(false);
   }
 
-  const currency_symbol = getCurrencySymbol(data.currency);
-  const usd_symbol = getCurrencySymbol("USD");
-
   return (
-    <div className="mt-5">
-      <div className="w-full py-3 bg-white">
-        <h1 className="text-fluid-base font-semibold text-dark">
-          Update artwork pricing
+    <div className="mx-auto mt-8 max-w-3xl space-y-8 px-4 pb-12">
+      {/* Page Header */}
+      <div className="pb-5">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+          Edit Artwork
         </h1>
+        <p className="mt-2 text-sm text-slate-500">
+          Update the details of your artwork or remove it from your gallery.
+        </p>
       </div>
 
-      <div className="grid lg:grid-cols-2 mt-2 gap-5 items-center justify-center">
-        <form className="w-full flex flex-col gap-y-4" onSubmit={handleSubmit}>
-          <div className=" flex flex-col w-full">
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor={"currency"}
-                className="text-dark font-light text-fluid-xxs"
-              >
-                Currency
-              </label>
-              <select
-                onChange={handleChange}
-                name="currency"
-                required={true}
-                className={SELECT_CLASS}
-              >
-                <option value="">Select</option>
-                <>
-                  {currencies!.map((item, index) => {
-                    return (
-                      <option
-                        key={item.code}
-                        value={item.code}
-                        className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
-                      >
-                        {item.name}
-                      </option>
-                    );
-                  })}
-                </>
-              </select>
-            </div>
-          </div>
-          <div className="flex flex-col space-y-1 items-center">
-            <div className="flex flex-col w-full">
-              <label
-                htmlFor={"price"}
-                className="text-dark font-light text-fluid-xxs"
-              >
-                Price
-              </label>
-              <input
-                name="price"
-                type="string"
-                value={data.price}
-                required={true}
-                disabled={data.currency === ""}
-                placeholder={"Enter price in your preferred currency"}
-                onChange={handleChange}
-                className={INPUT_CLASS}
-              />
-            </div>
+      {/* Main Edit Form Card */}
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+          <h2 className="text-base font-medium text-slate-800">
+            Artwork Description
+          </h2>
+        </div>
 
-            <div className="w-full text-fluid-xxs my-4">
-              {data.currency !== "" &&
-                data.price !== "" &&
-                data.usd_price !== "" && (
-                  <span className=" text-dark font-light">
-                    Exchange rate:{" "}
-                    {`${formatPrice(
-                      +data.price,
-                      currency_symbol,
-                    )} = ${formatPrice(+data.usd_price, usd_symbol)}`}
-                  </span>
-                )}
-
-              <p className="font-semibold text-fluid-xxs mt-1 text-red-600">
-                Please note: To ensure consistent pricing across the platform,
-                all uploaded prices will be displayed in US Dollar equivalents.
-              </p>
-            </div>
-          </div>
-          {/* Should show price */}
-          <div className="flex flex-col gap-1">
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="space-y-4">
             <label
-              htmlFor={"shouldShowPrice"}
-              className="text-dark font-light text-fluid-xxs"
+              htmlFor="description"
+              className="block text-sm font-medium text-slate-700"
             >
-              Display price value
+              Description details
             </label>
-            <select
-              onChange={handleChange}
-              name="shouldShowPrice"
-              required={true}
-              disabled={
-                user.subscription_status.type === null ||
-                ["basic", "pro"].includes(
-                  user.subscription_status.type.toLowerCase(),
-                )
-              }
-              className={SELECT_CLASS}
-            >
-              <option
-                value={
-                  user.subscription_status.type !== null &&
-                  ["basic", "pro"].includes(
-                    user.subscription_status.type.toLowerCase(),
-                  )
-                    ? "Yes"
-                    : ""
-                }
-              >
-                {user.subscription_status.type !== null &&
-                ["basic", "pro"].includes(
-                  user.subscription_status.type.toLowerCase(),
-                )
-                  ? "Yes"
-                  : "Select"}
-              </option>
-              <option
-                value="Yes"
-                className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
-              >
-                Yes
-              </option>
-              <option
-                value="No"
-                className="px-3 py-5 my-5 font-light text-fluid-xxs text-dark"
-              >
-                No
-              </option>
-            </select>
+            <textarea
+              name="description"
+              id="description"
+              rows={6}
+              value={description}
+              placeholder="Tell the story behind this piece..."
+              onChange={(e) => setDescription(e.target.value)}
+              // Appending to your existing class to ensure it looks pristine
+              className={`${TEXTAREA_CLASS} w-full resize-y p-4 text-sm leading-relaxed focus:outline-none text-slate-800 transition-colors focus:border-dark focus:ring-dark`}
+            />
           </div>
 
-          <div className="w-full mt-5">
+          <div className="mt-8 flex justify-end">
             <button
-              disabled={loading}
+              disabled={
+                loading || description.trim() === artwork.artwork_description
+              }
               type="submit"
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
+              className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded-md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}
             >
-              {loading ? <LoadSmall /> : " Update pricing details"}
+              {loading ? <LoadSmall /> : "Save Changes"}
             </button>
           </div>
+        </form>
+      </div>
 
-          <div className="w-full">
+      {/* Danger Zone Card */}
+      <div className="overflow-hidden rounded-xl border border-red-200 bg-red-50/30">
+        <div className="px-6 py-6 sm:flex sm:items-center sm:justify-between">
+          <div className="sm:pr-8">
+            <h3 className="text-base font-medium text-red-800">Danger Zone</h3>
+            <p className="mt-1 text-sm text-red-600/80">
+              Permanently delete this artwork from your gallery. This action
+              cannot be undone and will remove the piece from all public
+              listings.
+            </p>
+          </div>
+          <div className="mt-4 sm:ml-4 sm:mt-0 sm:shrink-0">
             <button
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-red-600 hover:bg-red-500 text-white text-fluid-xxs font-light"
+              className="inline-flex min-w-[140px] items-center justify-center rounded-md border border-red-200 bg-white px-6 py-2.5 text-sm font-medium text-red-600 shadow-sm transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {deleteLoading ? <LoadSmall /> : " Delete ths artwork"}
+              {deleteLoading ? <LoadSmall /> : "Delete Artwork"}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

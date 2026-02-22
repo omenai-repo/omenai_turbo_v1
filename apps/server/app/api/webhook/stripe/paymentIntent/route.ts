@@ -45,10 +45,8 @@ import {
   record_tax_transaction,
 } from "../../../util";
 import { rollbarServerInstance } from "@omenai/rollbar-config";
-import { redis } from "@omenai/upstash-config";
 import { NextResponse } from "next/server";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
-import { retry } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -590,6 +588,8 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       { upsert: true, new: true, session },
     );
 
+    const limit = getUploadLimitLookup(plan.name, planInterval, false);
+    console.log(limit);
     const subPayload = {
       start_date: nowUTC,
       expiry_date: expiryDate,
@@ -617,7 +617,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
         id: plan.plan_id,
       },
       upload_tracker: {
-        limit: getUploadLimitLookup(plan.name, planInterval),
+        limit,
         next_reset_date: expiryDate.toISOString(),
         upload_count: existingSubscription?.upload_tracker?.upload_count ?? 0,
       },
@@ -631,7 +631,15 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
 
     await AccountGallery.updateOne(
       { gallery_id: meta.gallery_id },
-      { $set: { subscription_status: { type: plan.name, active: true } } },
+      {
+        $set: {
+          subscription_status: {
+            type: plan.name,
+            active: true,
+            discount: { active: false, plan: null },
+          },
+        },
+      },
       { session },
     );
 

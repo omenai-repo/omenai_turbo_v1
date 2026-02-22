@@ -1,38 +1,7 @@
-import { storage } from "@omenai/appwrite-config/appwrite";
+import { serverStorage } from "@omenai/appwrite-config/appwrite";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-
-export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
-
-export const uploadWaybillDocument = async (file: File) => {
-  if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
-  try {
-    const fileUploaded = await storage.createFile({
-      bucketId: process.env.NEXT_PUBLIC_APPWRITE_DOCUMENTATION_BUCKET_ID!,
-      fileId: ID.unique(),
-      file,
-    });
-
-    if (fileUploaded) return fileUploaded;
-  } catch (error) {
-    throw new Error("Appwrite Exception: Something went wrong on Appwrite");
-  }
-};
-
-export default uploadWaybillDocument;
-
-export async function handleWorkflowError(error: any, payload: Payload) {
-  const error_response = handleErrorEdgeCases(error);
-  await saveFailedJob({
-    jobId: payload.order_id,
-    jobType: "create_shipment",
-    payload,
-    reason: error_response.message,
-  });
-  throw new Error("RetryableError: " + error_response.message);
-}
-
 import { Buffer } from "buffer";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import {
@@ -49,12 +18,57 @@ import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSche
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { WaybillCache } from "@omenai/shared-models/models/orders/OrderWaybillCache";
 
-export const base64ToPDF = (
+export const SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_shipment`;
+// NEW: Define UPS URL
+export const UPS_SHIPMENT_API_URL = `${getApiUrl()}/api/shipment/create_ups_shipment`;
+
+export const uploadWaybillDocument = async (file: File) => {
+  if (!file) throw new Error("WAYBILL DOC ERROR: No File was provided");
+  try {
+    const fileUploaded = await serverStorage.createFile({
+      bucketId: process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!,
+      fileId: ID.unique(),
+      file,
+    });
+
+    if (fileUploaded) return fileUploaded;
+  } catch (error) {
+    throw new Error("Appwrite Exception: Something went wrong on Appwrite");
+  }
+};
+
+export async function handleWorkflowError(error: any, payload: Payload) {
+  const error_response = handleErrorEdgeCases(error);
+  await saveFailedJob({
+    jobId: payload.order_id,
+    jobType: "create_shipment",
+    payload,
+    reason: error_response.message,
+  });
+  throw new Error("RetryableError: " + error_response.message);
+}
+
+export const base64ToFile = (
   base64: string,
-  filename = "waybilldoc.pdf",
+  filenamePrefix = "waybilldoc",
 ): File => {
   const byteArray = Buffer.from(base64, "base64");
-  return new File([byteArray], filename, { type: "application/pdf" });
+
+  // Default to PDF
+  let type = "application/pdf";
+  let extension = "pdf";
+
+  if (base64.startsWith("R0lGOD")) {
+    type = "image/gif";
+    extension = "gif";
+  } else if (base64.startsWith("JVBERi")) {
+    type = "application/pdf";
+    extension = "pdf";
+  }
+
+  const filename = `${filenamePrefix}.${extension}`;
+
+  return new File([byteArray], filename, { type });
 };
 
 let mongoClient: any;
@@ -66,9 +80,53 @@ export async function getMongoClient() {
   return mongoClient;
 }
 
+export async function handleWaybillUpload(
+  waybillBase64: string,
+  orderId: string,
+): Promise<string> {
+  const waybillFile = base64ToFile(
+    waybillBase64,
+    `waybilldoc_${generateAlphaDigit(6)}`,
+  );
+
+  const uploadedDoc = await uploadWaybillDocument(waybillFile);
+
+  if (!uploadedDoc) {
+    throw new ServerError("Waybill document upload failed on Appwrite");
+  }
+
+  const endpoint =
+    process.env.APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1";
+  const projectId = process.env.APPWRITE_CLIENT_ID!;
+  const bucketId = process.env.APPWRITE_DOCUMENTATION_BUCKET_ID!;
+  const fileId = uploadedDoc.$id;
+
+  // Construct the raw URL string
+
+  const waybillDocLink = `${endpoint}/storage/buckets/${bucketId}/files/${fileId}/view?project=${projectId}&mode=admin`;
+
+  const updateResult = await CreateOrder.updateOne(
+    { order_id: orderId },
+    {
+      $set: {
+        "shipping_details.shipment_information.waybill_document":
+          waybillDocLink,
+      },
+    },
+  );
+
+  if (updateResult.modifiedCount === 0) {
+    throw new Error("Unable to update order waybill document");
+  }
+
+  await WaybillCache.deleteOne({ order_id: orderId });
+  return waybillDocLink;
+}
+
+// UPDATE: Added carrier to return type
 export function buildShipmentData(
   order: CreateOrderModelTypes & { createdAt: string; updatedAt: string },
-): Omit<ShipmentRequestDataTypes, "originCountryCode"> {
+): Omit<ShipmentRequestDataTypes, "originCountryCode"> & { carrier: string } {
   return {
     specialInstructions:
       order.shipping_details.additional_information ??
@@ -91,48 +149,10 @@ export function buildShipmentData(
     },
     invoice_number: `OMENAI-INV-${order.order_id}`,
     artwork_price: Number(order.artwork_data.pricing.usd_price),
+    carrier: order.shipping_details.shipment_information.carrier,
   };
 }
 
-// Utility function to upload waybill document and update the order
-export async function handleWaybillUpload(
-  waybillBase64: string,
-  orderId: string,
-): Promise<string> {
-  const waybillFile = base64ToPDF(
-    waybillBase64,
-    `waybilldoc_${generateAlphaDigit(6)}.pdf`,
-  );
-  const uploadedDoc = await uploadWaybillDocument(waybillFile);
-
-  if (!uploadedDoc) {
-    throw new ServerError("Waybill document upload failed on Appwrite");
-  }
-
-  const waybillDocLink = storage.getFileView({
-    bucketId: uploadedDoc.bucketId,
-    fileId: uploadedDoc.$id,
-  });
-
-  const updateResult = await CreateOrder.updateOne(
-    { order_id: orderId },
-    {
-      $set: {
-        "shipping_details.shipment_information.waybill_document":
-          waybillDocLink,
-      },
-    },
-  );
-
-  if (updateResult.modifiedCount === 0) {
-    throw new Error("Unable to update order waybill document");
-  }
-
-  await WaybillCache.deleteOne({ order_id: orderId });
-  return waybillDocLink;
-}
-
-// Utility function to create a workflow for sending shipment emails
 export async function sendShipmentEmailWorkflow(
   buyerName: string,
   buyerEmail: string,

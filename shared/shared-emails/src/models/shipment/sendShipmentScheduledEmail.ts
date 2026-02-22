@@ -23,13 +23,13 @@ export const sendShipmentScheduledEmail = async ({
     from: "orders",
     to: email,
     subject: "Shipment created - Prepare for pickup",
-    react: SendShipmentScheduled(
+    react: SendShipmentScheduled({
       name,
       artworkId,
       artwork,
       artworkImage,
-      artistname,
-      price
-    ),
+      artistName: artistname,
+      price,
+    }),
   });
 };
