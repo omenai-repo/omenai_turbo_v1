@@ -15,6 +15,6 @@ export const sendSubscriptionPaymentFailedMail = async ({
     from: "transactions",
     to: email,
     subject: "Notification: Failed Subscription Payment Attempt",
-    react: SubscriptionPaymentFailedMail(name),
+    react: SubscriptionPaymentFailedMail({ name }),
   });
 };

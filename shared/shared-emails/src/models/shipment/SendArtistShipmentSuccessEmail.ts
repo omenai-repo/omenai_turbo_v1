@@ -9,7 +9,7 @@ type EmailData = {
   artistName: string;
   price: string;
 };
-export const SendArtistShipmentSuccessEmail = async ({
+export const sendArtistShipmentSuccessEmail = async ({
   name,
   email,
   trackingCode,
@@ -23,13 +23,13 @@ export const SendArtistShipmentSuccessEmail = async ({
     from: "orders",
     to: email,
     subject: "Your Shipment Was Successfully Delivered.",
-    react: SendArtistShipmentSuccess(
+    react: SendArtistShipmentSuccess({
       trackingCode,
       name,
       artwork,
       artworkImage,
       artistName,
-      price
-    ),
+      price,
+    }),
   });
 };

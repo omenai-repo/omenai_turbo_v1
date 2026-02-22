@@ -171,8 +171,8 @@ async function processOrder(order: any, dbConnection: any) {
               trackingCode: order.order_id,
               artworkImage: order.artwork_data.url,
               artwork: order.artwork_data.title,
-              buyerName: order.buyer_details.name,
-              requestDate: order.createdAt,
+              artistName: order.artwork_data.artist,
+              price: order.artwork_data.pricing.usd_price,
             });
           }
         }

@@ -37,7 +37,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
         artistName: payload.artistName,
         artwork: payload.artwork,
         artworkImage: payload.artworkImage,
-        artworkPrice: formatPrice(payload.artworkPrice),
+        price: formatPrice(payload.artworkPrice),
       }),
     ]);
   });
