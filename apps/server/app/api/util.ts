@@ -363,7 +363,7 @@ export async function getShipmentRates(params: ShipmentRateRequestTypes) {
 
   const account_to_use =
     originCountryCode === destinationCountryCode
-      ? OMENAI_INC_DHL_EXPRESS_EXPORT_ACCOUNT
+      ? OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT
       : OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT;
 
   const url = new URL(RATES_API_URL);
@@ -394,6 +394,11 @@ export async function getShipmentRates(params: ShipmentRateRequestTypes) {
   // 4. Handle Upstream Errors
   if (!response.ok) {
     const error_message = getUserFriendlyError(data.detail);
+    console.error("DHL API Error:", {
+      status: response.status,
+      message: error_message,
+      raw: data.detail,
+    });
     // Instead of returning JSON, we throw a typed error
     throw new DhlProviderError(error_message, data.status || 500, data);
   }
