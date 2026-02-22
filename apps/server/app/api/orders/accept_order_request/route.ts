@@ -45,7 +45,7 @@ const calculate_taxes = async (
   order_id: string,
 ): Promise<{ taxes: number; tax_calculation_id: string }> => {
   if (
-    origin_address.countryCode.toLowerCase() !== "us" &&
+    origin_address.countryCode.toLowerCase() !== "us" ||
     destination_address.countryCode.toLowerCase() !== "us"
   ) {
     return { taxes: 0, tax_calculation_id: "" };
@@ -240,9 +240,6 @@ async function getShippingRate(
     // UPS ROUTE
     // ----------------------
     if (carrier === "UPS") {
-      // getUPSRates handles the API call and returns a normalized object
-      // matching { chargeable_price_in_usd, productName, productCode }
-      // It also handles Metric -> Imperial conversion internally
       const upsRate = await getUPSRates(origin, destination, dimensions);
       return upsRate;
     }
