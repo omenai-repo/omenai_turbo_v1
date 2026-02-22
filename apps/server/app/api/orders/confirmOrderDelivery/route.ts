@@ -8,9 +8,9 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import { sendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendGalleryShipmentSuccessEmail";
-import { sendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendArtistShipmentSuccessEmail";
-import { sendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendBuyerShipmentSuccessEmail";
+import { sendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToGallery";
+import { sendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToArtist";
+import { sendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToBuyer";
 import z from "zod";
 
 const config: CombinedConfig = {
