@@ -13,7 +13,6 @@
     "@omenai/package-provider": "*",
     "@omenai/rollbar-config": "*",
     "@omenai/shared-auth": "*",
-    "@omenai/shared-emails": "*",
     "@omenai/shared-hooks": "*",
     "@omenai/shared-json": "*",
     "@omenai/shared-lib": "*",
@@ -22,7 +21,8 @@
     "@omenai/shared-utils": "*",
     "@omenai/typescript-config": "*",
     "@omenai/upstash-config": "*",
-    "@omenai/next-security-headers": "*"
+    "@omenai/next-security-headers": "*",
+    "@omenai/shared-emails": "*"
   },
   "dependencies": {
     "cors": "^2.8.5",
