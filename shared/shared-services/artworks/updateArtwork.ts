@@ -2,14 +2,14 @@ import { logRollbarServerError } from "@omenai/rollbar-config";
 import { ArtworkPriceFilterData } from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 
-export async function updateArtworkPrice(
-  filter: ArtworkPriceFilterData,
+export async function updateArtwork(
+  filter: Record<string, any>,
   art_id: string,
-  token: string
+  token: string,
 ) {
   try {
     const url = getApiUrl();
-    const res = await fetch(`${url}/api/artworks/updateArtworkPrice`, {
+    const res = await fetch(`${url}/api/artworks/updateArtwork`, {
       method: "POST",
       body: JSON.stringify({ filter, art_id }),
       headers: {

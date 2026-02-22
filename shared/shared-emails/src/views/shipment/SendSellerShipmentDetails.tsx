@@ -61,22 +61,78 @@ export default function SellerShipmentEmail(
           <Text
             style={{
               fontSize: "16px",
-              lineHeight: "1.5",
+              lineHeight: "1.6",
               marginBottom: "16px",
             }}
           >
-            Please make sure the artwork is securely packaged and ready for
-            pickup. We’ve attached a <strong>waybill document</strong> to this
-            email — kindly print it and attach it to the package before pickup.{" "}
-            <strong>
-              Also kindly attach the certificate of authenticity to the package
-              or hand this over to the courier to ensure smooth{" "}
-            </strong>
-            delivery.
+            Please carefully follow the instructions below to prepare your
+            shipment:
           </Text>
-          <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-            If you have any questions or concerns, feel free to contact our
-            customer care team anytime.
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              marginBottom: "12px",
+            }}
+          >
+            <strong>1. Print All Attached Documents</strong>
+            <br />
+            This email includes your shipping documents in a single PDF file.
+            Please print the entire document.
+          </Text>
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              marginBottom: "12px",
+            }}
+          >
+            <strong>2. Attach the Shipping Label</strong>
+            <br />
+            The first page is the shipping label. Securely attach this to the
+            outside of the package where it is clearly visible.
+          </Text>
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              marginBottom: "12px",
+            }}
+          >
+            <strong>
+              3. Attach the Commercial Invoice (Important for Customs)
+            </strong>
+            <br />
+            Print three (3) copies of the commercial invoice and place them in a
+            clear pouch on the outside of the package. DO NOT PLACE CUSTOMS
+            DOCUMENTS INSIDE THE PACKAGE.
+          </Text>
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              marginBottom: "12px",
+            }}
+          >
+            <strong>4. Include the Certificate of Authenticity</strong>
+            <br />
+            Attach the certificate of authenticity securely to the package or
+            hand it directly to the courier at pickup.
+          </Text>
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              marginBottom: "16px",
+            }}
+          >
+            Ensure the artwork is securely packaged and ready before the courier
+            arrives. Shipments without proper documentation may be delayed.
           </Text>
           <Text style={{ marginTop: "40px", fontSize: "16px" }}>
             Best regards,

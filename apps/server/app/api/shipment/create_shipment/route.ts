@@ -214,7 +214,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
               price: artwork_price,
               quantity: {
                 value: 1,
-                unitOfMeasurement: "BOX",
+                unitOfMeasurement: "PCS",
               },
 
               exportReasonType: "permanent",
@@ -240,7 +240,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           typeCode: "email",
           receiverId: receiver_data.email,
           languageCode: "eng",
-          languageCountryCode: "UK",
+          languageCountryCode: "US",
           bespokeMessage:
             "Shipment notification for your artwork purchased on Omenai",
         },

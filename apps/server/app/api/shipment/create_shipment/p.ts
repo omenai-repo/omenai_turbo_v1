@@ -1,4 +1,4 @@
-export const testDhlShipmentP = {
+export const testDhlShipmentPayload = {
   specialInstructions:
     "Handle with extreme care, fragile canvas artwork. Please call on arrival.",
   artwork_name: "Ethereal Echoes",

@@ -9,10 +9,11 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import { redis } from "@omenai/upstash-config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
-  allowedRoles: ["artist", "gallery"],
+  allowedRoles: ["gallery"],
 };
 
 const UpdateArtworkDataSchema = z.object({
@@ -38,6 +39,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function PUT(
         "Request could not be completed at this time. Please contact support",
       );
 
+    await redis.del(`artwork:${data.art_id}`);
     return NextResponse.json(
       {
         message: "Successfully updated artwork data",
