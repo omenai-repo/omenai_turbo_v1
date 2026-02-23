@@ -38,7 +38,7 @@ const adminAccountSchema = new Schema<AccountAdminSchemaTypes>(
     },
     access_role: {
       type: String,
-      enum: ["Admin", "Owner", "Editor", "Viewer"],
+      enum: ["Admin", "Owner", "Editor", "Viewer", "Principal"],
       required: true,
     },
     admin_active: {
@@ -50,7 +50,7 @@ const adminAccountSchema = new Schema<AccountAdminSchemaTypes>(
       default: "",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const AccountAdmin =

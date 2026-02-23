@@ -779,7 +779,12 @@ export type AccountAdminSchemaTypes = {
   joinedAt: string | Date;
 };
 
-export type AdminAccessRoleTypes = "Admin" | "Owner" | "Editor" | "Viewer";
+export type AdminAccessRoleTypes =
+  | "Admin"
+  | "Owner"
+  | "Principal"
+  | "Editor"
+  | "Viewer";
 
 export type FLWDirectChargeDataTypes = CardInputTypes & {
   card: string;

@@ -115,7 +115,6 @@ function QuoteFormContent({
   const [forceCustomToggle, setForceCustomToggle] = useState(0);
 
   // 3. Computed Values & Math
-  // 3. Computed Values & Math
   const artDims = useMemo(() => {
     const dims = order_data.artwork_data?.dimensions;
     if (!dims) return { length: 0, height: 0 };

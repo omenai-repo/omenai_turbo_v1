@@ -8,6 +8,9 @@ import {
   validateRequestBody,
 } from "../../../util";
 import z from "zod";
+import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { CombinedConfig } from "@omenai/shared-types";
 
 const SupportPatchGetIdSchema = z.object({
   ticketId: z.string().min(1).trim(),
@@ -16,8 +19,16 @@ const SupportPatchSchema = z.object({
   status: z.string().min(1),
   priority: z.string(),
 });
+
+const config: CombinedConfig = {
+  ...strictRateLimit,
+  allowedRoles: ["admin"],
+  allowedAdminAccessRoles: ["Admin", "Owner", "Principal"],
+};
 // PATCH: Update Status or Priority
-export async function PATCH(req: Request) {
+export const PATCH = withRateLimitHighlightAndCsrf(config)(async function PATCH(
+  req: Request,
+) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -57,4 +68,4 @@ export async function PATCH(req: Request) {
       { status: error_response?.status },
     );
   }
-}
+});

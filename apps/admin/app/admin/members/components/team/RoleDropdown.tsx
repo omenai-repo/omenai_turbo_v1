@@ -4,7 +4,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { TeamMember } from "@omenai/shared-types";
 import { useQueryClient } from "@tanstack/react-query";
-import { Eye, Shield, UserRoundCog, UserRoundPen } from "lucide-react";
+import { Eye, Key, Shield, UserRoundCog, UserRoundPen } from "lucide-react";
 import { useState } from "react";
 import { editMemberRole } from "@omenai/shared-services/admin/edit_member_role";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
@@ -45,11 +45,12 @@ const roleOptions: RoleOption[] = [
     label: "Owner",
     icon: <UserRoundCog size={20} absoluteStrokeWidth />,
   },
+  { value: "Principal", label: "Principal", icon: <Key size={16} /> },
 ];
 
 function getEditableRoleOptions(
   currentRole: TeamMember["access_role"],
-  userRole: TeamMember["access_role"]
+  userRole: TeamMember["access_role"],
 ): RoleOption[] {
   if (userRole !== "Owner" && userRole !== "Admin") {
     return roleOptions.filter((option) => option.value === currentRole);
@@ -104,7 +105,7 @@ export default function RoleDropdown({
         const response = await editMemberRole(
           member_id,
           pendingRole,
-          csrf || ""
+          csrf || "",
         );
 
         if (!response.isOk) {
