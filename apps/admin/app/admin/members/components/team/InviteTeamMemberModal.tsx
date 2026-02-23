@@ -10,7 +10,15 @@ import {
   Text,
   Alert,
 } from "@mantine/core";
-import { Shield, UserRoundPen, Eye, Send, Info } from "lucide-react";
+import {
+  Shield,
+  UserRoundPen,
+  Eye,
+  Send,
+  Info,
+  UserRound,
+  Key,
+} from "lucide-react";
 import { TeamMember } from "@omenai/shared-types";
 import { inviteNewMember } from "@omenai/shared-services/admin/invite_new_member";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -27,13 +35,12 @@ const ROLE_OPTIONS = [
   { value: "Admin", label: "Admin", icon: <Shield size={16} /> },
   { value: "Editor", label: "Editor", icon: <UserRoundPen size={16} /> },
   { value: "Viewer", label: "Viewer", icon: <Eye size={16} /> },
+  { value: "Principal", label: "Principal", icon: <Key size={16} /> },
 ];
-
-const ALLOWED_DOMAIN = ["omenai.net", "omenai.app"];
 
 function isValidOrgEmail(email: string) {
   const [_, domain] = email.split("@");
-  return ALLOWED_DOMAIN.includes(domain?.toLowerCase());
+  // return ALLOWED_DOMAIN.includes(domain?.toLowerCase());
 }
 
 export default function InviteTeamMemberModal({
@@ -76,7 +83,7 @@ export default function InviteTeamMemberModal({
 
       toast_notif(response.message, "success");
       await queryClient.invalidateQueries({
-        queryKey: ["fetch_all_teamMembers"],
+        queryKey: ["fetch_all_team_members"],
       });
 
       resetAndClose();
@@ -105,7 +112,7 @@ export default function InviteTeamMemberModal({
 
         <TextInput
           label="Work email"
-          placeholder={`name@${ALLOWED_DOMAIN}`}
+          placeholder={`name@omenai.net`}
           value={email}
           onChange={(e) => setEmail(e.currentTarget.value)}
           radius="md"

@@ -75,7 +75,7 @@ export default function TermsAndSubmitSection({
         disabled={isDisabled}
         className={`
           ${BUTTON_CLASS} 
-          w-full py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all duration-300 flex items-center justify-center gap-2
+          w-full py-3.5 text-sm font-bold tracking-wide rounded-xl transition-all duration-300 grid place-items-center
           ${
             isDisabled && !loading
               ? "bg-slate-100 text-slate-400 border border-slate-200 shadow-none cursor-not-allowed"
