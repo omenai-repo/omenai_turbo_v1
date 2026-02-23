@@ -41,7 +41,7 @@ export default function DeleteConfirmationModal({
 
       toast_notif(response.message, "success");
       await queryClient.invalidateQueries({
-        queryKey: ["fetch_all_teamMembers"],
+        queryKey: ["fetch_all_team_members"],
       });
 
       onClose();

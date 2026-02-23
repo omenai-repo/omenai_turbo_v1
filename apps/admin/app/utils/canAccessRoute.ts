@@ -17,7 +17,7 @@ const routePermissionsMap = new Map<string, TeamMember["access_role"][]>([
   ["taxes", ["Owner"]],
   ["editorials", ["Owner", "Admin", "Editor", "Principal"]],
   ["promotionals", ["Owner", "Admin", "Editor", "Principal"]],
-  ["team", ["Owner", "Admin", "Principal"]],
+  ["team", ["Owner", "Admin"]],
   ["settings", ["Owner", "Admin", "Editor", "Principal"]],
   ["logout", ["Owner", "Admin", "Editor", "Principal"]],
   ["analytics", ["Owner", "Admin"]],
