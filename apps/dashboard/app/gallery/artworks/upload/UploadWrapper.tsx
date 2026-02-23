@@ -46,7 +46,9 @@ export default function UploadArtwork() {
           isSubmitted: response.details_submitted,
           id: acc.data.connected_account_id,
           isSubActive: sub_check?.data?.status === "active",
-          isPremium: sub_check?.data?.plan_details.type === "premium" || false,
+          isPremium:
+            sub_check?.data?.plan_details.type.toLowerCase() === "premium" ||
+            false,
         };
       } catch (error) {
         if (error instanceof Error) {

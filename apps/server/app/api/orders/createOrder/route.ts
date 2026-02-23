@@ -169,7 +169,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const seller_country = sellerData.address.countryCode;
     const buyer_country = shipping_address.countryCode;
     const carrier: OrderShippingDetailsTypes["shipment_information"]["carrier"] =
-      seller_country === "US" && buyer_country === "US" ? "UPS" : "DHL";
+      (seller_country.toLowerCase() === "us" &&
+        buyer_country.toLowerCase() === "is") ||
+      (seller_country.toLowerCase() === "ng" &&
+        buyer_country.toLowerCase() === "ng")
+        ? "UPS"
+        : "DHL";
 
     // Create order
     const createOrder: CreateOrderModelTypes = await CreateOrder.create({

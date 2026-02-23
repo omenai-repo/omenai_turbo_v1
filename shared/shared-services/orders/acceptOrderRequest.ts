@@ -10,7 +10,7 @@ export const acceptOrderRequest = async (
   dimensions: ShipmentDimensions,
   exhibition_status: OrderArtworkExhibitionStatus | null,
   token: string,
-  specialInstructions?: string
+  specialInstructions?: string,
 ) => {
   const url = getApiUrl();
   try {
