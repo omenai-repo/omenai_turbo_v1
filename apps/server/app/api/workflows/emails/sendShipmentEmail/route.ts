@@ -10,6 +10,8 @@ type Payload = {
   sellerName: string;
   sellerEmail: string;
   trackingCode: string;
+  externalTrackingCode: string;
+  courier: string;
   fileContent: string;
   artwork: string;
   artworkImage: string;
@@ -34,6 +36,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
         name: payload.buyerName,
         email: payload.buyerEmail,
         trackingCode: payload.trackingCode,
+        externalTrackingCode: payload.externalTrackingCode,
+        courier: payload.courier,
         artistName: payload.artistName,
         artwork: payload.artwork,
         artworkImage: payload.artworkImage,

@@ -13,6 +13,7 @@ import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmen
 import { redis } from "@omenai/upstash-config";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PDFDocument } from "pdf-lib";
+import { Jimp } from "jimp";
 
 // ----------------------------------------------------------------------
 // CONFIGURATION & CONSTANTS
@@ -96,7 +97,7 @@ async function getUPSAccessToken(): Promise<string> {
 }
 
 // ----------------------------------------------------------------------
-// HELPERS
+// HELPERS & SMART ROUTER
 // ----------------------------------------------------------------------
 
 async function sendPickupFailedEmailWorkflow(
@@ -117,15 +118,6 @@ async function sendPickupFailedEmailWorkflow(
   );
 }
 
-function convertToImperial(dimensions: ShipmentDimensions): ShipmentDimensions {
-  return {
-    weight: Number((dimensions.weight * 2.20462).toFixed(2)),
-    length: Number((dimensions.length / 2.54).toFixed(2)),
-    width: Number((dimensions.width / 2.54).toFixed(2)),
-    height: Number((dimensions.height / 2.54).toFixed(2)),
-  };
-}
-
 function mapServiceCodeToName(code: string): string {
   const map: Record<string, string> = {
     "03": "Ground",
@@ -134,6 +126,35 @@ function mapServiceCodeToName(code: string): string {
     "12": "3 Day Select",
   };
   return map[code] || `Service ${code}`;
+}
+
+function formatUPSPackageData(
+  metricDimensions: ShipmentDimensions,
+  countryCode: string,
+) {
+  const isUS = countryCode.toUpperCase() === "US";
+
+  if (isUS) {
+    // US ORIGIN: Convert Metric (CM/KG) to Imperial (IN/LBS)
+    return {
+      weight: String(Number((metricDimensions.weight * 2.20462).toFixed(2))),
+      length: String(Number((metricDimensions.length / 2.54).toFixed(2))),
+      width: String(Number((metricDimensions.width / 2.54).toFixed(2))),
+      height: String(Number((metricDimensions.height / 2.54).toFixed(2))),
+      dimCode: "IN",
+      weightCode: "LBS",
+    };
+  } else {
+    // NG / GLOBAL ORIGIN: Keep the frontend's Metric numbers
+    return {
+      weight: String(metricDimensions.weight),
+      length: String(metricDimensions.length),
+      width: String(metricDimensions.width),
+      height: String(metricDimensions.height),
+      dimCode: "CM",
+      weightCode: "KGS",
+    };
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -146,21 +167,19 @@ export async function getUPSRates(
   metricDimensions: ShipmentDimensions,
 ): Promise<NormalizedRate> {
   const token = await getUPSAccessToken();
-  const dimensions = convertToImperial(metricDimensions);
+
+  // Run the frontend's metric data through our smart routing layer
+  const packageData = formatUPSPackageData(
+    metricDimensions,
+    origin.countryCode,
+  );
 
   const payload = {
     RateRequest: {
-      Request: {
-        TransactionReference: { CustomerContext: "OmenaiRate" },
-      },
-      PickupType: {
-        Code: "06",
-        Description: "One Time Pickup",
-      },
+      Request: { TransactionReference: { CustomerContext: "OmenaiRate" } },
+      PickupType: { Code: "06", Description: "One Time Pickup" },
       Shipment: {
-        // 1. Shipper = Omenai (Account Holder)
         Shipper: OMENAI_SHIPPER_DETAILS,
-        // 2. ShipFrom = Seller (Physical Origin)
         ShipFrom: {
           Name: "Seller Origin",
           Address: {
@@ -171,7 +190,6 @@ export async function getUPSRates(
             CountryCode: origin.countryCode,
           },
         },
-        // 3. ShipTo = Buyer
         ShipTo: {
           Name: "Buyer Destination",
           Address: {
@@ -185,14 +203,14 @@ export async function getUPSRates(
         Package: {
           PackagingType: { Code: "02", Description: "Package" },
           Dimensions: {
-            UnitOfMeasurement: { Code: "IN" },
-            Length: String(dimensions.length),
-            Width: String(dimensions.width),
-            Height: String(dimensions.height),
+            UnitOfMeasurement: { Code: packageData.dimCode },
+            Length: packageData.length,
+            Width: packageData.width,
+            Height: packageData.height,
           },
           PackageWeight: {
-            UnitOfMeasurement: { Code: "LBS" },
-            Weight: String(dimensions.weight),
+            UnitOfMeasurement: { Code: packageData.weightCode },
+            Weight: packageData.weight,
           },
         },
       },
@@ -200,7 +218,6 @@ export async function getUPSRates(
   };
 
   try {
-    // UPDATED: requestOption as query param
     const response = await fetch(
       `${UPS_BASE_URL}/api/rating/${UPS_VERSION}/Shop?requestOption=Shop`,
       {
@@ -265,29 +282,29 @@ function mapToPickupServiceCode(shipmentCode: string): string {
     "14": "014", // Next Day Air Early
     "65": "065", // Saver
   };
-  // Default to "003" (Ground) if unknown, to prevent crashes
   return map[shipmentCode] || "003";
 }
+
 export async function scheduleUPSPickup(
   data: ShipmentRequestDataTypes,
-  dimensions: ShipmentDimensions,
+  rawDimensions: ShipmentDimensions,
 ) {
   const token = await getUPSAccessToken();
-  const nextBusinessDate = await getFutureShipmentDate(1, false, "US");
+  const originCountry = data.seller_details.address.countryCode;
+  const nextBusinessDate = await getFutureShipmentDate(1, false, originCountry);
   const pickupDate = nextBusinessDate.replace(/-/g, "");
 
+  const packageData = formatUPSPackageData(rawDimensions, originCountry);
   const pickupServiceCode = mapToPickupServiceCode(data.shipment_product_code);
+
   const payload = {
     PickupCreationRequest: {
-      Request: {
-        // ADDED: Request Field
-        TransactionReference: { CustomerContext: "OmenaiPickup" },
-      },
+      Request: { TransactionReference: { CustomerContext: "OmenaiPickup" } },
       RatePickupIndicator: "N",
       Shipper: {
         Account: {
           AccountNumber: process.env.UPS_ACCOUNT_NUMBER,
-          AccountCountryCode: "US",
+          AccountCountryCode: "US", // Billing account origin stays US
         },
       },
       PickupDateInfo: {
@@ -302,23 +319,22 @@ export async function scheduleUPSPickup(
         City: data.seller_details.address.city,
         StateProvince: data.seller_details.address.stateCode,
         PostalCode: data.seller_details.address.zip,
-        CountryCode: "US",
+        CountryCode: originCountry, // Dynamic Origin
         Phone: { Number: data.seller_details.phone },
         ResidentialIndicator: "Y",
       },
-      // IMPORTANT: AlternateAddressIndicator = Y (Pickup is at Seller's, not Account Holder's)
       AlternateAddressIndicator: "Y",
       PickupPiece: [
         {
           ServiceCode: pickupServiceCode,
           Quantity: "1",
-          DestinationCountryCode: "US",
+          DestinationCountryCode: data.receiver_address.countryCode, // Dynamic Destination
           ContainerCode: "01",
         },
       ],
       TotalWeight: {
-        Weight: String(dimensions.weight),
-        UnitOfMeasurement: "LBS",
+        Weight: packageData.weight,
+        UnitOfMeasurement: packageData.weightCode,
       },
       OverweightIndicator: "N",
       PaymentMethod: "01",
@@ -339,39 +355,37 @@ export async function scheduleUPSPickup(
     },
   );
 
-  // 1. Get Raw Text FIRST (Don't use .json() yet)
   const rawText = await response.text();
-
-  // 3. Handle Errors Safely
   if (!response.ok) {
     throw new Error(`UPS Error (${response.status}): ${rawText}`);
   }
-
-  // 4. Parse JSON only if it's not empty
   return rawText ? JSON.parse(rawText) : { message: "Success with empty body" };
 }
 
 // ----------------------------------------------------------------------
-// 4. TIME IN TRANSIT API (Real Estimate)
+// 3. TIME IN TRANSIT API (Real Estimate)
 // ----------------------------------------------------------------------
 
 async function getUPSTimeInTransit(
   token: string,
   data: ShipmentRequestDataTypes,
-  dimensions: ShipmentDimensions,
+  rawDimensions: ShipmentDimensions,
 ): Promise<string> {
-  // Format today as YYYY-MM-DD for the request
   const today = new Date().toISOString().split("T")[0];
+  const packageData = formatUPSPackageData(
+    rawDimensions,
+    data.seller_details.address.countryCode,
+  );
 
   const payload = {
-    originCountryCode: "US", // Assuming US-US domestic
+    originCountryCode: data.seller_details.address.countryCode,
     originPostalCode: data.seller_details.address.zip,
     originCityName: data.seller_details.address.city,
-    destinationCountryCode: "US",
+    destinationCountryCode: data.receiver_address.countryCode,
     destinationPostalCode: data.receiver_address.zip,
     destinationCityName: data.receiver_address.city,
-    weight: String(dimensions.weight),
-    weightUnitOfMeasurement: "LBS",
+    weight: packageData.weight,
+    weightUnitOfMeasurement: packageData.weightCode,
     shipmentContentsValue: String(data.artwork_price),
     shipmentContentsCurrencyCode: "USD",
     billType: "03", // Pre-paid
@@ -395,25 +409,20 @@ async function getUPSTimeInTransit(
     );
 
     if (!response.ok) {
-      // If TNT fails, fallback to a safe manual estimate rather than crashing the shipment
       console.warn("UPS TNT API failed, falling back to manual estimate.");
       return calculateManualEstimate(data.shipment_product_code);
     }
 
     const result = await response.json();
-
-    // The API returns a list of services (Ground, Next Day, etc.)
-    // We must find the one matching our `shipment_product_code`
     const services = result.transitTimes || [];
     const matchedService = services.find(
       (s: any) => s.serviceCode === data.shipment_product_code,
     );
 
     if (matchedService && matchedService.arrivalDate) {
-      return matchedService.arrivalDate; // Returns YYYY-MM-DD
+      return matchedService.arrivalDate;
     }
 
-    // Fallback if specific service not found in list
     return calculateManualEstimate(data.shipment_product_code);
   } catch (error) {
     console.error("UPS TNT Error:", error);
@@ -421,7 +430,7 @@ async function getUPSTimeInTransit(
   }
 }
 
-// Fallback logic (just in case API is down)
+// Fallback logic
 function calculateManualEstimate(serviceCode: string): string {
   const today = new Date();
   let days = serviceCode === "01" ? 1 : serviceCode === "02" ? 2 : 5;
@@ -433,17 +442,26 @@ function calculateManualEstimate(serviceCode: string): string {
   return today.toISOString();
 }
 
-import { Jimp } from "jimp"; // Import Jimp
+// ----------------------------------------------------------------------
+// 4. SHIPMENT GENERATION API
+// ----------------------------------------------------------------------
 
 export async function createUPSShipment(
   data: ShipmentRequestDataTypes,
 ): Promise<any> {
   const token = await getUPSAccessToken();
-  const dimensions = convertToImperial(data.dimensions);
+
+  // Route dimensions for the Shipment API
+  const packageData = formatUPSPackageData(
+    data.dimensions,
+    data.seller_details.address.countryCode,
+  );
+
+  // Pass RAW dimensions to TNT so it can route internally
   const estimatedDeliveryDate = await getUPSTimeInTransit(
     token,
     data,
-    dimensions,
+    data.dimensions,
   );
 
   const shipPayload = {
@@ -454,10 +472,7 @@ export async function createUPSShipment(
       },
       Shipment: {
         Description: data.artwork_name,
-        // 1. Shipper = Omenai (Account Owner) with ShipperNumber
         Shipper: OMENAI_SHIPPER_DETAILS,
-
-        // 2. ShipFrom = Seller (Pickup Location)
         ShipFrom: {
           Name: data.seller_details.fullname.substring(0, 35),
           Address: {
@@ -470,8 +485,6 @@ export async function createUPSShipment(
             CountryCode: data.seller_details.address.countryCode,
           },
         },
-
-        // 3. ShipTo = Buyer
         ShipTo: {
           Name: data.receiver_data.fullname,
           AttentionName: data.receiver_data.fullname,
@@ -486,7 +499,7 @@ export async function createUPSShipment(
         },
         PaymentInformation: {
           ShipmentCharge: {
-            Type: "01", // Bill Shipper
+            Type: "01",
             BillShipper: { AccountNumber: process.env.UPS_ACCOUNT_NUMBER },
           },
         },
@@ -498,17 +511,16 @@ export async function createUPSShipment(
           Description: "Artwork",
           Packaging: { Code: "02" },
           Dimensions: {
-            UnitOfMeasurement: { Code: "IN" },
-            Length: String(dimensions.length),
-            Width: String(dimensions.width),
-            Height: String(dimensions.height),
+            UnitOfMeasurement: { Code: packageData.dimCode },
+            Length: packageData.length,
+            Width: packageData.width,
+            Height: packageData.height,
           },
           PackageWeight: {
-            UnitOfMeasurement: { Code: "LBS" },
-            Weight: String(dimensions.weight),
+            UnitOfMeasurement: { Code: packageData.weightCode },
+            Weight: packageData.weight,
           },
         },
-        // UPDATED: Label Specification
         LabelSpecification: {
           LabelImageFormat: { Code: "PNG" },
           HTTPUserAgent: "Mozilla/5.0",
@@ -519,7 +531,7 @@ export async function createUPSShipment(
   };
 
   let trackingNumber = "";
-  let labelContent = "";
+  let finalLabelContent = "";
 
   try {
     const response = await fetch(
@@ -543,37 +555,30 @@ export async function createUPSShipment(
         JSON.stringify(result, null, 2),
       );
 
-      // Extract the specific error message from UPS if possible
       const errorMsg =
         result.response?.errors?.[0]?.message || "Unknown UPS Error";
       const errorCode = result.response?.errors?.[0]?.code || "Unknown Code";
-
       throw new Error(`UPS Create Error: ${errorCode} - ${errorMsg}`);
     }
 
     const rawResults = result.ShipmentResponse.ShipmentResults.PackageResults;
     const pkg = Array.isArray(rawResults) ? rawResults[0] : rawResults;
 
-    let finalLabelContent = pkg.ShippingLabel.GraphicImage;
+    trackingNumber =
+      result.ShipmentResponse.ShipmentResults.ShipmentIdentificationNumber;
+    finalLabelContent = pkg.ShippingLabel.GraphicImage;
 
-    // 2. THE ROBUST CONVERTER (GIF -> PNG -> PDF)
+    // CONVERTER: Base64 -> PNG -> PDF
     try {
-      // A. Decode Base64 to Buffer
       const labelBuffer = Buffer.from(finalLabelContent, "base64");
-
-      // B. Convert Image to PNG using Jimp (Handles GIF, BMP, JPG input)
       const image = await Jimp.read(labelBuffer);
       const pngBuffer = await image.getBuffer("image/png");
 
-      // C. Create PDF
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage([288, 432]); // 4x6 inches
-
-      // D. Embed the Converted PNG
       const pngImage = await pdfDoc.embedPng(pngBuffer);
       const { width, height } = pngImage.scaleToFit(288, 432);
 
-      // E. Draw on Page
       page.drawImage(pngImage, {
         x: page.getWidth() / 2 - width / 2,
         y: page.getHeight() / 2 - height / 2,
@@ -581,48 +586,32 @@ export async function createUPSShipment(
         height,
       });
 
-      // F. Save as PDF Base64
       finalLabelContent = await pdfDoc.saveAsBase64();
-
       console.log("✅ Successfully converted UPS Label to PDF");
     } catch (conversionError) {
       console.error("⚠️ PDF Conversion Critical Failure:", conversionError);
-      // We still return the raw content if this fails, so the user gets *something*
     }
-
-    return {
-      shipmentTrackingNumber:
-        result.ShipmentResponse.ShipmentResults.ShipmentIdentificationNumber,
-      estimatedDeliveryDate: estimatedDeliveryDate,
-      plannedShippingDateAndTime: new Date().toISOString(),
-      documents: [
-        {
-          content: finalLabelContent, // Valid PDF string
-        },
-      ],
-    };
   } catch (error: any) {
     createErrorRollbarReport("UPS Shipment Failed", error, 500);
     throw new Error(`UPS Create Error: ${error.message}`);
   }
 
   // -------------------------------------------------
-  // PICKUP SCHEDULING (Retry Loop)
+  // PICKUP SCHEDULING (Now Reachable)
   // -------------------------------------------------
   let attempt = 0;
   let pickupSuccess = false;
 
   while (attempt < 3 && !pickupSuccess) {
     try {
-      await scheduleUPSPickup(data, dimensions);
+      // Pass RAW dimensions so pickup API can route internally
+      await scheduleUPSPickup(data, data.dimensions);
       pickupSuccess = true;
     } catch (pickupError: any) {
       attempt++;
       if (attempt >= 3) {
-        // FAIL SAFE: Log to DB & Email
         const orderId = data.invoice_number.replace("OMENAI-INV-", "");
         try {
-          // TODO: Remove this when we push to github
           await connectMongoDB();
           await FailedPickup.create({
             order_id: orderId,
@@ -630,7 +619,7 @@ export async function createUPSShipment(
             error_message: pickupError.message || JSON.stringify(pickupError),
             status: "pending",
             retry_count: 3,
-            payload_snapshot: { data, dimensions },
+            payload_snapshot: { data, dimensions: data.dimensions },
           });
           await sendPickupFailedEmailWorkflow(
             orderId,
@@ -646,15 +635,16 @@ export async function createUPSShipment(
     }
   }
 
+  // Final payload returns safely after the loop
   return {
     shipmentTrackingNumber: trackingNumber,
     estimatedDeliveryDate: estimatedDeliveryDate,
     plannedShippingDateAndTime: new Date().toISOString(),
-    documents: [{ content: labelContent }], // Base64 GIF
+    documents: [{ content: finalLabelContent }],
   };
 }
 
-// _------------------------------------------------------
+// ----------------------------------------------------------------------
 // 5. TRACKING API (v2409)
 // ----------------------------------------------------------------------
 
@@ -664,19 +654,13 @@ import {
   OmenaiTrackingStatus,
 } from "./dhl_service";
 
-// ----------------------------------------------------------------------
-// 1. THE TRANSLATOR (Normalization Logic)
-// ----------------------------------------------------------------------
 function formatUPSDate(dateStr: string, timeStr: string): string {
   if (!dateStr || dateStr.length !== 8) return new Date().toISOString();
 
-  // Format Date: "20260218" -> "2026-02-18"
   const year = dateStr.substring(0, 4);
   const month = dateStr.substring(4, 6);
   const day = dateStr.substring(6, 8);
 
-  // Format Time: "103000" -> "10:30:00"
-  // Pad with leading zero just in case UPS sends "93000" for 9:30 AM
   const cleanTime = (timeStr || "000000").padStart(6, "0");
   const hour = cleanTime.substring(0, 2);
   const min = cleanTime.substring(2, 4);
@@ -684,48 +668,33 @@ function formatUPSDate(dateStr: string, timeStr: string): string {
 
   return `${year}-${month}-${day}T${hour}:${min}:${sec}`;
 }
+
 function mapUPSStatusToOmenai(
   upsCode: string,
   type: string,
 ): OmenaiTrackingStatus {
-  // UPS uses a mix of "Status Type" (I, D, X, M) and "Activity Codes"
-
-  // High Level Types:
-  // I = In Transit
-  // D = Delivered
-  // X = Exception
-  // P = Pickup
-  // M = Manifest Pickup
-
   if (type === "D") return "DELIVERED";
   if (type === "X") return "EXCEPTION";
-  if (type === "M") return "CREATED"; // Label Created
-  if (type === "P") return "IN_TRANSIT"; // Pickup Scan
+  if (type === "M") return "CREATED";
+  if (type === "P") return "IN_TRANSIT";
 
-  // Granular Codes (Activity)
   const code = upsCode.toUpperCase();
   const STATUS_MAP: Record<string, OmenaiTrackingStatus> = {
-    OR: "IN_TRANSIT", // Origin Scan
-    AR: "IN_TRANSIT", // Arrival Scan
-    DP: "IN_TRANSIT", // Departure Scan
-    OT: "OUT_FOR_DELIVERY", // Out for Delivery
-    KB: "EXCEPTION", // Missed
-    "24": "EXCEPTION", // Signature Required
+    OR: "IN_TRANSIT",
+    AR: "IN_TRANSIT",
+    DP: "IN_TRANSIT",
+    OT: "OUT_FOR_DELIVERY",
+    KB: "EXCEPTION",
+    "24": "EXCEPTION",
   };
 
   return STATUS_MAP[code] || "IN_TRANSIT";
 }
 
-// ----------------------------------------------------------------------
-// 2. THE SERVICE (The Fetcher)
-// ----------------------------------------------------------------------
-
 export async function getUPSTracking(
   trackingNumber: string,
 ): Promise<UnifiedTrackingResponse> {
   const token = await getUPSAccessToken();
-
-  // UPS REST Tracking Endpoint (v1 is standard for tracking)
   const url = `${UPS_BASE_URL}/api/track/v1/details/${trackingNumber}`;
 
   try {
@@ -741,7 +710,6 @@ export async function getUPSTracking(
 
     if (!response.ok) {
       const errorText = await response.text();
-      // Handle "Not Found" (Label created but not scanned yet)
       if (response.status === 404) {
         return {
           tracking_number: trackingNumber,
@@ -759,10 +727,7 @@ export async function getUPSTracking(
 
     if (!packageData) throw new Error("No package data found in UPS response");
 
-    // 2. Transform Events
-    // UPS returns 'activity' array. Usually sorted Descending.
     const rawActivities = packageData.activity || [];
-
     const normalizedEvents: UnifiedTrackingEvent[] = rawActivities.map(
       (act: any) => ({
         timestamp: formatUPSDate(act.date, act.time),
@@ -772,8 +737,6 @@ export async function getUPSTracking(
       }),
     );
 
-    // 3. Determine Current Status
-    // UPS usually puts the current status in packageData.currentStatus
     const currentStatus = mapUPSStatusToOmenai(
       packageData.currentStatus.code,
       packageData.currentStatus.type,
@@ -783,7 +746,6 @@ export async function getUPSTracking(
       tracking_number: trackingNumber,
       carrier: "UPS",
       current_status: currentStatus,
-      // UPS often provides 'deliveryDate' in the root
       estimated_delivery:
         packageData.deliveryDate && packageData.deliveryDate[0]
           ? formatUPSDate(
@@ -798,7 +760,7 @@ export async function getUPSTracking(
     return {
       tracking_number: trackingNumber,
       carrier: "UPS",
-      current_status: "EXCEPTION", // Fail safe
+      current_status: "EXCEPTION",
       estimated_delivery: null,
       events: [
         {

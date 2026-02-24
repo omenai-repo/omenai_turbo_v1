@@ -52,10 +52,10 @@ const WalletPinUpdateCode = (username: string, token: string) => {
               If you did not authorize this action. Please contact us
               immediately on{" "}
               <Link
-                href="mailto:contact@omeani.net"
+                href="mailto:support@omenai.app"
                 className="underline text-blue-800"
               >
-                contact@omeani.net
+                support@omenai.app
               </Link>
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />

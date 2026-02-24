@@ -373,6 +373,8 @@ export async function runPostPaymentWorkflows(
         seller_email: order.seller_details.email,
         seller_name: order.seller_details.name,
         seller_entity: "gallery",
+        artwork_image: order.artwork_data.url,
+        artist: order.artwork_data.artist,
       }),
     ),
     createWorkflow(

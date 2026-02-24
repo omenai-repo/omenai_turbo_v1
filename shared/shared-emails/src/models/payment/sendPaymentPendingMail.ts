@@ -17,6 +17,6 @@ export const sendPaymentPendingMail = async ({
     from: "transactions",
     to: email,
     subject: "Your Payment is being Processed",
-    react: PaymentPendingMail(name, artwork),
+    react: PaymentPendingMail({ buyerName: name, artwork }),
   });
 };

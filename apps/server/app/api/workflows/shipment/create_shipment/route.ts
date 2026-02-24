@@ -256,6 +256,8 @@ async function createShipment(order: OrderWithTimestamps, orderId: string) {
     shipmentData.seller_details.fullname,
     shipmentData.seller_details.email,
     order.order_id,
+    order.shipping_details.shipment_information.tracking.id || "",
+    order.shipping_details.shipment_information.carrier.split(" ")[0],
     shipment.data.documents[0].content,
     shipmentData.artwork_name,
     order.artwork_data.url,

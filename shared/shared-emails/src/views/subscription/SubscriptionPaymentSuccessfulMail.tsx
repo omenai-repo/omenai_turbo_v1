@@ -120,7 +120,7 @@ export const SubscriptionPaymentSuccessfulEmail = ({
               download it directly from your billing settings. Should you need
               any assistance, our team is always available at{" "}
               <Link
-                href="mailto:contact@omenai.net"
+                href="mailto:support@omenai.app"
                 className="link-main"
                 style={{
                   color: "#2563eb",

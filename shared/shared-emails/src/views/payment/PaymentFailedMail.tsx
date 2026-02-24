@@ -10,123 +10,142 @@ import {
   Hr,
   Img,
   Link,
+  Tailwind,
+  Button,
 } from "@react-email/components";
 import * as React from "react";
+import EmailFooter from "../../components/Footer";
+import EmailArtworkCard from "../components/EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { COMPANY_INFO } from "../../constants/constants";
 
-interface Props {
+interface PaymentFailedEmailProps {
   buyerName: string;
   artwork: string;
 }
 
-export const PaymentFailedEmail = (buyerName: string, artwork: string) => {
+export const PaymentFailedEmail = ({
+  buyerName,
+  artwork,
+}: PaymentFailedEmailProps) => {
   return (
     <Html>
-      <Head />
-      <Preview>Unsuccessful payment for your artwork purchase</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={
-              "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .btn-main { background-color: #ffffff !important; color: #000000 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .link-main { color: #60a5fa !important; }
+              .advisory-box { background-color: #1f2937 !important; border-left-color: #ef4444 !important; }
             }
-            alt="Omenai logo"
-            width="120"
-            style={{ margin: "0 auto 30px" }}
-          />
-
-          <Heading style={heading}>⚠️ Payment Unsuccessful</Heading>
-          <Text style={text}>Hi {buyerName},</Text>
-          <Text style={text}>
-            We attempted to process your payment for <strong>{artwork}</strong>,
-            but unfortunately the transaction was not successful.
-          </Text>
-          <Text style={text}>
-            Please verify your payment method and try again. If you believe this
-            was a mistake or need assistance, don't hesitate to contact our
-            support team.
-          </Text>
-
-          <Text style={footer}>
-            If you have any questions or need help resolving this issue, please
-            reach out to us at{" "}
-            <Link
-              href="mailto:contact@omenani.net"
-              style={{ textDecoration: "underline", color: "#0f172a" }}
+          `}
+        </style>
+      </Head>
+      <Preview>
+        Update: There was an issue processing your transaction for {artwork}.
+      </Preview>
+      <Tailwind>
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
+          <Container
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "600px", margin: "40px auto", padding: "24px" }}
+          >
+            <Heading
+              className="heading-main text-gray-900"
+              style={{
+                fontSize: "22px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+              }}
             >
-              contact@omenani.net
-            </Link>
-            .
-          </Text>
-          <Text style={footer}>Thank you for your interest in Omenai.</Text>
-        </Container>
-      </Body>
+              Issue processing your transaction
+            </Heading>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Hello <strong>{buyerName}</strong>,
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              We attempted to process the payment for your recent artwork
+              purchase, but the transaction could not be completed at this time.
+            </Text>
+
+            {/* Support/Reason Box */}
+            <Section className="advisory-box bg-red-50 rounded-r-lg p-5 border-l-4 border-red-500 my-8">
+              <Text
+                className="text-main text-gray-800 m-0"
+                style={{ fontSize: "14px", lineHeight: "1.6" }}
+              >
+                <strong
+                  className="heading-main text-gray-900"
+                  style={{ fontWeight: "600" }}
+                >
+                  Recommendation:
+                </strong>{" "}
+                We suggest verifying your billing details or contacting your
+                financial institution to ensure the transaction is permitted.
+              </Text>
+            </Section>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Our advisory team is standing by to assist you. If you have
+              questions about the transaction or require a different payment
+              method, please reply directly to this email or reach out to us at{" "}
+              <Link
+                href="mailto:support@omenai.app"
+                className="link-main"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                support@omenai.app
+              </Link>
+              .
+            </Text>
+
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
+            >
+              Warmly,
+              <br />
+              <span
+                className="text-muted text-gray-500"
+                style={{ fontSize: "14px" }}
+              >
+                The Omenai Team
+              </span>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+
+            <EmailFooter recipientName={buyerName} showSupportSection={false} />
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
 
-export default PaymentFailedEmail;
-
-const main = {
-  backgroundColor: "#ffffff",
-  color: "#0f172a",
-  fontFamily: "Helvetica, Arial, sans-serif",
-  padding: "40px 0",
-} as const;
-
-const container = {
-  backgroundColor: "#ffffff",
-  padding: "40px",
-  borderRadius: "12px",
-  maxWidth: "600px",
-  margin: "0 auto",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-} as const;
-
-const heading = {
-  fontSize: "24px",
-  fontWeight: "bold",
-  marginBottom: "20px",
-  textAlign: "center",
-} as const;
-
-const subHeading = {
-  fontSize: "18px",
-  fontWeight: "bold",
-  margin: "24px 0 12px",
-} as const;
-
-const text = {
-  fontSize: "16px",
-  lineHeight: "1.6",
-  marginBottom: "16px",
-} as const;
-
-const receiptSection = {
-  padding: "24px",
-  backgroundColor: "#f9f9f9",
-  borderRadius: "12px",
+const textStyle = {
   fontSize: "15px",
   lineHeight: "1.6",
-  color: "#0f172a",
-} as const;
+  margin: "0 0 16px 0",
+};
 
-const receiptRow = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "10px",
-} as const;
-
-const label = {
-  fontWeight: "bold",
-} as const;
-
-const hr = {
-  border: "none",
-  borderTop: "1px solid #EAEAEA",
-  margin: "20px 0",
-} as const;
-
-const footer = {
-  fontSize: "14px",
-  color: "#666666",
-} as const;
+export default PaymentFailedEmail;

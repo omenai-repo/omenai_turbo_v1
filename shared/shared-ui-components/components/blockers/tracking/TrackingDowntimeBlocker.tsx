@@ -10,8 +10,7 @@ import { useRouter } from "next/navigation";
 interface TrackingBlockerProps {
   message?: string;
   trackingNumber?: string;
-  externalLink?: string;
-  externalLinkText?: string;
+  carrier?: "DHL" | "UPS" | string;
 }
 
 /**
@@ -20,7 +19,7 @@ interface TrackingBlockerProps {
  */
 const copyToClipboard = async (
   text: string,
-  setCopied: (value: boolean) => void
+  setCopied: (value: boolean) => void,
 ) => {
   try {
     // Use the modern Clipboard API (navigator.clipboard)
@@ -34,7 +33,7 @@ const copyToClipboard = async (
     // or if clipboard permissions are denied.
     console.error(
       "Could not copy text to clipboard. Ensure site is running in a secure context (https).",
-      err
+      err,
     );
   }
 };
@@ -42,10 +41,21 @@ const copyToClipboard = async (
 export default function ShipmentTrackingBlocker({
   message = "Our internal route optimization engine is under maintenance, causing a temporary delay in real-time tracking updates. We apologize for the inconvenience.",
   trackingNumber = "GM1234567890XX",
-  externalLink = "https://www.dhl.com/global-en/home/tracking.html",
-  externalLinkText = "Track on DHL Global Website",
+  carrier,
 }: TrackingBlockerProps) {
   const [copied, setCopied] = useState(false);
+  const url =
+    carrier === "DHL"
+      ? "https://www.dhl.com/global-en/home/tracking.html"
+      : "https://www.ups.com/track?loc=en_US&tracknum=";
+  const externalLinkWithTracking =
+    carrier === "DHL"
+      ? `${url}?tracking_id=${trackingNumber}`
+      : `${url}${trackingNumber}`;
+
+  const externalLinkText = carrier
+    ? `Track on ${carrier}`
+    : "Track on Courier Site";
 
   const router = useRouter();
   return (
@@ -120,7 +130,7 @@ export default function ShipmentTrackingBlocker({
           For immediate tracking, please use the provided link:
         </p>
         <Link
-          href={externalLink}
+          href={externalLinkWithTracking}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full inline-flex items-center justify-center py-3 px-6 bg-[#2A9EDF] text-white font-medium text-[clamp(0.79rem,0.35vw+0.7rem,0.889rem)] rounded hover:bg-opacity-90 transition-all shadow-[0_4px_15px_rgba(42,158,223,0.4)]"

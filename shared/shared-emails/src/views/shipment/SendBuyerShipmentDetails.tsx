@@ -18,6 +18,8 @@ interface BuyerShipmentEmailProps {
   artworkImage: string;
   artistName: string;
   price: string;
+  externalTrackingCode: string;
+  courier: string;
 }
 
 export default function BuyerShipmentEmail({
@@ -27,6 +29,8 @@ export default function BuyerShipmentEmail({
   artworkImage,
   artistName,
   price,
+  externalTrackingCode,
+  courier,
 }: BuyerShipmentEmailProps) {
   const optimizedImage = getImageFileView(artworkImage, 400);
 
@@ -85,7 +89,7 @@ export default function BuyerShipmentEmail({
 
           <Section style={{ textAlign: "center", margin: "32px 0" }}>
             <Link
-              href={`${tracking_url()}?tracking_id=${trackingCode}`}
+              href={`${tracking_url()}?tracking_id=${trackingCode}&external_tracking_code=${externalTrackingCode}&courier=${courier}`}
               style={{
                 display: "inline-block",
                 backgroundColor: "#000000",

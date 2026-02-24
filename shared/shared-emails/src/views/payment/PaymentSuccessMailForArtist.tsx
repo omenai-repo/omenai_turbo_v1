@@ -10,13 +10,23 @@ import {
   Heading,
   Hr,
   Img,
+  Link,
+  Tailwind,
+  Button,
 } from "@react-email/components";
 import * as React from "react";
+import EmailFooter from "../../components/Footer";
+import EmailArtworkCard from "../components/EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { COMPANY_INFO } from "../../constants/constants";
+import { dashboard_url } from "@omenai/url-config/src/config";
 
-interface Props {
+interface PaymentSuccessMailArtistProps {
   name: string;
   artwork: string;
-  amount: string;
+  artistName: string;
+  artworkImage: string;
+  amount: string | number;
   order_id: string;
   order_date: string;
   transaction_id: string;
@@ -25,125 +35,288 @@ interface Props {
 export const PaymentSuccessMailArtist = ({
   name,
   artwork,
+  artistName,
+  artworkImage,
   amount,
   order_date,
   order_id,
   transaction_id,
-}: Props) => {
+}: PaymentSuccessMailArtistProps) => {
+  const optimizedImage = getImageFileView(artworkImage, 400);
+
   return (
     <Html>
-      <Head />
-      <Preview>Your artwork has been sold – next steps</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Heading style={heading}>🎉 Your Artwork Has Been Sold</Heading>
-          <Text style={text}>Hi {name},</Text>
-          <Text style={text}>
-            Great news! A collector has successfully purchased your artwork,{" "}
-            <strong>{artwork}</strong>.
-          </Text>
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .btn-main { background-color: #ffffff !important; color: #000000 !important; }
+              .bg-box { background-color: #111827 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .link-main { color: #60a5fa !important; }
+            }
+          `}
+        </style>
+      </Head>
+      <Preview>
+        Sale Confirmed: A collector has acquired {artwork}. View your next
+        steps.
+      </Preview>
+      <Tailwind>
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
+          <Container
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "600px", margin: "40px auto", padding: "32px" }}
+          >
+            {/* Header */}
+            <Section style={{ textAlign: "center", marginBottom: "32px" }}>
+              <Img
+                src={COMPANY_INFO.logo}
+                width="130"
+                height="auto"
+                alt="Omenai logo"
+                style={{ margin: "0 auto" }}
+              />
+            </Section>
 
-          <Section style={section}>
-            <Text style={text}>
-              The payment of <strong> {formatPrice(amount, "USD")}</strong> has
-              been processed and the funds have been added to your{" "}
-              <strong>pending balance</strong> in your wallet.
-            </Text>
-            <Text style={text}>
-              A <strong>shipment will be created</strong> and a{" "}
-              <strong>courier pickup</strong> will be scheduled shortly.
-            </Text>
-            <Text style={text}>
-              Please ensure the piece is <strong>packaged and ready</strong> for
-              shipment.
-            </Text>
-            <Text style={text}>
-              Further shipping instructions and the waybill details will be sent
-              to you via email.
-            </Text>
-          </Section>
-          <Hr style={hr} />
-          <Text style={text}>
-            Once the buyer receives the piece, the funds will be{" "}
-            <strong>unlocked</strong> and available for withdrawal.
-          </Text>
+            <Heading
+              className="heading-main text-gray-900"
+              style={{
+                fontSize: "22px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+              }}
+            >
+              Sale Confirmed: Artwork Acquired
+            </Heading>
 
-          <Text style={footer}>
-            If you have any questions or need help, feel free to reach out to
-            our support team.
-          </Text>
-        </Container>
-      </Body>
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Hello <strong>{name}</strong>,
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Congratulations! We are thrilled to inform you that a collector
+              has successfully purchased your artwork. The transaction has been
+              fully processed and secured.
+            </Text>
+
+            <EmailArtworkCard
+              artwork={artwork}
+              artistName={artistName || name}
+              price={
+                typeof amount === "string" && amount.includes("$")
+                  ? amount
+                  : formatPrice(Number(amount), "USD")
+              }
+              artworkImage={optimizedImage}
+            />
+
+            {/* Financial Details */}
+            <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-100 border-divider">
+              <Text
+                className="heading-main text-gray-900"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.8px",
+                }}
+              >
+                Transaction Summary
+              </Text>
+
+              <table
+                className="w-full mb-6"
+                style={{ borderCollapse: "collapse" }}
+              >
+                <tbody>
+                  <tr style={{ borderBottom: "1px solid #f3f4f6" }}>
+                    <td style={labelCell} className="text-muted text-gray-500">
+                      Order ID:
+                    </td>
+                    <td
+                      style={valueCell}
+                      className="text-main text-gray-900 font-mono"
+                    >
+                      #{order_id}
+                    </td>
+                  </tr>
+                  <tr style={{ borderBottom: "1px solid #f3f4f6" }}>
+                    <td
+                      style={{ ...labelCell, paddingTop: "12px" }}
+                      className="text-muted text-gray-500"
+                    >
+                      Transaction:
+                    </td>
+                    <td
+                      style={{ ...valueCell, paddingTop: "12px" }}
+                      className="text-main text-gray-900 font-mono"
+                    >
+                      {transaction_id}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        ...labelCell,
+                        paddingTop: "12px",
+                        borderBottom: "none",
+                      }}
+                      className="text-muted text-gray-500"
+                    >
+                      Date Secured:
+                    </td>
+                    <td
+                      style={{
+                        ...valueCell,
+                        paddingTop: "12px",
+                        borderBottom: "none",
+                      }}
+                      className="text-main text-gray-900"
+                    >
+                      {order_date}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <Hr style={{ borderColor: "#e5e7eb", margin: "16px 0" }} />
+
+              <Text
+                className="heading-main text-gray-900"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginBottom: "12px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.8px",
+                }}
+              >
+                Fulfillment & Payment Protocol
+              </Text>
+
+              <Text
+                className="text-main text-gray-800"
+                style={{
+                  fontSize: "14px",
+                  lineHeight: "1.6",
+                  margin: "0 0 12px 0",
+                }}
+              >
+                <strong>1. Funds Secured:</strong> The payment has been safely
+                processed and the funds are currently held in your{" "}
+                <strong>pending wallet balance</strong>.
+              </Text>
+              <Text
+                className="text-main text-gray-800"
+                style={{
+                  fontSize: "14px",
+                  lineHeight: "1.6",
+                  margin: "0 0 12px 0",
+                }}
+              >
+                <strong>2. Logistics Preparation:</strong> Please begin
+                carefully packaging the piece. A courier shipment will be
+                created shortly, and you will receive a separate email
+                containing your waybill and shipping instructions.
+              </Text>
+              <Text
+                className="text-main text-gray-800"
+                style={{ fontSize: "14px", lineHeight: "1.6", margin: "0" }}
+              >
+                <strong>3. Payout Release:</strong> Once the artwork is
+                successfully delivered to the collector, your funds will be
+                instantly unlocked and available for withdrawal.
+              </Text>
+            </Section>
+
+            <Section style={{ textAlign: "center", margin: "32px 0" }}>
+              <Button
+                href={`${dashboard_url()}/dashboard/wallet`}
+                className="btn-main"
+                style={{
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  fontSize: "15px",
+                  fontWeight: "500",
+                  padding: "16px 36px",
+                  borderRadius: "6px",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  letterSpacing: "0.3px",
+                }}
+              >
+                View Pending Wallet Balance
+              </Button>
+            </Section>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Thank you for sharing your incredible talent on Omenai. We are
+              honored to facilitate the connection between your work and
+              collectors worldwide.
+            </Text>
+
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
+            >
+              Warmly,
+              <br />
+              <br />
+              <span
+                className="text-muted text-gray-500"
+                style={{ fontSize: "14px" }}
+              >
+                The Omenai team
+              </span>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+
+            <EmailFooter
+              recipientName={name}
+              showSupportSection={true}
+              supportTitle="Have questions about fulfillment?"
+              supportMessage="Our logistics team is available to assist you with packaging guidelines and courier scheduling. Reach out at"
+            />
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
 
-export default PaymentSuccessMailArtist;
-
-const main = {
-  backgroundColor: "#ffffff",
-  color: "#0f172a",
-  fontFamily: "Helvetica, Arial, sans-serif",
-  padding: "40px 0",
-} as const;
-
-const container = {
-  backgroundColor: "#ffffff",
-  padding: "40px",
-  borderRadius: "12px",
-  maxWidth: "600px",
-  margin: "0 auto",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-} as const;
-
-const heading = {
-  fontSize: "24px",
-  fontWeight: "bold",
-  marginBottom: "20px",
-} as const;
-
-const subHeading = {
-  fontSize: "18px",
-  fontWeight: "bold",
-  margin: "24px 0 12px",
-} as const;
-
-const text = {
-  fontSize: "16px",
-  lineHeight: "1.6",
-  marginBottom: "16px",
-} as const;
-
-const section = {
-  marginBottom: "24px",
-} as const;
-
-const receiptSection = {
-  padding: "24px",
-  backgroundColor: "#f9f9f9",
-  borderRadius: "12px",
+// Shared Styles
+const textStyle = {
   fontSize: "15px",
   lineHeight: "1.6",
-  color: "#0f172a",
-} as const;
+  margin: "0 0 16px 0",
+};
 
-const receiptRow = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "10px",
-} as const;
+const labelCell = {
+  width: "120px",
+  paddingBottom: "12px",
+  fontSize: "13px",
+  verticalAlign: "top",
+};
 
-const label = {
-  fontWeight: "bold",
-} as const;
-
-export const hr = {
-  border: "none",
-  borderTop: "1px solid #EAEAEA",
-  margin: "20px 0",
-} as const;
-
-const footer = {
+const valueCell = {
+  paddingBottom: "12px",
   fontSize: "14px",
-  color: "#666666",
-} as const;
+  verticalAlign: "top",
+};
+
+export default PaymentSuccessMailArtist;

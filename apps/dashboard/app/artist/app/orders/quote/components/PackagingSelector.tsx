@@ -14,8 +14,9 @@ interface PackagingSelectorProps {
   packagingType: PackagingType;
   carrier: string;
   forceCustomToggle: number;
-  onTypeChange: (type: PackagingType) => void;
   packagingTypeFromOrder: string;
+
+  onTypeChange: (type: PackagingType) => void;
   onUpdate: (details: {
     length: string;
     width: string;
@@ -29,9 +30,9 @@ export default function PackagingSelector({
   packagingType,
   carrier,
   forceCustomToggle,
-  packagingTypeFromOrder,
   onTypeChange,
   onUpdate,
+  packagingTypeFromOrder,
 }: PackagingSelectorProps) {
   const [selectedPreset, setSelectedPreset] = useState<string>("");
   const [isCustom, setIsCustom] = useState(false);
@@ -46,10 +47,12 @@ export default function PackagingSelector({
     wg: "",
   });
 
-  // 1. SMART FIT CHECK (Physics)
+  // SMART FIT CHECK
   const checkFit = (preset: PackagingPreset) => {
     const artLong = Math.max(artDimensions.length, artDimensions.height);
     const artShort = Math.min(artDimensions.length, artDimensions.height);
+
+    // For rolled, we only care if the shortest side of the canvas fits the tube length!
     if (packagingType === "rolled") return artShort <= preset.max_art.length;
 
     const boxLong = Math.max(preset.max_art.length, preset.max_art.width || 0);
@@ -57,7 +60,7 @@ export default function PackagingSelector({
     return artLong <= boxLong && artShort <= boxShort;
   };
 
-  // 2. UPGRADED RECOMMENDED LOGIC (Physics + Carrier Limits)
+  // IDENTIFY BEST PRESET
   const recommendedPreset = useMemo(() => {
     const validPresets = PACKAGING_PRESETS[packagingType].filter((preset) => {
       const fitsArt = checkFit(preset);
@@ -68,7 +71,6 @@ export default function PackagingSelector({
         preset.weight_kg,
         carrier,
       );
-      // ONLY recommend if it fits the art AND doesn't violate carrier limits
       return fitsArt && !isOversize;
     });
 
@@ -85,11 +87,12 @@ export default function PackagingSelector({
     });
   }, [packagingType]);
 
-  // AUTO-SELECT
+  // AUTO-SELECT & SMART PRE-FILL
   useEffect(() => {
     if (userHasManuallySwitched.current) return;
 
     if (recommendedPreset) {
+      setIsCustom(false);
       setSelectedPreset(recommendedPreset.id);
       setCustomValues({ l: "", w: "", h: "", wg: "" });
       onUpdate({
@@ -99,9 +102,27 @@ export default function PackagingSelector({
         weight: recommendedPreset.weight_kg.toFixed(1),
       });
     } else {
-      handleSwitchToCustom();
+      // No preset fits: Switch to Custom tab and leave inputs completely blank
+      setIsCustom(true);
+      setSelectedPreset("");
+
+      // Keep UI inputs blank
+      setCustomValues({
+        l: "",
+        w: "",
+        h: "",
+        wg: "",
+      });
+
+      // Pass blank values to QuoteForm (this will securely lock the Submit button)
+      onUpdate({
+        length: "",
+        width: "",
+        height: "",
+        weight: "",
+      });
     }
-  }, [recommendedPreset, packagingType]);
+  }, [recommendedPreset, packagingType, artDimensions]);
 
   const handleSelect = (preset: PackagingPreset) => {
     userHasManuallySwitched.current = true;
@@ -155,14 +176,12 @@ export default function PackagingSelector({
       });
     }
   };
-  console.log(packagingType, packagingTypeFromOrder);
 
   return (
     <div ref={containerRef} className="space-y-6">
-      {/* Header restored! */}
+      {/* Header */}
       <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all">
         <div className="flex items-start gap-4">
-          {/* Dynamic Icon Container */}
           <div className="shrink-0 mt-0.5">
             <div
               className={`
@@ -182,7 +201,6 @@ export default function PackagingSelector({
             </div>
           </div>
 
-          {/* Contextual Text */}
           <div>
             <h3 className="text-sm font-bold text-slate-900 capitalize tracking-tight mb-1">
               {packagingType} Packaging
@@ -209,7 +227,6 @@ export default function PackagingSelector({
           </div>
         </div>
 
-        {/* Tactile Switch Button */}
         <button
           type="button"
           onClick={() => {
@@ -243,19 +260,38 @@ export default function PackagingSelector({
 
           const isSelected = selectedPreset === preset.id && !isCustom;
           const isClickable = isCompatible && !isOversize;
-
-          // THE MISSING VARIABLE IS BACK!
           const isRecommended = recommendedPreset?.id === preset.id;
+
+          // THE FIX: Explicit and foolproof styling logic
+          let cardStyle =
+            "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm";
+
+          if (!isCompatible) {
+            cardStyle = "opacity-60 grayscale bg-slate-50 border-slate-100";
+          } else if (isOversize) {
+            cardStyle = "bg-slate-50/50 border-amber-200";
+          } else if (isSelected && isRecommended) {
+            // It is selected AND it's the recommendation -> Full Emerald Ring
+            cardStyle =
+              "border-emerald-500 ring-2 ring-emerald-500 ring-offset-2 bg-white shadow-lg z-20";
+          } else if (isSelected && !isRecommended) {
+            // It is selected, but not recommended -> Full Dark Ring
+            cardStyle =
+              "border-dark ring-2 ring-dark ring-offset-2 bg-white shadow-lg z-20";
+          } else if (!isSelected && isRecommended) {
+            // It is recommended, but not currently selected -> Subtle Emerald Hint
+            cardStyle =
+              "border-emerald-400 ring-1 ring-emerald-400 ring-offset-0 bg-white shadow-md z-10";
+          }
 
           return (
             <div
               key={preset.id}
               onClick={() => isClickable && handleSelect(preset)}
-              className={`relative border rounded-xl overflow-hidden transition-all duration-300 ${isClickable ? "cursor-pointer hover:border-slate-300" : "cursor-not-allowed"} ${isSelected ? "border-dark ring-2 ring-dark ring-offset-2 bg-white shadow-lg z-10" : !isCompatible ? "opacity-60 grayscale bg-slate-50 border-slate-100" : isOversize ? "bg-slate-50/50 border-amber-200" : "border-slate-200 bg-white"}`}
+              className={`relative border rounded-xl overflow-hidden transition-all duration-300 ${isClickable ? "cursor-pointer" : "cursor-not-allowed"} ${cardStyle}`}
             >
-              {/* THE MISSING BADGE IS BACK! */}
               {isRecommended && isCompatible && (
-                <div className="absolute top-0 left-0 z-20">
+                <div className="absolute top-0 left-0 z-30">
                   <div className="bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm uppercase tracking-wider flex items-center gap-1">
                     <svg
                       className="w-3 h-3"
@@ -288,7 +324,7 @@ export default function PackagingSelector({
                   <div className="bg-white border border-amber-200 shadow-md rounded-lg p-3 text-center flex flex-col items-center">
                     <AlertTriangle className="w-5 h-5 text-amber-500 mb-1" />
                     <span className="text-amber-800 text-xs font-bold uppercase tracking-wide leading-tight">
-                      Exceeds shipping courier size/weight limits
+                      Exceeds courier limits
                     </span>
                   </div>
                 </div>
@@ -302,9 +338,10 @@ export default function PackagingSelector({
                   depth={preset.dims_in.height}
                 />
 
-                {/* The Checkmark for Selected State */}
                 {isSelected && (
-                  <div className="absolute top-3 right-3 bg-dark text-white rounded-full p-1.5 shadow-lg z-10 animate-in zoom-in duration-200">
+                  <div
+                    className={`absolute top-3 right-3 rounded-full p-1.5 shadow-lg z-10 animate-in zoom-in duration-200 ${isRecommended ? "bg-emerald-500 text-white" : "bg-dark text-white"}`}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -321,10 +358,11 @@ export default function PackagingSelector({
                   </div>
                 )}
               </div>
+
               <div className="p-4 border-t border-slate-100">
                 <div className="flex justify-between items-start mb-1">
                   <h3
-                    className={`font-semibold text-sm ${isSelected ? "text-dark" : "text-slate-700"}`}
+                    className={`font-semibold text-sm ${isSelected && isRecommended ? "text-emerald-700" : isSelected ? "text-dark" : "text-slate-700"}`}
                   >
                     {preset.label}
                   </h3>
@@ -343,17 +381,19 @@ export default function PackagingSelector({
           );
         })}
 
-        {/* Custom Option Box restored with SVG */}
+        {/* Custom Option Box */}
         <div
           onClick={handleSwitchToCustom}
-          className={`flex flex-col items-center col-span-1 sm:col-span-2 w-full justify-center text-center p-6 border rounded-xl cursor-pointer transition-all min-h-[120px] ${isCustom ? "border-dark ring-2 ring-dark bg-slate-50" : "border-dashed border-slate-300 hover:bg-slate-50"}`}
+          className={`flex flex-col items-center col-span-1 sm:col-span-2 w-full justify-center text-center p-6 border rounded-xl cursor-pointer min-h-[120px] transition-all duration-200 ${isCustom ? "border-dark ring-2 ring-dark ring-offset-2 bg-slate-50 shadow-md" : "border-dashed border-slate-300 hover:bg-slate-50 hover:border-slate-400"}`}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm">
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm transition-colors ${isCustom ? "bg-dark text-white border-dark" : "bg-white border border-slate-200 text-slate-400"}`}
+            >
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
-                strokeWidth={1.5}
+                strokeWidth={isCustom ? 2 : 1.5}
                 stroke="currentColor"
                 className="w-5 h-5"
               >
@@ -365,10 +405,12 @@ export default function PackagingSelector({
               </svg>
             </div>
             <div className="text-left">
-              <h3 className="font-semibold text-sm text-slate-900">
+              <h3
+                className={`font-semibold text-sm ${isCustom ? "text-dark" : "text-slate-900"}`}
+              >
                 Custom Packaging
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 mt-0.5">
                 For oversize items or custom crates.
               </p>
             </div>
@@ -376,19 +418,18 @@ export default function PackagingSelector({
         </div>
       </div>
 
-      {/* Custom Fields Container */}
       {isCustom && (
         <div
           ref={customInputRef}
-          className="mt-4 p-5 bg-slate-50 rounded-xl border border-slate-200 animate-in fade-in shadow-inner"
+          className="mt-4 p-5 bg-slate-50 rounded-xl border border-slate-200 animate-in fade-in slide-in-from-top-2 shadow-inner"
         >
           <div className="flex items-center gap-2 mb-4">
             <span className="w-1.5 h-4 bg-dark rounded-full"></span>
             <h4 className="text-sm font-semibold text-slate-900">
-              Enter exact package dimensions (IN/KG)
+              Enter Exact Dimensions (IN/KG)
             </h4>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {["l", "w", "h", "wg"].map((f) => (
               <div key={f}>
                 <label className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5 block">
@@ -403,45 +444,13 @@ export default function PackagingSelector({
                   inputMode="decimal"
                   placeholder="0.0"
                   onChange={handleCustomChange}
-                  className={`${INPUT_CLASS} !bg-white focus:ring-2 focus:ring-blue-500/20`}
+                  className={`${INPUT_CLASS} !bg-white focus:ring-2 focus:ring-dark/20 focus:border-dark transition-all`}
                 />
               </div>
             ))}
           </div>
-          <p className="text-[10px] text-slate-400 mt-3 text-right">
-            Dimensions must result in a combined Length + Girth of less than 165
-            inches for UPS.
-          </p>
         </div>
       )}
-
-      {/* Handling Note */}
-      <div className="mt-6 flex items-start gap-3 p-4 bg-amber-50/50 border border-amber-100 rounded-lg">
-        <div className="p-1.5 bg-amber-100 rounded-full text-amber-600 mt-0.5">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold text-slate-900">
-            White Glove Handling Required
-          </h4>
-          <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-            Please ensure artworks are packed securely with bubble wrap and
-            corner protectors.
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
