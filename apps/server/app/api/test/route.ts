@@ -8,6 +8,7 @@ import { sendPaymentPendingMail } from "@omenai/shared-emails/src/models/payment
 import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessGalleryMail";
 import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
 import { sendPaymentSuccessMailArtist } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMailArtist";
+import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
 const payload = {
   email: "dantereus1@gmail.com",
   name: "Elias",
@@ -20,6 +21,8 @@ const payload = {
   order_id: "882194-ACQ",
 };
 export async function GET() {
-  await sendPaymentSuccessMailArtist(payload);
-  return NextResponse.json({ message: "Test route is working!" });
+  // await sendPaymentSuccessMailArtist(payload);
+
+  const data = await getFutureShipmentDate(3, true, "US");
+  return NextResponse.json({ message: "Test route is working!", data });
 }
