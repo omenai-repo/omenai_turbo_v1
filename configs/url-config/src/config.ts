@@ -17,7 +17,9 @@ export const session_auth_url = (): string => {
   }
 };
 export const auth_uri = (): string => {
-  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
     return "https://auth.omenai.app";
   } else
     return process.env.NODE_ENV === "production"
@@ -26,7 +28,9 @@ export const auth_uri = (): string => {
 };
 
 export const dashboard_url = (): string => {
-  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
     return "https://dashboard.omenai.app";
   } else
     return process.env.NODE_ENV === "production"
@@ -35,7 +39,9 @@ export const dashboard_url = (): string => {
 };
 
 export const base_url = (): string => {
-  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
     return "https://omenai.app";
   } else
     return process.env.NODE_ENV === "production"
@@ -43,7 +49,9 @@ export const base_url = (): string => {
       : "http://localhost:3000";
 };
 export const admin_url = (): string => {
-  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
     return "https://admin.omenai.app";
   } else
     return process.env.NODE_ENV === "production"
@@ -52,7 +60,9 @@ export const admin_url = (): string => {
 };
 
 export const tracking_url = (): string => {
-  if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
     return "https://tracking.omenai.app";
   } else
     return process.env.NODE_ENV === "production"

@@ -254,7 +254,7 @@ export type RoleAccess = {
 export type ArtworkDimensions = {
   height: string;
   weight: string;
-  length: string;
+  width: string;
 };
 
 export type ArtworkPricing = {
@@ -312,7 +312,7 @@ export type ArtworkUploadStateTypes = {
   rarity: string;
   materials: string;
   height: string;
-  length: string;
+  width: string;
   weight: string;
   price: number;
   usd_price: number;
@@ -381,7 +381,7 @@ export type OrderShippingDetailsTypes = {
   delivery_confirmed: boolean;
   additional_information?: string;
   shipment_information: {
-    carrier: string;
+    carrier: "UPS" | "DHL";
     shipment_product_code: string;
     dimensions: {
       length: number;
@@ -779,7 +779,12 @@ export type AccountAdminSchemaTypes = {
   joinedAt: string | Date;
 };
 
-export type AdminAccessRoleTypes = "Admin" | "Owner" | "Editor" | "Viewer";
+export type AdminAccessRoleTypes =
+  | "Admin"
+  | "Owner"
+  | "Principal"
+  | "Editor"
+  | "Viewer";
 
 export type FLWDirectChargeDataTypes = CardInputTypes & {
   card: string;
@@ -979,6 +984,7 @@ export type ShipmentRequestDataTypes = {
   };
   invoice_number: string;
   artwork_price: number;
+  carrier: OrderShippingDetailsTypes["shipment_information"]["carrier"];
 };
 
 type ShipmentDeliveryValidation = {
@@ -1099,14 +1105,43 @@ export type NotificationPayload = {
 
 // types/tracking.ts
 
+// types/tracking.ts
+export type TrackingStatus =
+  | "CREATED"
+  | "IN_TRANSIT"
+  | "OUT_FOR_DELIVERY"
+  | "DELIVERED"
+  | "EXCEPTION";
+
 export interface TrackingEvent {
-  date: string;
-  time: string;
-  typeCode: string;
-  serviceArea: { code: string; description: string }[];
+  timestamp: string;
+  location: string;
   description: string;
-  signedBy?: string;
+  status_label: TrackingStatus;
 }
+
+export interface TrackingData {
+  tracking_number: string;
+  carrier: "DHL" | "UPS";
+  current_status: TrackingStatus;
+  estimated_delivery: string | null;
+  events: TrackingEvent[];
+  // Add other order-specific fields you might be merging
+  coordinates?: {
+    origin: { lat: number; lng: number };
+    destination: { lat: number; lng: number };
+  };
+  shipping_details?: any; // Keep your existing shape here
+}
+
+// export interface TrackingEvent {
+//   date: string;
+//   time: string;
+//   typeCode: string;
+//   serviceArea: { code: string; description: string }[];
+//   description: string;
+//   signedBy?: string;
+// }
 
 export interface TrackingDetails {
   id: string;

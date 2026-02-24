@@ -6,10 +6,16 @@ import {
 } from "./packaging_data";
 import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import PackagingPreview from "./PackagingPreview";
+import { AlertTriangle, ArrowRightLeft, Box, Scroll } from "lucide-react";
+import { checkCarrierLimit } from "@omenai/shared-utils/src/shippingLimits";
 
 interface PackagingSelectorProps {
   artDimensions: { length: number; height: number };
   packagingType: PackagingType;
+  carrier: string;
+  forceCustomToggle: number;
+  packagingTypeFromOrder: string;
+
   onTypeChange: (type: PackagingType) => void;
   onUpdate: (details: {
     length: string;
@@ -22,14 +28,18 @@ interface PackagingSelectorProps {
 export default function PackagingSelector({
   artDimensions,
   packagingType,
+  carrier,
+  forceCustomToggle,
   onTypeChange,
   onUpdate,
+  packagingTypeFromOrder,
 }: PackagingSelectorProps) {
   const [selectedPreset, setSelectedPreset] = useState<string>("");
   const [isCustom, setIsCustom] = useState(false);
   const userHasManuallySwitched = useRef(false);
+  const customInputRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // STATE: Holds the raw user input (INCHES for dims, KG for weight)
   const [customValues, setCustomValues] = useState({
     l: "",
     w: "",
@@ -37,42 +47,55 @@ export default function PackagingSelector({
     wg: "",
   });
 
-  // 1. SMART FIT CHECK
+  // SMART FIT CHECK
   const checkFit = (preset: PackagingPreset) => {
     const artLong = Math.max(artDimensions.length, artDimensions.height);
     const artShort = Math.min(artDimensions.length, artDimensions.height);
 
-    if (packagingType === "rolled") {
-      return artShort <= preset.max_art.length;
-    } else {
-      const boxLong = Math.max(
-        preset.max_art.length,
-        preset.max_art.width || 0,
-      );
-      const boxShort = Math.min(
-        preset.max_art.length,
-        preset.max_art.width || 0,
-      );
-      return artLong <= boxLong && artShort <= boxShort;
-    }
+    // For rolled, we only care if the shortest side of the canvas fits the tube length!
+    if (packagingType === "rolled") return artShort <= preset.max_art.length;
+
+    const boxLong = Math.max(preset.max_art.length, preset.max_art.width || 0);
+    const boxShort = Math.min(preset.max_art.length, preset.max_art.width || 0);
+    return artLong <= boxLong && artShort <= boxShort;
   };
 
-  // 2. MEMO: Identify Best Preset
+  // IDENTIFY BEST PRESET
   const recommendedPreset = useMemo(() => {
-    const validPresets = PACKAGING_PRESETS[packagingType].filter(checkFit);
-    return validPresets.length > 0 ? validPresets[0] : null;
-  }, [packagingType, artDimensions.length, artDimensions.height]);
+    const validPresets = PACKAGING_PRESETS[packagingType].filter((preset) => {
+      const fitsArt = checkFit(preset);
+      const isOversize = checkCarrierLimit(
+        preset.dims_cm.length,
+        preset.dims_cm.width || 1,
+        preset.dims_cm.height || 1,
+        preset.weight_kg,
+        carrier,
+      );
+      return fitsArt && !isOversize;
+    });
 
-  // 3. AUTO-SELECT
+    return validPresets.length > 0 ? validPresets[0] : null;
+  }, [packagingType, artDimensions.length, artDimensions.height, carrier]);
+
+  // STATE RESET LISTENER
+  useEffect(() => {
+    userHasManuallySwitched.current = false;
+    setIsCustom(false);
+    containerRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [packagingType]);
+
+  // AUTO-SELECT & SMART PRE-FILL
   useEffect(() => {
     if (userHasManuallySwitched.current) return;
 
     if (recommendedPreset) {
+      // THE FIX: Explicitly kill the custom state here to guarantee the ring renders!
       setIsCustom(false);
       setSelectedPreset(recommendedPreset.id);
       setCustomValues({ l: "", w: "", h: "", wg: "" });
-
-      // Preset data is already in CM, so we pass it directly
       onUpdate({
         length: recommendedPreset.dims_cm.length.toFixed(1),
         width: recommendedPreset.dims_cm.width.toFixed(1),
@@ -80,16 +103,35 @@ export default function PackagingSelector({
         weight: recommendedPreset.weight_kg.toFixed(1),
       });
     } else {
-      handleSwitchToCustom();
+      // Smart Pre-fill for Custom Crates
+      const estL_in = artDimensions.length > 0 ? artDimensions.length + 2 : 0;
+      const estW_in = artDimensions.height > 0 ? artDimensions.height + 2 : 0;
+      const estH_in = 3;
+      const estWg_kg = "15";
+
+      setIsCustom(true);
+      setSelectedPreset("");
+
+      setCustomValues({
+        l: estL_in ? estL_in.toString() : "",
+        w: estW_in ? estW_in.toString() : "",
+        h: estH_in.toString(),
+        wg: estWg_kg,
+      });
+
+      onUpdate({
+        length: estL_in ? (estL_in * 2.54).toFixed(1) : "",
+        width: estW_in ? (estW_in * 2.54).toFixed(1) : "",
+        height: (estH_in * 2.54).toFixed(1),
+        weight: estWg_kg,
+      });
     }
-  }, [recommendedPreset, packagingType]);
+  }, [recommendedPreset, packagingType, artDimensions]);
 
   const handleSelect = (preset: PackagingPreset) => {
-    userHasManuallySwitched.current = false;
+    userHasManuallySwitched.current = true;
     setIsCustom(false);
     setSelectedPreset(preset.id);
-    setCustomValues({ l: "", w: "", h: "", wg: "" });
-
     onUpdate({
       length: preset.dims_cm.length.toFixed(1),
       width: preset.dims_cm.width.toFixed(1),
@@ -102,94 +144,90 @@ export default function PackagingSelector({
     userHasManuallySwitched.current = true;
     setIsCustom(true);
     setSelectedPreset("");
-    setCustomValues({ l: "", w: "", h: "", wg: "" });
     onUpdate({ length: "", width: "", height: "", weight: "" });
   };
 
-  // HELPER: Convert Inches String to CM String
+  // SCROLL TRIGGER LISTENER
+  useEffect(() => {
+    if (forceCustomToggle > 0) {
+      handleSwitchToCustom();
+      setTimeout(
+        () =>
+          customInputRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          }),
+        150,
+      );
+    }
+  }, [forceCustomToggle]);
+
   const toCM = (val: string) => {
-    if (!val) return "";
     const num = parseFloat(val);
-    if (isNaN(num)) return "";
-    return (num * 2.54).toFixed(1);
+    return isNaN(num) ? "" : (num * 2.54).toFixed(1);
   };
 
   const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    // REGEX: Only allow numbers and one decimal point
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
-      // 1. Update UI state (Inches)
       const updated = { ...customValues, [name]: value };
       setCustomValues(updated);
-
-      // 2. Calculate values for Parent (Centimeters)
-      // Note: We keep Weight as KG based on the label, but dimensions are converted
       onUpdate({
         length: toCM(updated.l),
         width: toCM(updated.w),
         height: toCM(updated.h),
-        weight: updated.wg, // Weight is passed raw (KG)
+        weight: updated.wg,
       });
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div ref={containerRef} className="space-y-6">
       {/* Header */}
-      <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-slate-300">
-        <div className="flex gap-3">
-          <div className="mt-0.5">
-            <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 shadow-sm">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all">
+        <div className="flex items-start gap-4">
+          <div className="shrink-0 mt-0.5">
+            <div
+              className={`
+              w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm
+              ${
+                packagingType === "rolled"
+                  ? "bg-indigo-50 border-indigo-100 text-indigo-600"
+                  : "bg-emerald-50 border-emerald-100 text-emerald-600"
+              }
+            `}
+            >
               {packagingType === "rolled" ? (
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
+                <Scroll size={20} strokeWidth={2} />
               ) : (
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  />
-                </svg>
+                <Box size={20} strokeWidth={2} />
               )}
             </div>
           </div>
+
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 capitalize">
+            <h3 className="text-sm font-bold text-slate-900 capitalize tracking-tight mb-1">
               {packagingType} Packaging
             </h3>
-            <p className="text-xs text-slate-500 max-w-md mt-0.5">
-              We've tailored these options for{" "}
-              <span className="font-medium text-slate-700">
-                {packagingType}
-              </span>{" "}
-              artworks based on your listing.
-            </p>
-            <p className="text-xs text-slate-500 max-w-md mt-0.5">
-              Based on your artwork size{" "}
-              <span className="font-mono text-slate-700 font-medium">
-                ({artDimensions.length}" x {artDimensions.height}")
-              </span>
-              , we have recommended the best fit below.
-            </p>
+
+            <div className="space-y-1">
+              {packagingTypeFromOrder === packagingType && (
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  We've tailored these options for{" "}
+                  <span className="font-semibold text-slate-700">
+                    {packagingType}
+                  </span>{" "}
+                  artworks based on your original listing.
+                </p>
+              )}
+              <p className="text-xs text-slate-500 leading-relaxed flex flex-wrap items-center gap-1.5">
+                Based on your artwork size
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-mono font-semibold text-[10px] tracking-wider">
+                  {artDimensions.length}" × {artDimensions.height}"
+                </span>
+                we recommend the best fit below.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -199,9 +237,16 @@ export default function PackagingSelector({
             userHasManuallySwitched.current = false;
             onTypeChange(packagingType === "rolled" ? "stretched" : "rolled");
           }}
-          className="text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 px-3 py-1.5 rounded transition-colors border border-transparent hover:border-indigo-100 whitespace-nowrap"
+          className="shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 transition-all active:scale-95 w-full md:w-auto"
         >
-          Switch to {packagingType === "rolled" ? "Stretched" : "Rolled"}?
+          <ArrowRightLeft
+            size={14}
+            strokeWidth={2}
+            className="text-slate-400"
+          />
+          <span>
+            Switch to {packagingType === "rolled" ? "Stretched" : "Rolled"}
+          </span>
         </button>
       </div>
 
@@ -209,23 +254,48 @@ export default function PackagingSelector({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {PACKAGING_PRESETS[packagingType].map((preset) => {
           const isCompatible = checkFit(preset);
+          const isOversize = checkCarrierLimit(
+            preset.dims_cm.length,
+            preset.dims_cm.width || 1,
+            preset.dims_cm.height || 1,
+            preset.weight_kg,
+            carrier,
+          );
+
           const isSelected = selectedPreset === preset.id && !isCustom;
+          const isClickable = isCompatible && !isOversize;
           const isRecommended = recommendedPreset?.id === preset.id;
+
+          // THE FIX: Explicit and foolproof styling logic
+          let cardStyle =
+            "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm";
+
+          if (!isCompatible) {
+            cardStyle = "opacity-60 grayscale bg-slate-50 border-slate-100";
+          } else if (isOversize) {
+            cardStyle = "bg-slate-50/50 border-amber-200";
+          } else if (isSelected && isRecommended) {
+            // It is selected AND it's the recommendation -> Full Emerald Ring
+            cardStyle =
+              "border-emerald-500 ring-2 ring-emerald-500 ring-offset-2 bg-white shadow-lg z-20";
+          } else if (isSelected && !isRecommended) {
+            // It is selected, but not recommended -> Full Dark Ring
+            cardStyle =
+              "border-dark ring-2 ring-dark ring-offset-2 bg-white shadow-lg z-20";
+          } else if (!isSelected && isRecommended) {
+            // It is recommended, but not currently selected -> Subtle Emerald Hint
+            cardStyle =
+              "border-emerald-400 ring-1 ring-emerald-400 ring-offset-0 bg-white shadow-md z-10";
+          }
 
           return (
             <div
               key={preset.id}
-              onClick={() => isCompatible && handleSelect(preset)}
-              className={`relative group border rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
-                !isCompatible
-                  ? "opacity-60 grayscale bg-slate-50 border-slate-100"
-                  : isSelected
-                    ? "border-dark ring-2 ring-dark ring-offset-2 bg-white shadow-lg shadow-gray-200/50"
-                    : "border-slate-200 hover:border-slate-300 hover:shadow-md bg-white"
-              }`}
+              onClick={() => isClickable && handleSelect(preset)}
+              className={`relative border rounded-xl overflow-hidden transition-all duration-300 ${isClickable ? "cursor-pointer" : "cursor-not-allowed"} ${cardStyle}`}
             >
               {isRecommended && isCompatible && (
-                <div className="absolute top-0 left-0 z-20">
+                <div className="absolute top-0 left-0 z-30">
                   <div className="bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-br-lg shadow-sm uppercase tracking-wider flex items-center gap-1">
                     <svg
                       className="w-3 h-3"
@@ -245,22 +315,39 @@ export default function PackagingSelector({
                 </div>
               )}
 
-              <div className="relative h-56 w-full bg-slate-50 flex items-center justify-center p-0 overflow-hidden">
-                <div className="w-full h-full transform transition-transform duration-500 group-hover:scale-[1.02]">
-                  <PackagingPreview
-                    type={packagingType}
-                    width={
-                      packagingType === "rolled"
-                        ? preset.dims_in.width
-                        : preset.dims_in.width
-                    }
-                    height={preset.dims_in.length}
-                    depth={preset.dims_in.height}
-                  />
+              {/* Overlays */}
+              {!isCompatible && (
+                <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-20">
+                  <span className="bg-white text-red-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm border border-red-100 uppercase tracking-wide">
+                    Too Small
+                  </span>
                 </div>
+              )}
+              {isCompatible && isOversize && !isSelected && (
+                <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px] flex items-center justify-center z-20 p-4">
+                  <div className="bg-white border border-amber-200 shadow-md rounded-lg p-3 text-center flex flex-col items-center">
+                    <AlertTriangle className="w-5 h-5 text-amber-500 mb-1" />
+                    <span className="text-amber-800 text-xs font-bold uppercase tracking-wide leading-tight">
+                      Exceeds {carrier}
+                      <br />
+                      Limits
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="relative h-56 w-full bg-slate-50 flex items-center justify-center overflow-hidden">
+                <PackagingPreview
+                  type={packagingType}
+                  width={preset.dims_in.width}
+                  height={preset.dims_in.length}
+                  depth={preset.dims_in.height}
+                />
 
                 {isSelected && (
-                  <div className="absolute top-3 right-3 bg-dark text-white rounded-full p-1.5 shadow-lg z-10 animate-in zoom-in duration-200">
+                  <div
+                    className={`absolute top-3 right-3 rounded-full p-1.5 shadow-lg z-10 animate-in zoom-in duration-200 ${isRecommended ? "bg-emerald-500 text-white" : "bg-dark text-white"}`}
+                  >
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -276,25 +363,17 @@ export default function PackagingSelector({
                     </svg>
                   </div>
                 )}
-
-                {!isCompatible && (
-                  <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-20">
-                    <span className="bg-white text-red-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm border border-red-100 uppercase tracking-wide">
-                      Too Small
-                    </span>
-                  </div>
-                )}
               </div>
 
               <div className="p-4 border-t border-slate-100">
                 <div className="flex justify-between items-start mb-1">
                   <h3
-                    className={`font-semibold text-sm ${isSelected ? "text-dark" : "text-slate-700"}`}
+                    className={`font-semibold text-sm ${isSelected && isRecommended ? "text-emerald-700" : isSelected ? "text-dark" : "text-slate-700"}`}
                   >
                     {preset.label}
                   </h3>
                   <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-                    Max weight: {preset.weight_lbs} lbs
+                    Max: {preset.weight_lbs} lbs
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mb-3">
@@ -308,22 +387,19 @@ export default function PackagingSelector({
           );
         })}
 
-        {/* Custom Option */}
+        {/* Custom Option Box */}
         <div
           onClick={handleSwitchToCustom}
-          className={`flex flex-col items-center col-span-1 sm:col-span-2 w-full justify-center text-center p-6 border rounded-xl cursor-pointer transition-all min-h-[120px] ${
-            isCustom
-              ? "border-dark ring-2 ring-dark ring-offset-2 bg-slate-50"
-              : "border-dashed border-slate-300 hover:border-slate-400 hover:bg-slate-50"
-          }`}
+          className={`flex flex-col items-center col-span-1 sm:col-span-2 w-full justify-center text-center p-6 border rounded-xl cursor-pointer min-h-[120px] transition-all duration-200 ${isCustom ? "border-dark ring-2 ring-dark ring-offset-2 bg-slate-50 shadow-md" : "border-dashed border-slate-300 hover:bg-slate-50 hover:border-slate-400"}`}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm">
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm transition-colors ${isCustom ? "bg-dark text-white border-dark" : "bg-white border border-slate-200 text-slate-400"}`}
+            >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                strokeWidth={1.5}
+                strokeWidth={isCustom ? 2 : 1.5}
                 stroke="currentColor"
                 className="w-5 h-5"
               >
@@ -335,10 +411,12 @@ export default function PackagingSelector({
               </svg>
             </div>
             <div className="text-left">
-              <h3 className="font-semibold text-sm text-slate-900">
+              <h3
+                className={`font-semibold text-sm ${isCustom ? "text-dark" : "text-slate-900"}`}
+              >
                 Custom Packaging
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 mt-0.5">
                 For oversize items or custom crates.
               </p>
             </div>
@@ -347,14 +425,17 @@ export default function PackagingSelector({
       </div>
 
       {isCustom && (
-        <div className="mt-4 p-5 bg-slate-50 rounded-xl border border-slate-200 animate-in fade-in slide-in-from-top-2">
+        <div
+          ref={customInputRef}
+          className="mt-4 p-5 bg-slate-50 rounded-xl border border-slate-200 animate-in fade-in slide-in-from-top-2 shadow-inner"
+        >
           <div className="flex items-center gap-2 mb-4">
             <span className="w-1.5 h-4 bg-dark rounded-full"></span>
             <h4 className="text-sm font-semibold text-slate-900">
               Enter Exact Dimensions (IN/KG)
             </h4>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {["l", "w", "h", "wg"].map((f) => (
               <div key={f}>
                 <label className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5 block">
@@ -369,41 +450,13 @@ export default function PackagingSelector({
                   inputMode="decimal"
                   placeholder="0.0"
                   onChange={handleCustomChange}
-                  className={`${INPUT_CLASS} !bg-white`}
+                  className={`${INPUT_CLASS} !bg-white focus:ring-2 focus:ring-dark/20 focus:border-dark transition-all`}
                 />
               </div>
             ))}
           </div>
         </div>
       )}
-
-      {/* Handling Note (Unchanged) */}
-      <div className="mt-6 flex items-start gap-3 p-4 bg-amber-50/50 border border-amber-100 rounded-lg">
-        <div className="p-1.5 bg-amber-100 rounded-full text-amber-600 mt-0.5">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold text-slate-900">
-            White Glove Handling Required
-          </h4>
-          <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-            Please ensure artworks are packed securely with bubble wrap and
-            corner protectors.
-          </p>
-        </div>
-      </div>
     </div>
   );
 }

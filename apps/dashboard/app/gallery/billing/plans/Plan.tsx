@@ -85,7 +85,7 @@ const isButtonDisabled = (
 
 const PlanBadge = ({ planName }: { planName: string }) =>
   planName === "Pro" ? (
-    <div className="absolute top-5 right-5 rounded bg-slate-900 px-3 py-1 text-xs font-medium text-white">
+    <div className="absolute top-5 right-5 rounded bg-emerald-600 px-3 py-1 text-xs font-medium text-white">
       Most popular
     </div>
   ) : null;
@@ -146,7 +146,7 @@ export default function Plan({
       <div
         className={`relative rounded bg-white p-8 transition ${
           isFeatured
-            ? "shadow-xl ring-1 ring-slate-900"
+            ? `shadow-xl ring-2  ${isEligibleForDiscount ? "ring-emerald-600" : "ring-slate-900"}`
             : "shadow-sm ring-1 ring-slate-200"
         }`}
       >
@@ -227,8 +227,8 @@ export default function Plan({
             className={`w-full rounded py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 
               ${
                 isFeatured
-                  ? "bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-900"
-                  : "bg-slate-100 text-slate-900 hover:bg-slate-200 focus:ring-slate-300"
+                  ? `text-white ${isEligibleForDiscount ? "ring-emerald-600 bg-emerald-600 hover:bg-emerald-500 focus:ring-slate-600" : "bg-slate-900 hover:bg-slate-800 focus:ring-slate-900"}`
+                  : "bg-slate-900 text-white hover:bg-slate-700 focus:ring-slate-700"
               }
               disabled:cursor-not-allowed disabled:opacity-50`}
           >

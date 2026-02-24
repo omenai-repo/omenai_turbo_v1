@@ -7,8 +7,8 @@ type EmailData = {
   trackingCode: string;
   artwork: string;
   artworkImage: string;
-  buyerName: string;
-  requestDate: string;
+  artistName: string;
+  price: string;
 };
 export const sendGalleryShipmentSuccessfulMail = async ({
   name,
@@ -16,21 +16,21 @@ export const sendGalleryShipmentSuccessfulMail = async ({
   trackingCode,
   artwork,
   artworkImage,
-  buyerName,
-  requestDate,
+  artistName,
+  price,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai shippment",
     from: "transactions",
     to: email,
     subject: "Shipment Delivery Confirmed!",
-    react: SendGalleryShipmentSuccess(
+    react: SendGalleryShipmentSuccess({
       name,
       trackingCode,
       artwork,
       artworkImage,
-      buyerName,
-      requestDate
-    ),
+      artistName,
+      price,
+    }),
   });
 };

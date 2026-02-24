@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Omenai – African Art Marketplace",
+    title: "Omenai – Contemporary African Art Marketplace",
     description: "Discover, buy, and sell Contemporary African Art online.",
     url: "https://omenai.app",
   },

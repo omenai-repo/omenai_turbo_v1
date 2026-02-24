@@ -55,7 +55,7 @@ export default function ArtworkPricing() {
   const isComplete = currentStep === totalSteps;
 
   const artwork_height = extractNumberString(artworkUploadData.height);
-  const artwork_width = extractNumberString(artworkUploadData.length);
+  const artwork_width = extractNumberString(artworkUploadData.width);
 
   const { data: pricing, isLoading } = useQuery({
     queryKey: [
@@ -109,7 +109,7 @@ export default function ArtworkPricing() {
         fileId: fileUploaded.$id,
       };
 
-      const packagingType = artworkUploadData.packaging_type || "rolled";
+      const packagingType = artworkUploadData.packaging_type ?? "rolled";
 
       const data = createUploadedArtworkData(
         {
@@ -121,7 +121,7 @@ export default function ArtworkPricing() {
           packaging_type: packagingType,
         },
         file.fileId,
-        user.artist_id ?? "",
+        user.artist_id,
         {
           role: "artist",
           designation: user.categorization,
@@ -133,10 +133,10 @@ export default function ArtworkPricing() {
       if (!uploadResponse?.isOk) {
         try {
           toast_notif(uploadResponse.body.message, "error");
-          await storage.deleteFile(
-            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
-            file.fileId,
-          );
+          await storage.deleteFile({
+            bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+            fileId: file.fileId,
+          });
         } catch (error) {
           rollbar.error({
             context: "Artist artwork upload: Delete appwrite image",

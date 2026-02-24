@@ -11,84 +11,164 @@ import {
   Link,
   Tailwind,
   Text,
+  Section,
+  Preview,
 } from "@react-email/components";
+import * as React from "react";
 
-const SubscriptionPaymentFailedMail = (name: string) => {
+interface SubscriptionPaymentFailedMailProps {
+  name: string;
+  email?: string;
+}
+
+export const SubscriptionPaymentFailedMail = ({
+  name,
+}: SubscriptionPaymentFailedMailProps) => {
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .btn-main { background-color: #ffffff !important; color: #000000 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .link-main { color: #60a5fa !important; }
+            }
+          `}
+        </style>
+      </Head>
+      <Preview>
+        Action Required: Please update your payment information to maintain your
+        subscription.
+      </Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
-              }
-              width="120"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
-            />
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
+          <Container
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "560px", margin: "40px auto", padding: "32px" }}
+          >
+            {/* Centered Brand Anchor */}
+            <Section style={{ textAlign: "center", marginBottom: "32px" }}>
+              <Img
+                src="https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
+                width="120"
+                height="auto"
+                alt="Omenai logo"
+                style={{ margin: "0 auto" }}
+              />
+            </Section>
 
-            <Heading className="text-dark text-fluid-md font-semibold text-center p-0 mb-[30px] mx-0">
-              Action Needed: Update Your Payment Details
+            <Heading
+              className="heading-main text-gray-900"
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+              }}
+            >
+              Action Required: Subscription Payment Unsuccessful
             </Heading>
 
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
+            <Text className="text-main text-gray-800" style={textStyle}>
               Hello <strong>{name}</strong>,
             </Text>
 
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              We hope you're doing well. We're reaching out to let you know that
-              your recent subscription payment attempt was unsuccessful.
+            <Text className="text-main text-gray-800" style={textStyle}>
+              We are reaching out to inform you that we were unable to process
+              the recent payment for your Omenai subscription.
             </Text>
 
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              To avoid any interruptions in your access, please update your
-              payment information at your earliest convenience.
+            <Text className="text-main text-gray-800" style={textStyle}>
+              To prevent any interruption in your gallery's access to the
+              platform, please take a moment to update your billing information.
+              Your account data remains completely secure, but active
+              subscription features are temporarily paused until the balance is
+              resolved.
             </Text>
 
-            <Button
-              href={`${dashboard_url()}/gallery/billing/card`}
-              className="bg-dark text-white text-fluid-xxs font-medium px-5 py-3 rounded mt-[20px] mb-[10px] mx-auto block text-center"
-            >
-              Update Payment Info
-            </Button>
-
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              Your account and data remain secure during this time, but
-              subscription access will be paused until payment is resolved.
-            </Text>
-
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              For any assistance, please contact our support team at{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-blue-800 italic"
+            <Section style={{ margin: "32px 0" }}>
+              <Button
+                href={`${dashboard_url()}/gallery/billing/card`}
+                className="btn-main"
+                style={{
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  fontSize: "15px",
+                  fontWeight: "500",
+                  padding: "14px 28px",
+                  borderRadius: "6px",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  letterSpacing: "0.3px",
+                }}
               >
-                contact@omenani.net
+                Update Payment Details
+              </Button>
+            </Section>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              If you require any assistance navigating this or have questions
+              regarding your account, please reply directly to this email or
+              reach out to our team at{" "}
+              <Link
+                href="mailto:contact@omenai.net"
+                className="link-main"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                contact@omenai.net
               </Link>
               .
             </Text>
 
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              Thank you for your attention to this matter. We appreciate your
-              continued support and look forward to having you back as an active
-              subscriber.
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
+            >
+              Warm regards,
+              <br />
+              <br />
+              <strong
+                className="heading-main text-gray-900"
+                style={{ fontWeight: "600" }}
+              >
+                Moses
+              </strong>
+              <br />
+              <span
+                className="text-muted text-gray-500"
+                style={{ fontSize: "14px" }}
+              >
+                The Omenai Team
+              </span>
             </Text>
 
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              Warm regards, <br />
-              Moses from Omenai
-            </Text>
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
 
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please note: this email is intended solely for{" "}
-              <span className="text-dark">{name}</span>. If you received it in
-              error, please delete it and notify us immediately. This message
-              may contain confidential or legally privileged information.
+            {/* Muted Legal Footer */}
+            <Text
+              className="text-muted text-gray-500"
+              style={{ fontSize: "12px", lineHeight: "1.6", margin: "0" }}
+            >
+              Please note: this communication is intended solely for{" "}
+              <strong className="text-main text-gray-700">{name}</strong>. If
+              you received this in error, please delete it and notify us
+              immediately. This message may contain confidential information.
               Unauthorized use or distribution is strictly prohibited.
             </Text>
           </Container>
@@ -96,6 +176,13 @@ const SubscriptionPaymentFailedMail = (name: string) => {
       </Tailwind>
     </Html>
   );
+};
+
+// Shared text style
+const textStyle = {
+  fontSize: "15px",
+  lineHeight: "1.6",
+  margin: "0 0 16px 0",
 };
 
 export default SubscriptionPaymentFailedMail;

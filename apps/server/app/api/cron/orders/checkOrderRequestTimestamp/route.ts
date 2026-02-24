@@ -186,11 +186,18 @@ async function sendReminderEmails(
     const reminderEmailPayload = await Promise.all(
       orders24.map(async (order) => {
         const html = await render(
-          OrderRequestReminder(order.seller_details.name),
+          OrderRequestReminder({
+            name: order.seller_details.name,
+            artworkTitle: order.artwork_data.title,
+            artistName: order.artwork_data.artist_name,
+            price: order.artwork_data.price,
+            artworkImage: order.artwork_data.image_url,
+            entity: order.seller_designation,
+          }),
         );
         return {
           from: "Orders <omenai@omenai.app>",
-          to: [order.seller_details.email],
+          to: order.seller_details.email,
           subject: "Order Request Reminder",
           html,
         };

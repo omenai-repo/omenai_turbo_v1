@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import {
   BadRequestError,
   ConflictError,
+  NotFoundError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
@@ -39,6 +40,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         { artist_id: user.author },
         "password",
       );
+
+      if (!account)
+        throw new NotFoundError(
+          "Invalid request. No account associated with this token.",
+        );
 
       const isPasswordMatch = bcrypt.compareSync(password, account.password);
 

@@ -1,195 +1,225 @@
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
-import { base_url, getApiUrl } from "@omenai/url-config/src/config";
+import { base_url } from "@omenai/url-config/src/config";
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
   Hr,
   Html,
+  Tailwind,
+  Section,
   Img,
+  Text,
   Link,
   Preview,
-  Section,
-  Tailwind,
-  Text,
 } from "@react-email/components";
+import * as React from "react";
+import { COMPANY_INFO } from "../../constants/constants";
 import EmailFooter from "../../components/Footer";
-import {
-  EMAIL_STYLES,
-  COMPANY_INFO,
-  EMAIL_COLORS,
-  EMAIL_SIGNATURES,
-} from "../../constants/constants";
+import EmailArtworkCard from "../components/EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
-const OrderRequestReceivedEmail = (
-  username: string,
-  artwork_data: Pick<
+interface OrderRequestReceivedEmailProps {
+  name: string;
+  artwork: Pick<
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
-  >,
-  orderId: string
-) => {
-  const url = base_url();
+  >;
+  orderId: string;
+}
+
+export const OrderRequestReceivedEmail = ({
+  name,
+  artwork,
+  orderId,
+}: OrderRequestReceivedEmailProps) => {
+  const artworkUrl = `${base_url()}/artwork/${artwork.url}`;
+  const optimizedImage = getImageFileView(artwork.url, 400);
+
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .bg-box { background-color: #111827 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .link-main { color: #60a5fa !important; }
+            }
+          `}
+        </style>
+      </Head>
       <Preview>
-        We've received your order request for {artwork_data.title}
+        Confirmation: We have received your order request for {artwork.title}.
       </Preview>
       <Tailwind>
-        <Body className="bg-gray-50 font-sans">
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
           <Container
-            style={EMAIL_STYLES.container}
-            className="my-10 rounded shadow-sm"
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "560px", margin: "40px auto", padding: "24px" }}
           >
-            {/* Header Section */}
-            <Section className="px-8 py-6 text-center border-b border-gray-200">
-              <Img
-                src={COMPANY_INFO.logo}
-                width="140"
-                height="24"
-                alt={`${COMPANY_INFO.name} logo`}
-                className="mx-auto"
-              />
-            </Section>
+            <Heading
+              className="heading-main text-gray-900"
+              style={{
+                fontSize: "22px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+              }}
+            >
+              Your Order Request is in Review
+            </Heading>
 
-            {/* Success Banner */}
-            <Section className="bg-green-50 px-8 py-4 border-b-4 border-green-500">
-              <Text
-                className="text-center font-semibold m-0"
-                style={{ color: EMAIL_COLORS.success, fontSize: "18px" }}
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Hello <strong>{name}</strong>,
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Thank you for choosing Omenai to expand your collection. We have
+              successfully received your request for{" "}
+              <Link
+                href={artworkUrl}
+                className="link-main"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
               >
-                ✓ Order Request Received
-              </Text>
-            </Section>
+                {artwork.title}
+              </Link>
+              .
+            </Text>
 
-            {/* Main Content */}
-            <Section className="px-8 py-8">
-              <Text style={EMAIL_STYLES.text.base}>
-                Dear <strong>{username}</strong>,
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                Thank you for your interest in{" "}
-                <Link
-                  href={`${base_url()}/artwork/${artwork_data.title}`}
-                  style={EMAIL_STYLES.link}
-                >
-                  {artwork_data.title}
-                </Link>
-                . We're excited to confirm that we've received your order
-                request and our team is now preparing your personalized quote.
-              </Text>
-
-              {/* Order Details Box */}
-              <Section className="my-6 p-6 bg-gray-50 rounded">
-                <Text
-                  style={{
-                    ...EMAIL_STYLES.text.base,
-                    marginBottom: "12px",
-                    fontWeight: "600",
-                  }}
-                >
-                  What happens next:
-                </Text>
-                <table style={{ width: "100%" }}>
-                  <tr>
-                    <td
-                      style={{
-                        paddingBottom: "8px",
-                        verticalAlign: "top",
-                        width: "30px",
-                      }}
-                    >
-                      <Text style={{ ...EMAIL_STYLES.text.small, margin: "0" }}>
-                        1.
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "8px" }}>
-                      <Text style={{ ...EMAIL_STYLES.text.small, margin: "0" }}>
-                        We'll calculate shipping costs to your location
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ paddingBottom: "8px", verticalAlign: "top" }}>
-                      <Text style={{ ...EMAIL_STYLES.text.small, margin: "0" }}>
-                        2.
-                      </Text>
-                    </td>
-                    <td style={{ paddingBottom: "8px" }}>
-                      <Text style={{ ...EMAIL_STYLES.text.small, margin: "0" }}>
-                        We'll determine applicable taxes and fees
-                      </Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ verticalAlign: "top" }}>
-                      <Text style={{ ...EMAIL_STYLES.text.small, margin: "0" }}>
-                        3.
-                      </Text>
-                    </td>
-                    <td>
-                      <Text style={{ ...EMAIL_STYLES.text.small, margin: "0" }}>
-                        You'll receive a detailed quote within{" "}
-                        <strong>24-48 hours</strong>
-                      </Text>
-                    </td>
-                  </tr>
-                </table>
-                {orderId && (
-                  <Text
-                    style={{
-                      ...EMAIL_STYLES.text.tiny,
-                      marginTop: "16px",
-                      marginBottom: "0",
-                    }}
-                  >
-                    Order Reference: <strong>{orderId}</strong>
-                  </Text>
-                )}
-              </Section>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                Once we've prepared your quote, we'll send you a detailed
-                breakdown of all costs and guide you through the next steps to
-                complete your purchase.
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                In the meantime, if you have any questions or special
-                requirements, please don't hesitate to reach out. We're here to
-                ensure a smooth and enjoyable art acquisition experience.
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                We appreciate your patience and look forward to helping you add
-                this beautiful piece to your collection.
-              </Text>
-
-              <Text style={EMAIL_STYLES.text.base}>
-                Best regards,
-                <br />
-                <strong>
-                  {EMAIL_SIGNATURES.default.name} from{" "}
-                  {EMAIL_SIGNATURES.default.company}
-                </strong>
-              </Text>
-            </Section>
-
-            {/* Reusable Footer */}
-            <EmailFooter
-              recipientName={username}
-              supportTitle="Have questions?"
-              supportMessage="Our team is ready to assist you with your order. Contact us at"
+            <EmailArtworkCard
+              artwork={artwork.title}
+              artistName={artwork.artist}
+              price={`$${artwork.pricing.price.toLocaleString()}`}
+              artworkImage={optimizedImage}
             />
+
+            <Text
+              className="text-main text-gray-900"
+              style={{ ...textStyle, fontWeight: "600", marginTop: "32px" }}
+            >
+              Our Curated Process
+            </Text>
+
+            <Text
+              className="text-muted text-gray-600"
+              style={{ ...textStyle, fontSize: "14px" }}
+            >
+              To ensure a seamless delivery, our logistics team and the gallery
+              are currently performing the following steps:
+            </Text>
+
+            {/* Steps Section */}
+            <Section className="mb-8">
+              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4 mb-3">
+                <Text
+                  className="heading-main text-gray-900 font-semibold m-0 mb-1"
+                  style={{ fontSize: "14px" }}
+                >
+                  1. Logistics Coordination
+                </Text>
+                <Text
+                  className="text-muted text-gray-600 m-0"
+                  style={{ fontSize: "13px", lineHeight: "1.5" }}
+                >
+                  Calculating the most secure and efficient shipping route to
+                  your specific location.
+                </Text>
+              </div>
+
+              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4 mb-3">
+                <Text
+                  className="heading-main text-gray-900 font-semibold m-0 mb-1"
+                  style={{ fontSize: "14px" }}
+                >
+                  2. Financial Overview
+                </Text>
+                <Text
+                  className="text-muted text-gray-600 m-0"
+                  style={{ fontSize: "13px", lineHeight: "1.5" }}
+                >
+                  Determining all applicable regional taxes and customs fees for
+                  a transparent final total.
+                </Text>
+              </div>
+
+              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4">
+                <Text
+                  className="heading-main text-gray-900 font-semibold m-0 mb-1"
+                  style={{ fontSize: "14px" }}
+                >
+                  3. Formal Quote Delivery
+                </Text>
+                <Text
+                  className="text-muted text-gray-600 m-0"
+                  style={{ fontSize: "13px", lineHeight: "1.5" }}
+                >
+                  You will receive a detailed acquisition quote within{" "}
+                  <strong>24–48 hours</strong> to finalize your purchase.
+                </Text>
+              </div>
+            </Section>
+
+            <Section className="bg-box bg-gray-50 p-4 rounded-md border border-gray-100 border-divider mb-8">
+              <Text
+                className="text-muted text-gray-500 m-0"
+                style={{ fontSize: "12px", textAlign: "center" }}
+              >
+                Order Reference:{" "}
+                <strong className="text-main text-gray-800">{orderId}</strong>
+              </Text>
+            </Section>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              In the meantime, if you have any special requirements or questions
+              regarding this piece, please reach out to our advisory team.
+            </Text>
+
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
+            >
+              Warmly,
+              <br />
+              <br />
+              <strong
+                className="heading-main text-gray-900"
+                style={{ fontWeight: "600" }}
+              >
+                The Omenai Team
+              </strong>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+
+            <EmailFooter recipientName={name} showSupportSection={true} />
           </Container>
         </Body>
       </Tailwind>
     </Html>
   );
+};
+
+const textStyle = {
+  fontSize: "15px",
+  lineHeight: "1.6",
+  margin: "0 0 16px 0",
 };
 
 export default OrderRequestReceivedEmail;

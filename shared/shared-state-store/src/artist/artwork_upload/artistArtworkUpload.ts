@@ -7,8 +7,9 @@ type ErrorFields = {
   title: string;
   materials: string;
   height: string;
-  length: string;
+  width: string;
 };
+
 type ArtistArtworkUploadTypes = {
   image: File | null;
   setImage: (img: File | null) => void;
@@ -35,7 +36,7 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
       materials: "",
       height: "",
       weight: "",
-      length: "",
+      width: "",
       artist_birthyear: "",
       artist_country_origin: "",
       certificate_of_authenticity: "",
@@ -65,7 +66,7 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
           materials: "",
           height: "",
           weight: "",
-          length: "",
+          width: "",
           artist_birthyear: "",
           artist_country_origin: "",
           certificate_of_authenticity: "",
@@ -82,7 +83,7 @@ export const artistArtworkUploadStore = create<ArtistArtworkUploadTypes>(
       title: "",
       materials: "",
       height: "",
-      length: "",
+      width: "",
       weight: "",
       artist_birthyear: "",
       artwork_description: "",

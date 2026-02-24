@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import PasswordBlock from "./components/PasswordBlock";
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 import { auth_uri } from "@omenai/url-config/src/config";
+import PasswordBlock from "../../components/PasswordBlock";
 
 export default async function ResetPassword({
   params,
@@ -25,7 +25,7 @@ export default async function ResetPassword({
         </div>
         {/* Body */}
       </div>
-      <PasswordBlock token={slug} />
+      <PasswordBlock token={slug} route="artist" />
     </div>
   );
 }

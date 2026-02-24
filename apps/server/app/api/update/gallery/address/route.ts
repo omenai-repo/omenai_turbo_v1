@@ -7,10 +7,17 @@ import {
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { CombinedConfig } from "@omenai/shared-types";
+import {
+  CombinedConfig,
+  ShipmentAddressValidationType,
+} from "@omenai/shared-types";
 import { getApiUrl } from "@omenai/url-config/src/config";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
-import { createErrorRollbarReport, validateRequestBody } from "../../../util";
+import {
+  createErrorRollbarReport,
+  validateDHLAddress,
+  validateRequestBody,
+} from "../../../util";
 import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -35,27 +42,15 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     await connectMongoDB();
 
     const { gallery_id, address } = await validateRequestBody(request, Schema);
-    const payload = {
+    const payload: ShipmentAddressValidationType = {
       type: "pickup",
       countryCode: address.countryCode,
       postalCode: address.zip,
       cityName: address.state,
       countyName: address.city,
+      country: address.country,
     };
-    const response = await fetch(
-      `${getApiUrl()}/api/shipment/address_validation`,
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      },
-    );
-    const result = await response.json();
-
-    if (!response.ok) throw new BadRequestError(result.message);
+    await validateDHLAddress(payload);
 
     const updatedData = await AccountGallery.updateOne(
       { gallery_id },

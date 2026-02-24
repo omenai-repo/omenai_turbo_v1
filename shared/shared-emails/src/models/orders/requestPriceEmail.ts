@@ -20,6 +20,6 @@ export const sendPriceEmail = async ({
     from: "transactions",
     to: email,
     subject: `Requested Information: Base Price of artwork`,
-    react: RequestPriceEmail(name, artwork_data),
+    react: RequestPriceEmail({ name, artwork_data }),
   });
 };

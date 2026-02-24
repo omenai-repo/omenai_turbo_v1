@@ -20,17 +20,19 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
           </span>
         </div>
         <div className="flex justify-between border-b border-neutral-200 pb-2">
-          <span className="font-sans text-xs text-neutral-500">Length</span>
+          <span className="font-sans text-xs text-neutral-500">Width</span>
           <span className="font-sans text-xs text-dark">
-            {dimensions.length}
+            {dimensions.width}
           </span>
         </div>
-        <div className="flex justify-between border-b border-neutral-200 pb-2">
-          <span className="font-sans text-xs text-neutral-500">Weight</span>
-          <span className="font-sans text-xs text-dark">
-            {dimensions.weight}
-          </span>
-        </div>
+        {!!dimensions.weight && (
+          <div className="flex justify-between border-b border-neutral-200 pb-2">
+            <span className="font-sans text-xs text-neutral-500">Weight</span>
+            <span className="font-sans text-xs text-dark">
+              {dimensions.weight}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

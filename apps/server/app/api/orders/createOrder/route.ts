@@ -26,6 +26,7 @@ import {
   CombinedConfig,
   CreateOrderModelTypes,
   NotificationPayload,
+  OrderShippingDetailsTypes,
 } from "@omenai/shared-types";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { validateDHLAddress } from "../../util";
@@ -165,6 +166,16 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ForbiddenError("This order is already being processed.");
     }
 
+    const seller_country = sellerData.address.countryCode;
+    const buyer_country = shipping_address.countryCode;
+    const carrier: OrderShippingDetailsTypes["shipment_information"]["carrier"] =
+      (seller_country.toLowerCase() === "us" &&
+        buyer_country.toLowerCase() === "is") ||
+      (seller_country.toLowerCase() === "ng" &&
+        buyer_country.toLowerCase() === "ng")
+        ? "UPS"
+        : "DHL";
+
     // Create order
     const createOrder: CreateOrderModelTypes = await CreateOrder.create({
       artwork_data: artwork,
@@ -188,7 +199,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         },
         delivery_confirmed: false,
         shipment_information: {
-          carrier: "DHL",
+          carrier,
           tracking: { id: null, link: null, delivery_status: null },
         },
       },

@@ -13,7 +13,7 @@ export const POST = withRateLimitHighlightAndCsrf(fortKnoxRateLimit)(
     try {
       const { name } = await validateRequestBody(request, Schema);
 
-      await sendVerifyGalleryMail({ name, email: "moses@omenai.net" });
+      await sendVerifyGalleryMail({ name, email: "onboarding@omenai.app" });
 
       return NextResponse.json(
         { message: "Gallery verification request sent" },

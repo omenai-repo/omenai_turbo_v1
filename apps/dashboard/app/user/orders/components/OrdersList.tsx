@@ -329,7 +329,8 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
             {actionType === "track" && (
               <div className="flex justify-between items-center">
                 <Link
-                  href={`${tracking_url()}?tracking_id=${order.shipping_details.shipment_information.tracking.id}`}
+                  target="_blank"
+                  href={`${tracking_url()}?tracking_id=${order.order_id}`}
                 >
                   <button className="w-fit rounded bg-dark px-5 py-2 text-fluid-xxs font-light text-white hover:opacity-90 transition">
                     Track shipment

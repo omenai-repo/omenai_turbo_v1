@@ -12,6 +12,7 @@ import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
+  allowedAdminAccessRoles: ["Admin", "Editor", "Owner", "Principal"],
 };
 const DeletePromotionalSchema = z.object({
   id: z.string(),

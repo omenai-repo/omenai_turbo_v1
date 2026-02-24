@@ -10,18 +10,20 @@ export type KeyList =
   | "logout"
   | "analytics"
   | "support"
-  | "artworks";
+  | "artworks"
+  | "shipments";
 const routePermissionsMap = new Map<string, TeamMember["access_role"][]>([
-  ["requests", ["Owner", "Admin"]],
+  ["requests", ["Owner", "Admin", "Principal"]],
   ["taxes", ["Owner"]],
-  ["editorials", ["Owner", "Admin", "Editor"]],
-  ["promotionals", ["Owner", "Admin", "Editor"]],
-  ["team", ["Owner", "Admin", "Editor", "Viewer"]],
-  ["settings", ["Owner", "Admin", "Editor", "Viewer"]],
-  ["logout", ["Owner", "Admin", "Editor", "Viewer"]],
+  ["editorials", ["Owner", "Admin", "Editor", "Principal"]],
+  ["promotionals", ["Owner", "Admin", "Editor", "Principal"]],
+  ["team", ["Owner", "Admin"]],
+  ["settings", ["Owner", "Admin", "Editor", "Principal"]],
+  ["logout", ["Owner", "Admin", "Editor", "Principal"]],
   ["analytics", ["Owner", "Admin"]],
-  ["support", ["Owner", "Admin", "Editor"]],
-  ["artworks", ["Owner", "Admin", "Editor"]],
+  ["support", ["Owner", "Admin", "Principal"]],
+  ["artworks", ["Owner", "Admin", "Principal"]],
+  ["shipments", ["Owner", "Admin"]],
 ]);
 
 export function canAccessRoute(

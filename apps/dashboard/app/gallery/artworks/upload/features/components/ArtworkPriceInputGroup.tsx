@@ -11,7 +11,11 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
 
-export default function ArtworkPriceInputGroup() {
+export default function ArtworkPriceInputGroup({
+  isPremium,
+}: {
+  isPremium: boolean;
+}) {
   const { artworkUploadData, updateArtworkUploadData } =
     galleryArtworkUploadStore();
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
@@ -165,11 +169,9 @@ export default function ArtworkPriceInputGroup() {
                 name={uploadArtworkPriceInputMocks[2].name}
                 required={uploadArtworkPriceInputMocks[2].required}
                 items={uploadArtworkPriceInputMocks[2].options}
-                disabled={
-                  user?.subscription_status?.type?.toLowerCase() !== "premium"
-                }
+                disabled={!isPremium}
               />
-              {user?.subscription_status?.type?.toLowerCase() !== "premium" && (
+              {!isPremium && (
                 <p className="text-[10px] text-slate-400 mt-2 italic">
                   * Upgrade your plan to unlock advanced pricing visibility
                   options.

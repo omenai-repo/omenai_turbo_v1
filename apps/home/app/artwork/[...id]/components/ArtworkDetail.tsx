@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { ArtworkResultTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehaviour";
 type ArtworkDetailTypes = {
   data: ArtworkResultTypes;
   sessionId: string | undefined;
@@ -58,7 +57,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         setLoading(false);
         if (res?.isOk) {
           toast.success("Request Sent", {
-            description: "Our concierge will contact you shortly.",
+            description:
+              "Request received. You'll receive a response via mail shortly.",
             style: { background: "black", color: "white", borderRadius: "0px" },
           });
         } else {

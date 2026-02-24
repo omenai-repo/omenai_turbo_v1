@@ -1,101 +1,122 @@
-import { Heading, Text } from "@react-email/components";
+import { Heading, Text, Section, Container, Hr } from "@react-email/components";
 import React from "react";
 import ShipmentLayout from "./ShipmentLayout";
-import EmailArtworkCard from "./EmailArtworkCard";
+import EmailArtworkCard from "../components/EmailArtworkCard";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
-export default function SendBuyerShipmentSuccess(
-  trackingCode: string,
-  name: string,
-  artwork: string,
-  artworkImage: string,
-  artistName: string,
-  price: string,
-) {
-  artworkImage = getImageFileView(artworkImage, 400);
+interface SendBuyerShipmentSuccessProps {
+  trackingCode: string;
+  name: string;
+  artwork: string;
+  artworkImage: string;
+  artistName: string;
+  price: string;
+  email?: string; // Added here to match your testing requirements
+}
+
+export default function SendBuyerShipmentSuccess({
+  trackingCode,
+  name,
+  artwork,
+  artworkImage,
+  artistName,
+  price,
+}: SendBuyerShipmentSuccessProps) {
+  const optimizedImage = getImageFileView(artworkImage, 400);
+
   return (
     <ShipmentLayout
-      preview="Great news! Your Shipment Was Successfully Delivered."
+      preview={`Your artwork has arrived: ${artwork} by ${artistName}.`}
       name={name}
     >
-      <Heading
-        as="h2"
-        style={{
-          color: "#0f172a",
-          fontSize: "24px",
-          marginBottom: "20px",
-        }}
-      >
-        Artwork Delivered Successfully!
-      </Heading>
+      <Container style={{ maxWidth: "600px", margin: "0 auto" }}>
+        <Section style={{ padding: "10px 0" }}>
+          <Heading
+            as="h2"
+            style={{
+              color: "#111827",
+              fontSize: "24px",
+              fontWeight: "600",
+              letterSpacing: "-0.5px",
+              marginBottom: "24px",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            Your masterpiece has arrived.
+          </Heading>
 
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "16px",
-        }}
-      >
-        Hi {name},
-      </Text>
+          <Text style={textStyle}>Dear {name},</Text>
 
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "16px",
-        }}
-      >
-        Congratulations! Your Shipment Was Successfully Delivered!
-      </Text>
+          <Text style={textStyle}>
+            We are delighted to confirm that your newly acquired artwork has
+            been successfully delivered. It is always a momentous occasion when
+            a piece finds its final home.
+          </Text>
 
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "24px",
-        }}
-      >
-        This is an official notification confirming that the shipment for your
-        order <strong>{trackingCode}</strong> has been successfully completed.
-        The package was dispatched under tracking number{" "}
-        <strong>{trackingCode}</strong> and has been delivered to the address
-        provided during the order process.
-      </Text>
-      <EmailArtworkCard
-        artwork={artwork}
-        artworkImage={artworkImage}
-        artistName={artistName}
-        price={price}
-      />
-      <Text
-        style={{
-          fontSize: "16px",
-          lineHeight: "1.5",
-          marginBottom: "24px",
-        }}
-      >
-        Please note that this message serves as confirmation of successful
-        shipment and delivery. If there are any discrepancies regarding the
-        items received or if further assistance is required, you may contact our
-        customer support team. Our representatives will be available to assist
-        you with any inquiries related to this order.
-      </Text>
+          {/* Stylized Order Reference Box */}
+          <Section
+            style={{
+              backgroundColor: "#f9fafb",
+              borderRadius: "8px",
+              padding: "16px",
+              margin: "24px 0",
+              border: "1px solid #e5e7eb",
+            }}
+          >
+            <Text style={{ ...textStyle, margin: "0", color: "#4b5563" }}>
+              <strong style={{ color: "#111827" }}>
+                Order & Tracking Reference:
+              </strong>{" "}
+              {trackingCode}
+            </Text>
+          </Section>
 
-      <Text
-        style={{
-          fontSize: "14px",
-          lineHeight: "1.5",
-          color: "#64748b",
-          marginTop: "24px",
-        }}
-      >
-        Thank you for being part of the Omenai community.
-      </Text>
-      <Text style={{ fontSize: "16px", lineHeight: "1.5" }}>
-        Best regards, <br />
-        <strong>Omenai</strong>
-      </Text>
+          <EmailArtworkCard
+            artwork={artwork}
+            artworkImage={optimizedImage}
+            artistName={artistName}
+            price={price}
+          />
+
+          <Text
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              color: "#374151",
+              marginTop: "32px",
+              marginBottom: "24px",
+            }}
+          >
+            We hope this piece brings immense inspiration to your space. If you
+            require any assistance with unboxing, installation advice, or have
+            any questions about your acquisition, our dedicated advisory team is
+            here to help.
+          </Text>
+
+          <Hr
+            style={{
+              borderColor: "#e5e7eb",
+              margin: "32px 0",
+            }}
+          />
+
+          <Text style={{ ...textStyle, color: "#6b7280", fontSize: "14px" }}>
+            Thank you for collecting with Omenai.
+            <br />
+            Warmly,
+            <br />
+            <strong style={{ color: "#111827" }}>The Omenai Team</strong>
+          </Text>
+        </Section>
+      </Container>
     </ShipmentLayout>
   );
 }
+
+// Shared text style for consistency
+const textStyle = {
+  fontSize: "16px",
+  lineHeight: "1.6",
+  color: "#374151",
+  marginBottom: "16px",
+};

@@ -68,10 +68,10 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     const expiredSoonEmailPayload = await Promise.all(
       results.map(async (subscription) => {
         const html = await render(
-          SubscriptionExpireAlert(
-            subscription.customer.name,
-            `${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`,
-          ),
+          SubscriptionExpireAlert({
+            name: subscription.customer.name,
+            day: subscription.days_until_expiry,
+          }),
         );
         return {
           from: "Subscription <omenai@omenai.app>",

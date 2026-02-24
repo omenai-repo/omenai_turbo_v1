@@ -15,7 +15,7 @@ const config: CombinedConfig = {
 };
 
 export const POST = withRateLimit(config)(async function POST(
-  request: Request
+  request: Request,
 ) {
   try {
     await connectMongoDB();
@@ -25,7 +25,7 @@ export const POST = withRateLimit(config)(async function POST(
 
     if (!createPlan)
       throw new ServerError(
-        "Something went wrong with creating this plan. Please contact support"
+        "Something went wrong with creating this plan. Please contact support",
       );
 
     return NextResponse.json({ message: "Plan created successfully" });
@@ -34,11 +34,11 @@ export const POST = withRateLimit(config)(async function POST(
     createErrorRollbarReport(
       "subscription: create plan",
       error,
-      error_response.status
+      error_response.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
 });

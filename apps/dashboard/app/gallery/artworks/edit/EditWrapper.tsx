@@ -12,10 +12,11 @@ export default function EditArtwork() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
+  if (id === null) return notFound();
+
   const { data: artwork, isLoading } = useQuery({
-    queryKey: ["get_update_pricing_artwork_details"],
+    queryKey: ["get_update_pricing_artwork_details", id],
     queryFn: async () => {
-      if (id === null) return notFound();
       const art_id = decodeURIComponent(id);
 
       const data = await fetchSingleArtwork(art_id);
@@ -23,6 +24,7 @@ export default function EditArtwork() {
       return data.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!id,
   });
 
   if (isLoading) {

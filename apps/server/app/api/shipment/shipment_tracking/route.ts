@@ -1,138 +1,107 @@
-import { formatISODate } from "@omenai/shared-utils/src/formatISODate";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  DHL_API,
-  DHL_API_URL_PROD,
-  DHL_API_URL_TEST,
-  getDhlHeaders,
-  getLatLng,
-} from "../resources";
-import {
-  BadRequestError,
-  ForbiddenError,
-  NotFoundError,
-  ServerError,
-} from "../../../../custom/errors/dictionary/errorDictionary";
+import { z } from "zod";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
-
-import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
-import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
-import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
-import z from "zod";
-const ShipmentTrackingSchema = z.object({
-  id: z.string(),
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import {
+  BadRequestError,
+  NotFoundError,
+} from "../../../../custom/errors/dictionary/errorDictionary";
+import { UnifiedTrackingResponse, getDHLTracking } from "../../dhl_service";
+import { getUPSTracking } from "../../ups_service";
+import { getLatLng } from "../resources";
+import { CreateOrderModelTypes } from "@omenai/shared-types";
+
+// 1. IMPORT YOUR GEOCODER
+
+const TrackingQuerySchema = z.object({
+  order_id: z.string().min(5),
 });
-import { ShipmentCoords } from "@omenai/shared-types";
-export const sleep = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const GET = withRateLimit(standardRateLimit)(async function GET(
-  request: Request,
+  req: Request,
 ) {
   try {
-    const isShipmentTrackingEnabled =
-      (await fetchConfigCatValue("shipment_tracking_enabled", "low")) ?? false;
-    if (!isShipmentTrackingEnabled) {
-      throw new ForbiddenError("Shipment tracking is currently disabled");
-    }
-
-    const nextRequest = new NextRequest(request);
+    const nextRequest = new NextRequest(req);
     const searchParams = nextRequest.nextUrl.searchParams;
 
-    const idParams = searchParams.get("order_id");
-    const { id } = validateGetRouteParams(ShipmentTrackingSchema, {
-      id: idParams,
-    });
-    if (!id)
-      throw new BadRequestError("Invalid parameters - order_id required");
+    const query = { order_id: searchParams.get("order_id") };
+    const validation = TrackingQuerySchema.safeParse(query);
 
-    const filter =
-      id.trim().length === 7
-        ? { order_id: id.trim() }
-        : { "shipping_details.shipment_information.tracking.id": id };
+    if (!validation.success)
+      throw new BadRequestError("Invalid or missing order_id");
 
+    const { order_id } = validation.data;
+
+    // 2. FETCH ADDRESSES ALONG WITH TRACKING INFO
     await connectMongoDB();
-    const order = await CreateOrder.findOne(
-      { ...filter },
-      "shipping_details createdAt artwork_data",
-    );
+    const order = (await CreateOrder.findOne({
+      order_id,
+    }).lean()) as unknown as CreateOrderModelTypes;
 
-    if (!order)
-      throw new NotFoundError("No order found for the given order id");
+    if (!order) throw new NotFoundError("Order not found");
 
-    const tracking_number =
-      order.shipping_details.shipment_information.tracking.id;
+    const trackingInfo = order.shipping_details?.shipment_information?.tracking;
+    const carrier = order.shipping_details?.shipment_information?.carrier
+      .split(" ")[0]
+      ?.toUpperCase();
+    const addresses = order.shipping_details?.addresses;
 
-    if (!tracking_number)
-      throw new NotFoundError(
-        "No tracking number found for the given order id",
-      );
+    if (!trackingInfo?.id)
+      throw new NotFoundError("This order has not been shipped yet.");
 
-    const origin_location = `${order.shipping_details.addresses.origin.zip}, ${order.shipping_details.addresses.origin.state}, ${order.shipping_details.addresses.origin.country}`;
-    const destination_location = `${order.shipping_details.addresses.destination.zip}, ${order.shipping_details.addresses.destination.state}, ${order.shipping_details.addresses.destination.country}`;
-    const get_origin_geo_location = await getLatLng(origin_location);
-    await sleep(1200);
-    const get_destination_geo_location = await getLatLng(destination_location);
+    let trackingResult: UnifiedTrackingResponse;
 
-    const API_URL_TEST = `${DHL_API}/shipments/9356579890/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
-
-    const API_URL_PROD = `${DHL_API}/shipments/${tracking_number}/tracking?trackingView=all-checkpoints&levelOfDetail=all`;
-
-    // TODO: Change to prod
-    const url = new URL(
-      `${process.env.APP_ENV === "production" ? API_URL_TEST : API_URL_TEST}`,
-    );
-    const requestOptions = {
-      method: "GET",
-      headers: getDhlHeaders(),
-    };
-
-    try {
-      const response = await fetch(url.toString(), requestOptions);
-      const data = await response.json();
-
-      console.log(process.env.APP_ENV);
-
-      if (!response.ok)
-        throw new ServerError(
-          "Unable to fetch shipment event at the moment. Please try again later or contact support",
-        );
-
-      const timeStamp = data.shipments[0].shipmentTimeStamp;
-
-      return NextResponse.json(
-        {
-          message: "Successfully fetched shipment events",
-          events: data.shipments[0].events,
-          timeStamp,
-          order_date: formatISODate(order.createdAt),
-          artwork_data: order.artwork_data,
-          shipping_details: order.shipping_details,
-          tracking_number,
-          coordinates: {
-            origin: get_origin_geo_location,
-            destination: get_destination_geo_location,
-          } as ShipmentCoords | null,
-        },
-        { status: 200 },
-      );
-    } catch (error) {
-      return NextResponse.json({ message: "Error", error }, { status: 500 });
+    if (carrier === "DHL") {
+      trackingResult = await getDHLTracking(trackingInfo.id);
+    } else if (carrier === "UPS") {
+      trackingResult = await getUPSTracking(trackingInfo.id);
+    } else {
+      throw new BadRequestError(`Unsupported Carrier: ${carrier}`);
     }
-  } catch (error) {
-    const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "shipment: shipment tracking",
-      error,
-      error_response.status,
-    );
 
+    // 4. RESTORE GEOCODING (The missing piece)
+    let coordinates = null;
+    if (addresses) {
+      try {
+        const originStr = `${addresses.origin.city}, ${addresses.origin.countryCode}`;
+        const destStr = `${addresses.destination.city}, ${addresses.destination.countryCode}`;
+
+        // Run in parallel for speed
+        const [originGeo, destGeo] = await Promise.all([
+          getLatLng(originStr),
+          getLatLng(destStr),
+        ]);
+
+        coordinates = {
+          origin: originGeo,
+          destination: destGeo,
+        };
+      } catch (geoError) {
+        console.warn("Geocoding failed, map will default:", geoError);
+        // We don't fail the request, just return null coordinates
+      }
+    }
+
+    // 5. MERGE & RETURN
     return NextResponse.json(
-      { message: error_response?.message },
-      { status: error_response?.status },
+      {
+        success: true,
+        data: {
+          ...trackingResult,
+          coordinates, // Now defined!
+          shipping_details: order.shipping_details, // Pass this back so UI has address text
+        },
+      },
+      { status: 200 },
+    );
+  } catch (error: any) {
+    console.error("Tracking Controller Error:", error);
+    const status = error.statusCode || 500;
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status },
     );
   }
 });

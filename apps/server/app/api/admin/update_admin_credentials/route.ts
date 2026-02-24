@@ -16,7 +16,7 @@ import z from "zod";
 const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["admin"],
-  allowedAdminAccessRoles: ["Admin", "Editor", "Owner", "Viewer"],
+  allowedAdminAccessRoles: ["Admin", "Editor", "Owner", "Viewer", "Principal"],
 };
 const UpdateAdminCredentialSchema = z.object({
   password: z.string().min(1),

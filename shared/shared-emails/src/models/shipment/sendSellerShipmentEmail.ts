@@ -23,7 +23,13 @@ export const sendSellerShipmentEmail = async ({
     from: "orders",
     to: email,
     subject: "Shipment created - Prepare for pickup",
-    react: SellerShipmentEmail(name, artwork, artworkImage, artistName, price),
+    react: SellerShipmentEmail({
+      name,
+      artwork,
+      artworkImage,
+      artistName,
+      price,
+    }),
     attachments: [
       {
         filename: "waybill.pdf",

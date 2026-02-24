@@ -6,7 +6,7 @@ import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_con
 import { createErrorRollbarReport } from "../../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
-export const GET = withRateLimit(lenientRateLimit)(async function GET() {
+export async function GET() {
   try {
     await connectMongoDB();
 
@@ -20,18 +20,18 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET() {
         message: "Successful",
         data: allArtworksIds,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport(
       "artwork: get All Artwork for SEO",
       error,
-      error_response?.status
+      error_response?.status,
     );
     return NextResponse.json(
       { message: error_response?.message },
-      { status: error_response?.status }
+      { status: error_response?.status },
     );
   }
-});
+}

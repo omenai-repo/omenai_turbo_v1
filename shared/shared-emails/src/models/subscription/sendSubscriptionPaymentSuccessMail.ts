@@ -15,6 +15,6 @@ export const sendSubscriptionPaymentSuccessfulMail = async ({
     from: "transactions",
     to: email,
     subject: "Confirmation: Successful Subscription Payment",
-    react: SubscriptionPaymentSuccessfulMail(name),
+    react: SubscriptionPaymentSuccessfulMail({ name }),
   });
 };

@@ -40,10 +40,10 @@ type TaskSummary = {
 /* ---------------- helpers ---------------- */
 
 function buildServiceOperations(
-    services: DeletionTaskServiceType[],
-    targetId: string,
-    entityType: EntityType,
-    requestId: string
+  services: DeletionTaskServiceType[],
+  targetId: string,
+  entityType: EntityType,
+  requestId: string,
 ) {
   return services.map((service) => ({
     service,
@@ -52,8 +52,8 @@ function buildServiceOperations(
 }
 
 function normalizeTaskResult(
-    service: DeletionTaskServiceType,
-    result: PromiseSettledResult<any>
+  service: DeletionTaskServiceType,
+  result: PromiseSettledResult<any>,
 ): TaskSummary {
   const completedAt = toUTCDate(new Date());
 
@@ -79,14 +79,13 @@ function normalizeTaskResult(
     note: "The service runner threw an unhandled exception. Manual intervention required",
     deletedRecordSummary: {},
     completedAt,
-    error_message:
-        (result.reason as Error)?.message || "Unknown error",
+    error_message: (result.reason as Error)?.message || "Unknown error",
   };
 }
 
 function buildAuditLog(
-    payload: Payload,
-    taskSummaries: TaskSummary[]
+  payload: Payload,
+  taskSummaries: TaskSummary[],
 ): Omit<DeletionAuditLog, "signature"> {
   return {
     deletion_request_id: payload.requestId,
@@ -101,9 +100,7 @@ function buildAuditLog(
   };
 }
 
-function signAuditLog(
-    auditLog: Omit<DeletionAuditLog, "signature">
-) {
+function signAuditLog(auditLog: Omit<DeletionAuditLog, "signature">) {
   const secretKey = process.env.DATA_DELETION_LOG_SIGNING_KEY;
 
   if (!secretKey) {
@@ -122,18 +119,16 @@ export const { POST } = serve<Payload>(async (ctx) => {
     await connectMongoDB();
 
     const serviceOps = buildServiceOperations(
-        payload.services,
-        payload.targetId,
-        payload.entityType,
-        payload.requestId
+      payload.services,
+      payload.targetId,
+      payload.entityType,
+      payload.requestId,
     );
 
-    const results = await Promise.allSettled(
-        serviceOps.map((op) => op.fn)
-    );
+    const results = await Promise.allSettled(serviceOps.map((op) => op.fn));
 
     const taskSummaries = results.map((result, index) =>
-        normalizeTaskResult(serviceOps[index].service, result)
+      normalizeTaskResult(serviceOps[index].service, result),
     );
 
     const auditLog = buildAuditLog(payload, taskSummaries);
@@ -145,13 +140,13 @@ export const { POST } = serve<Payload>(async (ctx) => {
     });
 
     await DeletionRequestModel.updateOne(
-        { requestId: payload.requestId },
-        { $set: { status: "completed" } }
+      { requestId: payload.requestId },
+      { $set: { status: "completed" } },
     );
   });
 
   return NextResponse.json(
-      { data: "Successfully ran deletion workflow" },
-      { status: 200 }
+    { data: "Successfully ran deletion workflow" },
+    { status: 200 },
   );
 });
