@@ -10,6 +10,8 @@ type EmailData = {
   order_date: string;
   order_id: string;
   transaction_id: string;
+  artistName: string;
+  artworkImage: string;
 };
 export const sendPaymentSuccessMailArtist = async ({
   email,
@@ -19,6 +21,8 @@ export const sendPaymentSuccessMailArtist = async ({
   order_date,
   order_id,
   transaction_id,
+  artistName,
+  artworkImage,
 }: EmailData) => {
   // Set up resend here instead
   const { data, error } = await sendMailVerification({
@@ -33,6 +37,8 @@ export const sendPaymentSuccessMailArtist = async ({
       transaction_id,
       order_date,
       order_id,
+      artistName,
+      artworkImage,
     }),
   });
 

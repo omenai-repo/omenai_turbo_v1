@@ -43,6 +43,8 @@ export const OrderAcceptedEmail = ({
   const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
   const optimizedImage = getImageFileView(artwork.url, 400);
 
+  console.log(artwork.pricing);
+
   return (
     <Html>
       <Head>
@@ -112,7 +114,7 @@ export const OrderAcceptedEmail = ({
               artwork={artwork.title}
               artworkImage={optimizedImage}
               artistName={artwork.artist}
-              price={`$${artwork.pricing.price.toLocaleString()}`}
+              price={`$${artwork.pricing.usd_price.toLocaleString()}`}
             />
 
             {/* High-Visibility Urgency Box - Updated for "No-Hold" Policy */}

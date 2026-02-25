@@ -135,6 +135,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   try {
     const data = await validateRequestBody(request, AcceptOrderRequestSchema);
 
+    console.log(data.dimensions);
+
     validatePayload(data);
 
     const order = await fetchOrder(data.order_id);
@@ -175,6 +177,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
+    console.log(error);
     createErrorRollbarReport(
       "order: accept order request",
       error,

@@ -31,7 +31,7 @@ export default function VerifyTransactionWrapper() {
       try {
         if (!transaction_id || !ids?.gid || !ids?.oid) {
           throw new Error(
-            "Missing required parameters for transaction verification"
+            "Missing required parameters for transaction verification",
           );
         }
 
@@ -45,13 +45,13 @@ export default function VerifyTransactionWrapper() {
               gallery_id: ids.gid,
               order_id: ids.oid,
             }),
-          }
+          },
         );
 
         if (!response.ok) {
           const errorResult = await response.json();
           throw new Error(
-            errorResult.message || "Transaction verification failed"
+            errorResult.message || "Transaction verification failed",
           );
         }
 

@@ -929,6 +929,13 @@ export type ShipmentDimensions = {
   height: number;
   weight: number;
 };
+
+export type StringShipmentDimensions = {
+  length: string;
+  width: string;
+  height: string;
+  weight: string;
+};
 export type ShipmentAddressValidationType = {
   type: "pickup" | "delivery";
   countryCode: string;

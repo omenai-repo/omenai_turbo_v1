@@ -178,7 +178,7 @@ function QuoteFormContent({
     e.preventDefault();
     if (allKeysEmpty(package_details)) {
       toast_notif(
-        "All packaging fields must be filled out before submission.",
+        "All packaging dimensions must be provided before submission.",
         "error",
       );
       return;

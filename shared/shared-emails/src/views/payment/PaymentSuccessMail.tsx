@@ -1,3 +1,4 @@
+import { base_url } from "@omenai/url-config/src/config";
 import {
   Html,
   Head,
@@ -10,11 +11,20 @@ import {
   Hr,
   Img,
   Link,
+  Tailwind,
+  Button,
 } from "@react-email/components";
+import * as React from "react";
+import EmailFooter from "../../components/Footer";
+import EmailArtworkCard from "../components/EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { COMPANY_INFO } from "../../constants/constants";
 
-interface Props {
+interface PurchaseConfirmationEmailProps {
   name: string;
   artwork: string;
+  artistName: string;
+  artworkImage: string;
   amount: string;
   transaction_id: string;
   order_date: string;
@@ -24,192 +34,241 @@ interface Props {
 export const PurchaseConfirmationEmail = ({
   name,
   artwork,
+  artistName,
+  artworkImage,
   amount,
   transaction_id,
   order_date,
   order_id,
-}: Props) => {
+}: PurchaseConfirmationEmailProps) => {
+  const optimizedImage = getImageFileView(artworkImage, 400);
+  const dashboardUrl = `${base_url()}/dashboard/user/orders`;
+
   return (
     <Html>
-      <Head />
-      <Preview>Your purchase has been successfully processed</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={
-              "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .btn-main { background-color: #ffffff !important; color: #000000 !important; }
+              .bg-box { background-color: #111827 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .link-main { color: #60a5fa !important; }
             }
-            alt="Omenai logo"
-            width="120"
-            style={{ margin: "0 auto 30px" }}
-          />
-
-          <Heading style={heading}>✅ Purchase Confirmed</Heading>
-          <Text style={text}>Hi {name},</Text>
-          <Text style={text}>
-            Thank you for your purchase of <strong>{artwork}</strong> (Order #
-            {order_id}). Your payment has been successfully processed.
-          </Text>
-
-          <Section style={section}>
-            <Text style={text}>We’re preparing your order for shipment.</Text>
-            <Text style={text}>
-              A shipment order will be created shortly and you’ll receive
-              updates with tracking information and expected delivery
-              information.
-            </Text>
-            <Text style={text}>
-              Please keep an eye on your inbox for further instructions.
-            </Text>
-            <Text style={text}>
-              A payment receipt will be sent to you shortly.
-            </Text>
-          </Section>
-
-          <Hr style={hr} />
-          <div className="bg-gray-50 rounded border border-gray-200 p-6 mb-8">
-            <Text className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-4 text-center">
-              Transaction Summary
-            </Text>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center py-2">
-                <Text className="text-gray-600 text-sm">Artwork</Text>
-                <Text className="text-gray-900 font-medium text-sm">
-                  {artwork}
-                </Text>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <Text className="text-gray-600 text-sm">Unit Price</Text>
-                <Text className="text-gray-900 font-semibold text-sm">
-                  {amount}
-                </Text>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <Text className="text-gray-600 text-sm">Order ID</Text>
-                <Text className="text-gray-900 font-mono text-sm">
-                  #{order_id}
-                </Text>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <Text className="text-gray-600 text-sm">Transaction ID</Text>
-                <Text className="text-gray-900 font-mono text-sm">
-                  {transaction_id}
-                </Text>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <Text className="text-gray-600 text-sm">Date</Text>
-                <Text className="text-gray-900 font-medium text-sm">
-                  {order_date}
-                </Text>
-              </div>
-            </div>
-          </div>
-          <Hr style={hr} />
-
-          <Text style={text}>
-            You can manage and track your order in your{" "}
-            <Link
-              href="https://omenai.net/dashboard/user/orders"
+          `}
+        </style>
+      </Head>
+      <Preview>
+        Acquisition Confirmed: Official receipt for your purchase of {artwork}.
+      </Preview>
+      <Tailwind>
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
+          <Container
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "600px", margin: "40px auto", padding: "32px" }}
+          >
+            <Heading
+              className="heading-main text-gray-900"
               style={{
-                textDecoration: "underline",
-                color: "#0f172a",
-                fontWeight: "bold",
+                fontSize: "22px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+                textAlign: "center",
               }}
             >
-              Account Dashboard
-            </Link>
-            .
-          </Text>
+              Purchase Confirmed
+            </Heading>
 
-          <Text style={footer}>
-            If you have any questions, please reach out to us at{" "}
-            <Link
-              href="mailto:contact@omenani.net"
-              style={{ textDecoration: "underline", color: "#0f172a" }}
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Dear <strong>{name}</strong>,
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Congratulations on your artwork purchase. Your payment has been
+              successfully processed, and preparations for shipping are
+              underway. Below are the details of your transaction and next
+              steps.
+            </Text>
+
+            <EmailArtworkCard
+              artwork={artwork}
+              artistName={artistName}
+              price={amount}
+              artworkImage={optimizedImage}
+            />
+
+            {/* Bulletproof Transaction Receipt */}
+            <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-100 border-divider">
+              <Text
+                className="heading-main text-gray-900"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.8px",
+                }}
+              >
+                Official Receipt
+              </Text>
+
+              <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                <tbody>
+                  <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                    <td style={labelCell} className="text-muted text-gray-500">
+                      Order ID:
+                    </td>
+                    <td
+                      style={valueCell}
+                      className="text-main text-gray-900 font-mono"
+                    >
+                      #{order_id}
+                    </td>
+                  </tr>
+                  <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                    <td
+                      style={{ ...labelCell, paddingTop: "12px" }}
+                      className="text-muted text-gray-500"
+                    >
+                      Transaction ID:
+                    </td>
+                    <td
+                      style={{ ...valueCell, paddingTop: "12px" }}
+                      className="text-main text-gray-900 font-mono"
+                    >
+                      {transaction_id}
+                    </td>
+                  </tr>
+                  <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                    <td
+                      style={{ ...labelCell, paddingTop: "12px" }}
+                      className="text-muted text-gray-500"
+                    >
+                      Date:
+                    </td>
+                    <td
+                      style={{ ...valueCell, paddingTop: "12px" }}
+                      className="text-main text-gray-900"
+                    >
+                      {order_date}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        ...labelCell,
+                        paddingTop: "12px",
+                        borderBottom: "none",
+                      }}
+                      className="text-main text-gray-900 font-semibold"
+                    >
+                      Total Settled:
+                    </td>
+                    <td
+                      style={{
+                        ...valueCell,
+                        paddingTop: "12px",
+                        borderBottom: "none",
+                      }}
+                      className="text-main text-gray-900 font-bold"
+                    >
+                      {amount}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </Section>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              <strong>What happens next:</strong> As soon as the securely
+              packaged piece is handed over to the logistics courier, you will
+              receive an update containing your tracking details and estimated
+              delivery timeline.
+            </Text>
+
+            <Section style={{ textAlign: "center", margin: "32px 0" }}>
+              <Button
+                href={dashboardUrl}
+                className="btn-main"
+                style={{
+                  backgroundColor: "#000000",
+                  color: "#ffffff",
+                  fontSize: "15px",
+                  fontWeight: "500",
+                  padding: "16px 36px",
+                  borderRadius: "6px",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  letterSpacing: "0.3px",
+                }}
+              >
+                Track order Status
+              </Button>
+            </Section>
+
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
             >
-              contact@omenani.net
-            </Link>
-            .
-          </Text>
-          <Text style={footer}>Thank you for shopping with Omenai.</Text>
-        </Container>
-      </Body>
+              Thank you for trusting Omenai to build your collection.
+              <br />
+              <br />
+              Warm regards,
+              <br />
+              <span
+                className="text-muted text-gray-500"
+                style={{ fontSize: "14px" }}
+              >
+                Client Services, {COMPANY_INFO.name}
+              </span>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+
+            <EmailFooter
+              recipientName={name}
+              showSupportSection={true}
+              supportTitle="Have questions about delivery?"
+              supportMessage="Our advisory team is available to assist you with logistics tracking or installation queries. Reach out at"
+            />
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
 
-export default PurchaseConfirmationEmail;
-
-const main = {
-  backgroundColor: "#ffffff",
-  color: "#0f172a",
-  fontFamily: "Helvetica, Arial, sans-serif",
-  padding: "40px 0",
-} as const;
-
-const container = {
-  backgroundColor: "#ffffff",
-  padding: "40px",
-  borderRadius: "12px",
-  maxWidth: "600px",
-  margin: "0 auto",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-} as const;
-
-const heading = {
-  fontSize: "24px",
-  fontWeight: "bold",
-  marginBottom: "20px",
-  textAlign: "center",
-} as const;
-
-const subHeading = {
-  fontSize: "18px",
-  fontWeight: "bold",
-  margin: "24px 0 12px",
-} as const;
-
-const text = {
-  fontSize: "16px",
-  lineHeight: "1.6",
-  marginBottom: "16px",
-} as const;
-
-const section = {
-  marginBottom: "24px",
-} as const;
-
-const receiptSection = {
-  padding: "24px",
-  backgroundColor: "#f9f9f9",
-  borderRadius: "12px",
+// Shared Styles
+const textStyle = {
   fontSize: "15px",
   lineHeight: "1.6",
-  color: "#0f172a",
-} as const;
+  margin: "0 0 16px 0",
+};
 
-const receiptRow = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "10px",
-} as const;
-
-const label = {
-  fontWeight: "bold",
-} as const;
-
-const hr = {
-  border: "none",
-  borderTop: "1px solid #EAEAEA",
-  margin: "20px 0",
-} as const;
-
-const footer = {
+const labelCell = {
+  paddingBottom: "12px",
   fontSize: "14px",
-  color: "#666666",
-} as const;
+  verticalAlign: "top",
+  width: "140px",
+};
+
+const valueCell = {
+  paddingBottom: "12px",
+  fontSize: "14px",
+  verticalAlign: "top",
+  textAlign: "right" as const,
+};
+
+export default PurchaseConfirmationEmail;
