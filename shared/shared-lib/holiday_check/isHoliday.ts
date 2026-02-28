@@ -4,7 +4,7 @@ export async function isHoliday(
   date: Date,
   countryCode: string,
 ): Promise<boolean> {
-  const apiKey = process.env.CALENDARIFIC_API_KEY as string;
+  const apiKey = process.env.CALENDARIFIC_API_KEY;
   if (!apiKey) {
     console.warn("Calendarific API key not set.");
     return false;
@@ -33,16 +33,16 @@ export async function isHoliday(
     const holidays = data.response?.holidays ?? [];
 
     // Keep only major holidays (exclude observances, seasons, local)
-    const majorHolidays = holidays.filter((h: any) =>
-      h.type?.some((t: string) =>
+    const majorHolidays = holidays.filter((h: { type?: string[] }) =>
+      h.type?.some((t) =>
         ["National holiday", "Public holiday", "Bank holiday"].includes(t),
       ),
     );
 
-    const isHoliday = majorHolidays.length > 0;
-    holidayCache.set(cacheKey, isHoliday);
+    const isMajorHoliday = majorHolidays.length > 0;
+    holidayCache.set(cacheKey, isMajorHoliday);
 
-    return isHoliday;
+    return isMajorHoliday;
   } catch (error) {
     console.error("Error checking holiday:", error);
     holidayCache.set(cacheKey, false);

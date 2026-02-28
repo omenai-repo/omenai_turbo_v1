@@ -92,7 +92,6 @@ export default function PackagingSelector({
     if (userHasManuallySwitched.current) return;
 
     if (recommendedPreset) {
-      // THE FIX: Explicitly kill the custom state here to guarantee the ring renders!
       setIsCustom(false);
       setSelectedPreset(recommendedPreset.id);
       setCustomValues({ l: "", w: "", h: "", wg: "" });
@@ -103,27 +102,24 @@ export default function PackagingSelector({
         weight: recommendedPreset.weight_kg.toFixed(1),
       });
     } else {
-      // Smart Pre-fill for Custom Crates
-      const estL_in = artDimensions.length > 0 ? artDimensions.length + 2 : 0;
-      const estW_in = artDimensions.height > 0 ? artDimensions.height + 2 : 0;
-      const estH_in = 3;
-      const estWg_kg = "15";
-
+      // No preset fits: Switch to Custom tab and leave inputs completely blank
       setIsCustom(true);
       setSelectedPreset("");
 
+      // Keep UI inputs blank
       setCustomValues({
-        l: estL_in ? estL_in.toString() : "",
-        w: estW_in ? estW_in.toString() : "",
-        h: estH_in.toString(),
-        wg: estWg_kg,
+        l: "",
+        w: "",
+        h: "",
+        wg: "",
       });
 
+      // Pass blank values to QuoteForm (this will securely lock the Submit button)
       onUpdate({
-        length: estL_in ? (estL_in * 2.54).toFixed(1) : "",
-        width: estW_in ? (estW_in * 2.54).toFixed(1) : "",
-        height: (estH_in * 2.54).toFixed(1),
-        weight: estWg_kg,
+        length: "",
+        width: "",
+        height: "",
+        weight: "",
       });
     }
   }, [recommendedPreset, packagingType, artDimensions]);
@@ -328,9 +324,7 @@ export default function PackagingSelector({
                   <div className="bg-white border border-amber-200 shadow-md rounded-lg p-3 text-center flex flex-col items-center">
                     <AlertTriangle className="w-5 h-5 text-amber-500 mb-1" />
                     <span className="text-amber-800 text-xs font-bold uppercase tracking-wide leading-tight">
-                      Exceeds {carrier}
-                      <br />
-                      Limits
+                      Exceeds courier limits
                     </span>
                   </div>
                 </div>

@@ -103,7 +103,7 @@ export const OrderRequestReceivedEmail = ({
             <EmailArtworkCard
               artwork={artwork.title}
               artistName={artwork.artist}
-              price={`$${artwork.pricing.price.toLocaleString()}`}
+              price={`$${artwork.pricing.usd_price.toLocaleString()}`}
               artworkImage={optimizedImage}
             />
 

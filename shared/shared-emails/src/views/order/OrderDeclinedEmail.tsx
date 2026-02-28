@@ -141,7 +141,7 @@ const OrderDeclinedEmail = ({
               artwork={artwork.title}
               artworkImage={optimizedImage}
               artistName={artwork.artist}
-              price={`$${artwork.pricing.price.toLocaleString()}`}
+              price={`$${artwork.pricing.usd_price.toLocaleString()}`}
             />
 
             <Text

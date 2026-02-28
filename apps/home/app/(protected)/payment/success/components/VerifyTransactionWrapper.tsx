@@ -5,14 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  CheckCircle,
-  XCircle,
-  CreditCard,
-  ArrowLeft,
-  Eye,
-  Clock4,
-} from "lucide-react";
+import { CheckCircle, XCircle, ArrowLeft, Eye, Loader2 } from "lucide-react";
 import { useRollbar } from "@rollbar/react";
 import type Rollbar from "rollbar";
 
@@ -34,45 +27,20 @@ const STATUS_CONFIG = {
   },
 };
 
-// Sub-components
-const LoadIcon = () => (
-  <div className="relative">
-    <div className="w-16 h-16 border-4 border-blue-200 rounded animate-pulse"></div>
-    <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-500 rounded animate-spin"></div>
-    <div
-      className="absolute inset-2 w-12 h-12 border-4 border-transparent border-t-purple-400 rounded animate-spin"
-      style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
-    ></div>
-    <CreditCard className="absolute inset-0 m-auto w-6 h-6 text-blue-600 animate-pulse" />
-  </div>
-);
-
-const ProgressDots = () => (
-  <div className="flex space-x-2">
-    {[0, 1, 2].map((i) => (
-      <div
-        key={i}
-        className="w-2 h-2 bg-blue-400 rounded animate-pulse"
-        style={{ animationDelay: `${i * 0.2}s` }}
-      />
-    ))}
-  </div>
-);
-
 const LoadingState = () => (
-  <div className="bg-white/80 backdrop-blur-xl rounded p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
-    <div className="flex flex-col items-center justify-center space-y-8">
-      <LoadIcon />
-      <div className="text-center space-y-3">
-        <h2 className="text-fluid-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Verifying Transaction
-        </h2>
-        <p className="text-gray-600 text-fluid-xxs animate-pulse">
-          Please wait while we confirm your payment...
-        </p>
+  <div className="w-full max-w-sm bg-white rounded-lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
+    <div className="flex justify-center mb-6">
+      <div className="relative">
+        <div className="absolute inset-0 bg-emerald-100 rounded-full blur-xl opacity-50"></div>
+        <Loader2 className="relative w-12 h-12 text-emerald-600 animate-spin" />
       </div>
-      <ProgressDots />
     </div>
+    <h2 className="text-lg font-semibold text-slate-900 mb-2">
+      Verifying Transaction
+    </h2>
+    <p className="text-sm text-slate-500">
+      Please wait while we confirm your payment details securely.
+    </p>
   </div>
 );
 

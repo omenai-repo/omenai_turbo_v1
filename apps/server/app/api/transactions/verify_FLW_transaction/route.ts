@@ -556,6 +556,8 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
           seller_email: order_info.seller_details.email,
           seller_name: order_info.seller_details.name,
           seller_entity: "artist",
+          artwork_image: order_info.artwork_data.url,
+          artist: order_info.artwork_data.artist,
         }),
       ),
     );

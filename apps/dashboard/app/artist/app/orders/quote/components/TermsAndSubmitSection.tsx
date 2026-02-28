@@ -86,10 +86,7 @@ export default function TermsAndSubmitSection({
         `}
       >
         {loading ? (
-          <>
-            <LoadSmall />
-            <span>Processing Order...</span>
-          </>
+          <LoadSmall />
         ) : isDisabled ? (
           <>
             <Lock className="w-4 h-4" />

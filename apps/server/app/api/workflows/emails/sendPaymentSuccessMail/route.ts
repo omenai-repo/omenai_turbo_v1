@@ -16,6 +16,8 @@ type Payload = {
   seller_email: string;
   seller_name: string;
   seller_entity: "artist" | "gallery";
+  artwork_image: string;
+  artist: string;
 };
 export const { POST } = serve<Payload>(async (ctx) => {
   const payload: Payload = ctx.requestPayload;
@@ -30,6 +32,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
           order_date: formatIntlDateTime(payload.order_date),
           transaction_id: payload.transaction_id,
           price: payload.price,
+          artistName: payload.artist,
+          artworkImage: payload.artwork_image,
         });
 
       return data.error;
@@ -45,6 +49,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
             transaction_id: payload.transaction_id,
             price: payload.price,
             order_id: payload.order_id,
+            artistName: payload.artist,
+            artworkImage: payload.artwork_image,
           });
 
         return data.error;
@@ -60,6 +66,8 @@ export const { POST } = serve<Payload>(async (ctx) => {
             transaction_id: payload.transaction_id,
             price: payload.price,
             order_id: payload.order_id,
+            artistName: payload.artist,
+            artworkImage: payload.artwork_image,
           });
 
         return data.error;
@@ -69,7 +77,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
   if (sendSuccessBuyerMail || sendSellerSuccessMail) {
     return NextResponse.json(
       { message: "Error sending email" },
-      { status: 500 }
+      { status: 500 },
     );
   }
   return NextResponse.json({ data: "Successful" }, { status: 201 });

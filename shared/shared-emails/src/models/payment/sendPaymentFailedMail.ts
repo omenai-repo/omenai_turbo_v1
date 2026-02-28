@@ -17,6 +17,6 @@ export const sendPaymentFailedMail = async ({
     from: "transactions",
     to: email,
     subject: "We encountered an issue processing your payment",
-    react: PaymentFailedMail(name, artwork),
+    react: PaymentFailedMail({ buyerName: name, artwork }),
   });
 };

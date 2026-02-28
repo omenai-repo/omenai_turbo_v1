@@ -100,13 +100,9 @@ export default function TrackingMap({
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-slate-400 mt-1 shrink-0 group-hover:text-blue-500 transition-colors" />
                   <div>
-                    <h4 className="text-lg font-bold text-slate-900 leading-tight mb-1">
-                      {origin.address_line}
-                    </h4>
                     <p className="text-sm text-slate-500">
                       {origin.city && `${origin.city}, `}
                       {origin.state && `${origin.state} `}
-                      {origin.zip}
                     </p>
                     <p className="text-sm font-medium text-slate-600 mt-0.5">
                       {origin.countryCode}
@@ -131,13 +127,9 @@ export default function TrackingMap({
                 <div className="flex md:flex-row-reverse items-start gap-3">
                   <MapPin className="w-5 h-5 text-slate-400 mt-1 shrink-0 group-hover:text-emerald-500 transition-colors" />
                   <div>
-                    <h4 className="text-lg font-bold text-slate-900 leading-tight mb-1">
-                      {destination.address_line}
-                    </h4>
                     <p className="text-sm text-slate-500">
                       {destination.city && `${destination.city}, `}
                       {destination.state && `${destination.state} `}
-                      {destination.zip}
                     </p>
                     <p className="text-sm font-medium text-slate-600 mt-0.5">
                       {destination.countryCode}

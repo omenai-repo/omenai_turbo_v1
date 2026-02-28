@@ -119,11 +119,13 @@ export default function ExhibitionStatusSection({
         <textarea
           value={specialInstructions}
           onChange={(e) => onInstructionsChange(e.target.value)}
-          name="specialInstructions"
-          placeholder="Add gate codes, handling requirements, or specific pickup notes..."
-          rows={3}
-          className={`${TEXTAREA_CLASS} !rounded-xl !border-slate-200 focus:!border-dark focus:!ring-dark/20 resize-none py-3 px-4 text-sm shadow-sm transition-all`}
+          maxLength={80} // THE FIX: Physically stops typing at 80 chars
+          placeholder="Notes for the courier (Max 80 characters)"
+          className={TEXTAREA_CLASS}
         />
+        <p className="text-right text-[10px] text-slate-400 mt-1">
+          {specialInstructions.length} / 80
+        </p>
       </div>
     </div>
   );

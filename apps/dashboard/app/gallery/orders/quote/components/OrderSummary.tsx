@@ -43,7 +43,7 @@ export default function OrderSummary({ order_data }: OrderSummaryProps) {
             Order Summary
           </h3>
           <span className="text-white text-xs font-mono bg-white/10 px-2 py-1 rounded">
-            #{order_data.order_id.slice(-6).toUpperCase()}
+            #{order_data.order_id.toUpperCase()}
           </span>
         </div>
         <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded blur-2xl pointer-events-none" />

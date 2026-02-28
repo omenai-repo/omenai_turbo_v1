@@ -1,5 +1,5 @@
-export const UPS_MAX_CM = 419.1; // 165 inches
-export const DHL_MAX_LENGTH_CM = 300; // 118.1 inches
+export const UPS_MAX_CM = 419.1;
+export const DHL_MAX_LENGTH_CM = 300;
 export const DHL_MAX_WEIGHT_KG = 300;
 
 export function checkCarrierLimit(

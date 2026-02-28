@@ -1,4 +1,3 @@
-import { getApiUrl } from "@omenai/url-config/src/config";
 import {
   Body,
   Container,
@@ -9,79 +8,175 @@ import {
   Img,
   Link,
   Preview,
+  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
+import * as React from "react";
+import EmailFooter from "../../components/Footer";
+import EmailArtworkCard from "../components/EmailArtworkCard";
+import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
+import { COMPANY_INFO } from "../../constants/constants";
 
-const PaymentPendingMail = (name: string, artwork: string) => {
+interface PaymentPendingMailProps {
+  buyerName: string;
+  artwork: string;
+}
+
+export const PaymentPendingMail = ({
+  buyerName,
+  artwork,
+}: PaymentPendingMailProps) => {
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>
+          {`
+            @media (prefers-color-scheme: dark) {
+              .body-bg { background-color: #0f172a !important; }
+              .container-bg { background-color: #000000 !important; border: 1px solid #1f2937 !important; }
+              .text-main { color: #e5e7eb !important; }
+              .text-muted { color: #9ca3af !important; }
+              .heading-main { color: #ffffff !important; }
+              .bg-box { background-color: #1f2937 !important; border-color: #374151 !important; }
+              .border-divider { border-color: #374151 !important; }
+              .link-main { color: #60a5fa !important; }
+            }
+          `}
+        </style>
+      </Head>
+      <Preview>
+        Update: Your payment for {artwork} is securely processing.
+      </Preview>
       <Tailwind>
-        <Preview>Payment Transaction Pending</Preview>
+        <Body
+          className="body-bg bg-gray-50 font-sans"
+          style={{ margin: "0", padding: "0" }}
+        >
+          <Container
+            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            style={{ maxWidth: "560px", margin: "40px auto", padding: "32px" }}
+          >
+            <Heading
+              className="heading-main text-gray-900"
+              style={{
+                fontSize: "22px",
+                fontWeight: "600",
+                letterSpacing: "-0.5px",
+                margin: "0 0 24px 0",
+              }}
+            >
+              Transaction Processing
+            </Heading>
 
-        <Body className="bg-white my-auto mx-auto font-sans">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
-            <Img
-              src={
-                "https://fra.cloud.appwrite.io/v1/storage/buckets/68d2931900387c9110e6/files/696ee3b60025e2a2c4ff/view?project=682272b1001e9d1609a8"
-              }
-              width="100"
-              height="20"
-              alt="Omenai logo"
-              className="mx-auto mt-10"
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Hello <strong>{buyerName}</strong>,
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Thank you for initiating the checkout process. We are writing to
+              let you know that your payment is currently undergoing standard
+              security verification by our payment gateway.
+            </Text>
+
+            {/* Status & Next Steps Box */}
+            <Section
+              className="bg-box"
+              style={{
+                backgroundColor: "#f9fafb",
+                borderRadius: "8px",
+                padding: "20px",
+                margin: "24px 0",
+                border: "1px solid #e5e7eb",
+              }}
+            >
+              <Text
+                className="heading-main text-gray-900"
+                style={{
+                  margin: "0 0 12px 0",
+                  fontSize: "15px",
+                  fontWeight: "600",
+                }}
+              >
+                What happens next:
+              </Text>
+              <Text className="text-muted text-gray-600" style={listItemStyle}>
+                • This verification typically takes only a few moments, but can
+                occasionally take up to 24 hours depending on your financial
+                institution.
+              </Text>
+              <Text className="text-muted text-gray-600" style={listItemStyle}>
+                • You will receive a final, official receipt via email the
+                moment the funds clear.
+              </Text>
+              <Text
+                className="text-muted text-gray-600"
+                style={{ ...listItemStyle, margin: "0" }}
+              >
+                • Upon clearance, we&apos;ll begin preparing your piece for
+                shipment.
+              </Text>
+            </Section>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              Your account security is our top priority. If you have any
+              questions or concerns regarding this transaction, please reach out
+              to our client advisory team at{" "}
+              <Link
+                href={`mailto:${COMPANY_INFO.email}`}
+                className="link-main"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                {COMPANY_INFO.email}
+              </Link>
+              .
+            </Text>
+
+            <Text
+              className="text-main text-gray-800"
+              style={{ ...textStyle, marginTop: "32px" }}
+            >
+              Thank you for your patience and for choosing Omenai.
+              <br />
+              <br />
+              Warm regards,
+              <br />
+              <span
+                className="text-muted text-gray-500"
+                style={{ fontSize: "14px" }}
+              >
+                The Omenai Team
+              </span>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
             />
 
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              <strong>Dear {name},</strong>
-            </Text>
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              Thank you for your recent order of ${artwork}! Your payment is
-              currently being processed. You'll receive a confirmation email
-              once your payment has been confirmed.
-            </Text>
-
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              As always, if you have any questions, feedback, or concerns
-              regarding your Order or any other aspect of our service, please
-              feel free to reach out to us at{" "}
-              <Link
-                href="mailto:contact@omenani.net"
-                className="underline text-dark italic font-bold"
-              >
-                contact@omeani.net
-              </Link>
-              . Our dedicated customer support team is available to assist you
-              and ensure your experience remains exceptional.{" "}
-            </Text>
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              Once again, thank you for choosing <strong>Omenai</strong> We
-              appreciate your business and look forward to serving you.
-            </Text>
-            <Text className="text-dark text-fluid-xxs leading-[24px]">
-              Best regards, <br />
-              Moses from Omenai
-            </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              was directed exclusively to{" "}
-              <span className="text-dark">{name} </span>. In the event that you
-              were not anticipating the receipt of this email, we respectfully
-              request that you refrain from taking any action based on its
-              contents. This communication may contain confidential and legally
-              privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+            <EmailFooter recipientName={buyerName} showSupportSection={false} />
           </Container>
         </Body>
       </Tailwind>
     </Html>
   );
+};
+
+// Shared text styles
+const textStyle = {
+  fontSize: "15px",
+  lineHeight: "1.6",
+  margin: "0 0 16px 0",
+};
+
+const listItemStyle = {
+  fontSize: "14px",
+  lineHeight: "1.5",
+  margin: "0 0 10px 0",
 };
 
 export default PaymentPendingMail;

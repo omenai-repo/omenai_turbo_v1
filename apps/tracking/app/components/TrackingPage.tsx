@@ -29,7 +29,7 @@ export default function TrackingPage() {
       const res = await getTrackingData(searchedNumber);
       if (!res.isOk)
         throw new Error(res.message || "Failed to fetch tracking data");
-      return res.data; // Expecting UnifiedTrackingResponse
+      return res.data;
     },
     enabled: !!searchedNumber,
     retry: 1,
