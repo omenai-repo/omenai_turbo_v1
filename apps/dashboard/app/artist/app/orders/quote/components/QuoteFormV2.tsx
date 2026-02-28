@@ -30,6 +30,7 @@ import {
   checkIfRolledPassesLimit,
 } from "@omenai/shared-utils/src/shippingLimits"; // IMPORT MATH
 import { init } from "rollbar";
+import { TEXTAREA_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 
 // Icon for the section header
 const RulerIcon = ({ className }: { className?: string }) => (
@@ -289,6 +290,16 @@ function QuoteFormContent({
               />
             ) : (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <textarea
+                  value={specialInstructions}
+                  onChange={(e) => setSpecialInstructions(e.target.value)}
+                  maxLength={80} // THE FIX: Physically stops typing at 80 chars
+                  placeholder="Notes for the courier (Max 80 characters)"
+                  className={TEXTAREA_CLASS}
+                />
+                <p className="text-right text-[10px] text-slate-400 mt-1">
+                  {specialInstructions.length} / 80
+                </p>
                 <TermsAndSubmitSection
                   termsChecked={terms_checked}
                   onTermsChange={set_terms_checked}

@@ -102,7 +102,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         location: "residence",
         specialInstructions: [
           {
-            value: `${specialInstructions}. Commercial invoice and waybill must be printed and attached to package before pickup.`,
+            value: `${specialInstructions?.substring(0, 80)}`,
           },
         ],
         pickupDetails: {
