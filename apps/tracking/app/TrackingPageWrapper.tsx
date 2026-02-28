@@ -14,7 +14,7 @@ export default function TrackingPageWrapper() {
     "shipment_tracking_enabled",
   );
 
-  if (isTrackingEnabled)
+  if (!isTrackingEnabled)
     return (
       <ShippingDowntimeBlocker
         trackingNumber={courierTrackingId}
