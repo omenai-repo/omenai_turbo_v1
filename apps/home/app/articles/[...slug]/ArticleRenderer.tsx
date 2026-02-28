@@ -30,16 +30,6 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         <h1 className="font-serif text-5xl md:text-7xl italic leading-[1.1] text-dark tracking-tight mb-8">
           {article.headline}
         </h1>
-
-        {/* Byline */}
-        <div className="flex justify-center">
-          <p className="font-mono text-xs uppercase tracking-widest text-dark">
-            Words by{" "}
-            <span className="border-b border-dark pb-0.5">
-              {"Iyanuoluwa Adenle"}
-            </span>
-          </p>
-        </div>
       </header>
 
       {/* 2. CINEMATIC COVER IMAGE */}
