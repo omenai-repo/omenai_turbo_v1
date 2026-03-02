@@ -32,7 +32,7 @@ const MOCK_DIMENSIONS: ShipmentDimensions = {
 
 export async function GET(req: Request) {
   try {
-    console.log("🚀 Starting UPS Rate Test...");
+    console.log(" Starting UPS Rate Test...");
 
     // 2. Call the Service
     const rate = await getUPSRates(

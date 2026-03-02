@@ -12,7 +12,7 @@ export const ChallengeBar = ({ data }: { data: any[] }) => {
       data={chartData}
       keys={["value"]}
       indexBy="id"
-      layout="horizontal" // 👈 Easier to read long labels
+      layout="horizontal" //  Easier to read long labels
       margin={{ top: 10, right: 30, bottom: 50, left: 250 }}
       padding={0.3}
       colors={{ scheme: "category10" }}

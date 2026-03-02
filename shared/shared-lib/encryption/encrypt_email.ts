@@ -86,7 +86,7 @@ function hmacSHA256Hex(keyHex: string, data: string): string {
 
 /**
  * hashEmail
- * - deterministic hash protocol > same email always gives same hash👌
+ * - deterministic hash protocol > same email always gives same hash
  * - returns string with format: "<kid>$<hex-hmac>"
  * - example: "v1$3f9e...a1b"
  */

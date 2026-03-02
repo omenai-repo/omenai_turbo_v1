@@ -61,7 +61,7 @@ const OnboardingBlockerScreen = ({ message }: FeatureBlockerProps) => {
           className="mb-6 text-gray-200"
           style={{ fontSize: "clamp(0.889rem, 0.5vw + 0.8rem, 1rem)" }}
         >
-          Thank you for your patience ❤️
+          Thank you for your patience
         </p>
 
         <Link

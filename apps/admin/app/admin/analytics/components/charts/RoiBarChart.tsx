@@ -11,9 +11,9 @@ export const RoiBarChart = ({ data }: { data: any[] }) => {
   return (
     <ResponsiveBar
       data={data}
-      keys={["visits", "signups"]} // 👈 The two bars
+      keys={["visits", "signups"]} //  The two bars
       indexBy="source"
-      groupMode="grouped" // 👈 Places them side-by-side
+      groupMode="grouped" //  Places them side-by-side
       margin={{ top: 20, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: "linear" }}

@@ -59,7 +59,7 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
             {/* Receipt notice box */}
             <Section className="rounded bg-gray-50 px-6 py-4">
               <Text className="text-sm text-gray-600">
-                📎{" "}
+                {" "}
                 <span className="font-medium text-gray-800">
                   Receipt attached
                 </span>

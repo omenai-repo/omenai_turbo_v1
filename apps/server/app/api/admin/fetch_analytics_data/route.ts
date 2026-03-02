@@ -130,7 +130,7 @@ export async function GET() {
       recent: data.recent_signups,
     };
 
-    // 3. 🧠 RUN STRATEGY ENGINE
+    // 3.  RUN STRATEGY ENGINE
     const suggestions = generateStrategy(formattedStats);
 
     return NextResponse.json({
@@ -148,7 +148,7 @@ export async function GET() {
 }
 
 // --------------------------------------------------------
-// 🤖 THE LOGIC BRAIN
+//  THE LOGIC BRAIN
 // --------------------------------------------------------
 function generateStrategy(stats: any) {
   const suggestions = [];

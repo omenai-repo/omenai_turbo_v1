@@ -45,7 +45,7 @@ const MOCK_DIMENSIONS: ShipmentDimensions = {
 
 export async function GET(req: Request) {
   try {
-    console.log("🚀 Starting UPS Pickup Test...");
+    console.log(" Starting UPS Pickup Test...");
 
     // 2. Call the Service
     // This calculates the next valid business day automatically

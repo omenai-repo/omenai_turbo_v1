@@ -4,7 +4,7 @@
 import { ReactLenis } from "@studio-freight/react-lenis";
 import React from "react";
 
-// 💡 PropsWithChildren is the standard way to type children in TS/React
+//  PropsWithChildren is the standard way to type children in TS/React
 type LenisProviderProps = {
   children: React.ReactNode;
 };
