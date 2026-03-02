@@ -12,6 +12,7 @@ import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
+import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
 export default function WithdrawalModalForm() {
   const [amount_data, set_amount_data] = useState<{
     amount: number;
@@ -320,7 +321,10 @@ export default function WithdrawalModalForm() {
                   </div>
                 </div>
               )}
-
+              <AlertComponent title="Tip:">
+                Once withdrawn has been initiated, settlement time can vary on
+                your local bank processing time
+              </AlertComponent>
               {/* Submit Button */}
               <button
                 onClick={handleWithdrawal}
