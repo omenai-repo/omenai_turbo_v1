@@ -321,9 +321,9 @@ export default function WithdrawalModalForm() {
                   </div>
                 </div>
               )}
-              <AlertComponent title="Tip:">
-                Once withdrawn has been initiated, settlement time can vary on
-                your local bank processing time
+              <AlertComponent title="Tip:" className="bg-green-200/50">
+                Once a withdrawal has been successfully initiated, settlement time may vary depending on
+                your financial institution's processing time.
               </AlertComponent>
               {/* Submit Button */}
               <button

@@ -9,28 +9,50 @@ export function formatPrice(
       ? Number.parseFloat(rawPrice.replace(/^[^\d.-]+/, ""))
       : rawPrice;
 
-  // Try to find the currency entry
-  const match = currency_symbol.find(
-    (entry) => entry.abbreviation === currency
-  );
+  if (isNaN(cleaned)) return "";
 
-  // Use ISO currency formatting if possible
+  // Convert to string to inspect decimals
+  const decimalPart = cleaned.toString().split(".")[1];
+
+  let processed = cleaned;
+
+  if (decimalPart) {
+    if (decimalPart.length === 1) {
+      // keep as-is (e.g., 1137.5)
+      processed = cleaned;
+    } else if (decimalPart.length === 2) {
+      // keep 2 decimals (e.g., 1137.04)
+      processed = cleaned;
+    } else {
+      // more than 2 decimals → round to 1 decimal
+      processed = Math.round(cleaned * 10) / 10;
+    }
+  }
+
+  // Determine how many decimals to show
+  const finalDecimal =
+    processed % 1 === 0
+      ? 0
+      : processed.toString().split(".")[1]?.length || 0;
+
   try {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency, // Use as-is; if invalid, it will throw
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }).format(cleaned);
-  } catch (e) {
-    // Fallback for unsupported or custom currencies with comma formatting
-    const symbol = match?.symbol ?? (currency || "$"); // Default to $ if no match found
+      currency,
+      minimumFractionDigits: finalDecimal,
+      maximumFractionDigits: finalDecimal,
+    }).format(processed);
+  } catch {
+    const match = currency_symbol.find(
+      (entry) => entry.abbreviation === currency
+    );
 
-    // Format number with commas and ensure we always show two decimal places
+    const symbol = match?.symbol ?? currency ?? "$";
+
     const formattedNumber = new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(cleaned);
+      minimumFractionDigits: finalDecimal,
+      maximumFractionDigits: finalDecimal,
+    }).format(processed);
 
     return `${symbol}${formattedNumber}`;
   }
