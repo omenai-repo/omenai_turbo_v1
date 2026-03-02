@@ -9,13 +9,11 @@ export const validateMeasurement = (value: string): string[] => {
   if (
     !schema
       .regex(/^\d+(\.\d+)?(in)$/, {
-        message: "Measurement? Flopped. Try again 😭.",
+        message: "Invalid measurement unit, please try again",
       })
       .safeParse(value).success
   ) {
-    errors.push(
-      "Heyyy 📣 — need a proper measurement in inches. No freestyling.",
-    );
+    errors.push("All measurements should be labeled in inches (in)");
   }
 
   return errors;

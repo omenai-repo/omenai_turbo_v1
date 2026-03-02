@@ -13,6 +13,7 @@ import { verifyAuthVercel } from "../../utils";
 import { UnifiedTrackingResponse, getDHLTracking } from "../../../dhl_service";
 import { getUPSTracking } from "../../../ups_service";
 
+// TODO: Check 2 days past and In transit
 /**
  * Checks if a given date is at least two days in the past from now.
  * NOTE: This means we only check tracking for orders that are 2 days PAST their ETA?

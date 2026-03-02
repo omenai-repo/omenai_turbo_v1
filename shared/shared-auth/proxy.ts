@@ -136,22 +136,6 @@ export default async function proxy(req: NextRequest) {
     });
   };
 
-  if (
-    pathname.startsWith("/privacy") &&
-    (host === "omenai.app" || host === "www.omenai.app")
-  )
-    return finalizeResponse(nextWithNonce());
-
-  if (
-    host.startsWith("auth.omenai.app") ||
-    host.startsWith("dashboard.omenai.app")
-  ) {
-    return NextResponse.next();
-  }
-
-  if (host.startsWith("omenai.app")) {
-    return NextResponse.redirect(new URL("https://join.omenai.app", req.url));
-  }
   const app_auth_uri = auth_uri();
 
   // === PUBLIC ROUTE CHECK ===
