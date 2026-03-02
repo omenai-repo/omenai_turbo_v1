@@ -39,6 +39,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           { "role_access.role": "artist" },
           { "role_access.role": "gallery", author_id: { $in: [...galleries] } },
         ],
+        availability: true,
         ...filterCriteria,
       })
         .sort({ impressions: -1 })

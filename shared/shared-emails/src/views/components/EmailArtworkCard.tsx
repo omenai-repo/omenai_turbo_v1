@@ -1,3 +1,4 @@
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Img,
   Section,
@@ -63,7 +64,7 @@ export default function EmailArtworkCard({
           </Column>
           <Column align="right">
             <Text className="text-value" style={priceText}>
-              {price}
+              {formatPrice(price, "USD")}
             </Text>
           </Column>
         </Row>

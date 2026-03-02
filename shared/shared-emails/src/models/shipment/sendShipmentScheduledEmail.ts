@@ -19,7 +19,7 @@ export const sendShipmentScheduledEmail = async ({
   price,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "Shipment created - Prepare for pickup",

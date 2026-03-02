@@ -27,7 +27,7 @@ export const sendPaymentSuccessMail = async ({
 }: EmailData) => {
   // Set up resend here instead
   const { data, error } = await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "transactions",
     to: email,
     subject: "Payment Confirmed. Thank you for your purchase",

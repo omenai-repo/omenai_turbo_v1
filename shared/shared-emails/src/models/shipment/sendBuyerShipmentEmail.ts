@@ -23,7 +23,7 @@ export const sendBuyerShipmentEmail = async ({
   courier,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "Your artwork is on it's way.",

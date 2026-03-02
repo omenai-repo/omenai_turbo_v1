@@ -57,8 +57,7 @@ export const RequestPriceEmail = ({
         </style>
       </Head>
       <Preview>
-        Private Price Inquiry information for {artwork_data.title} by{" "}
-        {artwork_data.artist}.
+        Private Price Inquiry information for {artwork_data.title}
       </Preview>
       <Tailwind>
         <Body
@@ -89,12 +88,12 @@ export const RequestPriceEmail = ({
               Thank you for your interest in{" "}
               <Link
                 href={artworkUrl}
-                className="link-main"
+                className="link-main italic"
                 style={{
                   color: "#2563eb",
                   textDecoration: "none",
                   fontWeight: "500",
-                  fontStyle : "italic"
+                  fontStyle: "italic",
                 }}
               >
                 {artwork_data.title}
@@ -111,19 +110,6 @@ export const RequestPriceEmail = ({
 
             {/* Technical Specifications Box */}
             <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-100 border-divider">
-              <Text
-                className="heading-main text-gray-900"
-                style={{
-                  fontSize: "13px",
-                  fontWeight: "600",
-                  marginBottom: "12px",
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                }}
-              >
-                Technical Specifications
-              </Text>
-
               <table className="w-full">
                 <tbody>
                   <tr>
@@ -154,7 +140,7 @@ export const RequestPriceEmail = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={`${base_url()}/purchase/${artwork_data.url}`}
+                href={`${base_url()}/purchase/${artwork_data.art_id}`}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",
@@ -191,7 +177,7 @@ export const RequestPriceEmail = ({
             </Section>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              Should you require additional details regarding the artist’s
+              Should you require additional details regarding the artist&apos;s
               province or high resolution documentation of the piece, our
               advisory team is available to assist.
             </Text>
@@ -208,6 +194,35 @@ export const RequestPriceEmail = ({
               >
                 The Omenai Team
               </span>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+
+            <Text
+              className="text-muted text-gray-500"
+              style={{
+                fontSize: "13px",
+                lineHeight: "1.6",
+                fontStyle: "italic",
+                margin: "0",
+              }}
+            >
+              Questions about this work? Connect with our advisory team for
+              details, provenance, and documentation at{" "}
+              <Link
+                className="link-main italic"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+                href="mailto:info@omenai.app"
+              >
+                info@omenai.app
+              </Link>
             </Text>
 
             <Hr

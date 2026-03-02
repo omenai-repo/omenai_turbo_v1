@@ -172,10 +172,10 @@ export default function TokenBlock({ token, route }: TokenProps) {
         <p className="text-center text-fluid-xxs">
           Feel free to contact us should you have any issues on{" "}
           <Link
-            href={"mailto:support@omenai.app"}
+            href={"mailto:info@omenai.app"}
             className="text-dark font-light underline"
           >
-            support@omenai.app
+            info@omenai.app
           </Link>
           . We are always happy to help.
         </p>
