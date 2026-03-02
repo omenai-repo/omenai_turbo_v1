@@ -14,15 +14,11 @@ export const validateYear = (value: string): string[] => {
       .regex(/^\d{4}$/)
       .safeParse(value).success
   ) {
-    errors.push(
-      "Umm... that's not it . Drop a proper four-digit year, please.",
-    );
+    errors.push("Year input should be four digits");
   }
 
   if (Number(value) > year)
-    errors.push(
-      "Whoa there, time traveler  — the year can't be in the future!",
-    );
+    errors.push("The year input cannot be in the future.");
 
   return errors;
 };

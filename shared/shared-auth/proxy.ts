@@ -24,11 +24,10 @@ const PROTECTED_PATHS = [
 
 export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-  const host = req.headers.get("host");
+  const host = req.headers.get("host") as string;
 
   const nonce = crypto.randomUUID();
 
-  // 1. Define CSP with newlines for readability
   const cspHeader = `
   default-src 'self';
 
@@ -116,7 +115,6 @@ export default async function proxy(req: NextRequest) {
   upgrade-insecure-requests;
 `;
 
-  // 2. ️ CRITICAL FIX: Replace ALL whitespace/newlines with a single space
   const contentSecurityPolicy = cspHeader.replace(/\s+/g, " ").trim();
 
   // === HELPER: Finalize Response with Headers ===
@@ -137,12 +135,6 @@ export default async function proxy(req: NextRequest) {
       },
     });
   };
-
-  if (
-    pathname.startsWith("/privacy") &&
-    (host === "omenai.app" || host === "www.omenai.app")
-  )
-    return finalizeResponse(nextWithNonce());
 
   const app_auth_uri = auth_uri();
 
