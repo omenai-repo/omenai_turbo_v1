@@ -9,7 +9,7 @@ export function formatPrice(
       ? Number.parseFloat(rawPrice.replace(/^[^\d.-]+/, ""))
       : rawPrice;
 
-  if (isNaN(cleaned)) return "";
+  if (Number.isNaN(cleaned)) return "";
 
   // Convert to string to inspect decimals
   const decimalPart = cleaned.toString().split(".")[1];
