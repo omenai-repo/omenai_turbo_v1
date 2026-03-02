@@ -30,7 +30,7 @@ export const sendPaymentSuccessMail = async ({
     prefix: "Omenai orders",
     from: "transactions",
     to: email,
-    subject: "Confirmation: Successful Order Payment",
+    subject: "Payment Confirmed. Thank you for your purchase",
     react: PurchaseConfirmationEmail({
       name,
       artwork,

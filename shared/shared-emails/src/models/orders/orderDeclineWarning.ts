@@ -7,7 +7,7 @@ type EmailData = {
 };
 export const sendOrderDeclineWarning = async ({ name, email }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "Notice: Potential Order Request Decline",

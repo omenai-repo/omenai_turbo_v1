@@ -61,7 +61,7 @@ export default function SimilarArtworks({
 
   return (
     <div className="w-full h-full py-5">
-      <h1 className="text-dark font-bold text-fluid-sm">Hot recommendations</h1>
+      <h1 className="text-dark font-bold text-fluid-sm">Curated for you</h1>
 
       <div className="w-full my-5">
         <div className="grid grid-cols-1 gap-y-12 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">

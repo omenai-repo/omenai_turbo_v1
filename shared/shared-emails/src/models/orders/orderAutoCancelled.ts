@@ -12,7 +12,7 @@ export const sendOrderAutoDeclinedMail = async ({
   artwork_data,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "transactions",
     to: email,
     subject: "Order auto declined",
