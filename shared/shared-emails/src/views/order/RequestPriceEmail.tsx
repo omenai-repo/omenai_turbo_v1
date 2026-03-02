@@ -140,7 +140,7 @@ export const RequestPriceEmail = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={`${base_url()}/purchase/${artwork_data.art_id}`}
+                href={`${base_url()}/purchase/${encodeURIComponent(artwork_data.art_id)}`}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",
