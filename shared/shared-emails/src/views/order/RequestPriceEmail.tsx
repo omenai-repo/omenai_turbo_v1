@@ -57,7 +57,7 @@ export const RequestPriceEmail = ({
         </style>
       </Head>
       <Preview>
-        Private Update: Price information for {artwork_data.title} by{" "}
+        Private Price Inquiry information for {artwork_data.title} by{" "}
         {artwork_data.artist}.
       </Preview>
       <Tailwind>
@@ -86,8 +86,7 @@ export const RequestPriceEmail = ({
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              Thank you for your interest in the Omenai collection. We are
-              pleased to provide the requested valuation for{" "}
+              Thank you for your interest in{" "}
               <Link
                 href={artworkUrl}
                 className="link-main"
@@ -95,11 +94,12 @@ export const RequestPriceEmail = ({
                   color: "#2563eb",
                   textDecoration: "none",
                   fontWeight: "500",
+                  fontStyle : "italic"
                 }}
               >
                 {artwork_data.title}
               </Link>
-              .
+              . Below are the pricing details you requested.
             </Text>
 
             <EmailArtworkCard
@@ -183,17 +183,17 @@ export const RequestPriceEmail = ({
                   margin: "0",
                 }}
               >
-                Note: The valuation shown reflects the base price of the
-                artwork. Final costs—including white-glove shipping, insurance,
-                and applicable regional taxes—will be calculated during the
-                checkout process.
+                <strong>Note:</strong> The price shown reflects the base price
+                of the artwork. Final costs, including white glove shipping,
+                insurance, and applicable regional taxes, will be calculated
+                during the checkout process.
               </Text>
             </Section>
 
             <Text className="text-main text-gray-800" style={textStyle}>
               Should you require additional details regarding the artist’s
-              provenance or high-resolution documentation of the piece, our
-              advisory team is at your disposal.
+              province or high resolution documentation of the piece, our
+              advisory team is available to assist.
             </Text>
 
             <Text
@@ -218,8 +218,8 @@ export const RequestPriceEmail = ({
             <EmailFooter
               recipientName={name}
               showSupportSection={true}
-              supportTitle="Questions about this piece?"
-              supportMessage="Our consultants are available to provide additional details or provenance documentation. Contact us at"
+              supportTitle="Questions about this work?"
+              supportMessage="Connect with our advisory team for details, provenance, and documentation."
             />
           </Container>
         </Body>

@@ -111,16 +111,16 @@ export const OrderRequestReceivedEmail = ({
               className="text-main text-gray-900"
               style={{ ...textStyle, fontWeight: "600", marginTop: "32px" }}
             >
-              Our Curated Process
+              What happens next
             </Text>
 
-            <Text
+            {/* <Text
               className="text-muted text-gray-600"
               style={{ ...textStyle, fontSize: "14px" }}
             >
               To ensure a seamless delivery, our logistics team and the gallery
               are currently performing the following steps:
-            </Text>
+            </Text> */}
 
             {/* Steps Section */}
             <Section className="mb-8">
@@ -129,7 +129,7 @@ export const OrderRequestReceivedEmail = ({
                   className="heading-main text-gray-900 font-semibold m-0 mb-1"
                   style={{ fontSize: "14px" }}
                 >
-                  1. Logistics Coordination
+                  1. We’ll confirm delivery and insurance to your location
                 </Text>
                 <Text
                   className="text-muted text-gray-600 m-0"
@@ -145,7 +145,7 @@ export const OrderRequestReceivedEmail = ({
                   className="heading-main text-gray-900 font-semibold m-0 mb-1"
                   style={{ fontSize: "14px" }}
                 >
-                  2. Financial Overview
+                  2. We’ll calculate any applicable taxes and fees
                 </Text>
                 <Text
                   className="text-muted text-gray-600 m-0"
@@ -161,7 +161,7 @@ export const OrderRequestReceivedEmail = ({
                   className="heading-main text-gray-900 font-semibold m-0 mb-1"
                   style={{ fontSize: "14px" }}
                 >
-                  3. Formal Quote Delivery
+                  3. We’ll send a detailed quote within 1-2 business days
                 </Text>
                 <Text
                   className="text-muted text-gray-600 m-0"
@@ -184,6 +184,21 @@ export const OrderRequestReceivedEmail = ({
             </Section>
 
             <Text className="text-main text-gray-800" style={textStyle}>
+              Once your quote is ready, we’ll share a full cost breakdown and
+              the next steps to complete your purchase.
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              If you have any timing, delivery, or documentation requirements,
+              reply to this email and we’ll take care of it.
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
+              We appreciate your patience and look forward to helping you place
+              this work in your collection.
+            </Text>
+
+            <Text className="text-main text-gray-800" style={textStyle}>
               In the meantime, if you have any special requirements or questions
               regarding this piece, please reach out to our advisory team.
             </Text>
@@ -194,13 +209,14 @@ export const OrderRequestReceivedEmail = ({
             >
               Warmly,
               <br />
-              <br />
               <strong
                 className="heading-main text-gray-900"
                 style={{ fontWeight: "600" }}
               >
-                The Omenai Team
+                Moses
               </strong>
+              <br />
+              Omenai Advisory
             </Text>
 
             <Hr
@@ -208,7 +224,12 @@ export const OrderRequestReceivedEmail = ({
               style={{ margin: "32px 0" }}
             />
 
-            <EmailFooter recipientName={name} showSupportSection={true} />
+            <EmailFooter
+              recipientName={name}
+              showSupportSection={true}
+              supportTitle="Questions about this work?"
+              supportMessage="Connect with our advisory team for details, provenance, and documentation."
+            />
           </Container>
         </Body>
       </Tailwind>

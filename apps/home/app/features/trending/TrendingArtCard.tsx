@@ -37,17 +37,12 @@ export default function TrendingArtworkCard({
           href={`/artwork/${encodeURIComponent(art_id)}`}
           className="block h-full w-full"
         >
-          {/* BADGE LOGIC: Show 'Acquired' if sold, otherwise 'Hot' */}
-          {!availability ? (
+          {/* BADGE LOGIC: Show 'Acquired' if sold */}
+          {!availability && (
             <div className="absolute top-2 left-2 z-20">
               <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded-sm text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
                 Sold
               </span>
-            </div>
-          ) : (
-            <div className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-white/95 backdrop-blur px-2 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider text-dark  shadow-sm">
-              <HiArrowTrendingUp />
-              <span>Hot</span>
             </div>
           )}
 

@@ -65,7 +65,7 @@ export const EmailFooter: React.FC<EmailFooterProps> = ({
               color: "#4b5563",
             }}
           >
-            {supportMessage}{" "}
+            {supportMessage} <br />
             <Link
               href={`mailto:${COMPANY_INFO.email}`}
               className="footer-link"

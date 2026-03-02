@@ -64,7 +64,8 @@ export const PurchaseConfirmationEmail = ({
         </style>
       </Head>
       <Preview>
-        Acquisition Confirmed: Official receipt for your purchase of {artwork}.
+        Payment Confirmed. Thank you for your purchase - Official receipt for
+        your purchase of {artwork}.
       </Preview>
       <Tailwind>
         <Body
@@ -85,7 +86,7 @@ export const PurchaseConfirmationEmail = ({
                 textAlign: "center",
               }}
             >
-              Purchase Confirmed
+              Payment confirmed. Thank you for your purchase.
             </Heading>
 
             <Text className="text-main text-gray-800" style={textStyle}>
@@ -93,10 +94,8 @@ export const PurchaseConfirmationEmail = ({
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              Congratulations on your artwork purchase. Your payment has been
-              successfully processed, and preparations for shipping are
-              underway. Below are the details of your transaction and next
-              steps.
+              We’re preparing your artwork for shipment and will share tracking
+              details as soon as the shipment is created.
             </Text>
 
             <EmailArtworkCard
@@ -196,23 +195,26 @@ export const PurchaseConfirmationEmail = ({
             </Text>
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
-              <Button
-                href={dashboardUrl}
-                className="btn-main"
-                style={{
-                  backgroundColor: "#000000",
-                  color: "#ffffff",
-                  fontSize: "15px",
-                  fontWeight: "500",
-                  padding: "16px 36px",
-                  borderRadius: "6px",
-                  textDecoration: "none",
-                  display: "inline-block",
-                  letterSpacing: "0.3px",
-                }}
-              >
-                Track order Status
-              </Button>
+              <Text>
+                You can track your order anytime in your{" "}
+                <Button
+                  href={dashboardUrl}
+                  className="btn-main"
+                  style={{
+                    backgroundColor: "#000000",
+                    color: "#ffffff",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    padding: "16px 36px",
+                    borderRadius: "6px",
+                    textDecoration: "none",
+                    display: "inline-block",
+                    letterSpacing: "0.3px",
+                  }}
+                >
+                  Account Dashboard
+                </Button>{" "}
+              </Text>
             </Section>
 
             <Text
@@ -240,8 +242,8 @@ export const PurchaseConfirmationEmail = ({
             <EmailFooter
               recipientName={name}
               showSupportSection={true}
-              supportTitle="Have questions about delivery?"
-              supportMessage="Our advisory team is available to assist you with logistics tracking or installation queries. Reach out at"
+              supportTitle="Questions about this work?"
+              supportMessage="Connect with our advisory team for details and documentation"
             />
           </Container>
         </Body>
