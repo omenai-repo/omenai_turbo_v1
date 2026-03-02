@@ -1,6 +1,6 @@
 "use client";
 import { Loader, PinInput } from "@mantine/core";
-import { RefreshCcwDot } from "lucide-react";
+import { AlertCircle, RefreshCcwDot } from "lucide-react";
 import Link from "next/link";
 import React, { ChangeEvent, useState } from "react";
 import { getTransferRate } from "@omenai/shared-services/wallet/getTransferRate";
@@ -321,10 +321,23 @@ export default function WithdrawalModalForm() {
                   </div>
                 </div>
               )}
-              <AlertComponent title="Tip:" className="bg-green-200/50">
-                Once a withdrawal has been successfully initiated, settlement time may vary depending on
-                your financial institution's processing time.
-              </AlertComponent>
+              <div
+                className={
+                  "mt-6 p-4 bg-green-200/50 rounded border border-slate-200"
+                }
+              >
+                <div className="flex gap-3">
+                  <AlertCircle className="w-4 h-4 text-neutral-400 mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-neutral-800 space-y-1">
+                    <p className="font-light">Tip:</p>
+                    <p>
+                      Once a withdrawal has been successfully initiated,
+                      settlement time may vary depending on your financial
+                      institution's processing time
+                    </p>
+                  </div>
+                </div>
+              </div>
               {/* Submit Button */}
               <button
                 onClick={handleWithdrawal}

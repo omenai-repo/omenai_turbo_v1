@@ -32,7 +32,7 @@ export const WithdrawalModal = () => {
             className="text-dark rounded w-full max-w-lg shadow-xl relative h-auto"
           >
             <div className="h-auto w-full">
-              {!isWalletWithdrawalEnabled ? (
+              {!true ? (
                 <WalletWithdrawalBlockerModal />
               ) : (
                 <WithdrawalModalForm />
