@@ -138,12 +138,6 @@ export default async function proxy(req: NextRequest) {
     });
   };
 
-  if (
-    pathname.startsWith("/privacy") &&
-    (host === "omenai.app" || host === "www.omenai.app")
-  )
-    return finalizeResponse(nextWithNonce());
-
   const app_auth_uri = auth_uri();
 
   // === PUBLIC ROUTE CHECK ===
