@@ -116,7 +116,7 @@ export default async function proxy(req: NextRequest) {
   upgrade-insecure-requests;
 `;
 
-  // 2. 🛡️ CRITICAL FIX: Replace ALL whitespace/newlines with a single space
+  // 2. ️ CRITICAL FIX: Replace ALL whitespace/newlines with a single space
   const contentSecurityPolicy = cspHeader.replace(/\s+/g, " ").trim();
 
   // === HELPER: Finalize Response with Headers ===

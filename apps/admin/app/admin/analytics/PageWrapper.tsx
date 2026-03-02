@@ -202,7 +202,7 @@ export default function EnterpriseDashboard() {
             <div className="col-span-12 md:col-span-6 bg-white p-5 rounded-xl border-l-4 border-amber-400 shadow-sm h-96">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-slate-800">
-                  💰 Collector DNA
+                  Collector DNA
                 </h3>
                 <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">
                   High Priority
@@ -234,7 +234,7 @@ export default function EnterpriseDashboard() {
             <div className="col-span-12 md:col-span-6 bg-white p-5 rounded-xl border-l-4 border-blue-400 shadow-sm h-96">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-slate-800">
-                  🎨 Artist Pedigree
+                  Artist Pedigree
                 </h3>
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
                   Supply Side

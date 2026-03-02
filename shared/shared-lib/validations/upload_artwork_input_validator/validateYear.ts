@@ -15,13 +15,13 @@ export const validateYear = (value: string): string[] => {
       .safeParse(value).success
   ) {
     errors.push(
-      "Umm... that's not it 🤨. Drop a proper four-digit year, please."
+      "Umm... that's not it . Drop a proper four-digit year, please.",
     );
   }
 
   if (Number(value) > year)
     errors.push(
-      "Whoa there, time traveler 🚀 — the year can't be in the future!"
+      "Whoa there, time traveler  — the year can't be in the future!",
     );
 
   return errors;

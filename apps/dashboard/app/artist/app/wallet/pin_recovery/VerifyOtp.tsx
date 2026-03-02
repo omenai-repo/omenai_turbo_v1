@@ -149,7 +149,7 @@ export default function VerifyOTP({
               className="text-green-600 text-fluid-xxs font-semibold"
               aria-live="polite"
             >
-              ✅ OTP successfully verified!
+              OTP successfully verified!
             </p>
             <button
               onClick={() => setVerification(otpVerified)}

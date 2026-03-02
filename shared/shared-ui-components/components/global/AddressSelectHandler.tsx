@@ -38,7 +38,7 @@ export default function SelectInput({
   const [stateList, setStateList] = useState<IState[]>([]);
   const [cityList, setCityList] = useState<ICity[]>([]);
 
-  // 🔹 Auto-update states when country changes
+  //  Auto-update states when country changes
   useEffect(() => {
     if (address.countryCode) {
       const states = State.getStatesOfCountry(address.countryCode);
@@ -50,7 +50,7 @@ export default function SelectInput({
     }
   }, [address.countryCode]);
 
-  // 🔹 Auto-update cities when state changes
+  //  Auto-update cities when state changes
   useEffect(() => {
     if (address.countryCode && address.stateCode) {
       const cities = City.getCitiesOfState(
@@ -63,7 +63,7 @@ export default function SelectInput({
     }
   }, [address.countryCode, address.stateCode]);
 
-  // 🔹 Handle selection changes
+  //  Handle selection changes
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     const selectedOption = e.target.options[e.target.selectedIndex];

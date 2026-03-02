@@ -55,7 +55,7 @@ export const MOCK_SHIPMENT_DATA: ShipmentRequestDataTypes = {
 
 export async function GET(req: Request) {
   try {
-    console.log("🚀 Starting UPS Shipment Test...");
+    console.log(" Starting UPS Shipment Test...");
 
     // 2. Call the Service
     // This triggers: Rate check (TNT) -> Label Gen -> Pickup Schedule

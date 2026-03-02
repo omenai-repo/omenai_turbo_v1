@@ -10,7 +10,7 @@ export const StrategyFeed: React.FC<StrategyFeedProps> = ({ suggestions }) => {
   return (
     <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8">
       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-        ⚡ Strategy Engine
+        Strategy Engine
       </h3>
       <div className="space-y-4">
         {suggestions.map((item, index) => (

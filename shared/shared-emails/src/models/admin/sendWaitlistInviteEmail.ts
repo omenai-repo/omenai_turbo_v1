@@ -15,7 +15,7 @@ export const sendWaitlistInviteEmail = async ({
     prefix: "Omenai Onboarding",
     from: "Onboarding",
     to: email,
-    subject: "🎉 We're Live!",
+    subject: " We're Live!",
     react: SendWaitListInvites(name, email, entity),
   });
 };

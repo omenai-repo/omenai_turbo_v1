@@ -14,7 +14,7 @@ export const validateWeight = (value: string): string[] => {
       .safeParse(value).success
   ) {
     errors.push(
-      "Invalid weight detected 🚫. We need real measurements like '5lb' or '25lb', not vibes.",
+      "Invalid weight detected . We need real measurements like '5lb' or '25lb', not vibes.",
     );
   }
 

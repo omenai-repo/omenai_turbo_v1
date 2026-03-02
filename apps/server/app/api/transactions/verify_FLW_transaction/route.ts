@@ -234,7 +234,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         { status: 400 },
       );
 
-    // 🛡️ SECURITY: AMOUNT & CURRENCY VERIFICATION
+    // ️ SECURITY: AMOUNT & CURRENCY VERIFICATION
     // We check if the price in DB matches price in meta, AND if total paid matches sum of parts.
     const paidAmount = Number(verified_transaction.data.amount);
     const paidCurrency = String(verified_transaction.data.currency);
@@ -298,7 +298,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         { status: 400 },
       );
     }
-    // 🛡️ END SECURITY CHECKS
+    // ️ END SECURITY CHECKS
 
     const flwStatus = String(verified_transaction.data.status).toLowerCase();
 

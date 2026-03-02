@@ -42,7 +42,7 @@ function calculateYTicks(min: number, max: number, maxTicks = 6) {
     ticks.push(lastVal);
   }
 
-  // 🛡️ CRITICAL FIX: Remove Duplicates and Sort
+  // ️ CRITICAL FIX: Remove Duplicates and Sort
   // This prevents the "same key" error
   const uniqueTicks = [...new Set(ticks)].sort((a, b) => a - b);
 

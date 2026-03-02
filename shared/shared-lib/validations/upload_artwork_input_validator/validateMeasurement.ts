@@ -9,12 +9,12 @@ export const validateMeasurement = (value: string): string[] => {
   if (
     !schema
       .regex(/^\d+(\.\d+)?(in)$/, {
-        message: "Measurement? Flopped. Try again 😭.",
+        message: "Measurement? Flopped. Try again .",
       })
       .safeParse(value).success
   ) {
     errors.push(
-      "Heyyy 📣 — need a proper measurement in inches. No freestyling.",
+      "Heyyy  — need a proper measurement in inches. No freestyling.",
     );
   }
 

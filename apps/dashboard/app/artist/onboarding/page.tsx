@@ -33,7 +33,7 @@ export default function ArtistOnboarding() {
         </div>
 
         <h1 className="text-fluid-md font-bold text-gray-900">
-          One last step before you begin… 🎨✨
+          One last step before you begin…
         </h1>
         <p className="text-gray-600 mt-3 text-fluid-xxs">
           To ensure a high standard of artistry and credibility on our platform,

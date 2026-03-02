@@ -13,7 +13,7 @@ const ActivateAdminEmail = ({ name }: ActivateAdminEmailProps) => {
       {/* Welcome Badge */}
       <Section className="text-center mb-8">
         <div className="dark:text-white text-[#0f172a] text-sm font-semibold px-4 py-2 rounded">
-          🎉 You are now an Admin
+          You are now an Admin
         </div>
       </Section>
 

@@ -24,7 +24,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     const { source, medium, campaign, referrer, visitorId } = body;
 
-    // 3. 🕵️‍♂️ Detective Work: Detect Country
+    // 3. ️‍♂️ Detective Work: Detect Country
     // Vercel and Cloudflare pass the country code in headers automatically
     const country =
       req.headers.get("x-vercel-ip-country") ||
@@ -57,7 +57,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       referrer: referrer || "",
       country,
       device: {
-        type: deviceType, // 👈 Use our smarter variable
+        type: deviceType, //  Use our smarter variable
         vendor: result.device.vendor || "Generic", // Desktops often don't have a "Vendor"
         model: result.device.model || "PC",
       },
