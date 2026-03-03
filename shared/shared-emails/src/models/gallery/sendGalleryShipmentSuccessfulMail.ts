@@ -21,7 +21,7 @@ export const sendGalleryShipmentSuccessfulMail = async ({
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai shippment",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Shipment Delivery Confirmed!",
     react: SendGalleryShipmentSuccess({

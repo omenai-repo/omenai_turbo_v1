@@ -15,7 +15,7 @@ export const sendOrderRequestReceivedMail = async ({
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "We’ve received your request",
     react: OrderRequestReceivedEmail({ name, artwork: artwork_data, orderId }),

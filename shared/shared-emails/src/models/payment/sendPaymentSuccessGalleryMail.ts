@@ -26,7 +26,7 @@ export const sendPaymentSuccessGalleryMail = async ({
   // Set up resend here instead
   const { data, error } = await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Successful Payment for Your Artwork",
     react: PaymentSuccessfulGalleryMail({

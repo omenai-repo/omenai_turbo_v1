@@ -14,7 +14,7 @@ export const sendPaymentFailedMail = async ({
   // Set up resend here instead
   await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "We encountered an issue processing your payment",
     react: PaymentFailedMail({ buyerName: name, artwork }),

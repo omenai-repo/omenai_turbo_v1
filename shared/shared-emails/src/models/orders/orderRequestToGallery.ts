@@ -17,7 +17,7 @@ export const sendOrderRequestToGalleryMail = async ({
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Notification of order request for Your Artwork",
     react: OrderRequestToGalleryMail({ name, buyer, date, artwork_data }),

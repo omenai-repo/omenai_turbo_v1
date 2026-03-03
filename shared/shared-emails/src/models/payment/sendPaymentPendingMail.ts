@@ -14,7 +14,7 @@ export const sendPaymentPendingMail = async ({
   // Set up resend here instead
   await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Your Payment is being Processed",
     react: PaymentPendingMail({ buyerName: name, artwork }),
