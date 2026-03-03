@@ -1,31 +1,31 @@
-import { auth_uri } from "@omenai/url-config/src/config";
 import { Img, Link, Section, Text } from "@react-email/components";
 import AdminEmailLayout from "./AdminEmailLayout";
 
-const SendWaitListInvites = (name: string, email: string, entity: string) => {
+const SendCollectorWaitlistInvite = (name: string) => {
   return (
     <AdminEmailLayout
       name={name}
       previewText="We're
-        excited to let you know that our application is now officially live!"
+        excited to let you know that OMENAI is now officially live!"
+      showFooter={false}
     >
       <Text className="text-dark text-fluid-xxs leading-[24px]">
         Dear {name},
       </Text>
       <Text className="text-dark text-fluid-xxs leading-[24px]">
-        Thank you for your patience while you were on our waitlist. We're
-        excited to let you know that our application is now officially live!
+        OMENAI is now live.
       </Text>
       <Text className="text-dark text-fluid-xxs leading-[24px]">
-        You can now create your account and start exploring everything we've
-        built for you.
+        Discover and collect contemporary African art through a curated digital
+        platform connecting leading artists across Africa and its diaspora with
+        collectors worldwide.
       </Text>
-      <Text className="m-0 text-fluid-xxs font-semibold leading-[32px] text-gray-900">
-        Ready to see what all the hype is about?
+      <Text className="text-dark text-fluid-xxs leading-[24px]">
+        Browse featured works, new arrivals, and limited editions now available.
       </Text>
       <div style={{ textAlign: "center", margin: "30px 0" }}>
         <Link
-          href={`https://auth.omenai.app/register/${entity === "collector" ? "user" : entity}`}
+          href={`https://auth.omenai.app/register/user`}
           style={{
             display: "inline-block",
             backgroundColor: "#0f172a",
@@ -36,7 +36,7 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
             fontSize: "16px",
           }}
         >
-          Register Now
+          Create Your Account
         </Link>
       </div>
       <Section
@@ -49,7 +49,7 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
           className="m-0 text-fluid-xxs font-semibold leading-[32px] text-gray-900"
           style={{ textAlign: "center" }}
         >
-          Or
+          Or download the app
         </Text>
         <table width="100%" cellPadding="0" cellSpacing="0" border={0}>
           <thead style={{ display: "none" }}>
@@ -75,7 +75,7 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
                   <tbody>
                     <tr>
                       <td style={{ paddingRight: "16px" }}>
-                        <Link href="https://apps.apple.com/app/omenai">
+                        <Link href="https://apps.apple.com/app/6748387089">
                           <Img
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/320px-Download_on_the_App_Store_Badge.svg.png"
                             alt="Download on the App Store"
@@ -112,21 +112,49 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
           </tbody>
         </table>
       </Section>
-      {entity === "artist" ? (
-        <Text className="text-fluid-xxs text-center leading-[24px]">
-          We look forward to seeing your beautiful creations!
-        </Text>
-      ) : (
-        <Text className="text-fluid-xxs text-center leading-[24px]">
-          We can't wait for you to dive in!
-        </Text>
-      )}
       <br />
-      <Text className="text-fluid-xxs leading-[24px]">
-        Best regards, <br /> The Omenai team
+      <Text
+        className="footer-text-main"
+        style={{
+          margin: "0 0 8px 0",
+          fontSize: "14px",
+          fontWeight: "600",
+          color: "#111827",
+          letterSpacing: "0.3px",
+        }}
+      >
+        Questions about a specific work?
       </Text>
+      <Text
+        className="footer-text-main"
+        style={{
+          margin: "0 0 8px 0",
+          fontSize: "14px",
+          fontWeight: "600",
+          color: "#111827",
+          letterSpacing: "0.3px",
+        }}
+      >
+        Contact OMENAI Advisory at{" "}
+        <Link
+          href={`mailto:advisory@omenai.app`}
+          className="footer-link"
+          style={{
+            color: "#111827",
+            fontWeight: "500",
+            textDecoration: "none",
+            borderBottom: "1px solid #d1d5db",
+          }}
+        >
+          advisory@omenai.app
+        </Link>
+      </Text>
+      <Text className="text-dark text-fluid-xxs leading-[24px]">
+        We look forward to welcoming you.
+      </Text>
+      <Text className="text-fluid-xxs leading-[24px]">The OMENAI team</Text>
     </AdminEmailLayout>
   );
 };
 
-export default SendWaitListInvites;
+export default SendCollectorWaitlistInvite;

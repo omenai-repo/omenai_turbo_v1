@@ -8,6 +8,8 @@ import { sendPaymentPendingMail } from "@omenai/shared-emails/src/models/payment
 import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessGalleryMail";
 import { sendPaymentSuccessMail } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMail";
 import { sendPaymentSuccessMailArtist } from "@omenai/shared-emails/src/models/payment/sendPaymentSuccessMailArtist";
+import { sendArtistWaitlistInviteEmail } from "@omenai/shared-emails/src/models/admin/sendArtistWaitlistInviteEmail";
+import { sendCollectorWaitlistInvite } from "@omenai/shared-emails/src/models/admin/sendCollectorWaitlistInvite";
 import { getFutureShipmentDate } from "@omenai/shared-utils/src/getFutureShipmentDate";
 const payload = {
   email: "dantereus1@gmail.com",
@@ -21,24 +23,13 @@ const payload = {
   order_id: "882194-ACQ",
 };
 export async function GET() {
-  // await sendPaymentSuccessMailArtist(payload);
-  // console.log('test')
-  await sendPriceEmail({
-    name: "Dante Reus",
-    email : "rodolphe@omenai.net",
-    artwork_data: {
-      art_id: "ddb13ea2-8ff8-416a-b1bb-46106d3c0169",
-      artist: "Frank Raymond",
-      medium: "Acrylic on canvas/linen/panel",
-      pricing: {
-        usd_price: 12345,
-        currency: "usd",
-        price: 12345,
-        shouldShowPrice: "true",
-      },
-      title: "Symphony of the Sahara",
-      url: "68b4e394002c1c773ad6",
-    },
+  await sendArtistWaitlistInviteEmail({
+    name: "Theon Greyjoy",
+    email: "moses@omenai.net",
+  });
+  await sendCollectorWaitlistInvite({
+    name: "Lord Bolton",
+    email: "moses@omenai.net",
   });
 
   // const data = await getFutureShipmentDate(3, true, "US");
