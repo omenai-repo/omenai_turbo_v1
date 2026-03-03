@@ -25,13 +25,13 @@ const SendWaitListInvites = (name: string, email: string, entity: string) => {
       </Text>
       <div style={{ textAlign: "center", margin: "30px 0" }}>
         <Link
-          href={`${auth_uri()}/register/${entity === "collector" ? "user" : entity}`}
+          href={`https://auth.omenai.app/register/${entity === "collector" ? "user" : entity}`}
           style={{
             display: "inline-block",
             backgroundColor: "#0f172a",
             color: "#ffffff",
             padding: "12px 24px",
-            borderRadius: "8px",
+            borderRadius: "4px",
             textDecoration: "none",
             fontSize: "16px",
           }}

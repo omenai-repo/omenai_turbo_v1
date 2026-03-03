@@ -83,14 +83,14 @@ export const SubscriptionExpireAlert = ({
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              This is a courtesy reminder that your Omenai premium subscription
-              is scheduled for its automated renewal on <strong>{day}</strong>.
+              This is a courtesy reminder that your Omenai subscription is
+              scheduled for its automated renewal on <strong>{day}</strong>.
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
               We will process the payment using your default payment method on
               file. This ensures your gallery experiences zero interruptions and
-              maintains seamless access to our platform's premium features.
+              maintains seamless access to our platform's features.
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>

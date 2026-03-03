@@ -12,7 +12,7 @@ interface EmailFooterProps {
 export const EmailFooter: React.FC<EmailFooterProps> = ({
   recipientName = "Valued Collector",
   showSupportSection = true,
-  supportTitle = "Client Services",
+  supportTitle = "Omenai Advisory",
   supportMessage = "Our advisory team is available to assist you. Reach out at",
 }) => {
   return (

@@ -22,7 +22,7 @@ const SendWaitlistInvitesSchema = z.object({
     z.object({
       name: z.string().min(1),
       email: z.email(),
-      entity: z.enum(["gallery", "artist"]),
+      entity: z.enum(["collector", "artist"]),
     }),
   ),
 });

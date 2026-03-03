@@ -201,35 +201,6 @@ export const RequestPriceEmail = ({
               style={{ margin: "32px 0" }}
             />
 
-            <Text
-              className="text-muted text-gray-500"
-              style={{
-                fontSize: "13px",
-                lineHeight: "1.6",
-                fontStyle: "italic",
-                margin: "0",
-              }}
-            >
-              Questions about this work? Connect with our advisory team for
-              details, provenance, and documentation at{" "}
-              <Link
-                className="link-main italic"
-                style={{
-                  color: "#2563eb",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-                href="mailto:info@omenai.app"
-              >
-                info@omenai.app
-              </Link>
-            </Text>
-
-            <Hr
-              className="border-divider border-gray-200"
-              style={{ margin: "32px 0" }}
-            />
-
             <EmailFooter
               recipientName={name}
               showSupportSection={true}
