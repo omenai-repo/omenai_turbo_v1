@@ -7,7 +7,7 @@ export default function AppStoreAd() {
   return (
     <section className="w-full bg-[#091830] overflow-hidden">
       <div className="px-12 py-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 pt-16 md:pt-24 pb-0">
+        <div className="flex flex-col md:flex-row items-center lg:justify-between lg:gap-12 pt-16 md:pt-24 pb-0">
           {/* 1. CONTENT COLUMN */}
           <div className="flex-1 max-w-xl text-left pb-16 md:pb-24">
             <div className="flex items-center gap-3 mb-6">
@@ -36,13 +36,13 @@ export default function AppStoreAd() {
                 }
                 target="_blank"
               >
-                <button className="group relative h-[45px] transition-transform hover:-translate-y-1">
+                <button className="group relative h-[70px] transition-transform hover:-translate-y-1">
                   <Image
                     src="/images/google_play.png"
                     width={150}
                     height={45}
                     alt="Get it on Google Play"
-                    className="h-full w-auto object-contain"
+                    className="h-full "
                   />
                 </button>
               </Link>
@@ -66,19 +66,19 @@ export default function AppStoreAd() {
 
           {/* 2. VISUAL COLUMN */}
           {/* Image bleeds off the bottom for a dynamic look */}
-          {/* <div className="flex-1 relative w-full flex justify-center md:justify-end">
-            <div className="relative w-[280px] md:w-[340px] lg:w-[380px] translate-y-10 md:translate-y-0">
+          <div className="flex-1 relative w-full flex justify-center md:justify-end">
+            <div className="relative w-[480px] md:w-[540px] lg:w-[580px]  md:translate-y-0">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#4F75FF]/20 blur-[80px] rounded-full pointer-events-none" />
 
               <Image
-                src="/images/store_ad.png"
-                width={400}
-                height={800}
+                src="/images/phone_mockup.png"
+                width={600}
+                height={1000}
                 alt="Omenai Mobile App Interface"
                 className="relative z-10 w-full h-auto drop-shadow-2xl"
               />
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </section>
