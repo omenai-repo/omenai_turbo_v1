@@ -16,7 +16,7 @@ const WaitlistLeadSchema = new Schema<IWaitlistLead>(
     // Flexible container for the category-specific answers
     kpi: { type: Schema.Types.Mixed, required: true },
 
-    // 📍 This is where your Traffic Source data lives
+    //  This is where your Traffic Source data lives
     marketing: {
       source: { type: String, default: "direct" },
       medium: { type: String, default: "none" },

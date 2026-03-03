@@ -56,10 +56,10 @@ const PasswordRecoveryEmail = (
               If you did not authorize this action. Please contact us
               immediately on{" "}
               <Link
-                href="mailto:support@omenai.app"
+                href="mailto:info@omenai.app"
                 className="underline text-blue-800"
               >
-                support@omenai.app
+                info@omenai.app
               </Link>
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />

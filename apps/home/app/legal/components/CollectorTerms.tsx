@@ -22,11 +22,11 @@ export default function CollectorsTerms() {
           <div className="flex flex-col sm:flex-row space-y-4 justify-start items-center sm:justify-between mb-6 pb-6 border-b border-dark/20">
             <div className="flex items-center text-sm text-gray-600">
               <FileText className="w-4 h-4 mr-2" />
-              <span>Effective Date: October 7, 2025</span>
+              <span>Effective Date: March 1, 2026</span>
             </div>
             <a
               href="/legal/collectors-terms.pdf"
-              download="Omenai-Collectors-terms.pdf"
+              download="OMENAI-Collectors-Terms-and-Conditions.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center px-4 py-2 bg-dark text-white rounded hover:bg-dark/80 transition-colors text-sm font-medium"
@@ -39,14 +39,14 @@ export default function CollectorsTerms() {
           {/* Terms Content */}
           <div className="prose prose-gray max-w-none">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Omenai Collectors Terms and Conditions
+              OMENAI COLLECTORS TERMS AND CONDITIONS
             </h2>
 
             <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
               About Omenai
             </h3>
             <p className="text-gray-700 mb-4">
-              At Omenai, we believe that art is more than expression - it's the
+              At Omenai, we believe that art is more than expression - it’s the
               heartbeat of a cultural and creative renaissance across Africa.
             </p>
             <p className="text-gray-700 mb-4">
@@ -55,13 +55,13 @@ export default function CollectorsTerms() {
               connect through technology, transparency, and trust.
             </p>
             <p className="text-gray-700 mb-4">
-              These Terms and Conditions (the "Agreement") outline the legal
+              These Terms and Conditions (the “Agreement”) outline the legal
               framework governing your use of the Omenai app and marketplace as
               a Collector.
             </p>
             <p className="text-gray-700 mb-4">
               By registering, accessing, or transacting on the Omenai platform
-              ("Omenai," "we," "us," or "our"), you agree to be bound by this
+              (“Omenai,” “we,” “us,” or “our”), you agree to be bound by this
               Agreement.
             </p>
 
@@ -70,27 +70,27 @@ export default function CollectorsTerms() {
             </h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li className="text-gray-700">
-                <strong>"Collector"</strong> means any individual or entity
+                <strong>“Collector”</strong> means any individual or entity
                 purchasing artworks through the Platform.
               </li>
               <li className="text-gray-700">
-                <strong>"Artist"</strong> means any individual or collective
+                <strong>“Artist”</strong> means any individual or collective
                 listing artworks for sale.
               </li>
               <li className="text-gray-700">
-                <strong>"Gallery"</strong> means any business entity or
+                <strong>“Gallery”</strong> means any business entity or
                 institution listing artworks for sale or exhibition.
               </li>
               <li className="text-gray-700">
-                <strong>"Artwork"</strong> means any physical or digital art
+                <strong>“Artwork”</strong> means any physical or digital art
                 piece uploaded or sold via the Platform.
               </li>
               <li className="text-gray-700">
-                <strong>"Order"</strong> means a confirmed transaction initiated
+                <strong>“Order”</strong> means a confirmed transaction initiated
                 by a Collector and accepted by an Artist or Gallery.
               </li>
               <li className="text-gray-700">
-                <strong>"User"</strong> collectively refers to Collectors,
+                <strong>“User”</strong> collectively refers to Collectors,
                 Artists, and Galleries.
               </li>
             </ul>
@@ -107,7 +107,7 @@ export default function CollectorsTerms() {
               regulations, and Omenai policies.
             </p>
             <p className="text-gray-700 mb-4">
-              2.3 Omenai reserves the right to verify a Collector's identity
+              2.3 Omenai reserves the right to verify a Collector’s identity
               before granting or maintaining access.
             </p>
 
@@ -130,35 +130,41 @@ export default function CollectorsTerms() {
             <p className="text-gray-700 mb-4">
               3.4 Omenai may introduce a reasonable service or
               payment-processing fee in the future with at least thirty (30)
-              days' notice.
+              days’ notice.
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
-              4. Refunds and Returns
+              4. Refunds, Returns, and the OMENAI Guarantee
             </h3>
             <p className="text-gray-700 mb-2">
-              4.1 All sales are final except where expressly provided herein.
+              4.1 All sales are final except where expressly provided in these
+              Terms or the OMENAI Guarantee.
             </p>
             <p className="text-gray-700 mb-2">
               4.2 Refunds may only be granted in cases of:
             </p>
             <p className="text-gray-700 mb-2 pl-6">
-              (i) Damage sustained prior to delivery; or
+              (i) Damage sustained prior to delivery, including loss or damage
+              in transit; or
             </p>
             <p className="text-gray-700 mb-4 pl-6">
               (ii) Material misrepresentation of the Artwork.
             </p>
             <p className="text-gray-700 mb-2">
               4.3 Collectors must notify Omenai within seven (7) days of
-              delivery to initiate a claim.
+              delivery to initiate a claim, or within seven (7) days after the
+              latest estimated delivery date if an Artwork does not arrive.
             </p>
             <p className="text-gray-700 mb-2">
               4.4 Omenai will review each claim and make a final determination
               at its sole discretion.
             </p>
             <p className="text-gray-700 mb-4">
-              4.5 Return shipping costs are borne by the Collector unless
-              otherwise specified by Omenai.
+              4.5 Omenai does not accept returns as a standard policy. A return
+              may be permitted only if Omenai explicitly authorizes it in
+              writing as part of an approved claim resolution under the OMENAI
+              Guarantee. If a return is authorized, return shipping costs are
+              borne by the Collector unless otherwise specified by Omenai.
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
@@ -178,7 +184,8 @@ export default function CollectorsTerms() {
             </p>
             <p className="text-gray-700 mb-2">
               5.4 Collectors must inspect deliveries upon receipt and report
-              damage within seven (7) days.
+              damage or issues in accordance with Section 4 and the OMENAI
+              Guarantee.
             </p>
             <p className="text-gray-700 mb-4">
               5.5 Ownership transfers to the Collector upon successful delivery.
@@ -226,7 +233,7 @@ export default function CollectorsTerms() {
               cases of gross negligence or willful misconduct.
             </p>
             <p className="text-gray-700 mb-4">
-              8.2 In no event shall Omenai's aggregate liability exceed the
+              8.2 In no event shall Omenai’s aggregate liability exceed the
               amount paid by the Collector for the Artwork in dispute.
             </p>
 
@@ -264,7 +271,7 @@ export default function CollectorsTerms() {
             </p>
             <p className="text-gray-700 mb-2">
               11.2 Mandatory consumer protection and data privacy laws in the
-              Collector's jurisdiction (including GDPR, UK GDPR, and NDPR) shall
+              Collector’s jurisdiction (including GDPR, UK GDPR, and NDPR) shall
               also apply where relevant.
             </p>
             <p className="text-gray-700 mb-4">
@@ -279,7 +286,7 @@ export default function CollectorsTerms() {
             <p className="text-gray-700 mb-4">
               Omenai may update these Terms from time to time. Material changes
               will be communicated via the Platform with at least thirty (30)
-              days' notice. Continued use constitutes acceptance.
+              days’ notice. Continued use constitutes acceptance.
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
@@ -289,11 +296,11 @@ export default function CollectorsTerms() {
               For questions or concerns regarding these Terms, please contact:
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>OMENAI Inc.</strong>
+              <strong>Omenai, Inc.</strong>
               <br />
-              122, S. Michigan Avenue, Suite 1390-H73
+              16192 Coastal Hwy, Lewes, DE 19958, USA
               <br />
-              support@omenai.app | legal@omenai.app
+              info@omenai.app | support@omenai.app | legal@omenai.app
             </p>
           </div>
         </div>

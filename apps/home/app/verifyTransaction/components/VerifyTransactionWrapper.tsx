@@ -21,7 +21,7 @@ import type Rollbar from "rollbar";
 // Status configuration
 // Status configuration
 const STATUS_CONFIG = {
-  // 👇 RENAME "completed" to "successful" to match your backend/logic
+  //  RENAME "completed" to "successful" to match your backend/logic
   successful: {
     bgColor: "bg-green-100",
     textColor: "text-green-600",
@@ -197,7 +197,7 @@ const verifyTransaction = async (
     // 2. Return success based on HTTP status (response.ok)
     return {
       message: result.message,
-      isOk: response.ok, // 👈 CHANGED: Uses the actual HTTP success status
+      isOk: response.ok, //  CHANGED: Uses the actual HTTP success status
       status: result.status || "successful",
       success: result.success,
     };

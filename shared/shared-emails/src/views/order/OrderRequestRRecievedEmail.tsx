@@ -55,9 +55,7 @@ export const OrderRequestReceivedEmail = ({
           `}
         </style>
       </Head>
-      <Preview>
-        Confirmation: We have received your order request for {artwork.title}.
-      </Preview>
+      <Preview>We’ve received your request</Preview>
       <Tailwind>
         <Body
           className="body-bg bg-gray-50 font-sans"
@@ -67,25 +65,12 @@ export const OrderRequestReceivedEmail = ({
             className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "560px", margin: "40px auto", padding: "24px" }}
           >
-            <Heading
-              className="heading-main text-gray-900"
-              style={{
-                fontSize: "22px",
-                fontWeight: "600",
-                letterSpacing: "-0.5px",
-                margin: "0 0 24px 0",
-              }}
-            >
-              Your Order Request is in Review
-            </Heading>
-
             <Text className="text-main text-gray-800" style={textStyle}>
               Hello <strong>{name}</strong>,
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              Thank you for choosing Omenai to expand your collection. We have
-              successfully received your request for{" "}
+              Thank you for your interest in{" "}
               <Link
                 href={artworkUrl}
                 className="link-main"
@@ -96,8 +81,9 @@ export const OrderRequestReceivedEmail = ({
                 }}
               >
                 {artwork.title}
-              </Link>
-              .
+              </Link>{" "}
+              We&apos;ve received your request, and our advisory team is
+              preparing your quote.
             </Text>
 
             <EmailArtworkCard
@@ -111,64 +97,35 @@ export const OrderRequestReceivedEmail = ({
               className="text-main text-gray-900"
               style={{ ...textStyle, fontWeight: "600", marginTop: "32px" }}
             >
-              Our Curated Process
-            </Text>
-
-            <Text
-              className="text-muted text-gray-600"
-              style={{ ...textStyle, fontSize: "14px" }}
-            >
-              To ensure a seamless delivery, our logistics team and the gallery
-              are currently performing the following steps:
+              What happens next:
             </Text>
 
             {/* Steps Section */}
             <Section className="mb-8">
               <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4 mb-3">
                 <Text
-                  className="heading-main text-gray-900 font-semibold m-0 mb-1"
-                  style={{ fontSize: "14px" }}
-                >
-                  1. Logistics Coordination
-                </Text>
-                <Text
                   className="text-muted text-gray-600 m-0"
                   style={{ fontSize: "13px", lineHeight: "1.5" }}
                 >
-                  Calculating the most secure and efficient shipping route to
-                  your specific location.
+                  1. We&apos;ll confirm delivery and insurance to your location
                 </Text>
               </div>
 
               <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4 mb-3">
                 <Text
-                  className="heading-main text-gray-900 font-semibold m-0 mb-1"
-                  style={{ fontSize: "14px" }}
-                >
-                  2. Financial Overview
-                </Text>
-                <Text
                   className="text-muted text-gray-600 m-0"
                   style={{ fontSize: "13px", lineHeight: "1.5" }}
                 >
-                  Determining all applicable regional taxes and customs fees for
-                  a transparent final total.
+                  2. We&apos;ll calculate any applicable taxes and fees
                 </Text>
               </div>
 
               <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4">
                 <Text
-                  className="heading-main text-gray-900 font-semibold m-0 mb-1"
-                  style={{ fontSize: "14px" }}
-                >
-                  3. Formal Quote Delivery
-                </Text>
-                <Text
                   className="text-muted text-gray-600 m-0"
                   style={{ fontSize: "13px", lineHeight: "1.5" }}
                 >
-                  You will receive a detailed acquisition quote within{" "}
-                  <strong>24–48 hours</strong> to finalize your purchase.
+                  3. We&apos;ll send a detailed quote within 1-2 business days
                 </Text>
               </div>
             </Section>
@@ -184,8 +141,16 @@ export const OrderRequestReceivedEmail = ({
             </Section>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              In the meantime, if you have any special requirements or questions
-              regarding this piece, please reach out to our advisory team.
+              Once your quote is ready, we’ll share a full cost breakdown and
+              the next steps to complete your purchase.
+            </Text>
+            <Text className="text-main text-gray-800" style={textStyle}>
+              If you have any timing, delivery, or documentation requirements,
+              reply to this email and we’ll take care of it.
+            </Text>
+            <Text className="text-main text-gray-800" style={textStyle}>
+              We appreciate your patience and look forward to helping you place
+              this work in your collection.
             </Text>
 
             <Text
@@ -194,19 +159,35 @@ export const OrderRequestReceivedEmail = ({
             >
               Warmly,
               <br />
-              <br />
               <strong
                 className="heading-main text-gray-900"
                 style={{ fontWeight: "600" }}
               >
-                The Omenai Team
+                Omenai Advisory
               </strong>
+              <br />
             </Text>
 
             <Hr
               className="border-divider border-gray-200"
               style={{ margin: "32px 0" }}
             />
+
+            <Text>
+              Questions about this work? Connect with our advisory team for
+              details, provenance, and documentation at{" "}
+              <Link
+                className="link-main italic"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+                href="mailto:info@omenai.app"
+              >
+                info@omenai.app
+              </Link>
+            </Text>
 
             <EmailFooter recipientName={name} showSupportSection={true} />
           </Container>

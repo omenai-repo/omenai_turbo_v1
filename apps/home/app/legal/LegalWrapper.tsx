@@ -5,6 +5,7 @@ import { notFound, useSearchParams } from "next/navigation";
 import ArtistsTerms from "./components/ArtistTerms";
 import GalleriesTerms from "./components/GalleryTerms";
 import CollectorsTerms from "./components/CollectorTerms";
+import OmenaiGuarantee from "./components/OmenaiGuarantee";
 
 export default function LegalDocuments() {
   const [activeTab, setActiveTab] = useState("terms");
@@ -55,6 +56,16 @@ export default function LegalDocuments() {
             >
               Terms of Use
             </button>
+            <button
+              onClick={() => setActiveTab("guarantee")}
+              className={`p-2 rounded font-medium text-sm transition-colors ${
+                activeTab === "guarantee"
+                  ? "border-dark text-white bg-dark"
+                  : "border-transparent text-slate-700 hover:text-gray-700 hover:border-gray-300"
+              }`}
+            >
+              Omenai Guarantee
+            </button>
           </div>
         </div>
       </div>
@@ -73,6 +84,8 @@ export default function LegalDocuments() {
           ) : (
             <CollectorsTerms />
           ))}
+
+        {activeTab === "guarantee" && <OmenaiGuarantee />}
       </div>
     </div>
   );

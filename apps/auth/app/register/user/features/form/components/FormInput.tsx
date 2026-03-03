@@ -37,8 +37,7 @@ export default function FormInput() {
       stateCode,
       phone,
     } = individualSignupData;
-    console.log(individualSignupData);
-    const checkField = { name, email, password, phone };
+    const checkField = { name, email, password };
 
     if (allKeysEmpty(checkField)) {
       toast.error("Error notification", {

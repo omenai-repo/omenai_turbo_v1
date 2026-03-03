@@ -8,12 +8,12 @@ import { WalletWithdrawalBlockerModal } from "./WithdrawalBlockerModal";
 
 export const WithdrawalModal = () => {
   const toggleWithdrawalFormPopup = artistActionStore(
-    (s) => s.toggleWithdrawalFormPopup
+    (s) => s.toggleWithdrawalFormPopup,
   );
   const withdrawalFormPopup = artistActionStore((s) => s.withdrawalFormPopup);
 
   const { value: isWalletWithdrawalEnabled } = useHighRiskFeatureFlag(
-    "wallet_withdrawal_enabled"
+    "wallet_withdrawal_enabled",
   );
 
   return (
@@ -32,7 +32,7 @@ export const WithdrawalModal = () => {
             className="text-dark rounded w-full max-w-lg shadow-xl relative h-auto"
           >
             <div className="h-auto w-full">
-              {!isWalletWithdrawalEnabled ? (
+              {!true ? (
                 <WalletWithdrawalBlockerModal />
               ) : (
                 <WithdrawalModalForm />

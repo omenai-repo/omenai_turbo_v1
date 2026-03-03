@@ -63,9 +63,7 @@ export const PurchaseConfirmationEmail = ({
           `}
         </style>
       </Head>
-      <Preview>
-        Acquisition Confirmed: Official receipt for your purchase of {artwork}.
-      </Preview>
+      <Preview>Payment Confirmed. Thank you for your purchase</Preview>
       <Tailwind>
         <Body
           className="body-bg bg-gray-50 font-sans"
@@ -85,7 +83,7 @@ export const PurchaseConfirmationEmail = ({
                 textAlign: "center",
               }}
             >
-              Purchase Confirmed
+              Payment Confirmed. Thank you for your purchase
             </Heading>
 
             <Text className="text-main text-gray-800" style={textStyle}>
@@ -93,10 +91,8 @@ export const PurchaseConfirmationEmail = ({
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              Congratulations on your artwork purchase. Your payment has been
-              successfully processed, and preparations for shipping are
-              underway. Below are the details of your transaction and next
-              steps.
+              We&apos;re preparing your artwork for shipment and will share
+              tracking details as soon as the shipment is created.
             </Text>
 
             <EmailArtworkCard
@@ -118,7 +114,7 @@ export const PurchaseConfirmationEmail = ({
                   letterSpacing: "0.8px",
                 }}
               >
-                Official Receipt
+                Order Details
               </Text>
 
               <table className="w-full" style={{ borderCollapse: "collapse" }}>
@@ -189,38 +185,14 @@ export const PurchaseConfirmationEmail = ({
             </Section>
 
             <Text className="text-main text-gray-800" style={textStyle}>
-              <strong>What happens next:</strong> As soon as the securely
-              packaged piece is handed over to the logistics courier, you will
-              receive an update containing your tracking details and estimated
-              delivery timeline.
+              You can track your order anytime in your{" "}
+              <strong> Account Dashboard.</strong>
             </Text>
-
-            <Section style={{ textAlign: "center", margin: "32px 0" }}>
-              <Button
-                href={dashboardUrl}
-                className="btn-main"
-                style={{
-                  backgroundColor: "#000000",
-                  color: "#ffffff",
-                  fontSize: "15px",
-                  fontWeight: "500",
-                  padding: "16px 36px",
-                  borderRadius: "6px",
-                  textDecoration: "none",
-                  display: "inline-block",
-                  letterSpacing: "0.3px",
-                }}
-              >
-                Track order Status
-              </Button>
-            </Section>
 
             <Text
               className="text-main text-gray-800"
               style={{ ...textStyle, marginTop: "32px" }}
             >
-              Thank you for trusting Omenai to build your collection.
-              <br />
               <br />
               Warm regards,
               <br />
@@ -228,8 +200,28 @@ export const PurchaseConfirmationEmail = ({
                 className="text-muted text-gray-500"
                 style={{ fontSize: "14px" }}
               >
-                Client Services, {COMPANY_INFO.name}
+                Omenai Advisory
               </span>
+            </Text>
+
+            <Hr
+              className="border-divider border-gray-200"
+              style={{ margin: "32px 0" }}
+            />
+            <Text>
+              Questions about this work? Connect with our advisory team for
+              details and documentation at
+              <Link
+                className="link-main italic"
+                style={{
+                  color: "#2563eb",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+                href="mailto:info@omenai.app"
+              >
+                info@omenai.app
+              </Link>
             </Text>
 
             <Hr
@@ -240,8 +232,8 @@ export const PurchaseConfirmationEmail = ({
             <EmailFooter
               recipientName={name}
               showSupportSection={true}
-              supportTitle="Have questions about delivery?"
-              supportMessage="Our advisory team is available to assist you with logistics tracking or installation queries. Reach out at"
+              supportTitle="Questions about this work?"
+              supportMessage="Connect with our advisory team for details and documentation"
             />
           </Container>
         </Body>

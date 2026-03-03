@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         $facet: {
           // 1. DISTINCT COUNTRIES (Run on Base Match to get ALL options)
           distinct_countries: [
-            { $match: baseMatch }, // 👈 Look at global data
+            { $match: baseMatch }, //  Look at global data
             { $group: { _id: "$country", count: { $sum: 1 } } },
             { $sort: { count: -1 } },
           ],

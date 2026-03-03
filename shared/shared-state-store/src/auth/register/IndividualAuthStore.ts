@@ -139,7 +139,7 @@ export const useIndividualAuthStore = create<IndividualAuthStoreTypes>(
       country: false,
       zip: false,
       state: false,
-      phone: true,
+      phone: false,
     },
     setIsFieldDirty: (key: keyof IndividualSignupData, value: boolean) => {
       set((state: any) => ({

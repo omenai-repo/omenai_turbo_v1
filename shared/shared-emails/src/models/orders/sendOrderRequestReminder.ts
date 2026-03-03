@@ -21,7 +21,7 @@ export const sendOrderRequestReminder = async ({
   entity,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "Notice: Potential Order Request Decline",

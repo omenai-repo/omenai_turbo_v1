@@ -17,21 +17,21 @@ export default function NotFoundData({
     <div
       className={`w-full flex items-center justify-center py-12 relative overflow-hidden ${className}`}
     >
-      {/* 🟡 Floating Animated Shape #1 */}
+      {/*  Floating Animated Shape #1 */}
       <motion.div
         className="absolute top-6 left-10 w-10 h-10 rounded bg-cyan-500/20"
         animate={{ y: [0, -12, 0], x: [0, 6, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* 🔵 Floating Animated Shape #2 */}
+      {/*  Floating Animated Shape #2 */}
       <motion.div
         className="absolute bottom-10 right-12 w-14 h-14 rounded bg-teal-400/20"
         animate={{ y: [0, 10, 0], x: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* 🟣 Floating Animated Shape #3 */}
+      {/*  Floating Animated Shape #3 */}
       <motion.div
         className="absolute bottom-16 left-1/3 w-8 h-8 rounded bg-indigo-500/20"
         animate={{ y: [0, -10, 0] }}
@@ -68,7 +68,7 @@ export default function NotFoundData({
   );
 }
 
-/* 🎨 Simple Abstract Illustration — lightweight & theme-friendly */
+/*  Simple Abstract Illustration — lightweight & theme-friendly */
 function EmptyArtIllustration() {
   return (
     <svg

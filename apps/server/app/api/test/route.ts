@@ -22,7 +22,25 @@ const payload = {
 };
 export async function GET() {
   // await sendPaymentSuccessMailArtist(payload);
+  // console.log('test')
+  await sendPriceEmail({
+    name: "Dante Reus",
+    email : "rodolphe@omenai.net",
+    artwork_data: {
+      art_id: "ddb13ea2-8ff8-416a-b1bb-46106d3c0169",
+      artist: "Frank Raymond",
+      medium: "Acrylic on canvas/linen/panel",
+      pricing: {
+        usd_price: 12345,
+        currency: "usd",
+        price: 12345,
+        shouldShowPrice: "true",
+      },
+      title: "Symphony of the Sahara",
+      url: "68b4e394002c1c773ad6",
+    },
+  });
 
-  const data = await getFutureShipmentDate(3, true, "US");
-  return NextResponse.json({ message: "Test route is working!", data });
+  // const data = await getFutureShipmentDate(3, true, "US");
+  return NextResponse.json({ message: "Test route is working!" });
 }

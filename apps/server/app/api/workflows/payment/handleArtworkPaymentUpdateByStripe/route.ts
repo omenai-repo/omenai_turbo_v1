@@ -137,7 +137,7 @@ async function updateArtworkRecordAsSold(
 ): Promise<FulfillmentStepResult> {
   try {
     const artwork = await Artworkuploads.findOneAndUpdate(
-      { art_id, availability: true }, // 🔐 guard
+      { art_id, availability: true }, //  guard
       { $set: { availability: false } },
       { new: true },
     );
@@ -210,7 +210,7 @@ async function updateMassOrderRecords(
         "artwork_data.art_id": art_id,
         "buyer_details.id": { $ne: buyer_id },
 
-        // 🔐 idempotency guard
+        //  idempotency guard
         availability: { $ne: false },
       },
       {

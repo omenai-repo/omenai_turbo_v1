@@ -237,7 +237,7 @@ export default function GalleriesTerms() {
             </p>
             <p className="text-gray-700 mb-4">
               8.2 Galleries may request reactivation by contacting
-              support@omenai.app.
+              info@omenai.app.
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mt-8 mb-3">
@@ -324,7 +324,7 @@ export default function GalleriesTerms() {
               <br />
               122, S. Michigan Avenue, Suite 1390-H73
               <br />
-              support@omenai.app | legal@omenai.app
+              info@omenai.app | legal@omenai.app
             </p>
           </div>
         </div>

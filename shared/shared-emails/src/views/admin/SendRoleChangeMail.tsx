@@ -64,7 +64,7 @@ export const RoleUpdateEmail = ({
                 className="text-center font-semibold m-0"
                 style={{ color: EMAIL_COLORS.link, fontSize: "18px" }}
               >
-                🔐 Admin Portal Role Update
+                Admin Portal Role Update
               </Text>
             </Section>
 

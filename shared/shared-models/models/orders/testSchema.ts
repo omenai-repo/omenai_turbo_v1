@@ -3,7 +3,7 @@ import { CreateOrderModelTypes } from "@omenai/shared-types";
 import { generateDigit } from "@omenai/shared-utils/src/generateToken";
 
 // -------------------------------
-// 🧩 SUB-SCHEMAS
+//  SUB-SCHEMAS
 // -------------------------------
 
 // Address
@@ -111,7 +111,7 @@ const OrderPersonDetailsSchema = new Schema({
 });
 
 // -------------------------------
-// 🧱 MAIN ORDER SCHEMA
+//  MAIN ORDER SCHEMA
 // -------------------------------
 
 const CreateOrderSchema = new Schema<CreateOrderModelTypes>(
@@ -177,7 +177,7 @@ const CreateOrderSchema = new Schema<CreateOrderModelTypes>(
       index: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // -------------------------------

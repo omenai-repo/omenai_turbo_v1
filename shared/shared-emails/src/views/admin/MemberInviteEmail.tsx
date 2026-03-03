@@ -14,7 +14,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
       {/* Welcome Badge */}
       <Section className="text-center mb-8">
         <div className="dark:text-white text-[#0f172a] text-sm font-semibold px-4 py-2 rounded">
-          🎉 Admin Invitation
+          Admin Invitation
         </div>
       </Section>
 
@@ -50,7 +50,7 @@ const MemberInviteEmail = ({ token }: MemberInviteEmailProps) => {
       <Section className="bg-gray-50 dark:bg-gray-900 rounded p-4 mt-8 mb-6">
         <Text className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-0">
           <strong className="text-gray-700 dark:text-gray-300">
-            🔒 Security First
+            Security First
           </strong>
           <br />
           This invitation link is unique to you and will expire in 48 hours.

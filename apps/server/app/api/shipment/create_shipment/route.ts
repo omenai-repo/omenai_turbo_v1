@@ -303,7 +303,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       },
     };
 
-    console.log("🚀 Creating DHL Shipment with Payload:", shipmentPayloadData);
+    console.log(" Creating DHL Shipment with Payload:", shipmentPayloadData);
     const requestOptions = {
       method: "POST",
       headers: getDhlHeaders(),

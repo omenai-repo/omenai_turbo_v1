@@ -90,7 +90,7 @@ const PlanBadge = ({ planName }: { planName: string }) =>
     </div>
   ) : null;
 
-/* 🔹 UPDATED Forfeit Warning — Reflects the 2-month offer */
+/*  UPDATED Forfeit Warning — Reflects the 2-month offer */
 const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
   <div className="mb-4 rounded bg-amber-50 border border-amber-200 p-3">
     <div className="flex gap-2">
@@ -137,7 +137,7 @@ export default function Plan({
 
   const showForfeitWarning = discount && !isEligibleForDiscount;
 
-  // 🔹 UPDATED: CTA text specific to the 2-month offer
+  //  UPDATED: CTA text specific to the 2-month offer
   const finalButtonText =
     isEligibleForDiscount && !isDisabled ? "Claim 2 months free" : buttonText;
 
@@ -174,7 +174,7 @@ export default function Plan({
                   : pricing.annual_price}
             </span>
 
-            {/* 🔹 UPDATED: Sub-text for pricing unit */}
+            {/*  UPDATED: Sub-text for pricing unit */}
             <span className="text-sm text-slate-500">
               {isEligibleForDiscount
                 ? "/mo for 2 months"
@@ -182,7 +182,7 @@ export default function Plan({
             </span>
           </div>
 
-          {/* 🔹 UPDATED: Green Pricing Benefits Text */}
+          {/*  UPDATED: Green Pricing Benefits Text */}
           {isEligibleForDiscount ? (
             <p className="mt-1 text-xs font-medium text-emerald-600">
               Then ${pricing.monthly_price}/mo · One-time offer

@@ -26,7 +26,7 @@ export const useCampaignTracker = () => {
     }
     setVisitorId(storedVisitorId);
 
-    // 2. 🧳 Prepare the Data
+    // 2.  Prepare the Data
     const marketingData = {
       source: searchParams.get("utm_source") || "direct",
       medium: searchParams.get("utm_medium") || "none",
@@ -35,7 +35,7 @@ export const useCampaignTracker = () => {
       visitorId: storedVisitorId,
     };
 
-    // 3. 📡 The Signal: Send "Page View" to backend
+    // 3.  The Signal: Send "Page View" to backend
     // We use sendBeacon if available (better for analytics), else fetch
     const payload = JSON.stringify(marketingData);
     const blob = new Blob([payload], { type: "application/json" });

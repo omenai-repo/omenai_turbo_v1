@@ -19,7 +19,7 @@ export const sendArtistShipmentSuccessEmail = async ({
   price,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "Your Shipment Was Successfully Delivered.",

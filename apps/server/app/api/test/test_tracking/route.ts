@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
   try {
     let result;
-    console.log(`🔍 Testing ${carrier} tracking for: ${trackingNumber}`);
+    console.log(` Testing ${carrier} tracking for: ${trackingNumber}`);
 
     if (carrier === "DHL") {
       result = await getDHLTracking(trackingNumber);

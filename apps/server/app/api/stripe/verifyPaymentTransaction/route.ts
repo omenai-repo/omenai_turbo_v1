@@ -56,7 +56,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       );
     }
 
-    // 🔐 Safely parse metadata (Stripe metadata is string-only)
+    //  Safely parse metadata (Stripe metadata is string-only)
 
     await verifyStripeTransaction(paymentIntent, meta);
 

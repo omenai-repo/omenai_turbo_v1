@@ -222,7 +222,7 @@ export default function MigrationUpgradeCheckoutItem({
           {/* Compliance & Trust badges */}
           <div className="space-y-6 pt-6">
             <div className="p-4 bg-gray-50 border border-gray-200 rounded flex items-start gap-4">
-              <div className="p-2 bg-white rounded shadow-sm">🔒</div>
+              <div className="p-2 bg-white rounded shadow-sm"></div>
               <p className="text-xs text-gray-600 leading-relaxed">
                 <span className="font-bold block text-slate-800 mb-1 uppercase tracking-tighter">
                   PCI-DSS Compliant
