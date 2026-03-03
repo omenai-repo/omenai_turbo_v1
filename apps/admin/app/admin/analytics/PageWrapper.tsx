@@ -117,8 +117,8 @@ export default function EnterpriseDashboard() {
               {crm.selectedIds.length} users selected
             </span>
             <button
-              disabled={true}
-              // disabled={crm.selectedIds.length === 0 || crm.isInviting}
+              // disabled={true}
+              disabled={crm.selectedIds.length === 0 || crm.isInviting}
               onClick={crm.inviteUsers}
               className={`px-4 py-2 rounded-lg disabled:bg-slate-300 disabled:cursor-not-allowed text-sm font-bold text-white transition-colors shadow-sm ${
                 crm.selectedIds.length > 0
