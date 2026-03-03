@@ -64,7 +64,7 @@ export default function EmailArtworkCard({
           </Column>
           <Column align="right">
             <Text className="text-value" style={priceText}>
-              {formatPrice(price, "USD")}
+              {price}
             </Text>
           </Column>
         </Row>
