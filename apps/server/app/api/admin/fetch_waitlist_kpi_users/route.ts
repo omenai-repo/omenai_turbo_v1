@@ -6,8 +6,8 @@ import { validateRequestBody } from "../../util";
 
 const FetchWaitlistKpiUsersSchema = z.object({
   entity: z.string(),
-  page: z.number().default(1),
-  limit: z.number().default(1),
+  page: z.number(),
+  limit: z.number().default(50),
   filters: z.object({
     buying_frequency: z.any().optional(),
     formal_education: z.any().optional(),
