@@ -17,7 +17,7 @@ export const sendOrderAcceptedMail = async ({
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Your Order has been Accepted!",
     react: OrderAcceptedEmail({

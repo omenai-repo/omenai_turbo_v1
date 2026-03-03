@@ -12,7 +12,7 @@ export const sendSubscriptionPaymentPendingMail = async ({
   // Set up resend here instead
   await sendMailVerification({
     prefix: "Omenai subscriptions",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Notification: Pending Subscription Payment",
     react: SubscriptionPaymentPendingEmail({ name }),

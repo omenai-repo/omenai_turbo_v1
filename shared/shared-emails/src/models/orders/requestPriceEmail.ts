@@ -17,7 +17,7 @@ export const sendPriceEmail = async ({
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: `Private Price Inquiry Response`,
     react: RequestPriceEmail({ name, artwork_data }),

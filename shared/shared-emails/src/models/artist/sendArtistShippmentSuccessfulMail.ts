@@ -21,7 +21,7 @@ export const sendArtistShippmentSuccessfulMail = async ({
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai shippment",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Funds are available for withdrawal!",
     react: SendArtistShipmentSuccess(
@@ -30,7 +30,7 @@ export const sendArtistShippmentSuccessfulMail = async ({
       artwork,
       artworkImage,
       artistName,
-      artworkPrice
+      artworkPrice,
     ),
   });
 };
