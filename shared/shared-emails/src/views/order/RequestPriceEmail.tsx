@@ -34,7 +34,7 @@ export const RequestPriceEmail = ({
   name,
   artwork_data,
 }: RequestPriceEmailProps) => {
-  const artworkUrl = `${base_url()}/artwork/${artwork_data.url}`;
+  const artworkUrl = `${base_url()}/artwork/${artwork_data.art_id}`;
   const optimizedImage = getImageFileView(artwork_data.url, 400);
 
   return (
