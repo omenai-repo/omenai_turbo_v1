@@ -41,10 +41,10 @@ const RejectArtistMail = (artist_name?: string) => {
               decision was made in error or if you would like to discuss your
               account further, please contact our support team at{" "}
               <Link
-                href="mailto:info@omenai.app"
+                href="mailto:support@omenai.app"
                 className="text-dark font-bold underline"
               >
-                info@omenai.app
+                support@omenai.app
               </Link>
               , and we will be happy to assist you.
             </Text>

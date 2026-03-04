@@ -15,7 +15,7 @@ export const sendPurchaseInvoice = async ({
     from: "orders",
     to: email,
     subject: "Your Omenai Payment Receipt for artwork purchase",
-    prefix: "Orders",
+    prefix: "Omenai Advisory",
     react: InvoiceMail({ name }),
     attachments: [
       {

@@ -102,7 +102,7 @@ export const PaymentFailedEmail = ({
               questions about the transaction or require a different payment
               method, please reply directly to this email or reach out to us at{" "}
               <Link
-                href="mailto:info@omenai.app"
+                href="mailto:advisory@omenai.app"
                 className="link-main"
                 style={{
                   color: "#2563eb",
@@ -110,7 +110,7 @@ export const PaymentFailedEmail = ({
                   fontWeight: "500",
                 }}
               >
-                info@omenai.app
+                advisory@omenai.app
               </Link>
               .
             </Text>
