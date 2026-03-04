@@ -15,10 +15,12 @@ export default function AdminEmailLayout({
   name,
   previewText,
   children,
+  showFooter = true,
 }: {
   name?: string;
   previewText: string;
   children: React.ReactNode;
+  showFooter?: boolean;
 }) {
   return (
     <Html>
@@ -44,7 +46,7 @@ export default function AdminEmailLayout({
           </Container>
 
           {/* Help Section Outside Container */}
-          <EmailFooter recipientName={name} />
+          {showFooter && <EmailFooter recipientName={name} />}
         </Body>
       </Tailwind>
     </Html>
