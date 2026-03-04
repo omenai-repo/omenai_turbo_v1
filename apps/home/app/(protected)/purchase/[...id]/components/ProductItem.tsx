@@ -17,7 +17,7 @@ export default function ProductItem({
       {/* 1. ASSET HEADER */}
       <div className="mb-6 flex items-center justify-between border-b border-neutral-200 pb-4">
         <span className="font-sans text-[9px] uppercase tracking-widest text-neutral-500">
-          Asset Reference
+          Work Reference
         </span>
         <span className="font-sans text-[9px] uppercase tracking-widest text-dark">
           #{artwork.art_id.slice(-6)}

@@ -183,9 +183,9 @@ export const OrderRequestReceivedEmail = ({
                   textDecoration: "none",
                   fontWeight: "500",
                 }}
-                href="mailto:info@omenai.app"
+                href="mailto:support@omenai.app"
               >
-                info@omenai.app
+                support@omenai.app
               </Link>
             </Text>
 

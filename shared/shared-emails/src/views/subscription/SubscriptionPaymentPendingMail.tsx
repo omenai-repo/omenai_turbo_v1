@@ -134,7 +134,7 @@ export const SubscriptionPaymentPendingEmail = ({
               you have any questions regarding this charge, our team is ready to
               assist you at{" "}
               <Link
-                href="mailto:info@omenai.app"
+                href="mailto:support@omenai.app"
                 className="link-main"
                 style={{
                   color: "#2563eb",
@@ -142,7 +142,7 @@ export const SubscriptionPaymentPendingEmail = ({
                   fontWeight: "500",
                 }}
               >
-                info@omenai.app
+                support@omenai.app
               </Link>
               .
             </Text>

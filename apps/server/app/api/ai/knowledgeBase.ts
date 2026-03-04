@@ -96,7 +96,7 @@ const COLLECTOR_INFO = `
 
 // --- SECTOR 8: CONTACT & GUARDRAILS ---
 const CONTACT_INFO = `
-- **Support Email**: info@omenai.app
+- **Support Email**: support@omenai.app
 - **Live Assistant**: Available on platform.
 `;
 
