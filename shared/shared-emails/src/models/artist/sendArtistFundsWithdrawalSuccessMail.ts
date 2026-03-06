@@ -12,7 +12,7 @@ export const sendArtistFundsWithdrawalSuccessMail = async ({
   amount,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai Team",
+    prefix: "Omenai Advisory",
     from: "team",
     to: email,
     subject: "Your withdrawal has been completed successfully.",

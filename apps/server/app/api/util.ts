@@ -157,7 +157,7 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
 
-  const path = `/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase() || country}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase() || cityName || country}&strictValidation=${false}`;
+  const path = `/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase()}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase()}&strictValidation=${false}`;
 
   const API_URL = `${DHL_API}/${path}`;
 
@@ -172,6 +172,7 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const response = await fetch(url, requestOptions);
 
   const result = await response.json();
+  console.log(result);
 
   if (!response.ok) {
     const error_message = getUserFriendlyError(result.detail);
@@ -180,12 +181,6 @@ export async function validateDHLAddress(data: ShipmentAddressValidationType) {
 
   return result;
 }
-
-const API_URL = getApiUrl();
-const HEADERS = {
-  "Content-Type": "application/json",
-};
-// FILE: packages/shared-lib/shipment/rateService.ts (Create this file)
 
 export async function calculateShipmentRate(
   order: CreateOrderModelTypes,

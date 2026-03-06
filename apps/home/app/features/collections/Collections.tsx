@@ -105,7 +105,7 @@ export default function Collections({
                 </div>
               </div>
             ))}
-            {/* "View All" Card at the end */}
+            "View All" Card at the end
             <div className="flex-[0_0_auto] flex items-center">
               <Link
                 href="/catalog"

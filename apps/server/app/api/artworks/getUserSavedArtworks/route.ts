@@ -35,7 +35,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
         { "role_access.role": "gallery", author_id: { $in: [...galleries] } },
       ],
     })
-      .sort({ createdAt: -1 })
+      .sort({ availability: -1, createdAt: -1 })
       .skip(skip)
       .limit(PAGE_SIZE)
       .select("art_id")

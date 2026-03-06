@@ -1,3 +1,5 @@
+import { base_url } from "@omenai/url-config/src/config";
+import Link from "next/link";
 import { useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
 
@@ -37,6 +39,19 @@ export default function Accordion({ header, items }: AccordionPropTypes) {
               {item.content}
             </li>
           ))}
+          {header === "Omenai Guarantee" && (
+            <li
+              key={5}
+              className="font-sans text-xs text-neutral-500 pl-4 border-l border-neutral-200"
+            >
+              <Link
+                className="text-[10px] underline text-blue-600"
+                href={`${base_url()}/legal?ent=collector`}
+              >
+                Learn more
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </div>

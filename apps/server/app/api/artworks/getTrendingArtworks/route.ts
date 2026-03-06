@@ -42,7 +42,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         availability: true,
         ...filterCriteria,
       })
-        .sort({ impressions: -1 })
+        .sort({ impressions: -1, availability: -1 })
         .skip(skip)
         .limit(PAGE_SIZE)
         .select("art_id")

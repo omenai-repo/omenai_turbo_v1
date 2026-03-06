@@ -26,9 +26,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         .skip(skip)
         .limit(16)
         .select("art_id")
-        .sort({
-          createdAt: -1,
-        })
+        .sort({ availability: -1, createdAt: -1 })
         .lean()
         .exec();
 

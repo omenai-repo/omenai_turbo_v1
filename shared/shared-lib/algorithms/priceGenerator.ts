@@ -17,7 +17,7 @@ type ArtworkMedium =
   | "Works on paper"
   | "Acrylic on canvas/linen/panel"
   | "Oil on canvas/panel"
-  | "Mixed media on paper/canvas";
+  | "Mixed media on canvas/paper";
 
 interface ArtworkDetails {
   artistCategory: ArtistCategory;
@@ -42,7 +42,7 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
     Photography: 0.05,
     "Works on paper": 0.15,
     "Acrylic on canvas/linen/panel": 0.35,
-    "Mixed media on paper/canvas": 0.5,
+    "Mixed media on canvas/paper": 0.5,
     "Oil on canvas/panel": 0.7,
   };
 

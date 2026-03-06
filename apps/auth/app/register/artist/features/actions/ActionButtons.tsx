@@ -43,8 +43,8 @@ export default function () {
       type: "pickup" as "delivery" | "pickup",
       countryCode: artistSignupData.countryCode,
       postalCode: artistSignupData.zip,
-      cityName: artistSignupData.state,
-      countyName: artistSignupData.city,
+      cityName: artistSignupData.city,
+      countyName: artistSignupData.state,
     };
 
     setLoading(true);

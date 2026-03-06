@@ -268,7 +268,7 @@ export type ArtworkMediumTypes =
   | "Photography"
   | "Works on paper"
   | "Acrylic on canvas/linen/panel"
-  | "Mixed media on paper/canvas"
+  | "Mixed media on canvas/paper"
   | "Oil on canvas/panel";
 
 export type ArtworkPriceFilterData = {

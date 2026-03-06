@@ -23,7 +23,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       const allArtworksIds = await Artworkuploads.find({
         author_id,
       })
-        .sort({ createdAt: -1 })
+        .sort({ availability: -1, createdAt: -1 })
         .select("art_id")
         .lean()
         .exec();

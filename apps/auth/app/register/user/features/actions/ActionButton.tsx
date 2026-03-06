@@ -45,8 +45,8 @@ export default function ({
       type: "delivery" as "delivery" | "pickup",
       countryCode: individualSignupData.countryCode,
       postalCode: individualSignupData.zip,
-      cityName: individualSignupData.state,
-      countyName: individualSignupData.city,
+      cityName: individualSignupData.city,
+      countyName: individualSignupData.state,
     };
 
     setLoading(true);

@@ -21,6 +21,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     const popular_artworks = await Artworkuploads.find({ author_id: id })
       .sort({
         impressions: -1,
+        availability: -1,
       })
       .limit(3)
       .lean()
