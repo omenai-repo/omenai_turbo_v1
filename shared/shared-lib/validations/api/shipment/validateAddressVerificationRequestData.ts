@@ -1,7 +1,7 @@
 import { ShipmentAddressValidationType } from "@omenai/shared-types";
 
 export function validateAddressVerificationRequestData(
-  data: ShipmentAddressValidationType
+  data: ShipmentAddressValidationType,
 ): string | null {
   const { type, countryCode, postalCode, cityName, countyName } = data;
 

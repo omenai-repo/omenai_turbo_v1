@@ -363,7 +363,7 @@
                                         - generic [ref=e480]: Sold
                                     - generic [ref=e481]:
                                         - paragraph [ref=e482]: Visage of Beauty
-                                        - paragraph [ref=e483]: Mixed media on paper/canvas
+                                        - paragraph [ref=e483]: Mixed media on canvas/paper
                             - generic [ref=e485]:
                                 - generic [ref=e486]:
                                     - link "Ma Grand-mère et son telephone Rouge Sold" [ref=e487] [cursor=pointer]:
@@ -441,9 +441,9 @@
                         - link [ref=e591] [cursor=pointer]:
                             - /url: /collections/mixed-media-on-paper-canvas
                             - article [ref=e592]:
-                                - img "Mixed media on paper/canvas" [ref=e594]
+                                - img "Mixed media on canvas/paper" [ref=e594]
                                 - generic [ref=e597]:
-                                    - heading "Mixed media on paper/canvas" [level=3] [ref=e599]
+                                    - heading "Mixed media on canvas/paper" [level=3] [ref=e599]
                                     - img [ref=e601]
                         - link [ref=e606] [cursor=pointer]:
                             - /url: /collections/oil-on-canvas-panel

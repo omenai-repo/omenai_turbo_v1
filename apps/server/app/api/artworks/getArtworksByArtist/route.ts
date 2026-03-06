@@ -33,7 +33,7 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         ],
         artist,
       })
-        .sort({ createdAt: -1 })
+        .sort({ availability: -1, createdAt: -1 })
         .skip(skip)
         .limit(PAGE_SIZE)
         .select("art_id")

@@ -8,7 +8,7 @@ export const validatePostalCode = <T>(value: T) => {
 
   let errors: string[] = [];
 
-  if (!schema.min(3).max(10).safeParse(value).success) {
+  if (!schema.min(3).max(15).safeParse(value).success) {
     errors.push("Postal code must be between 3 and 10 characters long.");
   }
 

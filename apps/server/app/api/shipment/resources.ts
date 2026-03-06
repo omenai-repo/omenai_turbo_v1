@@ -6,7 +6,7 @@ const API_KEY = (process.env.DHL_API_KEY || "").trim();
 const API_SECRET = (process.env.DHL_API_SECRET || "").trim();
 
 // DHL API version
-export const DHL_API_VERSION = "3.0.1";
+export const DHL_API_VERSION = "3.2.0";
 
 // DHL API credentials encryption
 export const credentials = Buffer.from(`${API_KEY}:${API_SECRET}`).toString(

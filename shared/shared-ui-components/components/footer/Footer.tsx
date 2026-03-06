@@ -115,7 +115,7 @@ export default function Footer() {
             <ul className="space-y-4 font-sans text-sm text-neutral-500">
               <li>
                 <Link
-                  href="mailto:info@omenai.app"
+                  href="mailto:support@omenai.app"
                   className="hover:text-dark  transition-colors block py-1"
                 >
                   Contact us
