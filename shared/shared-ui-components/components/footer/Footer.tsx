@@ -17,9 +17,6 @@ export default function Footer() {
   const year = new Date().getFullYear();
   const pathname = usePathname();
 
-  // Hide footer on studio/admin paths
-  if (pathname?.includes("/studio")) return null;
-
   return (
     <footer className="w-full bg-white text-dark  border-t border-neutral-200">
       {/* MAIN GRID WRAPPER */}

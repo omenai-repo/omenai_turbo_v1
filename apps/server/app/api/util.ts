@@ -157,7 +157,7 @@ import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 export async function validateDHLAddress(data: ShipmentAddressValidationType) {
   const { type, countryCode, postalCode, cityName, countyName, country } = data;
 
-  const path = `/address-validate?type=${type}&countryCode=${countryCode}&cityName=${cityName?.toLowerCase()}&postalCode=${postalCode}&countyName=${countyName?.toLowerCase()}&strictValidation=${false}`;
+  const path = `/address-validate?type=${type}&countryCode=${countryCode}&cityName=${countyName?.toLowerCase()}&postalCode=${postalCode}&countyName=${cityName?.toLowerCase()}&strictValidation=${false}`;
 
   const API_URL = `${DHL_API}/${path}`;
 
