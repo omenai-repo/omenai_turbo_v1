@@ -44,8 +44,8 @@ export default function () {
       type: "pickup" as "delivery" | "pickup",
       countryCode: gallerySignupData.countryCode,
       postalCode: gallerySignupData.zip,
-      cityName: gallerySignupData.city,
-      countyName: gallerySignupData.state,
+      cityName: gallerySignupData.state,
+      countyName: gallerySignupData.city,
     };
 
     setLoading(true);
