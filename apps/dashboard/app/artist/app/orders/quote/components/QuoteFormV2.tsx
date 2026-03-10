@@ -31,6 +31,7 @@ import {
 } from "@omenai/shared-utils/src/shippingLimits"; // IMPORT MATH
 import { init } from "rollbar";
 import { TEXTAREA_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import PickupAddressWidget from "./address/PickupAddressWidget";
 
 // Icon for the section header
 const RulerIcon = ({ className }: { className?: string }) => (
@@ -89,6 +90,8 @@ function QuoteFormContent({
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  const pickup_address = order_data.shipping_details.addresses.origin;
+
   const packaging_type_from_order = order_data.artwork_data.packaging_type;
   const initial_packaging_type =
     packaging_type_from_order === "rolled" ||
@@ -129,7 +132,7 @@ function QuoteFormContent({
   }, [order_data]);
 
   const carrier =
-    order_data.shipping_details?.shipment_information?.carrier?.toUpperCase() ||
+    order_data.shipping_details.shipment_information.carrier.toUpperCase() ||
     "";
 
   // UNIVERSAL LIMIT CHECK
@@ -231,14 +234,13 @@ function QuoteFormContent({
     <div className="h-[calc(100vh-6rem)] overflow-hidden bg-slate-50/50">
       <div className="grid lg:grid-cols-12 h-full">
         {/* LEFT SIDE */}
-        <div className="lg:col-span-7 xl:col-span-8 h-full overflow-y-auto custom-scrollbar p-4 md:p-8 space-y-8">
+        <div className="lg:col-span-7 xl:col-span-8 h-full overflow-y-auto custom-scrollbar p-4 space-y-6">
           <div>
             <h1 className="text-fluid-md font-bold tracking-tight text-slate-900">
               Confirm Logistics
             </h1>
-            <p className="mt-2 text-fluid-xs text-slate-600">
-              Please verify the artwork dimensions, exhibition status, and
-              packaging details.
+            <p className="mt-2 text-fluid-xxs text-slate-600">
+              Please verify the artwork dimensions and packaging details.
             </p>
           </div>
 
@@ -289,13 +291,18 @@ function QuoteFormContent({
                 }
               />
             ) : (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <PickupAddressWidget
+                  initialAddress={pickup_address}
+                  order_id={order_id}
+                />
                 <textarea
                   value={specialInstructions}
                   onChange={(e) => setSpecialInstructions(e.target.value)}
                   maxLength={80} // THE FIX: Physically stops typing at 80 chars
                   placeholder="Notes for the courier (Max 80 characters)"
                   className={TEXTAREA_CLASS}
+                  rows={5}
                 />
                 <p className="text-right text-[10px] text-slate-400 mt-1">
                   {specialInstructions.length} / 80

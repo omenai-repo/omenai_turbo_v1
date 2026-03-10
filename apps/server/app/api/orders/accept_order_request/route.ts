@@ -109,9 +109,20 @@ const config: CombinedConfig = {
   allowedRoles: ["artist", "gallery"],
 };
 
+const AddressSchema: z.ZodType<AddressTypes> = z.object({
+  address_line: z.string(),
+  state: z.string(),
+  country: z.string(),
+  city: z.string(),
+  zip: z.string(),
+  stateCode: z.string().max(2),
+  countryCode: z.string().max(2),
+});
+
 const AcceptOrderRequestSchema = z.object({
   order_id: z.string(),
   specialInstructions: z.string().optional(),
+  address: AddressSchema,
   dimensions: z.object({
     length: z.number(),
     width: z.number(),
@@ -133,33 +144,47 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   await connectMongoDB();
 
   try {
-    const data = await validateRequestBody(request, AcceptOrderRequestSchema);
-
-    console.log(data.dimensions);
+    const {
+      order_id,
+      address: pickup_address,
+      dimensions,
+      exhibition_status,
+      specialInstructions,
+    } = await validateRequestBody(request, AcceptOrderRequestSchema);
 
     validatePayload(data);
 
-    const order = await fetchOrder(data.order_id);
+    const order = await fetchOrder(order_id);
 
     await validateSellerSubscription(order);
 
     // ROUTER LOGIC HAPPENS INSIDE HERE
-    const shipping_rate_data = await getShippingRate(order, data.dimensions);
-
-    const shipment_information = await buildShipmentInformation(
+    const shipping_rate_data = await getShippingRate(
       order,
-      data.dimensions,
-      shipping_rate_data,
+      dimensions,
+      pickup_address,
     );
+
+    const shipmentInfoPayload = {
+      order,
+      dimensions,
+      rate: shipping_rate_data,
+      origin_address: pickup_address,
+      destination_address: order.shipping_details.addresses.destination,
+    };
+
+    const shipment_information =
+      await buildShipmentInformation(shipmentInfoPayload);
 
     const expiresAt = buildExpiryDate();
 
     await updateOrder({
-      order_id: data.order_id,
-      exhibition_status: data.exhibition_status,
-      specialInstructions: data.specialInstructions,
+      order_id,
+      exhibition_status,
+      specialInstructions,
       shipment_information,
       expiresAt,
+      origin_address: pickup_address,
     });
 
     await notifyBuyer(order);
@@ -203,7 +228,7 @@ function validatePayload(data: any) {
   }
 }
 
-async function fetchOrder(order_id: string) {
+async function fetchOrder(order_id: string): Promise<CreateOrderModelTypes> {
   const order = await CreateOrder.findOne({ order_id });
   if (!order) {
     throw new NotFoundError("Order data not found. Try again");
@@ -233,9 +258,10 @@ async function validateSellerSubscription(order: CreateOrderModelTypes) {
 async function getShippingRate(
   order: CreateOrderModelTypes,
   dimensions: ShipmentDimensions,
+  pickup_address: AddressTypes,
 ) {
   const carrier = order.shipping_details.shipment_information.carrier;
-  const origin = order.shipping_details.addresses.origin;
+  const origin = pickup_address;
   const destination = order.shipping_details.addresses.destination;
 
   try {
@@ -272,25 +298,29 @@ async function getShippingRate(
   }
 }
 
-async function buildShipmentInformation(
-  order: CreateOrderModelTypes,
-  dimensions: ShipmentDimensions,
-  rate: any,
-) {
-  const origin = order.shipping_details.addresses.origin;
-  const destination = order.shipping_details.addresses.destination;
-
+async function buildShipmentInformation({
+  order,
+  dimensions,
+  rate,
+  origin_address,
+  destination_address,
+}: {
+  order: CreateOrderModelTypes;
+  dimensions: ShipmentDimensions;
+  rate: any;
+  origin_address: AddressTypes;
+  destination_address: AddressTypes;
+}) {
   const { taxes, tax_calculation_id } = await calculate_taxes(
-    origin,
-    destination,
+    origin_address,
+    destination_address,
     order.artwork_data.pricing.usd_price,
     Number(rate.chargeable_price_in_usd),
     order.order_id,
   );
 
   // Determine Carrier Name
-  // If it's DHL, your old code did "DHL " + productName.
-  // If it's UPS, our service returns "UPS Ground".
+
   let carrierName = rate.productName;
   if (
     !carrierName.toUpperCase().includes("UPS") &&
@@ -324,12 +354,14 @@ async function updateOrder({
   specialInstructions,
   shipment_information,
   expiresAt,
+  origin_address,
 }: {
   order_id: string;
   exhibition_status: OrderArtworkExhibitionStatus | null;
   specialInstructions?: string;
   shipment_information: any;
   expiresAt: string;
+  origin_address: AddressTypes;
 }) {
   if (!expiresAt)
     throw new Error(
@@ -344,6 +376,7 @@ async function updateOrder({
         "shipping_details.additional_information": specialInstructions || "",
         "shipping_details.shipment_information": shipment_information,
         "order_accepted.status": "accepted",
+        "shipping_details.addresses.origin": origin_address,
         expiresAt,
       },
     },

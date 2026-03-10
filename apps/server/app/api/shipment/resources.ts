@@ -133,7 +133,7 @@ export function getUserFriendlyError(dhlErrorMessage: string): string {
     }
   }
   // Return a generic friendly message if the error code is unknown or extraction fails
-  return "An unexpected error occurred. Please try again later or contact support.";
+  return "Address Verification failed. Please review the entered address or contact support for assistance.";
 }
 
 export async function getLatLng(

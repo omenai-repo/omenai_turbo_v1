@@ -30,6 +30,7 @@ import {
   checkCarrierLimit,
   checkIfRolledPassesLimit,
 } from "@omenai/shared-utils/src/shippingLimits"; // IMPORT MATH
+import PickupAddressWidget from "./address/PickupAddressWidget";
 
 // Icon for the section header
 const RulerIcon = ({ className }: { className?: string }) => (
@@ -87,6 +88,8 @@ function QuoteFormContent({
   const { csrf } = useAuth({ requiredRole: "gallery" });
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const pickup_address = order_data.shipping_details.addresses.origin;
 
   const packaging_type_from_order = order_data.artwork_data.packaging_type;
   const initial_packaging_type =
@@ -287,7 +290,11 @@ function QuoteFormContent({
                 }
               />
             ) : (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <PickupAddressWidget
+                  initialAddress={pickup_address}
+                  order_id={order_id}
+                />
                 <ExhibitionStatusSection
                   exhibitionStatus={exhibition_status}
                   onStatusChange={set_exhibition_status}
