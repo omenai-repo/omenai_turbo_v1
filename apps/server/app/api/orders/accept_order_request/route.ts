@@ -122,7 +122,6 @@ const AddressSchema: z.ZodType<AddressTypes> = z.object({
 const AcceptOrderRequestSchema = z.object({
   order_id: z.string(),
   specialInstructions: z.string().optional(),
-  address: AddressSchema,
   dimensions: z.object({
     length: z.number(),
     width: z.number(),
@@ -144,19 +143,16 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   await connectMongoDB();
 
   try {
-    const {
-      order_id,
-      address: pickup_address,
-      dimensions,
-      exhibition_status,
-      specialInstructions,
-    } = await validateRequestBody(request, AcceptOrderRequestSchema);
+    const { order_id, dimensions, exhibition_status, specialInstructions } =
+      await validateRequestBody(request, AcceptOrderRequestSchema);
 
     validatePayload(data);
 
     const order = await fetchOrder(order_id);
 
     await validateSellerSubscription(order);
+
+    const pickup_address = order.shipping_details.addresses.origin;
 
     // ROUTER LOGIC HAPPENS INSIDE HERE
     const shipping_rate_data = await getShippingRate(

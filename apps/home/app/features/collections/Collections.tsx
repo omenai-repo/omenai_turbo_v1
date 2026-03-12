@@ -7,8 +7,6 @@ import {
 } from "react-icons/md";
 import useEmblaCarousel from "embla-carousel-react";
 import { collections } from "../../collectionConstants";
-import Link from "next/link";
-import { IoArrowForward } from "react-icons/io5";
 
 export default function Collections({
   isCatalog = false,
