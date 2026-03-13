@@ -1,8 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
 test("purchase", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-  await page.getByRole("link", { name: "Fish pie" }).first().click();
+  await page.goto("https://staging.omenai.app/");
+  await page.getByRole("link", { name: "Colors of Heaven" }).first().click();
   await page.getByRole("button", { name: "Buy Artwork" }).click();
   await page.getByRole("textbox", { name: "Email Address" }).click();
   await page
@@ -10,6 +10,7 @@ test("purchase", async ({ page }) => {
     .fill("dantereus1@gmail.com");
   await page.getByRole("textbox", { name: "••••••••" }).click();
   await page.getByRole("textbox", { name: "••••••••" }).fill("Test12345@");
+  await page.getByRole("textbox", { name: "••••••••" }).press("Enter");
   await page.getByRole("button", { name: "Login to your account" }).click();
   await page.getByRole("button", { name: "Buy Artwork" }).click();
   await page.getByRole("button", { name: "Submit Purchase Request" }).click();
