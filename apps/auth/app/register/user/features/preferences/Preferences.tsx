@@ -8,7 +8,7 @@ let artTypes = [
   "Photography",
   "Works on paper",
   "Acrylic on canvas/linen/panel",
-  "Mixed media on paper/canvas",
+  "Mixed media on canvas",
   "Oil on canvas/panel",
 ];
 function Preferences() {
@@ -20,7 +20,7 @@ function Preferences() {
           Select artwork mediums that resonate with you.
         </p>
         <p className="text-center text-fluid-xxs font-semibold my-[1.5rem]">
-          Selected: {preferences.length}/5
+          Selected: {preferences.length}
         </p>
 
         <motion.div

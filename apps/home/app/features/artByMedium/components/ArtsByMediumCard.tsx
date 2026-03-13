@@ -22,7 +22,7 @@ export default function ArtsByMediumCard({ name, tag }: ArtsByMediumCardProps) {
           </span>
           <Link
             href={"/"}
-            className="md:text-fluid-md text-fluid-base text-dark font-light"
+            className="md:text-fluid-sm text-fluid-xs text-dark font-light"
           >
             {name}
           </Link>

@@ -5,7 +5,7 @@ export const COMPANY_INFO = {
 
   address:
     "122 S. Michigan Avenue, Suite 1390-H73, Chicago, IL 60603, United States",
-  email: "support@omenai.app",
+  email: "advisory@omenai.app",
   phone: "+123456789",
   website: "www.omenai.net",
 } as const;

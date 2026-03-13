@@ -18,7 +18,7 @@ export const sendPasswordRecoveryMail = async ({
   // Set up resend here instead
   await sendMailVerification({
     prefix: "Omenai onboarding",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Reset your password",
     react: PasswordRecoveryEmail(name, token, route),

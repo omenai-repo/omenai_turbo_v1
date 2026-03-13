@@ -46,7 +46,7 @@ export const POST = withRateLimit(lenientRateLimit)(async function POST(
       ...filterCriteria,
       medium: { $in: preferences },
     })
-      .sort({ createdAt: -1 })
+      .sort({ availability: -1, createdAt: -1 })
       .skip(skip)
       .limit(PAGE_SIZE)
       .select("art_id")

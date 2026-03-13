@@ -42,7 +42,7 @@ export const GET = withRateLimitHighlightAndCsrf(standardRateLimit)(
         const API_GET_SHIPMENT_DOC_URL_PROD = `${DHL_API}/${path}`;
 
         const url = new URL(
-          `${process.env.APP_ENV === "production" ? API_GET_SHIPMENT_DOC_URL_TEST : API_GET_SHIPMENT_DOC_URL_PROD}`,
+          `${process.env.APP_ENV === "production" ? API_GET_SHIPMENT_DOC_URL_PROD : API_GET_SHIPMENT_DOC_URL_TEST}`,
         );
 
         const response = await fetch(url, requestOptions);

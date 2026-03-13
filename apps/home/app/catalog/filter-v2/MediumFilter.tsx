@@ -13,7 +13,7 @@ const mediumOptions = [
   "Photography",
   "Works on paper",
   "Acrylic on canvas/linen/panel",
-  "Mixed media on paper/canvas",
+  "Mixed media on canvas",
   "Oil on canvas/panel",
 ];
 

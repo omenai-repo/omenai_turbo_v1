@@ -7,8 +7,6 @@ import {
 } from "react-icons/md";
 import useEmblaCarousel from "embla-carousel-react";
 import { collections } from "../../collectionConstants";
-import Link from "next/link";
-import { IoArrowForward } from "react-icons/io5";
 
 export default function Collections({
   isCatalog = false,
@@ -105,8 +103,7 @@ export default function Collections({
                 </div>
               </div>
             ))}
-            {/* "View All" Card at the end */}
-            <div className="flex-[0_0_auto] flex items-center">
+            {/* <div className="flex-[0_0_auto] flex items-center">
               <Link
                 href="/catalog"
                 className="group flex h-[400px] w-[200px] flex-col items-center justify-center gap-4 rounded-md border-2 border-dashed border-neutral-300 bg-white p-6 text-center transition-colors hover:border-[#091830]"
@@ -118,7 +115,7 @@ export default function Collections({
                   View All Categories
                 </span>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

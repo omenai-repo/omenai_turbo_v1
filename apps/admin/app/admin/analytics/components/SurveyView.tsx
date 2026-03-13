@@ -7,7 +7,7 @@ import { SurveyRadar } from "./charts/SurveyRadar";
 import { fetchSurveyView } from "@omenai/shared-services/analytics/fetchSurveyView";
 export const SurveyView = () => {
   const [countryFilter, setCountryFilter] = useState("");
-  const [page, setPage] = useState(1); // 👈 Pagination State
+  const [page, setPage] = useState(1); //  Pagination State
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["survey-stats", countryFilter, page],
@@ -35,7 +35,7 @@ export const SurveyView = () => {
       {/* 1. FILTER BAR */}
       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-          📊 Market Consensus
+          Market Consensus
           {isFetching && (
             <span className="text-xs font-light text-blue-500 animate-pulse ml-2">
               Updating data...
@@ -54,7 +54,7 @@ export const SurveyView = () => {
         >
           <option value="">Global (All Regions)</option>
 
-          {/* 👇 The Dynamic Render Loop */}
+          {/*  The Dynamic Render Loop */}
           {stats?.distinct_countries?.map((c: any) => (
             <option key={c._id} value={c._id}>
               {c._id || "Unknown Region"} ({c.count})
@@ -151,7 +151,7 @@ export const SurveyView = () => {
                       {user.entity}
                     </span>
                   </td>
-                  {/* 👇 Using the new formatter here */}
+                  {/*  Using the new formatter here */}
                   <td
                     className="px-6 py-4 max-w-[200px] truncate"
                     title={formatSurveyAnswer(user.survey?.current_challenges)}

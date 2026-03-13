@@ -56,7 +56,7 @@ export default function Home() {
           sessionId={user && user.role === "user" ? user.id : undefined}
         />
         <Editorials />
-        <TrendingArtistWrapper />
+        {/* <TrendingArtistWrapper /> */}
         {user && user.role === "user" && (
           <CuratedArtworkClientWrapper
             sessionId={user && user.role === "user" ? user.id : undefined}

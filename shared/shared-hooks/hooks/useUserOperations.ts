@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   useQuery,
   useMutation,
-  keepPreviousData, // 👈 Import the helper function here
+  keepPreviousData, //  Import the helper function here
   useQueryClient,
 } from "@tanstack/react-query";
 import { fetchWaitlistKpiUsers } from "@omenai/shared-services/admin/fetch_waitlist_kpi_users";
@@ -71,6 +71,8 @@ export const useUserOperations = (activeTab: "artist" | "collector") => {
     placeholderData: keepPreviousData,
   });
 
+  console.log(data);
+
   // 3. Handle Selection (Checkbox Logic)
   const toggleSelection = (id: string) => {
     setSelectedIds((prev) =>
@@ -130,6 +132,6 @@ export const useUserOperations = (activeTab: "artist" | "collector") => {
     toggleSelection,
     toggleAll,
     inviteUsers: () => inviteMutation.mutate(selectedIds),
-    isInviting: inviteMutation.isPending, // 👇 FIX: renamed from isLoading to isPending in v5
+    isInviting: inviteMutation.isPending, //  FIX: renamed from isLoading to isPending in v5
   };
 };

@@ -12,7 +12,7 @@ type ValidationFunction = (value: string) => string[];
 export function validate(
   value: string,
   label: string,
-  confirm?: string
+  confirm?: string,
 ): { success: boolean; errors: string[] | [] } {
   const validationFunctions: Record<string, ValidationFunction> = {
     name: (value: string) => validateText(value),

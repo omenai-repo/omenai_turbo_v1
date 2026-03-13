@@ -105,7 +105,7 @@ export async function generateInvoicePdf(
       "Omenai Inc.",
       "122 S. Michigan Avenue, Suite 1390-H73",
       "Chicago, Illinois, IL 60603",
-      "support@omenai.app",
+      "info@omenai.app",
     ],
     leftMargin,
     addressY - 20,

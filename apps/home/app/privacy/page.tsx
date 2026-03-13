@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
               </li>
               <li className="text-gray-700">or</li>
               <li className="text-gray-700">
-                <strong>support@omenai.app</strong> (for general inquiries)
+                <strong>info@omenai.app</strong> (for general inquiries)
               </li>
             </ul>
             <p className="text-gray-700 mb-2">
@@ -375,7 +375,7 @@ export default function PrivacyPolicy() {
               <br />
               122, S. Michigan Avenue, Suite 1390-H73
               <br />
-              support@omenai.app | legal@omenai.app
+              info@omenai.app | legal@omenai.app
             </p>
           </div>
         </div>

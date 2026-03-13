@@ -16,10 +16,10 @@ export const sendPriceEmail = async ({
   artwork_data,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
-    from: "transactions",
+    prefix: "Omenai Advisory",
+    from: "orders",
     to: email,
-    subject: `Requested Information: Base Price of artwork`,
+    subject: `Private Price Inquiry Response`,
     react: RequestPriceEmail({ name, artwork_data }),
   });
 };

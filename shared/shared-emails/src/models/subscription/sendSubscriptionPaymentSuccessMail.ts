@@ -12,7 +12,7 @@ export const sendSubscriptionPaymentSuccessfulMail = async ({
   // Set up resend here instead
   await sendMailVerification({
     prefix: "Omenai subscriptions",
-    from: "transactions",
+    from: "orders",
     to: email,
     subject: "Confirmation: Successful Subscription Payment",
     react: SubscriptionPaymentSuccessfulMail({ name }),

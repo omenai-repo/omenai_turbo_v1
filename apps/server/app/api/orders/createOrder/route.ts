@@ -170,7 +170,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const buyer_country = shipping_address.countryCode;
     const carrier: OrderShippingDetailsTypes["shipment_information"]["carrier"] =
       (seller_country.toLowerCase() === "us" &&
-        buyer_country.toLowerCase() === "is") ||
+        buyer_country.toLowerCase() === "us") ||
       (seller_country.toLowerCase() === "ng" &&
         buyer_country.toLowerCase() === "ng")
         ? "UPS"

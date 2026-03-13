@@ -8,7 +8,8 @@ import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHan
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import WaitlistLead from "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel";
-import SendWaitListInvites from "@omenai/shared-emails/src/views/admin/SendWaitListInvites";
+import SendArtistWaitListInvites from "@omenai/shared-emails/src/views/admin/SendArtistWaitListInvites";
+import SendCollectorWaitlistInvite from "@omenai/shared-emails/src/views/admin/SendCollectorWaitlistInvite";
 import z from "zod";
 
 const config: CombinedConfig = {
@@ -22,7 +23,7 @@ const SendWaitlistInvitesSchema = z.object({
     z.object({
       name: z.string().min(1),
       email: z.email(),
-      entity: z.enum(["gallery", "artist"]),
+      entity: z.enum(["collector", "artist"]),
     }),
   ),
 });
@@ -42,15 +43,23 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const inviteUserEmailPayload = await Promise.all(
       matchedUsers.map(async (user) => {
-        const html = await render(
-          SendWaitListInvites(user.name, user.email, user.entity),
-        );
-        return {
-          from: "Onboarding <onboarding@omenai.app>",
-          to: [user.email],
-          subject: "Join Omenai: An Invitation for Your Gallery",
-          html,
-        };
+        if (user.entity === "artist") {
+          const html = await render(SendArtistWaitListInvites(user.name));
+          return {
+            from: "Omenai Onboarding <onboarding@omenai.app>",
+            to: [user.email],
+            subject: "OMENAI is Live — Activate Your Profile",
+            html,
+          };
+        } else {
+          const html = await render(SendCollectorWaitlistInvite(user.name));
+          return {
+            from: "Omenai Onboarding <onboarding@omenai.app>",
+            to: [user.email],
+            subject: "OMENAI is Now Live",
+            html,
+          };
+        }
       }),
     );
     await resend.batch.send(inviteUserEmailPayload);

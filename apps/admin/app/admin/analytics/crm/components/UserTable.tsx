@@ -16,6 +16,8 @@ export const UserTable = ({
       </div>
     );
 
+  console.log(users.length);
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
@@ -26,7 +28,7 @@ export const UserTable = ({
                 type="checkbox"
                 checked={allSelected}
                 onChange={() => toggleAll(users.map((u: any) => u._id))}
-                className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
               />
             </th>
             <th className="p-4">User Details</th>
@@ -46,7 +48,7 @@ export const UserTable = ({
                   type="checkbox"
                   checked={selectedIds.includes(user._id)}
                   onChange={() => toggleSelection(user._id)}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                 />
               </td>
               <td className="p-4">

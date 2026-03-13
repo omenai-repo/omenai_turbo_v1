@@ -1,3 +1,4 @@
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import {
   Img,
   Section,

@@ -282,11 +282,10 @@ export const PaymentFailedEmail = ({
                 require assistance or wish to discuss your subscription, please
                 do not hesitate to reach out.
                 <br />
-                <br />
                 Warmly,
                 <br />
                 <strong className="heading-main text-gray-900">
-                  The Omenai Billing Team
+                  The Omenai Team
                 </strong>
               </Text>
             </Section>
@@ -295,7 +294,7 @@ export const PaymentFailedEmail = ({
             <EmailFooter
               recipientName={recipientName}
               supportTitle="Having trouble with your payment?"
-              supportMessage="Our client services team is ready to assist you. Contact us at"
+              supportMessage="Our Advisory team is ready to assist you. Contact us at"
             />
           </Container>
         </Body>

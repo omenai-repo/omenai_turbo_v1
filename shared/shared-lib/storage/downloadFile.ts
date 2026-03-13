@@ -13,10 +13,13 @@ export const downloadFile = async (fileId: string) => {
   return fileData;
 };
 
+const invoiceBucketId =
+  process.env.APPWRITE_INVOICE_BUCKET_ID ||
+  process.env.NEXT_PUBLIC_APPWRITE_INVOICE_BUCKET_ID!;
 export const downloadInvoiceFile = (file: string) => {
   if (!file) return;
   const fileDownload = storage.getFileDownload({
-    bucketId,
+    bucketId: invoiceBucketId,
     fileId: file,
   });
   return fileDownload;

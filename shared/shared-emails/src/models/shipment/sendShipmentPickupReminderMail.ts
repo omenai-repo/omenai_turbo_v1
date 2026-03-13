@@ -28,7 +28,7 @@ export const sendShipmentPickupReminderMail = async ({
   price,
 }: EmailData) => {
   await sendMailVerification({
-    prefix: "Omenai orders",
+    prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "Shipment Pickup Schedule Reminder - Action Required",

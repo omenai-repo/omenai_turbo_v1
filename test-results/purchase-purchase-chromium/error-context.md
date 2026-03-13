@@ -1,0 +1,979 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+    - generic [ref=e6] [cursor=pointer]:
+        - button "Open Next.js Dev Tools" [ref=e7]:
+            - img [ref=e8]
+        - generic [ref=e11]:
+            - button "Open issues overlay" [ref=e12]:
+                - generic [ref=e13]:
+                    - generic [ref=e14]: "0"
+                    - generic [ref=e15]: "1"
+                - generic [ref=e16]: Issue
+            - button "Collapse issues badge" [ref=e17]:
+                - img [ref=e18]
+    - region "Notifications alt+T"
+    - generic [ref=e20]:
+        - main [ref=e21]:
+            - generic [ref=e22]:
+                - navigation [ref=e23]:
+                    - generic [ref=e24]:
+                        - generic [ref=e25]:
+                            - link "omenai logo" [ref=e26] [cursor=pointer]:
+                                - /url: http://localhost:3000
+                                - img "omenai logo" [ref=e27]
+                            - list [ref=e28]:
+                                - listitem [ref=e29]:
+                                    - link "Collect" [ref=e30] [cursor=pointer]:
+                                        - /url: /catalog
+                                        - generic [ref=e31]: Collect
+                                - listitem [ref=e32]:
+                                    - link "Editorials" [ref=e33] [cursor=pointer]:
+                                        - /url: /articles
+                                        - generic [ref=e34]: Editorials
+                        - generic [ref=e35]:
+                            - generic [ref=e37]:
+                                - generic:
+                                    - img
+                                - textbox "Search artists, artworks, styles..." [ref=e38]
+                            - generic [ref=e39]:
+                                - link "Create Account" [ref=e40] [cursor=pointer]:
+                                    - /url: http://localhost:4000/register?redirect=http%3A%2F%2Flocalhost%3A3000%2F
+                                - link "Log in" [ref=e41] [cursor=pointer]:
+                                    - /url: http://localhost:4000/login/user?redirect=http%3A%2F%2Flocalhost%3A3000%2F
+                - generic [ref=e43]:
+                    - generic [ref=e45]:
+                        - link "Test Featured Test Prepare to be amazed at the reveal of contemporary art right here in Houstin, Texas Discover" [ref=e49] [cursor=pointer]:
+                            - /url: https://omenai.app/catalog
+                            - generic [ref=e50]:
+                                - img [ref=e52]
+                                - img "Test" [ref=e55]
+                            - generic [ref=e57]:
+                                - generic [ref=e60]: Featured
+                                - generic [ref=e61]:
+                                    - heading "Test" [level=2] [ref=e62]
+                                    - paragraph [ref=e63]: Prepare to be amazed at the reveal of contemporary art right here in Houstin, Texas
+                                - generic [ref=e64]:
+                                    - generic [ref=e65]: Discover
+                                    - img [ref=e66]
+                        - link "Prints Featured Prints Frank Raymond - Acrylic on canvas and linen Discover" [ref=e72] [cursor=pointer]:
+                            - /url: https://staging.omenai.app/artwork/8c7e074f-e59c-4829-ad6e-414691390d16
+                            - generic [ref=e73]:
+                                - img [ref=e75]
+                                - img "Prints" [ref=e78]
+                            - generic [ref=e80]:
+                                - generic [ref=e83]: Featured
+                                - generic [ref=e84]:
+                                    - heading "Prints" [level=2] [ref=e85]
+                                    - paragraph [ref=e86]: Frank Raymond - Acrylic on canvas and linen
+                                - generic [ref=e87]:
+                                    - generic [ref=e88]: Discover
+                                    - img [ref=e89]
+                        - link "A day to remember Featured A day to remember Johnson Eziefula - Mixed media on Paper, Fabric and Canvas Discover" [ref=e95] [cursor=pointer]:
+                            - /url: https://staging.omenai.app/artwork/4cb59d3f-1922-4476-9a7d-4cb481216e3e
+                            - generic [ref=e96]:
+                                - img [ref=e98]
+                                - img "A day to remember" [ref=e101]
+                            - generic [ref=e103]:
+                                - generic [ref=e106]: Featured
+                                - generic [ref=e107]:
+                                    - heading "A day to remember" [level=2] [ref=e108]
+                                    - paragraph [ref=e109]: Johnson Eziefula - Mixed media on Paper, Fabric and Canvas
+                                - generic [ref=e110]:
+                                    - generic [ref=e111]: Discover
+                                    - img [ref=e112]
+                        - link "Baroque Featured Baroque Lekan Abatan - Charcoal, Acrylic and Fabric on Paper Discover" [ref=e118] [cursor=pointer]:
+                            - /url: https://staging.omenai.app/artwork/788cf6c4-60e4-4134-805d-d7582ed6c73d
+                            - generic [ref=e119]:
+                                - img [ref=e121]
+                                - img "Baroque" [ref=e124]
+                            - generic [ref=e126]:
+                                - generic [ref=e129]: Featured
+                                - generic [ref=e130]:
+                                    - heading "Baroque" [level=2] [ref=e131]
+                                    - paragraph [ref=e132]: Lekan Abatan - Charcoal, Acrylic and Fabric on Paper
+                                - generic [ref=e133]:
+                                    - generic [ref=e134]: Discover
+                                    - img [ref=e135]
+                        - link "Hands up Featured Hands up Amoako Boafo - Oil on canvas and panel Discover" [ref=e141] [cursor=pointer]:
+                            - /url: https://staging.omenai.app/artwork/f3cd2f7c-5421-441c-b786-af73eb794ff5
+                            - generic [ref=e142]:
+                                - img [ref=e144]
+                                - img "Hands up" [ref=e147]
+                            - generic [ref=e149]:
+                                - generic [ref=e152]: Featured
+                                - generic [ref=e153]:
+                                    - heading "Hands up" [level=2] [ref=e154]
+                                    - paragraph [ref=e155]: Amoako Boafo - Oil on canvas and panel
+                                - generic [ref=e156]:
+                                    - generic [ref=e157]: Discover
+                                    - img [ref=e158]
+                        - link "Exhausted III Featured Exhausted III Chukwueze Kalu - Acrylic on canvas and fabric linen Discover" [ref=e164] [cursor=pointer]:
+                            - /url: https://staging.omenai.app/artwork/ef23c3ed-7642-4e5f-a1f7-f35188ba9197
+                            - generic [ref=e165]:
+                                - img [ref=e167]
+                                - img "Exhausted III" [ref=e170]
+                            - generic [ref=e172]:
+                                - generic [ref=e175]: Featured
+                                - generic [ref=e176]:
+                                    - heading "Exhausted III" [level=2] [ref=e177]
+                                    - paragraph [ref=e178]: Chukwueze Kalu - Acrylic on canvas and fabric linen
+                                - generic [ref=e179]:
+                                    - generic [ref=e180]: Discover
+                                    - img [ref=e181]
+                        - link "Big Sis Featured Big Sis Ifeoma Goodness Charles - Charcoal, acrylic and oil on canvas Discover" [ref=e187] [cursor=pointer]:
+                            - /url: https://staging.omenai.app/artwork/2eacc01b-35c1-4499-9389-9fcd6d364baa
+                            - generic [ref=e188]:
+                                - img [ref=e190]
+                                - img "Big Sis" [ref=e193]
+                            - generic [ref=e195]:
+                                - generic [ref=e198]: Featured
+                                - generic [ref=e199]:
+                                    - heading "Big Sis" [level=2] [ref=e200]
+                                    - paragraph [ref=e201]: Ifeoma Goodness Charles - Charcoal, acrylic and oil on canvas
+                                - generic [ref=e202]:
+                                    - generic [ref=e203]: Discover
+                                    - img [ref=e204]
+                    - generic [ref=e207]:
+                        - button "Previous Slide" [ref=e208] [cursor=pointer]:
+                            - img [ref=e209]
+                        - button "Next Slide" [ref=e211] [cursor=pointer]:
+                            - img [ref=e212]
+                - generic [ref=e215]:
+                    - generic [ref=e216]:
+                        - generic [ref=e217]:
+                            - generic [ref=e222]: Recently Added
+                            - heading "New Arrivals" [level=2] [ref=e223]
+                        - link "View All Arrivals" [ref=e225] [cursor=pointer]:
+                            - /url: /catalog
+                            - text: View All Arrivals
+                            - img [ref=e226]
+                    - generic [ref=e230]:
+                        - generic [ref=e231]:
+                            - generic [ref=e233]:
+                                - generic [ref=e234]:
+                                    - link "TESTINGGG" [ref=e235] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/72d545b1-0c6f-43f8-9d1e-227b13230915
+                                        - img "TESTINGGG" [ref=e237]
+                                    - img [ref=e240] [cursor=pointer]
+                                - generic [ref=e242]:
+                                    - generic [ref=e243]:
+                                        - heading "TESTINGGG" [level=3] [ref=e244]:
+                                            - link "TESTINGGG" [ref=e245] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/72d545b1-0c6f-43f8-9d1e-227b13230915
+                                        - generic [ref=e246]: $1,416.2
+                                    - generic [ref=e247]:
+                                        - paragraph [ref=e248]: KELVIN
+                                        - paragraph [ref=e249]: Photography
+                            - generic [ref=e251]:
+                                - generic [ref=e252]:
+                                    - link "TestingGG" [ref=e253] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/fdb5d8f1-e83a-4c50-98da-a8e27fa1410c
+                                        - img "TestingGG" [ref=e255]
+                                    - img [ref=e258] [cursor=pointer]
+                                - generic [ref=e260]:
+                                    - generic [ref=e261]:
+                                        - heading "TestingGG" [level=3] [ref=e262]:
+                                            - link "TestingGG" [ref=e263] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/fdb5d8f1-e83a-4c50-98da-a8e27fa1410c
+                                        - generic [ref=e264]: $708.1
+                                    - generic [ref=e265]:
+                                        - paragraph [ref=e266]: KELVIN
+                                        - paragraph [ref=e267]: Photography
+                            - generic [ref=e269]:
+                                - generic [ref=e270]:
+                                    - link "Hola" [ref=e271] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/bea5e9ef-d6bd-4292-a1c4-80b9584ba504
+                                        - img "Hola" [ref=e273]
+                                    - img [ref=e276] [cursor=pointer]
+                                - generic [ref=e278]:
+                                    - generic [ref=e279]:
+                                        - heading "Hola" [level=3] [ref=e280]:
+                                            - link "Hola" [ref=e281] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/bea5e9ef-d6bd-4292-a1c4-80b9584ba504
+                                        - generic [ref=e282]: $1,070.0
+                                    - generic [ref=e283]:
+                                        - paragraph [ref=e284]: Frank Raymond
+                                        - paragraph [ref=e285]: Photography
+                            - generic [ref=e287]:
+                                - generic [ref=e288]:
+                                    - link "Cognitive Desonance Sold" [ref=e289] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/d4203299-56e8-4dbe-b5cb-29ed4494ecc0
+                                        - generic [ref=e290]:
+                                            - img "Cognitive Desonance" [ref=e291]
+                                            - generic [ref=e293]: Sold
+                                    - img [ref=e296] [cursor=pointer]
+                                - generic [ref=e298]:
+                                    - generic [ref=e299]:
+                                        - heading "Cognitive Desonance" [level=3] [ref=e300]:
+                                            - link "Cognitive Desonance" [ref=e301] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/d4203299-56e8-4dbe-b5cb-29ed4494ecc0
+                                        - generic [ref=e302]: Sold
+                                    - generic [ref=e303]:
+                                        - paragraph [ref=e304]: De Decker Brian
+                                        - paragraph [ref=e305]: Photography
+                            - generic [ref=e307]:
+                                - generic [ref=e308]:
+                                    - link "Testing Sold" [ref=e309] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/6af8cdf9-6736-425a-a927-517d0beac7b6
+                                        - generic [ref=e310]:
+                                            - img "Testing" [ref=e311]
+                                            - generic [ref=e313]: Sold
+                                    - img [ref=e316] [cursor=pointer]
+                                - generic [ref=e318]:
+                                    - generic [ref=e319]:
+                                        - heading "Testing" [level=3] [ref=e320]:
+                                            - link "Testing" [ref=e321] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/6af8cdf9-6736-425a-a927-517d0beac7b6
+                                        - generic [ref=e322]: Sold
+                                    - generic [ref=e323]:
+                                        - paragraph [ref=e324]: Frank Raymond
+                                        - paragraph [ref=e325]: Photography
+                            - generic [ref=e327]:
+                                - generic [ref=e328]:
+                                    - link "Hey Sold" [ref=e329] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/289b7675-0221-4a7b-87db-1b51ceecac4c
+                                        - generic [ref=e330]:
+                                            - img "Hey" [ref=e331]
+                                            - generic [ref=e333]: Sold
+                                    - img [ref=e336] [cursor=pointer]
+                                - generic [ref=e338]:
+                                    - generic [ref=e339]:
+                                        - heading "Hey" [level=3] [ref=e340]:
+                                            - link "Hey" [ref=e341] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/289b7675-0221-4a7b-87db-1b51ceecac4c
+                                        - generic [ref=e342]: Sold
+                                    - generic [ref=e343]:
+                                        - paragraph [ref=e344]: Frank Raymond
+                                        - paragraph [ref=e345]: Photography
+                        - generic [ref=e346]:
+                            - generic [ref=e348]:
+                                - generic [ref=e349]:
+                                    - link "Colors of Heaven" [ref=e350] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/b6f2dd78-7657-410c-ab8b-a5a51e2b3121
+                                        - img "Colors of Heaven" [ref=e352]
+                                    - img [ref=e355] [cursor=pointer]
+                                - generic [ref=e357]:
+                                    - generic [ref=e358]:
+                                        - heading "Colors of Heaven" [level=3] [ref=e359]:
+                                            - link "Colors of Heaven" [ref=e360] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/b6f2dd78-7657-410c-ab8b-a5a51e2b3121
+                                        - generic [ref=e361]: $3,767.0
+                                    - generic [ref=e362]:
+                                        - paragraph [ref=e363]: Nana Bruce
+                                        - paragraph [ref=e364]: Works on paper
+                            - generic [ref=e366]:
+                                - generic [ref=e367]:
+                                    - link "Waves of Heaven" [ref=e368] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/6b96d92f-84a9-4470-a06c-f1e2d16c0543
+                                        - img "Waves of Heaven" [ref=e370]
+                                    - img [ref=e373] [cursor=pointer]
+                                - generic [ref=e375]:
+                                    - generic [ref=e376]:
+                                        - heading "Waves of Heaven" [level=3] [ref=e377]:
+                                            - link "Waves of Heaven" [ref=e378] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/6b96d92f-84a9-4470-a06c-f1e2d16c0543
+                                        - generic [ref=e379]: $1,292.0
+                                    - generic [ref=e380]:
+                                        - paragraph [ref=e381]: Frank Raymond
+                                        - paragraph [ref=e382]: Works on paper
+                            - generic [ref=e384]:
+                                - generic [ref=e385]:
+                                    - link "Fish pie Sold" [active] [ref=e386] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/03610351-91c4-4349-bc2d-2316f7cac002
+                                        - generic [ref=e387]:
+                                            - img "Fish pie" [ref=e388]
+                                            - generic [ref=e390]: Sold
+                                    - img [ref=e393] [cursor=pointer]
+                                - generic [ref=e395]:
+                                    - generic [ref=e396]:
+                                        - heading "Fish pie" [level=3] [ref=e397]:
+                                            - link "Fish pie" [ref=e398] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/03610351-91c4-4349-bc2d-2316f7cac002
+                                        - generic [ref=e399]: Sold
+                                    - generic [ref=e400]:
+                                        - paragraph [ref=e401]: Frank Raymond
+                                        - paragraph [ref=e402]: Photography
+                            - generic [ref=e404]:
+                                - generic [ref=e405]:
+                                    - link "Veins of melody Sold" [ref=e406] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/d56fec06-5583-44a5-b1ab-15c6b2772d79
+                                        - generic [ref=e407]:
+                                            - img "Veins of melody" [ref=e408]
+                                            - generic [ref=e410]: Sold
+                                    - img [ref=e413] [cursor=pointer]
+                                - generic [ref=e415]:
+                                    - generic [ref=e416]:
+                                        - heading "Veins of melody" [level=3] [ref=e417]:
+                                            - link "Veins of melody" [ref=e418] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/d56fec06-5583-44a5-b1ab-15c6b2772d79
+                                        - generic [ref=e419]: Sold
+                                    - generic [ref=e420]:
+                                        - paragraph [ref=e421]: Palazzo Barberinni
+                                        - paragraph [ref=e422]: Works on paper
+                            - generic [ref=e424]:
+                                - generic [ref=e425]:
+                                    - link "Dance Sold" [ref=e426] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/3bfdec74-3910-48be-826b-345c7dc9e9de
+                                        - generic [ref=e427]:
+                                            - img "Dance" [ref=e428]
+                                            - generic [ref=e430]: Sold
+                                    - img [ref=e433] [cursor=pointer]
+                                - generic [ref=e435]:
+                                    - generic [ref=e436]:
+                                        - heading "Dance" [level=3] [ref=e437]:
+                                            - link "Dance" [ref=e438] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/3bfdec74-3910-48be-826b-345c7dc9e9de
+                                        - generic [ref=e439]: Sold
+                                    - generic [ref=e440]:
+                                        - paragraph [ref=e441]: Cornelius Annor
+                                        - paragraph [ref=e442]: Acrylic on canvas/linen/panel
+                        - generic [ref=e443]:
+                            - generic [ref=e445]:
+                                - generic [ref=e446]:
+                                    - link "Controlled Chaos Sold" [ref=e447] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/baa1244f-b764-4068-9e5f-4ed2a655598d
+                                        - generic [ref=e448]:
+                                            - img "Controlled Chaos" [ref=e449]
+                                            - generic [ref=e451]: Sold
+                                    - img [ref=e454] [cursor=pointer]
+                                - generic [ref=e456]:
+                                    - generic [ref=e457]:
+                                        - heading "Controlled Chaos" [level=3] [ref=e458]:
+                                            - link "Controlled Chaos" [ref=e459] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/baa1244f-b764-4068-9e5f-4ed2a655598d
+                                        - generic [ref=e460]: Sold
+                                    - generic [ref=e461]:
+                                        - paragraph [ref=e462]: Gbenro Adeyemo
+                                        - paragraph [ref=e463]: Acrylic on canvas/linen/panel
+                            - generic [ref=e465]:
+                                - generic [ref=e466]:
+                                    - link "hello Sold" [ref=e467] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/2ddd03f8-8c7b-4c9c-83e7-cb013b20b252
+                                        - generic [ref=e468]:
+                                            - img "hello" [ref=e469]
+                                            - generic [ref=e471]: Sold
+                                    - img [ref=e474] [cursor=pointer]
+                                - generic [ref=e476]:
+                                    - generic [ref=e477]:
+                                        - heading "hello" [level=3] [ref=e478]:
+                                            - link "hello" [ref=e479] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/2ddd03f8-8c7b-4c9c-83e7-cb013b20b252
+                                        - generic [ref=e480]: Sold
+                                    - generic [ref=e481]:
+                                        - paragraph [ref=e482]: Visage of Beauty
+                                        - paragraph [ref=e483]: Mixed media on canvas
+                            - generic [ref=e485]:
+                                - generic [ref=e486]:
+                                    - link "Ma Grand-mère et son telephone Rouge Sold" [ref=e487] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/1cf4861b-572b-4f72-a3cc-48f6cbf95451
+                                        - generic [ref=e488]:
+                                            - img "Ma Grand-mère et son telephone Rouge" [ref=e489]
+                                            - generic [ref=e491]: Sold
+                                    - img [ref=e494] [cursor=pointer]
+                                - generic [ref=e496]:
+                                    - generic [ref=e497]:
+                                        - heading "Ma Grand-mère et son telephone Rouge" [level=3] [ref=e498]:
+                                            - link "Ma Grand-mère et son telephone Rouge" [ref=e499] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/1cf4861b-572b-4f72-a3cc-48f6cbf95451
+                                        - generic [ref=e500]: Sold
+                                    - generic [ref=e501]:
+                                        - paragraph [ref=e502]: Frank Raymond
+                                        - paragraph [ref=e503]: Acrylic on canvas/linen/panel
+                            - generic [ref=e505]:
+                                - generic [ref=e506]:
+                                    - link "Yonk Yonko Sold" [ref=e507] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/eabf4024-9da1-4a37-affd-95c1fdf17db5
+                                        - generic [ref=e508]:
+                                            - img "Yonk Yonko" [ref=e509]
+                                            - generic [ref=e511]: Sold
+                                    - img [ref=e514] [cursor=pointer]
+                                - generic [ref=e516]:
+                                    - generic [ref=e517]:
+                                        - heading "Yonk Yonko" [level=3] [ref=e518]:
+                                            - link "Yonk Yonko" [ref=e519] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/eabf4024-9da1-4a37-affd-95c1fdf17db5
+                                        - generic [ref=e520]: Sold
+                                    - generic [ref=e521]:
+                                        - paragraph [ref=e522]: Frank Raymond
+                                        - paragraph [ref=e523]: Works on paper
+                            - generic [ref=e525]:
+                                - generic [ref=e526]:
+                                    - link "Aunty Bose" [ref=e527] [cursor=pointer]:
+                                        - /url: http://localhost:3000/artwork/e00f745d-70aa-4ae4-935d-eb93f906ed85
+                                        - img "Aunty Bose" [ref=e529]
+                                    - img [ref=e532] [cursor=pointer]
+                                - generic [ref=e534]:
+                                    - generic [ref=e535]:
+                                        - heading "Aunty Bose" [level=3] [ref=e536]:
+                                            - link "Aunty Bose" [ref=e537] [cursor=pointer]:
+                                                - /url: http://localhost:3000/artwork/e00f745d-70aa-4ae4-935d-eb93f906ed85
+                                        - generic [ref=e538]: $5,778.0
+                                    - generic [ref=e539]:
+                                        - paragraph [ref=e540]: Orry Shenjobi
+                                        - paragraph [ref=e541]: Works on paper
+                - generic [ref=e543]:
+                    - generic [ref=e544]:
+                        - generic [ref=e545]:
+                            - generic [ref=e546]: Featured Collections
+                            - heading "Browse by medium" [level=2] [ref=e547]
+                        - generic [ref=e548]:
+                            - button [disabled] [ref=e549]:
+                                - img [ref=e550]
+                            - button [ref=e553] [cursor=pointer]:
+                                - img [ref=e554]
+                    - generic [ref=e558]:
+                        - link [ref=e561] [cursor=pointer]:
+                            - /url: /collections/photography
+                            - article [ref=e562]:
+                                - img "Photography" [ref=e564]
+                                - generic [ref=e567]:
+                                    - heading "Photography" [level=3] [ref=e569]
+                                    - img [ref=e571]
+                        - link [ref=e576] [cursor=pointer]:
+                            - /url: /collections/acrylic-on-canvas-linen-panel
+                            - article [ref=e577]:
+                                - img "Acrylic on canvas/linen/panel" [ref=e579]
+                                - generic [ref=e582]:
+                                    - heading "Acrylic on canvas/linen/panel" [level=3] [ref=e584]
+                                    - img [ref=e586]
+                        - link [ref=e591] [cursor=pointer]:
+                            - /url: /collections/mixed-media-on-paper-canvas
+                            - article [ref=e592]:
+                                - img "Mixed media on canvas" [ref=e594]
+                                - generic [ref=e597]:
+                                    - heading "Mixed media on canvas" [level=3] [ref=e599]
+                                    - img [ref=e601]
+                        - link [ref=e606] [cursor=pointer]:
+                            - /url: /collections/oil-on-canvas-panel
+                            - article [ref=e607]:
+                                - img "Oil on canvas/panel" [ref=e609]
+                                - generic [ref=e612]:
+                                    - heading "Oil on canvas/panel" [level=3] [ref=e614]
+                                    - img [ref=e616]
+                        - link "View All Categories" [ref=e620] [cursor=pointer]:
+                            - /url: /catalog
+                            - img [ref=e622]
+                            - generic [ref=e624]: View All Categories
+                - generic [ref=e626]:
+                    - generic [ref=e628]:
+                        - generic [ref=e629]:
+                            - img [ref=e631]
+                            - generic [ref=e633]: Trending works
+                        - heading "Trending Now" [level=2] [ref=e634]
+                        - paragraph [ref=e635]: Works capturing collector attention this week.
+                    - generic [ref=e637]:
+                        - generic [ref=e638]:
+                            - generic [ref=e639]:
+                                - link "Sold Dress Code III" [ref=e640] [cursor=pointer]:
+                                    - /url: /artwork/b29d35e8-a473-4304-b92b-cee65261d474
+                                    - generic [ref=e642]: Sold
+                                    - img "Dress Code III" [ref=e643]
+                                - img [ref=e647] [cursor=pointer]
+                            - generic [ref=e649]:
+                                - heading "Dress Code III" [level=3] [ref=e650]:
+                                    - link "Dress Code III" [ref=e651] [cursor=pointer]:
+                                        - /url: /artwork/b29d35e8-a473-4304-b92b-cee65261d474
+                                - generic [ref=e652]:
+                                    - paragraph [ref=e653]: Komla Letsu Phillip
+                                    - generic [ref=e654]:
+                                        - generic [ref=e655]: "3"
+                                        - generic [ref=e656]: like(s)
+                        - generic [ref=e657]:
+                            - generic [ref=e658]:
+                                - link "Sold All by myself" [ref=e659] [cursor=pointer]:
+                                    - /url: /artwork/ddb13ea2-8ff8-416a-b1bb-46106d3c0169
+                                    - generic [ref=e661]: Sold
+                                    - img "All by myself" [ref=e662]
+                                - img [ref=e666] [cursor=pointer]
+                            - generic [ref=e668]:
+                                - heading "All by myself" [level=3] [ref=e669]:
+                                    - link "All by myself" [ref=e670] [cursor=pointer]:
+                                        - /url: /artwork/ddb13ea2-8ff8-416a-b1bb-46106d3c0169
+                                - generic [ref=e671]:
+                                    - paragraph [ref=e672]: Ayansola Oluyem
+                                    - generic [ref=e673]:
+                                        - generic [ref=e674]: "3"
+                                        - generic [ref=e675]: like(s)
+                        - generic [ref=e676]:
+                            - generic [ref=e677]:
+                                - link "Sold Barouque" [ref=e678] [cursor=pointer]:
+                                    - /url: /artwork/788cf6c4-60e4-4134-805d-d7582ed6c73d
+                                    - generic [ref=e680]: Sold
+                                    - img "Barouque" [ref=e681]
+                                - img [ref=e685] [cursor=pointer]
+                            - generic [ref=e687]:
+                                - heading "Barouque" [level=3] [ref=e688]:
+                                    - link "Barouque" [ref=e689] [cursor=pointer]:
+                                        - /url: /artwork/788cf6c4-60e4-4134-805d-d7582ed6c73d
+                                - generic [ref=e690]:
+                                    - paragraph [ref=e691]: Lekan Abatan
+                                    - generic [ref=e692]:
+                                        - generic [ref=e693]: "1"
+                                        - generic [ref=e694]: like(s)
+                        - generic [ref=e695]:
+                            - generic [ref=e696]:
+                                - link "Sold Dancing Flowers" [ref=e697] [cursor=pointer]:
+                                    - /url: /artwork/43eeb2dc-23d4-4be7-a4a6-4e69c7f87a31
+                                    - generic [ref=e699]: Sold
+                                    - img "Dancing Flowers" [ref=e700]
+                                - img [ref=e704] [cursor=pointer]
+                            - generic [ref=e706]:
+                                - heading "Dancing Flowers" [level=3] [ref=e707]:
+                                    - link "Dancing Flowers" [ref=e708] [cursor=pointer]:
+                                        - /url: /artwork/43eeb2dc-23d4-4be7-a4a6-4e69c7f87a31
+                                - generic [ref=e709]:
+                                    - paragraph [ref=e710]: Cornelius Annor Jr
+                                    - generic [ref=e711]:
+                                        - generic [ref=e712]: "0"
+                                        - generic [ref=e713]: like(s)
+                        - generic [ref=e714]:
+                            - generic [ref=e715]:
+                                - link "Sold Fracsidus" [ref=e716] [cursor=pointer]:
+                                    - /url: /artwork/6d677711-afcd-4f96-b083-557f88add880
+                                    - generic [ref=e718]: Sold
+                                    - img "Fracsidus" [ref=e719]
+                                - img [ref=e723] [cursor=pointer]
+                            - generic [ref=e725]:
+                                - heading "Fracsidus" [level=3] [ref=e726]:
+                                    - link "Fracsidus" [ref=e727] [cursor=pointer]:
+                                        - /url: /artwork/6d677711-afcd-4f96-b083-557f88add880
+                                - generic [ref=e728]:
+                                    - paragraph [ref=e729]: Frank Raymond
+                                    - generic [ref=e730]:
+                                        - generic [ref=e731]: "0"
+                                        - generic [ref=e732]: like(s)
+                        - generic [ref=e733]:
+                            - generic [ref=e734]:
+                                - link "Hot Botched Lillies" [ref=e735] [cursor=pointer]:
+                                    - /url: /artwork/be4f93c1-df27-4b4f-8652-081f8851ebbf
+                                    - generic [ref=e736]:
+                                        - img [ref=e737]
+                                        - generic [ref=e739]: Hot
+                                    - img "Botched Lillies" [ref=e740]
+                                - img [ref=e744] [cursor=pointer]
+                            - generic [ref=e746]:
+                                - heading "Botched Lillies" [level=3] [ref=e747]:
+                                    - link "Botched Lillies" [ref=e748] [cursor=pointer]:
+                                        - /url: /artwork/be4f93c1-df27-4b4f-8652-081f8851ebbf
+                                - generic [ref=e749]:
+                                    - paragraph [ref=e750]: Test Artist
+                                    - generic [ref=e751]:
+                                        - generic [ref=e752]: "2"
+                                        - generic [ref=e753]: like(s)
+                        - generic [ref=e754]:
+                            - generic [ref=e755]:
+                                - link "Hot Tarmara Harhai" [ref=e756] [cursor=pointer]:
+                                    - /url: /artwork/ad1aa7da-1e49-41fe-8a42-dac38f6d8921
+                                    - generic [ref=e757]:
+                                        - img [ref=e758]
+                                        - generic [ref=e760]: Hot
+                                    - img "Tarmara Harhai" [ref=e761]
+                                - img [ref=e765] [cursor=pointer]
+                            - generic [ref=e767]:
+                                - heading "Tarmara Harhai" [level=3] [ref=e768]:
+                                    - link "Tarmara Harhai" [ref=e769] [cursor=pointer]:
+                                        - /url: /artwork/ad1aa7da-1e49-41fe-8a42-dac38f6d8921
+                                - generic [ref=e770]:
+                                    - paragraph [ref=e771]: Test Artist
+                                    - generic [ref=e772]:
+                                        - generic [ref=e773]: "1"
+                                        - generic [ref=e774]: like(s)
+                        - generic [ref=e775]:
+                            - generic [ref=e776]:
+                                - link "Sold Prints" [ref=e777] [cursor=pointer]:
+                                    - /url: /artwork/8c7e074f-e59c-4829-ad6e-414691390d16
+                                    - generic [ref=e779]: Sold
+                                    - img "Prints" [ref=e780]
+                                - img [ref=e784] [cursor=pointer]
+                            - generic [ref=e786]:
+                                - heading "Prints" [level=3] [ref=e787]:
+                                    - link "Prints" [ref=e788] [cursor=pointer]:
+                                        - /url: /artwork/8c7e074f-e59c-4829-ad6e-414691390d16
+                                - generic [ref=e789]:
+                                    - paragraph [ref=e790]: Frank Raymond
+                                    - generic [ref=e791]:
+                                        - generic [ref=e792]: "2"
+                                        - generic [ref=e793]: like(s)
+                        - generic [ref=e794]:
+                            - generic [ref=e795]:
+                                - link "Sold Is It Really That Too far-fetched?" [ref=e796] [cursor=pointer]:
+                                    - /url: /artwork/ab8d5493-50dc-4a4f-bedd-8059e389c8df
+                                    - generic [ref=e798]: Sold
+                                    - img "Is It Really That Too far-fetched?" [ref=e799]
+                                - img [ref=e803] [cursor=pointer]
+                            - generic [ref=e805]:
+                                - heading "Is It Really That Too far-fetched?" [level=3] [ref=e806]:
+                                    - link "Is It Really That Too far-fetched?" [ref=e807] [cursor=pointer]:
+                                        - /url: /artwork/ab8d5493-50dc-4a4f-bedd-8059e389c8df
+                                - generic [ref=e808]:
+                                    - paragraph [ref=e809]: Siphesihle Ntsungwana
+                                    - generic [ref=e810]:
+                                        - generic [ref=e811]: "2"
+                                        - generic [ref=e812]: like(s)
+                        - generic [ref=e813]:
+                            - generic [ref=e814]:
+                                - link "Sold Wá, make I tell you something" [ref=e815] [cursor=pointer]:
+                                    - /url: /artwork/bb088973-a537-4ed2-ae06-cc5d77cd7a51
+                                    - generic [ref=e817]: Sold
+                                    - img "Wá, make I tell you something" [ref=e818]
+                                - img [ref=e822] [cursor=pointer]
+                            - generic [ref=e824]:
+                                - heading "Wá, make I tell you something" [level=3] [ref=e825]:
+                                    - link "Wá, make I tell you something" [ref=e826] [cursor=pointer]:
+                                        - /url: /artwork/bb088973-a537-4ed2-ae06-cc5d77cd7a51
+                                - generic [ref=e827]:
+                                    - paragraph [ref=e828]: Orry Shenjobi
+                                    - generic [ref=e829]:
+                                        - generic [ref=e830]: "2"
+                                        - generic [ref=e831]: like(s)
+                        - generic [ref=e832]:
+                            - generic [ref=e833]:
+                                - link "Sold Ukulalelwa Kwabaphansi" [ref=e834] [cursor=pointer]:
+                                    - /url: /artwork/754089d8-2173-4ab5-a5e6-edcbb371a6b2
+                                    - generic [ref=e836]: Sold
+                                    - img "Ukulalelwa Kwabaphansi" [ref=e837]
+                                - img [ref=e841] [cursor=pointer]
+                            - generic [ref=e843]:
+                                - heading "Ukulalelwa Kwabaphansi" [level=3] [ref=e844]:
+                                    - link "Ukulalelwa Kwabaphansi" [ref=e845] [cursor=pointer]:
+                                        - /url: /artwork/754089d8-2173-4ab5-a5e6-edcbb371a6b2
+                                - generic [ref=e846]:
+                                    - paragraph [ref=e847]: Sthenjwa Luthuli
+                                    - generic [ref=e848]:
+                                        - generic [ref=e849]: "2"
+                                        - generic [ref=e850]: like(s)
+                        - generic [ref=e851]:
+                            - generic [ref=e852]:
+                                - link "Sold The Black Swan" [ref=e853] [cursor=pointer]:
+                                    - /url: /artwork/f9081787-10a4-4fce-adb6-c3630a3b4f0d
+                                    - generic [ref=e855]: Sold
+                                    - img "The Black Swan" [ref=e856]
+                                - img [ref=e860] [cursor=pointer]
+                            - generic [ref=e862]:
+                                - heading "The Black Swan" [level=3] [ref=e863]:
+                                    - link "The Black Swan" [ref=e864] [cursor=pointer]:
+                                        - /url: /artwork/f9081787-10a4-4fce-adb6-c3630a3b4f0d
+                                - generic [ref=e865]:
+                                    - paragraph [ref=e866]: Nedia Were
+                                    - generic [ref=e867]:
+                                        - generic [ref=e868]: "2"
+                                        - generic [ref=e869]: like(s)
+                        - generic [ref=e870]:
+                            - generic [ref=e871]:
+                                - link "Sold Sit or Stand" [ref=e872] [cursor=pointer]:
+                                    - /url: /artwork/82c570e7-6529-4da0-a218-7ec43ffd4646
+                                    - generic [ref=e874]: Sold
+                                    - img "Sit or Stand" [ref=e875]
+                                - img [ref=e879] [cursor=pointer]
+                            - generic [ref=e881]:
+                                - heading "Sit or Stand" [level=3] [ref=e882]:
+                                    - link "Sit or Stand" [ref=e883] [cursor=pointer]:
+                                        - /url: /artwork/82c570e7-6529-4da0-a218-7ec43ffd4646
+                                - generic [ref=e884]:
+                                    - paragraph [ref=e885]: Lasisi Damilare
+                                    - generic [ref=e886]:
+                                        - generic [ref=e887]: "2"
+                                        - generic [ref=e888]: like(s)
+                        - generic [ref=e889]:
+                            - generic [ref=e890]:
+                                - link "Sold The Frailty of Beautiful Things" [ref=e891] [cursor=pointer]:
+                                    - /url: /artwork/f2c8eb1a-8e46-4cf5-b66c-7ee2ff8ebce6
+                                    - generic [ref=e893]: Sold
+                                    - img "The Frailty of Beautiful Things" [ref=e894]
+                                - img [ref=e898] [cursor=pointer]
+                            - generic [ref=e900]:
+                                - heading "The Frailty of Beautiful Things" [level=3] [ref=e901]:
+                                    - link "The Frailty of Beautiful Things" [ref=e902] [cursor=pointer]:
+                                        - /url: /artwork/f2c8eb1a-8e46-4cf5-b66c-7ee2ff8ebce6
+                                - generic [ref=e903]:
+                                    - paragraph [ref=e904]: Damilare Jamiu Kanyinsola
+                                    - generic [ref=e905]:
+                                        - generic [ref=e906]: "2"
+                                        - generic [ref=e907]: like(s)
+                        - generic [ref=e908]:
+                            - generic [ref=e909]:
+                                - link "Hot Melodies of motion" [ref=e910] [cursor=pointer]:
+                                    - /url: /artwork/0073cf8a-ae7c-4811-8cd2-87c44c307db4
+                                    - generic [ref=e911]:
+                                        - img [ref=e912]
+                                        - generic [ref=e914]: Hot
+                                    - img "Melodies of motion" [ref=e915]
+                                - img [ref=e919] [cursor=pointer]
+                            - generic [ref=e921]:
+                                - heading "Melodies of motion" [level=3] [ref=e922]:
+                                    - link "Melodies of motion" [ref=e923] [cursor=pointer]:
+                                        - /url: /artwork/0073cf8a-ae7c-4811-8cd2-87c44c307db4
+                                - generic [ref=e924]:
+                                    - paragraph [ref=e925]: Idowu Emmanuel
+                                    - generic [ref=e926]:
+                                        - generic [ref=e927]: "2"
+                                        - generic [ref=e928]: like(s)
+                        - generic [ref=e929]:
+                            - generic [ref=e930]:
+                                - link "Sold Dandora (Xala, Musicians)⁠" [ref=e931] [cursor=pointer]:
+                                    - /url: /artwork/a995ed03-3ef2-4360-ad4c-1ce97b848319
+                                    - generic [ref=e933]: Sold
+                                    - img "Dandora (Xala, Musicians)⁠" [ref=e934]
+                                - img [ref=e938] [cursor=pointer]
+                            - generic [ref=e940]:
+                                - heading "Dandora (Xala, Musicians)⁠" [level=3] [ref=e941]:
+                                    - link "Dandora (Xala, Musicians)⁠" [ref=e942] [cursor=pointer]:
+                                        - /url: /artwork/a995ed03-3ef2-4360-ad4c-1ce97b848319
+                                - generic [ref=e943]:
+                                    - paragraph [ref=e944]: Frank Raymond
+                                    - generic [ref=e945]:
+                                        - generic [ref=e946]: "1"
+                                        - generic [ref=e947]: like(s)
+                - generic [ref=e949]:
+                    - generic [ref=e950]:
+                        - generic [ref=e951]:
+                            - generic [ref=e952]:
+                                - img [ref=e954]
+                                - generic [ref=e957]: Omenai Editorial
+                            - heading "Stories & Insights" [level=2] [ref=e958]
+                            - paragraph [ref=e959]: In-depth features, market analysis, and conversations with artists.
+                        - link "Read All Articles" [ref=e961] [cursor=pointer]:
+                            - /url: /articles
+                            - text: Read All Articles
+                            - img [ref=e962]
+                    - generic [ref=e965]:
+                        - link [ref=e967] [cursor=pointer]:
+                            - /url: http://localhost:3000/articles/dmuwT5sV?id=696a8fa4003d75cdd0f9
+                            - article [ref=e968]:
+                                - img "Must-See Exhibitions in Summer 2025" [ref=e970]
+                                - generic [ref=e972]:
+                                    - generic [ref=e973]: Cover Story
+                                    - generic [ref=e974]:
+                                        - generic [ref=e977]: January 16, 2026
+                                        - heading "Must-See Exhibitions in Summer 2025" [level=3] [ref=e978]
+                                        - paragraph [ref=e979]: Ghanaian artist Rufai Zakari’s works examine the negative impacts of consumerism, pollution, labor, trade, and industrialization in Ghana. He focuses his practice on recycling waste gathered from the streets of his home country of Ghana.
+                                        - generic [ref=e980]:
+                                            - generic [ref=e981]: Read Story
+                                            - img [ref=e982]
+                        - link [ref=e985] [cursor=pointer]:
+                            - /url: http://localhost:3000/articles/8auEN0nt?id=696a8f90002152f073f5
+                            - article [ref=e986]:
+                                - img "Love in colors" [ref=e988]
+                                - generic [ref=e991]:
+                                    - generic [ref=e994]: January 16, 2026
+                                    - heading "Love in colors" [level=3] [ref=e995]
+                                    - generic [ref=e996]:
+                                        - generic [ref=e997]: Read Story
+                                        - img [ref=e998]
+                        - link [ref=e1001] [cursor=pointer]:
+                            - /url: http://localhost:3000/articles/XZHPv5En?id=696a8f6800116f2942a0
+                            - article [ref=e1002]:
+                                - img "Black community owned Galleries" [ref=e1004]
+                                - generic [ref=e1007]:
+                                    - generic [ref=e1010]: January 16, 2026
+                                    - heading "Black community owned Galleries" [level=3] [ref=e1011]
+                                    - generic [ref=e1012]:
+                                        - generic [ref=e1013]: Read Story
+                                        - img [ref=e1014]
+                        - link [ref=e1017] [cursor=pointer]:
+                            - /url: http://localhost:3000/articles/dxwqToTF?id=68d3e6c7000a23085c2b
+                            - article [ref=e1018]:
+                                - img "Four Must-See Installations at the São Paulo Bienal 2025" [ref=e1020]
+                                - generic [ref=e1023]:
+                                    - generic [ref=e1026]: September 24, 2025
+                                    - heading "Four Must-See Installations at the São Paulo Bienal 2025" [level=3] [ref=e1027]
+                                    - generic [ref=e1028]:
+                                        - generic [ref=e1029]: Read Story
+                                        - img [ref=e1030]
+                        - link [ref=e1033] [cursor=pointer]:
+                            - /url: http://localhost:3000/articles/2WQaQfy6?id=68d3e5d60020a423e6d5
+                            - article [ref=e1034]:
+                                - img "What determines the value of an artwork?" [ref=e1036]
+                                - generic [ref=e1039]:
+                                    - generic [ref=e1042]: September 24, 2025
+                                    - heading "What determines the value of an artwork?" [level=3] [ref=e1043]
+                                    - generic [ref=e1044]:
+                                        - generic [ref=e1045]: Read Story
+                                        - img [ref=e1046]
+                - generic [ref=e1049]:
+                    - generic [ref=e1051]:
+                        - heading "Artist to watch" [level=2] [ref=e1052]
+                        - paragraph [ref=e1053]: Discover artists gaining collector attention right now.
+                    - generic [ref=e1055]:
+                        - generic [ref=e1056]:
+                            - button [disabled] [ref=e1057]:
+                                - img [ref=e1058]
+                            - button [ref=e1061] [cursor=pointer]:
+                                - img [ref=e1062]
+                        - generic [ref=e1066]:
+                            - link [ref=e1069] [cursor=pointer]:
+                                - /url: http://localhost:3000/artists/?id=82bd4878-b6e7-40cb-8cf2-2c905189b880&url=697e31680011d167a43e&artist=Frank Raymond
+                                - article [ref=e1070]:
+                                    - img "Frank Raymond" [ref=e1072]
+                                    - generic [ref=e1074]:
+                                        - generic [ref=e1075]:
+                                            - heading "Frank Raymond" [level=3] [ref=e1076]
+                                            - img [ref=e1077]
+                                        - generic [ref=e1080]:
+                                            - paragraph [ref=e1081]: land Islands
+                                            - generic [ref=e1082]:
+                                                - img [ref=e1083]
+                                                - generic [ref=e1086]: "22"
+                            - link [ref=e1089] [cursor=pointer]:
+                                - /url: http://localhost:3000/artists/?id=fb9bb85c-ec61-4c35-bcbe-51eaa31a973e&url=6923034800167d9d12de&artist=Test Artist
+                                - article [ref=e1090]:
+                                    - img "Test Artist" [ref=e1092]
+                                    - generic [ref=e1094]:
+                                        - generic [ref=e1095]:
+                                            - heading "Test Artist" [level=3] [ref=e1096]
+                                            - img [ref=e1097]
+                                        - generic [ref=e1100]:
+                                            - paragraph [ref=e1101]: Afghanistan
+                                            - generic [ref=e1102]:
+                                                - img [ref=e1103]
+                                                - generic [ref=e1106]: "3"
+                            - link [ref=e1109] [cursor=pointer]:
+                                - /url: http://localhost:3000/artists/?id=9ef44111-5336-4a07-a59d-121628a90acd&url=68e8bd5f4d7ed1a485f0&artist=Ahmad Adejumo
+                                - article [ref=e1110]:
+                                    - img "Ahmad Adejumo" [ref=e1112]
+                                    - generic [ref=e1114]:
+                                        - generic [ref=e1115]:
+                                            - heading "Ahmad Adejumo" [level=3] [ref=e1116]
+                                            - img [ref=e1117]
+                                        - generic [ref=e1120]:
+                                            - paragraph [ref=e1121]: AF
+                                            - generic [ref=e1122]:
+                                                - img [ref=e1123]
+                                                - generic [ref=e1126]: "1"
+                            - link [ref=e1129] [cursor=pointer]:
+                                - /url: http://localhost:3000/artists/?id=126b1093-9953-47c7-b1f0-25117db3066e&url=68de5ea2001ca834f36e&artist=Faith Egwuenu
+                                - article [ref=e1130]:
+                                    - img "Faith Egwuenu" [ref=e1132]
+                                    - generic [ref=e1134]:
+                                        - generic [ref=e1135]:
+                                            - heading "Faith Egwuenu" [level=3] [ref=e1136]
+                                            - img [ref=e1137]
+                                        - generic [ref=e1140]:
+                                            - paragraph [ref=e1141]: Nigeria
+                                            - generic [ref=e1142]:
+                                                - img [ref=e1143]
+                                                - generic [ref=e1146]: "1"
+            - generic [ref=e1150]:
+                - generic [ref=e1151]:
+                    - generic [ref=e1152]:
+                        - img [ref=e1154]
+                        - generic [ref=e1160]: Omenai Mobile
+                    - heading "Discover and collect Contemporary African Art, Anywhere" [level=2] [ref=e1161]
+                    - paragraph [ref=e1162]: Discover artists, save works you love, and manage your collections, from Anywhere
+                    - generic [ref=e1163]:
+                        - link "Get it on Google Play" [ref=e1164] [cursor=pointer]:
+                            - /url: https://play.google.com/store/apps/details?id=com.omenai.omenaiapp
+                            - button "Get it on Google Play" [ref=e1165]:
+                                - img "Get it on Google Play" [ref=e1166]
+                        - link "Download on the App Store" [ref=e1167] [cursor=pointer]:
+                            - /url: https://apps.apple.com/ng/app/omenai/id6748387089
+                            - button "Download on the App Store" [ref=e1168]:
+                                - img "Download on the App Store" [ref=e1169]
+                - img "Omenai Mobile App Interface" [ref=e1172]
+            - generic [ref=e1176]:
+                - generic [ref=e1177]:
+                    - text: Market Intelligence
+                    - heading "Join the Inner Circle." [level=2] [ref=e1178]
+                    - paragraph [ref=e1179]: Receive weekly editorials, market analysis, and collector insights. No noise, just art.
+                - iframe [ref=e1181]:
+                    - generic [ref=f1e2]:
+                        - generic [ref=f1e4]:
+                            - generic [ref=f1e5]:
+                                - link "Logo" [ref=f1e6] [cursor=pointer]:
+                                    - /url: https://www.omenaiinsider.com/
+                                    - img "Logo" [ref=f1e7]
+                                - heading "OMENAI Insider" [level=1] [ref=f1e8]:
+                                    - link "OMENAI Insider" [ref=f1e9] [cursor=pointer]:
+                                        - /url: https://www.omenaiinsider.com/
+                                - paragraph [ref=f1e10]: OMENAI Insider is the curated briefing on contemporary African art. Editorial perspective, collector insight, and the market signals that matter.
+                                - generic [ref=f1e15]:
+                                    - textbox "Type your email..." [ref=f1e18]
+                                    - button "Subscribe" [disabled] [ref=f1e19]
+                                - generic [ref=f1e21]:
+                                    - text: By subscribing you agree to
+                                    - link "Substack's Terms of Use" [ref=f1e22] [cursor=pointer]:
+                                        - /url: https://www.omenaiinsider.com/tos?utm_source=embed_publication
+                                    - text: ","
+                                    - link "our Privacy Policy" [ref=f1e23] [cursor=pointer]:
+                                        - /url: https://www.omenaiinsider.com/privacy?utm_source=embed_publication
+                                    - text: and
+                                    - link "our Information collection notice" [ref=f1e24] [cursor=pointer]:
+                                        - /url: https://substack.com/ccpa?utm_source=embed_publication#personal-data-collected
+                            - link "Substack":
+                                - /url: https://substack.com/?utm_source=embed&utm_content=omenai
+                                - img "Substack" [ref=f1e25] [cursor=pointer]
+                        - region "Notifications (F8)":
+                            - list
+            - generic [ref=e1183]:
+                - generic [ref=e1184]:
+                    - generic [ref=e1185]:
+                        - link "omenai logo" [ref=e1186] [cursor=pointer]:
+                            - /url: http://localhost:3000
+                            - img "omenai logo" [ref=e1187]
+                        - paragraph [ref=e1188]: Discover and collect Contemporary African Art from artists and galleries across Africa and it's diaspora.
+                    - generic [ref=e1189]:
+                        - generic [ref=e1190]: Connect
+                        - generic [ref=e1191]:
+                            - link [ref=e1192] [cursor=pointer]:
+                                - /url: https://instagram.com/omenaiofficial
+                                - img [ref=e1193]
+                            - link [ref=e1195] [cursor=pointer]:
+                                - /url: https://www.threads.com/@omenaiofficial?hl=en
+                                - img [ref=e1196]
+                            - link [ref=e1198] [cursor=pointer]:
+                                - /url: https://linkedin.com/company/omenaiart
+                                - img [ref=e1199]
+                            - link [ref=e1201] [cursor=pointer]:
+                                - /url: https://pinterest.com/omenaiofficial
+                                - img [ref=e1202]
+                - generic [ref=e1204]:
+                    - generic [ref=e1205]:
+                        - heading "Discover" [level=3] [ref=e1206]
+                        - list [ref=e1207]:
+                            - listitem [ref=e1208]:
+                                - link "Collect" [ref=e1209] [cursor=pointer]:
+                                    - /url: http://localhost:3000/catalog
+                            - listitem [ref=e1210]:
+                                - link "Collections" [ref=e1211] [cursor=pointer]:
+                                    - /url: http://localhost:3000/collections
+                            - listitem [ref=e1212]:
+                                - link "Editorials" [ref=e1213] [cursor=pointer]:
+                                    - /url: http://localhost:3000/articles
+                    - generic [ref=e1214]:
+                        - heading "Support" [level=3] [ref=e1215]
+                        - list [ref=e1216]:
+                            - listitem [ref=e1217]:
+                                - link "Contact us" [ref=e1218] [cursor=pointer]:
+                                    - /url: mailto:info@omenai.app
+                            - listitem [ref=e1219]:
+                                - link "Privacy Policy" [ref=e1220] [cursor=pointer]:
+                                    - /url: http://localhost:3000/privacy
+                            - listitem [ref=e1221]:
+                                - link "Terms of Service" [ref=e1222] [cursor=pointer]:
+                                    - /url: http://localhost:3000/legal?ent=collector
+                    - generic [ref=e1223]:
+                        - heading "Get the App" [level=3] [ref=e1224]
+                        - generic [ref=e1225]:
+                            - paragraph [ref=e1226]: Discover and collect Contemporary African Art, anywhere.
+                            - link "Download on the App Store" [ref=e1227] [cursor=pointer]:
+                                - /url: https://apps.apple.com/ng/app/omenai/id6748387089
+                                - img [ref=e1228]
+                                - generic [ref=e1230]:
+                                    - generic [ref=e1231]: Download on the
+                                    - generic [ref=e1232]: App Store
+                            - link "Get it on Google Play" [ref=e1233] [cursor=pointer]:
+                                - /url: https://play.google.com/store/apps/details?id=com.omenai.omenaiapp
+                                - img [ref=e1234]
+                                - generic [ref=e1236]:
+                                    - generic [ref=e1237]: Get it on
+                                    - generic [ref=e1238]: Google Play
+        - generic [ref=e1239]:
+            - generic:
+                - generic:
+                    - generic: Ask Advisor
+            - button "Open Omenai Advisor" [ref=e1240] [cursor=pointer]:
+                - img [ref=e1246]
+    - alert [ref=e1253]
+```

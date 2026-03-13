@@ -59,7 +59,7 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
             {/* Receipt notice box */}
             <Section className="rounded bg-gray-50 px-6 py-4">
               <Text className="text-sm text-gray-600">
-                📎{" "}
+                {" "}
                 <span className="font-medium text-gray-800">
                   Receipt attached
                 </span>
@@ -74,7 +74,7 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
             <Text className="mt-8 text-gray-700">
               If you have any questions about this invoice or need further
               assistance, feel free to contact our support team at{" "}
-              <span className="font-medium">support@omenai.app</span>.
+              <span className="font-medium">info@omenai.app</span>.
             </Text>
 
             {/* Sign-off */}

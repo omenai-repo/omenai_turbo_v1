@@ -14,6 +14,7 @@ import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWork
 import { redis } from "@omenai/upstash-config";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import { RecentView } from "@omenai/shared-models/models/artworks/RecentlyViewed";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -37,6 +38,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!artwork) throw new NotFoundError("Artwork not found");
 
     const deleteArtwork = await Artworkuploads.deleteOne({ art_id }).exec();
+    await RecentView.deleteMany({ art_id }).exec();
 
     if (deleteArtwork.deletedCount === 0) {
       throw new ServerError(

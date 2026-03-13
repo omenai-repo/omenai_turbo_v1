@@ -39,6 +39,10 @@ export default function ArtworkPricing() {
   const [priceConsent, setPriceConsent] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [shouldShowPrice, setShouldShowPrice] = useState<"Yes" | "No">("Yes");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const NO_CHANGE_VISIBILITY_ACCESS = ["Emerging"];
 
   const rollbar = useRollbar();
   const router = useRouter();
@@ -116,7 +120,7 @@ export default function ArtworkPricing() {
           ...artworkUploadData,
           price: pricing?.price,
           usd_price: pricing?.usd_price,
-          shouldShowPrice: pricing?.shouldShowPrice,
+          shouldShowPrice,
           currency: pricing?.currency,
           packaging_type: packagingType,
         },
@@ -187,7 +191,6 @@ export default function ArtworkPricing() {
         <>
           {/* --- Section 1: Price Reveal Hero Card --- */}
           <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm text-center relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-dark via-slate-600 to-dark" />
             <p className="text-slate-500 text-sm font-medium uppercase tracking-wide mb-3">
               Proposed Listing Price
             </p>
@@ -203,9 +206,9 @@ export default function ArtworkPricing() {
               </p>
             </div>
             <div className="mt-6 text-xs text-slate-400 max-w-lg mx-auto leading-relaxed">
-              This price is calculated based on your artist tier, the medium,
-              and dimensions of the artwork. Consistent pricing helps build
-              collector trust.
+              This price is calculated based on your artist categorization, the
+              medium, and dimensions of the artwork. Consistent pricing helps
+              build collector trust.
             </div>
           </div>
 
@@ -303,6 +306,87 @@ export default function ArtworkPricing() {
             </div>
           </div>
 
+          {/* Add select price display */}
+          <div className="flex flex-col gap-3 p-5 bg-white border border-neutral-200/80 rounded-xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] w-full max-w-full">
+            {/* Label Area */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-dark">
+                Price Display
+              </label>
+              <p className="text-xs text-neutral-500">
+                Would you like to mask the artwork's price from public view?
+              </p>
+            </div>
+
+            {/* Custom Select Boundary */}
+            <div className="relative">
+              {/* Trigger Button */}
+              <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                disabled={NO_CHANGE_VISIBILITY_ACCESS.includes(
+                  user.categorization,
+                )}
+                className="disabled:cursor-not-allowed flex items-center justify-between w-full px-4 py-3 text-sm text-left transition-all bg-neutral-50/50 border border-neutral-200 rounded-md hover:bg-neutral-100/50 focus:outline-none focus:ring-1 focus:ring-dark focus:border-transparent"
+              >
+                <span className="font-normal text-sm text-neutral-600">
+                  {shouldShowPrice === "Yes"
+                    ? "Yes, display the price"
+                    : "No, mask the price"}
+                </span>
+
+                {/* Chevron Icon */}
+                <svg
+                  className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {/* Custom Dropdown Menu */}
+              {isOpen &&
+                !NO_CHANGE_VISIBILITY_ACCESS.includes(user.categorization) && (
+                  <div className="absolute z-50 w-full mt-2 overflow-hidden bg-white border border-neutral-100 rounded-xl shadow-lg origin-top animate-in fade-in slide-in-from-top-2">
+                    <div className="py-1">
+                      <button
+                        onClick={() => {
+                          setShouldShowPrice("Yes");
+                          setIsOpen(false);
+                        }}
+                        className="flex items-center w-full px-4 py-2.5 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-dark"
+                      >
+                        Yes, display the price
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setShouldShowPrice("No");
+                          setIsOpen(false);
+                        }}
+                        className="flex items-center w-full px-4 py-2.5 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-dark"
+                      >
+                        No, mask the price
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+              {NO_CHANGE_VISIBILITY_ACCESS.includes(user.categorization) && (
+                <span className="text-[10px] text-neutral-400">
+                  Pricing visibility change is unlocked at higher Artist Tiers
+                </span>
+              )}
+            </div>
+          </div>
+
           {/* --- Section 3: Action Buttons --- */}
           <div className="grid grid-cols-12 gap-4 mt-2">
             <Link
@@ -311,7 +395,7 @@ export default function ArtworkPricing() {
             >
               <button
                 type="button"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-slate-300 text-slate-600 font-medium text-sm hover:bg-slate-50 hover:text-dark transition-colors"
+                className="w-full px-8 py-3.5 rounded-lg border border-slate-300 text-slate-600 font-medium text-sm hover:bg-slate-50 hover:text-dark transition-colors"
               >
                 Cancel Upload
               </button>
@@ -328,13 +412,7 @@ export default function ArtworkPricing() {
                 }
               `}
             >
-              {loading ? (
-                <LoadSmall />
-              ) : (
-                <>
-                  Publish Artwork <ArrowRight size={16} />
-                </>
-              )}
+              {loading ? <LoadSmall /> : "Publish Artwork"}
             </button>
           </div>
         </>

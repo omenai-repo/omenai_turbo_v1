@@ -1,0 +1,891 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+    - generic [ref=e6] [cursor=pointer]:
+        - button "Open Next.js Dev Tools" [ref=e7]:
+            - img [ref=e8]
+        - generic [ref=e12]:
+            - button "Open issues overlay" [ref=e13]:
+                - generic [ref=e14]:
+                    - generic [ref=e15]: "0"
+                    - generic [ref=e16]: "1"
+                - generic [ref=e17]: Issue
+            - button "Collapse issues badge" [ref=e18]:
+                - img [ref=e19]
+    - region "Notifications alt+T"
+    - generic [ref=e21]:
+        - generic [ref=e22]:
+            - navigation [ref=e23]:
+                - generic [ref=e24]:
+                    - generic [ref=e25]:
+                        - link "omenai logo" [ref=e26] [cursor=pointer]:
+                            - /url: http://localhost:3000
+                            - img "omenai logo" [ref=e27]
+                        - list [ref=e28]:
+                            - listitem [ref=e29]:
+                                - link "Collect" [ref=e30] [cursor=pointer]:
+                                    - /url: /catalog
+                                    - generic [ref=e31]: Collect
+                            - listitem [ref=e32]:
+                                - link "Editorials" [ref=e33] [cursor=pointer]:
+                                    - /url: /articles
+                                    - generic [ref=e34]: Editorials
+                    - generic [ref=e35]:
+                        - generic [ref=e37]:
+                            - generic:
+                                - img
+                            - textbox "Search artists, artworks, styles..." [ref=e38]
+                        - generic [ref=e39]:
+                            - link "Create Account" [ref=e40] [cursor=pointer]:
+                                - /url: http://localhost:4000/register?redirect=http%3A%2F%2Flocalhost%3A3000%2Fartwork%2F03610351-91c4-4349-bc2d-2316f7cac002
+                            - link "Log in" [ref=e41] [cursor=pointer]:
+                                - /url: http://localhost:4000/login/user?redirect=http%3A%2F%2Flocalhost%3A3000%2Fartwork%2F03610351-91c4-4349-bc2d-2316f7cac002
+            - main [ref=e43]:
+                - generic [ref=e45]:
+                    - generic [ref=e48]:
+                        - img "Fish pie - Omenai" [ref=e49]
+                        - generic [ref=e50]:
+                            - img [ref=e51]
+                            - generic [ref=e55]: Inspect Plate
+                    - generic [ref=e56]:
+                        - generic [ref=e57]:
+                            - generic [ref=e58]:
+                                - heading "Fish pie" [level=1] [ref=e59]
+                                - heading "Frank Raymond" [level=2] [ref=e60]
+                            - generic [ref=e61]:
+                                - generic [ref=e62]: Photography
+                                - generic [ref=e64]: "2019"
+                                - generic [ref=e66]: Unique
+                            - generic [ref=e67]:
+                                - heading "Physical Specifications" [level=6] [ref=e68]
+                                - generic [ref=e69]:
+                                    - generic [ref=e70]:
+                                        - generic [ref=e71]: Height
+                                        - generic [ref=e72]: 54in
+                                    - generic [ref=e74]: Width
+                                    - generic [ref=e75]:
+                                        - generic [ref=e76]: Weight
+                                        - generic [ref=e77]: 3lb
+                            - generic [ref=e78]:
+                                - generic [ref=e79]: Price
+                                - generic [ref=e80]: Sold
+                            - generic [ref=e81]:
+                                - button "Unavailable" [disabled] [ref=e82]:
+                                    - generic [ref=e83]: Unavailable
+                                - button "Save to Collection" [ref=e84] [cursor=pointer]:
+                                    - generic [ref=e85]: Save to Collection
+                                    - img [ref=e86]
+                        - generic [ref=e89]:
+                            - generic [ref=e90]:
+                                - button "Shipping & Taxes" [ref=e91] [cursor=pointer]:
+                                    - generic [ref=e92]: Shipping & Taxes
+                                    - img [ref=e93]
+                                - list [ref=e96]:
+                                    - listitem [ref=e97]: Shipping calculated at checkout.
+                                    - listitem [ref=e98]: Duties and taxes may apply.
+                            - generic [ref=e99]:
+                                - button "Omenai Guarantee" [ref=e100] [cursor=pointer]:
+                                    - generic [ref=e101]: Omenai Guarantee
+                                    - img [ref=e102]
+                                - list [ref=e105]:
+                                    - listitem [ref=e106]: Encrypted payment security.
+                                    - listitem [ref=e107]: Verified Certificate of Authenticity.
+                - generic [ref=e108]:
+                    - generic [ref=e110]:
+                        - heading "Provenance & Details" [level=3] [ref=e111]
+                        - generic [ref=e112]:
+                            - generic [ref=e113]:
+                                - term [ref=e114]: Materials
+                                - definition [ref=e115]: Acrylic on canvas
+                            - generic [ref=e116]:
+                                - term [ref=e117]: Signature
+                                - definition [ref=e118]: By artist
+                            - generic [ref=e119]:
+                                - term [ref=e120]: Authenticity
+                                - definition [ref=e121]: Certificate Included
+                            - generic [ref=e122]:
+                                - term [ref=e123]: Packaging
+                                - definition [ref=e124]: Stretched
+                            - generic [ref=e125]:
+                                - term [ref=e126]: Description
+                                - definition [ref=e127]: N/A
+                    - generic [ref=e129]:
+                        - heading "About the Artist" [level=3] [ref=e130]
+                        - heading "Frank Raymond" [level=4] [ref=e131]
+                        - generic [ref=e132]:
+                            - generic [ref=e133]:
+                                - generic [ref=e134]: Born
+                                - text: "1998"
+                            - generic [ref=e135]:
+                                - generic [ref=e136]: Origin
+                                - text: Afghanistan
+                - generic [ref=e137]:
+                    - generic [ref=e138]:
+                        - heading "Hot recommendations" [level=1] [ref=e139]
+                        - generic [ref=e141]:
+                            - generic [ref=e142]:
+                                - generic [ref=e144]:
+                                    - generic [ref=e145]:
+                                        - link "TESTINGGG" [ref=e146] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/72d545b1-0c6f-43f8-9d1e-227b13230915
+                                            - img "TESTINGGG" [ref=e148]
+                                        - img [ref=e151] [cursor=pointer]
+                                    - generic [ref=e153]:
+                                        - generic [ref=e154]:
+                                            - heading "TESTINGGG" [level=3] [ref=e155]:
+                                                - link "TESTINGGG" [ref=e156] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/72d545b1-0c6f-43f8-9d1e-227b13230915
+                                            - generic [ref=e157]: $1,416.2
+                                        - generic [ref=e158]:
+                                            - paragraph [ref=e159]: KELVIN
+                                            - paragraph [ref=e160]: Photography
+                                - generic [ref=e162]:
+                                    - generic [ref=e163]:
+                                        - link "TestingGG" [ref=e164] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/fdb5d8f1-e83a-4c50-98da-a8e27fa1410c
+                                            - img "TestingGG" [ref=e166]
+                                        - img [ref=e169] [cursor=pointer]
+                                    - generic [ref=e171]:
+                                        - generic [ref=e172]:
+                                            - heading "TestingGG" [level=3] [ref=e173]:
+                                                - link "TestingGG" [ref=e174] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/fdb5d8f1-e83a-4c50-98da-a8e27fa1410c
+                                            - generic [ref=e175]: $708.1
+                                        - generic [ref=e176]:
+                                            - paragraph [ref=e177]: KELVIN
+                                            - paragraph [ref=e178]: Photography
+                                - generic [ref=e180]:
+                                    - generic [ref=e181]:
+                                        - link "Hola" [ref=e182] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/bea5e9ef-d6bd-4292-a1c4-80b9584ba504
+                                            - img "Hola" [ref=e184]
+                                        - img [ref=e187] [cursor=pointer]
+                                    - generic [ref=e189]:
+                                        - generic [ref=e190]:
+                                            - heading "Hola" [level=3] [ref=e191]:
+                                                - link "Hola" [ref=e192] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/bea5e9ef-d6bd-4292-a1c4-80b9584ba504
+                                            - generic [ref=e193]: $1,070.0
+                                        - generic [ref=e194]:
+                                            - paragraph [ref=e195]: Frank Raymond
+                                            - paragraph [ref=e196]: Photography
+                                - generic [ref=e198]:
+                                    - generic [ref=e199]:
+                                        - link "Cognitive Desonance Sold" [ref=e200] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/d4203299-56e8-4dbe-b5cb-29ed4494ecc0
+                                            - generic [ref=e201]:
+                                                - img "Cognitive Desonance" [ref=e202]
+                                                - generic [ref=e204]: Sold
+                                        - img [ref=e207] [cursor=pointer]
+                                    - generic [ref=e209]:
+                                        - generic [ref=e210]:
+                                            - heading "Cognitive Desonance" [level=3] [ref=e211]:
+                                                - link "Cognitive Desonance" [ref=e212] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/d4203299-56e8-4dbe-b5cb-29ed4494ecc0
+                                            - generic [ref=e213]: Sold
+                                        - generic [ref=e214]:
+                                            - paragraph [ref=e215]: De Decker Brian
+                                            - paragraph [ref=e216]: Photography
+                                - generic [ref=e218]:
+                                    - generic [ref=e219]:
+                                        - link "Testing Sold" [ref=e220] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/6af8cdf9-6736-425a-a927-517d0beac7b6
+                                            - generic [ref=e221]:
+                                                - img "Testing" [ref=e222]
+                                                - generic [ref=e224]: Sold
+                                        - img [ref=e227] [cursor=pointer]
+                                    - generic [ref=e229]:
+                                        - generic [ref=e230]:
+                                            - heading "Testing" [level=3] [ref=e231]:
+                                                - link "Testing" [ref=e232] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/6af8cdf9-6736-425a-a927-517d0beac7b6
+                                            - generic [ref=e233]: Sold
+                                        - generic [ref=e234]:
+                                            - paragraph [ref=e235]: Frank Raymond
+                                            - paragraph [ref=e236]: Photography
+                            - generic [ref=e237]:
+                                - generic [ref=e239]:
+                                    - generic [ref=e240]:
+                                        - link "Hey Sold" [ref=e241] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/289b7675-0221-4a7b-87db-1b51ceecac4c
+                                            - generic [ref=e242]:
+                                                - img "Hey" [ref=e243]
+                                                - generic [ref=e245]: Sold
+                                        - img [ref=e248] [cursor=pointer]
+                                    - generic [ref=e250]:
+                                        - generic [ref=e251]:
+                                            - heading "Hey" [level=3] [ref=e252]:
+                                                - link "Hey" [ref=e253] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/289b7675-0221-4a7b-87db-1b51ceecac4c
+                                            - generic [ref=e254]: Sold
+                                        - generic [ref=e255]:
+                                            - paragraph [ref=e256]: Frank Raymond
+                                            - paragraph [ref=e257]: Photography
+                                - generic [ref=e259]:
+                                    - generic [ref=e260]:
+                                        - link "Faded mesh Sold" [ref=e261] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/090bb0f8-8898-4e73-96f4-639c8f0e74bf
+                                            - generic [ref=e262]:
+                                                - img "Faded mesh" [ref=e263]
+                                                - generic [ref=e265]: Sold
+                                        - img [ref=e268] [cursor=pointer]
+                                    - generic [ref=e270]:
+                                        - generic [ref=e271]:
+                                            - heading "Faded mesh" [level=3] [ref=e272]:
+                                                - link "Faded mesh" [ref=e273] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/090bb0f8-8898-4e73-96f4-639c8f0e74bf
+                                            - generic [ref=e274]: Sold
+                                        - generic [ref=e275]:
+                                            - paragraph [ref=e276]: Frank Raymond
+                                            - paragraph [ref=e277]: Photography
+                                - generic [ref=e279]:
+                                    - generic [ref=e280]:
+                                        - link "Black splash" [ref=e281] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/11ebe8d5-6284-47da-92e8-bb99a7858c24
+                                            - img "Black splash" [ref=e283]
+                                        - img [ref=e286] [cursor=pointer]
+                                    - generic [ref=e288]:
+                                        - generic [ref=e289]:
+                                            - heading "Black splash" [level=3] [ref=e290]:
+                                                - link "Black splash" [ref=e291] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/11ebe8d5-6284-47da-92e8-bb99a7858c24
+                                            - generic [ref=e292]: Price on Request
+                                        - generic [ref=e293]:
+                                            - paragraph [ref=e294]: Palazzo Barberinni
+                                            - paragraph [ref=e295]: Photography
+                                - generic [ref=e297]:
+                                    - generic [ref=e298]:
+                                        - link "Glacial Landscape Sold" [ref=e299] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/034b5209-be26-41ba-bf79-1b0672e7ade1
+                                            - generic [ref=e300]:
+                                                - img "Glacial Landscape" [ref=e301]
+                                                - generic [ref=e303]: Sold
+                                        - img [ref=e306] [cursor=pointer]
+                                    - generic [ref=e308]:
+                                        - generic [ref=e309]:
+                                            - heading "Glacial Landscape" [level=3] [ref=e310]:
+                                                - link "Glacial Landscape" [ref=e311] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/034b5209-be26-41ba-bf79-1b0672e7ade1
+                                            - generic [ref=e312]: Sold
+                                        - generic [ref=e313]:
+                                            - paragraph [ref=e314]: Frank Raymond
+                                            - paragraph [ref=e315]: Photography
+                                - generic [ref=e317]:
+                                    - generic [ref=e318]:
+                                        - link "Lone Flower Sold" [ref=e319] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/6b9004c4-44ee-4059-a62f-af7ee749b13c
+                                            - generic [ref=e320]:
+                                                - img "Lone Flower" [ref=e321]
+                                                - generic [ref=e323]: Sold
+                                        - img [ref=e326] [cursor=pointer]
+                                    - generic [ref=e328]:
+                                        - generic [ref=e329]:
+                                            - heading "Lone Flower" [level=3] [ref=e330]:
+                                                - link "Lone Flower" [ref=e331] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/6b9004c4-44ee-4059-a62f-af7ee749b13c
+                                            - generic [ref=e332]: Sold
+                                        - generic [ref=e333]:
+                                            - paragraph [ref=e334]: Palazzo Barberinni
+                                            - paragraph [ref=e335]: Photography
+                            - generic [ref=e336]:
+                                - generic [ref=e338]:
+                                    - generic [ref=e339]:
+                                        - link "It came with a wave, and washed slowly ashore Sold" [ref=e340] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/c688933b-f387-469b-97a5-74733c07a06e
+                                            - generic [ref=e341]:
+                                                - img "It came with a wave, and washed slowly ashore" [ref=e342]
+                                                - generic [ref=e344]: Sold
+                                        - img [ref=e347] [cursor=pointer]
+                                    - generic [ref=e349]:
+                                        - generic [ref=e350]:
+                                            - heading "It came with a wave, and washed slowly ashore" [level=3] [ref=e351]:
+                                                - link "It came with a wave, and washed slowly ashore" [ref=e352] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/c688933b-f387-469b-97a5-74733c07a06e
+                                            - generic [ref=e353]: Sold
+                                        - generic [ref=e354]:
+                                            - paragraph [ref=e355]: Frank Raymond
+                                            - paragraph [ref=e356]: Photography
+                                - generic [ref=e358]:
+                                    - generic [ref=e359]:
+                                        - link "Botched Lillies" [ref=e360] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/be4f93c1-df27-4b4f-8652-081f8851ebbf
+                                            - img "Botched Lillies" [ref=e362]
+                                        - img [ref=e365] [cursor=pointer]
+                                    - generic [ref=e367]:
+                                        - generic [ref=e368]:
+                                            - heading "Botched Lillies" [level=3] [ref=e369]:
+                                                - link "Botched Lillies" [ref=e370] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/be4f93c1-df27-4b4f-8652-081f8851ebbf
+                                            - generic [ref=e371]: $5,557.0
+                                        - generic [ref=e372]:
+                                            - paragraph [ref=e373]: Test Artist
+                                            - paragraph [ref=e374]: Photography
+                                - generic [ref=e376]:
+                                    - generic [ref=e377]:
+                                        - link "Dalim taba" [ref=e378] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/eace24c8-7ca5-444a-8cf5-4d83123ced3f
+                                            - img "Dalim taba" [ref=e380]
+                                        - img [ref=e383] [cursor=pointer]
+                                    - generic [ref=e385]:
+                                        - generic [ref=e386]:
+                                            - heading "Dalim taba" [level=3] [ref=e387]:
+                                                - link "Dalim taba" [ref=e388] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/eace24c8-7ca5-444a-8cf5-4d83123ced3f
+                                            - generic [ref=e389]: $3,519.0
+                                        - generic [ref=e390]:
+                                            - paragraph [ref=e391]: Test Artist
+                                            - paragraph [ref=e392]: Photography
+                                - generic [ref=e394]:
+                                    - generic [ref=e395]:
+                                        - link "Wá, make I tell you something Sold" [ref=e396] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/bb088973-a537-4ed2-ae06-cc5d77cd7a51
+                                            - generic [ref=e397]:
+                                                - img "Wá, make I tell you something" [ref=e398]
+                                                - generic [ref=e400]: Sold
+                                        - img [ref=e403] [cursor=pointer]
+                                    - generic [ref=e405]:
+                                        - generic [ref=e406]:
+                                            - heading "Wá, make I tell you something" [level=3] [ref=e407]:
+                                                - link "Wá, make I tell you something" [ref=e408] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/bb088973-a537-4ed2-ae06-cc5d77cd7a51
+                                            - generic [ref=e409]: Sold
+                                        - generic [ref=e410]:
+                                            - paragraph [ref=e411]: Orry Shenjobi
+                                            - paragraph [ref=e412]: Photography
+                        - link "Enter Full Archive" [ref=e414] [cursor=pointer]:
+                            - /url: /catalog
+                            - button "Enter Full Archive" [ref=e415]:
+                                - generic [ref=e416]: Enter Full Archive
+                                - img [ref=e417]
+                    - generic [ref=e419]:
+                        - heading "Other works by Frank Raymond" [level=1] [ref=e420]
+                        - generic [ref=e422]:
+                            - generic [ref=e423]:
+                                - generic [ref=e425]:
+                                    - generic [ref=e426]:
+                                        - link "Hola" [ref=e427] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/bea5e9ef-d6bd-4292-a1c4-80b9584ba504
+                                            - img "Hola" [ref=e429]
+                                        - img [ref=e432] [cursor=pointer]
+                                    - generic [ref=e434]:
+                                        - generic [ref=e435]:
+                                            - heading "Hola" [level=3] [ref=e436]:
+                                                - link "Hola" [ref=e437] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/bea5e9ef-d6bd-4292-a1c4-80b9584ba504
+                                            - generic [ref=e438]: $1,070.0
+                                        - generic [ref=e439]:
+                                            - paragraph [ref=e440]: Frank Raymond
+                                            - paragraph [ref=e441]: Photography
+                                - generic [ref=e443]:
+                                    - generic [ref=e444]:
+                                        - link "Testing Sold" [ref=e445] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/6af8cdf9-6736-425a-a927-517d0beac7b6
+                                            - generic [ref=e446]:
+                                                - img "Testing" [ref=e447]
+                                                - generic [ref=e449]: Sold
+                                        - img [ref=e452] [cursor=pointer]
+                                    - generic [ref=e454]:
+                                        - generic [ref=e455]:
+                                            - heading "Testing" [level=3] [ref=e456]:
+                                                - link "Testing" [ref=e457] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/6af8cdf9-6736-425a-a927-517d0beac7b6
+                                            - generic [ref=e458]: Sold
+                                        - generic [ref=e459]:
+                                            - paragraph [ref=e460]: Frank Raymond
+                                            - paragraph [ref=e461]: Photography
+                                - generic [ref=e463]:
+                                    - generic [ref=e464]:
+                                        - link "Hey Sold" [ref=e465] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/289b7675-0221-4a7b-87db-1b51ceecac4c
+                                            - generic [ref=e466]:
+                                                - img "Hey" [ref=e467]
+                                                - generic [ref=e469]: Sold
+                                        - img [ref=e472] [cursor=pointer]
+                                    - generic [ref=e474]:
+                                        - generic [ref=e475]:
+                                            - heading "Hey" [level=3] [ref=e476]:
+                                                - link "Hey" [ref=e477] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/289b7675-0221-4a7b-87db-1b51ceecac4c
+                                            - generic [ref=e478]: Sold
+                                        - generic [ref=e479]:
+                                            - paragraph [ref=e480]: Frank Raymond
+                                            - paragraph [ref=e481]: Photography
+                                - generic [ref=e483]:
+                                    - generic [ref=e484]:
+                                        - link "Waves of Heaven" [ref=e485] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/6b96d92f-84a9-4470-a06c-f1e2d16c0543
+                                            - img "Waves of Heaven" [ref=e487]
+                                        - img [ref=e490] [cursor=pointer]
+                                    - generic [ref=e492]:
+                                        - generic [ref=e493]:
+                                            - heading "Waves of Heaven" [level=3] [ref=e494]:
+                                                - link "Waves of Heaven" [ref=e495] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/6b96d92f-84a9-4470-a06c-f1e2d16c0543
+                                            - generic [ref=e496]: $1,292.0
+                                        - generic [ref=e497]:
+                                            - paragraph [ref=e498]: Frank Raymond
+                                            - paragraph [ref=e499]: Works on paper
+                                - generic [ref=e501]:
+                                    - generic [ref=e502]:
+                                        - link "Fish pie Sold" [ref=e503] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/03610351-91c4-4349-bc2d-2316f7cac002
+                                            - generic [ref=e504]:
+                                                - img "Fish pie" [ref=e505]
+                                                - generic [ref=e507]: Sold
+                                        - img [ref=e510] [cursor=pointer]
+                                    - generic [ref=e512]:
+                                        - generic [ref=e513]:
+                                            - heading "Fish pie" [level=3] [ref=e514]:
+                                                - link "Fish pie" [ref=e515] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/03610351-91c4-4349-bc2d-2316f7cac002
+                                            - generic [ref=e516]: Sold
+                                        - generic [ref=e517]:
+                                            - paragraph [ref=e518]: Frank Raymond
+                                            - paragraph [ref=e519]: Photography
+                                - generic [ref=e521]:
+                                    - generic [ref=e522]:
+                                        - link "Ma Grand-mère et son telephone Rouge Sold" [ref=e523] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/1cf4861b-572b-4f72-a3cc-48f6cbf95451
+                                            - generic [ref=e524]:
+                                                - img "Ma Grand-mère et son telephone Rouge" [ref=e525]
+                                                - generic [ref=e527]: Sold
+                                        - img [ref=e530] [cursor=pointer]
+                                    - generic [ref=e532]:
+                                        - generic [ref=e533]:
+                                            - heading "Ma Grand-mère et son telephone Rouge" [level=3] [ref=e534]:
+                                                - link "Ma Grand-mère et son telephone Rouge" [ref=e535] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/1cf4861b-572b-4f72-a3cc-48f6cbf95451
+                                            - generic [ref=e536]: Sold
+                                        - generic [ref=e537]:
+                                            - paragraph [ref=e538]: Frank Raymond
+                                            - paragraph [ref=e539]: Acrylic on canvas/linen/panel
+                                - generic [ref=e541]:
+                                    - generic [ref=e542]:
+                                        - link "Yonk Yonko Sold" [ref=e543] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/eabf4024-9da1-4a37-affd-95c1fdf17db5
+                                            - generic [ref=e544]:
+                                                - img "Yonk Yonko" [ref=e545]
+                                                - generic [ref=e547]: Sold
+                                        - img [ref=e550] [cursor=pointer]
+                                    - generic [ref=e552]:
+                                        - generic [ref=e553]:
+                                            - heading "Yonk Yonko" [level=3] [ref=e554]:
+                                                - link "Yonk Yonko" [ref=e555] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/eabf4024-9da1-4a37-affd-95c1fdf17db5
+                                            - generic [ref=e556]: Sold
+                                        - generic [ref=e557]:
+                                            - paragraph [ref=e558]: Frank Raymond
+                                            - paragraph [ref=e559]: Works on paper
+                                - generic [ref=e561]:
+                                    - generic [ref=e562]:
+                                        - link "Scene" [ref=e563] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/1bfa979d-bfef-46d6-b955-0b6b7ee608a4
+                                            - img "Scene" [ref=e565]
+                                        - img [ref=e568] [cursor=pointer]
+                                    - generic [ref=e570]:
+                                        - generic [ref=e571]:
+                                            - heading "Scene" [level=3] [ref=e572]:
+                                                - link "Scene" [ref=e573] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/1bfa979d-bfef-46d6-b955-0b6b7ee608a4
+                                            - generic [ref=e574]: $1,079.0
+                                        - generic [ref=e575]:
+                                            - paragraph [ref=e576]: Frank Raymond
+                                            - paragraph [ref=e577]: Works on paper
+                                - generic [ref=e579]:
+                                    - generic [ref=e580]:
+                                        - link "Fracsidus Sold" [ref=e581] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/6d677711-afcd-4f96-b083-557f88add880
+                                            - generic [ref=e582]:
+                                                - img "Fracsidus" [ref=e583]
+                                                - generic [ref=e585]: Sold
+                                        - img [ref=e588] [cursor=pointer]
+                                    - generic [ref=e590]:
+                                        - generic [ref=e591]:
+                                            - heading "Fracsidus" [level=3] [ref=e592]:
+                                                - link "Fracsidus" [ref=e593] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/6d677711-afcd-4f96-b083-557f88add880
+                                            - generic [ref=e594]: Sold
+                                        - generic [ref=e595]:
+                                            - paragraph [ref=e596]: Frank Raymond
+                                            - paragraph [ref=e597]: Acrylic on canvas/linen/panel
+                            - generic [ref=e598]:
+                                - generic [ref=e600]:
+                                    - generic [ref=e601]:
+                                        - link "Faded mesh Sold" [ref=e602] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/090bb0f8-8898-4e73-96f4-639c8f0e74bf
+                                            - generic [ref=e603]:
+                                                - img "Faded mesh" [ref=e604]
+                                                - generic [ref=e606]: Sold
+                                        - img [ref=e609] [cursor=pointer]
+                                    - generic [ref=e611]:
+                                        - generic [ref=e612]:
+                                            - heading "Faded mesh" [level=3] [ref=e613]:
+                                                - link "Faded mesh" [ref=e614] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/090bb0f8-8898-4e73-96f4-639c8f0e74bf
+                                            - generic [ref=e615]: Sold
+                                        - generic [ref=e616]:
+                                            - paragraph [ref=e617]: Frank Raymond
+                                            - paragraph [ref=e618]: Photography
+                                - generic [ref=e620]:
+                                    - generic [ref=e621]:
+                                        - link "Glacial Landscape Sold" [ref=e622] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/034b5209-be26-41ba-bf79-1b0672e7ade1
+                                            - generic [ref=e623]:
+                                                - img "Glacial Landscape" [ref=e624]
+                                                - generic [ref=e626]: Sold
+                                        - img [ref=e629] [cursor=pointer]
+                                    - generic [ref=e631]:
+                                        - generic [ref=e632]:
+                                            - heading "Glacial Landscape" [level=3] [ref=e633]:
+                                                - link "Glacial Landscape" [ref=e634] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/034b5209-be26-41ba-bf79-1b0672e7ade1
+                                            - generic [ref=e635]: Sold
+                                        - generic [ref=e636]:
+                                            - paragraph [ref=e637]: Frank Raymond
+                                            - paragraph [ref=e638]: Photography
+                                - generic [ref=e640]:
+                                    - generic [ref=e641]:
+                                        - link "A day to remember Sold" [ref=e642] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/4cb59d3f-1922-4476-9a7d-4cb481216e3e
+                                            - generic [ref=e643]:
+                                                - img "A day to remember" [ref=e644]
+                                                - generic [ref=e646]: Sold
+                                        - img [ref=e649] [cursor=pointer]
+                                    - generic [ref=e651]:
+                                        - generic [ref=e652]:
+                                            - heading "A day to remember" [level=3] [ref=e653]:
+                                                - link "A day to remember" [ref=e654] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/4cb59d3f-1922-4476-9a7d-4cb481216e3e
+                                            - generic [ref=e655]: Sold
+                                        - generic [ref=e656]:
+                                            - paragraph [ref=e657]: Frank Raymond
+                                            - paragraph [ref=e658]: Acrylic on canvas/linen/panel
+                                - generic [ref=e660]:
+                                    - generic [ref=e661]:
+                                        - link "A Night With Osibisa Sold" [ref=e662] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/1e7611e5-84d1-4f27-b58d-9bfe39ea0622
+                                            - generic [ref=e663]:
+                                                - img "A Night With Osibisa" [ref=e664]
+                                                - generic [ref=e666]: Sold
+                                        - img [ref=e669] [cursor=pointer]
+                                    - generic [ref=e671]:
+                                        - generic [ref=e672]:
+                                            - heading "A Night With Osibisa" [level=3] [ref=e673]:
+                                                - link "A Night With Osibisa" [ref=e674] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/1e7611e5-84d1-4f27-b58d-9bfe39ea0622
+                                            - generic [ref=e675]: Sold
+                                        - generic [ref=e676]:
+                                            - paragraph [ref=e677]: Frank Raymond
+                                            - paragraph [ref=e678]: Canvas
+                                - generic [ref=e680]:
+                                    - generic [ref=e681]:
+                                        - link "Prints Sold" [ref=e682] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/8c7e074f-e59c-4829-ad6e-414691390d16
+                                            - generic [ref=e683]:
+                                                - img "Prints" [ref=e684]
+                                                - generic [ref=e686]: Sold
+                                        - img [ref=e689] [cursor=pointer]
+                                    - generic [ref=e691]:
+                                        - generic [ref=e692]:
+                                            - heading "Prints" [level=3] [ref=e693]:
+                                                - link "Prints" [ref=e694] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/8c7e074f-e59c-4829-ad6e-414691390d16
+                                            - generic [ref=e695]: Sold
+                                        - generic [ref=e696]:
+                                            - paragraph [ref=e697]: Frank Raymond
+                                            - paragraph [ref=e698]: Acrylic on canvas/linen/panel
+                                - generic [ref=e700]:
+                                    - generic [ref=e701]:
+                                        - link "Cityscape Sold" [ref=e702] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/b7651d0e-b07e-4c45-8a5b-1a5d6aa84d2c
+                                            - generic [ref=e703]:
+                                                - img "Cityscape" [ref=e704]
+                                                - generic [ref=e706]: Sold
+                                        - img [ref=e709] [cursor=pointer]
+                                    - generic [ref=e711]:
+                                        - generic [ref=e712]:
+                                            - heading "Cityscape" [level=3] [ref=e713]:
+                                                - link "Cityscape" [ref=e714] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/b7651d0e-b07e-4c45-8a5b-1a5d6aa84d2c
+                                            - generic [ref=e715]: Sold
+                                        - generic [ref=e716]:
+                                            - paragraph [ref=e717]: Frank Raymond
+                                            - paragraph [ref=e718]: Works on paper
+                                - generic [ref=e720]:
+                                    - generic [ref=e721]:
+                                        - link "It came with a wave, and washed slowly ashore Sold" [ref=e722] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/c688933b-f387-469b-97a5-74733c07a06e
+                                            - generic [ref=e723]:
+                                                - img "It came with a wave, and washed slowly ashore" [ref=e724]
+                                                - generic [ref=e726]: Sold
+                                        - img [ref=e729] [cursor=pointer]
+                                    - generic [ref=e731]:
+                                        - generic [ref=e732]:
+                                            - heading "It came with a wave, and washed slowly ashore" [level=3] [ref=e733]:
+                                                - link "It came with a wave, and washed slowly ashore" [ref=e734] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/c688933b-f387-469b-97a5-74733c07a06e
+                                            - generic [ref=e735]: Sold
+                                        - generic [ref=e736]:
+                                            - paragraph [ref=e737]: Frank Raymond
+                                            - paragraph [ref=e738]: Photography
+                                - generic [ref=e740]:
+                                    - generic [ref=e741]:
+                                        - link "Exhausted III Sold" [ref=e742] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/ef23c3ed-7642-4e5f-a1f7-f35188ba9197
+                                            - generic [ref=e743]:
+                                                - img "Exhausted III" [ref=e744]
+                                                - generic [ref=e746]: Sold
+                                        - img [ref=e749] [cursor=pointer]
+                                    - generic [ref=e751]:
+                                        - generic [ref=e752]:
+                                            - heading "Exhausted III" [level=3] [ref=e753]:
+                                                - link "Exhausted III" [ref=e754] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/ef23c3ed-7642-4e5f-a1f7-f35188ba9197
+                                            - generic [ref=e755]: Sold
+                                        - generic [ref=e756]:
+                                            - paragraph [ref=e757]: Frank Raymond
+                                            - paragraph [ref=e758]: Acrylic on canvas/linen/panel
+                                - generic [ref=e760]:
+                                    - generic [ref=e761]:
+                                        - link "Two Halves of a whole Sold" [ref=e762] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/9a77b0c9-7907-4026-80ca-ff33baa539d3
+                                            - generic [ref=e763]:
+                                                - img "Two Halves of a whole" [ref=e764]
+                                                - generic [ref=e766]: Sold
+                                        - img [ref=e769] [cursor=pointer]
+                                    - generic [ref=e771]:
+                                        - generic [ref=e772]:
+                                            - heading "Two Halves of a whole" [level=3] [ref=e773]:
+                                                - link "Two Halves of a whole" [ref=e774] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/9a77b0c9-7907-4026-80ca-ff33baa539d3
+                                            - generic [ref=e775]: Sold
+                                        - generic [ref=e776]:
+                                            - paragraph [ref=e777]: Frank Raymond
+                                            - paragraph [ref=e778]: Acrylic on canvas/linen/panel
+                            - generic [ref=e779]:
+                                - generic [ref=e781]:
+                                    - generic [ref=e782]:
+                                        - link "Tender lots Sold" [ref=e783] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/54a308ae-9344-478e-8030-db616a1ba24d
+                                            - generic [ref=e784]:
+                                                - img "Tender lots" [ref=e785]
+                                                - generic [ref=e787]: Sold
+                                        - img [ref=e790] [cursor=pointer]
+                                    - generic [ref=e792]:
+                                        - generic [ref=e793]:
+                                            - heading "Tender lots" [level=3] [ref=e794]:
+                                                - link "Tender lots" [ref=e795] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/54a308ae-9344-478e-8030-db616a1ba24d
+                                            - generic [ref=e796]: Sold
+                                        - generic [ref=e797]:
+                                            - paragraph [ref=e798]: Frank Raymond
+                                            - paragraph [ref=e799]: Oil on canvas/panel
+                                - generic [ref=e801]:
+                                    - generic [ref=e802]:
+                                        - link "The Shield (ii) Sold" [ref=e803] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/d72636b1-12f3-41af-8ccf-b91dcaecfa10
+                                            - generic [ref=e804]:
+                                                - img "The Shield (ii)" [ref=e805]
+                                                - generic [ref=e807]: Sold
+                                        - img [ref=e810] [cursor=pointer]
+                                    - generic [ref=e812]:
+                                        - generic [ref=e813]:
+                                            - heading "The Shield (ii)" [level=3] [ref=e814]:
+                                                - link "The Shield (ii)" [ref=e815] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/d72636b1-12f3-41af-8ccf-b91dcaecfa10
+                                            - generic [ref=e816]: Sold
+                                        - generic [ref=e817]:
+                                            - paragraph [ref=e818]: Frank Raymond
+                                            - paragraph [ref=e819]: Acrylic on canvas/linen/panel
+                                - generic [ref=e821]:
+                                    - generic [ref=e822]:
+                                        - link "Dandora (Xala, Musicians)⁠ Sold" [ref=e823] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/a995ed03-3ef2-4360-ad4c-1ce97b848319
+                                            - generic [ref=e824]:
+                                                - img "Dandora (Xala, Musicians)⁠" [ref=e825]
+                                                - generic [ref=e827]: Sold
+                                        - img [ref=e830] [cursor=pointer]
+                                    - generic [ref=e832]:
+                                        - generic [ref=e833]:
+                                            - heading "Dandora (Xala, Musicians)⁠" [level=3] [ref=e834]:
+                                                - link "Dandora (Xala, Musicians)⁠" [ref=e835] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/a995ed03-3ef2-4360-ad4c-1ce97b848319
+                                            - generic [ref=e836]: Sold
+                                        - generic [ref=e837]:
+                                            - paragraph [ref=e838]: Frank Raymond
+                                            - paragraph [ref=e839]: Oil on canvas/panel
+                                - generic [ref=e841]:
+                                    - generic [ref=e842]:
+                                        - link "Valentino Lady in Pink Sold" [ref=e843] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/334b008e-3552-4273-9a0e-772b487b6dc4
+                                            - generic [ref=e844]:
+                                                - img "Valentino Lady in Pink" [ref=e845]
+                                                - generic [ref=e847]: Sold
+                                        - img [ref=e850] [cursor=pointer]
+                                    - generic [ref=e852]:
+                                        - generic [ref=e853]:
+                                            - heading "Valentino Lady in Pink" [level=3] [ref=e854]:
+                                                - link "Valentino Lady in Pink" [ref=e855] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/334b008e-3552-4273-9a0e-772b487b6dc4
+                                            - generic [ref=e856]: Sold
+                                        - generic [ref=e857]:
+                                            - paragraph [ref=e858]: Frank Raymond
+                                            - paragraph [ref=e859]: Mixed media on canvas
+                                - generic [ref=e861]:
+                                    - generic [ref=e862]:
+                                        - link "Spirited Away Sold" [ref=e863] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/1737c6c3-4309-4450-b282-86193fd2dfe3
+                                            - generic [ref=e864]:
+                                                - img "Spirited Away" [ref=e865]
+                                                - generic [ref=e867]: Sold
+                                        - img [ref=e870] [cursor=pointer]
+                                    - generic [ref=e872]:
+                                        - generic [ref=e873]:
+                                            - heading "Spirited Away" [level=3] [ref=e874]:
+                                                - link "Spirited Away" [ref=e875] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/1737c6c3-4309-4450-b282-86193fd2dfe3
+                                            - generic [ref=e876]: Sold
+                                        - generic [ref=e877]:
+                                            - paragraph [ref=e878]: Frank Raymond
+                                            - paragraph [ref=e879]: Mixed media on canvas
+                                - generic [ref=e881]:
+                                    - generic [ref=e882]:
+                                        - link "Ota Jua, Tuliza Roho -⁠ Even the Grounded Need Grounding⁠ Sold" [ref=e883] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/c5590205-6cd5-45a2-8f70-5113505e6d47
+                                            - generic [ref=e884]:
+                                                - img "Ota Jua, Tuliza Roho -⁠ Even the Grounded Need Grounding⁠" [ref=e885]
+                                                - generic [ref=e887]: Sold
+                                        - img [ref=e890] [cursor=pointer]
+                                    - generic [ref=e892]:
+                                        - generic [ref=e893]:
+                                            - heading "Ota Jua, Tuliza Roho -⁠ Even the Grounded Need Grounding⁠" [level=3] [ref=e894]:
+                                                - link "Ota Jua, Tuliza Roho -⁠ Even the Grounded Need Grounding⁠" [ref=e895] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/c5590205-6cd5-45a2-8f70-5113505e6d47
+                                            - generic [ref=e896]: Sold
+                                        - generic [ref=e897]:
+                                            - paragraph [ref=e898]: Frank Raymond
+                                            - paragraph [ref=e899]: Oil on canvas/panel
+                                - generic [ref=e901]:
+                                    - generic [ref=e902]:
+                                        - link "Anglophone / Francophone (The Crowd) Sold" [ref=e903] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/9196b228-669f-4b42-93bc-ca7a7397a611
+                                            - generic [ref=e904]:
+                                                - img "Anglophone / Francophone (The Crowd)" [ref=e905]
+                                                - generic [ref=e907]: Sold
+                                        - img [ref=e910] [cursor=pointer]
+                                    - generic [ref=e912]:
+                                        - generic [ref=e913]:
+                                            - heading "Anglophone / Francophone (The Crowd)" [level=3] [ref=e914]:
+                                                - link "Anglophone / Francophone (The Crowd)" [ref=e915] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/9196b228-669f-4b42-93bc-ca7a7397a611
+                                            - generic [ref=e916]: Sold
+                                        - generic [ref=e917]:
+                                            - paragraph [ref=e918]: Frank Raymond
+                                            - paragraph [ref=e919]: Oil on canvas/panel
+                                - generic [ref=e921]:
+                                    - generic [ref=e922]:
+                                        - link "Charcoal , Pastel and Pencil on Paper Sold" [ref=e923] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/5631b91f-6939-4b30-9856-647eed2c1e10
+                                            - generic [ref=e924]:
+                                                - img "Charcoal , Pastel and Pencil on Paper" [ref=e925]
+                                                - generic [ref=e927]: Sold
+                                        - img [ref=e930] [cursor=pointer]
+                                    - generic [ref=e932]:
+                                        - generic [ref=e933]:
+                                            - heading "Charcoal , Pastel and Pencil on Paper" [level=3] [ref=e934]:
+                                                - link "Charcoal , Pastel and Pencil on Paper" [ref=e935] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/5631b91f-6939-4b30-9856-647eed2c1e10
+                                            - generic [ref=e936]: Sold
+                                        - generic [ref=e937]:
+                                            - paragraph [ref=e938]: Frank Raymond
+                                            - paragraph [ref=e939]: Mixed media on canvas
+                                - generic [ref=e941]:
+                                    - generic [ref=e942]:
+                                        - link "Until you come Sold" [ref=e943] [cursor=pointer]:
+                                            - /url: http://localhost:3000/artwork/8b236744-91a4-4ede-bb72-de77f5e66b8b
+                                            - generic [ref=e944]:
+                                                - img "Until you come" [ref=e945]
+                                                - generic [ref=e947]: Sold
+                                        - img [ref=e950] [cursor=pointer]
+                                    - generic [ref=e952]:
+                                        - generic [ref=e953]:
+                                            - heading "Until you come" [level=3] [ref=e954]:
+                                                - link "Until you come" [ref=e955] [cursor=pointer]:
+                                                    - /url: http://localhost:3000/artwork/8b236744-91a4-4ede-bb72-de77f5e66b8b
+                                            - generic [ref=e956]: Sold
+                                        - generic [ref=e957]:
+                                            - paragraph [ref=e958]: Frank Raymond
+                                            - paragraph [ref=e959]: Oil on canvas/panel
+            - contentinfo [ref=e960]:
+                - generic [ref=e961]:
+                    - generic [ref=e962]:
+                        - generic [ref=e963]:
+                            - link "omenai logo" [ref=e964] [cursor=pointer]:
+                                - /url: http://localhost:3000
+                                - img "omenai logo" [ref=e965]
+                            - paragraph [ref=e966]: Discover and collect Contemporary African Art from artists and galleries across Africa and it's diaspora.
+                        - generic [ref=e967]:
+                            - generic [ref=e968]: Connect
+                            - generic [ref=e969]:
+                                - link [ref=e970] [cursor=pointer]:
+                                    - /url: https://instagram.com/omenaiofficial
+                                    - img [ref=e971]
+                                - link [ref=e973] [cursor=pointer]:
+                                    - /url: https://www.threads.com/@omenaiofficial?hl=en
+                                    - img [ref=e974]
+                                - link [ref=e976] [cursor=pointer]:
+                                    - /url: https://linkedin.com/company/omenaiart
+                                    - img [ref=e977]
+                                - link [ref=e979] [cursor=pointer]:
+                                    - /url: https://pinterest.com/omenaiofficial
+                                    - img [ref=e980]
+                    - generic [ref=e982]:
+                        - generic [ref=e983]:
+                            - heading "Discover" [level=3] [ref=e984]
+                            - list [ref=e985]:
+                                - listitem [ref=e986]:
+                                    - link "Collect" [ref=e987] [cursor=pointer]:
+                                        - /url: http://localhost:3000/catalog
+                                - listitem [ref=e988]:
+                                    - link "Collections" [ref=e989] [cursor=pointer]:
+                                        - /url: http://localhost:3000/collections
+                                - listitem [ref=e990]:
+                                    - link "Editorials" [ref=e991] [cursor=pointer]:
+                                        - /url: http://localhost:3000/articles
+                        - generic [ref=e992]:
+                            - heading "Support" [level=3] [ref=e993]
+                            - list [ref=e994]:
+                                - listitem [ref=e995]:
+                                    - link "Contact us" [ref=e996] [cursor=pointer]:
+                                        - /url: mailto:info@omenai.app
+                                - listitem [ref=e997]:
+                                    - link "Privacy Policy" [ref=e998] [cursor=pointer]:
+                                        - /url: http://localhost:3000/privacy
+                                - listitem [ref=e999]:
+                                    - link "Terms of Service" [ref=e1000] [cursor=pointer]:
+                                        - /url: http://localhost:3000/legal?ent=collector
+                        - generic [ref=e1001]:
+                            - heading "Get the App" [level=3] [ref=e1002]
+                            - generic [ref=e1003]:
+                                - paragraph [ref=e1004]: Discover and collect Contemporary African Art, anywhere.
+                                - link "Download on the App Store" [ref=e1005] [cursor=pointer]:
+                                    - /url: https://apps.apple.com/ng/app/omenai/id6748387089
+                                    - img [ref=e1006]
+                                    - generic [ref=e1008]:
+                                        - generic [ref=e1009]: Download on the
+                                        - generic [ref=e1010]: App Store
+                                - link "Get it on Google Play" [ref=e1011] [cursor=pointer]:
+                                    - /url: https://play.google.com/store/apps/details?id=com.omenai.omenaiapp
+                                    - img [ref=e1012]
+                                    - generic [ref=e1014]:
+                                        - generic [ref=e1015]: Get it on
+                                        - generic [ref=e1016]: Google Play
+        - generic [ref=e1017]:
+            - generic:
+                - generic:
+                    - generic: Ask Advisor
+            - button "Open Omenai Advisor" [ref=e1018] [cursor=pointer]:
+                - img [ref=e1024]
+    - alert [ref=e1034]
+```

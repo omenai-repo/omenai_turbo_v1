@@ -64,7 +64,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const isPinMatch = bcrypt.compareSync(wallet_pin, get_wallet.wallet_pin);
     if (!isPinMatch) throw new ForbiddenError("Incorrect wallet pin");
 
-    // 5. 🛡️ ATOMIC DEDUCTION (The "Reservation" Pattern)
+    // 5. ️ ATOMIC DEDUCTION (The "Reservation" Pattern)
     // We try to deduct money FIRST. If this fails, we know they don't have funds.
     // This prevents the Race Condition.
     const reservedWallet = await Wallet.findOneAndUpdate(

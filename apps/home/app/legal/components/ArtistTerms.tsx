@@ -259,7 +259,7 @@ export default function ArtistsTerms() {
             </p>
             <p className="text-gray-700 mb-2">
               10.2 Artists may close their accounts at any time by contacting
-              support@omenai.app.
+              info@omenai.app.
             </p>
             <p className="text-gray-700 mb-4">
               10.3 Omenai may retain transaction records as required by law.
@@ -322,7 +322,7 @@ export default function ArtistsTerms() {
               <br />
               122, S. Michigan Avenue, Suite 1390-H73
               <br />
-              support@omenai.app | legal@omenai.app
+              info@omenai.app | legal@omenai.app
             </p>
           </div>
         </div>

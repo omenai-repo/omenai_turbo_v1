@@ -25,7 +25,7 @@ export default function TermsAndSubmitSection({
       {/* Custom Interactive Terms Card */}
       <label
         className={`
-          relative flex items-start gap-4 p-5 rounded-lg border transition-all cursor-pointer select-none group
+          relative flex items-start gap-4 p-5 rounded-md border transition-all cursor-pointer select-none group
           ${
             termsChecked
               ? "bg-slate-50 border-dark ring-1 ring-dark shadow-sm"
@@ -77,7 +77,7 @@ export default function TermsAndSubmitSection({
         disabled={isDisabled}
         className={`
           ${BUTTON_CLASS} 
-          w-full py-3.5 text-fluid-xs font-bold tracking-wide rounded-md transition-all duration-300 flex items-center justify-center gap-2
+          w-full py-3.5 text-fluid-xs font-normal tracking-wide rounded-md transition-all duration-300 flex items-center justify-center gap-2
           ${
             isDisabled && !loading
               ? "!bg-slate-100 !text-slate-400 !border-slate-200 shadow-none cursor-not-allowed"

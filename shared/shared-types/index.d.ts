@@ -268,7 +268,7 @@ export type ArtworkMediumTypes =
   | "Photography"
   | "Works on paper"
   | "Acrylic on canvas/linen/panel"
-  | "Mixed media on paper/canvas"
+  | "Mixed media on canvas"
   | "Oil on canvas/panel";
 
 export type ArtworkPriceFilterData = {
@@ -457,6 +457,14 @@ export type AddressTypes = {
   state: string;
   stateCode: string;
   zip: string;
+};
+
+export type VerifyPickupChangePayload = {
+  type: string;
+  countryCode: string;
+  postalCode: string;
+  cityName: string;
+  countyName: string;
 };
 export type PaymentStatusTypes = {
   status: "pending" | "completed" | "processing" | "failed";

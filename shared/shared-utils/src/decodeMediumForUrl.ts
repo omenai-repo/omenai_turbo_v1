@@ -5,7 +5,7 @@ const slugToMedium: Record<string, ArtworkMediumTypes> = {
   photography: "Photography",
   "works-on-paper": "Works on paper",
   "acrylic-on-canvas-linen-panel": "Acrylic on canvas/linen/panel",
-  "mixed-media-on-paper-canvas": "Mixed media on paper/canvas",
+  "mixed-media-on-paper-canvas": "Mixed media on canvas",
   "oil-on-canvas-panel": "Oil on canvas/panel",
 };
 

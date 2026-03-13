@@ -55,7 +55,7 @@ function Blocker({
       </p>
       <p className="text-[#818181] text-center max-w-md text-[clamp(0.889rem,0.5vw+0.8rem,1rem)] leading-relaxed mb-8">
         Thank you for your patience as we work to enhance your payment
-        experience ❤️
+        experience ️
       </p>
 
       {/* --- Timer Display --- */}

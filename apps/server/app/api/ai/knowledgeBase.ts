@@ -59,9 +59,8 @@ const ORDER_PROTOCOL = `
 
 // --- SECTOR 5: LOGISTICS & SHIPPING (DHL) ---
 const LOGISTICS = `
-- **Partner**: **DHL** is the exclusive logistics partner.
 - **Initiation**: Shipment is automatically created *only after* successful payment.
-- **Tracking**: Buyer can track via Omenai Dashboard or DHL tracking page.
+- **Tracking**: Buyer can track via Omenai Dashboard or our logistic partner's tracking page.
 - **Exhibition Rule**: If a sold piece is currently in an exhibition, shipment is **scheduled for after the exhibition ends**. The piece remains on display marked as "Sold" during the show.
 - **Cost**: The **Buyer** pays for shipping and applicable taxes/customs duties (dependent on location).
 - **Returns**: STRICT POLICY. Returns/Refunds are ONLY accepted if the artwork arrives **damaged**.
@@ -91,7 +90,7 @@ const COLLECTOR_INFO = `
   - Photography
   - Works on paper
   - Acrylic on canvas/linen/panel
-  - Mixed media on paper/canvas
+  - Mixed media on canvas
   - Oil on canvas/panel
 `;
 
@@ -131,7 +130,7 @@ export const getOmenaiContext = async (
   ) {
     dynamicFocus = `
       USER CONTEXT: The user is at Checkout.
-      PRIORITIZE: The "Lock/Queue" system (reassure them the piece is held), Customs Duties (Buyer pays), and Shipment timing (Exhibition hold rules).
+      PRIORITIZE: The "Lock/Queue" system (reassure them the payment portal is locked till they complete their payment or payment is abandoned), Customs Duties (Buyer pays), and Shipment timing (Exhibition hold rules).
     `;
   } else if (userPageContext.includes("gallery_signup")) {
     dynamicFocus = `
@@ -141,7 +140,7 @@ export const getOmenaiContext = async (
   } else {
     dynamicFocus = `
       USER CONTEXT: General Browsing / Collector.
-      PRIORITIZE: Art Advisory, discovering styles, and trust (COA & DHL Shipping).
+      PRIORITIZE: Art Advisory, discovering styles, and trust (COA & Logistics Shipping). Do not name any logistics company
     `;
   }
 
@@ -165,7 +164,7 @@ export const getOmenaiContext = async (
     [ORDER PROTOCOL & QUEUE LOCK]
     ${ORDER_PROTOCOL}
 
-    [LOGISTICS & SHIPPING (DHL)]
+    [LOGISTICS & SHIPPING]
     ${LOGISTICS}
 
     [ARTIST RULES & WITHDRAWALS]
