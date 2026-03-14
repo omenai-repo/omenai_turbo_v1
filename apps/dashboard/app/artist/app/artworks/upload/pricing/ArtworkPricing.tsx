@@ -151,6 +151,7 @@ export default function ArtworkPricing() {
         }
         return;
       }
+      clearData();
 
       toast_notif(uploadResponse.body.message, "success");
 
@@ -159,7 +160,6 @@ export default function ArtworkPricing() {
       });
 
       setHasUploaded(true);
-      clearData();
       setImage(null);
       router.replace("/artist/app/artworks");
     } catch (error) {

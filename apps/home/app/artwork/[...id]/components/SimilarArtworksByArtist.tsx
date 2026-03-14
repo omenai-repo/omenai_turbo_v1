@@ -34,6 +34,8 @@ export default function SimilarArtworksByArtist({
     return <ArtworksListingSkeletonLoader />;
   }
 
+  if (!artworksArray || artworksArray.length === 0) return null;
+
   const arts = catalogChunk(
     artworksArray,
     width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
@@ -43,13 +45,6 @@ export default function SimilarArtworksByArtist({
       <h1 className="text-dark font-bold text-fluid-sm">
         Other works by {artist}
       </h1>
-
-      {!artworksArray ||
-        (artworksArray.length === 0 && (
-          <div className="w-full h-full min-h-[400px] grid place-items-center">
-            <NotFoundData />
-          </div>
-        ))}
 
       <div className="w-full my-5">
         <div className="grid grid-cols-1 gap-y-12 gap-x-8 sm:grid-cols-2 lg:grid-cols-4">

@@ -47,11 +47,7 @@ export default function SimilarArtworks({
     return artwork.title !== title;
   });
   if (!artworks || artworks.length === 0) {
-    return (
-      <div className="w-full h-full grid place-items-center">
-        <NotFoundData />
-      </div>
-    );
+    return null;
   }
 
   const arts = catalogChunk(
