@@ -23,7 +23,7 @@ const GetArtworkPriceForArtist = z.object({
     "Photography",
     "Works on paper",
     "Acrylic on canvas/linen/panel",
-    "Mixed media on canvas/paper",
+    "Mixed media on canvas",
     "Oil on canvas/panel",
   ]),
   height: z.string(),

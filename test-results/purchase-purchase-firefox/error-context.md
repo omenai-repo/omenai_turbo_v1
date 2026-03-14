@@ -731,7 +731,7 @@
                                             - generic [ref=e856]: Sold
                                         - generic [ref=e857]:
                                             - paragraph [ref=e858]: Frank Raymond
-                                            - paragraph [ref=e859]: Mixed media on canvas/paper
+                                            - paragraph [ref=e859]: Mixed media on canvas
                                 - generic [ref=e861]:
                                     - generic [ref=e862]:
                                         - link "Spirited Away Sold" [ref=e863] [cursor=pointer]:
@@ -748,7 +748,7 @@
                                             - generic [ref=e876]: Sold
                                         - generic [ref=e877]:
                                             - paragraph [ref=e878]: Frank Raymond
-                                            - paragraph [ref=e879]: Mixed media on canvas/paper
+                                            - paragraph [ref=e879]: Mixed media on canvas
                                 - generic [ref=e881]:
                                     - generic [ref=e882]:
                                         - link "Ota Jua, Tuliza Roho -⁠ Even the Grounded Need Grounding⁠ Sold" [ref=e883] [cursor=pointer]:
@@ -799,7 +799,7 @@
                                             - generic [ref=e936]: Sold
                                         - generic [ref=e937]:
                                             - paragraph [ref=e938]: Frank Raymond
-                                            - paragraph [ref=e939]: Mixed media on canvas/paper
+                                            - paragraph [ref=e939]: Mixed media on canvas
                                 - generic [ref=e941]:
                                     - generic [ref=e942]:
                                         - link "Until you come Sold" [ref=e943] [cursor=pointer]:
