@@ -51,7 +51,8 @@ export default function AddressDisplay({
         <p>{address.country}</p>
       </div>
 
-      <div className="pt-4 flex flex-col items-start gap-3 mt-2">
+      {/* TODO: We can uncomment this later if change address feature becomes relevant for artists */}
+      {/* <div className="pt-4 flex flex-col items-start gap-3 mt-2">
         <button
           onClick={onEditClick}
           type="button"
@@ -59,7 +60,7 @@ export default function AddressDisplay({
         >
           Change pickup address for this order
         </button>
-      </div>
+      </div> */}
     </motion.div>
   );
 }

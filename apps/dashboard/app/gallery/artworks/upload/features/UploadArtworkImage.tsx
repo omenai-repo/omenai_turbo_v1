@@ -27,11 +27,6 @@ export default function UploadArtworkImage() {
     clearData,
   } = galleryArtworkUploadStore();
 
-  // New State for Packaging Type
-  const [packagingType, setPackagingType] = useState<"stretched" | "rolled">(
-    "stretched",
-  );
-
   const [loading, setLoading] = useState(false);
   const rollbar = useRollbar();
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
@@ -115,8 +110,6 @@ export default function UploadArtworkImage() {
         },
       );
 
-      console.log(baseData);
-
       const uploadResponse = await uploadArtworkData(baseData, csrf || "");
 
       if (!uploadResponse?.isOk) {
@@ -131,14 +124,17 @@ export default function UploadArtworkImage() {
         setImage(null);
         return;
       }
+      clearData();
 
       toast.success("Success", {
         description: "Artwork uploaded successfully",
         style: { background: "green", color: "white" },
       });
 
-      queryClient.invalidateQueries();
-      clearData();
+      await queryClient.invalidateQueries({
+        queryKey: ["fetch_artworks_by_id"],
+      });
+
       router.replace("/gallery/artworks");
     } catch (error) {
       if (error instanceof Error) {

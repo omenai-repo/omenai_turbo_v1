@@ -146,8 +146,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const { order_id, dimensions, exhibition_status, specialInstructions } =
       await validateRequestBody(request, AcceptOrderRequestSchema);
 
-    validatePayload(data);
-
     const order = await fetchOrder(order_id);
 
     await validateSellerSubscription(order);
@@ -215,14 +213,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 /* -------------------------------------------------------------------------- */
 /* HELPERS                                  */
 /* -------------------------------------------------------------------------- */
-
-function validatePayload(data: any) {
-  if (!data?.order_id || !data?.dimensions) {
-    throw new BadRequestError(
-      "Invalid params - Order ID or dimensions is missing",
-    );
-  }
-}
 
 async function fetchOrder(order_id: string): Promise<CreateOrderModelTypes> {
   const order = await CreateOrder.findOne({ order_id });
