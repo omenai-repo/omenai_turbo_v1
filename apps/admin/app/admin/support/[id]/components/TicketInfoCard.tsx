@@ -4,7 +4,7 @@ export function TicketInfoCard({ ticket }: { ticket: any }) {
   return (
     <div className="space-y-6">
       {/* 1. User Details */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div className="bg-white p-6 rounded -xl border border-slate-200 shadow-sm">
         <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
           User Details
         </h3>
@@ -33,7 +33,7 @@ export function TicketInfoCard({ ticket }: { ticket: any }) {
       </div>
 
       {/* 2. Technical Context */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div className="bg-white p-6 rounded -xl border border-slate-200 shadow-sm">
         <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
           Context
         </h3>

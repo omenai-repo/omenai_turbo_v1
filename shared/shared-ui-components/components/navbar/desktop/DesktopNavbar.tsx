@@ -82,7 +82,7 @@ const DesktopNavbar = () => {
               <div className="hidden lg:flex items-center gap-6">
                 <Link
                   href={`${login_base_url}/register?redirect=${encodeURIComponent(getCurrentUrl())}`}
-                  className="bg-[#091830] text-white px-5 py-2.5 rounded-md text-sm font-sans font-light hover:bg-[#0F2342] transition-all shadow-sm"
+                  className="bg-[#091830] text-white px-5 py-2.5 rounded -md text-sm font-sans font-light hover:bg-[#0F2342] transition-all shadow-sm"
                 >
                   Create Account
                 </Link>
@@ -98,7 +98,7 @@ const DesktopNavbar = () => {
             {/* Hamburger - Only visible on Mobile/Tablet */}
             <button
               onClick={() => updateOpenSideNav(true)}
-              className="lg:hidden p-2 text-dark  hover:bg-neutral-100 rounded-md transition-colors"
+              className="lg:hidden p-2 text-dark  hover:bg-neutral-100 rounded -md transition-colors"
             >
               <icons.Menu strokeWidth={2} size={24} />
             </button>

@@ -27,7 +27,7 @@ export default function PreferencesGrid({
   };
 
   return (
-    <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+    <div className="bg-white rounded -[32px] p-8 border border-slate-100 shadow-sm">
       <div className="mb-6">
         <h3 className="text-lg font-medium text-slate-900">
           Artistic Interests

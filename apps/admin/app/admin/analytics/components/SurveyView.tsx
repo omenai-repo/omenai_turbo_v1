@@ -33,7 +33,7 @@ export const SurveyView = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-10">
       {/* 1. FILTER BAR */}
-      <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex justify-between items-center bg-white p-4 rounded -xl border border-slate-200 shadow-sm">
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
           Market Consensus
           {isFetching && (
@@ -50,7 +50,7 @@ export const SurveyView = () => {
             setCountryFilter(e.target.value);
             setPage(1);
           }}
-          className="bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 min-w-[200px]"
+          className="bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded -lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 min-w-[200px]"
         >
           <option value="">Global (All Regions)</option>
 
@@ -68,7 +68,7 @@ export const SurveyView = () => {
         {strategies.map((strat: any, i: number) => (
           <div
             key={i}
-            className={`p-6 rounded-xl border-l-4 shadow-sm ${
+            className={`p-6 rounded -xl border-l-4 shadow-sm ${
               strat.type === "warning"
                 ? "bg-red-50 border-red-500"
                 : strat.type === "opportunity"
@@ -94,13 +94,13 @@ export const SurveyView = () => {
 
       {/* 3. VISUALIZATIONS */}
       <div className="grid grid-cols-12 gap-6">
-        <div className="col-span-12 md:col-span-6 bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-96">
+        <div className="col-span-12 md:col-span-6 bg-white p-6 rounded -xl border border-slate-200 shadow-sm h-96">
           <h3 className="text-sm font-bold uppercase text-slate-500 mb-4">
             What Users Value Most
           </h3>
           <SurveyRadar data={stats.value_drivers_global} />
         </div>
-        <div className="col-span-12 md:col-span-6 bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-96">
+        <div className="col-span-12 md:col-span-6 bg-white p-6 rounded -xl border border-slate-200 shadow-sm h-96">
           <h3 className="text-sm font-bold uppercase text-slate-500 mb-4">
             Top Challenges (Pain Points)
           </h3>
@@ -109,7 +109,7 @@ export const SurveyView = () => {
       </div>
 
       {/* 4. DEEP DIVE: RAW RESPONSES (Now Paginated & Readable) */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded -xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
           <h3 className="text-sm font-bold text-slate-800">
             Individual Responses{" "}

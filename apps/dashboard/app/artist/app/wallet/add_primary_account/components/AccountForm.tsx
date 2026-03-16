@@ -262,7 +262,7 @@ export default function AccountForm() {
             />
 
             {validatedAccount?.isValidated && (
-              <div className="p-4 bg-green-50 border border-green-100 rounded-lg animate-in fade-in slide-in-from-bottom-2">
+              <div className="p-4 bg-green-50 border border-green-100 rounded -lg animate-in fade-in slide-in-from-bottom-2">
                 <Text
                   size="xs"
                   c="green.8"
@@ -320,12 +320,12 @@ export default function AccountForm() {
       <div className="hidden lg:flex lg:w-7/12 xl:w-2/3 bg-slate-900 relative overflow-hidden items-center justify-center">
         {/* Abstract Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900" />
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-blue-600/20 rounded -full blur-3xl" />
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-indigo-600/10 rounded -full blur-3xl" />
 
         {/* Content Card */}
         <div className="relative z-10 max-w-lg">
-          <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-12 rounded-2xl shadow-2xl">
+          <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-12 rounded -2xl shadow-2xl">
             <Badge variant="filled" color="blue" size="md" className="mb-6">
               Secure Payouts
             </Badge>
@@ -340,9 +340,9 @@ export default function AccountForm() {
             </Text>
 
             <div className="mt-10 flex gap-4">
-              <div className="h-2 w-20 bg-blue-500 rounded-full" />
-              <div className="h-2 w-4 bg-slate-600 rounded-full" />
-              <div className="h-2 w-4 bg-slate-600 rounded-full" />
+              <div className="h-2 w-20 bg-blue-500 rounded -full" />
+              <div className="h-2 w-4 bg-slate-600 rounded -full" />
+              <div className="h-2 w-4 bg-slate-600 rounded -full" />
             </div>
           </div>
         </div>

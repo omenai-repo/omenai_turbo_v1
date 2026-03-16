@@ -41,11 +41,11 @@ export default function ShipmentDetails({
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4">
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded -2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100">
+            <div className="bg-white p-2 rounded -lg shadow-sm border border-slate-100">
               <Package className="w-5 h-5 text-slate-900" />
             </div>
             <h3 className="font-semibold text-slate-900">Shipment Overview</h3>
@@ -53,7 +53,7 @@ export default function ShipmentDetails({
 
           {/* Status Badge */}
           <div
-            className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-2 ${getStatusColor(status)}`}
+            className={`px-3 py-1 rounded -full text-xs font-bold border flex items-center gap-2 ${getStatusColor(status)}`}
           >
             {status === "DELIVERED" && <CheckCircle className="w-3 h-3" />}
             {status === "EXCEPTION" && <AlertTriangle className="w-3 h-3" />}
@@ -67,7 +67,7 @@ export default function ShipmentDetails({
           {/* Tracking ID */}
           <div className="p-6 group hover:bg-slate-50 transition-colors">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 bg-slate-100 text-slate-600 rounded -xl flex items-center justify-center shrink-0">
                 <Hash className="w-5 h-5" />
               </div>
               <div className="overflow-hidden">
@@ -84,7 +84,7 @@ export default function ShipmentDetails({
           {/* Service */}
           <div className="p-6 group hover:bg-slate-50 transition-colors">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 bg-slate-100 text-slate-600 rounded -xl flex items-center justify-center shrink-0">
                 <Truck className="w-5 h-5" />
               </div>
               <div>
@@ -99,7 +99,7 @@ export default function ShipmentDetails({
           {/* Last Update */}
           <div className="p-6 group hover:bg-slate-50 transition-colors">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 bg-slate-100 text-slate-600 rounded -xl flex items-center justify-center shrink-0">
                 <Clock className="w-5 h-5" />
               </div>
               <div>

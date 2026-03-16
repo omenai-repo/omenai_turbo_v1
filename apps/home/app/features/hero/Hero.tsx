@@ -153,7 +153,7 @@ export default function Hero({ promotionals }: any) {
                 // CHANGED: transformOrigin is now 'center center' to shrink towards the middle
                 style={{ transformOrigin: "center center" }}
               >
-                <div className="rounded-lg shadow-2xl shadow-dark/5 bg-dark overflow-hidden relative">
+                <div className="rounded -lg shadow-2xl shadow-dark/5 bg-dark overflow-hidden relative">
                   <PromotionalCard {...promotional} />
 
                   {/* WHITE MIST OVERLAY */}
@@ -198,7 +198,7 @@ export default function Hero({ promotionals }: any) {
         {scrollSnaps.map((_, index) => (
           <button
             key={index}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
+            className={`h-1.5 rounded -full transition-all duration-300 ${
               index === selectedIndex ? "w-8 bg-dark" : "w-1.5 bg-neutral-200"
             }`}
             onClick={() => emblaApi && emblaApi.scrollTo(index)}

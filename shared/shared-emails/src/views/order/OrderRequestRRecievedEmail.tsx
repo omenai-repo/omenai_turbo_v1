@@ -62,7 +62,7 @@ export const OrderRequestReceivedEmail = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "560px", margin: "40px auto", padding: "24px" }}
           >
             <Text className="text-main text-gray-800" style={textStyle}>
@@ -102,7 +102,7 @@ export const OrderRequestReceivedEmail = ({
 
             {/* Steps Section */}
             <Section className="mb-8">
-              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4 mb-3">
+              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded -md p-4 mb-3">
                 <Text
                   className="text-muted text-gray-600 m-0"
                   style={{ fontSize: "13px", lineHeight: "1.5" }}
@@ -111,7 +111,7 @@ export const OrderRequestReceivedEmail = ({
                 </Text>
               </div>
 
-              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4 mb-3">
+              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded -md p-4 mb-3">
                 <Text
                   className="text-muted text-gray-600 m-0"
                   style={{ fontSize: "13px", lineHeight: "1.5" }}
@@ -120,7 +120,7 @@ export const OrderRequestReceivedEmail = ({
                 </Text>
               </div>
 
-              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded-md p-4">
+              <div className="bg-box bg-gray-50 border border-gray-100 border-divider rounded -md p-4">
                 <Text
                   className="text-muted text-gray-600 m-0"
                   style={{ fontSize: "13px", lineHeight: "1.5" }}
@@ -130,7 +130,7 @@ export const OrderRequestReceivedEmail = ({
               </div>
             </Section>
 
-            <Section className="bg-box bg-gray-50 p-4 rounded-md border border-gray-100 border-divider mb-8">
+            <Section className="bg-box bg-gray-50 p-4 rounded -md border border-gray-100 border-divider mb-8">
               <Text
                 className="text-muted text-gray-500 m-0"
                 style={{ fontSize: "12px", textAlign: "center" }}

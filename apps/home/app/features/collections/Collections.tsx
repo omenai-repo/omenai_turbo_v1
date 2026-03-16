@@ -74,14 +74,14 @@ export default function Collections({
             <button
               onClick={scrollPrev}
               disabled={!canScrollPrev}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+              className="flex h-10 w-10 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
             >
               <MdOutlineKeyboardArrowLeft className="text-xl" />
             </button>
             <button
               onClick={scrollNext}
               disabled={!canScrollNext}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+              className="flex h-10 w-10 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
             >
               <MdOutlineKeyboardArrowRight className="text-xl" />
             </button>
@@ -106,9 +106,9 @@ export default function Collections({
             {/* <div className="flex-[0_0_auto] flex items-center">
               <Link
                 href="/catalog"
-                className="group flex h-[400px] w-[200px] flex-col items-center justify-center gap-4 rounded-md border-2 border-dashed border-neutral-300 bg-white p-6 text-center transition-colors hover:border-[#091830]"
+                className="group flex h-[400px] w-[200px] flex-col items-center justify-center gap-4 rounded -md border-2 border-dashed border-neutral-300 bg-white p-6 text-center transition-colors hover:border-[#091830]"
               >
-                <span className="h-12 w-12 rounded-full bg-neutral-100 flex items-center justify-center group-hover:bg-[#091830] group-hover:text-white transition-colors">
+                <span className="h-12 w-12 rounded -full bg-neutral-100 flex items-center justify-center group-hover:bg-[#091830] group-hover:text-white transition-colors">
                   <IoArrowForward className="text-xl" />
                 </span>
                 <span className="font-sans text-sm font-semibold text-dark ">

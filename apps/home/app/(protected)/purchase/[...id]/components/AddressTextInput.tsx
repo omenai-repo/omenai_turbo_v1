@@ -47,7 +47,7 @@ export default function AddressTextInput({
             w-full bg-white px-4 py-3
             font-sans text-sm text-dark
             border border-neutral-300 
-            rounded-none
+            rounded -none
             placeholder:text-neutral-300
             focus:border-dark focus:ring-0 focus:outline-none
             disabled:bg-neutral-50 disabled:text-neutral-400

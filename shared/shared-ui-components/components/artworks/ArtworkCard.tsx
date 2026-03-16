@@ -76,7 +76,7 @@ export default function ArtworkCard({
     <FadeUpCard>
       <div className="group relative w-full flex flex-col gap-3">
         {/* 1. IMAGE CONTAINER */}
-        <div className="relative w-full overflow-hidden rounded-md bg-slate-100">
+        <div className="relative w-full overflow-hidden rounded -md bg-slate-100">
           <Link
             href={`${base_uri}/artwork/${encoded_url}`}
             className="block w-full"
@@ -109,7 +109,7 @@ export default function ArtworkCard({
               <Link
                 href={`${dashboard_url()}/gallery/artworks/edit?id=${art_id}`}
               >
-                <button className="bg-white/90 backdrop-blur-sm text-dark rounded-md px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white">
+                <button className="bg-white/90 backdrop-blur-sm text-dark rounded -md px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white text-fluid-xxs disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white">
                   Edit artwork
                 </button>
               </Link>
@@ -118,7 +118,7 @@ export default function ArtworkCard({
           {/* Top Right Actions */}
           <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2">
             {trending && (
-              <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
+              <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded -full text-xs font-medium">
                 {impressions} {impressions > 1 ? "likes" : "like"}
               </div>
             )}
@@ -136,7 +136,7 @@ export default function ArtworkCard({
               className="absolute hover:text-white top-4 right-2 z-20 transition-opacity duration-300 cursor-pointer"
               onClick={() => handleDownload(image, name)}
             >
-              <div className="bg-white/95 hover:bg-dark backdrop-blur-sm rounded-full shadow-sm p-2 transition-colors">
+              <div className="bg-white/95 hover:bg-dark backdrop-blur-sm rounded -full shadow-sm p-2 transition-colors">
                 <Download size={18} />
               </div>
             </div>
@@ -184,11 +184,11 @@ export default function ArtworkCard({
               <div className="flex items-center justify-between text-fluid-xxs">
                 <span className="text-slate-600 text-fluid-xxs">Status:</span>
                 {!availability ? (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
+                  <span className="inline-flex items-center px-2 py-1 rounded -full text-xs font-medium bg-red-50 text-red-700">
                     Sold
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                  <span className="inline-flex items-center px-2 py-1 rounded -full text-xs font-medium bg-green-50 text-green-700">
                     Available
                   </span>
                 )}

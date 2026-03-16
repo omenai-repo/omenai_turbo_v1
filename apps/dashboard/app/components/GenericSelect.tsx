@@ -51,7 +51,7 @@ export const GenericSelect = ({
         type="button"
         disabled={disabled}
         onClick={toggleOpen}
-        className={`w-full flex items-center justify-between px-3 py-3.5  border border-slate-300 focus:border-dark outline-none focus:ring-0 rounded-md text-sm transition-all duration-200 
+        className={`w-full flex items-center justify-between px-3 py-3.5  border border-slate-300 focus:border-dark outline-none focus:ring-0 rounded -md text-sm transition-all duration-200 
           ${disabled ? "bg-slate-100 text-slate-400 cursor-not-allowed" : ""}
         `}
       >
@@ -67,10 +67,10 @@ export const GenericSelect = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 top-full mt-1 w-full bg-white border border-slate-100 rounded-lg shadow-xl max-h-96 overflow-hidden animate-in fade-in zoom-in-95 duration-100 flex flex-col">
+        <div className="absolute z-50 top-full mt-1 w-full bg-white border border-slate-100 rounded -lg shadow-xl max-h-96 overflow-hidden animate-in fade-in zoom-in-95 duration-100 flex flex-col">
           {/* Search Field */}
           <div className="p-2 border-b border-slate-100 sticky top-0 bg-white z-10">
-            <div className="flex items-center gap-2 px-2 py-1.5 bg-slate-50 rounded-md border border-slate-200 focus-within:border-dark/50 transition-colors">
+            <div className="flex items-center gap-2 px-2 py-1.5 bg-slate-50 rounded -md border border-slate-200 focus-within:border-dark/50 transition-colors">
               <Search size={14} className="text-slate-400" />
               <input
                 type="text"

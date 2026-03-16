@@ -94,13 +94,13 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
       setZoomLevel(zoom);
       viewerInstance?.viewport.zoomTo(zoom);
     },
-    [viewerInstance] // Recreate handleZoom only when viewerInstance changes
+    [viewerInstance], // Recreate handleZoom only when viewerInstance changes
   );
 
   // Check if image is in cache
   const isImageInCache = useMemo(
     () => imageCache.has(dziUrl),
-    [dziUrl, imageCache]
+    [dziUrl, imageCache],
   );
 
   useEffect(() => {
@@ -130,7 +130,7 @@ export const ZoomableViewer: React.FC<ZoomableViewerProps> = ({ dziUrl }) => {
 
       {/* Zoom slider */}
       <div className="flex translate-x-[-50%] z-[60] absolute bottom-[30px] left-[50%] max-h-[100%]">
-        <div className="w-[240px] h-[35px] rounded-[2px] bg-dark/60 flex justify-center items-center">
+        <div className="w-[240px] h-[35px] rounded -[2px] bg-dark/60 flex justify-center items-center">
           <div className="relative align-middle flex">
             <input
               type="range"

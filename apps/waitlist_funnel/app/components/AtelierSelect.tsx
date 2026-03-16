@@ -35,7 +35,7 @@ export const AtelierSelect = ({
           value={value}
           onChange={onChange}
           className={`
-            w-full appearance-none rounded-none
+            w-full appearance-none rounded -none
             border-b border-neutral-300 bg-transparent py-3 pr-8 
             font-sans text-sm text-dark 
             focus:border-dark focus:outline-none focus:ring-0

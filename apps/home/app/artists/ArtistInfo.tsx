@@ -61,7 +61,7 @@ export default function ArtistInfo({
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
         {/* LEFT: Portrait (Sticky) */}
         <div className="lg:col-span-4 xl:col-span-3">
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm lg:sticky lg:top-32">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded -sm bg-neutral-100 shadow-sm lg:sticky lg:top-32">
             <Image
               fill
               src={image_href}
@@ -118,7 +118,7 @@ export default function ArtistInfo({
                     href={item.link}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-50 text-neutral-500 hover:bg-[#091830] hover:text-white transition-all duration-300"
+                    className="flex h-10 w-10 items-center justify-center rounded -full bg-neutral-50 text-neutral-500 hover:bg-[#091830] hover:text-white transition-all duration-300"
                   >
                     <item.icon size={18} />
                   </a>

@@ -36,7 +36,7 @@ export const HomeLoad = () => {
 
 export const LoadSmall = () => {
   return (
-    <div className="h-24 w-24 overflow-hidden rounded-full">
+    <div className="h-24 w-24 overflow-hidden rounded -full">
       <Lottie
         animationData={animationData}
         loop

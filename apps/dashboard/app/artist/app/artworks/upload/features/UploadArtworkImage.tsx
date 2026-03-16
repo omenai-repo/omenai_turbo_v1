@@ -146,10 +146,10 @@ export default function UploadArtworkImage() {
             ) : (
               <button
                 type="button"
-                className="w-full max-w-[500px] aspect-square border-2 border-dashed border-slate-400 bg-slate-50 rounded-xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
+                className="w-full max-w-[500px] aspect-square border-2 border-dashed border-slate-400 bg-slate-50 rounded -xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
                 onClick={() => imagePickerRef.current?.click()}
               >
-                <div className="p-4 bg-white rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                <div className="p-4 bg-white rounded -full shadow-sm mb-4 group-hover:scale-110 transition-transform">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -195,7 +195,7 @@ export default function UploadArtworkImage() {
             <div
               id="rolled-option"
               tabIndex={-1}
-              className={`p-5 rounded-xl border-2 transition-all cursor-pointer mb-6 ${
+              className={`p-5 rounded -xl border-2 transition-all cursor-pointer mb-6 ${
                 packagingType === "rolled"
                   ? "border-dark bg-slate-50 ring-1 ring-dark"
                   : "border-slate-200 hover:border-slate-300"
@@ -248,7 +248,7 @@ export default function UploadArtworkImage() {
 
             {/* Warning Mode: Stretched Selected */}
             <Collapse in={showStretchedWarning}>
-              <div className="mt-2 border border-red-100 rounded-xl overflow-hidden">
+              <div className="mt-2 border border-red-100 rounded -xl overflow-hidden">
                 <Alert
                   variant="light"
                   color="red"

@@ -30,7 +30,7 @@ export function TrendingArtistCard({
     >
       <article className="flex flex-col gap-4">
         {/* IMAGE FRAME: Removed grayscale, added rounding */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded -md bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
           <Image
             src={image_href}
             alt={artist}
@@ -61,7 +61,7 @@ export function TrendingArtistCard({
             </p>
 
             {/* Likes Badge */}
-            <div className="flex items-center gap-1.5 bg-neutral-100 px-2 py-0.5 rounded-full">
+            <div className="flex items-center gap-1.5 bg-neutral-100 px-2 py-0.5 rounded -full">
               <MdFavorite className="text-xs text-dark " />
               <span className="font-sans text-[10px] font-bold text-dark ">
                 {likes}

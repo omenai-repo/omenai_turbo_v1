@@ -9,30 +9,30 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 import { fetchArtworkPriceForArtist } from "@omenai/shared-services/artworks/fetchArtworkPriceForArtist";
-import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
-import { TriangleAlert, CheckCircle2, ArrowRight } from "lucide-react";
 import ArtworkPricingSkeleton from "@omenai/shared-ui-components/components/skeletons/ArtworkPricingSkeleton";
 import Link from "next/link";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { base_url } from "@omenai/url-config/src/config";
 import { useRollbar } from "@rollbar/react";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+import PriceRevealCard from "./components/PriceRevealCard";
+import AgreementsSection from "./components/AgreementSection";
+import PriceDisputeTrigger from "./components/PriceDisputeTrigger";
+import PriceVisibilitySelect from "./components/PriceVisibilitySelect";
 
-// --- Helper Functions ---
 function extractNumberString(str: string) {
   if (!str) return "";
   return str.trim().replaceAll(/[^\d.]/g, "");
 }
 
-// --- Main Component ---
 export default function ArtworkPricing() {
   const { user, csrf } = useAuth({ requiredRole: "artist" });
-
-  // Destructure store data
   const { image, setImage, artworkUploadData, clearData } =
     artistArtworkUploadStore();
+  const rollbar = useRollbar();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
@@ -40,23 +40,14 @@ export default function ArtworkPricing() {
   const [hasUploaded, setHasUploaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [shouldShowPrice, setShouldShowPrice] = useState<"Yes" | "No">("Yes");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const NO_CHANGE_VISIBILITY_ACCESS = ["Emerging"];
-
-  const rollbar = useRollbar();
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  const [isVisibilityDropdownOpen, setIsVisibilityDropdownOpen] =
+    useState(false);
 
   const canProceed = acknowledgment && penaltyConsent && priceConsent;
-
-  // Logic for visual progress bar
-  const totalSteps = 3;
   const currentStep =
     (priceConsent ? 1 : 0) +
     (acknowledgment ? 1 : 0) +
     (penaltyConsent ? 1 : 0);
-  const isComplete = currentStep === totalSteps;
 
   const artwork_height = extractNumberString(artworkUploadData.height);
   const artwork_width = extractNumberString(artworkUploadData.width);
@@ -87,7 +78,7 @@ export default function ArtworkPricing() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const handleArtworkUpload = async (e: FormEvent<HTMLFormElement>) => {
+  const handleArtworkUpload = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
 
     if (!image) {
@@ -151,6 +142,7 @@ export default function ArtworkPricing() {
         }
         return;
       }
+      setImage(null);
       clearData();
 
       toast_notif(uploadResponse.body.message, "success");
@@ -175,302 +167,82 @@ export default function ArtworkPricing() {
     }
   };
 
-  // Prevent rendering if missing data
-  if (!image || !artworkUploadData.medium) {
-    return <ArtworkPricingSkeleton />;
-  }
+  if (!image || !artworkUploadData.medium) return <ArtworkPricingSkeleton />;
+
+  const priceReviewArtworkData = { ...artworkUploadData, shouldShowPrice };
 
   return (
-    <form
+    <div
       onSubmit={handleArtworkUpload}
-      className="w-full max-w-4xl mx-auto flex flex-col gap-8 pb-20"
+      className="w-full h-full max-w-[90rem] mx-auto  flex flex-col gap-8 pb-20"
     >
       {isLoading || !pricing || hasUploaded ? (
         <ArtworkPricingSkeleton />
       ) : (
-        <>
-          {/* --- Section 1: Price Reveal Hero Card --- */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm text-center relative overflow-hidden group">
-            <p className="text-slate-500 text-sm font-medium uppercase tracking-wide mb-3">
-              Proposed Listing Price
-            </p>
-            <div className="flex flex-col items-center justify-center gap-1">
-              <h1 className="text-5xl font-bold text-dark tracking-tight">
-                {formatPrice(pricing.usd_price, "USD")}
-              </h1>
-              <p className="text-slate-400 text-sm font-medium mt-2 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
-                Local currency equivalent:{" "}
-                <span className="text-slate-700 font-semibold">
-                  {formatPrice(pricing.price, pricing.currency)}
-                </span>
-              </p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: The Workspace (65%) */}
+          <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
+            <div className="bg-white border border-neutral-200 rounded -lg overflow-hidden flex flex-col">
+              <PriceRevealCard
+                usd_price={pricing.usd_price}
+                price={pricing.price}
+                currency={pricing.currency}
+              />
+              <PriceDisputeTrigger
+                pricingData={pricing.algorithm_recommendation}
+                artworkMeta={priceReviewArtworkData}
+                image={image}
+              />
             </div>
-            <div className="mt-6 text-xs text-slate-400 max-w-lg mx-auto leading-relaxed">
-              This price is calculated based on your artist categorization, the
-              medium, and dimensions of the artwork. Consistent pricing helps
-              build collector trust.
-            </div>
+
+            <PriceVisibilitySelect
+              shouldShowPrice={shouldShowPrice}
+              setShouldShowPrice={setShouldShowPrice}
+              isOpen={isVisibilityDropdownOpen}
+              setIsOpen={setIsVisibilityDropdownOpen}
+            />
           </div>
 
-          {/* --- Section 2: Agreements --- */}
-          <div className="bg-amber-50/50 border border-amber-200 rounded-xl overflow-hidden shadow-sm">
-            {/* Header */}
-            <div className="bg-amber-100/60 px-6 py-4 border-b border-amber-200 flex items-center gap-3">
-              <div className="p-2 bg-amber-200 text-amber-700 rounded-lg shrink-0">
-                <TriangleAlert size={20} strokeWidth={2} />
-              </div>
-              <div>
-                <h3 className="text-amber-900 font-semibold text-sm sm:text-base">
-                  Exclusivity & Pricing Agreement
-                </h3>
-                <p className="text-amber-800/70 text-xs mt-0.5">
-                  Please review and accept terms to proceed.
-                </p>
-              </div>
-            </div>
+          {/* Right Column: Commitment Panel (35%) */}
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-6 sticky top-24">
+            <AgreementsSection
+              priceConsent={priceConsent}
+              setPriceConsent={setPriceConsent}
+              acknowledgment={acknowledgment}
+              setAcknowledgment={setAcknowledgment}
+              penaltyConsent={penaltyConsent}
+              setPenaltyConsent={setPenaltyConsent}
+              currentStep={currentStep}
+              totalSteps={3}
+              isComplete={currentStep === 3}
+            />
 
-            {/* Checklist */}
-            <div className="p-5 sm:p-6 space-y-3">
-              <CheckboxCard
-                checked={priceConsent}
-                onChange={setPriceConsent}
-                text="I accept the price stipulated for this artwork and agree to have it listed on the platform at this price. I understand that I may cancel this upload if I do not agree."
-              />
-
-              <CheckboxCard
-                checked={acknowledgment}
-                onChange={setAcknowledgment}
-                text={
-                  <span>
-                    I acknowledge that this artwork is subject to a 90-day
-                    exclusivity period with Omenai as stipulated in the{" "}
-                    <Link
-                      href={`${base_url()}/legal?ent=artist`}
-                      target="__blank"
-                      className="text-amber-700 underline decoration-amber-400 underline-offset-2 hover:text-amber-900 font-medium transition-colors"
-                    >
-                      Terms of Agreement
-                    </Link>{" "}
-                    and may not be sold through external channels during this
-                    time.
-                  </span>
-                }
-              />
-
-              <CheckboxCard
-                checked={penaltyConsent}
-                onChange={setPenaltyConsent}
-                text={
-                  <span>
-                    I agree that any breach of this exclusivity obligation will
-                    result in a 10% penalty fee deducted from my next successful
-                    sale on the platform as stipulated in the{" "}
-                    <Link
-                      href={`${base_url()}/legal?ent=artist`}
-                      target="__blank"
-                      className="text-amber-700 underline decoration-amber-400 underline-offset-2 hover:text-amber-900 font-medium transition-colors"
-                    >
-                      Terms of Agreement.
-                    </Link>
-                  </span>
-                }
-              />
-            </div>
-
-            {/* Progress Footer */}
-            <div className="px-6 py-3 bg-white border-t border-amber-100 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
-                <span className="hidden sm:inline">Completion Status:</span>
-                <div className="flex gap-1">
-                  {[1, 2, 3].map((step) => (
-                    <div
-                      key={step}
-                      className={`h-1.5 w-6 rounded-full transition-all duration-300 ${
-                        step <= currentStep ? "bg-green-500" : "bg-slate-200"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div
-                className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors duration-300 ${
-                  isComplete
-                    ? "bg-green-100 text-green-700"
-                    : "bg-slate-100 text-slate-500"
+            <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={handleArtworkUpload}
+                disabled={loading || !canProceed}
+                className={`${BUTTON_CLASS} w-full py-4 text-base tracking-wide shadow-xl ${
+                  loading || !canProceed
+                    ? "bg-neutral-300 text-neutral-500 cursor-not-allowed shadow-none"
+                    : "bg-dark text-white hover:bg-black hover:-translate-y-0.5"
                 }`}
               >
-                {isComplete
-                  ? "All Agreed"
-                  : `${currentStep}/${totalSteps} Agreed`}
-              </div>
-            </div>
-          </div>
+                {loading ? <LoadSmall /> : "Publish Artwork"}
+              </button>
 
-          {/* Add select price display */}
-          <div className="flex flex-col gap-3 p-5 bg-white border border-neutral-200/80 rounded-xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] w-full max-w-full">
-            {/* Label Area */}
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-dark">
-                Price Display
-              </label>
-              <p className="text-xs text-neutral-500">
-                Would you like to mask the artwork's price from public view?
-              </p>
-            </div>
-
-            {/* Custom Select Boundary */}
-            <div className="relative">
-              {/* Trigger Button */}
-              <button
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                disabled={NO_CHANGE_VISIBILITY_ACCESS.includes(
-                  user.categorization,
-                )}
-                className="disabled:cursor-not-allowed flex items-center justify-between w-full px-4 py-3 text-sm text-left transition-all bg-neutral-50/50 border border-neutral-200 rounded-md hover:bg-neutral-100/50 focus:outline-none focus:ring-1 focus:ring-dark focus:border-transparent"
-              >
-                <span className="font-normal text-sm text-neutral-600">
-                  {shouldShowPrice === "Yes"
-                    ? "Yes, display the price"
-                    : "No, mask the price"}
-                </span>
-
-                {/* Chevron Icon */}
-                <svg
-                  className={`w-4 h-4 text-neutral-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <Link href={"/artist/app/artworks/upload"} className="w-full">
+                <button
+                  type="button"
+                  className="w-full px-8 py-3.5 rounded -lg text-neutral-500 font-medium text-sm hover:bg-neutral-100 transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {/* Custom Dropdown Menu */}
-              {isOpen &&
-                !NO_CHANGE_VISIBILITY_ACCESS.includes(user.categorization) && (
-                  <div className="absolute z-50 w-full mt-2 overflow-hidden bg-white border border-neutral-100 rounded-xl shadow-lg origin-top animate-in fade-in slide-in-from-top-2">
-                    <div className="py-1">
-                      <button
-                        onClick={() => {
-                          setShouldShowPrice("Yes");
-                          setIsOpen(false);
-                        }}
-                        className="flex items-center w-full px-4 py-2.5 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-dark"
-                      >
-                        Yes, display the price
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setShouldShowPrice("No");
-                          setIsOpen(false);
-                        }}
-                        className="flex items-center w-full px-4 py-2.5 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-dark"
-                      >
-                        No, mask the price
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-              {NO_CHANGE_VISIBILITY_ACCESS.includes(user.categorization) && (
-                <span className="text-[10px] text-neutral-400">
-                  Pricing visibility change is unlocked at higher Artist Tiers
-                </span>
-              )}
+                  Cancel & Discard
+                </button>
+              </Link>
             </div>
           </div>
-
-          {/* --- Section 3: Action Buttons --- */}
-          <div className="grid grid-cols-12 gap-4 mt-2">
-            <Link
-              href={"/artist/app/artworks/upload"}
-              className="w-full sm:w-auto col-span-4"
-            >
-              <button
-                type="button"
-                className="w-full px-8 py-3.5 rounded-lg border border-slate-300 text-slate-600 font-medium text-sm hover:bg-slate-50 hover:text-dark transition-colors"
-              >
-                Cancel Upload
-              </button>
-            </Link>
-
-            <button
-              type="submit"
-              disabled={loading || !canProceed}
-              className={`${BUTTON_CLASS} col-span-8
-                ${
-                  loading || !canProceed
-                    ? "bg-slate-300 cursor-not-allowed shadow-none"
-                    : "bg-dark hover:bg-black hover:-translate-y-0.5"
-                }
-              `}
-            >
-              {loading ? <LoadSmall /> : "Publish Artwork"}
-            </button>
-          </div>
-        </>
-      )}
-    </form>
-  );
-}
-
-// --- Sub-Component: Checkbox Card ---
-function CheckboxCard({
-  checked,
-  onChange,
-  text,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  text: React.ReactNode;
-}) {
-  return (
-    <label
-      className={`relative flex items-start gap-4 p-4 rounded-lg border transition-all duration-200 cursor-pointer group select-none
-      ${
-        checked
-          ? "bg-white border-amber-300 shadow-sm ring-1 ring-amber-100"
-          : "bg-white/50 border-transparent hover:bg-white hover:border-amber-200"
-      }`}
-    >
-      <div className="pt-0.5 shrink-0">
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          className="peer sr-only"
-        />
-        <div
-          className={`h-5 w-5 rounded border flex items-center justify-center transition-all duration-200 
-          ${
-            checked
-              ? "bg-amber-500 border-amber-600 text-white"
-              : "bg-white border-slate-300 text-transparent group-hover:border-amber-400"
-          }`}
-        >
-          <CheckCircle2
-            size={14}
-            strokeWidth={3}
-            className={`transition-transform duration-200 ${
-              checked ? "scale-100" : "scale-0"
-            }`}
-          />
         </div>
-      </div>
-      <span
-        className={`text-sm leading-relaxed transition-colors ${
-          checked ? "text-slate-800" : "text-slate-600"
-        }`}
-      >
-        {text}
-      </span>
-    </label>
+      )}
+    </div>
   );
 }

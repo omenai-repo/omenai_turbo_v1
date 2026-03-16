@@ -50,7 +50,7 @@ export const SubscriptionPaymentPendingEmail = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "560px", margin: "40px auto", padding: "32px" }}
           >
             {/* Centered Brand Anchor */}

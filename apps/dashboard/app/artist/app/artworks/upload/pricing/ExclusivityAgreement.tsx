@@ -28,10 +28,10 @@ export default function ExclusivityAgreementGroup({
   return (
     <div className="my-8 w-full max-w-3xl mx-auto">
       {/* Main Container */}
-      <div className="bg-amber-50/50 border border-amber-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-amber-50/50 border border-amber-200 rounded -xl overflow-hidden shadow-sm">
         {/* Header Section */}
         <div className="bg-amber-100/60 px-6 py-4 border-b border-amber-200 flex items-start sm:items-center gap-3">
-          <div className="p-2 bg-amber-200 text-amber-700 rounded-lg shrink-0">
+          <div className="p-2 bg-amber-200 text-amber-700 rounded -lg shrink-0">
             <TriangleAlert size={20} strokeWidth={2} />
           </div>
           <div>
@@ -103,13 +103,13 @@ export default function ExclusivityAgreementGroup({
               {[1, 2, 3].map((step) => (
                 <div
                   key={step}
-                  className={`h-1.5 w-6 rounded-full transition-all duration-300 ${step <= currentStep ? "bg-green-500" : "bg-gray-200"}`}
+                  className={`h-1.5 w-6 rounded -full transition-all duration-300 ${step <= currentStep ? "bg-green-500" : "bg-gray-200"}`}
                 />
               ))}
             </div>
           </div>
           <div
-            className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors duration-300 ${isComplete ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}
+            className={`text-xs font-semibold px-3 py-1 rounded -full transition-colors duration-300 ${isComplete ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}
           >
             {isComplete ? "All Agreed" : `${currentStep}/${totalSteps} Agreed`}
           </div>
@@ -131,7 +131,7 @@ function CheckboxCard({
 }) {
   return (
     <label
-      className={`relative flex items-start gap-4 p-4 rounded-lg border transition-all duration-200 cursor-pointer group
+      className={`relative flex items-start gap-4 p-4 rounded -lg border transition-all duration-200 cursor-pointer group
       ${
         checked
           ? "bg-white border-amber-300 shadow-sm ring-1 ring-amber-100"

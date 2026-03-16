@@ -22,7 +22,7 @@ export default function JournalCard({
     >
       <article className="flex h-full flex-col gap-4">
         {/* 1. IMAGE */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm transition-all duration-300 group-hover:shadow-md">
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded -sm bg-neutral-100 shadow-sm transition-all duration-300 group-hover:shadow-md">
           <Image
             src={image_href}
             alt={article.headline}

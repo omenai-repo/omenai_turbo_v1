@@ -46,10 +46,10 @@ const STATUS_CONFIG = {
 };
 
 const LoadingState = () => (
-  <div className="w-full max-w-sm bg-white rounded-lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
+  <div className="w-full max-w-sm bg-white rounded -lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
     <div className="flex justify-center mb-6">
       <div className="relative">
-        <div className="absolute inset-0 bg-emerald-100 rounded-full blur-xl opacity-50"></div>
+        <div className="absolute inset-0 bg-emerald-100 rounded -full blur-xl opacity-50"></div>
         <Loader2 className="relative w-12 h-12 text-emerald-600 animate-spin" />
       </div>
     </div>
@@ -63,7 +63,7 @@ const LoadingState = () => (
 );
 
 const ErrorState = () => (
-  <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
+  <div className="bg-white/80 backdrop-blur-xl rounded -3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
     <div className="flex flex-col items-center justify-center space-y-8">
       <h2 className="text-fluid-base font-semibold bg-gradient-to-r from-red-600 to-red-600 bg-clip-text text-transparent">
         Error occurred while verifying transaction
@@ -88,14 +88,14 @@ const StatusIcon = ({
   return (
     <div className="relative">
       <div
-        className={`w-20 h-20 rounded-full flex items-center justify-center transform transition-all duration-500 ${
+        className={`w-20 h-20 rounded -full flex items-center justify-center transform transition-all duration-500 ${
           showContent ? "scale-100 rotate-0" : "scale-0 rotate-180"
         } ${config.bgColor} ${config.textColor}`}
       >
         <IconComponent className="w-12 h-12 animate-pulse" />
       </div>
       <div
-        className={`absolute inset-0 rounded-full animate-ping opacity-20 ${config.rippleColor}`}
+        className={`absolute inset-0 rounded -full animate-ping opacity-20 ${config.rippleColor}`}
       />
     </div>
   );
@@ -124,7 +124,7 @@ const ActionButtons = () => (
 
 const SecurityBadge = () => (
   <div className="flex items-center gap-2 text-fluid-xxs text-slate-700 pt-2">
-    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+    <div className="w-2 h-2 bg-green-400 rounded -full animate-pulse" />
     <span>Secure SSL Encrypted Transaction</span>
   </div>
 );
@@ -144,7 +144,7 @@ const SuccessState = ({
 
   return (
     <div
-      className={`bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
+      className={`bg-white/90 backdrop-blur-xl rounded -3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
         showContent ? "scale-100 opacity-100" : "scale-95 opacity-0"
       }`}
     >

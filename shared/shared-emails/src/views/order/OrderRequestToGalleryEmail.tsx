@@ -71,7 +71,7 @@ export const OrderRequestToGalleryMail = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "600px", margin: "40px auto", padding: "24px" }}
           >
             <Heading
@@ -103,7 +103,7 @@ export const OrderRequestToGalleryMail = ({
             />
 
             {/* Acquisition Manifest */}
-            <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-100 border-divider">
+            <Section className="bg-box bg-gray-50 rounded -lg p-6 my-8 border border-gray-100 border-divider">
               <Text
                 className="heading-main text-gray-900"
                 style={{
@@ -177,7 +177,7 @@ export const OrderRequestToGalleryMail = ({
             </Section>
 
             {/* Response Timeline Advisory */}
-            <Section className="advisory-box bg-blue-50 rounded-r-lg p-5 border-l-4 border-blue-600 mb-8">
+            <Section className="advisory-box bg-blue-50 rounded -r-lg p-5 border-l-4 border-blue-600 mb-8">
               <Text
                 className="text-main text-gray-800 m-0"
                 style={{ fontSize: "14px", lineHeight: "1.6" }}

@@ -40,7 +40,7 @@ export default function EditorialItemCard({
       href={`${base_url()}/articles/${editorial.slug}?id=${editorial.$id}`}
       className="group block h-full w-full cursor-pointer"
     >
-      <article className="relative h-full w-full overflow-hidden rounded-md border border-neutral-200 bg-neutral-900 transition-all duration-500 hover:shadow-xl hover:border-neutral-500">
+      <article className="relative h-full w-full overflow-hidden rounded -md border border-neutral-200 bg-neutral-900 transition-all duration-500 hover:shadow-xl hover:border-neutral-500">
         {/* 1. BACKGROUND IMAGE (Full Bleed for ALL cards) */}
         <div className="absolute inset-0 z-0">
           {url ? (
@@ -67,7 +67,7 @@ export default function EditorialItemCard({
           {/* TOP BADGE (Featured Only) */}
           {isFeatured && (
             <div className="absolute top-6 left-6 md:top-8 md:left-8">
-              <span className="bg-white/20 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full font-sans text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+              <span className="bg-white/20 backdrop-blur-md border border-white/10 px-3 py-1 rounded -full font-sans text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
                 Cover Story
               </span>
             </div>
@@ -77,7 +77,7 @@ export default function EditorialItemCard({
           <div className="flex flex-col gap-3">
             {/* Date */}
             <div className="flex items-center gap-3">
-              <div className="h-[2px] w-6 bg-white/70 rounded-full" />
+              <div className="h-[2px] w-6 bg-white/70 rounded -full" />
               <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-white/80">
                 {formattedDate}
               </span>

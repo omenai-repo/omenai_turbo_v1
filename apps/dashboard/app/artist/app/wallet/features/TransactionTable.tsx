@@ -124,7 +124,7 @@ export default function TransactionTable({
   };
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[650px]">
+    <div className="w-full bg-white rounded -xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[650px]">
       {/* Header */}
       <div className="p-5 border-b border-slate-100 bg-white flex flex-row items-center justify-between sticky top-0 z-10">
         <div>
@@ -167,7 +167,7 @@ export default function TransactionTable({
           </div>
         ) : transactions.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-slate-50 rounded -full flex items-center justify-center mb-4">
               <Calendar size={24} className="text-slate-300" />
             </div>
             <h3 className="text-sm font-semibold text-slate-900">
@@ -204,7 +204,7 @@ export default function TransactionTable({
                       <div className="flex items-center justify-between w-full pr-4">
                         <div className="flex items-center gap-3">
                           <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${config.bgColor} ${config.color}`}
+                            className={`w-8 h-8 rounded -full flex items-center justify-center ${config.bgColor} ${config.color}`}
                           >
                             {config.icon}
                           </div>

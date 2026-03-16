@@ -54,10 +54,10 @@ export default function TrackingTimeline({
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 pb-12">
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded -2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Status Header */}
         <div className="bg-slate-900 p-8 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded -full mix-blend-overlay filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
           <div className="relative z-10">
             <h2 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">
               Latest Status
@@ -81,7 +81,7 @@ export default function TrackingTimeline({
                 <div key={index} className="relative flex gap-6 z-10">
                   {/* Icon */}
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-all duration-300 flex-shrink-0 ${
+                    className={`w-10 h-10 rounded -full flex items-center justify-center border-4 transition-all duration-300 flex-shrink-0 ${
                       isLatest
                         ? "bg-slate-900 border-slate-100 text-white shadow-lg"
                         : "bg-white border-slate-100 text-slate-300"

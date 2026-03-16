@@ -84,7 +84,7 @@ export default function AddressForm({
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
-      className="p-6 border border-neutral-100 rounded-lg bg-white flex flex-col gap-6"
+      className="p-6 border border-neutral-100 rounded -lg bg-white flex flex-col gap-6"
     >
       <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
         <h3 className="text-md font-normal text-neutral-900">
@@ -197,7 +197,7 @@ export default function AddressForm({
           type="button"
           onClick={onCancel}
           disabled={isSaving}
-          className="px-5 py-2.5 text-fluid-xs font-normal text-neutral-700 hover:bg-neutral-100 rounded-sm transition-colors disabled:opacity-50"
+          className="px-5 py-2.5 text-fluid-xs font-normal text-neutral-700 hover:bg-neutral-100 rounded -sm transition-colors disabled:opacity-50"
         >
           Cancel
         </button>
@@ -213,7 +213,7 @@ export default function AddressForm({
             !formData.city ||
             !formData.zip
           }
-          className="flex items-center gap-2 px-5 py-2.5 text-fluid-xs font-normal text-white bg-green-600 hover:bg-green-700 rounded-sm transition-colors shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-5 py-2.5 text-fluid-xs font-normal text-white bg-green-600 hover:bg-green-700 rounded -sm transition-colors shadow-sm disabled:opacity-50"
         >
           {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSaving ? "Saving..." : "Save Pickup Address"}

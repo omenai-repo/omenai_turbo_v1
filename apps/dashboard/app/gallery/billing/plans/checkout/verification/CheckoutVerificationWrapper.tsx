@@ -14,10 +14,10 @@ import Link from "next/link";
 /* -------------------------------------------------------------------------- */
 
 const LoadingState = () => (
-  <div className="w-full max-w-sm bg-white rounded-lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
+  <div className="w-full max-w-sm bg-white rounded -lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
     <div className="flex justify-center mb-6">
       <div className="relative">
-        <div className="absolute inset-0 bg-emerald-100 rounded-full blur-xl opacity-50"></div>
+        <div className="absolute inset-0 bg-emerald-100 rounded -full blur-xl opacity-50"></div>
         <Loader2 className="relative w-12 h-12 text-emerald-600 animate-spin" />
       </div>
     </div>
@@ -38,12 +38,12 @@ const SuccessState = ({
   showContent: boolean;
 }) => (
   <div
-    className={`w-full max-w-sm bg-white rounded-lg border border-slate-100 shadow-xl shadow-slate-200/50 p-8 text-center transition-all duration-700 ${
+    className={`w-full max-w-sm bg-white rounded -lg border border-slate-100 shadow-xl shadow-slate-200/50 p-8 text-center transition-all duration-700 ${
       showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
     }`}
   >
     <div className="flex justify-center mb-6">
-      <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center">
+      <div className="w-16 h-16 bg-emerald-50 rounded -full flex items-center justify-center">
         <Check className="w-8 h-8 text-emerald-600" strokeWidth={3} />
       </div>
     </div>
@@ -52,7 +52,7 @@ const SuccessState = ({
 
     <Link
       href="/gallery/billing"
-      className="block w-full rounded-md bg-slate-900 py-3 text-sm font-medium text-white hover:bg-slate-800 transition focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+      className="block w-full rounded -md bg-slate-900 py-3 text-sm font-medium text-white hover:bg-slate-800 transition focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
     >
       View Subscription
     </Link>
@@ -72,12 +72,12 @@ const ErrorState = ({
   showContent: boolean;
 }) => (
   <div
-    className={`w-full max-w-sm bg-white rounded-lg border border-red-100 shadow-xl shadow-red-100/50 p-8 text-center transition-all duration-700 ${
+    className={`w-full max-w-sm bg-white rounded -lg border border-red-100 shadow-xl shadow-red-100/50 p-8 text-center transition-all duration-700 ${
       showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
     }`}
   >
     <div className="flex justify-center mb-6">
-      <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
+      <div className="w-16 h-16 bg-red-50 rounded -full flex items-center justify-center">
         <X className="w-8 h-8 text-red-600" strokeWidth={3} />
       </div>
     </div>
@@ -88,7 +88,7 @@ const ErrorState = ({
 
     <Link
       href="/gallery/billing"
-      className="group flex items-center justify-center gap-2 w-full rounded-md border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-2"
+      className="group flex items-center justify-center gap-2 w-full rounded -md border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-2"
     >
       <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
       Return to Billing

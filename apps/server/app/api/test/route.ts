@@ -18,10 +18,10 @@ const payload = {
 const email = "moses@omenai.net";
 
 export async function GET() {
-  await sendPriceReviewRequest({ name: "Oberyn Martell", email });
-  await sendPriceReviewApproved({ name: "Oberyn Martell", email });
-  await sendPriceReviewCompleted({ name: "Oberyn Martell", email });
-  await sendArtworkPriceReviewEmail({ name: "Oberyn Martell", email });
+  // await sendPriceReviewRequest({ name: "Oberyn Martell", email });
+  // await sendPriceReviewApproved({ name: "Oberyn Martell", email });
+  // await sendPriceReviewCompleted({ name: "Oberyn Martell", email });
+  // await sendArtworkPriceReviewEmail({ name: "Oberyn Martell", email });
 
   // const data = await getFutureShipmentDate(3, true, "US");
   return NextResponse.json({ message: "Test route is working!" });

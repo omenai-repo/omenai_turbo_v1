@@ -68,7 +68,7 @@ export default function PaymentMethodChangeWrapper() {
         {/* LEFT SIDE: Security & Information (40%) */}
         <div className="flex w-full flex-col bg-dark p-8 text-white lg:w-[40%] lg:p-12">
           <div className="mb-8 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded -full bg-indigo-500/20 text-indigo-400">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -97,7 +97,7 @@ export default function PaymentMethodChangeWrapper() {
 
           <ul className="space-y-8">
             <li className="flex items-start gap-4">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-800 text-emerald-400">
+              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded -full bg-slate-800 text-emerald-400">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -123,7 +123,7 @@ export default function PaymentMethodChangeWrapper() {
             </li>
 
             <li className="flex items-start gap-4">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-800 text-emerald-400">
+              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded -full bg-slate-800 text-emerald-400">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -150,7 +150,7 @@ export default function PaymentMethodChangeWrapper() {
             </li>
 
             <li className="flex items-start gap-4">
-              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-800 text-emerald-400">
+              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded -full bg-slate-800 text-emerald-400">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

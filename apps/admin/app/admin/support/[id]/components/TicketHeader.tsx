@@ -22,7 +22,7 @@ export function TicketHeader({
       <div className="flex items-center gap-4">
         <button
           onClick={() => router.back()}
-          className="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+          className="p-2 border border-slate-200 rounded -lg hover:bg-slate-50 transition-colors"
         >
           <svg
             width="16"
@@ -60,7 +60,7 @@ export function TicketHeader({
           value={ticket.status}
           onChange={(e) => onUpdateStatus(e.target.value)}
           disabled={saving}
-          className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg p-2.5 focus:ring-1 focus:ring-slate-900 outline-none cursor-pointer"
+          className="bg-white border border-slate-200 text-slate-700 text-sm rounded -lg p-2.5 focus:ring-1 focus:ring-slate-900 outline-none cursor-pointer"
         >
           <option value="OPEN">Mark as Open</option>
           <option value="IN_PROGRESS">Mark In Progress</option>
@@ -72,7 +72,7 @@ export function TicketHeader({
           value={ticket.priority}
           onChange={(e) => onUpdatePriority(e.target.value)}
           disabled={saving}
-          className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg p-2.5 focus:ring-1 focus:ring-slate-900 outline-none cursor-pointer"
+          className="bg-white border border-slate-200 text-slate-700 text-sm rounded -lg p-2.5 focus:ring-1 focus:ring-slate-900 outline-none cursor-pointer"
         >
           <option value="LOW">Low Priority</option>
           <option value="NORMAL">Normal Priority</option>

@@ -32,7 +32,7 @@ export default function TrendingArtworkCard({
   return (
     <div className="group flex flex-col gap-3 w-full">
       {/* 1. IMAGE AREA - FIXED RATIO */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-md bg-neutral-100">
+      <div className="relative w-full aspect-[4/5] overflow-hidden rounded -md bg-neutral-100">
         <Link
           href={`/artwork/${encodeURIComponent(art_id)}`}
           className="block h-full w-full"
@@ -40,7 +40,7 @@ export default function TrendingArtworkCard({
           {/* BADGE LOGIC: Show 'Acquired' if sold */}
           {!availability && (
             <div className="absolute top-2 left-2 z-20">
-              <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded-sm text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
+              <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded -sm text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
                 Sold
               </span>
             </div>
@@ -57,7 +57,7 @@ export default function TrendingArtworkCard({
 
         {/* Like Button */}
         <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="bg-white rounded-full p-1.5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="bg-white rounded -full p-1.5 shadow-sm hover:shadow-md transition-shadow">
             <LikeComponent
               impressions={impressions}
               likeIds={likeIds}

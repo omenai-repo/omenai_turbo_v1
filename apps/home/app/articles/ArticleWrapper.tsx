@@ -83,7 +83,7 @@ export default function ArticleWrapper() {
         {featuredStory && (
           <section className="mb-24">
             <div className="mb-4 flex items-center gap-2">
-              <span className="h-2 w-2 bg-[#091830] rounded-full animate-pulse" />
+              <span className="h-2 w-2 bg-[#091830] rounded -full animate-pulse" />
               <span className="font-mono text-[10px] uppercase tracking-widest text-dark ">
                 Latest Issue
               </span>

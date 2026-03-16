@@ -28,10 +28,10 @@ const STATUS_CONFIG = {
 };
 
 const LoadingState = () => (
-  <div className="w-full max-w-sm bg-white rounded-lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
+  <div className="w-full max-w-sm bg-white rounded -lg border border-slate-100 shadow-xl shadow-slate-200/50 p-10 text-center">
     <div className="flex justify-center mb-6">
       <div className="relative">
-        <div className="absolute inset-0 bg-emerald-100 rounded-full blur-xl opacity-50"></div>
+        <div className="absolute inset-0 bg-emerald-100 rounded -full blur-xl opacity-50"></div>
         <Loader2 className="relative w-12 h-12 text-emerald-600 animate-spin" />
       </div>
     </div>

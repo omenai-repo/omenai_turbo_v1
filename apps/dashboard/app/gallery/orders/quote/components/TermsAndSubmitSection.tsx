@@ -23,7 +23,7 @@ export default function TermsAndSubmitSection({
       {/* Custom Interactive Terms Card */}
       <label
         className={`
-          relative flex items-start gap-4 p-5 rounded-xl border transition-all cursor-pointer select-none group
+          relative flex items-start gap-4 p-5 rounded -xl border transition-all cursor-pointer select-none group
           ${
             termsChecked
               ? "bg-slate-50 border-dark ring-1 ring-dark shadow-sm"
@@ -43,7 +43,7 @@ export default function TermsAndSubmitSection({
         <div className="flex-shrink-0 mt-0.5">
           <div
             className={`
-              w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200
+              w-6 h-6 rounded -md flex items-center justify-center transition-all duration-200
               ${
                 termsChecked
                   ? "bg-dark text-white border-dark"
@@ -75,7 +75,7 @@ export default function TermsAndSubmitSection({
         disabled={isDisabled}
         className={`
           ${BUTTON_CLASS} 
-          w-full py-3.5 text-fluid-xs font-bold tracking-wide rounded-md transition-all duration-300 flex items-center justify-center gap-2
+          w-full py-3.5 text-fluid-xs font-bold tracking-wide rounded -md transition-all duration-300 flex items-center justify-center gap-2
           ${
             isDisabled && !loading
               ? "bg-slate-100 text-slate-400 border border-slate-200 shadow-none cursor-not-allowed"

@@ -11,7 +11,7 @@ export default function AppStoreAd() {
           {/* 1. CONTENT COLUMN */}
           <div className="flex-1 max-w-xl text-left pb-16 md:pb-24">
             <div className="flex items-center gap-3 mb-6">
-              <span className="flex items-center justify-center h-8 w-8 rounded-full bg-white/10 text-white">
+              <span className="flex items-center justify-center h-8 w-8 rounded -full bg-white/10 text-white">
                 <BsQrCode className="text-sm" />
               </span>
               <span className="font-sans text-xs font-bold uppercase tracking-wider text-white/60">
@@ -68,7 +68,7 @@ export default function AppStoreAd() {
           {/* Image bleeds off the bottom for a dynamic look */}
           <div className="flex-1 relative w-full flex justify-center md:justify-end">
             <div className="relative w-[480px] md:w-[540px] lg:w-[580px]  md:translate-y-0">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#4F75FF]/20 blur-[80px] rounded-full pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#4F75FF]/20 blur-[80px] rounded -full pointer-events-none" />
 
               <Image
                 src="/images/phone_mockup.png"

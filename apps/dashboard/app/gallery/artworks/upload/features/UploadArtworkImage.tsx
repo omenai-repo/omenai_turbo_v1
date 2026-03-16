@@ -124,6 +124,7 @@ export default function UploadArtworkImage() {
         setImage(null);
         return;
       }
+      setImage(null);
       clearData();
 
       toast.success("Success", {
@@ -178,10 +179,10 @@ export default function UploadArtworkImage() {
         ) : (
           <button
             type="button"
-            className="w-full max-w-[300px] aspect-square border-2 border-dashed border-slate-300 bg-slate-50 rounded-xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
+            className="w-full max-w-[300px] aspect-square border-2 border-dashed border-slate-300 bg-slate-50 rounded -xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
             onClick={() => imagePickerRef.current?.click()}
           >
-            <div className="p-4 bg-white rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">
+            <div className="p-4 bg-white rounded -full shadow-sm mb-4 group-hover:scale-110 transition-transform">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -215,7 +216,7 @@ export default function UploadArtworkImage() {
       </div>
 
       {/* 2. Shipping Configuration Section */}
-      <div className="bg-white p-6 rounded-lg border border-slate-200 mb-10 shadow-sm">
+      <div className="bg-white p-6 rounded -lg border border-slate-200 mb-10 shadow-sm">
         <h3 className="text-sm font-bold text-slate-900 mb-4">
           Shipping Configuration
         </h3>
@@ -251,7 +252,7 @@ export default function UploadArtworkImage() {
                   </Text>
                 </div>
               }
-              className="p-4 border cursor-pointer border-slate-200 rounded-md hover:bg-slate-50 flex-1 transition-colors"
+              className="p-4 border cursor-pointer border-slate-200 rounded -md hover:bg-slate-50 flex-1 transition-colors"
               styles={{
                 root: { alignItems: "flex-start" },
                 radio: { cursor: "pointer" },
@@ -275,7 +276,7 @@ export default function UploadArtworkImage() {
                   </Text>
                 </div>
               }
-              className="p-4 border cursor-pointer border-slate-200 rounded-md hover:bg-slate-50 flex-1 transition-colors"
+              className="p-4 border cursor-pointer border-slate-200 rounded -md hover:bg-slate-50 flex-1 transition-colors"
               styles={{
                 root: { alignItems: "flex-start" },
                 radio: { cursor: "pointer" },
