@@ -1,5 +1,6 @@
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PriceReview } from "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema";
 import { CombinedConfig } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
@@ -19,6 +20,8 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "20");
     const skip = (page - 1) * limit;
+
+    await connectMongoDB();
 
     let dbQuery: any = {};
 

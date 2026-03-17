@@ -1,5 +1,6 @@
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PriceReview } from "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { CombinedConfig } from "@omenai/shared-types";
@@ -20,6 +21,7 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(
     const skip = (page - 1) * limit;
     const artistId = searchParams.get("id");
 
+    await connectMongoDB();
     const artist_id = await AccountArtist.exists({
       artist_id: artistId,
     }).exec();

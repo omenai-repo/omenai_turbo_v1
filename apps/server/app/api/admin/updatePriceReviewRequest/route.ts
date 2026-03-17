@@ -10,6 +10,7 @@ import { NotFoundError } from "../../../../custom/errors/dictionary/errorDiction
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { sendPriceReviewApproved } from "@omenai/shared-emails/src/models/artist/sendPriceReviewApproved";
 import { sendPriceReviewCompleted } from "@omenai/shared-emails/src/models/artist/sendPriceReviewCompleted";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -30,6 +31,7 @@ export const PATCH = withRateLimitHighlightAndCsrf(config)(async function PATCH(
       decline_reason,
     } = body;
 
+    await connectMongoDB();
     const review = await PriceReview.findById(review_id);
 
     const artist_id = review.artist_id;

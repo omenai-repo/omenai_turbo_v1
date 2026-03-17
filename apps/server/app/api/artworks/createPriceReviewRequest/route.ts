@@ -7,6 +7,7 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { uploadArtworkLogic } from "../../uploadArtwork.service";
 import { sendPriceReviewRequest } from "@omenai/shared-emails/src/models/artist/sendPriceReviewRequest";
 import { sendArtworkPriceReviewEmail } from "@omenai/shared-emails/src/models/admin/sendArtworkPriceReviewEmail";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -20,6 +21,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const body = await request.json();
     const { artist_id, artist_review, meta } = body;
 
+    await connectMongoDB();
     // 1. Fetch the Artist's Profile to check allowances and category
     const artist = await AccountArtist.findOne({ artist_id });
     if (!artist) {

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { uploadArtworkLogic } from "../../uploadArtwork.service";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport } from "../../util";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const artistPatchSchema = z.object({
   artist_id: z.string(),
@@ -25,6 +26,7 @@ export async function PATCH(request: Request) {
 
     const { review_id, action, artist_id } = parsedData.data;
 
+    await connectMongoDB();
     // 1. Ownership & Document Check
     const review = await PriceReview.findOne({
       _id: review_id,
