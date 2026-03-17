@@ -189,7 +189,7 @@ export default function PriceReviewWidget({
       {/* Close Button - Given a solid background to hover nicely over scrolling content */}
       <button
         onClick={onCancel}
-        className="absolute top-4 right-4 p-5 bg-neutral-100/80 backdrop-blur-sm hover:bg-neutral-200 text-neutral-600 rounded -full transition-colors z-20"
+        className="absolute top-4 right-4 p-5 bg-neutral-100/80 backdrop-blur hover:bg-neutral-200 text-neutral-600 rounded -full transition-colors z-20"
       >
         <X size={20} />
       </button>
