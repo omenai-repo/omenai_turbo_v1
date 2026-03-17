@@ -24,7 +24,7 @@ const PriceReviewCompleted = ({
         <Text className="text-[#4a4a4a] text-sm leading-relaxed mt-4">
           The pricing review for{" "}
           <span className="font-semibold text-[#1a1a1a]">{artwork_title}</span>{" "}
-          has been completed by the Omenai curation team.
+          has been completed by the Omenai Advisory team.
         </Text>
 
         <Text className="text-[#4a4a4a] text-sm leading-relaxed mt-4">

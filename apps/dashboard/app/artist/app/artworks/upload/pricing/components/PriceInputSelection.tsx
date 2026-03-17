@@ -65,8 +65,8 @@ export default function PriceInputSection({
                 <>
                   <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-amber-600" />
                   <span className="text-xs font-medium">
-                    This is a significant increase from the baseline. Our team
-                    will review your proof of value before publishing.
+                    This is a significant increase from the baseline. Our
+                    Advisory team will review before publishing.
                   </span>
                 </>
               )}

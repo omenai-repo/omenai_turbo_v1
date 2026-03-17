@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { artistArtworkUploadStore } from "@omenai/shared-state-store/src/artist/artwork_upload/artistArtworkUpload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -9,9 +9,7 @@ import {
   Alert,
   Radio,
   Text,
-  Group,
   Button,
-  Stack,
   ThemeIcon,
   List,
   Collapse,
@@ -67,19 +65,38 @@ const CheckIcon = () => (
 
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
-  const { image, setImage, updateArtworkUploadData, artworkUploadData } =
+  const { image, setImage, updateArtworkUploadData } =
     artistArtworkUploadStore();
   const router = useRouter();
 
-  // Default is rolled. User must explicitly opt-in to see stretched options.
   const [packagingType, setPackagingType] = useState<"rolled" | "stretched">(
     "rolled",
   );
   const [showStretchedWarning, setShowStretchedWarning] = useState(false);
 
+  // NEW: State to hold the safe preview URL
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const acceptedFileTypes = ["jpg", "jpeg", "png", "webp"];
   const MAX_SIZE_MB = 10;
   const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+  // NEW: Safely manage the object URL lifecycle and DOM sync
+  useEffect(() => {
+    if (image) {
+      const objectUrl = URL.createObjectURL(image);
+      setPreviewUrl(objectUrl);
+
+      // Cleanup function to prevent memory leaks when image changes or unmounts
+      return () => URL.revokeObjectURL(objectUrl);
+    } else {
+      // If Zustand image is null (cleared from next page), completely reset everything here
+      setPreviewUrl(null);
+      if (imagePickerRef.current) {
+        imagePickerRef.current.value = ""; // Wipes the physical DOM input
+      }
+    }
+  }, [image]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -106,8 +123,9 @@ export default function UploadArtworkImage() {
       });
       return;
     }
+
     setImage(file);
-    e.target.value = "";
+    // e.target.value = ""; <- Removed this here, the useEffect handles it cleanly now!
   };
 
   function handleImageSubmit() {
@@ -117,7 +135,6 @@ export default function UploadArtworkImage() {
     }
 
     updateArtworkUploadData("packaging_type", packagingType);
-
     toast.info("Processing", { description: "Preparing pricing module..." });
     router.push("/artist/app/artworks/upload/pricing");
   }
@@ -128,14 +145,14 @@ export default function UploadArtworkImage() {
         {/* --- LEFT: IMAGE UPLOAD (Visual Focus) --- */}
         <div className="w-full md:w-1/2 bg-slate-50 p-8 flex flex-col justify-center items-center border-r border-slate-100 relative">
           <div className="w-full grid place-items-center mb-5">
-            {image ? (
+            {previewUrl ? ( // Use the safe previewUrl state here
               <button
                 type="button"
                 onClick={() => setImage(null)}
                 className="relative group"
               >
                 <img
-                  src={URL.createObjectURL(image)}
+                  src={previewUrl}
                   alt="uploaded artwork"
                   className="w-auto h-auto max-h-[300px] max-w-full object-contain rounded shadow-lg transition-all duration-200"
                 />
@@ -146,24 +163,11 @@ export default function UploadArtworkImage() {
             ) : (
               <button
                 type="button"
-                className="w-full max-w-[500px] aspect-square border-2 border-dashed border-slate-400 bg-slate-50 rounded -xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
+                className="w-full max-w-[500px] aspect-square border-2 border-dashed border-slate-400 bg-slate-50 rounded-xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
                 onClick={() => imagePickerRef.current?.click()}
               >
-                <div className="p-4 bg-white rounded -full shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-8 h-8 text-slate-600"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                    />
-                  </svg>
+                <div className="p-4 bg-white rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                  <UploadIcon />
                 </div>
                 <span className="text-sm font-semibold text-slate-900">
                   Click to upload artwork image
@@ -195,7 +199,7 @@ export default function UploadArtworkImage() {
             <div
               id="rolled-option"
               tabIndex={-1}
-              className={`p-5 rounded -xl border-2 transition-all cursor-pointer mb-6 ${
+              className={`p-5 rounded-xl border-2 transition-all cursor-pointer mb-6 ${
                 packagingType === "rolled"
                   ? "border-dark bg-slate-50 ring-1 ring-dark"
                   : "border-slate-200 hover:border-slate-300"
@@ -248,7 +252,7 @@ export default function UploadArtworkImage() {
 
             {/* Warning Mode: Stretched Selected */}
             <Collapse in={showStretchedWarning}>
-              <div className="mt-2 border border-red-100 rounded -xl overflow-hidden">
+              <div className="mt-2 border border-red-100 rounded-xl overflow-hidden">
                 <Alert
                   variant="light"
                   color="red"
