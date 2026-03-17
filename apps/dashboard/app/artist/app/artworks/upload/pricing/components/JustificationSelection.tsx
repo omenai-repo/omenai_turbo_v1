@@ -14,6 +14,7 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 
 interface JustificationSectionProps {
   justificationType: JustificationType | "";
@@ -215,12 +216,22 @@ export default function JustificationSection({
                   {!justificationFile && (
                     <input
                       type="file"
-                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      accept=".pdf" // Changed to only accept PDF natively in the file browser
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
+                          // Validate file type
+                          if (file.type !== "application/pdf") {
+                            toast_notif(
+                              "Invalid file type. Please upload a PDF document.",
+                              "error",
+                            );
+                            e.target.value = "";
+                            return;
+                          }
+
                           setJustificationFile(file);
-                          setJustificationUrl(""); // Clear URL if they upload a file
+                          setJustificationUrl("");
                         }
                       }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"

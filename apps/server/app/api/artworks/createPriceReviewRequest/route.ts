@@ -12,6 +12,7 @@ const config: CombinedConfig = {
   ...strictRateLimit,
   allowedRoles: ["artist"],
 };
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
@@ -71,38 +72,50 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       if (artist_review.requested_price <= maxAllowedPrice) {
         finalStatus = "AUTO_APPROVED";
         isAutoApproved = true;
+
+        // INJECTION FIX: Satisfy Mongoose Schema requirements for auto-approvals
+        // Since the frontend omitted these, we provide safe system fallbacks
+        artist_review.justification_type = "OTHER";
+        artist_review.justification_notes =
+          "System Auto-Approval: Price increase is within the acceptable variance threshold for this artist tier.";
+        artist_review.justification_proof_url = "";
       }
     }
 
     // 5. Construct and Save the Review Document
     const newReview = new PriceReview({
       artist_id,
-      artist_review,
+      artist_review, // Mongoose is now happy because justification_type exists
       meta,
       status: finalStatus,
     });
 
     await newReview.save();
 
-    await sendPriceReviewRequest({
-      name: artist.name,
-      email: artist.email,
-      artwork_title: meta.artwork.title,
-    });
-    await sendArtworkPriceReviewEmail({
-      name: artist.name,
-      email: "moses@omenai.net",
-      artwork_title: meta.artwork.title,
-      requested_price: artist_review.requested_price,
-    });
-
-    // 6. If auto-approved, increment their usage tracker and save the profile
+    // 6. Handle Side Effects (Emails & Publishing) based on Status
     if (isAutoApproved) {
+      // Update limits and publish immediately
       artist.pricing_allowances.auto_approvals_used += 1;
       await artist.save();
 
-      // NOTE: Trigger your artwork publishing function here since it's approved
       await uploadArtworkLogic(meta.artwork);
+
+      // (Optional) You can send the "PriceReviewApproved" email here instead
+      // since it bypassed the manual queue entirely!
+    } else {
+      // ONLY send emails if the request actually requires manual intervention
+      await sendPriceReviewRequest({
+        name: artist.name,
+        email: artist.email,
+        artwork_title: meta.artwork.title,
+      });
+
+      await sendArtworkPriceReviewEmail({
+        name: artist.name,
+        email: "moses@omenai.net",
+        artwork_title: meta.artwork.title,
+        requested_price: artist_review.requested_price,
+      });
     }
 
     return NextResponse.json(
