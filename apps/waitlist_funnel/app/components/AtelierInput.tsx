@@ -57,7 +57,7 @@ export const AtelierInput = ({
         onChange={onChange}
         {...props}
         className={`
-          w-full rounded-none
+          w-full rounded -none
           border border-neutral-300 bg-transparent p-3 
           font-sans text-sm text-dark font-medium
           placeholder:text-neutral-400

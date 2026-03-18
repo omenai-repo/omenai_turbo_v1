@@ -48,11 +48,11 @@ export const UserMenu = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-3 px-2 py-1.5 rounded-full transition-all duration-200 ${
+        className={`flex items-center gap-3 px-2 py-1.5 rounded -full transition-all duration-200 ${
           isOpen ? "bg-neutral-100" : "hover:bg-neutral-50"
         }`}
       >
-        <div className="w-8 h-8 rounded-full bg-[#091830] text-white grid place-items-center shadow-sm">
+        <div className="w-8 h-8 rounded -full bg-[#091830] text-white grid place-items-center shadow-sm">
           <User size={16} strokeWidth={2} />
         </div>
         <div className="hidden lg:flex flex-col items-start">
@@ -63,7 +63,7 @@ export const UserMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border border-neutral-100 rounded-lg shadow-xl ring-1 ring-black/5 overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-64 bg-white border border-neutral-100 rounded -lg shadow-xl ring-1 ring-black/5 overflow-hidden z-50">
           <div className="px-5 py-4 bg-neutral-50 border-b border-neutral-100">
             <p className="text-sm font-sans font-semibold text-dark ">
               {user.name}
@@ -80,7 +80,7 @@ export const UserMenu = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center px-4 py-2.5 text-sm font-sans font-medium text-neutral-600 rounded-md hover:bg-neutral-50 hover:text-dark  transition-colors"
+                  className="flex items-center px-4 py-2.5 text-sm font-sans font-medium text-neutral-600 rounded -md hover:bg-neutral-50 hover:text-dark  transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   <Icon className="mr-3 h-4 w-4 text-neutral-400 group-hover:text-dark " />
@@ -93,7 +93,7 @@ export const UserMenu = () => {
           <div className="p-2 border-t border-neutral-100">
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center px-4 py-2.5 text-sm font-sans font-medium text-red-600 rounded-md hover:bg-red-50 transition-colors"
+              className="w-full flex items-center px-4 py-2.5 text-sm font-sans font-medium text-red-600 rounded -md hover:bg-red-50 transition-colors"
             >
               <icons.LogOut className="mr-3 h-4 w-4" />
               Sign Out

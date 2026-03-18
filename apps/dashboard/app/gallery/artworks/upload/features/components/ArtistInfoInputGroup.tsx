@@ -14,7 +14,7 @@ export default function ArtistInfoInputGroup() {
       </div>
 
       {/* Main Card Container */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded -xl p-6 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {uploadArtistDetailsInputMocks.map((input, index) => {
             return (

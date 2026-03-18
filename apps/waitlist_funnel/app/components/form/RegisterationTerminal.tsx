@@ -261,7 +261,7 @@ export const RegistrationTerminal = () => {
                     <CountryDropdown
                       value={waitlistData.country}
                       onChange={(val: string) => handleCountrySelect(val)}
-                      className="w-full appearance-none border-b border-neutral-300 bg-transparent py-3 font-sans focus:ring-0 text-sm text-dark focus:border-dark focus:outline-none transition-colors rounded-none"
+                      className="w-full appearance-none border-b border-neutral-300 bg-transparent py-3 font-sans focus:ring-0 text-sm text-dark focus:border-dark focus:outline-none transition-colors rounded -none"
                     />
                   </div>
                   <AtelierInput

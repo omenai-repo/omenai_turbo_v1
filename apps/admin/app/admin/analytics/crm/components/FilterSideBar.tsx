@@ -111,7 +111,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 const FilterButton = ({ label, count, active, onClick }: any) => (
   <button
     onClick={onClick}
-    className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded-md transition-all capitalize ${
+    className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded -md transition-all capitalize ${
       active
         ? "bg-blue-600 text-white shadow-md transform scale-[1.02]"
         : "text-slate-600 hover:bg-slate-100"
@@ -119,7 +119,7 @@ const FilterButton = ({ label, count, active, onClick }: any) => (
   >
     <span className="truncate mr-2">{label || "Unknown"}</span>
     <span
-      className={`text-xs px-2 py-0.5 rounded-full ${
+      className={`text-xs px-2 py-0.5 rounded -full ${
         active ? "bg-blue-500 text-white" : "bg-slate-200 text-slate-500"
       }`}
     >

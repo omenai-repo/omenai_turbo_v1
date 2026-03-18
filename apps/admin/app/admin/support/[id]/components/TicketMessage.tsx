@@ -1,6 +1,6 @@
 export function TicketMessage({ ticket }: { ticket: any }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded -xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
         <h3 className="font-semibold text-slate-900">Issue Description</h3>
         <span className="text-xs text-slate-500">
@@ -17,7 +17,7 @@ export function TicketMessage({ ticket }: { ticket: any }) {
       <div className="px-6 py-4 bg-slate-50 border-t border-slate-100">
         <a
           href={`mailto:${ticket.userEmail}?subject=Re: Support Ticket ${ticket.ticketId} - ${ticket.category}`}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-black transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded -lg hover:bg-black transition-colors"
         >
           <svg
             width="16"

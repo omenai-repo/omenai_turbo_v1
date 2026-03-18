@@ -17,7 +17,7 @@ export default function PromotionalCard({
   return (
     <Link
       href={cta}
-      className="group block h-full w-full cursor-pointer relative overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
+      className="group block h-full w-full cursor-pointer relative overflow-hidden rounded -lg shadow-sm hover:shadow-md transition-all duration-300"
     >
       <article className="flex flex-col md:flex-row h-[420px] w-full bg-[#091830]">
         {/* 1. IMAGE SECTION (Top on Mobile, Left on Desktop) */}
@@ -88,7 +88,7 @@ export default function PromotionalCard({
                     "
               >
                 Explore
-                <span className="bg-white text-dark  rounded-full p-1 transition-transform duration-300 group-hover:translate-x-1">
+                <span className="bg-white text-dark  rounded -full p-1 transition-transform duration-300 group-hover:translate-x-1">
                   <MdArrowRightAlt className="text-lg" />
                 </span>
               </span>

@@ -38,7 +38,7 @@ export default function Editorials() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
+                  <span className="flex items-center justify-center h-6 w-6 rounded -full bg-[#091830]/10 text-dark ">
                     <Newspaper />
                   </span>
                   <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
@@ -72,7 +72,7 @@ export default function Editorials() {
             <div className="mt-10 flex md:hidden justify-center">
               <Link
                 href="/articles"
-                className="w-full py-3 text-center rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
+                className="w-full py-3 text-center rounded -md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
               >
                 Read All Articles
               </Link>

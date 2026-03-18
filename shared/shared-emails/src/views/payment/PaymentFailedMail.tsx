@@ -56,7 +56,7 @@ export const PaymentFailedEmail = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "600px", margin: "40px auto", padding: "24px" }}
           >
             <Heading
@@ -81,7 +81,7 @@ export const PaymentFailedEmail = ({
             </Text>
 
             {/* Support/Reason Box */}
-            <Section className="advisory-box bg-red-50 rounded-r-lg p-5 border-l-4 border-red-500 my-8">
+            <Section className="advisory-box bg-red-50 rounded -r-lg p-5 border-l-4 border-red-500 my-8">
               <Text
                 className="text-main text-gray-800 m-0"
                 style={{ fontSize: "14px", lineHeight: "1.6" }}

@@ -37,8 +37,8 @@ export default function LatestArtworkWrapper({
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded -full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded -full h-2 w-2 bg-red-500"></span>
               </span>
               <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
                 Recently Added
@@ -63,7 +63,7 @@ export default function LatestArtworkWrapper({
         {/* 2. THE GRID */}
         <div className="w-full">
           {artworks?.length === 0 ? (
-            <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg bg-neutral-50 border border-neutral-100">
+            <div className="flex h-64 w-full flex-col items-center justify-center rounded -lg bg-neutral-50 border border-neutral-100">
               <span className="font-sans text-neutral-400">
                 Catalog updating...
               </span>
@@ -77,7 +77,7 @@ export default function LatestArtworkWrapper({
         <div className="mt-12 flex justify-center md:hidden">
           <Link
             href="/catalog"
-            className="w-full text-center py-3 rounded-md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
+            className="w-full text-center py-3 rounded -md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
           >
             View Full Archive
           </Link>

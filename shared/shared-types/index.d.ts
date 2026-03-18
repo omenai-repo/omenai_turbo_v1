@@ -13,6 +13,7 @@ export type SessionDataType = (
       | "documentation"
       | "phone"
       | "exclusivity_uphold_status"
+      | "pricing_allowances"
     >)
 ) & { id: string };
 
@@ -63,6 +64,10 @@ export type ArtistSchemaTypes = {
     ExclusivityUpholdStatus,
     "isBreached" | "incident_count"
   >;
+  pricing_allowances: {
+    auto_approvals_used: number;
+    last_reset_date: Date;
+  };
 };
 
 type ExclusivityUpholdStatus = {
@@ -1564,3 +1569,58 @@ export interface ISupportTicket {
   updatedAt: Date;
   resolvedAt?: Date; // Good for tracking turnaround time later
 }
+
+// PRICE REVIEW SYSTEM
+// The states the review can be in.
+export type PriceReviewStatusType =
+  | "PENDING_ADMIN_REVIEW" // Waiting for Omenai admin
+  | "PENDING_ARTIST_ACTION" // Admin countered, waiting for Artist
+  | "APPROVED_ARTIST_PRICE" // Admin accepted original request
+  | "APPROVED_COUNTER_PRICE" // Artist accepted admin's counter
+  | "DECLINED_BY_ADMIN" // Admin rejected outright
+  | "DECLINED_BY_ARTIST" // Artist rejected counter-offer
+  | "AUTO_APPROVED"; // Hit the variance threshold, bypassed admin
+
+// Structured data for the algorithm to eventually learn from
+export type JustificationType =
+  | "PAST_SALE"
+  | "GALLERY_EXHIBITION"
+  | "HIGH_COST_MATERIALS"
+  | "OTHER";
+
+export type PriceReviewArtistReview = {
+  requested_price: number;
+  justification_type: JustificationType;
+  justification_proof_url?: string; // Optional, but required by UI if PAST_SALE or GALLERY_EXHIBITION
+  justification_notes?: string; // The fallback text box for extra context
+};
+
+export type AdminPriceReview = {
+  counter_offer_price?: number;
+  admin_notes?: string; // Internal team notes (e.g., "Link broken")
+  decline_reason?: string; // Feedback sent to artist if outright declined
+  action_taken_by?: string; // Admin ID for audit trails
+  action_date?: Date;
+};
+
+export type PriceReviewMetaData = {
+  artwork: Omit<
+    ArtworkSchemaTypes,
+    "art_id" | "availability" | "exclusivity_status"
+  >;
+  algorithm_recommendation: {
+    recommendedPrice: number;
+    priceRange: [number, number, number, number, number];
+    meanPrice: number;
+  };
+};
+
+export type PriceReviewRequest = {
+  artist_id: string;
+  artist_review: PriceReviewArtistReview;
+  meta: PriceReviewMetaData;
+  review?: AdminPriceReview; // Optional because it doesn't exist when initially created
+  status: PriceReviewStatusType;
+  createdAt?: Date; // Provided by Mongoose timestamps
+  updatedAt?: Date; // Provided by Mongoose timestamps
+};

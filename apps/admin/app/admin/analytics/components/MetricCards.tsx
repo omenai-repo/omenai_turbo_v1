@@ -40,7 +40,7 @@ export const MetricCards: React.FC<MetricCardsProps> = ({ overview }) => {
       {cards.map((card, idx) => (
         <div
           key={idx}
-          className={`bg-white p-6 rounded-lg shadow-sm border border-slate-100 ${card.color}`}
+          className={`bg-white p-6 rounded -lg shadow-sm border border-slate-100 ${card.color}`}
         >
           <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">
             {card.label}

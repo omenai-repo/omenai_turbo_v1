@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@omenai/appwrite-config": "*",
+    "@omenai/next-security-headers": "*",
     "@omenai/package-provider": "*",
     "@omenai/shared-auth": "*",
     "@omenai/shared-emails": "*",
@@ -20,7 +21,6 @@
     "@omenai/shared-state-store": "*",
     "@omenai/shared-types": "*",
     "@omenai/shared-ui-components": "*",
-    "@omenai/next-security-headers": "*",
     "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*"
@@ -43,6 +43,7 @@
     "@tiptap/pm": "^3.0.1",
     "@tiptap/react": "^3.0.1",
     "@tiptap/starter-kit": "^3.0.1",
+    "browser-image-compression": "^2.0.2",
     "nextjs-toploader": "^3.7.15",
     "react-datepicker": "^7.5.0",
     "tinymce": "^7.9.1"

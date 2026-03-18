@@ -87,8 +87,8 @@ export const CountdownTimer = () => {
         <div className="flex items-center gap-4">
           {/* Status Indicator: Changed from Pulse Green to Solid/Warning or Completed */}
           <div className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-600"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded -full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded -full h-3 w-3 bg-emerald-600"></span>
           </div>
 
           <div className="flex flex-col">
@@ -103,7 +103,7 @@ export const CountdownTimer = () => {
 
         {/* CTA Hint */}
         <div className="hidden md:block">
-          <span className="font-mono text-xs font-medium text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">
+          <span className="font-mono text-xs font-medium text-emerald-800 bg-emerald-100 px-3 py-1 rounded -full">
             Final Boarding Active
           </span>
         </div>
@@ -122,7 +122,7 @@ export const CountdownTimer = () => {
       <TimeUnit value={timeLeft.seconds} label="Secs" showDivider={false} />
 
       <div className="ml-auto hidden md:flex items-center gap-3">
-        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="h-2 w-2 rounded -full bg-emerald-500 animate-pulse" />
         <span className="font-serif text-[10px] uppercase tracking-widest text-neutral-400">
           Until Launch
         </span>

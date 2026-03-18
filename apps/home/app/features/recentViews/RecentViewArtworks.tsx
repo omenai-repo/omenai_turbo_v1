@@ -62,14 +62,14 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
             <button
               onClick={scrollPrev}
               disabled={!canScrollPrev}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
             >
               <MdOutlineKeyboardArrowLeft className="text-lg" />
             </button>
             <button
               onClick={scrollNext}
               disabled={!canScrollNext}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
             >
               <MdOutlineKeyboardArrowRight className="text-lg" />
             </button>

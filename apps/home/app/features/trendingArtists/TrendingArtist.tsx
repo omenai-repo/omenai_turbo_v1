@@ -40,14 +40,14 @@ export default function TrendingArtist({ artists }: { artists: any }) {
         <button
           onClick={scrollPrev}
           disabled={!canScrollPrev}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+          className="flex h-10 w-10 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
         >
           <MdOutlineKeyboardArrowLeft className="text-xl" />
         </button>
         <button
           onClick={scrollNext}
           disabled={!canScrollNext}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
+          className="flex h-10 w-10 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  transition-all hover:border-[#091830] hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark "
         >
           <MdOutlineKeyboardArrowRight className="text-xl" />
         </button>

@@ -12,6 +12,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import EmailFooter from "../../components/Footer";
 
 const ArtistVerificationMail = (artist_name: string, token: string) => {
   return (
@@ -49,20 +50,10 @@ const ArtistVerificationMail = (artist_name: string, token: string) => {
               </Text>
             </Section>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-dark text-[12px] leading-[24px]">
-              Please be advised that the information contained within this email
-              is addressed directly to{" "}
-              <span className="text-dark">{artist_name} </span>. In the event
-              that you were not anticipating the receipt of this email, we
-              respectfully request that you refrain from taking any action based
-              on its contents. This communication may contain confidential and
-              legally privileged information, and it is intended solely for the
-              designated recipient. Unauthorized access, use, or dissemination
-              of this email is strictly prohibited. If you have received this
-              email in error, we kindly ask that you promptly inform us and
-              delete it from your communication systems. Your prompt attention
-              to this matter is greatly appreciated. Thank you
-            </Text>
+            <EmailFooter
+              recipientName={artist_name}
+              showSupportSection={false}
+            />
           </Container>
         </Body>
       </Tailwind>

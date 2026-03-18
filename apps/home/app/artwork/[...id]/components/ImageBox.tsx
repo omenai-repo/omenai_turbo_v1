@@ -66,7 +66,7 @@ export default function ImageBox({ url, title }: ImageBoxProps) {
       {/* <div className="p-10">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-black text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors flex items-center gap-2"
+          className="bg-black text-white px-6 py-3 rounded -lg font-bold hover:bg-gray-800 transition-colors flex items-center gap-2"
         >
           <svg
             className="w-5 h-5"

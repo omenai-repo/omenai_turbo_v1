@@ -16,7 +16,7 @@ export default function ArtworkListing({
 
   if (!artworks || artworks.length === 0) {
     return (
-      <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50">
+      <div className="flex h-[400px] w-full flex-col items-center justify-center rounded -lg border border-dashed border-neutral-200 bg-neutral-50">
         <div className="scale-75 opacity-60">
           <NotFoundData />
         </div>

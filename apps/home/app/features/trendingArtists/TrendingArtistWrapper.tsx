@@ -29,7 +29,7 @@ export default function TrendingArtistWrapper() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             {/* <div className="flex items-center gap-2 mb-3">
-              <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
+              <span className="flex items-center justify-center h-6 w-6 rounded -full bg-[#091830]/10 text-dark ">
                 <HiUserGroup size={14} />
               </span>
               <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
@@ -48,7 +48,7 @@ export default function TrendingArtistWrapper() {
         {/* 2. DATA DISPLAY */}
         <div className="w-full">
           {artists?.length === 0 ? (
-            <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg border border-dashed border-neutral-200 bg-neutral-50">
+            <div className="flex h-64 w-full flex-col items-center justify-center rounded -lg border border-dashed border-neutral-200 bg-neutral-50">
               <span className="font-sans text-neutral-400">
                 Artist roster updating...
               </span>

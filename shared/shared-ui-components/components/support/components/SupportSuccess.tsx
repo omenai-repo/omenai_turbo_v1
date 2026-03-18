@@ -14,7 +14,7 @@ export function SupportSuccess({ ticketId, onClose }: SupportSuccessProps) {
 
   return (
     <div className="p-10 flex flex-col items-center text-center space-y-7 bg-white">
-      <div className="w-24 h-24 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-full flex items-center justify-center border border-slate-300 shadow-[0_8px_30px_-12px_rgba(16,185,129,0.3)]">
+      <div className="w-24 h-24 bg-gradient-to-br from-emerald-50 to-teal-50 rounded -full flex items-center justify-center border border-slate-300 shadow-[0_8px_30px_-12px_rgba(16,185,129,0.3)]">
         <Icons.Success />
       </div>
 
@@ -28,7 +28,7 @@ export function SupportSuccess({ ticketId, onClose }: SupportSuccessProps) {
       </div>
 
       <div
-        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-5 relative group cursor-pointer transition-all duration-300 hover:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)]"
+        className="w-full bg-slate-50 border border-slate-300 rounded -lg p-5 relative group cursor-pointer transition-all duration-300 hover:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08)]"
         onClick={copyToClipboard}
       >
         <p className="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-medium mb-2">
@@ -49,7 +49,7 @@ export function SupportSuccess({ ticketId, onClose }: SupportSuccessProps) {
 
       <button
         onClick={onClose}
-        className="w-full bg-dark text-white font-light py-3.5 rounded-lg hover:bg-black transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
+        className="w-full bg-dark text-white font-light py-3.5 rounded -lg hover:bg-black transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
       >
         Close
       </button>

@@ -297,7 +297,7 @@ export default function SupportWidget() {
         style={{ animation: "fadeIn 0.3s ease-out" }}
       />
       <div
-        className="pointer-events-auto relative w-full max-w-md bg-white rounded-lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] border border-slate-300 overflow-hidden flex flex-col max-h-[88vh]"
+        className="pointer-events-auto relative w-full max-w-md bg-white rounded -lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] border border-slate-300 overflow-hidden flex flex-col max-h-[88vh]"
         style={{ animation: "slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}
       >
         {ticketId ? (
@@ -319,7 +319,7 @@ export default function SupportWidget() {
               </button>
               <div className="flex justify-between items-start">
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-full flex items-center justify-center shadow-sm">
+                  <div className="p-2 rounded -full flex items-center justify-center shadow-sm">
                     <OmenaiLogoCut />
                   </div>
                   <div>
@@ -333,7 +333,7 @@ export default function SupportWidget() {
                 </div>
                 <button
                   onClick={handleClose}
-                  className="text-slate-400 hover:text-dark hover:bg-slate-100 p-2 rounded-full transition-all duration-200"
+                  className="text-slate-400 hover:text-dark hover:bg-slate-100 p-2 rounded -full transition-all duration-200"
                 >
                   <Icons.Close />
                 </button>

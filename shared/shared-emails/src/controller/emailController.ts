@@ -21,7 +21,7 @@ export const sendMailVerification = async (datum: EmailPayload) => {
     from:
       datum.from === "onboarding"
         ? `${datum.prefix} <onboarding@omenai.app>`
-        : datum.from === "orders"
+        : datum.from === "orders" || datum.from === "team"
           ? `${datum.prefix} <advisory@omenai.app>`
           : `${datum.prefix} <info@omenai.app>`,
     to: datum.to,

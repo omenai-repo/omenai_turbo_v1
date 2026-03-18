@@ -113,7 +113,7 @@ export default function DateTimePickerComponent({
               }
             }}
             className={`
-              flex items-center justify-center h-9 w-9 rounded-full text-xs font-medium transition-all
+              flex items-center justify-center h-9 w-9 rounded -full text-xs font-medium transition-all
               ${!isCurrentMonth ? "text-slate-300" : ""}
               ${isDisabled ? "text-slate-300 cursor-not-allowed" : "cursor-pointer"}
               ${isSelected ? "bg-dark text-white shadow-md" : ""}
@@ -187,7 +187,7 @@ export default function DateTimePickerComponent({
 
   return (
     <div className="w-full flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-300">
-      <div className="bg-amber-50/50 border border-amber-100 rounded-lg p-3.5 flex items-start gap-3">
+      <div className="bg-amber-50/50 border border-amber-100 rounded -lg p-3.5 flex items-start gap-3">
         <Info className="text-amber-600 shrink-0 mt-0.5" size={16} />
         <p className="text-xs text-amber-800 leading-relaxed">
           <span className="font-semibold block mb-0.5 text-amber-900">
@@ -198,7 +198,7 @@ export default function DateTimePickerComponent({
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row gap-6 bg-white p-5 rounded -xl border border-slate-200 shadow-sm">
         {/* LEFT: Custom Calendar */}
         <div className="w-full md:w-[280px] shrink-0">
           <div className="flex items-center justify-between mb-5">
@@ -206,7 +206,7 @@ export default function DateTimePickerComponent({
               type="button"
               onClick={prevMonth}
               disabled={isSameMonth(currentMonth, today)}
-              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+              className="p-1.5 rounded -lg hover:bg-slate-100 text-slate-600 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -217,7 +217,7 @@ export default function DateTimePickerComponent({
               type="button"
               onClick={nextMonth}
               disabled={isSameMonth(currentMonth, maxDate)}
-              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+              className="p-1.5 rounded -lg hover:bg-slate-100 text-slate-600 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -250,11 +250,11 @@ export default function DateTimePickerComponent({
 
             {/* AM / PM Segmented Control */}
             {selectedDate && (
-              <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/60">
+              <div className="flex items-center bg-slate-100 p-0.5 rounded -lg border border-slate-200/60">
                 <button
                   type="button"
                   onClick={() => setTimePeriod("AM")}
-                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  className={`px-3 py-1 text-[11px] font-bold rounded -md transition-all ${
                     timePeriod === "AM"
                       ? "bg-white text-dark shadow-sm"
                       : "text-slate-500 hover:text-slate-700"
@@ -265,7 +265,7 @@ export default function DateTimePickerComponent({
                 <button
                   type="button"
                   onClick={() => setTimePeriod("PM")}
-                  className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  className={`px-3 py-1 text-[11px] font-bold rounded -md transition-all ${
                     timePeriod === "PM"
                       ? "bg-white text-dark shadow-sm"
                       : "text-slate-500 hover:text-slate-700"
@@ -280,14 +280,14 @@ export default function DateTimePickerComponent({
           {/* Time Grid Content */}
           {/* Time Grid Content */}
           {!selectedDate ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-100 rounded-xl p-6">
+            <div className="flex-1 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-100 rounded -xl p-6">
               <CalendarDays className="w-8 h-8 text-slate-200 mb-2" />
               <p className="text-sm font-medium text-slate-500">
                 Select a date first
               </p>
             </div>
           ) : availableTimes.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-100 rounded-xl p-6">
+            <div className="flex-1 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-100 rounded -xl p-6">
               <Clock className="w-8 h-8 text-slate-200 mb-2" />
               <p className="text-sm font-medium text-slate-500">
                 No {timePeriod} times available
@@ -310,7 +310,7 @@ export default function DateTimePickerComponent({
                       type="button"
                       onClick={() => setSelectedTime(slot)}
                       className={`
-                        flex items-center justify-center py-2.5 rounded-lg border text-xs font-bold transition-all outline-none
+                        flex items-center justify-center py-2.5 rounded -lg border text-xs font-bold transition-all outline-none
                         ${
                           isSelected
                             ? "border-dark bg-dark text-white shadow-md ring-2 ring-dark/20 ring-offset-1"
@@ -332,7 +332,7 @@ export default function DateTimePickerComponent({
       {/* Selection Confirmation Bar */}
       <div className="h-10">
         {selectedDate && selectedTime && (
-          <div className="flex items-center gap-2 animate-in fade-in bg-emerald-50 text-emerald-700 px-4 py-2.5 rounded-lg border border-emerald-100 w-fit">
+          <div className="flex items-center gap-2 animate-in fade-in bg-emerald-50 text-emerald-700 px-4 py-2.5 rounded -lg border border-emerald-100 w-fit">
             <Check className="w-4 h-4 shrink-0" />
             <span className="text-xs font-medium">
               Scheduled for{" "}

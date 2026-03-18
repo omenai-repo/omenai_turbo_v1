@@ -31,7 +31,7 @@ export const UserSplitChart: React.FC<UserSplitChartProps> = ({ data }) => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 h-96">
+    <div className="bg-white p-6 rounded -lg shadow-sm border border-gray-100 h-96">
       <h4 className="text-gray-700 font-semibold mb-4">Ecosystem Balance</h4>
       <div className="h-64">
         <ResponsivePie
