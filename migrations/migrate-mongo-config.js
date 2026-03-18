@@ -3,10 +3,10 @@
 const config = {
   mongodb: {
     // Change (or review) the url to your MongoDB:
-    url: "mongodb+srv://omeani:cuT1Ed21KyninL6q@omenai.xdgpvpj.mongodb.net/",
+    url: "",
 
     // Change this to your database name:
-    databaseName: "test",
+    databaseName: "",
 
     options: {
       useNewUrlParser: true, // removes a deprecation warning when connecting
