@@ -33,6 +33,9 @@ I've been writting test for the different flows of the apps like login, and acco
 | Admin login with valid data       | ✅ Passed |                                                   |
 | Admin login with invalid data     | ✅ Passed |                                                   |
 | Collector purchase                | ❌ Failed | Failed on webkit ; timeout                        |
+| Purchase network failure          | ❌ Failed | timeout                                           |
+| Purchase Order existed            | ✅ Passed |                                                   |
+| Artwork payment                   | ✅ Passed |                                                   |
 
 ---
 
@@ -40,9 +43,9 @@ I've been writting test for the different flows of the apps like login, and acco
 
 | Metric      | Value |
 | ----------- | ----- |
-| Total Tests | 9     |
-| Passed      | 6     |
-| Failed      | 3     |
+| Total Tests | 12    |
+| Passed      | 8     |
+| Failed      | 4     |
 
 ---
 
