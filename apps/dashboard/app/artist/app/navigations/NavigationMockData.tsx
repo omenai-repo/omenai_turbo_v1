@@ -10,7 +10,14 @@ export type SidebarItem = {
 };
 
 // config/sidebar.ts
-import { LayoutDashboard, Package, Image, Wallet, User } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  Image,
+  Wallet,
+  User,
+  MessageCircleMore,
+} from "lucide-react";
 
 export const sidebarItems: SidebarItem[] = [
   {
@@ -29,6 +36,12 @@ export const sidebarItems: SidebarItem[] = [
     label: "My Artworks",
     href: "/artist/app/artworks",
     icon: Image,
+    section: "core",
+  },
+  {
+    label: "Review Hub",
+    href: "/artist/app/reviews",
+    icon: MessageCircleMore,
     section: "core",
   },
 

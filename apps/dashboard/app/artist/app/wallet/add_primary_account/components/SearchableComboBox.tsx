@@ -168,7 +168,7 @@ export function SearchableSelect({
         </InputBase>
       </Combobox.Target>
 
-      <Combobox.Dropdown className="max-h-[300px] overflow-y-auto shadow-lg border-slate-100 rounded-lg">
+      <Combobox.Dropdown className="max-h-[300px] overflow-y-auto shadow-lg border-slate-100 rounded -lg">
         <Combobox.Search
           value={search}
           onChange={(event) => setSearch(event.currentTarget.value)}

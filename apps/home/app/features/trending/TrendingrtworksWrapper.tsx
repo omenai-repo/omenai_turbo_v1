@@ -36,7 +36,7 @@ export default function TrendingArtworkWrapper({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="flex items-center justify-center h-6 w-6 rounded-full bg-[#091830]/10 text-dark ">
+              <span className="flex items-center justify-center h-6 w-6 rounded -full bg-[#091830]/10 text-dark ">
                 <HiArrowTrendingUp size={14} />
               </span>
               <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
@@ -54,7 +54,7 @@ export default function TrendingArtworkWrapper({
 
         {/* 2. CONTENT */}
         {artworks?.length === 0 ? (
-          <div className="h-64 w-full place-items-center grid border border-dashed border-neutral-200 rounded-lg">
+          <div className="h-64 w-full place-items-center grid border border-dashed border-neutral-200 rounded -lg">
             <NotFoundData />
           </div>
         ) : (

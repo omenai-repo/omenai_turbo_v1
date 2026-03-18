@@ -20,7 +20,7 @@ const recentView = new Schema(
     },
     url: { type: String, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const RecentView =

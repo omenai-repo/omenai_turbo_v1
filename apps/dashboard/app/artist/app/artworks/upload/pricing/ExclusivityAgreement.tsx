@@ -1,7 +1,8 @@
 "use client";
-import { TriangleAlert, CheckCircle2, Circle } from "lucide-react";
+import { TriangleAlert, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { base_url } from "@omenai/url-config/src/config";
+
 export default function ExclusivityAgreementGroup({
   priceConsent,
   setPriceConsent,
@@ -17,7 +18,6 @@ export default function ExclusivityAgreementGroup({
   penaltyConsent: boolean;
   setPenaltyConsent: (v: boolean) => void;
 }) {
-  // Calculate progress for the visual indicator
   const totalSteps = 3;
   const currentStep =
     (priceConsent ? 1 : 0) +
@@ -26,92 +26,85 @@ export default function ExclusivityAgreementGroup({
   const isComplete = currentStep === totalSteps;
 
   return (
-    <div className="my-8 w-full max-w-3xl mx-auto">
-      {/* Main Container */}
-      <div className="bg-amber-50/50 border border-amber-200 rounded-xl overflow-hidden shadow-sm">
-        {/* Header Section */}
-        <div className="bg-amber-100/60 px-6 py-4 border-b border-amber-200 flex items-start sm:items-center gap-3">
-          <div className="p-2 bg-amber-200 text-amber-700 rounded-lg shrink-0">
-            <TriangleAlert size={20} strokeWidth={2} />
-          </div>
-          <div>
-            <h3 className="text-amber-900 font-semibold text-sm sm:text-base">
-              Exclusivity & Pricing Agreement
-            </h3>
-            <p className="text-amber-800/70 text-xs mt-0.5">
-              Please review and accept the terms below to proceed with your
-              upload.
-            </p>
-          </div>
+    <div className="w-full mt-2 mb-2">
+      <div className="bg-amber-50/50 border border-amber-200 rounded -xl overflow-hidden shadow-sm">
+        {/* Compact Header */}
+        <div className="bg-amber-100/60 px-4 py-2.5 border-b border-amber-200 flex items-center gap-2">
+          <TriangleAlert
+            size={16}
+            className="text-amber-600 shrink-0"
+            strokeWidth={2.5}
+          />
+          <h3 className="text-amber-900 font-bold text-xs uppercase tracking-wider">
+            Exclusivity & Pricing Agreement
+          </h3>
         </div>
 
-        {/* Content Body */}
-        <div className="p-5 sm:p-6 space-y-3">
-          {/* Checkbox Item 1 */}
+        {/* Compact Body */}
+        <div className="p-3 flex flex-col gap-2">
           <CheckboxCard
             checked={priceConsent}
             onChange={setPriceConsent}
-            text="I accept the price stipulated for this artwork and agree to have it listed on the platform at this price. I understand that I may cancel this upload if I do not agree."
+            text="I agree to list this artwork at the finalized listing price"
           />
 
-          {/* Checkbox Item 2 */}
           <CheckboxCard
             checked={acknowledgment}
             onChange={setAcknowledgment}
             text={
               <span>
-                I acknowledge that this artwork is subject to a 90-day
-                exclusivity period with Omenai as stipulated in the{" "}
+                I agree to a 90-day platform exclusivity period where this
+                artwork cannot be sold elsewhere. (
                 <Link
                   href={`${base_url()}/legal?ent=artist`}
                   target="__blank"
-                  className="text-amber-700 underline decoration-amber-400 underline-offset-2 hover:text-amber-900 font-medium transition-colors"
+                  className="text-amber-700 underline decoration-amber-400 hover:text-amber-900 font-semibold"
                 >
-                  Terms of Agreement
-                </Link>{" "}
-                and may not be sold through external channels during this time.
+                  Omenai&apos;s Terms of Service
+                </Link>
+                )
               </span>
             }
           />
 
-          {/* Checkbox Item 3 */}
           <CheckboxCard
             checked={penaltyConsent}
             onChange={setPenaltyConsent}
             text={
               <span>
-                I agree that any breach of this exclusivity obligation will
-                result in a 10% penalty fee deducted from my next successful
-                sale on the platform as stipulated in the{" "}
+                I acknowledge that breaching exclusivity incurs a 10% penalty
+                fee on my next platform sale. (
                 <Link
                   href={`${base_url()}/legal?ent=artist`}
                   target="__blank"
-                  className="text-amber-700 underline decoration-amber-400 underline-offset-2 hover:text-amber-900 font-medium transition-colors"
+                  className="text-amber-700 underline decoration-amber-400 hover:text-amber-900 font-semibold"
                 >
-                  Terms of Agreement.
+                  Omenai&apos;s Terms of Service
                 </Link>
+                )
               </span>
             }
           />
         </div>
 
-        {/* Footer / Status Bar */}
-        <div className="px-6 py-3 bg-white border-t border-amber-100 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
-            <span>Completion Status:</span>
-            <div className="flex gap-1">
-              {[1, 2, 3].map((step) => (
-                <div
-                  key={step}
-                  className={`h-1.5 w-6 rounded-full transition-all duration-300 ${step <= currentStep ? "bg-green-500" : "bg-gray-200"}`}
-                />
-              ))}
-            </div>
+        {/* Slim Footer */}
+        <div className="px-4 py-2.5 bg-white border-t border-amber-100 flex items-center justify-between">
+          <div className="flex gap-1.5 items-center">
+            {[1, 2, 3].map((step) => (
+              <div
+                key={step}
+                className={`h-1 w-4 rounded -full transition-all duration-300 ${
+                  step <= currentStep ? "bg-green-500" : "bg-gray-200"
+                }`}
+              />
+            ))}
           </div>
           <div
-            className={`text-xs font-semibold px-3 py-1 rounded-full transition-colors duration-300 ${isComplete ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}
+            className={`text-[10px] font-bold uppercase tracking-wide transition-colors duration-300 ${
+              isComplete ? "text-green-600" : "text-gray-400"
+            }`}
           >
-            {isComplete ? "All Agreed" : `${currentStep}/${totalSteps} Agreed`}
+            {isComplete ? "All Agreed" : `${currentStep}/${totalSteps}`}
           </div>
         </div>
       </div>
@@ -119,7 +112,7 @@ export default function ExclusivityAgreementGroup({
   );
 }
 
-// --- Sub-Component for Cleaner Code ---
+// --- Compact Sub-Component ---
 function CheckboxCard({
   checked,
   onChange,
@@ -131,7 +124,7 @@ function CheckboxCard({
 }) {
   return (
     <label
-      className={`relative flex items-start gap-4 p-4 rounded-lg border transition-all duration-200 cursor-pointer group
+      className={`relative flex items-start gap-3 p-3 rounded -lg border transition-all duration-200 cursor-pointer group
       ${
         checked
           ? "bg-white border-amber-300 shadow-sm ring-1 ring-amber-100"
@@ -143,11 +136,10 @@ function CheckboxCard({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="peer sr-only" // Hide default checkbox
+          className="peer sr-only"
         />
-        {/* Custom Checkbox UI */}
         <div
-          className={`h-5 w-5 rounded border flex items-center justify-center transition-all duration-200 
+          className={`h-4 w-4 rounded border flex items-center justify-center transition-all duration-200 
           ${
             checked
               ? "bg-amber-500 border-amber-600 text-white"
@@ -155,14 +147,16 @@ function CheckboxCard({
           }`}
         >
           <CheckCircle2
-            size={14}
+            size={12}
             strokeWidth={3}
             className={checked ? "scale-100" : "scale-0"}
           />
         </div>
       </div>
       <span
-        className={`text-sm leading-relaxed transition-colors ${checked ? "text-gray-800" : "text-gray-600"}`}
+        className={`text-xs leading-snug transition-colors ${
+          checked ? "text-gray-900 font-medium" : "text-gray-600"
+        }`}
       >
         {text}
       </span>

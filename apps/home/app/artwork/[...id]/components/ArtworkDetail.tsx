@@ -146,7 +146,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         {/* SECONDARY ACTION: Save */}
         <button
           onClick={() => handleLike(!likedState.ids.includes(sessionId || ""))}
-          className="group flex h-14 w-full items-center justify-center gap-3 border border-slate-200 bg-white text-dark transition-all duration-300 hover:border-dark rounded-none"
+          className="group flex h-14 w-full items-center justify-center gap-3 border border-slate-200 bg-white text-dark transition-all duration-300 hover:border-dark rounded -none"
         >
           {sessionId && likedState.ids.includes(sessionId) ? (
             <>

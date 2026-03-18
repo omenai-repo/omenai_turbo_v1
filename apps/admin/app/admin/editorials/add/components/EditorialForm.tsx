@@ -1,6 +1,5 @@
 "use client";
 
-import { Input, TextInput } from "@mantine/core";
 import React, { ChangeEvent, useState } from "react";
 import EditorialCover from "./EditorialCover";
 import { EditorialContentEditor } from "./EditorialContentEditor";
@@ -26,7 +25,10 @@ export default function EditorialForm() {
   });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  // Updated to accept both native input and textarea elements
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const name = e.target.name as "headline" | "summary";
     setData((prev) => ({ ...prev, [name]: e.target.value }));
   };
@@ -36,7 +38,7 @@ export default function EditorialForm() {
       if (!content || !cover || !data.headline) {
         toast_notif(
           "Please complete the headline, cover image, and content before publishing.",
-          "error"
+          "error",
         );
         return;
       }
@@ -68,7 +70,7 @@ export default function EditorialForm() {
         await deleteEditorialImage(file.fileId);
         toast_notif(
           uploadEditorial.message || "Failed to publish editorial.",
-          "error"
+          "error",
         );
         return;
       }
@@ -89,47 +91,45 @@ export default function EditorialForm() {
   };
 
   return (
-    <div className="space-y-10">
-      {/* Metadata */}
-      <section className="space-y-5">
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium text-neutral-900">
-            Editorial details
-          </h3>
-          <p className="text-sm text-neutral-500">
-            Title, summary, and cover image used for discovery.
-          </p>
+    <div className="w-full flex flex-col space-y-12">
+      {/* Top Section: Metadata & Cover Grid */}
+      <section className="w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* Left Column: Custom Typography Inputs */}
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-center space-y-6 pt-4">
+          {/* Native Input for Headline */}
+          <input
+            type="text"
+            name="headline"
+            placeholder="Editorial Headline"
+            onChange={handleInputChange}
+            required
+            className="w-full  text-3xl lg:text-4xl font-light tracking-tight text-neutral-900 placeholder:text-neutral-400 bg-transparent border border-neutral-200 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 py-2"
+          />
+
+          {/* Native Textarea for Summary */}
+          <textarea
+            name="summary"
+            placeholder="Write a brief, captivating summary (Optional)"
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full text-xl font-light text-neutral-600 placeholder:text-neutral-400 resize-none bg-transparent border border-neutral-200 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 py-2"
+          />
         </div>
 
-        <TextInput
-          label="Headline"
-          placeholder="Enter the title of this editorial"
-          onChange={handleInputChange}
-          name="headline"
-          required
-        />
-
-        <TextInput
-          label="Summary (optional)"
-          placeholder="Short description shown in previews"
-          onChange={handleInputChange}
-          name="summary"
-        />
-
-        <EditorialCover cover={cover} setCover={setCover} />
+        {/* Right Column: Cover Image Upload */}
+        <div className="lg:col-span-5 xl:col-span-4 h-full">
+          <div className="h-full min-h-[280px] w-full rounded-xl bg-neutral-50/50 border border-neutral-200 hover:border-neutral-300 transition-colors overflow-hidden group flex flex-col relative">
+            {/* Note: Ensure your EditorialCover component takes full width/height of its parent */}
+            <EditorialCover cover={cover} setCover={setCover} />
+          </div>
+        </div>
       </section>
 
-      {/* Content */}
-      <section className="space-y-3">
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium text-neutral-900">
-            Editorial content
-          </h3>
-          <p className="text-sm text-neutral-500">
-            Write the full editorial article below.
-          </p>
-        </div>
+      {/* Subtle Divider */}
+      <div className="w-full h-px bg-neutral-100" />
 
+      {/* Full Width Content Editor */}
+      <section className="w-full">
         <EditorialContentEditor
           handleEditorialUpload={handleEditorialUpload}
           loading={loading}

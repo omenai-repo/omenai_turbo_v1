@@ -74,10 +74,10 @@ export default function ArtworkPriceInputGroup({
       </div>
 
       {/* Main Card Container */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded -xl p-6 shadow-sm">
         {/* Info Alert Box */}
-        <div className="mb-8 bg-amber-50 border border-amber-100 rounded-lg p-4 flex items-start gap-3">
-          <div className="mt-1 min-w-[4px] h-[4px] rounded-full bg-amber-500" />
+        <div className="mb-8 bg-amber-50 border border-amber-100 rounded -lg p-4 flex items-start gap-3">
+          <div className="mt-1 min-w-[4px] h-[4px] rounded -full bg-amber-500" />
           <p className="text-amber-800 text-xs leading-relaxed">
             <span className="font-semibold block mb-1">
               Currency Standardization
@@ -129,7 +129,7 @@ export default function ArtworkPriceInputGroup({
                   artworkUploadData.price.toString() === "" ||
                   conversionLoading
                 }
-                className="group relative h-10 w-10 flex items-center justify-center rounded-full bg-dark text-white shadow-md hover:bg-black transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed"
+                className="group relative h-10 w-10 flex items-center justify-center rounded -full bg-dark text-white shadow-md hover:bg-black transition-all disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed"
                 title="Convert to USD"
               >
                 {conversionLoading ? (

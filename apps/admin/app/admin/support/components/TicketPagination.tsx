@@ -16,7 +16,7 @@ export function TicketPagination({
   loading,
 }: TicketPaginationProps) {
   return (
-    <div className="bg-white px-6 py-4 border border-t-0 border-slate-200 rounded-b-xl flex items-center justify-between">
+    <div className="bg-white px-6 py-4 border border-t-0 border-slate-200 rounded -b-xl flex items-center justify-between">
       <div className="text-sm text-slate-500">
         Showing <span className="font-medium">{(page - 1) * limit + 1}</span> to{" "}
         <span className="font-medium">{Math.min(page * limit, total)}</span> of{" "}

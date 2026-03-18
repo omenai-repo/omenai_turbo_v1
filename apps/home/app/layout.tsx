@@ -15,16 +15,18 @@ import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Omenai",
-  description: "Discover, buy, and sell Contemporary African Art online.",
+  title: "Omenai - Discover and collect contemporary African Art",
+  description:
+    "Discover and collect contemporary African Art from leading and emerging artists from across Africa and it's disapora through the Omenai Platform",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Omenai – Contemporary African Art Marketplace",
-    description: "Discover, buy, and sell Contemporary African Art online.",
+    title: "Omenai - Discover and collect contemporary African Art",
+    description:
+      "Discover and collect contemporary African Art from leading and emerging artists from across Africa and it's disapora through the Omenai Platform",
     url: "https://omenai.app",
   },
   manifest: "/site.webmanifest",
@@ -60,7 +62,7 @@ export default async function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <title>Omenai</title>
+        <title>Omenai - Discover and collect contemporary African Art</title>
       </head>
       <body
         className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}

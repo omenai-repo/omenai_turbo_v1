@@ -22,7 +22,7 @@ export async function up(db, client) {
             },
           },
         },
-        { session }
+        { session },
       );
 
       const currentDate = toUTCDate(new Date());
@@ -108,7 +108,7 @@ export async function down(db, client) {
         {
           $unset: { exclusivity_uphold_status: "" },
         },
-        { session }
+        { session },
       );
 
       // Remove exclusivity_status from CreateOrders
@@ -117,7 +117,7 @@ export async function down(db, client) {
         .updateMany(
           {},
           { $unset: { "artwork_data.exclusivity_status": "" } },
-          { session }
+          { session },
         );
 
       // Remove exclusivity_status from Artworkuploads

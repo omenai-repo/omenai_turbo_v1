@@ -68,7 +68,7 @@ export default function ExhibitionGrid({
           </div>
         ) : (
           // Empty State
-          <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white">
+          <div className="flex h-64 w-full flex-col items-center justify-center rounded -lg border border-neutral-200 bg-white">
             <span className="font-sans font-medium text-neutral-400">
               No works found in {curated_preference}.
             </span>

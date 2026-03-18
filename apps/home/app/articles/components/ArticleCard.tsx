@@ -22,7 +22,7 @@ export default function ArticleCard({
           src={url}
           height={300}
           width={300}
-          className="w-full h-[200px] object-cover ring-1 ring-[#f1f1f1] rounded-t-lg"
+          className="w-full h-[200px] object-cover ring-1 ring-[#f1f1f1] rounded -t-lg"
         />
       </div>
 

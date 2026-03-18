@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { format } from "date-fns";
 import { fetchUserSupportTickets } from "@omenai/shared-services/support/fetchUserSupportTickets";
 import { Icons, PriorityBadge, UserStatusBadge } from "./util";
+import { INPUT_CLASS } from "../styles/inputClasses";
 
 export default function UserSupportHistory({ id }: { id: string }) {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -58,7 +59,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
 
   // --- SUB-COMPONENT: Mobile Card Item ---
   const TicketCard = ({ ticket }: { ticket: any }) => (
-    <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm space-y-3">
+    <div className="bg-white border border-slate-200 rounded -lg p-4 shadow-sm space-y-3">
       <div className="flex justify-between items-start">
         <div>
           <span className="font-mono text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
@@ -93,7 +94,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
   return (
     <div className="space-y-6">
       {/* 1. Header & Filters */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-5">
+      <div className="bg-white p-5 rounded -xl border border-slate-200 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h3 className="text-base font-semibold text-slate-900">
@@ -106,7 +107,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
 
           {/* Search Bar - Full width on mobile */}
           <div className="relative w-full md:w-72">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
               <Icons.Search />
             </div>
             <input
@@ -117,7 +118,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="block w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-1 focus:ring-slate-900 transition-colors"
+              className={INPUT_CLASS}
             />
           </div>
         </div>
@@ -141,7 +142,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
                   setStatus(e.target.value);
                   setPage(1);
                 }}
-                className="w-full md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-slate-900 outline-none"
+                className="w-full md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded -lg px-3 py-2.5 focus:ring-1 focus:ring-slate-900 outline-none"
               >
                 <option value="ALL">Status: All</option>
                 <option value="OPEN">Open</option>
@@ -156,7 +157,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
                   setPriority(e.target.value);
                   setPage(1);
                 }}
-                className="w-full md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-slate-900 outline-none"
+                className="w-full md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded -lg px-3 py-2.5 focus:ring-1 focus:ring-slate-900 outline-none"
               >
                 <option value="ALL">Priority: All</option>
                 <option value="HIGH">High</option>
@@ -170,7 +171,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
                   setYear(e.target.value);
                   setPage(1);
                 }}
-                className="col-span-2 md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-slate-900 outline-none"
+                className="col-span-2 md:w-auto bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded -lg px-3 py-2.5 focus:ring-1 focus:ring-slate-900 outline-none"
               >
                 <option value="ALL">Year: All</option>
                 {years.map((y) => (
@@ -191,7 +192,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white border border-slate-100 rounded-xl p-6 animate-pulse flex flex-col gap-3"
+                className="bg-white border border-slate-100 rounded -xl p-6 animate-pulse flex flex-col gap-3"
               >
                 <div className="h-4 w-1/3 bg-slate-100 rounded"></div>
                 <div className="h-3 w-full bg-slate-50 rounded"></div>
@@ -199,8 +200,8 @@ export default function UserSupportHistory({ id }: { id: string }) {
             ))}
           </div>
         ) : tickets.length === 0 ? (
-          <div className="bg-white border border-dashed border-slate-200 rounded-xl p-12 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3 text-slate-300 text-xl">
+          <div className="bg-white border border-dashed border-slate-200 rounded -xl p-12 flex flex-col items-center justify-center text-center">
+            <div className="w-12 h-12 bg-slate-50 rounded -full flex items-center justify-center mb-3 text-slate-300 text-xl">
               ?
             </div>
             <p className="text-sm font-medium text-slate-900">
@@ -231,7 +232,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
             </div>
 
             {/* VIEW B: Desktop Table (Visible on Medium+ Screens) */}
-            <div className="hidden md:block border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+            <div className="hidden md:block border border-slate-200 rounded -xl overflow-hidden bg-white shadow-sm">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-100">
                   <thead className="bg-slate-50/50">
@@ -312,7 +313,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1 || loading}
-              className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded-lg hover:bg-white bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-600 flex items-center justify-center"
+              className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded -lg hover:bg-white bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-600 flex items-center justify-center"
             >
               <Icons.ChevronLeft />
             </button>
@@ -321,7 +322,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
                 setPage((p) => Math.min(pagination.totalPages, p + 1))
               }
               disabled={page === pagination.totalPages || loading}
-              className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded-lg hover:bg-white bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-600 flex items-center justify-center"
+              className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded -lg hover:bg-white bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-600 flex items-center justify-center"
             >
               <Icons.ChevronRight />
             </button>

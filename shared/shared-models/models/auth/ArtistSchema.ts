@@ -2,8 +2,13 @@ import {
   ArtistDocumentationTypes,
   ArtistSchemaTypes,
 } from "@omenai/shared-types";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
+
+const now = new Date();
+const resetDate = new Date(now);
+resetDate.setMonth(now.getMonth() + 1);
 
 const artistSchemaDef = new Schema<ArtistSchemaTypes>(
   {
@@ -103,8 +108,12 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       isBreached: { type: Boolean, default: false },
       incident_count: { type: Number, default: 0 },
     },
+    pricing_allowances: {
+      auto_approvals_used: { type: Number, default: 0 },
+      last_reset_date: { type: Date, default: toUTCDate(resetDate) },
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const AccountArtist =

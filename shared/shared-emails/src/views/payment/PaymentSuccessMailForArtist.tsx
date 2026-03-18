@@ -73,7 +73,7 @@ export const PaymentSuccessMailArtist = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "600px", margin: "40px auto", padding: "32px" }}
           >
             {/* Header */}
@@ -121,7 +121,7 @@ export const PaymentSuccessMailArtist = ({
             />
 
             {/* Financial Details */}
-            <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-100 border-divider">
+            <Section className="bg-box bg-gray-50 rounded -lg p-6 my-8 border border-gray-100 border-divider">
               <Text
                 className="heading-main text-gray-900"
                 style={{

@@ -1,9 +1,14 @@
 "use client";
 
-import { Input } from "@mantine/core";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { Image as ImageIcon, X } from "lucide-react";
-import React, { ChangeEvent, useRef, useState } from "react";
+import { Image as ImageIcon, UploadCloud, X } from "lucide-react";
+import React, {
+  ChangeEvent,
+  useEffect,
+  useRef,
+  useState,
+  DragEvent,
+} from "react";
 
 export default function EditorialCover({
   setCover,
@@ -13,16 +18,27 @@ export default function EditorialCover({
   cover: File | null;
 }) {
   const imagePickerRef = useRef<HTMLInputElement>(null);
-  const acceptedFileTypes = ["jpg", "jpeg", "png"];
-  const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+  const [isDragging, setIsDragging] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !file.type.startsWith("image/")) return;
+  const MAX_SIZE_BYTES = 15 * 1024 * 1024;
 
-    const ext = file.type.split("/")[1];
-    if (!acceptedFileTypes.includes(ext)) {
-      toast_notif("Unsupported file type. Use JPG or PNG images.", "error");
+  // FIX: Safely manage the object URL to prevent memory leaks
+  useEffect(() => {
+    if (!cover) {
+      setPreviewUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(cover);
+    setPreviewUrl(objectUrl);
+
+    // Cleanup function revokes the URL when the component unmounts or cover changes
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [cover]);
+
+  const validateAndSetFile = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast_notif("Unsupported file type. Please upload an image.", "error");
       return;
     }
 
@@ -32,73 +48,114 @@ export default function EditorialCover({
     }
 
     setCover(file);
-    e.target.value = "";
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) validateAndSetFile(file);
+    e.target.value = ""; // Reset input so the same file can be uploaded again if removed
+  };
+
+  // Drag and Drop Handlers
+  const onDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const onDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const onDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) validateAndSetFile(file);
   };
 
   return (
-    <div className="space-y-2">
-      <Input.Label className="text-sm font-medium text-neutral-900">
-        Cover image
-      </Input.Label>
-
-      <p className="text-sm text-neutral-500">
-        This image will be used as the hero visual for the editorial.
-      </p>
-
+    <div className="flex h-full w-full flex-col">
       <div
-        className="
-          relative h-[240px] w-full max-w-xl
-          overflow-hidden rounded
-          border border-dashed border-neutral-300
-          bg-neutral-50
-          transition hover:border-neutral-400
-        "
+        className={`
+          relative flex h-full min-h-[320px] w-full flex-col items-center justify-center 
+          overflow-hidden rounded-xl border-2 transition-all duration-200 ease-in-out
+          ${
+            isDragging
+              ? "border-neutral-400 border-dashed bg-neutral-100/50"
+              : cover
+                ? "border-transparent bg-transparent"
+                : "border-dashed border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-neutral-100/50 cursor-pointer"
+          }
+        `}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        onClick={() => !cover && imagePickerRef.current?.click()}
       >
-        {cover ? (
-          <>
+        {cover && previewUrl ? (
+          <div className="group relative h-full w-full">
+            {/* The Image */}
             <img
-              src={URL.createObjectURL(cover)}
+              src={previewUrl}
               alt="Editorial cover preview"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
+            {/* Premium Hover Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  imagePickerRef.current?.click();
+                }}
+                className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-neutral-900 backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+              >
+                <UploadCloud size={18} />
+                Replace Cover
+              </button>
+            </div>
+
+            {/* Remove Button */}
             <button
-              onClick={() => setCover(null)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCover(null);
+              }}
               type="button"
-              className="
-                absolute right-3 top-3
-                rounded bg-white/90 p-1
-                text-neutral-600
-                shadow-sm
-                hover:bg-white
-              "
+              className="absolute right-4 top-4 rounded-full bg-black/50 p-2 text-white backdrop-blur-md transition-colors hover:bg-red-500"
               aria-label="Remove cover image"
             >
               <X size={16} />
             </button>
-          </>
+          </div>
         ) : (
-          <button
-            type="button"
-            onClick={() => imagePickerRef.current?.click()}
-            className="
-              flex h-full w-full flex-col items-center justify-center gap-2
-              text-neutral-500
-              hover:text-neutral-700
-            "
-          >
-            <ImageIcon size={28} />
-            <span className="text-sm">Click to upload cover image</span>
-            <span className="text-xs text-neutral-400">
-              JPG or PNG • max 5MB
-            </span>
-          </button>
+          <div className="flex flex-col items-center justify-center gap-3 p-6 text-center pointer-events-none">
+            <div
+              className={`rounded-full bg-white p-4 shadow-sm ring-1 ring-neutral-900/5 transition-transform duration-300 ${isDragging ? "scale-110 shadow-md" : ""}`}
+            >
+              <ImageIcon className="text-neutral-400" size={32} />
+            </div>
+            <div className="space-y-1">
+              <p className="text-base font-medium text-neutral-900">
+                {isDragging ? "Drop image here" : "Upload cover image"}
+              </p>
+              <p className="text-sm text-neutral-500">
+                Drag and drop, or click to browse
+              </p>
+            </div>
+            <p className="text-xs font-medium text-neutral-400 mt-2 uppercase tracking-wider">
+              High-Res JPG or PNG. Max 15MB
+            </p>
+          </div>
         )}
 
         <input
           ref={imagePickerRef}
           type="file"
-          hidden
+          accept="image/jpeg, image/png, image/webp"
+          className="hidden"
           onChange={handleFileChange}
         />
       </div>

@@ -64,7 +64,7 @@ export const PaymentFailedEmail = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white my-10 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white my-10 rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "600px" }}
           >
             {/* Header Section */}
@@ -120,7 +120,7 @@ export const PaymentFailedEmail = ({
               </Text>
 
               {/* Payment Details Grid */}
-              <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-200 border-divider">
+              <Section className="bg-box bg-gray-50 rounded -lg p-6 my-8 border border-gray-200 border-divider">
                 <Text
                   className="heading-main text-gray-900"
                   style={{
@@ -205,7 +205,7 @@ export const PaymentFailedEmail = ({
               </Section>
 
               {/* Suspension Notice */}
-              <Section className="advisory-box bg-amber-50 rounded-r-lg p-5 border-l-4 border-amber-400 mb-8">
+              <Section className="advisory-box bg-amber-50 rounded -r-lg p-5 border-l-4 border-amber-400 mb-8">
                 <Text
                   className="text-main text-gray-800 m-0"
                   style={{ fontSize: "14px", lineHeight: "1.6" }}

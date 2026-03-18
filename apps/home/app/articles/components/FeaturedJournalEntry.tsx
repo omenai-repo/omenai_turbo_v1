@@ -20,7 +20,7 @@ export default function FeaturedJournalEntry({
         <article className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* IMAGE COLUMN (Dominant) */}
           <div className="lg:col-span-8 w-full">
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded -sm bg-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <Image
                 src={image_href}
                 alt={article.headline}
@@ -48,7 +48,7 @@ export default function FeaturedJournalEntry({
 
             <span className="inline-flex items-center gap-3 font-sans text-xs font-bold uppercase tracking-widest text-dark ">
               Read Feature
-              <span className="bg-[#091830] text-white rounded-full p-1 transition-transform duration-300 group-hover:translate-x-2">
+              <span className="bg-[#091830] text-white rounded -full p-1 transition-transform duration-300 group-hover:translate-x-2">
                 <MdArrowRightAlt className="text-lg" />
               </span>
             </span>

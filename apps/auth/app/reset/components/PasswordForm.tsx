@@ -161,7 +161,7 @@ export default function PasswordForm({ id, route }: IdProps) {
 
         {/* Validation Errors Display */}
         {errorList.length > 0 && (
-          <div className="rounded-md border border-red-200 bg-red-50 p-4">
+          <div className="rounded -md border border-red-200 bg-red-50 p-4">
             <ul className="list-inside list-disc space-y-1 text-sm text-red-600">
               {errorList.map((error, index) => (
                 <li key={`error-${index}`}>{error}</li>
@@ -175,7 +175,7 @@ export default function PasswordForm({ id, route }: IdProps) {
         disabled={
           isLoading || !passwordData.password || !passwordData.confirmPassword
         }
-        className="flex h-11 w-full items-center justify-center rounded-md bg-slate-900 px-4 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+        className="flex h-11 w-full items-center justify-center rounded -md bg-slate-900 px-4 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
       >
         {isLoading ? <LoadSmall /> : "Change Password"}
       </button>

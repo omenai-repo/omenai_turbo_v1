@@ -26,7 +26,7 @@ export const UserProfileSkeleton = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Personal Details Skeleton */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
+            <div className="bg-white rounded -[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
               {/* Header */}
               <div className="flex items-center gap-3 mb-8">
                 <Skeleton height={36} width={36} radius="sm" />
@@ -82,7 +82,7 @@ export const UserProfileSkeleton = () => {
           {/* Right Column: Preferences Skeleton */}
           <div className="lg:col-span-7">
             {/* Preferences Grid */}
-            <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+            <div className="bg-white rounded -[32px] p-8 border border-slate-100 shadow-sm">
               <div className="flex items-center gap-3 mb-8">
                 <Skeleton height={24} width={180} radius="md" />
               </div>
@@ -101,7 +101,7 @@ export const UserProfileSkeleton = () => {
             </div>
 
             {/* Account Security Card Skeleton */}
-            <div className="mt-6 bg-gradient-to-r from-dark to-slate-800 rounded-[32px] p-8 shadow-lg">
+            <div className="mt-6 bg-gradient-to-r from-dark to-slate-800 rounded -[32px] p-8 shadow-lg">
               <div className="flex justify-between items-center">
                 <div className="flex-1">
                   <Skeleton

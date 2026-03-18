@@ -153,6 +153,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
         price_data: price,
         shouldShowPrice: "Yes",
         currency,
+        algorithm_recommendation: price,
       };
 
       return NextResponse.json(

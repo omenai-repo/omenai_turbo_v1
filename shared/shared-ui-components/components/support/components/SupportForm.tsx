@@ -129,7 +129,7 @@ export function SupportForm({
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="appearance-none w-full bg-slate-50/50 border border-slate-200/60 text-dark text-sm rounded-xl focus:border-slate-400 focus:bg-white focus:ring-0 block px-4 py-3 outline-none transition-all font-light text-left flex items-center justify-between"
+            className="appearance-none w-full bg-slate-50/50 border border-slate-200/60 text-dark text-sm rounded -xl focus:border-slate-400 focus:bg-white focus:ring-0 block px-4 py-3 outline-none transition-all font-light text-left flex items-center justify-between"
           >
             <span>{CATEGORY_LABELS[category]}</span>
             <Icons.ChevronDown />
@@ -141,7 +141,7 @@ export function SupportForm({
                 className="fixed inset-0 z-10"
                 onClick={() => setDropdownOpen(false)}
               />
-              <div className="absolute z-20 w-full my-2 bg-white border border-slate-200/60 rounded-xl shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] overflow-hidden backdrop-blur-xl max-h-60 overflow-y-auto">
+              <div className="absolute z-20 w-full my-2 bg-white border border-slate-200/60 rounded -xl shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] overflow-hidden backdrop-blur-xl max-h-60 overflow-y-auto">
                 {allowedCategories.map((cat) => (
                   <button
                     key={cat}
@@ -173,7 +173,7 @@ export function SupportForm({
       </div>
 
       {(showReferenceField || showDateField) && (
-        <div className="p-5 bg-slate-50 rounded-lg space-y-4 border border-slate-300">
+        <div className="p-5 bg-slate-50 rounded -lg space-y-4 border border-slate-300">
           {showReferenceField && (
             <div className="space-y-2">
               <div className="flex justify-between items-center">
@@ -218,7 +218,7 @@ export function SupportForm({
       <button
         onClick={onSubmit}
         disabled={isSubmitting}
-        className="w-full group relative flex justify-center py-3.5 px-4 border-0 text-sm font-light rounded-lg text-white bg-dark hover:bg-black focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
+        className="w-full group relative flex justify-center py-3.5 px-4 border-0 text-sm font-light rounded -lg text-white bg-dark hover:bg-black focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] border border-slate-300"
       >
         {isSubmitting ? (
           <span className="flex items-center gap-2">

@@ -72,7 +72,7 @@ export const StatusBadge = ({ status }: { status: string }) => {
   };
   return (
     <span
-      className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${styles[status] || styles.OPEN} tracking-wide uppercase`}
+      className={`px-2.5 py-0.5 rounded -full text-[10px] font-medium border ${styles[status] || styles.OPEN} tracking-wide uppercase`}
     >
       {status.replace("_", " ")}
     </span>
@@ -87,7 +87,7 @@ export const PriorityBadge = ({ priority }: { priority: string }) => {
   };
   return (
     <span
-      className={`px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${styles[priority] || styles.NORMAL} tracking-wide uppercase`}
+      className={`px-2.5 py-0.5 rounded -full text-[10px] font-medium border ${styles[priority] || styles.NORMAL} tracking-wide uppercase`}
     >
       {priority}
     </span>

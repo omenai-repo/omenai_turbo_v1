@@ -36,7 +36,7 @@ export default function ArtCollectionCard({
 
           {/* Floating Action Button (Bottom Right) */}
           <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-dark  shadow-md">
+            <div className="flex h-10 w-10 items-center justify-center rounded -full bg-white text-dark  shadow-md">
               <MdArrowRightAlt className="text-xl" />
             </div>
           </div>

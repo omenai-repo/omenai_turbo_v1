@@ -10,6 +10,8 @@ import {
   ChartColumnBig,
   Headset,
   Image,
+  MessageCircleMore,
+  Truck,
 } from "lucide-react";
 // types/sidebar.ts
 import { LucideIcon } from "lucide-react";
@@ -48,8 +50,15 @@ export const sidebarItems: SidebarItem[] = [
     key: "support",
   },
   {
+    label: "Review Hub",
+    icon: MessageCircleMore,
+    href: "/admin/reviews",
+    section: "actions",
+    key: "reviews",
+  },
+  {
     label: "Shipments",
-    icon: Headset,
+    icon: Truck,
     href: "/admin/shipments",
     section: "actions",
     key: "shipments",

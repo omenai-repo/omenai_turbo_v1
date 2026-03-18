@@ -90,7 +90,7 @@ export default function MobileNavbar() {
                   <Link
                     href={item.href}
                     onClick={() => updateOpenSideNav(false)}
-                    className="block px-4 py-3 rounded-lg text-sm font-sans font-medium text-neutral-800 hover:bg-neutral-50 hover:text-dark  transition-colors"
+                    className="block px-4 py-3 rounded -lg text-sm font-sans font-medium text-neutral-800 hover:bg-neutral-50 hover:text-dark  transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -106,7 +106,7 @@ export default function MobileNavbar() {
                       ]
                     }
                     onClick={() => updateOpenSideNav(false)}
-                    className="block px-4 py-3 rounded-lg text-sm font-sans font-medium text-dark  bg-neutral-50"
+                    className="block px-4 py-3 rounded -lg text-sm font-sans font-medium text-dark  bg-neutral-50"
                   >
                     Dashboard
                   </Link>
@@ -119,13 +119,13 @@ export default function MobileNavbar() {
               <div className="mt-10 pt-8 border-t border-neutral-100 flex flex-col gap-4">
                 <Link
                   href={`${login_base_url}/login/user`}
-                  className="w-full text-center py-3 rounded-lg border border-neutral-200 text-sm font-sans font-semibold text-neutral-700 hover:border-neutral-400 transition-colors"
+                  className="w-full text-center py-3 rounded -lg border border-neutral-200 text-sm font-sans font-semibold text-neutral-700 hover:border-neutral-400 transition-colors"
                 >
                   Log In
                 </Link>
                 <Link
                   href={`${login_base_url}/register`}
-                  className="w-full text-center py-3 rounded-lg bg-[#091830] text-sm font-sans font-semibold text-white shadow-md hover:bg-[#0F2342] transition-colors"
+                  className="w-full text-center py-3 rounded -lg bg-[#091830] text-sm font-sans font-semibold text-white shadow-md hover:bg-[#0F2342] transition-colors"
                 >
                   Create Account
                 </Link>

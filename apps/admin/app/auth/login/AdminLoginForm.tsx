@@ -1,31 +1,32 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import FormInput from "./FormInput";
-
 import { IndividualLogo } from "@omenai/shared-ui-components/components/logo/Logo";
 
-export default function ArtistLoginForm() {
+export default function AdminLoginForm() {
   return (
-    <AnimatePresence key={4}>
+    <AnimatePresence>
       <motion.div
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ y: 100 }}
-        transition={{ duration: 0.33 }}
-        className="w-full h-full flex items-center gap-x-8"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full flex flex-col space-y-8"
       >
-        <div className="flex flex-col space-y-8 w-full ">
-          <div className="text-fluid-xxs ">
+        <div className="flex flex-col items-center justify-center text-center space-y-6">
+          <div className="scale-110">
             <IndividualLogo />
           </div>
-          <div className="flex flex-col space-y-10 w-full">
-            <h1 className="text-fluid-base sm:text-fluid-sm font-bold">
-              Login to your admin account.
+          <div className="space-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+              Admin Portal
             </h1>
-
-            <FormInput />
+            <p className="text-sm text-gray-500">
+              Enter your credentials to manage your platform.
+            </p>
           </div>
         </div>
+
+        <FormInput />
       </motion.div>
     </AnimatePresence>
   );

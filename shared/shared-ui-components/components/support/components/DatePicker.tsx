@@ -146,7 +146,7 @@ const PremiumDatePicker = ({
             handleDateSelect(day);
           }}
           className={`
-            h-7 w-7 flex items-center justify-center text-[11px] rounded-full transition-all duration-200
+            h-7 w-7 flex items-center justify-center text-[11px] rounded -full transition-all duration-200
             ${
               isSelected
                 ? "bg-slate-800 text-white font-medium shadow-sm"
@@ -174,7 +174,7 @@ const PremiumDatePicker = ({
           type="button"
           onClick={() => handleYearSelect(year)}
           className={`
-            py-2 text-xs rounded-md transition-all
+            py-2 text-xs rounded -md transition-all
             ${
               isSelectedYear
                 ? "bg-slate-800 text-white font-medium shadow-sm"
@@ -199,7 +199,7 @@ const PremiumDatePicker = ({
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          w-full bg-white border text-slate-900 text-sm rounded-md 
+          w-full bg-white border text-slate-900 text-sm rounded -md 
           block px-3 py-2 outline-none transition-all cursor-pointer flex items-center justify-between
           ${isOpen ? "border-slate-400 ring-1 ring-slate-100" : "border-slate-300 hover:border-slate-400"}
         `}
@@ -220,13 +220,13 @@ const PremiumDatePicker = ({
 
       {/* Dropdown Calendar */}
       {isOpen && (
-        <div className="absolute z-50 top-[calc(100%+4px)] left-0 w-full min-w-[240px] bg-white border border-slate-200 rounded-lg shadow-xl p-3 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute z-50 top-[calc(100%+4px)] left-0 w-full min-w-[240px] bg-white border border-slate-200 rounded -lg shadow-xl p-3 animate-in fade-in zoom-in-95 duration-200">
           {/* Header */}
           <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
             <button
               type="button"
               onClick={view === "days" ? previousMonth : prevYearWindow}
-              className="p-1 hover:bg-slate-100 rounded-md text-slate-500 transition-colors"
+              className="p-1 hover:bg-slate-100 rounded -md text-slate-500 transition-colors"
             >
               <ChevronLeft size={14} />
             </button>
@@ -256,7 +256,7 @@ const PremiumDatePicker = ({
             <button
               type="button"
               onClick={view === "days" ? nextMonth : nextYearWindow}
-              className="p-1 hover:bg-slate-100 rounded-md text-slate-500 transition-colors"
+              className="p-1 hover:bg-slate-100 rounded -md text-slate-500 transition-colors"
             >
               <ChevronRight size={14} />
             </button>

@@ -175,7 +175,7 @@ export default function WalletPinModalForm() {
           </div>
 
           {error.isError && (
-            <div className="rounded-md border border-red-200 bg-red-50 p-4">
+            <div className="rounded -md border border-red-200 bg-red-50 p-4">
               <p className="text-sm font-medium text-red-600">{error.value}</p>
             </div>
           )}
@@ -194,7 +194,7 @@ export default function WalletPinModalForm() {
       <div className="hidden w-1/2 flex-col justify-center bg-slate-950 px-16 py-12 md:flex lg:px-24">
         <div className="max-w-md space-y-10 text-white">
           <div className="space-y-3">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 mb-4">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded -xl bg-indigo-500/20 text-indigo-400 mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -221,7 +221,7 @@ export default function WalletPinModalForm() {
 
           <ul className="space-y-6">
             <li className="flex items-start">
-              <span className="mr-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-indigo-400">
+              <span className="mr-4 flex h-6 w-6 shrink-0 items-center justify-center rounded -full bg-slate-800 text-indigo-400">
                 1
               </span>
               <p className="text-slate-300">
@@ -233,7 +233,7 @@ export default function WalletPinModalForm() {
               </p>
             </li>
             <li className="flex items-start">
-              <span className="mr-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-indigo-400">
+              <span className="mr-4 flex h-6 w-6 shrink-0 items-center justify-center rounded -full bg-slate-800 text-indigo-400">
                 2
               </span>
               <p className="text-slate-300">
@@ -244,7 +244,7 @@ export default function WalletPinModalForm() {
               </p>
             </li>
             <li className="flex items-start">
-              <span className="mr-4 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-indigo-400">
+              <span className="mr-4 flex h-6 w-6 shrink-0 items-center justify-center rounded -full bg-slate-800 text-indigo-400">
                 3
               </span>
               <p className="text-slate-300">

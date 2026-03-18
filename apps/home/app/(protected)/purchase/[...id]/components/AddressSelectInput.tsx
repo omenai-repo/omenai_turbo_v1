@@ -84,7 +84,7 @@ export default function AddressSelectInput({
             w-full bg-white px-4 py-3
             font-sans text-sm text-dark
             border border-neutral-300 
-            rounded-none
+            rounded -none
             focus:border-dark focus:ring-0 focus:outline-none
             appearance-none
             transition-colors duration-200

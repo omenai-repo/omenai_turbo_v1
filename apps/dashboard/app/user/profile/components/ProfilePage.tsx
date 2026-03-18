@@ -139,7 +139,7 @@ export default function UserProfile({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
           {/* Left Column: Personal Details */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
+            <div className="bg-white rounded -[32px] p-8 border border-slate-100 shadow-sm h-full flex flex-col">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-2 bg-slate-50 rounded">
                   <svg
@@ -252,7 +252,7 @@ export default function UserProfile({
             />
 
             {/* Additional "Premium" Visual Element */}
-            <div className="mt-6 bg-gradient-to-r from-dark to-slate-800 rounded-[32px] p-8 text-white shadow-lg overflow-hidden relative">
+            <div className="mt-6 bg-gradient-to-r from-dark to-slate-800 rounded -[32px] p-8 text-white shadow-lg overflow-hidden relative">
               <div className="relative z-10 flex justify-between items-center">
                 <div>
                   <h4 className="text-lg font-medium mb-1">Account Security</h4>

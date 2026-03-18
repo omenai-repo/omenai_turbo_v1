@@ -48,7 +48,7 @@ export default function GalleryRequest({
       <div className="relative group">
         {/* Status accent */}
         <div
-          className={`absolute left-0 top-0 h-full w-1 rounded-l-lg ${status.accent}`}
+          className={`absolute left-0 top-0 h-full w-1 rounded -l-lg ${status.accent}`}
         />
 
         <div

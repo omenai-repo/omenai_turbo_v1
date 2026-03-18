@@ -72,7 +72,7 @@ export const ShipmentPickupNotificationEmail = ({
           style={{ margin: "0", padding: "0" }}
         >
           <Container
-            className="container-bg bg-white my-10 rounded-lg shadow-sm border border-gray-200 overflow-hidden"
+            className="container-bg bg-white my-10 rounded -lg shadow-sm border border-gray-200 overflow-hidden"
             style={{ maxWidth: "600px" }}
           >
             {/* Header Section */}
@@ -122,7 +122,7 @@ export const ShipmentPickupNotificationEmail = ({
               />
 
               {/* Order Details Grid */}
-              <Section className="bg-box bg-gray-50 rounded-lg p-6 my-8 border border-gray-200 border-divider">
+              <Section className="bg-box bg-gray-50 rounded -lg p-6 my-8 border border-gray-200 border-divider">
                 <Text
                   className="heading-main text-gray-900"
                   style={{
@@ -223,7 +223,7 @@ export const ShipmentPickupNotificationEmail = ({
                   must be prepared prior to the courier's arrival:
                 </Text>
 
-                <div className="bg-box bg-white border border-gray-200 border-divider rounded-md p-4 mb-3">
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded -md p-4 mb-3">
                   <Text
                     className="heading-main text-gray-900 font-semibold m-0 mb-1"
                     style={{ fontSize: "15px" }}
@@ -239,7 +239,7 @@ export const ShipmentPickupNotificationEmail = ({
                   </Text>
                 </div>
 
-                <div className="bg-box bg-white border border-gray-200 border-divider rounded-md p-4 mb-3">
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded -md p-4 mb-3">
                   <Text
                     className="heading-main text-gray-900 font-semibold m-0 mb-1"
                     style={{ fontSize: "15px" }}
@@ -255,7 +255,7 @@ export const ShipmentPickupNotificationEmail = ({
                   </Text>
                 </div>
 
-                <div className="bg-box bg-white border border-gray-200 border-divider rounded-md p-4 mb-3">
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded -md p-4 mb-3">
                   <Text
                     className="heading-main text-gray-900 font-semibold m-0 mb-1"
                     style={{ fontSize: "15px" }}
@@ -274,7 +274,7 @@ export const ShipmentPickupNotificationEmail = ({
               </Section>
 
               {/* Standard Operating Procedure Notice */}
-              <Section className="advisory-box bg-gray-100 rounded-r-lg p-5 border-l-4 border-gray-800 my-8">
+              <Section className="advisory-box bg-gray-100 rounded -r-lg p-5 border-l-4 border-gray-800 my-8">
                 <Text
                   className="heading-main text-gray-900 font-semibold m-0 mb-2"
                   style={{ fontSize: "15px" }}
