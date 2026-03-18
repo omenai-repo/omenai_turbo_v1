@@ -36,11 +36,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const lastReset = new Date(artist.pricing_allowances.last_reset_date);
     let currentUsage = artist.pricing_allowances.auto_approvals_used;
 
-    // If we are in a new month, reset their usage counter to 0
-    if (
-      now.getMonth() !== lastReset.getMonth() ||
-      now.getFullYear() !== lastReset.getFullYear()
-    ) {
+    // Calculate the exact time difference in days
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const daysSinceLastReset = (now.getTime() - lastReset.getTime()) / msPerDay;
+
+    // If 30 or more full 24-hour periods have passed, reset the counter
+    if (daysSinceLastReset >= 30) {
       currentUsage = 0;
       artist.pricing_allowances.auto_approvals_used = 0;
       artist.pricing_allowances.last_reset_date = now;
@@ -87,7 +88,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     // 5. Construct and Save the Review Document
     const newReview = new PriceReview({
       artist_id,
-      artist_review, // Mongoose is now happy because justification_type exists
+      artist_review,
       meta,
       status: finalStatus,
     });
@@ -101,11 +102,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       await artist.save();
 
       await uploadArtworkLogic(meta.artwork);
-
-      // (Optional) You can send the "PriceReviewApproved" email here instead
-      // since it bypassed the manual queue entirely!
     } else {
-      // ONLY send emails if the request actually requires manual intervention
       await sendPriceReviewRequest({
         name: artist.name,
         email: artist.email,

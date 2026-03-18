@@ -66,6 +66,7 @@ export default function ArtworkPricing() {
         artwork_height,
         artwork_width,
         user.base_currency as string,
+        user.artist_id,
       );
 
       if (response === undefined || !response.isOk)
@@ -192,6 +193,7 @@ export default function ArtworkPricing() {
                 pricingData={pricing.algorithm_recommendation}
                 artworkMeta={priceReviewArtworkData}
                 image={image}
+                hasAutoApprovalsRemaining={pricing.hasAutoApprovalsRemaining}
               />
             </div>
 

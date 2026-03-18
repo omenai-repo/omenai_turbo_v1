@@ -40,6 +40,7 @@ interface PriceReviewWidgetProps {
     | "currency"
   >;
   image: File;
+  hasAutoApprovalsRemaining: boolean;
   onCancel?: () => void;
   onSuccess?: () => void;
 }
@@ -58,6 +59,7 @@ export default function PriceReviewWidget({
   pricingData,
   artworkMeta,
   image,
+  hasAutoApprovalsRemaining,
   onCancel,
   onSuccess,
 }: PriceReviewWidgetProps) {
@@ -102,10 +104,11 @@ export default function PriceReviewWidget({
     return anchorPrice * (1 + varianceLimit);
   }, [artistCategory, pricingData.priceRange]);
 
+  // Inside PriceReviewWidget.tsx
   const isAutoApproveZone = useMemo(() => {
     if (requestedPrice === "") return true;
-    return requestedPrice <= maxAllowedPrice;
-  }, [requestedPrice, maxAllowedPrice]);
+    return requestedPrice <= maxAllowedPrice && hasAutoApprovalsRemaining;
+  }, [requestedPrice, maxAllowedPrice, hasAutoApprovalsRemaining]);
 
   const handleSubmit = async () => {
     if (!requestedPrice || requestedPrice <= 0) {
@@ -232,7 +235,9 @@ export default function PriceReviewWidget({
       }
 
       if (onSuccess) onSuccess();
-      router.replace("/artist/app/reviews");
+      isAutoApproveZone
+        ? router.replace("/artist/app/artworks")
+        : router.replace("/artist/app/reviews");
     } catch (error: any) {
       toast_notif(error.message, "error");
     } finally {
@@ -282,7 +287,7 @@ export default function PriceReviewWidget({
               <div>
                 <h4 className="font-medium text-sm">Data-Backed Adjustments</h4>
                 <p className="text-xs text-neutral-400 mt-1">
-                  Significant price increases require verification via past
+                  Significant price changes require verification via past
                   gallery sales or exhibitions.
                 </p>
               </div>
@@ -318,7 +323,8 @@ export default function PriceReviewWidget({
               recommendedPrice={pricingData.recommendedPrice}
               requestedPrice={requestedPrice}
               setRequestedPrice={setRequestedPrice}
-              isAutoApproveZone={isAutoApproveZone}
+              maxAllowedPrice={maxAllowedPrice}
+              hasAutoApprovalsRemaining={hasAutoApprovalsRemaining}
             />
 
             {user.categorization !== "Emerging" && (

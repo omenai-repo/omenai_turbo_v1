@@ -8,11 +8,12 @@ export async function fetchArtworkPriceForArtist(
   height: string,
   width: string,
   currency: string,
+  artist_id: string,
 ) {
   try {
     const url = getApiUrl();
     const res = await fetch(
-      `${url}/api/artworks/getArtworkPriceForArtist?medium=${medium}&category=${category}&height=${height}&width=${width}&currency=${currency.toUpperCase()}
+      `${url}/api/artworks/getArtworkPriceForArtist?medium=${medium}&category=${category}&height=${height}&width=${width}&currency=${currency.toUpperCase()}&id=${artist_id}
 `,
       {
         method: "GET",
