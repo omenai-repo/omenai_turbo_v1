@@ -13,7 +13,7 @@ import ReviewSidebar from "./ReviewSidebar";
 import { fetchPriceReviewRequests } from "@omenai/shared-services/admin/fetchPriceReviewRequests";
 import { updatePriceReviewRequest } from "@omenai/shared-services/admin/updatePriceReviewRequest";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-// Updated to build the exact URL parameters expected by the backend
+
 const fetchAdminQueue = async ({ queryKey }: any) => {
   const [_key, page, artistId] = queryKey;
 
@@ -50,7 +50,7 @@ export default function AdminPricingTriage() {
     queryKey: ["admin_price_queue", currentPage, searchArtistId],
     queryFn: fetchAdminQueue,
     refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData, // Prevents the sidebar from flashing empty while loading the next page
+    placeholderData: keepPreviousData,
   });
 
   const adminActionMutation = useMutation({
@@ -60,13 +60,14 @@ export default function AdminPricingTriage() {
       if (!res.isOk)
         throw new Error(
           res.message ||
-            "Failed to process request. Pleasre try again or contact support",
+            "Failed to process request. Please try again or contact support",
         );
       return res;
     },
     onSuccess: () => {
       toast_notif("Decision recorded successfully.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin_price_queue"] });
+      // This sets it to null, triggering the key change to wipe the form!
       setSelectedReviewId(null);
     },
     onError: (error: any) => {
@@ -98,6 +99,7 @@ export default function AdminPricingTriage() {
       {/* Right Column: The Workspace (65% width) */}
       <div className="hidden md:block flex-1 h-full border-l border-neutral-200">
         <ReviewWorkspace
+          key={selectedReviewId || "empty-workspace"}
           review={selectedReview}
           onAction={adminActionMutation.mutate}
           isMutating={adminActionMutation.isPending}

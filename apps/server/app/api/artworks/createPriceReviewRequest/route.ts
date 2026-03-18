@@ -114,7 +114,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
       await sendArtworkPriceReviewEmail({
         name: artist.name,
-        email: "moses@omenai.net",
+        email: "advisory@omenai.net",
         artwork_title: meta.artwork.title,
         requested_price: artist_review.requested_price,
       });

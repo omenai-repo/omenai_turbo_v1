@@ -80,7 +80,6 @@ export default function PriceReviewWidget({
     useState(false);
   const [shouldShowPrice, setShouldShowPrice] = useState<"Yes" | "No">("Yes");
 
-  // LEGAL CONSENT STATE ADDED
   const [priceConsent, setPriceConsent] = useState(false);
   const [acknowledgment, setAcknowledgment] = useState(false);
   const [penaltyConsent, setPenaltyConsent] = useState(false);
@@ -113,7 +112,6 @@ export default function PriceReviewWidget({
       return toast_notif("Please enter a valid price", "error");
     }
 
-    // Safety check: ensure terms are accepted before backend processing
     if (!allTermsAccepted) {
       return toast_notif(
         "Please accept the exclusivity agreement to proceed",
@@ -122,8 +120,10 @@ export default function PriceReviewWidget({
     }
 
     if (!isAutoApproveZone) {
-      if (!justificationType)
-        return toast_notif("Please select a reason", "error");
+      if (!justificationType) {
+        return toast_notif("Please select a justification type", "error");
+      }
+
       if (
         (justificationType === "PAST_SALE" ||
           justificationType === "GALLERY_EXHIBITION") &&
@@ -131,6 +131,14 @@ export default function PriceReviewWidget({
         !justificationFile
       ) {
         return toast_notif("Proof via Link or Document is required", "error");
+      }
+
+      // NEW: Explicitly require notes and prevent whitespace-only submissions
+      if (!justificationNotes || justificationNotes.trim() === "") {
+        return toast_notif(
+          "Please provide some context to justify the price change",
+          "error",
+        );
       }
     }
 
@@ -313,12 +321,14 @@ export default function PriceReviewWidget({
               isAutoApproveZone={isAutoApproveZone}
             />
 
-            <PriceVisibilitySelect
-              shouldShowPrice={shouldShowPrice}
-              setShouldShowPrice={setShouldShowPrice}
-              isOpen={isVisibilityDropdownOpen}
-              setIsOpen={setIsVisibilityDropdownOpen}
-            />
+            {user.categorization !== "Emerging" && (
+              <PriceVisibilitySelect
+                shouldShowPrice={shouldShowPrice}
+                setShouldShowPrice={setShouldShowPrice}
+                isOpen={isVisibilityDropdownOpen}
+                setIsOpen={setIsVisibilityDropdownOpen}
+              />
+            )}
 
             <AnimatePresence>
               {!isAutoApproveZone && (
@@ -335,7 +345,6 @@ export default function PriceReviewWidget({
               )}
             </AnimatePresence>
 
-            {/* INTEGRATED LEGAL COMPONENT HERE */}
             <div className="pt-4 border-t border-neutral-200 mt-2">
               <ExclusivityAgreement
                 priceConsent={priceConsent}

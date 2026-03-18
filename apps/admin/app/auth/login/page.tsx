@@ -1,30 +1,18 @@
-import Image from "next/image";
 import AdminLoginForm from "./AdminLoginForm";
 
 export const dynamic = "force-dynamic";
 
-function Page() {
+export default function Page() {
   return (
-    <section className="h-[100vh] overflow-x-hidden">
-      <div className="w-full h-full md:grid grid-cols-2">
-        {/* Side section */}
-        <div className="h-full w-full relative flex-1 hidden md:block">
-          <Image
-            src={"/dark_bg_1.jpg"}
-            alt="Artist sign up image block"
-            width={960}
-            height={1024}
-            className="absolute inset-0 w-full h-full object-center object-cover aspect-auto"
-          />
-        </div>
+    <section className="min-h-screen w-full bg-[#FAFAFA] bg-dot-pattern flex items-center justify-center p-4 overflow-x-hidden relative">
+      {/* This is a pure CSS mesh dot background. 
+        Ensure you add the corresponding style to your global CSS (below).
+      */}
 
-        {/* Form section */}
-        <div className="w-full max-w-sm h-full container overflow-x-hidden">
-          <AdminLoginForm />
-        </div>
+      {/* Premium centered card layout */}
+      <div className="w-full max-w-[420px] bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 sm:p-10 relative z-10">
+        <AdminLoginForm />
       </div>
     </section>
   );
 }
-
-export default Page;

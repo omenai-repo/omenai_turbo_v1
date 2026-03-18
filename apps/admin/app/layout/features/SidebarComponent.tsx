@@ -31,7 +31,7 @@ export function SidebarContent({ expanded }: { expanded: boolean }) {
         {expanded ? <IndividualLogo /> : <OmenaiLogoCut />}
       </div>
 
-      <nav className="flex flex-1 flex-col gap-8 px-3">
+      <nav className="flex flex-1 flex-col gap-3 px-3">
         {["actions", "activity", "management", "account"].map((section) => (
           <div key={section}>
             <ul className="space-y-3">

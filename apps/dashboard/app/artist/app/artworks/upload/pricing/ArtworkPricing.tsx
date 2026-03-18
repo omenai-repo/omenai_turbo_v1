@@ -195,12 +195,14 @@ export default function ArtworkPricing() {
               />
             </div>
 
-            <PriceVisibilitySelect
-              shouldShowPrice={shouldShowPrice}
-              setShouldShowPrice={setShouldShowPrice}
-              isOpen={isVisibilityDropdownOpen}
-              setIsOpen={setIsVisibilityDropdownOpen}
-            />
+            {user.categorization !== "Emerging" && (
+              <PriceVisibilitySelect
+                shouldShowPrice={shouldShowPrice}
+                setShouldShowPrice={setShouldShowPrice}
+                isOpen={isVisibilityDropdownOpen}
+                setIsOpen={setIsVisibilityDropdownOpen}
+              />
+            )}
           </div>
 
           {/* Right Column: Commitment Panel (35%) */}

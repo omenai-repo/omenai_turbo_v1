@@ -282,14 +282,13 @@ export default function JustificationSection({
 
       {/* 3. Contextual Notes */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-bold text-dark">
-          Contextual Notes (Optional)
-        </label>
+        <label className="text-sm font-bold text-dark">Contextual Notes</label>
         <textarea
           value={justificationNotes}
           onChange={(e) => setJustificationNotes(e.target.value)}
-          placeholder="Help our review team understand the price increase..."
+          placeholder="Help our review team understand the price change..."
           rows={3}
+          required
           className={`${TEXTAREA_CLASS} bg-white border-neutral-300 resize-none`}
         />
       </div>
