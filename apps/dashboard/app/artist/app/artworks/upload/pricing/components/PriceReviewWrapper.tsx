@@ -20,6 +20,10 @@ import { storage } from "@omenai/appwrite-config";
 import { useRollbar } from "@rollbar/react";
 import { ID } from "appwrite";
 import ExclusivityAgreement from "../ExclusivityAgreement";
+import {
+  getImageAspectRatio,
+  getRatioString,
+} from "@omenai/shared-utils/src/getImageAspectRatio";
 
 type PricingData = {
   recommendedPrice: number;
@@ -147,6 +151,15 @@ export default function PriceReviewWidget({
 
     setIsSubmitting(true);
 
+    const aspect_ratio = await getImageAspectRatio(image);
+
+    const image_format = getRatioString(aspect_ratio);
+
+    if (!image_format) {
+      toast_notif("Invalid Image format", "error");
+      return;
+    }
+
     const fileUploaded = await uploadImage(image);
     if (!fileUploaded) {
       setIsSubmitting(false);
@@ -188,6 +201,7 @@ export default function PriceReviewWidget({
         role: "artist",
         designation: user.categorization,
       },
+      image_format,
     );
 
     const payload = {
