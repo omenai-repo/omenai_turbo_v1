@@ -24,6 +24,9 @@ export default function EditArtworkWrapper({
   const [description, setDescription] = useState(
     artwork.artwork_description ?? "",
   );
+  const [availability, setAvailability] = useState<boolean>(
+    artwork.availability,
+  );
 
   const { csrf } = useAuth({ requiredRole: "gallery" });
   const router = useRouter();
@@ -39,7 +42,7 @@ export default function EditArtworkWrapper({
     setLoading(true);
     try {
       const update = await updateArtwork(
-        { artwork_description: description },
+        { artwork_description: description, availability },
         artwork.art_id,
         csrf || "",
       );
@@ -109,7 +112,7 @@ export default function EditArtworkWrapper({
           </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
           <div className="space-y-4">
             <label
               htmlFor="description"
@@ -124,15 +127,33 @@ export default function EditArtworkWrapper({
               value={description}
               placeholder="Tell the story behind this piece..."
               onChange={(e) => setDescription(e.target.value)}
-              // Appending to your existing class to ensure it looks pristine
               className={`${TEXTAREA_CLASS} w-full resize-y p-4 text-sm leading-relaxed focus:outline-none text-slate-800 transition-colors focus:border-dark focus:ring-dark`}
             />
+          </div>
+          <div className="flex items-center justify-between w-full">
+            <p className="block text-sm font-medium text-slate-700">
+              Mark artwork as sold
+            </p>
+            <label
+              className={`relative inline-flex cursor-pointer items-center `}
+            >
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={!availability}
+                onChange={(e) => setAvailability(!e.target.checked)}
+                disabled={loading}
+              />
+              <div className="h-6 w-11 rounded-full bg-slate-200 peer-checked:bg-slate-900 peer-focus-visible:ring-2 peer-focus-visible:ring-slate-900 peer-focus-visible:ring-offset-2 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-lg after:transition-all after:duration-200 peer-checked:after:translate-x-5 after:content-['']" />
+            </label>
           </div>
 
           <div className="mt-8 flex justify-end">
             <button
               disabled={
-                loading || description.trim() === artwork.artwork_description
+                loading ||
+                (description.trim() === artwork.artwork_description &&
+                  artwork.availability === availability)
               }
               type="submit"
               className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded -md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}

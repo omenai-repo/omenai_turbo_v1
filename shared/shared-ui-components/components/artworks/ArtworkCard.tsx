@@ -168,11 +168,11 @@ export default function ArtworkCard({
             </div>
           </div>
 
-          <div className="flex justify-between items-center mt-1">
-            <p className="font-sans text-fluid-xs text-slate-500 max-w-[70%]">
+          <div className="flex justify-between items-start mt-1 gap-x-2">
+            <p className="font-sans text-fluid-xs text-slate-500 max-w-[70%] break-words">
               {artist}
             </p>
-            <p className="font-sans text-[10px] text-slate-400 uppercase truncate tracking-wide">
+            <p className="font-sans text-[10px] text-slate-400 uppercase truncate tracking-wide text-right min-w-0">
               {medium}
             </p>
           </div>

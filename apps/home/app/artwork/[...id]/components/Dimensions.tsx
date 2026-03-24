@@ -1,7 +1,7 @@
 import { ArtworkDimensions } from "@omenai/shared-types";
 
 type DimensionsProps = {
-  dimensions: ArtworkDimensions;
+  dimensions: ArtworkDimensions & { length?: string };
 };
 
 export default function Dimensions({ dimensions }: DimensionsProps) {
@@ -22,7 +22,7 @@ export default function Dimensions({ dimensions }: DimensionsProps) {
         <div className="flex justify-between border-b border-neutral-200 pb-2">
           <span className="font-sans text-xs text-neutral-500">Width</span>
           <span className="font-sans text-xs text-dark">
-            {dimensions.width}
+            {dimensions.length ?? dimensions.width}
           </span>
         </div>
         {!!dimensions.weight && (
