@@ -107,7 +107,7 @@ export default function EditArtworkWrapper({
         queryClient.invalidateQueries({ queryKey: ["fetch_artworks_by_id"] });
         router.replace("/gallery/artworks");
       }
-    } catch (error) {
+    } catch {
       toast_notif(
         "An error occurred. Please try again or contact support",
         "error",
