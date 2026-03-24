@@ -4,7 +4,6 @@ import { updateArtwork } from "@omenai/shared-services/artworks/updateArtwork";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
-import { updateArtworkAvailability } from "@omenai/shared-services/artworks/updateArtworkAvailability";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -22,9 +21,11 @@ export default function EditArtworkWrapper({
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
-  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
   const [description, setDescription] = useState(
     artwork.artwork_description ?? "",
+  );
+  const [availability, setAvailability] = useState<boolean>(
+    artwork.availability,
   );
 
   const { csrf } = useAuth({ requiredRole: "gallery" });
@@ -41,7 +42,7 @@ export default function EditArtworkWrapper({
     setLoading(true);
     try {
       const update = await updateArtwork(
-        { artwork_description: description },
+        { artwork_description: description, availability },
         artwork.art_id,
         csrf || "",
       );
@@ -91,32 +92,6 @@ export default function EditArtworkWrapper({
     }
   }
 
-  async function updataArtworkAvailability() {
-    setUpdateLoading(true);
-    try {
-      const updateArtworkData = await updateArtworkAvailability(
-        artwork.art_id,
-        artwork.author_id,
-        csrf || "",
-      );
-
-      if (!updateArtworkData?.isOk) {
-        toast_notif(updateArtworkData.message, "error");
-      } else {
-        toast_notif(updateArtworkData.message, "success");
-        queryClient.invalidateQueries({ queryKey: ["fetch_artworks_by_id"] });
-        router.replace("/gallery/artworks");
-      }
-    } catch {
-      toast_notif(
-        "An error occurred. Please try again or contact support",
-        "error",
-      );
-    } finally {
-      setUpdateLoading(false);
-    }
-  }
-
   return (
     <div className="mx-auto mt-8 max-w-3xl space-y-8 px-4 pb-12">
       {/* Page Header */}
@@ -129,31 +104,6 @@ export default function EditArtworkWrapper({
         </p>
       </div>
 
-      <div className="overflow-hidden rounded -xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
-          <h2 className="text-base font-medium text-slate-800">
-            Artwork availability
-          </h2>
-        </div>
-
-        <div className="p-6">
-          <p className="block text-sm font-medium text-slate-700">
-            Set the status of your artwork here. If it has been purchased, mark
-            it as sold to update your gallery and let collectors know it’s no
-            longer available.
-          </p>
-          <div className="mt-8 flex justify-end">
-            <button
-              type="button"
-              onClick={updataArtworkAvailability}
-              className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded -md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}
-            >
-              {updateLoading ? <LoadSmall /> : "Mark artwork as sold"}
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main Edit Form Card */}
       <div className="overflow-hidden rounded -xl border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
@@ -162,7 +112,7 @@ export default function EditArtworkWrapper({
           </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
           <div className="space-y-4">
             <label
               htmlFor="description"
@@ -177,15 +127,33 @@ export default function EditArtworkWrapper({
               value={description}
               placeholder="Tell the story behind this piece..."
               onChange={(e) => setDescription(e.target.value)}
-              // Appending to your existing class to ensure it looks pristine
               className={`${TEXTAREA_CLASS} w-full resize-y p-4 text-sm leading-relaxed focus:outline-none text-slate-800 transition-colors focus:border-dark focus:ring-dark`}
             />
+          </div>
+          <div className="flex items-center justify-between w-full">
+            <p className="block text-sm font-medium text-slate-700">
+              Mark artwork as sold
+            </p>
+            <label
+              className={`relative inline-flex cursor-pointer items-center `}
+            >
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={!availability}
+                onChange={(e) => setAvailability(!e.target.checked)}
+                disabled={loading}
+              />
+              <div className="h-6 w-11 rounded-full bg-slate-200 peer-checked:bg-slate-900 peer-focus-visible:ring-2 peer-focus-visible:ring-slate-900 peer-focus-visible:ring-offset-2 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-lg after:transition-all after:duration-200 peer-checked:after:translate-x-5 after:content-['']" />
+            </label>
           </div>
 
           <div className="mt-8 flex justify-end">
             <button
               disabled={
-                loading || description.trim() === artwork.artwork_description
+                loading ||
+                (description.trim() === artwork.artwork_description &&
+                  artwork.availability === availability)
               }
               type="submit"
               className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded -md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}
