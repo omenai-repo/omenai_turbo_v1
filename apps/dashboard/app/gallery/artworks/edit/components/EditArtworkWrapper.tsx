@@ -4,6 +4,7 @@ import { updateArtwork } from "@omenai/shared-services/artworks/updateArtwork";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { deleteArtwork } from "@omenai/shared-services/artworks/deleteArtwork";
+import { updateArtworkAvailability } from "@omenai/shared-services/artworks/updateArtworkAvailability";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { LoadSmall } from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
@@ -21,6 +22,7 @@ export default function EditArtworkWrapper({
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
   const [description, setDescription] = useState(
     artwork.artwork_description ?? "",
   );
@@ -89,6 +91,32 @@ export default function EditArtworkWrapper({
     }
   }
 
+  async function updataArtworkAvailability() {
+    setUpdateLoading(true);
+    try {
+      const updateArtworkData = await updateArtworkAvailability(
+        artwork.art_id,
+        artwork.author_id,
+        csrf || "",
+      );
+
+      if (!updateArtworkData?.isOk) {
+        toast_notif(updateArtworkData.message, "error");
+      } else {
+        toast_notif(updateArtworkData.message, "success");
+        queryClient.invalidateQueries({ queryKey: ["fetch_artworks_by_id"] });
+        router.replace("/gallery/artworks");
+      }
+    } catch (error) {
+      toast_notif(
+        "An error occurred. Please try again or contact support",
+        "error",
+      );
+    } finally {
+      setUpdateLoading(false);
+    }
+  }
+
   return (
     <div className="mx-auto mt-8 max-w-3xl space-y-8 px-4 pb-12">
       {/* Page Header */}
@@ -99,6 +127,31 @@ export default function EditArtworkWrapper({
         <p className="mt-2 text-sm text-slate-500">
           Update the details of your artwork or remove it from your gallery.
         </p>
+      </div>
+
+      <div className="overflow-hidden rounded -xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+          <h2 className="text-base font-medium text-slate-800">
+            Artwork availability
+          </h2>
+        </div>
+
+        <div className="p-6">
+          <p className="block text-sm font-medium text-slate-700">
+            Set the status of your artwork here. If it has been purchased, mark
+            it as sold to update your gallery and let collectors know it’s no
+            longer available.
+          </p>
+          <div className="mt-8 flex justify-end">
+            <button
+              type="button"
+              onClick={updataArtworkAvailability}
+              className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded -md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}
+            >
+              {updateLoading ? <LoadSmall /> : "Mark artwork as sold"}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Main Edit Form Card */}
