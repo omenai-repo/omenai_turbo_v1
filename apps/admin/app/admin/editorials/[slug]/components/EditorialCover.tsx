@@ -5,7 +5,7 @@ import { Image as ImageIcon, UploadCloud } from "lucide-react";
 import React, {
   ChangeEvent,
   useEffect,
-  useRef,
+  useId,
   useState,
   DragEvent,
 } from "react";
@@ -19,9 +19,8 @@ export default function EditorialCover({
   cover: File | null;
   existingCoverUrl?: string | null;
 }>) {
-  const inputId = useRef(
-    `editorial-cover-${Math.random().toString(36).slice(2)}`,
-  );
+  const rawId = useId();
+  const inputId = `editorial-cover-${rawId}`;
   const [isDragging, setIsDragging] = useState(false);
   const [newPreviewUrl, setNewPreviewUrl] = useState<string | null>(null);
 
@@ -77,7 +76,7 @@ export default function EditorialCover({
   // Single hidden input shared by both the label click and the Replace button
   const fileInput = (
     <input
-      id={inputId.current}
+      id={inputId}
       type="file"
       accept="image/jpeg, image/png, image/webp"
       className="sr-only"
@@ -106,7 +105,7 @@ export default function EditorialCover({
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               {/* Native <label> opens the file picker — fully keyboard & screen-reader accessible */}
               <label
-                htmlFor={inputId.current}
+                htmlFor={inputId}
                 className="flex cursor-pointer items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-neutral-900 backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               >
                 <UploadCloud size={18} />
@@ -121,7 +120,7 @@ export default function EditorialCover({
         // No image — wrap the entire drop zone in a <label> so clicking
         // anywhere opens the file picker natively. No onClick div needed.
         <label
-          htmlFor={inputId.current}
+          htmlFor={inputId}
           className={`
             relative flex h-full min-h-[320px] w-full cursor-pointer flex-col items-center justify-center
             overflow-hidden rounded-xl border-2 transition-all duration-200 ease-in-out
