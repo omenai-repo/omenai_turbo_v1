@@ -19,13 +19,14 @@ export default function EditorialCover({
   cover: File | null;
   existingCoverUrl?: string | null;
 }>) {
-  const imagePickerRef = useRef<HTMLInputElement>(null);
+  const inputId = useRef(
+    `editorial-cover-${Math.random().toString(36).slice(2)}`,
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [newPreviewUrl, setNewPreviewUrl] = useState<string | null>(null);
 
   const MAX_SIZE_BYTES = 15 * 1024 * 1024;
 
-  // Manage object URL for newly picked files only
   useEffect(() => {
     if (!cover) {
       setNewPreviewUrl(null);
@@ -54,67 +55,87 @@ export default function EditorialCover({
     e.target.value = "";
   };
 
-  const onDragOver = (e: DragEvent<HTMLDivElement>) => {
+  const onDragOver = (e: DragEvent<HTMLLabelElement | HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const onDragLeave = (e: DragEvent<HTMLDivElement>) => {
+  const onDragLeave = (e: DragEvent<HTMLLabelElement | HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
   };
 
-  const onDrop = (e: DragEvent<HTMLDivElement>) => {
+  const onDrop = (e: DragEvent<HTMLLabelElement | HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file) validateAndSetFile(file);
   };
+
   const displayUrl = newPreviewUrl ?? existingCoverUrl ?? null;
+
+  // Single hidden input shared by both the label click and the Replace button
+  const fileInput = (
+    <input
+      id={inputId.current}
+      type="file"
+      accept="image/jpeg, image/png, image/webp"
+      className="sr-only"
+      onChange={handleFileChange}
+    />
+  );
 
   return (
     <div className="flex h-full w-full flex-col">
-      <div
-        className={`
-          relative flex h-full min-h-[320px] w-full flex-col items-center justify-center 
-          overflow-hidden rounded-xl border-2 transition-all duration-200 ease-in-out
-          ${
-            isDragging
-              ? "border-neutral-400 border-dashed bg-neutral-100/50"
-              : displayUrl
-                ? "border-transparent bg-transparent"
-                : "border-dashed border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-neutral-100/50 cursor-pointer"
-          }
-        `}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
-        onClick={() => !displayUrl && imagePickerRef.current?.click()}
-      >
-        {displayUrl ? (
+      {displayUrl ? (
+        // Image is present — use a plain div. The only interactive element
+        // is a native <label> (Replace Cover), so no a11y warning.
+        <div
+          className="relative flex h-full min-h-[320px] w-full flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-transparent transition-all duration-200 ease-in-out"
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+        >
           <div className="group relative h-full w-full">
-            {/* Cover image — existing or newly picked */}
             <img
               src={displayUrl}
               alt="Editorial cover preview"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
+
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  imagePickerRef.current?.click();
-                }}
-                className="flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-neutral-900 backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
+              {/* Native <label> opens the file picker — fully keyboard & screen-reader accessible */}
+              <label
+                htmlFor={inputId.current}
+                className="flex cursor-pointer items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-neutral-900 backdrop-blur-sm transition-transform hover:scale-105 hover:bg-white"
               >
                 <UploadCloud size={18} />
                 Replace Cover
-              </button>
+              </label>
             </div>
           </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center gap-3 p-6 text-center pointer-events-none">
+
+          {fileInput}
+        </div>
+      ) : (
+        // No image — wrap the entire drop zone in a <label> so clicking
+        // anywhere opens the file picker natively. No onClick div needed.
+        <label
+          htmlFor={inputId.current}
+          className={`
+            relative flex h-full min-h-[320px] w-full cursor-pointer flex-col items-center justify-center
+            overflow-hidden rounded-xl border-2 transition-all duration-200 ease-in-out
+            ${
+              isDragging
+                ? "border-neutral-400 border-dashed bg-neutral-100/50"
+                : "border-dashed border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-neutral-100/50"
+            }
+          `}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+        >
+          <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
             <div
               className={`rounded-full bg-white p-4 shadow-sm ring-1 ring-neutral-900/5 transition-transform duration-300 ${isDragging ? "scale-110 shadow-md" : ""}`}
             >
@@ -132,16 +153,10 @@ export default function EditorialCover({
               High-Res JPG or PNG. Max 15MB
             </p>
           </div>
-        )}
 
-        <input
-          ref={imagePickerRef}
-          type="file"
-          accept="image/jpeg, image/png, image/webp"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-      </div>
+          {fileInput}
+        </label>
+      )}
     </div>
   );
 }

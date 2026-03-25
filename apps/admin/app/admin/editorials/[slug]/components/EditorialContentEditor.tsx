@@ -147,7 +147,7 @@ export function EditorialContentEditor({
           >
             {isProcessingImages
               ? "Optimizing Media images..."
-              : "Publish Editorial"}
+              : "Update Editorial"}
           </Button>
         </div>
       </div>
