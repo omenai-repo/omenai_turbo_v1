@@ -1,7 +1,7 @@
 "use client";
 
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
-import { Image as ImageIcon, UploadCloud, X } from "lucide-react";
+import { Image as ImageIcon, UploadCloud } from "lucide-react";
 import React, {
   ChangeEvent,
   useEffect,
@@ -14,12 +14,11 @@ export default function EditorialCover({
   setCover,
   cover,
   existingCoverUrl,
-}: {
+}: Readonly<{
   setCover: React.Dispatch<React.SetStateAction<File | null>>;
   cover: File | null;
-  /** Full URL of the already-saved cover image (from article.cover). */
   existingCoverUrl?: string | null;
-}) {
+}>) {
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [newPreviewUrl, setNewPreviewUrl] = useState<string | null>(null);

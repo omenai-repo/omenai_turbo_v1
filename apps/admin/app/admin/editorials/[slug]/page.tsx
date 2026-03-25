@@ -6,10 +6,10 @@ import { admin_url } from "@omenai/url-config/src/config";
 export default async function EditEditorialPage({
   params,
   searchParams,
-}: {
+}: Readonly<{
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ id: string | undefined }>;
-}) {
+}>) {
   const { slug } = await params;
   const { id } = await searchParams;
   if (!id) {

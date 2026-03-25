@@ -12,10 +12,10 @@ import { LoadIcon } from "@omenai/shared-ui-components/components/loader/Load";
 export default function EditEditorialPageWrapper({
   id,
   slug,
-}: {
+}: Readonly<{
   id: string;
   slug: string;
-}) {
+}>) {
   const { user } = useAuth({ requiredRole: "admin" });
 
   if (!canAccessRoute(user.access_role, "editorials")) {

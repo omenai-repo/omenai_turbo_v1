@@ -6,17 +6,16 @@ import { ID } from "appwrite";
 import imageCompression from "browser-image-compression";
 import { storage } from "@omenai/appwrite-config";
 import { EditorialSchemaTypes } from "@omenai/shared-types";
-// import { storage } from "@/lib/appwrite"; // Adjust this import to match your Appwrite setup
 
 export function EditorialContentEditor({
   handleEditorialUpload,
   loading,
   article,
-}: {
+}: Readonly<{
   handleEditorialUpload: (content: string) => void;
   loading: boolean;
   article: EditorialSchemaTypes;
-}) {
+}>) {
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
   // Local state to indicate when TinyMCE is actively compressing and uploading the batch

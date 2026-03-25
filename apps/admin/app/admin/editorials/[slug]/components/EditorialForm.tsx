@@ -16,16 +16,13 @@ import { updateEditorialPiece } from "../../lib/updateEditorial";
 
 export default function EditorialForm({
   article,
-}: {
+}: Readonly<{
   article: EditorialSchemaTypes & { $id: string };
-}) {
+}>) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const rollbar = useRollbar();
   const [cover, setCover] = useState<File | null>(null);
-  const [existingCoverId, setExistingCoverId] = useState<string | null>(
-    article.cover ?? null,
-  );
   const [data, setData] = useState<{ headline: string; summary?: string }>({
     headline: article.headline,
     summary: article.summary,
@@ -43,7 +40,7 @@ export default function EditorialForm({
 
   const handleEditorialUpload = async (content: string) => {
     try {
-      const hasCover = !!existingCoverId || !!cover;
+      const hasCover = !!article.cover || !!cover;
       if (!content || !hasCover || !data.headline) {
         toast_notif(
           "Please complete the headline, cover image, and content before publishing.",
@@ -71,7 +68,7 @@ export default function EditorialForm({
         }
       } else {
         // No new file — keep whichever existing cover ID is still set.
-        finalCoverFileId = existingCoverId!;
+        finalCoverFileId = article.cover!;
 
         // If the original cover was removed and no new one was provided,
         // the guard above would have already returned, so we're safe here.
