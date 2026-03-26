@@ -16,7 +16,11 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
 import { Radio, Group, Text, Stack } from "@mantine/core";
 import { BUTTON_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
-
+import {
+  getImageAspectRatio,
+  getRatioString,
+} from "@omenai/shared-utils/src/getImageAspectRatio";
+import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 export default function UploadArtworkImage() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
   const {
@@ -87,6 +91,17 @@ export default function UploadArtworkImage() {
       return;
     }
 
+    // retrieve aspect ratio.
+
+    const aspect_ratio = await getImageAspectRatio(image);
+
+    const image_format = getRatioString(aspect_ratio);
+
+    if (!image_format) {
+      toast_notif("Invalid Image format", "error");
+      return;
+    }
+
     try {
       const fileUploaded = await uploadImage(image);
 
@@ -108,6 +123,7 @@ export default function UploadArtworkImage() {
           role: "gallery",
           designation: null,
         },
+        image_format,
       );
 
       const uploadResponse = await uploadArtworkData(baseData, csrf || "");

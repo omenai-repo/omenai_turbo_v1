@@ -20,6 +20,10 @@ import PriceRevealCard from "./components/PriceRevealCard";
 import AgreementsSection from "./components/AgreementSection";
 import PriceDisputeTrigger from "./components/PriceDisputeTrigger";
 import PriceVisibilitySelect from "./components/PriceVisibilitySelect";
+import {
+  getImageAspectRatio,
+  getRatioString,
+} from "@omenai/shared-utils/src/getImageAspectRatio";
 
 function extractNumberString(str: string) {
   if (!str) return "";
@@ -66,6 +70,7 @@ export default function ArtworkPricing() {
         artwork_height,
         artwork_width,
         user.base_currency as string,
+        user.artist_id,
       );
 
       if (response === undefined || !response.isOk)
@@ -96,6 +101,14 @@ export default function ArtworkPricing() {
 
     try {
       setLoading(true);
+      const aspect_ratio = await getImageAspectRatio(image);
+
+      const image_format = getRatioString(aspect_ratio);
+
+      if (!image_format) {
+        toast_notif("Invalid Image format", "error");
+        return;
+      }
       const fileUploaded = await uploadImage(image);
       if (!fileUploaded) throw new Error("Image upload failed");
 
@@ -121,6 +134,7 @@ export default function ArtworkPricing() {
           role: "artist",
           designation: user.categorization,
         },
+        image_format,
       );
 
       const uploadResponse = await uploadArtworkData(data, csrf || "");
@@ -192,6 +206,7 @@ export default function ArtworkPricing() {
                 pricingData={pricing.algorithm_recommendation}
                 artworkMeta={priceReviewArtworkData}
                 image={image}
+                hasAutoApprovalsRemaining={pricing.hasAutoApprovalsRemaining}
               />
             </div>
 

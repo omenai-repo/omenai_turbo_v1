@@ -7,8 +7,6 @@ export async function up(db, client) {
     await session.withTransaction(async () => {
       // Calculate 1 month from now
       const now = new Date();
-      const resetDate = new Date(now);
-      resetDate.setMonth(now.getMonth() + 1);
 
       await db.collection("accountartists").updateMany(
         {},
@@ -16,7 +14,7 @@ export async function up(db, client) {
           $set: {
             pricing_allowances: {
               auto_approvals_used: 0,
-              last_reset_date: toUTCDate(resetDate),
+              last_reset_date: toUTCDate(now),
             },
           },
         },

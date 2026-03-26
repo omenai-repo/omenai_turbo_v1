@@ -3,8 +3,10 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../../util";
+import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { uploadArtworkLogic } from "../../uploadArtwork.service";
+import { UploadArtworkInput } from "@omenai/shared-lib/upload/uploadArtwork.schema";
+import z from "zod";
 
 const config: CombinedConfig = {
   ...standardRateLimit,

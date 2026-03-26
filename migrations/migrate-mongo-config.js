@@ -6,7 +6,7 @@ const config = {
     url: "",
 
     // Change this to your database name:
-    databaseName: "test",
+    databaseName: "",
 
     options: {
       useNewUrlParser: true, // removes a deprecation warning when connecting

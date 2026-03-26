@@ -80,6 +80,7 @@
     "eslint-config-next": "^15.5.4",
     "framer-motion": "^11.11.17",
     "fs-extra": "^11.3.0",
+    "image-size": "^2.0.2",
     "iron-session": "^8.0.4",
     "isomorphic-dompurify": "^2.26.0",
     "jimp": "^1.6.0",
