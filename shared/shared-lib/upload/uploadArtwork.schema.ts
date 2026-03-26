@@ -30,6 +30,12 @@ export const UploadArtworkSchema = z.object({
     role: z.string(),
     designation: z.string().nullable(),
   }),
+  image_format: z
+    .object({
+      ratio: z.string(),
+      orientation: z.enum(["portrait", "landscape", "square"]),
+    })
+    .nullable(),
 });
 
 export type UploadArtworkInput = z.infer<typeof UploadArtworkSchema>;

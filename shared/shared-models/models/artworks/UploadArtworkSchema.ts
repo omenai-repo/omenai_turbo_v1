@@ -52,6 +52,13 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
       exclusivity_end_date: { type: Date || null, default: null },
       order_auto_rejection_count: { type: Number, default: 0 },
     },
+    image_format: {
+      ratio: { type: String },
+      orientation: {
+        type: String,
+        enum: ["portrait", "landscape", "square"],
+      },
+    },
   },
   { timestamps: true },
 );

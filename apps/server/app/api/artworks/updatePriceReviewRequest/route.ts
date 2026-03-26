@@ -48,7 +48,8 @@ export async function PATCH(request: Request) {
     review.status =
       action === "ACCEPT" ? "APPROVED_COUNTER_PRICE" : "DECLINED_BY_ARTIST";
     await review.save();
-    await uploadArtworkLogic(artwork);
+
+    if (action === "ACCEPT") await uploadArtworkLogic(artwork);
 
     return NextResponse.json({
       message: `Offer ${action.toLowerCase()}ed`,

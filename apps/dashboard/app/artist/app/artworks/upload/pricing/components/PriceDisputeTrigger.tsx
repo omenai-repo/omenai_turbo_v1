@@ -6,12 +6,14 @@ interface PriceDisputeTriggerProps {
   pricingData: any;
   artworkMeta: any;
   image: File;
+  hasAutoApprovalsRemaining: boolean;
 }
 
 export default function PriceDisputeTrigger({
   pricingData,
   artworkMeta,
   image,
+  hasAutoApprovalsRemaining,
 }: PriceDisputeTriggerProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -49,6 +51,7 @@ export default function PriceDisputeTrigger({
               artworkMeta={artworkMeta}
               onCancel={() => setIsModalOpen(false)}
               image={image}
+              hasAutoApprovalsRemaining={hasAutoApprovalsRemaining}
             />
           </div>
         </div>

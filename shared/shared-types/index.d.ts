@@ -249,6 +249,10 @@ export type ArtworkSchemaTypes = {
     exclusivity_end_date: Date | null;
     order_auto_rejection_count: number;
   };
+  image_format: {
+    ratio: string;
+    orientation: "landscape" | "portrait" | "square";
+  };
 };
 
 export type RoleAccess = {
