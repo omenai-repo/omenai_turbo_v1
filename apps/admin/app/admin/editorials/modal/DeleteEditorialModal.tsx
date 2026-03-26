@@ -33,7 +33,7 @@ export default function DeleteEditorialModal({
       if (!deleteEditorial.isOk) {
         toast_notif(
           deleteEditorial.message || "Failed to delete editorial",
-          "error"
+          "error",
         );
         return;
       }
