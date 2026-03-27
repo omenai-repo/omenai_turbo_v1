@@ -3,10 +3,10 @@
 ## 1. Overview
 
 **Project:** Omenai web app  
-**Environment:** staging
+**Environment:** staging  
 **Tester:** rodolphe@omenai.net
 
-I've been writting test for the different flows of the apps like login, and account flows
+I've been writing tests for the different flows of the app such as login and account flows.
 
 ---
 
@@ -14,29 +14,29 @@ I've been writting test for the different flows of the apps like login, and acco
 
 | Component         | Value                       |
 | ----------------- | --------------------------- |
-| web app           | staging                     |
-| Browser(s)        | Chromium / Webkit / Firefox |
+| Web App           | Staging                     |
+| Browser(s)        | Chromium / WebKit / Firefox |
 | Testing Framework | Playwright                  |
 
 ---
 
 ## 3. Test Scenarios
 
-| Scenario                          | Status    | Notes                                                 |
-| --------------------------------- | --------- | ----------------------------------------------------- |
-| Collector login with valid data   | ✅ Passed |                                                       |
-| Collector login with invalid data | ✅ Passed |                                                       |
-| Gallery login with valid data     | ❌ Failed | Failed on chrome; timeout                             |
-| Gallery login with invalid data   | ❌ Failed | Failed on firefox and webkit; toaster not visible     |
-| Artist login with valid data      | ✅ Passed |                                                       |
-| Artist login with invalid data    | ✅ Passed |                                                       |
-| Admin login with valid data       | ✅ Passed |                                                       |
-| Admin login with invalid data     | ✅ Passed |                                                       |
-| Collector purchase                | ❌ Failed | Failed on webkit ; timeout                            |
-| Purchase network failure          | ❌ Failed | timeout                                               |
-| Purchase Order existed            | ✅ Passed |                                                       |
-| Artwork payment                   | ✅ Passed |                                                       |
-| Artwork with invalid data         | ❌ Failed | Failed on webkit, artwork dropdown icon does not show |
+| Scenario                          | Status    | Notes                                               |
+| --------------------------------- | --------- | --------------------------------------------------- |
+| Collector login with valid data   | ✅ Passed |                                                     |
+| Collector login with invalid data | ✅ Passed |                                                     |
+| Gallery login with valid data     | ❌ Failed | Failed on Chrome; timeout                           |
+| Gallery login with invalid data   | ❌ Failed | Failed on Firefox and WebKit; toaster not visible   |
+| Artist login with valid data      | ✅ Passed |                                                     |
+| Artist login with invalid data    | ✅ Passed |                                                     |
+| Admin login with valid data       | ✅ Passed |                                                     |
+| Admin login with invalid data     | ✅ Passed |                                                     |
+| Collector purchase                | ❌ Failed | Failed on WebKit; timeout                           |
+| Purchase network failure          | ❌ Failed | Timeout                                             |
+| Purchase Order existed            | ✅ Passed |                                                     |
+| Artwork payment                   | ✅ Passed |                                                     |
+| Artwork with invalid data         | ❌ Failed | Failed on WebKit; artwork dropdown icon not visible |
 
 ---
 
@@ -53,5 +53,85 @@ I've been writting test for the different flows of the apps like login, and acco
 ## 5. Issues Found
 
 1. Timeout of 30000ms exceeded
-2. Toaster test "Invalid credentials" not visible on firefox and webkit for gallery login
-3.
+2. "Invalid credentials" toast not visible on Firefox and WebKit (gallery login)
+3. UI inconsistencies across browsers (dropdown/icon visibility)
+4. Network failure not properly handled (timeout instead of error feedback)
+
+---
+
+## 6. Application Recommendations
+
+### 6.1 Improve API Response Time & Reliability
+
+**Issues impacted:**
+
+- Gallery login timeout (Chrome)
+- Collector purchase timeout (WebKit)
+- Network failure scenario
+
+**Recommendations:**
+
+- Optimize backend endpoints (login, purchase)
+  - Target response time: < 1–2 seconds
+- Ensure all API requests:
+  - always return a response (no hanging requests)
+  - return proper HTTP status codes (4xx / 5xx)
+- Add backend timeouts and fallback handling
+
+**Priority:** low
+
+---
+
+### 6.2 Standardize Error Handling
+
+**Issues impacted:**
+
+- Missing "Invalid credentials" toast
+- Network failure not surfaced to UI
+
+**Recommendations:**
+
+- Implement a centralized error response format:
+  ```json
+  { "message": "Error description" }
+  ```
+
+### 6.8 WebKit-Specific Recommendations
+
+**Issues impacted:**
+
+- Gallery login (invalid) → toast not visible
+- Collector purchase → timeout
+- Artwork dropdown icon not visible
+
+**Context:**  
+WebKit (Safari engine) has stricter and different behavior compared to Chromium/Firefox, especially around rendering, animations, and async UI updates.
+
+---
+
+#### 6.8.1 Fix Rendering & Visibility Issues
+
+**Recommendations:**
+
+- Avoid relying solely on:
+  - `opacity: 0/1` for visibility
+  - CSS animations to display elements
+- Always pair visibility with:
+  - `display: none/block` or `visibility: hidden/visible`
+- Ensure elements are **mounted in the DOM before interaction**
+
+---
+
+#### 6.8.2 Review CSS Compatibility
+
+**Recommendations:**
+
+- Audit for WebKit-specific issues:
+  - `flex` and `grid` rendering inconsistencies
+  - `overflow: hidden` clipping elements
+  - `position: fixed/absolute` behaving differently
+- Add WebKit-safe styles if needed:
+  ```css
+  -webkit-transform: translateZ(0);
+  -webkit-appearance: none;
+  ```
