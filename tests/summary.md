@@ -36,6 +36,7 @@ I've been writting test for the different flows of the apps like login, and acco
 | Purchase network failure          | ❌ Failed | timeout                                           |
 | Purchase Order existed            | ✅ Passed |                                                   |
 | Artwork payment                   | ✅ Passed |                                                   |
+| Artwork with invalid data         | ✅ Passed |                                                   |
 
 ---
 

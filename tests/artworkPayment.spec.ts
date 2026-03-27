@@ -19,14 +19,9 @@ test("test", async ({ page }) => {
   await page.getByRole("button", { name: "Sign In to Omenai" }).click();
   await page.getByRole("button", { name: "Moses" }).click();
   await page.getByRole("link", { name: "Orders & Bids" }).click();
-  await page.locator(".h-8").first().click();
+  await page.getByTestId("user-order-card").first().click();
   await page.getByRole("tab", { name: "In Progress" }).click();
-  await page
-    .locator(
-      "#mantine-8okddrcsk-panel-processing > .flex.flex-col.gap-4 > div > .p-5 > .flex.items-center.gap-6 > .flex.items-center.gap-4 > .h-8 > .lucide",
-    )
-    .first()
-    .click();
+  await page.getByTestId("user-order-card-icon").first().click();
   await page.getByRole("button", { name: "Pay for this artwork" }).click();
   await page.getByRole("button", { name: "Complete Purchase" }).click();
   await page
