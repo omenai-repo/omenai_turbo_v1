@@ -22,21 +22,21 @@ I've been writting test for the different flows of the apps like login, and acco
 
 ## 3. Test Scenarios
 
-| Scenario                          | Status    | Notes                                             |
-| --------------------------------- | --------- | ------------------------------------------------- |
-| Collector login with valid data   | ✅ Passed |                                                   |
-| Collector login with invalid data | ✅ Passed |                                                   |
-| Gallery login with valid data     | ❌ Failed | Failed on chrome; timeout                         |
-| Gallery login with invalid data   | ❌ Failed | Failed on firefox and webkit; toaster not visible |
-| Artist login with valid data      | ✅ Passed |                                                   |
-| Artist login with invalid data    | ✅ Passed |                                                   |
-| Admin login with valid data       | ✅ Passed |                                                   |
-| Admin login with invalid data     | ✅ Passed |                                                   |
-| Collector purchase                | ❌ Failed | Failed on webkit ; timeout                        |
-| Purchase network failure          | ❌ Failed | timeout                                           |
-| Purchase Order existed            | ✅ Passed |                                                   |
-| Artwork payment                   | ✅ Passed |                                                   |
-| Artwork with invalid data         | ✅ Passed |                                                   |
+| Scenario                          | Status    | Notes                                                 |
+| --------------------------------- | --------- | ----------------------------------------------------- |
+| Collector login with valid data   | ✅ Passed |                                                       |
+| Collector login with invalid data | ✅ Passed |                                                       |
+| Gallery login with valid data     | ❌ Failed | Failed on chrome; timeout                             |
+| Gallery login with invalid data   | ❌ Failed | Failed on firefox and webkit; toaster not visible     |
+| Artist login with valid data      | ✅ Passed |                                                       |
+| Artist login with invalid data    | ✅ Passed |                                                       |
+| Admin login with valid data       | ✅ Passed |                                                       |
+| Admin login with invalid data     | ✅ Passed |                                                       |
+| Collector purchase                | ❌ Failed | Failed on webkit ; timeout                            |
+| Purchase network failure          | ❌ Failed | timeout                                               |
+| Purchase Order existed            | ✅ Passed |                                                       |
+| Artwork payment                   | ✅ Passed |                                                       |
+| Artwork with invalid data         | ❌ Failed | Failed on webkit, artwork dropdown icon does not show |
 
 ---
 
@@ -44,9 +44,9 @@ I've been writting test for the different flows of the apps like login, and acco
 
 | Metric      | Value |
 | ----------- | ----- |
-| Total Tests | 12    |
+| Total Tests | 13    |
 | Passed      | 8     |
-| Failed      | 4     |
+| Failed      | 5     |
 
 ---
 
