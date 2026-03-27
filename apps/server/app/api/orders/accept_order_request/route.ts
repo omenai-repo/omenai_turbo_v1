@@ -361,7 +361,11 @@ async function updateOrder({
         hold_status: { is_hold: true, hold_end_date: expiresAt },
         "shipping_details.additional_information": specialInstructions || "",
         "shipping_details.shipment_information": shipment_information,
-        "order_accepted.status": "accepted",
+        order_accepted: {
+          status: "accepted",
+          acceptedAt: toUTCDate(new Date()),
+          reason: "",
+        },
         "shipping_details.addresses.origin": origin_address,
         expiresAt,
       },

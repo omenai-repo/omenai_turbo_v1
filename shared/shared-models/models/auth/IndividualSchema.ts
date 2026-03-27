@@ -49,8 +49,20 @@ const individualSignupSchema = new Schema<IndividualSchemaTypes>(
       type: Schema.Types.Mixed,
       required: true,
     },
+    registeration_tracking: {
+      type: Schema.Types.Mixed,
+      default: () => ({
+        ip_address: "Unknown",
+        country: "Unknown",
+        city: "Unknown",
+        device_type: "unknown",
+        os: "Unknown",
+        browser: "Unknown",
+        referrer: "direct",
+      }),
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const AccountIndividual =

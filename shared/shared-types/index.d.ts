@@ -3,9 +3,18 @@ import { Stripe } from "stripe";
 import z from "zod";
 // Create discriminated union with role as discriminator
 export type SessionDataType = (
-  | ({ role: "gallery" } & Omit<GallerySchemaTypes, "password" | "phone">)
-  | ({ role: "user" } & Omit<IndividualSchemaTypes, "password" | "phone">)
-  | ({ role: "admin" } & Omit<AccountAdminSchemaTypes, "password" | "phone">)
+  | ({ role: "gallery" } & Omit<
+      GallerySchemaTypes,
+      "password" | "phone" | "registeration_tracking"
+    >)
+  | ({ role: "user" } & Omit<
+      IndividualSchemaTypes,
+      "password" | "phone" | "registeration_tracking"
+    >)
+  | ({ role: "admin" } & Omit<
+      AccountAdminSchemaTypes,
+      "password" | "phone" | "registeration_tracking"
+    >)
   | ({ role: "artist" } & Omit<
       ArtistSchemaTypes,
       | "password"
@@ -14,6 +23,7 @@ export type SessionDataType = (
       | "phone"
       | "exclusivity_uphold_status"
       | "pricing_allowances"
+      | "registeration_tracking"
     >)
 ) & { id: string };
 
@@ -68,6 +78,17 @@ export type ArtistSchemaTypes = {
     auto_approvals_used: number;
     last_reset_date: Date;
   };
+  registeration_tracking: Registeration_Tracking;
+};
+
+export type Registeration_Tracking = {
+  ip_address: string;
+  country: string;
+  city: string;
+  device_type: string;
+  os: string;
+  browser: string;
+  referrer: string;
 };
 
 type ExclusivityUpholdStatus = {
@@ -120,6 +141,7 @@ export type GallerySchemaTypes = {
   status: "active" | "blocked";
   connected_account_id: string | null;
   stripe_customer_id: string | null;
+  registeration_tracking: Registeration_Tracking;
 };
 
 type SubscriptionStatus = {
@@ -141,6 +163,7 @@ export type IndividualSchemaTypes = {
   verified: boolean;
   role: AccessRoleTypes;
   address: AddressTypes;
+  registeration_tracking: Registeration_Tracking;
 };
 
 export type InputProps = {
@@ -475,6 +498,28 @@ export type VerifyPickupChangePayload = {
   cityName: string;
   countyName: string;
 };
+
+export type PriceRequestTypes = {
+  request_id: string;
+  art_id: string;
+  buyer_id: string;
+  seller_id: string;
+
+  artwork_snapshot: {
+    title: string;
+    artist: string;
+    url: string;
+  };
+  funnel_status: {
+    requested_at: Date;
+    is_order_placed: boolean;
+    order_id?: string | null;
+    is_order_paid: boolean;
+  };
+  request_date: Date; // For year and month tracking
+  expires_at: Date;
+};
+
 export type PaymentStatusTypes = {
   status: "pending" | "completed" | "processing" | "failed";
   transaction_value: number;
@@ -526,6 +571,7 @@ export type PaymentFulfillmentStatusTypes = {
   transaction_created: "done" | "failed";
   sale_record_created: "done" | "failed";
   mass_orders_updated: "done" | "failed";
+  purchase_request_updated: "done" | "failed";
   seller_wallet_updated?: "done" | "failed";
 };
 
@@ -1628,3 +1674,182 @@ export type PriceReviewRequest = {
   createdAt?: Date; // Provided by Mongoose timestamps
   updatedAt?: Date; // Provided by Mongoose timestamps
 };
+
+// ==================================================== //
+// METRCIS
+// ==================================================== //
+
+export type EventType =
+  | "page_view"
+  | "por_inquiry"
+  | "search"
+  | "checkout_initiated"
+  | "artwork_view"
+  | "artist_profile_view"
+  | "gallery_profile_view"
+  | "artwork_saved";
+
+export interface UserTrackingData {
+  ip_address: string;
+  country: string;
+  city: string;
+  device_type: "mobile" | "desktop" | "tablet" | "unknown";
+  os: string;
+  browser: string;
+  referrer: string;
+}
+
+export interface PlatformEventSchemaTypes {
+  event_type: EventType;
+  user_id: string | null; // Nullable for anonymous visitors
+  session_id: string; // Group actions by a frontend-generated UUID
+  art_id?: string; // Tied to specific artworks (for Price on Request or views)
+  entity_id?: string; // Tied to a gallery or artist profile view
+  tracking_data: UserTrackingData;
+  metadata?: Record<string, any>; // Catch-all for extra data (e.g., search terms)
+  createdAt?: Date;
+}
+
+// A generic wrapper for all your API responses
+export interface ApiResponse<T> {
+  isOk?: boolean; // Legacy support for your existing routes
+  success?: boolean; // Support for the new routes we just wrote
+  message?: string;
+  data: T;
+}
+
+// A reusable type for Tremor's BarList, DonutChart, and AreaChart data
+export interface ChartDataItem {
+  name?: string; // For Donut/Bar
+  value?: number; // For Donut/Bar
+  count?: number; // Legacy fallback
+  month?: string; // For AreaChart timeline
+  gmv?: number; // For AreaChart timeline
+  netRevenue?: number; // For AreaChart timeline
+}
+
+export type UserRole = "user" | "artist" | "gallery";
+
+// --- FINANCIAL METRICS (Updated for 2x2 Grid) ---
+export interface FinancialMetricsData {
+  kpis: {
+    realizedGMV: number;
+    netPlatformRevenue: number;
+    trueAOV: number;
+  };
+  trendChart: ChartDataItem[];
+  funnelChart: ChartDataItem[];
+  liabilitiesChart: ChartDataItem[];
+}
+
+// --- ACQUISITION METRICS ---
+
+// 1. The new helper interface for our funnel metrics
+export interface ActivationMetric {
+  count: number;
+  percentage: number;
+}
+
+// 2. The fully updated Acquisition / Network payload
+export interface AcquisitionMetricsData {
+  summary: {
+    totalCollectors: number;
+    totalArtists: number;
+    totalGalleries: number;
+  };
+  waitlist: {
+    conversionRate: number | string; // (Note: toFixed() returns a string, so allowing both prevents TS errors)
+    converted: number;
+    total: number;
+  };
+  demographics: {
+    countries: Record<UserRole, ChartDataItem[]>;
+    referrers: Record<UserRole, ChartDataItem[]>;
+    devices: Record<UserRole, ChartDataItem[]>;
+  };
+
+  // --- NEW: Network Activation Block ---
+  activation: {
+    collectors: {
+      placedOrder: ActivationMetric;
+      paidOrder: ActivationMetric;
+      repeatBuyer: ActivationMetric;
+    };
+    artists: {
+      hasArtworks: ActivationMetric;
+      activeCatalog: ActivationMetric;
+      hasSoldArt: ActivationMetric;
+    };
+    galleries: {
+      activeSubscription: ActivationMetric;
+      churnedHard: ActivationMetric;
+      hasSoldArt: ActivationMetric;
+      zeroSaleChurn: ActivationMetric;
+    };
+  };
+}
+
+// --- OPERATIONAL METRICS ---
+export interface OperationalMetricsData {
+  // 1. Pipeline Velocity
+  timeToQuoteHours: number;
+
+  // 2. Collector Friction
+  abandonmentRate: number;
+
+  // 3. Supply Friction
+  ghostRate: number;
+  rejectionRate: number;
+
+  // 4. Raw Totals (Crucial for Tooltips so percentages aren't misleading)
+  totals: {
+    abandoned: number;
+    ghosted: number;
+    rejected: number;
+    totalOrders: number;
+  };
+
+  // 5. Live Actionable Bottlenecks
+  activeBottlenecks: {
+    inExhibition: number; // status: 'processing', exhibition_status != null, tracking == null
+  };
+}
+
+// 1. Helper type for the Leaderboard items
+export interface ArtworkLeaderboardItem {
+  _id: string; // The art_id
+  count: number; // Number of views or requests
+  title: string;
+  artist: string;
+  url: string; // The image thumbnail
+}
+
+// 2. Helper type for the Trend Chart
+export interface EngagementTrendItem {
+  date: string; // e.g., "Jan 26"
+  "Price Requests": number;
+  "Artwork Views": number;
+}
+
+// 3. The Main Engagement Metrics Payload
+export interface EngagementMetricsData {
+  summary: {
+    totalViews: number;
+    totalRequests: number;
+  };
+  funnel: {
+    requests: number;
+    ordersPlaced: number;
+    ordersPaid: number;
+    rates: {
+      requestToOrder: number; // Intent Velocity
+      orderToPaid: number; // Closing Rate
+      totalLiquidity: number; // Total Funnel Efficiency
+    };
+  };
+  trends: EngagementTrendItem[];
+  leaderboards: {
+    topRequested: ArtworkLeaderboardItem[];
+    topViewed: ArtworkLeaderboardItem[];
+  };
+}

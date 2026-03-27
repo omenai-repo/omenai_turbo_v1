@@ -81,6 +81,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error: any) {
       const error_response = handleErrorEdgeCases(error);
+      console.log(error);
       createErrorRollbarReport(
         "auth: admin login",
         error,

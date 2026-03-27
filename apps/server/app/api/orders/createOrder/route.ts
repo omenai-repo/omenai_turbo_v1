@@ -31,6 +31,8 @@ import {
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { validateDHLAddress } from "../../util";
 import z from "zod";
+import { PriceRequest } from "@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema";
+
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["user"],
@@ -61,6 +63,7 @@ const getSellerData = async (seller_id: string, designation: string) => {
     address: AddressTypes;
   };
 };
+
 const CreateOrderSchema = z.object({
   buyer_id: z.string(),
   art_id: z.string(),
@@ -77,6 +80,7 @@ const CreateOrderSchema = z.object({
   }),
   designation: z.string(),
 });
+
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   request: Request,
 ) {
@@ -213,6 +217,17 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         { $set: { address: shipping_address } },
       );
     }
+
+    await PriceRequest.updateOne(
+      { buyer_id, art_id },
+      {
+        $set: {
+          "funnel_status.is_order_placed": true,
+          "funnel_status.order_id": createOrder.order_id,
+        },
+        $unset: { expires_at: "" }, // Removes TTL index so the conversion is tracked permanently
+      },
+    );
 
     // Fetch both device tokens in one go
     const deviceRecords = await DeviceManagement.find({
