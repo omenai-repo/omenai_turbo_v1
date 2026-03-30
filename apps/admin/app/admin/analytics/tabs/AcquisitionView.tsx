@@ -56,11 +56,11 @@ const EcosystemOverview = ({ summary }: { summary: any }) => (
           <span
             className={`w-2 h-2 rounded-full ${stat.color.split(" ")[0]}`}
           />
-          <p className="text-xs font-medium tracking-wide uppercase text-neutral-500">
+          <p className="text-xs font-normal tracking-wide uppercase text-neutral-500">
             {stat.label}
           </p>
         </div>
-        <p className="text-3xl font-medium text-neutral-800 tabular-nums my-1">
+        <p className="text-2xl font-normal text-neutral-800 tabular-nums my-1">
           {fmt(stat.value)}
         </p>
         <p className="text-xs text-neutral-400">{stat.sub}</p>
@@ -76,7 +76,7 @@ const WaitlistTracker = ({ waitlist }: { waitlist: any }) => {
     <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-neutral-100/80 mb-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
         <div>
-          <h3 className="text-xs font-medium text-neutral-800">
+          <h3 className="text-xs font-normal text-neutral-800">
             Waitlist Conversion Funnel
           </h3>
           <p className="text-xs text-neutral-500 mt-1">
@@ -85,7 +85,7 @@ const WaitlistTracker = ({ waitlist }: { waitlist: any }) => {
         </div>
         <div className="flex items-center gap-6 bg-neutral-50 px-4 py-2 rounded-xl ring-1 ring-neutral-100">
           <div className="text-right">
-            <p className="text-2xl font-medium text-teal-500 tabular-nums">
+            <p className="text-2xl font-normal text-teal-500 tabular-nums">
               {rate}%
             </p>
             <p className="text-[10px] uppercase tracking-wider text-neutral-400 mt-0.5">
@@ -94,7 +94,7 @@ const WaitlistTracker = ({ waitlist }: { waitlist: any }) => {
           </div>
           <div className="w-px h-8 bg-neutral-200" />
           <div>
-            <p className="text-xs font-medium text-neutral-700 tabular-nums">
+            <p className="text-xs font-normal text-neutral-700 tabular-nums">
               {fmt(waitlist.converted)}{" "}
               <span className="text-neutral-300 mx-1">/</span>{" "}
               {fmt(waitlist.total)}
@@ -217,7 +217,7 @@ const ActivationPipeline = ({
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-neutral-100/80 mb-6">
-      <h3 className="text-base font-medium text-neutral-800 mb-6">
+      <h3 className="text-base font-normal text-neutral-800 mb-6">
         {segmentLabels[segment]} Activation Pipeline
       </h3>
       <div className="space-y-5">
@@ -225,14 +225,14 @@ const ActivationPipeline = ({
           <div key={idx} className="relative">
             <div className="flex justify-between items-end mb-2">
               <div>
-                <p className="text-xs font-medium text-neutral-700">
+                <p className="text-xs font-normal text-neutral-700">
                   {step.name}
                 </p>
                 <p className="text-xs text-neutral-400 mt-0.5">
                   {fmt(step.count)} Users
                 </p>
               </div>
-              <p className="text-xs font-medium text-neutral-800 tabular-nums">
+              <p className="text-xs font-normal text-neutral-800 tabular-nums">
                 {step.value}%
               </p>
             </div>
@@ -270,13 +270,13 @@ const DemographicGrid = ({
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-neutral-100/80">
-      <h3 className="text-xs font-medium text-neutral-800 mb-6">
+      <h3 className="text-xs font-normal text-neutral-800 mb-6">
         {segmentLabels[segment]} Demographics
       </h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="space-y-4">
-          <p className="text-xs tracking-wider uppercase text-neutral-400 font-medium flex items-center gap-3">
+          <p className="text-xs tracking-wider uppercase text-neutral-400 font-normal flex items-center gap-3">
             Geographical Distribution{" "}
             <span className="flex-1 h-px bg-neutral-100" />
           </p>
@@ -295,7 +295,7 @@ const DemographicGrid = ({
         </div>
 
         <div className="space-y-4">
-          <p className="text-xs tracking-wider uppercase text-neutral-400 font-medium flex items-center gap-3">
+          <p className="text-xs tracking-wider uppercase text-neutral-400 font-normal flex items-center gap-3">
             Traffic Sources <span className="flex-1 h-px bg-neutral-100" />
           </p>
           {referrersData.length > 0 ? (
@@ -314,7 +314,7 @@ const DemographicGrid = ({
 
         {/* Device Split */}
         <div className="space-y-4">
-          <p className="text-xs tracking-wider uppercase text-neutral-400 font-medium flex items-center gap-3">
+          <p className="text-xs tracking-wider uppercase text-neutral-400 font-normal flex items-center gap-3">
             Device Split <span className="flex-1 h-px bg-neutral-100" />
           </p>
 
@@ -338,10 +338,10 @@ const DemographicGrid = ({
                       return (
                         // Custom offset tooltip pushed up and to the right
                         <div className="pointer-events-none cursor-pointer  transform -translate-y-10 translate-x-8 bg-white px-3.5 py-2.5 rounded-xl shadow-xl ring-1 ring-neutral-100/50 min-w-[120px]">
-                          <p className="text-[9px] tracking-widest uppercase text-neutral-400 font-medium mb-1">
+                          <p className="text-[9px] tracking-widest uppercase text-neutral-400 font-normal mb-1">
                             {data.name}
                           </p>
-                          <p className="text-lg font-medium text-neutral-800 tabular-nums leading-none">
+                          <p className="text-lg font-normal text-neutral-800 tabular-nums leading-none">
                             {fmt(data.value)}
                           </p>
                         </div>
@@ -351,10 +351,10 @@ const DemographicGrid = ({
                 </div>
                 {/* Center Label */}
                 <div className="absolute z-0 inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-[9px] tracking-widest uppercase text-neutral-400 font-medium">
+                  <span className="text-[9px] tracking-widest uppercase text-neutral-400 font-normal">
                     Total
                   </span>
-                  <span className="text-lg font-medium text-neutral-800 tabular-nums mt-0.5">
+                  <span className="text-lg font-normal text-neutral-800 tabular-nums mt-0.5">
                     {fmt(totalDevices)}
                   </span>
                 </div>
@@ -378,12 +378,12 @@ const DemographicGrid = ({
                         <span
                           className={`w-2 h-2 rounded-full ${dotColors[i % dotColors.length]}`}
                         />
-                        <span className="text-xs tracking-wide uppercase text-neutral-600 font-medium">
+                        <span className="text-xs tracking-wide uppercase text-neutral-600 font-normal">
                           {d.name}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] text-neutral-400 font-medium tabular-nums">
+                        <span className="text-[10px] text-neutral-400 font-normal tabular-nums">
                           {totalDevices > 0
                             ? `${((d.value / totalDevices) * 100).toFixed(0)}%`
                             : "—"}
@@ -431,7 +431,7 @@ export default function NetworkActivationView() {
             <button
               key={role}
               onClick={() => setActiveSegment(role)}
-              className={`px-5 py-2 text-xs font-semibold tracking-wide uppercase rounded-lg transition-all duration-200 ${
+              className={`px-5 py-2 text-xs font-medium tracking-wide uppercase rounded-lg transition-all duration-200 ${
                 activeSegment === role
                   ? "bg-white text-neutral-800 shadow-sm ring-1 ring-neutral-200/50"
                   : "text-neutral-400 hover:text-neutral-600"

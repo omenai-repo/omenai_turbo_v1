@@ -65,3 +65,69 @@ export function extractUserTrackingData(req: Request): UserTrackingData {
     referrer: nativeClient ? "app_direct" : referrer, // Tag app traffic clearly
   };
 }
+
+export const enrichRegistrationTracking = (
+  user: any,
+  request: Request,
+  Model: any, // AccountIndividual, AccountArtist, etc.
+) => {
+  const tracking = user.registration_tracking || {};
+
+  // If the country is Unknown, it's a legacy account that needs enrichment
+  const needsEnrichment = !tracking.country || tracking.country === "Unknown";
+
+  if (needsEnrichment) {
+    // 1. Sniff Vercel Edge Headers for Location & IP
+    const ip_address =
+      request.headers.get("x-forwarded-for") ||
+      request.headers.get("x-real-ip") ||
+      "Unknown";
+    const country = request.headers.get("x-vercel-ip-country") || "Unknown";
+
+    const rawCity = request.headers.get("x-vercel-ip-city");
+    const city = rawCity ? decodeURIComponent(rawCity) : "Unknown"; // Decodes "New%20York" to "New York"
+
+    // 2. Parse User-Agent for Device, OS, and Browser
+    const userAgent = request.headers.get("User-Agent") || "";
+
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent,
+      );
+    const device_type = isMobile ? "Mobile" : "Desktop";
+
+    let os = "Unknown";
+    if (/Windows/i.test(userAgent)) os = "Windows";
+    else if (/Mac/i.test(userAgent)) os = "MacOS";
+    else if (/Linux/i.test(userAgent)) os = "Linux";
+    else if (/Android/i.test(userAgent)) os = "Android";
+    else if (/iOS|iPhone|iPad/i.test(userAgent)) os = "iOS";
+
+    let browser = "Unknown";
+    if (/Chrome/i.test(userAgent) && !/Edge|Edg/i.test(userAgent))
+      browser = "Chrome";
+    else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent))
+      browser = "Safari";
+    else if (/Firefox/i.test(userAgent)) browser = "Firefox";
+    else if (/Edge|Edg/i.test(userAgent)) browser = "Edge";
+
+    // 3. Fire-and-Forget Database Update
+    Model.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          "registration_tracking.ip_address": ip_address,
+          "registration_tracking.country": country,
+          "registration_tracking.city": city,
+          "registration_tracking.device_type": device_type,
+          "registration_tracking.os": os,
+          "registration_tracking.browser": browser,
+          "registration_tracking.referrer":
+            tracking.referrer || "legacy_backfill",
+        },
+      },
+    ).catch((err: any) =>
+      console.error("Silent Enrichment Failed:", err.message),
+    );
+  }
+};

@@ -1824,13 +1824,6 @@ export interface ArtworkLeaderboardItem {
   url: string; // The image thumbnail
 }
 
-// 2. Helper type for the Trend Chart
-export interface EngagementTrendItem {
-  date: string; // e.g., "Jan 26"
-  "Price Requests": number;
-  "Artwork Views": number;
-}
-
 // 3. The Main Engagement Metrics Payload
 export interface EngagementMetricsData {
   summary: {
@@ -1852,4 +1845,11 @@ export interface EngagementMetricsData {
     topRequested: ArtworkLeaderboardItem[];
     topViewed: ArtworkLeaderboardItem[];
   };
+}
+export interface EngagementTrendItem {
+  year: number;
+  month: number;
+  requests: number;
+  views: number;
+  uniqueCollectors: number;
 }

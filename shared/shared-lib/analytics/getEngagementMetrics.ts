@@ -3,12 +3,6 @@ import { RecentView } from "@omenai/shared-models/models/artworks/RecentlyViewed
 
 export async function getEngagementMetrics() {
   try {
-    // Set up a 12-month rolling window for our trend charts
-    const twelveMonthsAgo = new Date();
-    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 11);
-    twelveMonthsAgo.setDate(1); // Start at the beginning of that month
-    twelveMonthsAgo.setHours(0, 0, 0, 0);
-
     const [
       funnelStats,
       totalViews,
@@ -66,30 +60,35 @@ export async function getEngagementMetrics() {
         { $limit: 5 },
       ]),
 
-      // E. 12-MONTH TRENDS: PRICE REQUESTS
+      // E. ALL-TIME TRENDS: PRICE REQUESTS & UNIQUE COLLECTORS
       PriceRequest.aggregate([
-        { $match: { request_date: { $gte: twelveMonthsAgo } } },
         {
           $group: {
             _id: {
-              month: { $month: "$request_date" },
               year: { $year: "$request_date" },
+              month: { $month: "$request_date" },
             },
-            count: { $sum: 1 },
+            requests: { $sum: 1 },
+            uniqueBuyers: { $addToSet: "$buyer_id" }, // Gathers an array of unique user IDs
+          },
+        },
+        {
+          $project: {
+            requests: 1,
+            uniqueCollectors: { $size: "$uniqueBuyers" }, // Counts the unique IDs
           },
         },
       ]),
 
-      // F. 12-MONTH TRENDS: ARTWORK VIEWS
+      // F. ALL-TIME TRENDS: ARTWORK VIEWS
       RecentView.aggregate([
-        { $match: { createdAt: { $gte: twelveMonthsAgo } } },
         {
           $group: {
             _id: {
-              month: { $month: "$createdAt" },
               year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" },
             },
-            count: { $sum: 1 },
+            views: { $sum: 1 },
           },
         },
       ]),
@@ -108,42 +107,38 @@ export async function getEngagementMetrics() {
     const calcRate = (part: number, whole: number) =>
       whole > 0 ? Number(((part / whole) * 100).toFixed(1)) : 0;
 
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const formattedTrends = [];
+    const rawTrends: any[] = [];
 
-    // Build the perfect 12-month contiguous array
-    for (let i = 11; i >= 0; i--) {
-      const d = new Date();
-      d.setMonth(d.getMonth() - i);
-      const m = d.getMonth() + 1; // 1-12
-      const y = d.getFullYear();
-
-      const requestsThisMonth =
-        monthlyRequests.find((t: any) => t._id.month === m && t._id.year === y)
-          ?.count || 0;
-      const viewsThisMonth =
-        monthlyViews.find((t: any) => t._id.month === m && t._id.year === y)
-          ?.count || 0;
-
-      formattedTrends.push({
-        date: `${monthNames[m - 1]} ${y.toString().slice(-2)}`, // e.g., "Jan 26"
-        "Price Requests": requestsThisMonth,
-        "Artwork Views": viewsThisMonth,
+    // Combine the grouped data into a clean, flat array for the frontend
+    monthlyRequests.forEach((req: any) => {
+      rawTrends.push({
+        year: req._id.year,
+        month: req._id.month,
+        requests: req.requests,
+        uniqueCollectors: req.uniqueCollectors,
+        views:
+          monthlyViews.find(
+            (v: any) =>
+              v._id.year === req._id.year && v._id.month === req._id.month,
+          )?.views || 0,
       });
-    }
+    });
+
+    // Catch any months that had views but NO requests
+    monthlyViews.forEach((view: any) => {
+      const exists = rawTrends.some(
+        (t) => t.year === view._id.year && t.month === view._id.month,
+      );
+      if (!exists) {
+        rawTrends.push({
+          year: view._id.year,
+          month: view._id.month,
+          requests: 0,
+          uniqueCollectors: 0,
+          views: view.views,
+        });
+      }
+    });
 
     return {
       success: true,
@@ -162,7 +157,7 @@ export async function getEngagementMetrics() {
             totalLiquidity: calcRate(funnel.ordersPaid, funnel.totalRequests),
           },
         },
-        trends: formattedTrends,
+        trends: rawTrends, // Passing the all-time flat array to the frontend
         leaderboards: {
           topRequested,
           topViewed,
