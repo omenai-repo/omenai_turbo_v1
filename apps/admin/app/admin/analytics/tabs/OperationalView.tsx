@@ -19,8 +19,6 @@ export default function OperationalView() {
   if (isError || !data?.isOk || !data?.data)
     return <ErrorState message="Operations data currently unreachable." />;
 
-  console.log(data);
-
   // 1. Map to our new locked-in data contract
   const {
     timeToQuoteHours,

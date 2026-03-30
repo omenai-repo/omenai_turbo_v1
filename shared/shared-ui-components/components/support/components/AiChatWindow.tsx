@@ -296,7 +296,6 @@ export function AiChatWindow({
       ]);
     } catch (error: any) {
       if (error.name === "AbortError") {
-        console.log("Stream stopped by user");
         const aiMessageId = (Date.now() + 1).toString();
         onUpdateSession([
           ...updatedMessages,

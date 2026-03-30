@@ -165,8 +165,6 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
         { $inc: { available_balance: amount } },
       ).session(session);
 
-      console.log(`Refunded ${amount} to wallet ${meta.wallet_id}`);
-
       // Fire-and-forget email
       const artist = await AccountArtist.findOne({ wallet_id: meta.wallet_id });
       if (artist) {

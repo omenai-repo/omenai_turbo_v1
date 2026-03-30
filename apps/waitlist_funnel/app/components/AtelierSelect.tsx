@@ -21,9 +21,6 @@ export const AtelierSelect = ({
   className, // Destructure className to merge it
   ...props
 }: SelectProps) => {
-  useEffect(() => {
-    console.log(`AtelierSelect [${label}] received value:`, value);
-  }, [value]);
   return (
     <div className="flex flex-col gap-2 w-full relative group">
       <label className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-500">

@@ -29,8 +29,6 @@ export default function FinancialView() {
   // 2. Fetch Dynamic Data
   const { data, isLoading, isError } = useFinancialMetrics(selectedYear);
 
-  console.log(data);
-
   if (isLoading) return <FinancialSkeleton />;
   if (isError || !data?.isOk || !data?.data)
     return <ErrorState message="Unable to load financial intelligence." />;

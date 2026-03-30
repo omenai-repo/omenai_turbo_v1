@@ -587,7 +587,6 @@ export async function createUPSShipment(
       });
 
       finalLabelContent = await pdfDoc.saveAsBase64();
-      console.log("✅ Successfully converted UPS Label to PDF");
     } catch (conversionError) {
       console.error("⚠️ PDF Conversion Critical Failure:", conversionError);
     }

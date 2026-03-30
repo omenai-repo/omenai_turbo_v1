@@ -103,15 +103,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       wallet_exists.primary_withdrawal_account?.beneficiary_id;
 
     if (beneficiary_id) {
-      console.log(beneficiary_id);
       const response = await fetch(
         `https://api.flutterwave.com/v3/beneficiaries/${beneficiary_id}`,
         { ...appendOptions("DELETE") },
       );
 
       const result = await response.json();
-
-      console.log(result);
 
       if (
         result.status !== "success" &&
