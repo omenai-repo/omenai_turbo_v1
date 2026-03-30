@@ -6,7 +6,18 @@ export function extractUserTrackingData(req: Request): UserTrackingData {
     req.headers.get("x-forwarded-for") ||
     req.headers.get("x-real-ip") ||
     "Unknown";
-  const country = req.headers.get("x-vercel-ip-country") || "Unknown";
+  // ── NEW: Safely convert Alpha-2 code (e.g., "NG") to Full Name (e.g., "Nigeria") ──
+  const countryCode = req.headers.get("x-vercel-ip-country");
+  let country = "Unknown";
+
+  if (countryCode) {
+    try {
+      const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+      country = regionNames.of(countryCode) || countryCode;
+    } catch (error) {
+      country = countryCode; // Fallback to the 2-letter code just in case
+    }
+  }
   const city = req.headers.get("x-vercel-ip-city") || "Unknown";
 
   // 2. Extract standard web headers
@@ -82,7 +93,18 @@ export const enrichRegistrationTracking = (
       request.headers.get("x-forwarded-for") ||
       request.headers.get("x-real-ip") ||
       "Unknown";
-    const country = request.headers.get("x-vercel-ip-country") || "Unknown";
+    // ── NEW: Safely convert Alpha-2 code (e.g., "NG") to Full Name (e.g., "Nigeria") ──
+    const countryCode = request.headers.get("x-vercel-ip-country");
+    let country = "Unknown";
+
+    if (countryCode) {
+      try {
+        const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+        country = regionNames.of(countryCode) || countryCode;
+      } catch (error) {
+        country = countryCode; // Fallback to the 2-letter code just in case
+      }
+    }
 
     const rawCity = request.headers.get("x-vercel-ip-city");
     const city = rawCity ? decodeURIComponent(rawCity) : "Unknown"; // Decodes "New%20York" to "New York"
