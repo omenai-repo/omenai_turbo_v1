@@ -1,6 +1,5 @@
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import WaitlistLead from "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel";
-// IMPORT YOUR NEW MODELS (Adjust paths to match your folder structure)
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions/SubscriptionSchema";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
@@ -55,13 +54,10 @@ export async function getAcquisitionMetrics() {
             summary: [{ $group: { _id: "$role", count: { $sum: 1 } } }],
             byCountry: [
               {
-                $match: { "registration_tracking.referrer": { $ne: "legacy" } },
-              },
-              {
                 $group: {
                   _id: {
                     role: "$role",
-                    label: "$registration_tracking.country",
+                    label: "$registeration_tracking.country",
                   },
                   count: { $sum: 1 },
                 },
@@ -70,13 +66,10 @@ export async function getAcquisitionMetrics() {
             ],
             byDevice: [
               {
-                $match: { "registration_tracking.referrer": { $ne: "legacy" } },
-              },
-              {
                 $group: {
                   _id: {
                     role: "$role",
-                    label: "$registration_tracking.device_type",
+                    label: "$registeration_tracking.device_type",
                   },
                   count: { $sum: 1 },
                 },
@@ -85,13 +78,10 @@ export async function getAcquisitionMetrics() {
             ],
             byReferrer: [
               {
-                $match: { "registration_tracking.referrer": { $ne: "legacy" } },
-              },
-              {
                 $group: {
                   _id: {
                     role: "$role",
-                    label: "$registration_tracking.referrer",
+                    label: "$registeration_tracking.referrer",
                   },
                   count: { $sum: 1 },
                 },
@@ -183,6 +173,7 @@ export async function getAcquisitionMetrics() {
       (churnedId: string) => !galleriesWhoSold.includes(churnedId),
     ).length;
 
+    // console.log(rawData.byCountry);
     return {
       success: true,
       data: {

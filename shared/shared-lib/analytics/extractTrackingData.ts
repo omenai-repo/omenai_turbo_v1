@@ -1,12 +1,20 @@
 import { UserTrackingData } from "@omenai/shared-types";
 
+const decodeSafe = (str: string | null): string => {
+  if (!str) return "Unknown";
+  try {
+    return decodeURIComponent(str);
+  } catch (e) {
+    return str;
+  }
+};
+
 export function extractUserTrackingData(req: Request): UserTrackingData {
-  // 1. Safely extract Vercel's proprietary geo-headers (Works for BOTH Web and Mobile App)
   const ip_address =
     req.headers.get("x-forwarded-for") ||
     req.headers.get("x-real-ip") ||
     "Unknown";
-  // ── NEW: Safely convert Alpha-2 code (e.g., "NG") to Full Name (e.g., "Nigeria") ──
+
   const countryCode = req.headers.get("x-vercel-ip-country");
   let country = "Unknown";
 
@@ -18,7 +26,8 @@ export function extractUserTrackingData(req: Request): UserTrackingData {
       country = countryCode; // Fallback to the 2-letter code just in case
     }
   }
-  const city = req.headers.get("x-vercel-ip-city") || "Unknown";
+
+  const city = decodeSafe(req.headers.get("x-vercel-ip-city"));
 
   // 2. Extract standard web headers
   const userAgent = req.headers.get("user-agent") || "";
@@ -34,8 +43,8 @@ export function extractUserTrackingData(req: Request): UserTrackingData {
 
   if (nativeClient) {
     // If the header exists, we KNOW it's the mobile app. Bypass the messy User-Agent parsing.
-    device_type = "mobile"; // You can adjust this if you have a native iPad app later
-    browser = "Native App"; // Clearly separates app traffic from Safari/Chrome mobile traffic
+    device_type = "mobile";
+    browser = "Native App";
 
     // Simple OS detection based on what the app sends (e.g., "ios" or "android")
     if (nativeClient.toLowerCase().includes("ios")) os = "iOS";
@@ -80,9 +89,9 @@ export function extractUserTrackingData(req: Request): UserTrackingData {
 export const enrichRegistrationTracking = (
   user: any,
   request: Request,
-  Model: any, // AccountIndividual, AccountArtist, etc.
+  Model: any,
 ) => {
-  const tracking = user.registration_tracking || {};
+  const tracking = user.registeration_tracking || {};
 
   // If the country is Unknown, it's a legacy account that needs enrichment
   const needsEnrichment = !tracking.country || tracking.country === "Unknown";
@@ -93,7 +102,8 @@ export const enrichRegistrationTracking = (
       request.headers.get("x-forwarded-for") ||
       request.headers.get("x-real-ip") ||
       "Unknown";
-    // ── NEW: Safely convert Alpha-2 code (e.g., "NG") to Full Name (e.g., "Nigeria") ──
+
+    // ── Safely convert Alpha-2 code (e.g., "NG") to Full Name (e.g., "Nigeria") ──
     const countryCode = request.headers.get("x-vercel-ip-country");
     let country = "Unknown";
 
@@ -106,8 +116,8 @@ export const enrichRegistrationTracking = (
       }
     }
 
-    const rawCity = request.headers.get("x-vercel-ip-city");
-    const city = rawCity ? decodeURIComponent(rawCity) : "Unknown"; // Decodes "New%20York" to "New York"
+    // ── NEW: Safely decode the city header using the shared helper ──
+    const city = decodeSafe(request.headers.get("x-vercel-ip-city"));
 
     // 2. Parse User-Agent for Device, OS, and Browser
     const userAgent = request.headers.get("User-Agent") || "";
@@ -138,13 +148,13 @@ export const enrichRegistrationTracking = (
       { _id: user._id },
       {
         $set: {
-          "registration_tracking.ip_address": ip_address,
-          "registration_tracking.country": country,
-          "registration_tracking.city": city,
-          "registration_tracking.device_type": device_type,
-          "registration_tracking.os": os,
-          "registration_tracking.browser": browser,
-          "registration_tracking.referrer":
+          "registeration_tracking.ip_address": ip_address,
+          "registeration_tracking.country": country,
+          "registeration_tracking.city": city,
+          "registeration_tracking.device_type": device_type,
+          "registeration_tracking.os": os,
+          "registeration_tracking.browser": browser,
+          "registeration_tracking.referrer":
             tracking.referrer || "legacy_backfill",
         },
       },

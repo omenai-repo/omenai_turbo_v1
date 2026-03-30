@@ -129,7 +129,7 @@ export default function OperationalView() {
           {donutData.length > 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center pt-4">
               <div className="relative w-56 h-56 overflow-visible">
-                <div className="absolute inset-0 overflow-visible">
+                <div className="absolute z-10 inset-0 overflow-visible">
                   <DonutChart
                     data={donutData}
                     category="amount"
@@ -141,7 +141,7 @@ export default function OperationalView() {
                     customTooltip={DonTip}
                   />
                 </div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <div className="absolute z-0 inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <p className="text-[9px] text-[#B0B8C1] uppercase tracking-[0.2em]">
                     Total Lost
                   </p>

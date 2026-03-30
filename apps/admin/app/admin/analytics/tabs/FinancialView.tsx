@@ -93,7 +93,7 @@ export default function FinancialView() {
   const captureVsLossData = [
     { name: "Realized (Captured)", amount: realizedGMV },
     { name: "Lost (Collector Abandoned)", amount: abandonedRev },
-    { name: "Lost (Gallery Ghosted)", amount: ghostedRev },
+    { name: "Lost (Seller Ghosted)", amount: ghostedRev },
   ].filter((d) => d.amount > 0);
 
   // B. Pipeline Ratio (BarList)
@@ -206,7 +206,7 @@ export default function FinancialView() {
         >
           <div className="flex-1 min-h-0 relative mt-4">
             {hasTrendData ? (
-              <div className="absolute inset-0">
+              <div className="absolute z-10 inset-0">
                 <AreaChart
                   className="h-full w-full text-xs"
                   data={completeTrendChart}
@@ -237,7 +237,7 @@ export default function FinancialView() {
           {hasCaptureData ? (
             <div className="flex-1 flex flex-col items-center justify-center pt-2">
               <div className="relative w-48 h-48 shrink-0 overflow-visible">
-                <div className="absolute inset-0 overflow-visible">
+                <div className="absolute z-10 inset-0 overflow-visible">
                   <DonutChart
                     data={captureVsLossData}
                     category="amount"
@@ -251,7 +251,7 @@ export default function FinancialView() {
                   />
                 </div>
                 {/* Center label comparing demand */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <div className="absolute z-0 inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <span className="text-[9px] text-[#B0B8C1] tracking-[0.2em] uppercase text-center">
                     Total Demand
                   </span>
@@ -309,7 +309,6 @@ export default function FinancialView() {
           <div className="flex-1 flex flex-col items-center justify-center pt-4">
             <div className="relative w-40 h-40 shrink-0 overflow-visible">
               <DonutChart
-                // FIXED: We pass the array directly here, ensuring no filters remove the Pending slice
                 data={[
                   { name: "Secured Revenue (Cleared)", value: realizedGMV },
                   {
