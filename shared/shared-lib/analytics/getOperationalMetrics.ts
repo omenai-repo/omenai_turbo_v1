@@ -139,11 +139,9 @@ export async function getOperationalMetrics() {
           activeBottlenecks: [
             {
               $match: {
-                status: "processing", // Root status is correct here
-                $or: [
-                  { exhibition_status: { $ne: null } },
-                  { "exhibition_status.status": { $ne: "pending" } },
-                ],
+                status: "processing",
+                exhibition_status: { $ne: null },
+                "exhibition_status.status": { $ne: "pending" },
                 "shipping_details.shipment_information.tracking.id": null,
               },
             },
