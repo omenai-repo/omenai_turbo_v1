@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { PlatformEvents } from "@omenai/shared-models/models/analytics/PlatformEventsSchema";
+import crypto from "crypto";
 
 // Helper to get a random date within the last 90 days
 const getRandomDateLast90Days = () => {
@@ -8,10 +9,11 @@ const getRandomDateLast90Days = () => {
   const ninetyDaysAgo = new Date();
   ninetyDaysAgo.setDate(now.getDate() - 89); // Safely inside the TTL window
 
-  return new Date(
-    ninetyDaysAgo.getTime() +
-      Math.random() * (now.getTime() - ninetyDaysAgo.getTime()),
-  );
+  const start = ninetyDaysAgo.getTime();
+  const end = now.getTime();
+  const offset = crypto.randomInt(0, end - start + 1);
+
+  return new Date(start + offset);
 };
 
 export async function GET(request: Request) {
@@ -53,21 +55,21 @@ export async function GET(request: Request) {
     // 3. GENERATE 150 RANDOM EVENTS
     for (let i = 0; i < 150; i++) {
       // Create a realistic funnel weight: mostly saves, some PORs, fewer checkouts
-      const rand = Math.random();
+      const rand = crypto.randomInt(0, 1000000) / 1000000;
       let type = "artwork_saved";
       if (rand > 0.6) type = "por_inquiry";
       if (rand > 0.85) type = "checkout_initiated";
 
       mockEvents.push({
         event_type: type,
-        session_id: `mock-session-${Math.floor(Math.random() * 10000)}`,
-        user_id: `mock-user-${Math.floor(Math.random() * 50)}`, // Simulate some returning users
-        art_id: mockArtworks[Math.floor(Math.random() * mockArtworks.length)],
+        session_id: `mock-session-${crypto.randomInt(0, 10000)}`,
+        user_id: `mock-user-${crypto.randomInt(0, 50)}`, // Simulate some returning users
+        art_id: mockArtworks[crypto.randomInt(0, mockArtworks.length)],
         tracking_data: {
           ip_address: "127.0.0.1",
           country: "Nigeria", // Hardcoding to your current location for realism
           city: "Lagos",
-          device_type: Math.random() > 0.5 ? "desktop" : "mobile",
+          device_type: crypto.randomInt(0, 2) === 0 ? "desktop" : "mobile",
           os: "macOS",
           browser: "Chrome",
           referrer: "direct",
