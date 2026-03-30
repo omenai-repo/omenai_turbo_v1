@@ -71,7 +71,6 @@ export default function ArtworkCard({
     [countdown],
   );
 
-  console.log(expiryDate);
   return (
     <FadeUpCard>
       <div className="group relative w-full flex flex-col gap-3">

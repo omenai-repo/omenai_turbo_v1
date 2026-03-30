@@ -1,5 +1,5 @@
-import EnterpriseDashboard from "./PageWrapper";
-export const dynamic = "force-dynamic";
+import AnalyticsTabs from "./components/AnalyticsTabs";
+
 export default function page() {
-  return <EnterpriseDashboard />;
+  return <AnalyticsTabs />;
 }

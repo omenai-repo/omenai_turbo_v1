@@ -303,7 +303,6 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       },
     };
 
-    console.log(" Creating DHL Shipment with Payload:", shipmentPayloadData);
     const requestOptions = {
       method: "POST",
       headers: getDhlHeaders(),
@@ -312,8 +311,6 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     const response = await fetch(`${SHIPMENT_API_URL}`, requestOptions);
     const data = await response.json();
-
-    console.log(data);
 
     if (!response.ok)
       throw new ServerError("Error creating shipment. Please contact support");

@@ -12,6 +12,7 @@ import {
   Image,
   MessageCircleMore,
   Truck,
+  ChartColumn,
 } from "lucide-react";
 // types/sidebar.ts
 import { LucideIcon } from "lucide-react";
@@ -102,6 +103,13 @@ export const sidebarItems: SidebarItem[] = [
   {
     label: "Mission Control",
     icon: ChartColumnBig,
+    href: "/admin/waitlist_analytics",
+    section: "management",
+    key: "analytics",
+  },
+  {
+    label: "Analytics",
+    icon: ChartColumn,
     href: "/admin/analytics",
     section: "management",
     key: "analytics",

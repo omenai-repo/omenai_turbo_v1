@@ -27,7 +27,6 @@ export default function DeleteAccountModal({
     // Simulate API call
     setTimeout(() => {
       // In real app, this would redirect to login after deletion
-      console.log("Account deleted");
       setLoading(false);
       onClose();
     }, 2000);

@@ -21,6 +21,7 @@ import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import z from "zod";
+import { extractUserTrackingData } from "@omenai/shared-lib/analytics/extractTrackingData";
 
 const RegisterSchema = z.object({
   name: z.string(),
@@ -56,34 +57,9 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       );
     }
 
-    const isWaitlistFeatureActive =
-      (await fetchConfigCatValue("waitlistActivated", "low")) ?? false;
-
     await connectMongoDB();
 
     const data = await validateRequestBody(request, RegisterSchema);
-
-    if (isWaitlistFeatureActive) {
-      if (!data.referrerKey || !data.inviteCode)
-        throw new BadRequestError(
-          "Invalid request parameters - Please try again or contact support",
-        );
-
-      // Check referrerKey and Invite code validity
-
-      const isWaitlistUserInvitedAndValidated = await Waitlist.exists({
-        referrerKe: data.referrerKey,
-        inviteCode: data.inviteCode,
-        email: data.email,
-        isInvited: true,
-        entity: "artist",
-      });
-
-      if (!isWaitlistUserInvitedAndValidated)
-        throw new ForbiddenError(
-          "Sign-up unavailable. Please join the waitlist or wait for an invite.",
-        );
-    }
 
     const userAgent: string = request.headers.get("User-Agent") ?? "";
     const authorization: string = request.headers.get("Authorization") ?? "";
@@ -100,9 +76,12 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 
     const email_token = generateDigit(7);
 
+    const trackingData = extractUserTrackingData(request);
+
     const saveData = await AccountArtist.create({
       ...parsedData,
       email: parsedData.email.toLowerCase(),
+      registeration_tracking: trackingData,
     });
     const { artist_id } = saveData;
 

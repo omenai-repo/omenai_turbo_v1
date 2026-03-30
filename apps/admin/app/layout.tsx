@@ -54,8 +54,7 @@ export default async function AdminDashboardRootLayout({
     <RollbarProvider config={clientConfig}>
       <html lang="en" {...mantineHtmlProps}>
         <head>
-          <meta name="color-scheme" content="light" />
-          <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
+          <meta name="color-scheme" content="light" nonce={nonce} />
         </head>
         <body className={`${work_sans.variable} flex flex-col justify-center`}>
           <Toaster

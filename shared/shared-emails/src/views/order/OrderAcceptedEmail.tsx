@@ -43,8 +43,6 @@ export const OrderAcceptedEmail = ({
   const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
   const optimizedImage = getImageFileView(artwork.url, 400);
 
-  console.log(artwork.pricing);
-
   return (
     <Html>
       <Head>

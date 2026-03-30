@@ -39,20 +39,8 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
         router.push(`/purchase/${encodeURIComponent(data.art_id)}`);
       } else {
         setLoading(true);
-        const artwork_data = {
-          title: data.title,
-          artist: data.artist,
-          art_id: data.art_id,
-          url: data.url,
-          medium: data.medium,
-          pricing: data.pricing,
-        };
-        const res = await requestPrice(
-          artwork_data,
-          user.email,
-          user.name,
-          csrf || "",
-        );
+
+        const res = await requestPrice(data.art_id, user.user_id, csrf || "");
 
         setLoading(false);
         if (res?.isOk) {

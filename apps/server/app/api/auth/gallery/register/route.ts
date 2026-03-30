@@ -21,13 +21,12 @@ import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import z from "zod";
+import { extractUserTrackingData } from "@omenai/shared-lib/analytics/extractTrackingData";
 
 const RegisterSchema = z.object({
   name: z.string(),
   email: z.email(),
   password: z.string(),
-  referrerKey: z.string().optional().nullable(),
-  inviteCode: z.string().optional().nullable(),
   device_push_token: z.string().optional(),
   phone: z.string(),
   address: z.object({
@@ -56,36 +55,9 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         );
       }
 
-      const isWaitlistFeatureActive =
-        (await fetchConfigCatValue("waitlistActivated", "low")) ?? false;
-
       await connectMongoDB();
 
       const data = await validateRequestBody(request, RegisterSchema);
-
-      const { referrerKey, inviteCode } = data;
-
-      if (isWaitlistFeatureActive) {
-        if (!referrerKey || !inviteCode)
-          throw new BadRequestError(
-            "Invalid request parameters - Please try again or contact support",
-          );
-
-        // Check referrerKey and Invite code validity
-
-        const isWaitlistUserInvitedAndValidated = await Waitlist.exists({
-          referrerKey,
-          inviteCode,
-          email: data.email,
-          isInvited: true,
-          entity: "gallery",
-        });
-
-        if (!isWaitlistUserInvitedAndValidated)
-          throw new ForbiddenError(
-            "Sign-up unavailable. Please join the waitlist or wait for an invite.",
-          );
-      }
 
       const isAccountRegistered = await AccountGallery.findOne({
         email: data.email.toLowerCase(),
@@ -107,9 +79,12 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const email_token = generateDigit(7);
 
+      const trackingData = extractUserTrackingData(request);
+
       const saveData = await AccountGallery.create({
         ...parsedData,
         email: parsedData.email.toLowerCase(),
+        registeration_tracking: trackingData,
       });
 
       const { gallery_id, email, name } = saveData;
@@ -139,16 +114,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       if (!storeVerificationCode)
         throw new ServerError("A server error has occured, please try again");
 
-      await Waitlist.updateOne(
-        {
-          referrerKey,
-          inviteCode,
-          email: data.email,
-          isInvited: true,
-          entity: "gallery",
-        },
-        { $set: { inviteAccepted: true, entityId: gallery_id } },
-      );
       await sendGalleryMail({
         name: name,
         email: email,

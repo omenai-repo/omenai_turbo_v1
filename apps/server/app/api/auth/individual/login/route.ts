@@ -6,7 +6,7 @@ import {
   ConflictError,
   ServerError,
   ForbiddenError,
-} from "../../../../../custom/errors/dictionary/errorDictionary"; // Added ForbiddenError
+} from "../../../../../custom/errors/dictionary/errorDictionary";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
@@ -23,9 +23,10 @@ import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/Dele
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { validateRequestBody } from "../../../util";
 import z from "zod";
+import { enrichRegistrationTracking } from "@omenai/shared-lib/analytics/extractTrackingData";
 
 export const LoginSchema = z.object({
-  email: z.email(),
+  email: z.string().email(),
   password: z.string(),
   device_push_token: z.string().optional(),
 });
@@ -37,18 +38,20 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const data = await validateRequestBody(request, LoginSchema);
       const { email, password, device_push_token } = data;
 
-      console.log(data);
-
       await connectMongoDB();
 
-      // 1. Authenticate User
+      // 1. Authenticate User (Notice we select registration_tracking now)
       const user = await AccountIndividual.findOne<IndividualSchemaTypes>({
         email: email.toLowerCase(),
-      }).exec();
+      })
+        .select("+password +registration_tracking") // Ensure we grab tracking data for enrichment check
+        .exec();
 
       if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new ConflictError("Invalid credentials");
       }
+
+      enrichRegistrationTracking(user, request, AccountIndividual);
 
       // 2. Prepare Session Data
       const sessionPayload: SessionDataType = {
@@ -85,7 +88,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         }
 
         // A2. CREATE SESSION (Redis Only)
-        // We generate the ID here and store it in Redis.
         const sessionId = await createSession({
           userId: user.user_id,
           userData: sessionPayload,
@@ -93,7 +95,6 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         });
 
         // A3. RETURN JSON (No Cookie)
-        // The mobile app will save 'access_token' in SecureStore
         return NextResponse.json(
           {
             success: true,

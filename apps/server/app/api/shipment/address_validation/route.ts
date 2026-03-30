@@ -25,7 +25,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         postalCode,
       });
 
-      console.log(requestValidation);
       if (requestValidation) throw new BadRequestError(requestValidation);
     } catch (error) {
       const error_response = handleErrorEdgeCases(error);
@@ -50,8 +49,6 @@ export const POST = withRateLimitHighlightAndCsrf(standardRateLimit)(
         countyName,
         country,
       });
-
-      console.log(data);
 
       return NextResponse.json({ message: "Success", data }, { status: 200 });
     } catch (error) {

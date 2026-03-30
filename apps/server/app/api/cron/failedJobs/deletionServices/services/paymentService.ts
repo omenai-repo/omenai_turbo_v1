@@ -32,8 +32,8 @@ async function detachPaymentMethods(job: FailedCronJobTypes) {
     // Detach all payment methods in parallel
     await Promise.all(
       paymentMethods.data.map((pm: Stripe.PaymentMethod) =>
-        stripe.paymentMethods.detach(pm.id)
-      )
+        stripe.paymentMethods.detach(pm.id),
+      ),
     );
 
     return {
@@ -45,7 +45,7 @@ async function detachPaymentMethods(job: FailedCronJobTypes) {
     // Increment retry count on failure
     await FailedJob.updateOne(
       { jobId: job.jobId },
-      { $inc: { retryCount: 1 } }
+      { $inc: { retryCount: 1 } },
     );
 
     return {
@@ -65,9 +65,6 @@ export async function stripePaymentMethodsService(jobs: FailedCronJobTypes[]) {
     results.forEach((result) => {
       if (result.status === "fulfilled" && result.value.success) {
         successfulJobIds.push(result.value.jobId);
-        console.log(
-          `Job ${result.value.jobId}: ${result.value.note || "Success"}`
-        );
       } else if (result.status === "fulfilled") {
         console.warn(`Job ${result.value.jobId} failed: ${result.value.error}`);
       }

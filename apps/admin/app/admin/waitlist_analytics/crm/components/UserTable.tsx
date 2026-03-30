@@ -16,8 +16,6 @@ export const UserTable = ({
       </div>
     );
 
-  console.log(users.length);
-
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
