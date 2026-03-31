@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 
 test("gallery login with valid data", async ({ page }) => {
   await page.goto("https://staging.auth.omenai.app/login/gallery");
