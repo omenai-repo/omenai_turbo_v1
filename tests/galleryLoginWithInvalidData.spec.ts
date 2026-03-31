@@ -10,9 +10,7 @@ test("gallery login with invalid data", async ({ page }) => {
   await page
     .getByRole("textbox", { name: "Enter your Password" })
     .fill("Test12345@");
-  await page
-    .getByRole("textbox", { name: "Enter your Password" })
-    .press("Enter");
+  await page.getByRole("textbox", { name: "Enter your Password" });
   await page.getByRole("button", { name: "Sign In to Omenai" }).click();
   await expect(page.getByText("Invalid credentials")).toBeVisible();
 });

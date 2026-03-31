@@ -26,13 +26,13 @@ I've been writing tests for the different flows of the app such as login and acc
 | --------------------------------- | --------- | --------------------------------------------------- |
 | Collector login with valid data   | ✅ Passed |                                                     |
 | Collector login with invalid data | ✅ Passed |                                                     |
-| Gallery login with valid data     | ❌ Failed | Failed on Chrome; timeout                           |
-| Gallery login with invalid data   | ❌ Failed | Failed on Firefox and WebKit; toaster not visible   |
+| Gallery login with valid data     | ✅ Passed |                                                     |
+| Gallery login with invalid data   | ✅ Passed |                                                     |
 | Artist login with valid data      | ✅ Passed |                                                     |
 | Artist login with invalid data    | ✅ Passed |                                                     |
 | Admin login with valid data       | ✅ Passed |                                                     |
 | Admin login with invalid data     | ✅ Passed |                                                     |
-| Collector purchase                | ❌ Failed | Failed on WebKit; timeout                           |
+| Collector purchase                | ✅ Passed |                                                     |
 | Purchase network failure          | ❌ Failed | Timeout                                             |
 | Purchase Order existed            | ✅ Passed |                                                     |
 | Artwork payment                   | ✅ Passed |                                                     |
@@ -45,8 +45,8 @@ I've been writing tests for the different flows of the app such as login and acc
 | Metric      | Value |
 | ----------- | ----- |
 | Total Tests | 13    |
-| Passed      | 8     |
-| Failed      | 5     |
+| Passed      | 11    |
+| Failed      | 2     |
 
 ---
 

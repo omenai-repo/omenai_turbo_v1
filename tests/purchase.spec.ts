@@ -2,7 +2,7 @@ import { test } from "@playwright/test";
 
 test("purchase", async ({ page }) => {
   await page.goto("https://staging.omenai.app/");
-  await page.getByRole("link", { name: "Colors of Heaven" }).first().click();
+  await page.getByRole("link", { name: "Artworkww" }).first().click();
   await page.getByRole("button", { name: "Buy Artwork" }).click();
   await page.getByRole("textbox", { name: "Email Address" }).click();
   await page

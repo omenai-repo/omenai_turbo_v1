@@ -10,9 +10,7 @@ test("gallery login with valid data", async ({ page }) => {
   await page
     .getByRole("textbox", { name: "Enter your Password" })
     .fill("Test12345@");
-  await page
-    .getByRole("textbox", { name: "Enter your Password" })
-    .press("Enter");
+  await page.getByRole("textbox", { name: "Enter your Password" });
   await page.getByRole("button", { name: "Sign In to Omenai" }).click();
   await page.goto("https://staging.dashboard.omenai.app/gallery/overview");
 });

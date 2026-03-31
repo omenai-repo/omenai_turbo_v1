@@ -47,6 +47,7 @@ export const UserMenu = () => {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        data-testid={"user-name"}
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-3 px-2 py-1.5 rounded -full transition-all duration-200 ${
           isOpen ? "bg-neutral-100" : "hover:bg-neutral-50"
