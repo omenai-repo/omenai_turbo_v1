@@ -23,24 +23,35 @@ interface Props {
 }
 
 export const SocialLinks: React.FC<Props> = ({ socials }) => {
-  if (!socials) return null;
+  // Return null if socials object is undefined or completely empty
+  if (!socials || Object.keys(socials).length === 0) return null;
+
+  // Quick helper to capitalize the first letter of the platform (e.g., "instagram" -> "Instagram")
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-wrap items-center gap-3">
       {Object.entries(socials).map(([key, url]) => {
         const icon = socialIcons[key as Socials];
+
         if (!icon || !url) return null;
+
+        // Ensure the URL has a protocol to prevent Next.js Link from treating it as a relative route
+        const validUrl = url.startsWith("http") ? url : `https://${url}`;
 
         return (
           <Link
             key={key}
-            href={url}
+            href={validUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-dark/70 hover:text-foreground text-fluid-xxs transition underline leading-4 flex gap-x-1 items-center"
+            className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-dark hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+            title={validUrl} // Shows the full URL natively when the user hovers, just in case they want to see it!
           >
-            <span>{icon}</span>
-            <span>{url}</span>
+            <span className="text-slate-400 transition-colors group-hover:text-slate-700">
+              {icon}
+            </span>
+            <span>{capitalize(key)}</span>
           </Link>
         );
       })}
