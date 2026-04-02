@@ -14,7 +14,7 @@ export default function TaxWrapper() {
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-4">
       {/* Header */}
       <div className="flex flex-col gap-1">
         <h1 className="text-fluid-md font-semibold text-slate-900">

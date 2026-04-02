@@ -30,6 +30,13 @@ import { KeyList } from "../utils/canAccessRoute";
 
 export const sidebarItems: SidebarItem[] = [
   {
+    label: "Collector roster",
+    icon: MessageCircleMore,
+    href: "/admin/collectors",
+    section: "actions",
+    key: "requests",
+  },
+  {
     label: "Gallery requests",
     icon: Landmark,
     href: "/admin/requests/gallery",

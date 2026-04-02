@@ -6,12 +6,12 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-4">
       {/* Page header */}
       <header className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-lg font-semibold text-neutral-900">
-            Promotionals
+          <h1 className="text-xl font-semibold text-neutral-900">
+            Omenai Promotionals
           </h1>
           <p className="text-sm text-neutral-500">
             Create and manage promotional incentives across the platform

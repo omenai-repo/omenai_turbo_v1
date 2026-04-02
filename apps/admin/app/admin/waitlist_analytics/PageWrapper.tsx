@@ -69,7 +69,7 @@ export default function EnterpriseDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 p-4">
       {/* ======================================================================
           TOP NAVIGATION BAR (Sticky Header)
       ====================================================================== */}

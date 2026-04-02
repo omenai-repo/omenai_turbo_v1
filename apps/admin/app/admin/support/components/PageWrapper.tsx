@@ -59,7 +59,7 @@ export default function SupportTicketsPage() {
   }, [fetchTickets]);
 
   return (
-    <div className=" max-w-[1600px] mx-auto space-y-8">
+    <div className=" max-w-[1600px] mx-auto space-y-8 p-4">
       {/* 1. Header & Stats */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>

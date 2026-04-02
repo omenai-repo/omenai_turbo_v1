@@ -41,7 +41,7 @@ export default function TeamManagement() {
   }
 
   return (
-    <section className="max-w-full mx-auto space-y-6">
+    <section className="max-w-full mx-auto space-y-6 p-4">
       {/* Header */}
       <header className="flex items-center justify-between">
         <div>
