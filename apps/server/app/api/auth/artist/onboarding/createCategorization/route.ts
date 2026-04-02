@@ -27,7 +27,14 @@ const CreateCategorizationSchema = z.object({
   bio: z.string(),
   documentation: z.object({
     cv: z.string(),
-    socials: z.object(),
+    socials: z.object({
+      instagram: z.string().optional(),
+      twitter: z.string().optional(),
+      linkedin: z.string().optional(),
+      behance: z.string().optional(),
+      facebook: z.string().optional(),
+      tiktok: z.string().optional(),
+    }),
   }),
   answers: z.object({
     graduate: z.enum(["yes", "no"]),
@@ -48,11 +55,10 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
     try {
       session.startTransaction();
 
-      const data = await validateRequestBody(
-        request,
-        CreateCategorizationSchema,
-      );
-      const artist = await AccountArtist.findOne({ artist_id: data.artist_id });
+      const { artist_id, bio, documentation, answers } =
+        await validateRequestBody(request, CreateCategorizationSchema);
+
+      const artist = await AccountArtist.findOne({ artist_id });
 
       if (!artist) throw new BadRequestError("Artist not found. Invalid ID");
 
@@ -68,7 +74,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       // Calculate new algorithm
       const algorithm_result: ArtistCategorizationAlgorithmResult =
-        calculateArtistRating(data.answers);
+        calculateArtistRating(answers);
 
       if (algorithm_result.status !== "success")
         throw new ServerError(
@@ -86,7 +92,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
             artist_categorization: algorithm_result.rating as
               | ArtistCategory
               | "Unknown",
-            answers: data.answers,
+            answers: answers,
             price_range: algorithm_result.price_range,
           },
         },
@@ -97,11 +103,11 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       });
 
       await AccountArtist.updateOne(
-        { artist_id: data.artist_id },
+        { artist_id },
         {
           $set: {
-            documentation: data.documentation,
-            bio: data.bio,
+            documentation,
+            bio,
             isOnboardingCompleted: true,
           },
         },
@@ -120,12 +126,15 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       );
     } catch (error) {
       await session.abortTransaction();
+
+      console.log(error);
       const error_response = handleErrorEdgeCases(error);
       createErrorRollbarReport(
         "auth: artist onboarding create categorization",
         error,
         error_response.status,
       );
+
       return NextResponse.json(
         { message: error_response!.message },
         { status: error_response!.status },

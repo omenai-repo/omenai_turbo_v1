@@ -1,14 +1,18 @@
 "use client";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Link2, User, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
-import React from "react";
-import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
-// Assuming StepComponentProps is correctly defined in the parent context
-// import { StepComponentProps } from "../OnboardingContainer";
 
+type SocialType =
+  | "instagram"
+  | "linkedin"
+  | "twitter"
+  | "behance"
+  | "tiktok"
+  | "facebook"
+  | "";
 interface SocialLink {
-  type: string;
+  type: SocialType;
   url: string;
 }
 
@@ -26,7 +30,6 @@ const HTTPS_PREFIX = "https://";
 const HTTP_PREFIX = "http://";
 
 // NOTE: I am keeping the original function signature/props,
-// but adding missing imports (useEffect, useMemo, useCallback) for completeness.
 // Using 'any' for StepComponentProps since the definition is external.
 export default function SocialsStep({
   question,
@@ -36,7 +39,7 @@ export default function SocialsStep({
   isFirstStep,
   label,
 }: any) {
-  const { onboardingData } = artistOnboardingStore();
+  const { onboardingData, updateOnboardingData } = artistOnboardingStore();
 
   type SocialType = keyof typeof onboardingData.socials;
 
@@ -80,10 +83,10 @@ export default function SocialsStep({
                 ? HTTPS_PREFIX + newValue.trim()
                 : "";
 
-              return { ...link, [field]: urlForState };
+              return { ...link, [field]: urlForState } as SocialLink;
             }
 
-            return { ...link, [field]: newValue };
+            return { ...link, [field]: newValue } as SocialLink;
           }
           return link;
         }),
@@ -94,7 +97,9 @@ export default function SocialsStep({
 
   const handleClickNext = () => {
     for (const link of links) {
-      updateData(label, link.url, link.type);
+      if (link.type && link.url) {
+        updateOnboardingData(label, link.url, link.type);
+      }
     }
     goNext();
   };
@@ -156,7 +161,7 @@ export default function SocialsStep({
                     key={option.value}
                     value={option.value}
                     disabled={
-                      selectedTypes.includes(option.value) &&
+                      selectedTypes.includes(option.value as SocialType) &&
                       option.value !== link.type
                     }
                   >

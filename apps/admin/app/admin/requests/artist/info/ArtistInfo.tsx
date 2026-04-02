@@ -2,7 +2,6 @@ import { ArtistCategory } from "@omenai/shared-types";
 import React, { useState } from "react";
 import { SocialLinks } from "./Socials";
 import CategorizationAnswers from "./CategorizationAnswers";
-import { toast } from "sonner";
 import { getGalleryLogoFileView } from "@omenai/shared-lib/storage/getGalleryLogoFileView";
 import { VerificationInfoType } from "./ArtistInfoWrapper";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,13 +14,14 @@ import { download_artist_resume } from "../../../lib/downloadResumeFile";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import {
   Download,
-  CheckCircle,
+  CheckCircle2,
   XCircle,
   MapPin,
   Palette,
-  AlertCircle,
+  AlertTriangle,
+  Loader2,
+  ShieldCheck,
 } from "lucide-react";
-import error from "../../../../error";
 import { useRollbar } from "@rollbar/react";
 
 export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
@@ -29,7 +29,10 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   const [recommendation, setRecommedation] = useState<ArtistCategory>(
     request.categorization.artist_categorization as ArtistCategory,
   );
-  const [loading, setLoading] = useState(false);
+  const [loadingType, setLoadingType] = useState<"accept" | "reject" | null>(
+    null,
+  );
+
   const { artist_id, name, email } = artist;
   const rollbar = useRollbar();
   const queryClient = useQueryClient();
@@ -38,22 +41,18 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
 
   const handleFileDownload = () => {
     const file = artist.documentation?.cv;
-
     if (!file) {
       toast_notif("File ID not found", "error");
       return;
     }
-
     const file_download = download_artist_resume(file);
-
     if (!file_download) {
       toast_notif("Resume file not found", "error");
       return;
     }
-
     const a = document.createElement("a");
     a.href = file_download;
-    a.download = `${artist.name} resume`;
+    a.download = `${artist.name} Resume`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -61,7 +60,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
 
   const handleRequestAction = async (type: "accept" | "reject") => {
     try {
-      setLoading(true);
+      setLoadingType(type);
 
       const response =
         type === "accept"
@@ -93,7 +92,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
         "error",
       );
     } finally {
-      setLoading(false);
+      setLoadingType(null);
     }
   };
 
@@ -108,217 +107,243 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
     "Elite",
   ];
 
-  const getCategoryColor = (category: ArtistCategory | "Unknown") => {
-    const colors = {
-      Emerging: "bg-green-500",
-      "Early Mid-Career": "bg-yellow-500",
-      "Mid-Career": "bg-orange-500",
-      "Late Mid-Career": "bg-purple-500",
-      Established: "bg-blue-500",
-      Elite: "bg-pink-500",
-      Unknown: "bg-gray-500",
-    };
-    return colors[category] || "bg-gray-500";
+  const categoryTheme: Record<
+    string,
+    { bg: string; text: string; border: string; ring: string }
+  > = {
+    Emerging: {
+      bg: "bg-emerald-50",
+      text: "text-emerald-700",
+      border: "border-emerald-200",
+      ring: "ring-emerald-500",
+    },
+    "Early Mid-Career": {
+      bg: "bg-teal-50",
+      text: "text-teal-700",
+      border: "border-teal-200",
+      ring: "ring-teal-500",
+    },
+    "Mid-Career": {
+      bg: "bg-blue-50",
+      text: "text-blue-700",
+      border: "border-blue-200",
+      ring: "ring-blue-500",
+    },
+    "Late Mid-Career": {
+      bg: "bg-indigo-50",
+      text: "text-indigo-700",
+      border: "border-indigo-200",
+      ring: "ring-indigo-500",
+    },
+    Established: {
+      bg: "bg-purple-50",
+      text: "text-purple-700",
+      border: "border-purple-200",
+      ring: "ring-purple-500",
+    },
+    Elite: {
+      bg: "bg-rose-50",
+      text: "text-rose-700",
+      border: "border-rose-200",
+      ring: "ring-rose-500",
+    },
+    Unknown: {
+      bg: "bg-slate-50",
+      text: "text-slate-700",
+      border: "border-slate-200",
+      ring: "ring-slate-500",
+    },
   };
 
-  const getCategoryBgColor = (category: ArtistCategory | "Unknown") => {
-    const colors = {
-      Emerging: "bg-green-50 border-green-200",
-      "Early Mid-Career": "bg-yellow-50 border-yellow-200",
-      "Mid-Career": "bg-orange-50 border-orange-200",
-      "Late Mid-Career": "bg-purple-50 border-purple-200",
-      Established: "bg-blue-50 border-blue-200",
-      Elite: "bg-pink-50 border-pink-200",
-      Unknown: "bg-gray-50 border-gray-200",
-    };
-    return colors[category] || "bg-gray-50 border-gray-200";
-  };
+  const getTheme = (cat: string) => categoryTheme[cat] || categoryTheme.Unknown;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 2xl:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Card */}
-        <div className="bg-white rounded shadow-sm border border-gray-100 overflow-hidden mb-4">
-          {/* Banner */}
-          <div className="h-32 bg-gradient-to-br from-gray-900 to-gray-700 relative">
-            <div className="absolute inset-0 bg-dark/20"></div>
+    <div className="min-h-screen bg-slate-50/50 p-4 md:p-8">
+      <div className="mx-auto max-w-full space-y-6">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="relative h-32 w-full overflow-hidden bg-slate-50 border-b border-slate-100">
+            <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-slate-200/40 blur-3xl"></div>
+            <div className="absolute -bottom-10 right-20 h-40 w-40 rounded-full bg-slate-200/50 blur-3xl"></div>
           </div>
 
-          <div className="px-4 pb-4">
-            {/* Profile Section */}
-            <div className="flex flex-col md:flex-row gap-6 -mt-16 relative">
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                {image_href ? (
-                  <div className="relative">
+          <div className="px-6 pb-6 sm:px-8 sm:pb-8">
+            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              {/* Avatar & Basic Info */}
+              <div className="-mt-16 flex flex-col sm:flex-row sm:items-end gap-5">
+                {/* Square Avatar Wrapper */}
+                <div className="relative inline-block shrink-0">
+                  {image_href ? (
                     <Image
                       src={image_href}
-                      className="rounded border-4 border-white shadow-xl"
-                      h={100}
-                      w={100}
-                      radius="100%"
+                      className="h-32 w-32 rounded-2xl border-[5px] border-white bg-white object-cover shadow-md"
+                      radius="16px"
+                      alt={artist.name}
                     />
-                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded border-4 border-white flex items-center justify-center">
-                      <CheckCircle size={14} className="text-white" />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-600 rounded border-4 border-white shadow-xl flex items-center justify-center text-white text-fluid-lg 2xl:text-fluid-xl font-semibold">
+                  ) : (
+                    <div className="flex h-32 w-32 items-center justify-center rounded-2xl border-[5px] border-white bg-gradient-to-br from-slate-800 to-dark text-3xl font-bold tracking-wider text-white shadow-md">
                       {artist.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </div>
-                    <div className="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded border-4 border-white flex items-center justify-center">
-                      <CheckCircle size={16} className="text-white" />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Artist Info */}
-              <div className="flex-1 pt-4">
-                <h1 className="text-fluid-lg 2xl:text-fluid-xl font-semibold text-white mb-2">
-                  {artist.name}
-                </h1>
-
-                <div className="flex flex-wrap gap-3 mb-4">
-                  <div className="inline-flex items-center gap-2 px-4 bg-blue-50 text-blue-700 rounded text-fluid-xxs font-light border border-blue-200">
-                    <Palette size={14} />
-                    {artist.art_style}
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded text-fluid-xxs font-light border border-green-200">
-                    <MapPin size={14} />
-                    {artist.address.state}, {artist.address.country}
+                  )}
+                  {/* Verified Badge shifted to fit the square corner perfectly */}
+                  <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-emerald-500 text-white shadow-sm">
+                    <ShieldCheck size={14} strokeWidth={2.5} />
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <SocialLinks socials={artist.documentation?.socials} />
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    onClick={handleFileDownload}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-gray-900 text-white hover:text-dark rounded font-medium hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md"
-                  >
-                    <Download size={14} />
-                    Download Resume
-                  </button>
-                  <button
-                    disabled={loading}
-                    onClick={() => handleRequestAction("accept")}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded animate-spin" />
-                    ) : (
-                      <CheckCircle size={14} />
-                    )}
-                    Accept Artist
-                  </button>
-                  <button
-                    disabled={loading}
-                    onClick={() => handleRequestAction("reject")}
-                    className="inline-flex items-center gap-2 px-4 text-fluid-xxs py-2 bg-red-600 text-white rounded font-medium hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded animate-spin" />
-                    ) : (
-                      <XCircle size={14} />
-                    )}
-                    Reject Artist
-                  </button>
+                {/* Name & Badges */}
+                <div className="mb-1.5 space-y-3">
+                  <h1 className="text-2xl font-bold tracking-tight text-dark">
+                    {artist.name}
+                  </h1>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-normal text-slate-600">
+                      <Palette size={13} className="text-slate-400" />
+                      {artist.art_style}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-normal text-slate-600">
+                      <MapPin size={13} className="text-slate-400" />
+                      {artist.address.state}, {artist.address.country}
+                    </span>
+                  </div>
                 </div>
               </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3 sm:mb-2">
+                <button
+                  onClick={handleFileDownload}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-normal text-slate-700 transition-colors hover:bg-slate-50 hover:text-dark focus:outline-none focus:ring-2 focus:ring-slate-200"
+                >
+                  <Download size={16} className="text-slate-400" />
+                  Resume
+                </button>
+                <button
+                  disabled={loadingType !== null}
+                  onClick={() => handleRequestAction("reject")}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 text-sm font-normal text-red-700 transition-colors hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-200 disabled:opacity-50"
+                >
+                  {loadingType === "reject" ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <XCircle size={16} />
+                  )}
+                  Reject
+                </button>
+                <button
+                  disabled={loadingType !== null}
+                  onClick={() => handleRequestAction("accept")}
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 text-sm font-normal text-white transition-all hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 shadow-sm"
+                >
+                  {loadingType === "accept" ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <CheckCircle2 size={16} />
+                  )}
+                  Accept Artist
+                </button>
+              </div>
+            </div>
+
+            {/* Socials Divider */}
+            <div className="mt-8 border-t border-slate-100 pt-6">
+              <SocialLinks socials={artist.documentation?.socials} />
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="space-y-8">
-          {/* Categorization Answers */}
-          <CategorizationAnswers answers={request?.categorization.answers} />
+        {/* --- Main Content Split --- */}
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Left Column: Questionnaire Answers */}
+          <div className="lg:col-span-7">
+            <CategorizationAnswers answers={request?.categorization.answers} />
+          </div>
 
-          {/* Category Recommendation Section */}
-          <div className="bg-white rounded shadow-sm border border-gray-100 p-8">
-            <h2 className="text-fluid-md font-bold text-gray-900 mb-6">
-              Category Assessment
-            </h2>
+          {/* Right Column: Category Assessment Tool */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-5 text-lg font-medium tracking-tight text-dark">
+                Category Assessment
+              </h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Algorithm Recommendation */}
-              <div className="bg-gray-50 rounded p-6 border border-gray-200">
-                <h3 className="text-fluid-xxs font-semibold text-gray-600 uppercase tracking-wider mb-3">
-                  Algorithm Recommendation
-                </h3>
-                <div
-                  className={`inline-flex items-center px-4 py-2 ${getCategoryColor(request?.categorization.artist_categorization)} text-white rounded text-fluid-xxs font-medium shadow-md`}
-                >
-                  {request?.categorization.artist_categorization}
-                </div>
-              </div>
-
-              {/* Current Selection */}
-              <div className="bg-blue-50 rounded p-6 border border-blue-200">
-                <h3 className="text-fluid-xxs font-semibold text-blue-600 uppercase tracking-wider mb-3">
-                  Selected Category
-                </h3>
-                <div
-                  className={`inline-flex items-center px-4 py-2 text-fluid-xxs ${getCategoryColor(recommendation)} text-white rounded font-medium shadow-md`}
-                >
-                  {recommendation}
-                </div>
-              </div>
-            </div>
-
-            {/* Category Selection Grid */}
-            <div className="mt-8">
-              <h4 className="text-fluid-sm font-semibold text-gray-700 mb-4">
-                Update Category Selection
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {categoryOptions.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setRecommedation(category as ArtistCategory)}
-                    className={`relative p-3 rounded text-fluid-xxs font-medium transition-all duration-200 ${
-                      recommendation === category
-                        ? `${getCategoryColor(category)} text-white shadow-lg scale-105`
-                        : `${getCategoryBgColor(category as ArtistCategory)} hover:scale-102 border`
-                    }`}
+              {/* Status Metric Cards */}
+              <div className="mb-8 grid grid-cols-2 gap-4">
+                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    Algorithm Result
+                  </p>
+                  <span
+                    className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-medium ${getTheme(request?.categorization.artist_categorization as string).bg} ${getTheme(request?.categorization.artist_categorization as string).text} ${getTheme(request?.categorization.artist_categorization as string).border}`}
                   >
-                    {recommendation === category && (
-                      <div className="absolute top-2 right-2">
-                        <CheckCircle size={16} />
-                      </div>
-                    )}
-                    {category}
-                  </button>
-                ))}
+                    {request?.categorization.artist_categorization}
+                  </span>
+                </div>
+                <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4">
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-blue-600">
+                    Final Selection
+                  </p>
+                  <span
+                    className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-medium ${getTheme(recommendation).bg} ${getTheme(recommendation).text} ${getTheme(recommendation).border}`}
+                  >
+                    {recommendation}
+                  </span>
+                </div>
               </div>
 
-              {/* Warning Message */}
+              {/* Interactive Category Selector */}
+              <div>
+                <h3 className="mb-3 text-sm font-normal text-dark">
+                  Override Category
+                </h3>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {categoryOptions.map((category) => {
+                    const isSelected = recommendation === category;
+                    const theme = getTheme(category);
+
+                    return (
+                      <button
+                        key={category}
+                        onClick={() =>
+                          setRecommedation(category as ArtistCategory)
+                        }
+                        className={`relative flex items-center justify-between rounded-xl border p-3 text-left text-sm font-normal transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                          isSelected
+                            ? `${theme.bg} ${theme.border} ${theme.text} ${theme.ring} ring-2 ring-offset-0`
+                            : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        {category}
+                        {isSelected && (
+                          <CheckCircle2 size={16} className={theme.text} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Warning Callout (Only shows if overriding algorithm) */}
               {recommendation !==
                 request?.categorization.artist_categorization && (
-                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded flex items-start gap-3">
-                  <AlertCircle
-                    className="text-amber-600 flex-shrink-0 mt-0.5"
-                    size={20}
+                <div className="mt-6 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <AlertTriangle
+                    className="mt-0.5 shrink-0 text-amber-500"
+                    size={18}
                   />
                   <div>
-                    <p className="text-amber-800 font-medium text-fluid-xxs">
-                      Category will be updated
-                    </p>
-                    <p className="text-amber-700 text-fluid-xxs">
-                      The artist will be categorized as{" "}
-                      <strong>{recommendation}</strong> instead of the
-                      recommended{" "}
-                      <strong>
+                    <h4 className="text-sm font-normal text-amber-800">
+                      Manual Override Active
+                    </h4>
+                    <p className="mt-1 text-xs leading-relaxed text-amber-700">
+                      You are assigning this artist to{" "}
+                      <strong className="font-medium">{recommendation}</strong>{" "}
+                      instead of the algorithm's recommendation of{" "}
+                      <strong className="font-medium">
                         {request?.categorization.artist_categorization}
                       </strong>
+                      .
                     </p>
                   </div>
                 </div>
