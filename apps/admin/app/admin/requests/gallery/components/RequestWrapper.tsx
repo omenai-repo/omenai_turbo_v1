@@ -46,18 +46,18 @@ export function GalleryRequestWrapper() {
   if (isLoading) return <Load />;
 
   const pending = galleries.filter(
-    (gallery: GalleryType) => !gallery.gallery_verified
+    (gallery: GalleryType) => !gallery.gallery_verified,
   );
 
   const approved = galleries.filter(
-    (gallery: GalleryType) => gallery.gallery_verified
+    (gallery: GalleryType) => gallery.gallery_verified,
   );
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-4">
       {/* Header */}
       <header className="flex flex-col gap-1">
-        <h1 className="text-lg font-semibold text-neutral-900">
+        <h1 className="text-xl font-semibold text-neutral-900">
           Gallery Requests
         </h1>
         <p className="text-sm text-neutral-500">

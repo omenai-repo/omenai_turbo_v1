@@ -72,7 +72,7 @@ export default function ArtworkListing() {
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50 font-sans text-slate-800">
+    <div className="min-h-screen bg-neutral-50 font-sans text-slate-800 p-4">
       <div className="bg-neutral-50  py-6 flex justify-between items-center sticky -top-5 z-30">
         {/* View Toggle Switch */}
         <div className="flex bg-slate-100 p-1 rounded -lg border border-slate-200">

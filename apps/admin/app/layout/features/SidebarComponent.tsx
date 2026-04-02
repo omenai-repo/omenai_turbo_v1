@@ -1,7 +1,6 @@
+// components/layout/SidebarComponent.tsx
 "use client";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
 import {
   IndividualLogo,
   OmenaiLogoCut,
@@ -10,10 +9,20 @@ import { toast } from "sonner";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { SidebarLogout } from "./SidebarLogout";
 import { SidebarItem, sidebarItems } from "../navMockData";
-import NavigationItem from "../NavigationItem";
 import { canAccessRoute } from "../../utils/canAccessRoute";
 
-export function SidebarContent({ expanded }: { expanded: boolean }) {
+// Import top-level section icons
+import { Layers, Activity, Users, Settings } from "lucide-react";
+import { SectionNavItem } from "../SectionNavItem";
+
+const SECTION_CONFIG: Record<string, { label: string; icon: any }> = {
+  actions: { label: "Operations", icon: Layers },
+  activity: { label: "Activity", icon: Activity },
+  management: { label: "Admin", icon: Users },
+  account: { label: "Settings", icon: Settings },
+};
+
+export function SidebarContent({ isMobile }: { isMobile: boolean }) {
   const pathname = usePathname();
   const { signOut, user } = useAuth({ requiredRole: "admin" });
 
@@ -22,41 +31,43 @@ export function SidebarContent({ expanded }: { expanded: boolean }) {
       description: "You will be redirected to the login page",
     });
     await signOut();
-    // router.replace(`${auth_uri}/login`);
   }
+
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
-      <div className="flex items-center h-16 px-4">
-        {expanded ? <IndividualLogo /> : <OmenaiLogoCut />}
+      <div className="flex h-16 shrink-0 items-center justify-center px-4">
+        {isMobile ? <IndividualLogo /> : <OmenaiLogoCut />}
       </div>
 
-      <nav className="flex flex-1 flex-col gap-3 px-3">
-        {["actions", "activity", "management", "account"].map((section) => (
-          <div key={section}>
-            <ul className="space-y-3">
-              {sidebarItems
-                .filter((item: SidebarItem) => item.section === section)
-                .map((item: SidebarItem) => {
-                  const active = pathname.startsWith(item.href);
-                  const Icon = item.icon;
+      <nav className="mt-4 flex flex-1 flex-col gap-2 px-2 pb-4">
+        {Object.entries(SECTION_CONFIG).map(([sectionKey, config]) => {
+          // 1. DYNAMIC ROLE FILTERING
+          const accessibleItems = sidebarItems.filter(
+            (item: SidebarItem) =>
+              item.section === sectionKey &&
+              canAccessRoute(user.access_role, item.key),
+          );
 
-                  return (
-                    <NavigationItem
-                      key={item.label}
-                      item={item}
-                      active={active}
-                      icon={<Icon className="h-4 w-4 shrink-0" />}
-                      expanded={expanded}
-                      disabled={!canAccessRoute(user.access_role, item.key)}
-                    />
-                  );
-                })}
-            </ul>
-          </div>
-        ))}
+          // Hide completely if the role has no access to this section
+          if (accessibleItems.length === 0) return null;
+
+          return (
+            <SectionNavItem
+              key={sectionKey}
+              sectionName={config.label}
+              sectionIcon={config.icon}
+              items={accessibleItems}
+              pathname={pathname}
+              isMobile={isMobile}
+            />
+          );
+        })}
       </nav>
-      <SidebarLogout expanded={expanded} onLogout={handleSignOut} />
+
+      <div className="shrink-0">
+        <SidebarLogout isMobile={isMobile} onLogout={handleSignOut} />
+      </div>
     </div>
   );
 }

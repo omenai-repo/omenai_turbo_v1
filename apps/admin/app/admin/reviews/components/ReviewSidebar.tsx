@@ -39,7 +39,7 @@ export default function ReviewSidebar({
       {/* 1. Sticky Header with Search */}
       <div className="p-4 border-b border-neutral-200 bg-white sticky top-0 z-10 space-y-3">
         <h2 className="text-sm font-bold text-dark uppercase tracking-wider flex justify-between items-center">
-          <span>Needs Action</span>
+          <span>Price review requests</span>
           {isFetching && (
             <span className="text-[10px] text-neutral-400 normal-case animate-pulse">
               Updating...
