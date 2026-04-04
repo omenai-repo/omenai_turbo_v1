@@ -60,8 +60,8 @@ export const uploadArtworkDetailInputMocks = [
   {
     name: "artwork_description",
     type: "textarea",
-    label: "Artwork description (optional)",
-    required: false,
+    label: "Artwork description",
+    required: true,
     placeholder: "Describe this art piece",
   },
 ];
