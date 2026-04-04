@@ -8,12 +8,10 @@ function getCountryName(input: string) {
 
   const value = input.trim();
 
-  // Case 1: Already alpha-2 code
   if (value.length === 2) {
     return countries.getName(value.toUpperCase(), "en") || value;
   }
 
-  // Case 2: Full name → normalize
   const code = countries.getAlpha2Code(value, "en");
 
   if (code) {
