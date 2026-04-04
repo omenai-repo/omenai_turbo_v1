@@ -1,3 +1,28 @@
+import countries from "i18n-iso-countries";
+import en from "i18n-iso-countries/langs/en.json";
+
+countries.registerLocale(en);
+
+function getCountryName(input: string) {
+  if (!input) return null;
+
+  const value = input.trim();
+
+  // Case 1: Already alpha-2 code
+  if (value.length === 2) {
+    return countries.getName(value.toUpperCase(), "en") || value;
+  }
+
+  // Case 2: Full name → normalize
+  const code = countries.getAlpha2Code(value, "en");
+
+  if (code) {
+    return countries.getName(code, "en");
+  }
+
+  return value;
+}
+
 export function ArtistInformation({
   name,
   year,
@@ -25,7 +50,7 @@ export function ArtistInformation({
           <span className="block text-[10px] uppercase text-neutral-500 mb-1">
             Origin
           </span>
-          <span className="font-sans text-sm">{location}</span>
+          <span className="font-sans text-sm">{getCountryName(location)}</span>
         </div>
       </div>
     </div>
