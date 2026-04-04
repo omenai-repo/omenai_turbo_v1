@@ -17,6 +17,7 @@ import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch
 import { createErrorRollbarReport, validateGetRouteParams } from "../../util";
 import z from "zod";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 const GetArtworkPriceForArtist = z.object({
@@ -75,6 +76,7 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
           "Artwork price calculation is currently disabled",
         );
 
+      await connectMongoDB();
       // 1. Check if Height/Width are valid
       if (Number.isNaN(+height) || Number.isNaN(+width))
         throw new BadRequestError("Height or width must be a number");
