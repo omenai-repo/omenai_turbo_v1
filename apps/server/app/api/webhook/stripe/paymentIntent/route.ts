@@ -591,7 +591,6 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     );
 
     const limit = getUploadLimitLookup(plan.name, planInterval, false);
-    console.log(limit);
     const subPayload = {
       start_date: nowUTC,
       expiry_date: expiryDate,

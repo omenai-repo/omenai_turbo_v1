@@ -165,8 +165,6 @@ async function handleTransferFailure(verified_transaction: any, session: any) {
         { $inc: { available_balance: amount } },
       ).session(session);
 
-      console.log(`Refunded ${amount} to wallet ${meta.wallet_id}`);
-
       // Fire-and-forget email
       const artist = await AccountArtist.findOne({ wallet_id: meta.wallet_id });
       if (artist) {
@@ -305,10 +303,7 @@ export const POST = async function POST(request: Request): Promise<Response> {
       session.endSession();
     }
 
-    return NextResponse.json(
-      { status: result?.isOk ? 200 : 400 },
-      { status: result?.isOk ? 200 : 400 },
-    );
+    return NextResponse.json({ status: result?.isOk ? 200 : 400 });
   } catch (error) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing - fatal error",
@@ -316,6 +311,9 @@ export const POST = async function POST(request: Request): Promise<Response> {
       500,
     );
 
-    return NextResponse.json({ status: 200 });
+    return NextResponse.json(
+      { error: "Internal server error during webhook processing" },
+      { status: 500 },
+    );
   }
 };

@@ -16,11 +16,13 @@ export default function EditorialWrapper() {
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-4">
       {/* Page header */}
       <header className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-lg font-semibold text-neutral-900">Editorials</h1>
+          <h1 className="text-xl font-semibold text-neutral-900">
+            Omenai Editorials
+          </h1>
           <p className="text-sm text-neutral-500">
             Manage long-form editorial content published on the platform
           </p>

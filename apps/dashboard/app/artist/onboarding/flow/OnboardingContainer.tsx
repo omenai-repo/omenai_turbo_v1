@@ -10,7 +10,6 @@ import SocialsStep from "./components/StepSocialLinks";
 import { artistOnboardingStore } from "@omenai/shared-state-store/src/artist/onboarding/ArtistOnboardingStateStore";
 import { ArtistOnboardingData, Socials } from "@omenai/shared-types";
 
-// Define the shape of the data collected from the artist
 export type ArtistData = ArtistOnboardingData;
 
 // Props for individual step components

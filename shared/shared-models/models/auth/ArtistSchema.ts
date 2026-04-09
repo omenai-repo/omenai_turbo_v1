@@ -112,6 +112,18 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       auto_approvals_used: { type: Number, default: 0 },
       last_reset_date: { type: Date, default: toUTCDate(resetDate) },
     },
+    registeration_tracking: {
+      type: Schema.Types.Mixed,
+      default: () => ({
+        ip_address: "Unknown",
+        country: "Unknown",
+        city: "Unknown",
+        device_type: "unknown",
+        os: "Unknown",
+        browser: "Unknown",
+        referrer: "direct",
+      }),
+    },
   },
   { timestamps: true },
 );

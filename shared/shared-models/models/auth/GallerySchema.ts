@@ -84,6 +84,18 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       default: () => null,
     },
     stripe_customer_id: { type: String, default: () => null },
+    registeration_tracking: {
+      type: Schema.Types.Mixed,
+      default: () => ({
+        ip_address: "Unknown",
+        country: "Unknown",
+        city: "Unknown",
+        device_type: "unknown",
+        os: "Unknown",
+        browser: "Unknown",
+        referrer: "direct",
+      }),
+    },
   },
   { timestamps: true },
 );

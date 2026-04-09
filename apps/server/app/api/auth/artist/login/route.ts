@@ -20,6 +20,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
 import z from "zod";
+import { enrichRegistrationTracking } from "@omenai/shared-lib/analytics/extractTrackingData";
 const LoginSchema = z.object({
   email: z.email(),
   password: z.string().min(1),
@@ -44,6 +45,8 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const isPasswordMatch = bcrypt.compareSync(password, artist.password);
       if (!isPasswordMatch) throw new ConflictError("Invalid credentials");
+
+      enrichRegistrationTracking(artist, request, AccountArtist);
 
       // 2. Prepare Session Payload
       const {

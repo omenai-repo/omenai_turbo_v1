@@ -20,6 +20,7 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { MetaSchema } from "@omenai/shared-types";
 import { buildPricing } from "../../../util";
+import { PriceRequest } from "@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema";
 
 // Map the payload of the expected data here
 type Payload = {
@@ -108,6 +109,7 @@ async function handlePaymentTransactionUpdates(
     artwork_marked_sold: "failed",
     mass_orders_updated: "failed",
     seller_wallet_updated: "failed",
+    purchase_request_updated: "failed",
   };
   const nowUTC = toUTCDate(new Date());
 
@@ -153,6 +155,11 @@ async function handlePaymentTransactionUpdates(
       ),
       updateArtworkRecordAsSold(meta.art_id ?? ""),
       updateMassOrderRecords(meta.art_id ?? "", meta.buyer_id ?? ""),
+      updatePriceRequest(
+        meta.order_id ?? "",
+        meta.buyer_id ?? "",
+        meta.art_id ?? "",
+      ),
     ]);
 
     for (const result of updates) {
@@ -466,4 +473,25 @@ async function updateMassOrderRecords(
       reason: "exception",
     };
   }
+}
+
+async function updatePriceRequest(
+  order_id: string,
+  buyer_id: string,
+  art_id: string,
+) {
+  const price_request_filter = {
+    buyer_id,
+    order_id,
+    art_id,
+  };
+
+  await PriceRequest.updateOne(price_request_filter, {
+    $set: { "funnel_status.is_order_paid": true },
+  });
+
+  return {
+    step: "purchase_request_updated",
+    status: "done",
+  };
 }

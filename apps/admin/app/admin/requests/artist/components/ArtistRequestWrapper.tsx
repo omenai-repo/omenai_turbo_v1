@@ -37,17 +37,17 @@ export function ArtistRequestWrapper() {
   if (loading) return <Load />;
 
   const pending: ArtistType[] = artists.filter(
-    (artist: ArtistType) => !artist.artist_verified
+    (artist: ArtistType) => !artist.artist_verified,
   );
 
   const approved: ArtistType[] = artists.filter(
-    (artist: ArtistType) => artist.artist_verified
+    (artist: ArtistType) => artist.artist_verified,
   );
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-4">
       {/* Header */}
       <header className="flex flex-col gap-1">
-        <h1 className="text-lg font-semibold text-neutral-900">
+        <h1 className="text-xl font-semibold text-neutral-900">
           Artist Requests
         </h1>
         <p className="text-sm text-neutral-500">

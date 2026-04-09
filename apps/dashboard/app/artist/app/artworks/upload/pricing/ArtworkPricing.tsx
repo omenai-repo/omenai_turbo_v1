@@ -34,6 +34,7 @@ export default function ArtworkPricing() {
   const { user, csrf } = useAuth({ requiredRole: "artist" });
   const { image, setImage, artworkUploadData, clearData } =
     artistArtworkUploadStore();
+  const [shouldShowPrice, setShouldShowPrice] = useState<"Yes" | "No">("Yes");
   const rollbar = useRollbar();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -43,7 +44,6 @@ export default function ArtworkPricing() {
   const [priceConsent, setPriceConsent] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [shouldShowPrice, setShouldShowPrice] = useState<"Yes" | "No">("Yes");
   const [isVisibilityDropdownOpen, setIsVisibilityDropdownOpen] =
     useState(false);
 

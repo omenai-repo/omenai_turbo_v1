@@ -7,7 +7,7 @@ import ArtworkUploadBlocker from "@omenai/shared-ui-components/components/blocke
 
 export default function UploadArtworkContainer() {
   const { value: isArtworkUploadEnabled } = useHighRiskFeatureFlag(
-    "artwork_upload_enabled"
+    "artwork_upload_enabled",
   );
   return (
     <>

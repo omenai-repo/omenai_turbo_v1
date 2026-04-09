@@ -8,14 +8,11 @@ import { toast } from "sonner";
 import {
   Button,
   TextInput,
-  Paper,
   Title,
   Text,
   Group,
   ActionIcon,
   Tooltip,
-  Container,
-  Grid,
   ThemeIcon,
   Badge,
 } from "@mantine/core";
@@ -30,8 +27,17 @@ import { addPrimaryAccount } from "@omenai/shared-services/wallet/addPrimaryAcco
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 import { SearchableSelect } from "./SearchableComboBox";
-import { Building, Check, RefreshCcw, Shield, ShieldClose } from "lucide-react";
+import {
+  Building,
+  Check,
+  CheckCircle2,
+  Landmark,
+  RefreshCcw,
+  Shield,
+  ShieldClose,
+} from "lucide-react";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
+import { ValidationUtils } from "../validator";
 
 const COUNTRIES_WITH_BANK_BRANCHES = [
   "BJ",
@@ -49,69 +55,136 @@ const COUNTRIES_WITH_BANK_BRANCHES = [
   "UG",
 ];
 
+// List of African countries supported by Flutterwave's legacy bank endpoints
+const AFRICAN_COUNTRIES = [
+  "NG",
+  "GH",
+  "KE",
+  "UG",
+  "ZA",
+  "TZ",
+  "RW",
+  "CM",
+  "CI",
+  "SN",
+  "BJ",
+  "TD",
+  "CG",
+  "GA",
+  "MW",
+  "SL",
+  "EG",
+  "MA",
+];
+
+// List of ALL SEPA countries (Euro & Non-Euro)
+const SEPA_COUNTRY_CODES = [
+  "AD",
+  "AT",
+  "BE",
+  "BG",
+  "CH",
+  "CY",
+  "CZ",
+  "DE",
+  "DK",
+  "EE",
+  "ES",
+  "FI",
+  "FR",
+  "GR",
+  "HR",
+  "HU",
+  "IE",
+  "IS",
+  "IT",
+  "LI",
+  "LT",
+  "LU",
+  "LV",
+  "MC",
+  "MT",
+  "NL",
+  "NO",
+  "PL",
+  "PT",
+  "RO",
+  "SE",
+  "SI",
+  "SK",
+  "SM",
+  "VA",
+];
+
 export default function AccountForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const rollbar = useRollbar();
   const { user, csrf } = useAuth({ requiredRole: "artist" });
 
-  // --- State ---
+  // --- Determine Region Type ---
+  const regionType = useMemo<"africa" | "uk" | "eu">(() => {
+    const code = user.address.countryCode?.toUpperCase() || "";
+    if (code === "GB") return "uk";
+    if (SEPA_COUNTRY_CODES.includes(code)) return "eu";
+    if (AFRICAN_COUNTRIES.includes(code)) return "africa";
+
+    // Default fallback to international IBAN/SWIFT form for any unlisted countries
+    return "eu";
+  }, [user.address.countryCode]);
+
+  // --- Shared State ---
+  const [loading, setLoading] = useState(false);
+  const [manualAccountName, setManualAccountName] = useState("");
+  const [manualBankName, setManualBankName] = useState("");
+
+  // --- Africa State ---
   const [selectedBank, setSelectedBank] = useState<BankType | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<BankBranchType | null>(
     null,
   );
-  const [loading, setLoading] = useState(false);
   const [accountNumber, setAccountNumber] = useState("");
-
   const [validatedAccount, setValidatedAccount] = useState<{
     isValidated: boolean;
     account_name: string;
     account_number: string;
   } | null>(null);
 
+  // --- UK State ---
+  const [sortCode, setSortCode] = useState("");
+
+  // --- EU State ---
+  const [iban, setIban] = useState("");
+  const [swiftCode, setSwiftCode] = useState("");
+
   // --- Derived State ---
   const showBranches = useMemo(() => {
-    return (
-      user?.address?.countryCode &&
+    return Boolean(
+      // <-- Force this to return true/false
+      regionType === "africa" &&
+      user.address.countryCode &&
       selectedBank !== null &&
-      COUNTRIES_WITH_BANK_BRANCHES.includes(user.address.countryCode)
+      COUNTRIES_WITH_BANK_BRANCHES.includes(user.address.countryCode),
     );
-  }, [user, selectedBank]);
+  }, [user, selectedBank, regionType]);
 
   // --- Handlers ---
-
   const handleReset = useCallback(() => {
     setSelectedBank(null);
     setSelectedBranch(null);
     setAccountNumber("");
+    setSortCode("");
+    setIban("");
+    setSwiftCode("");
+    setManualAccountName("");
+    setManualBankName("");
     setValidatedAccount(null);
     toast.info("Form reset", { description: "Fields have been cleared." });
   }, []);
 
-  const handleBankChange = useCallback(
-    (value: BankType | BankBranchType | null) => {
-      setSelectedBank(value as BankType);
-      setSelectedBranch(null); // Reset branch when bank changes
-      setValidatedAccount(null); // Invalidate previous verification
-    },
-    [],
-  );
-
-  const handleBranchChange = useCallback(
-    (value: BankType | BankBranchType | null) => {
-      setSelectedBranch(value as BankBranchType);
-    },
-    [],
-  );
-
-  const handleAccountNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setAccountNumber(event.currentTarget.value);
-    if (validatedAccount) setValidatedAccount(null); // Reset validation on edit
-  };
-
   const handleValidateAccount = async () => {
+    if (regionType !== "africa") return;
+
     if (!selectedBank || !accountNumber) {
       toast_notif("Bank and Account Number are required.", "error");
       return;
@@ -127,7 +200,6 @@ export default function AccountForm() {
 
       if (!response?.isOk) {
         toast_notif(response?.message || "Could not validate account", "error");
-
         return;
       }
 
@@ -148,19 +220,88 @@ export default function AccountForm() {
   };
 
   const handleAddPrimaryAccount = async () => {
-    if (!selectedBank || !validatedAccount) return;
+    if (regionType === "africa" && (!selectedBank || !validatedAccount)) {
+      toast_notif("Please validate your account before proceeding.", "error");
+      return;
+    }
+
+    // Extra safety guard: Force branch selection if the country requires it
+    if (regionType === "africa" && showBranches && !selectedBranch) {
+      toast_notif("Please select a bank branch before proceeding.", "error");
+      return;
+    }
+
+    if (
+      regionType === "uk" &&
+      (!accountNumber || !sortCode || !manualAccountName)
+    ) {
+      toast_notif(
+        "Please fill in all required fields for your UK account.",
+        "error",
+      );
+      return;
+    }
+
+    if (regionType === "eu" && (!iban || !swiftCode || !manualAccountName)) {
+      toast_notif(
+        "Please fill in all required fields for your account.",
+        "error",
+      );
+      return;
+    }
+
+    if (regionType === "uk") {
+      if (!ValidationUtils.isValidUKBankDetails(accountNumber, sortCode)) {
+        toast_notif("Invalid UK Account Number or Sort Code", "error");
+        return;
+      }
+    }
+
+    if (regionType === "eu") {
+      if (!ValidationUtils.isValidIBAN(iban)) {
+        toast_notif(
+          "The IBAN provided is invalid. Please check for typos.",
+          "error",
+        );
+        return;
+      }
+    }
 
     try {
       setLoading(true);
-      const account_details: Omit<WithdrawalAccount, "beneficiary_id"> = {
-        account_number: validatedAccount.account_number,
-        bank_name: selectedBank.name,
-        account_name: validatedAccount.account_name,
-        bank_id: selectedBank.id,
-        bank_code: selectedBank.code,
-        branch: selectedBranch,
-        bank_country: user.address.countryCode,
-      };
+
+      let account_details: any; // Build payload based on our Discriminated Union Type
+
+      if (regionType === "africa" && selectedBank && validatedAccount) {
+        account_details = {
+          type: "africa",
+          account_number: validatedAccount.account_number,
+          bank_name: selectedBank.name,
+          account_name: validatedAccount.account_name,
+          bank_id: selectedBank.id,
+          bank_code: selectedBank.code,
+          branch: selectedBranch,
+          bank_country: user.address.countryCode,
+        };
+      } else if (regionType === "uk") {
+        account_details = {
+          type: "uk",
+          account_number: accountNumber,
+          sort_code: sortCode,
+          bank_name: manualBankName || "UK Bank",
+          account_name: manualAccountName,
+          bank_country: user.address.countryCode,
+        };
+      } else if (regionType === "eu") {
+        account_details = {
+          type: "eu",
+          iban: iban,
+          swift_code: swiftCode,
+          bank_name: manualBankName || "EU Bank",
+          account_name: manualAccountName,
+          bank_country: user.address.countryCode,
+        };
+      }
 
       const response = await addPrimaryAccount({
         owner_id: user.artist_id,
@@ -196,7 +337,7 @@ export default function AccountForm() {
         <div className="max-w-md mx-auto w-full space-y-8">
           <div>
             <Group justify="space-between" align="start">
-              <ThemeIcon size={48} radius="md" variant="light" color="blue">
+              <ThemeIcon size={24} radius="md" variant="light" color="blue">
                 <Building size={28} />
               </ThemeIcon>
 
@@ -206,87 +347,195 @@ export default function AccountForm() {
                   color="slate"
                   onClick={handleReset}
                   size="lg"
-                  aria-label="Reset form w-auto"
                 >
                   <RefreshCcw size={20} />
                 </ActionIcon>
               </Tooltip>
             </Group>
 
-            <Title size={"xl"} order={2} className="py-3 text-slate-900">
+            <Title size={"md"} order={2} className="py-3 text-slate-900">
               Connect Bank Account
             </Title>
-            <Text c="dimmed" size="sm" className="mt-2">
+            <Text c="dimmed" size="xs" className="mt-2">
               Link your primary bank account to receive payouts securely.
             </Text>
           </div>
 
-          <form className="flex flex-col space-y-4">
-            <TextInput
-              label="Country"
-              value={user.address.country}
-              disabled
-              size="sm"
-              classNames={{
-                input: "bg-slate-50 text-slate-500 border-slate-200",
-              }}
-              rightSection={<Check size={16} className="text-green-500" />}
-            />
-
-            <SearchableSelect
-              type="banks"
-              selectedItem={selectedBank}
-              onChange={handleBankChange}
-              disabled={!!validatedAccount?.isValidated}
-            />
-
-            {showBranches && (
-              <SearchableSelect
-                type="branches"
-                selectedItem={selectedBranch}
-                onChange={handleBranchChange}
-                bankCode={selectedBank ? String(selectedBank.id) : ""}
-                disabled={!selectedBank || !!validatedAccount?.isValidated}
-              />
-            )}
-
-            <TextInput
-              label="Account Number"
-              placeholder="0000000000"
-              value={accountNumber}
-              onChange={handleAccountNumberChange}
-              disabled={!!validatedAccount?.isValidated}
-              size="sm"
-              withAsterisk
-              classNames={{ label: "mb-1 font-medium text-slate-700" }}
-            />
-
-            {validatedAccount?.isValidated && (
-              <div className="p-4 bg-green-50 border border-green-100 rounded -lg animate-in fade-in slide-in-from-bottom-2">
+          <form className="flex flex-col space-y-2">
+            <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-100 rounded mb-2">
+              <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-700 border border-slate-200">
+                <Landmark size={20} />
+              </div>
+              <div>
                 <Text
                   size="xs"
-                  c="green.8"
+                  c="dimmed"
                   fw={500}
                   tt="uppercase"
-                  className="mb-1"
+                  className="tracking-wider"
                 >
-                  Verified Account Name
+                  Your Region/Country
                 </Text>
-                <Text size="sm" fw={700} c="green.9">
-                  {validatedAccount.account_name}
+                <Text
+                  size="sm"
+                  fw={600}
+                  c="slate.9"
+                  className="flex items-center gap-2"
+                >
+                  {user.address.country}
+                  <CheckCircle2 size={14} className="text-green-500" />
                 </Text>
               </div>
+            </div>
+
+            {/* --- AFRICA SPECIFIC FIELDS --- */}
+            {regionType === "africa" && (
+              <>
+                <SearchableSelect
+                  type="banks"
+                  selectedItem={selectedBank}
+                  onChange={(val) => {
+                    setSelectedBank(val as BankType);
+                    setSelectedBranch(null);
+                    setValidatedAccount(null);
+                  }}
+                  disabled={!!validatedAccount?.isValidated}
+                />
+
+                {showBranches && (
+                  <SearchableSelect
+                    type="branches"
+                    selectedItem={selectedBranch}
+                    onChange={(val) => setSelectedBranch(val as BankBranchType)}
+                    bankCode={selectedBank ? String(selectedBank.id) : ""}
+                    disabled={!selectedBank || !!validatedAccount?.isValidated}
+                  />
+                )}
+
+                <TextInput
+                  label="Account Number"
+                  placeholder="0000000000"
+                  value={accountNumber}
+                  onChange={(e) => {
+                    setAccountNumber(e.currentTarget.value);
+                    setValidatedAccount(null);
+                  }}
+                  disabled={!!validatedAccount?.isValidated}
+                  size="sm"
+                  withAsterisk
+                />
+
+                {validatedAccount?.isValidated && (
+                  <div className="p-4 bg-green-50 border border-green-100 rounded-lg animate-in fade-in slide-in-from-bottom-2">
+                    <Text
+                      size="xs"
+                      c="green.8"
+                      fw={500}
+                      tt="uppercase"
+                      className="mb-1"
+                    >
+                      Verified Account Name
+                    </Text>
+                    <Text size="sm" fw={700} c="green.9">
+                      {validatedAccount.account_name}
+                    </Text>
+                  </div>
+                )}
+              </>
             )}
 
+            {/* --- UK SPECIFIC FIELDS --- */}
+            {regionType === "uk" && (
+              <>
+                <TextInput
+                  label="Account Holder Name"
+                  placeholder="Jane Doe"
+                  value={manualAccountName}
+                  onChange={(e) => setManualAccountName(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="Bank Name"
+                  placeholder="e.g. Barclays, Monzo"
+                  value={manualBankName}
+                  onChange={(e) => setManualBankName(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="Account Number"
+                  placeholder="8 Digit Account Number"
+                  value={accountNumber}
+                  onChange={(e) => setAccountNumber(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="Sort Code"
+                  placeholder="123456 or 12-34-56"
+                  value={sortCode}
+                  onChange={(e) => setSortCode(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+              </>
+            )}
+
+            {/* --- EU / SEPA SPECIFIC FIELDS --- */}
+            {regionType === "eu" && (
+              <>
+                <TextInput
+                  label="Account Holder Name"
+                  placeholder="Jane Doe"
+                  value={manualAccountName}
+                  onChange={(e) => setManualAccountName(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="Bank Name"
+                  placeholder="e.g. Santander, BNP Paribas"
+                  value={manualBankName}
+                  onChange={(e) => setManualBankName(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="IBAN"
+                  placeholder="International Bank Account Number"
+                  value={iban}
+                  onChange={(e) => setIban(e.currentTarget.value.toUpperCase())}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="SWIFT / BIC Code"
+                  placeholder="8 or 11 character code"
+                  value={swiftCode}
+                  onChange={(e) =>
+                    setSwiftCode(e.currentTarget.value.toUpperCase())
+                  }
+                  size="sm"
+                  withAsterisk
+                />
+              </>
+            )}
+
+            {/* --- ACTION BUTTONS --- */}
             <div className="pt-4">
-              {!validatedAccount?.isValidated ? (
+              {regionType === "africa" && !validatedAccount?.isValidated ? (
                 <Button
                   onClick={handleValidateAccount}
                   fullWidth
                   size="sm"
                   color="dark"
                   loading={loading}
-                  disabled={!accountNumber || !selectedBank}
+                  disabled={
+                    !accountNumber ||
+                    !selectedBank ||
+                    (showBranches && !selectedBranch)
+                  }
                 >
                   Validate Account
                 </Button>
@@ -298,6 +547,12 @@ export default function AccountForm() {
                   color="dark"
                   loading={loading}
                   leftSection={<Shield size={18} />}
+                  disabled={
+                    (regionType === "uk" &&
+                      (!accountNumber || !sortCode || !manualAccountName)) ||
+                    (regionType === "eu" &&
+                      (!iban || !swiftCode || !manualAccountName))
+                  }
                 >
                   Confirm & Link Account
                 </Button>
@@ -320,14 +575,14 @@ export default function AccountForm() {
       <div className="hidden lg:flex lg:w-7/12 xl:w-2/3 bg-slate-900 relative overflow-hidden items-center justify-center">
         {/* Abstract Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900" />
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-blue-600/20 rounded -full blur-3xl" />
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-indigo-600/10 rounded -full blur-3xl" />
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-3xl" />
 
         {/* Content Card */}
         <div className="relative z-10 max-w-lg">
-          <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-12 rounded -2xl shadow-2xl">
+          <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-12 rounded-2xl shadow-2xl">
             <Badge variant="filled" color="blue" size="md" className="mb-6">
-              Secure Payouts
+              Global Payouts Supported
             </Badge>
             <Title className="text-white text-5xl font-light mb-6 leading-tight">
               Seamless Wallet <br />
@@ -335,14 +590,14 @@ export default function AccountForm() {
             </Title>
             <Text c={"white"} className="text-white text-md leading-relaxed">
               Connect your local bank account to receive funds directly in your
-              currency. We support secure transfers across the continent with
-              real-time validation.
+              currency. We support secure transfers globally, accommodating
+              standard IBAN, Sort Codes, and local clearing routes.
             </Text>
 
             <div className="mt-10 flex gap-4">
-              <div className="h-2 w-20 bg-blue-500 rounded -full" />
-              <div className="h-2 w-4 bg-slate-600 rounded -full" />
-              <div className="h-2 w-4 bg-slate-600 rounded -full" />
+              <div className="h-2 w-20 bg-blue-500 rounded-full" />
+              <div className="h-2 w-4 bg-slate-600 rounded-full" />
+              <div className="h-2 w-4 bg-slate-600 rounded-full" />
             </div>
           </div>
         </div>

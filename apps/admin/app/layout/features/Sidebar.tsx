@@ -1,26 +1,17 @@
 // components/layout/DesktopSidebar.tsx
 "use client";
 
-import { useState } from "react";
-import clsx from "clsx";
 import { SidebarContent } from "./SidebarComponent";
 
 export function DesktopSidebar() {
-  const [expanded, setExpanded] = useState(false);
-
   return (
     <aside
-      onMouseEnter={() => setExpanded(true)}
-      onMouseLeave={() => setExpanded(false)}
-      className={clsx(
-        "fixed left-0 top-0 z-40 hidden h-screen bg-white transition-all duration-300 md:block",
-        expanded ? "w-64" : "w-16"
-      )}
+      className="fixed left-2 top-1/2 z-40 hidden h-[98vh] w-[72px] -translate-y-1/2 rounded-xl bg-slate-900 shadow-2xl shadow-slate-900/20 md:block transition-none"
       style={{
-        borderRight: "1px solid rgba(0,0,0,0.04)",
+        border: "1px solid rgba(255,255,255,0.1)", // Changed to a full border
       }}
     >
-      <SidebarContent expanded={expanded} />
+      <SidebarContent isMobile={false} />
     </aside>
   );
 }

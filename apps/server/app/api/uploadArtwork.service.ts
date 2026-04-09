@@ -34,7 +34,6 @@ export async function uploadArtworkLogic(
   }
 
   const data: UploadArtworkInput = UploadArtworkSchema.parse(rawData);
-  console.log(data);
 
   await connectMongoDB();
 

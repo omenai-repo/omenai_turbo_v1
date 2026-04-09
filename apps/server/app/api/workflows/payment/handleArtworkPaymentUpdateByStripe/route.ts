@@ -16,6 +16,7 @@ import { redis } from "@omenai/upstash-config";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { PaymentLedger } from "@omenai/shared-models/models/transactions/PaymentLedgerShema";
+import { PriceRequest } from "@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema";
 
 type Payload = {
   provider: PaymentLedgerTypes["provider"];
@@ -248,6 +249,27 @@ async function updateMassOrderRecords(
   }
 }
 
+async function updatePriceRequest(
+  order_id: string,
+  buyer_id: string,
+  art_id: string,
+) {
+  const price_request_filter = {
+    buyer_id,
+    order_id,
+    art_id,
+  };
+
+  await PriceRequest.updateOne(price_request_filter, {
+    $set: { "funnel_status.is_order_paid": true },
+  });
+
+  return {
+    step: "purchase_request_updated",
+    status: "done",
+  };
+}
+
 async function handlePaymentTransactionUpdatesByStripe(
   paymentIntent: any,
   meta: MetaSchema & { commission: string; order_id: string },
@@ -259,6 +281,7 @@ async function handlePaymentTransactionUpdatesByStripe(
     sale_record_created: "failed",
     artwork_marked_sold: "failed",
     mass_orders_updated: "failed",
+    purchase_request_updated: "failed",
   };
   const date = toUTCDate(new Date());
 
@@ -294,6 +317,11 @@ async function handlePaymentTransactionUpdatesByStripe(
       ),
       updateArtworkRecordAsSold(meta.art_id ?? ""),
       updateMassOrderRecords(meta.art_id ?? "", meta.buyer_id ?? ""),
+      updatePriceRequest(
+        meta.order_id ?? "",
+        meta.buyer_id ?? "",
+        meta.art_id ?? "",
+      ),
     ]);
 
     for (const result of updates) {

@@ -16,13 +16,11 @@ export function MobileSidebar() {
 
       {open && (
         <div className="fixed inset-0 z-50 flex">
-          {/* Overlay */}
           <div
             className="absolute inset-0 bg-dark/40"
             onClick={() => setOpen(false)}
           />
 
-          {/* Drawer */}
           <aside className="relative z-50 h-full w-64 bg-white">
             <button
               onClick={() => setOpen(false)}
@@ -31,8 +29,8 @@ export function MobileSidebar() {
               <X />
             </button>
 
-            {/*  Mobile is ALWAYS expanded */}
-            <SidebarContent expanded />
+            {/* Render as mobile drawer layout */}
+            <SidebarContent isMobile={true} />
           </aside>
         </div>
       )}

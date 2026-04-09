@@ -14,12 +14,12 @@ type ArtistOnboardingStoreTypes = {
   updateOnboardingData: (
     label: keyof ArtistOnboardingData,
     value: any,
-    social_key?: keyof typeof socials
+    social_key?: keyof typeof socials,
   ) => void;
   field_completion_state: Record<keyof ArtistOnboardingData, boolean>;
   update_field_completion_state: (
     label: keyof ArtistOnboardingData,
-    value: boolean
+    value: boolean,
   ) => void;
 
   clearData: () => void;
@@ -49,7 +49,7 @@ export const artistOnboardingStore = create<ArtistOnboardingStoreTypes>(
     updateOnboardingData: (
       label: keyof ArtistOnboardingData,
       value: any,
-      social_key?: keyof typeof socials
+      social_key?: keyof typeof socials,
     ) => {
       const data = get().onboardingData;
 
@@ -80,7 +80,7 @@ export const artistOnboardingStore = create<ArtistOnboardingStoreTypes>(
     },
     update_field_completion_state: (
       label: keyof ArtistOnboardingData,
-      value: boolean
+      value: boolean,
     ) => {
       set((state: any) => ({
         field_completion_state: {
@@ -112,5 +112,5 @@ export const artistOnboardingStore = create<ArtistOnboardingStoreTypes>(
       };
       set({ onboardingData: clear_data });
     },
-  })
+  }),
 );

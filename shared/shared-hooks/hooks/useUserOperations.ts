@@ -71,8 +71,6 @@ export const useUserOperations = (activeTab: "artist" | "collector") => {
     placeholderData: keepPreviousData,
   });
 
-  console.log(data);
-
   // 3. Handle Selection (Checkbox Logic)
   const toggleSelection = (id: string) => {
     setSelectedIds((prev) =>

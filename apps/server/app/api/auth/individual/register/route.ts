@@ -17,6 +17,7 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import z from "zod";
+import { extractUserTrackingData } from "@omenai/shared-lib/analytics/extractTrackingData";
 const RegisterSchema = z.object({
   name: z.string(),
   email: z.email(),
@@ -63,9 +64,12 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
 
       const email_token = generateDigit(7);
 
+      const trackingData = extractUserTrackingData(request);
+
       const saveData = await AccountIndividual.create({
         ...parsedData,
         email: parsedData.email.toLowerCase(),
+        registeration_tracking: trackingData,
       });
 
       if (!saveData)
