@@ -184,3 +184,29 @@ input[type="date"]::-moz-focus-inner {
   color: blue;
   font-size: 2em;
 }
+
+/* Add to your globals.css */
+
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(163, 163, 163, 0.4) transparent; /* Firefox */
+}
+
+/* Chrome, Edge, and Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(163, 163, 163, 0.4);
+  border-radius: 20px;
+}
+
+/* Optional: Only show the scrollbar on hover for an ultra-clean look */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(163, 163, 163, 0.8);
+}

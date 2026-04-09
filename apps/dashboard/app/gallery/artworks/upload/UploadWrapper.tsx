@@ -1,13 +1,10 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
 import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
 import NoVerificationBlock from "../../components/NoVerificationBlock";
-import PageTitle from "../../components/PageTitle";
 import UploadArtworkDetails from "./features/UploadArtworkDetails";
 
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";

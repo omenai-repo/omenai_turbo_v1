@@ -45,6 +45,7 @@ export default function WithdrawalModalForm() {
   const [withdrawalLoading, setWithdrawalLoading] = useState<boolean>(false);
   const [isWithdrawalSuccessful, setIsWithdrawalSuccessful] =
     useState<boolean>(false);
+
   const handleAmountConvert = async () => {
     try {
       setTransferRateLoading(true);

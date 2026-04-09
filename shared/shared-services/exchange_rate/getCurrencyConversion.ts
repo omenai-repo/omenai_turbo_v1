@@ -4,7 +4,7 @@ import { getApiUrl } from "@omenai/url-config/src/config";
 export async function getCurrencyConversion(
   currency: string,
   amount: number,
-  token: string
+  token: string,
 ) {
   try {
     const url = getApiUrl();
@@ -17,7 +17,12 @@ export async function getCurrencyConversion(
 
     const result = await res.json();
 
-    return { isOk: res.ok, data: result.data };
+    return {
+      isOk: res.ok,
+      data: result.data,
+      rate: result.rate,
+      message: result.message,
+    };
   } catch (error: any) {
     logRollbarServerError(error);
     return {
