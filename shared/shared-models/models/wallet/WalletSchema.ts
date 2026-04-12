@@ -2,8 +2,6 @@ import { WalletModelSchemaTypes } from "@omenai/shared-types";
 import mongoose, { Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-// 1. Define the base schema for the primary withdrawal account
-// The 'type' field will act as the discriminator key to determine which validation rules apply.
 const baseAccountOptions = { discriminatorKey: "type", _id: false };
 
 const BaseWithdrawalAccountSchema = new Schema(
@@ -43,9 +41,6 @@ const walletSchema = new Schema<WalletModelSchemaTypes>(
   { timestamps: true },
 );
 
-// 3. Attach the region-specific discriminators to the specific path
-// We use 'any' to bypass strict TS definitions on the path method for discriminators,
-// which is standard practice in Mongoose when chaining nested discriminators.
 const accountPath = walletSchema.path("primary_withdrawal_account") as any;
 
 accountPath.discriminator(
@@ -69,6 +64,17 @@ accountPath.discriminator(
     {
       account_number: { type: String, required: true },
       sort_code: { type: String, required: true },
+      bank_name: { type: String },
+    },
+    { _id: false },
+  ),
+);
+accountPath.discriminator(
+  "us",
+  new Schema(
+    {
+      account_number: { type: String, required: true },
+      routing_number: { type: String, required: true },
       bank_name: { type: String },
     },
     { _id: false },

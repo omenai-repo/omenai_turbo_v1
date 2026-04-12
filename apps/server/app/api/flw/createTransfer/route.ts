@@ -88,6 +88,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (primaryAccount.type === "uk") SOURCE_CURRENCY = "GBP";
     if (primaryAccount.type === "eu") SOURCE_CURRENCY = "EUR";
+    if (primaryAccount.type === "us") SOURCE_CURRENCY = "USD";
 
     // 3. DYNAMIC FX CONVERSION (USD -> LOCAL)
     let final_transfer_amount = amount;
@@ -166,6 +167,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           bank_name: primaryAccount.bank_name || "UK Bank",
           beneficiary_name: primaryAccount.account_name,
           beneficiary_country: primaryAccount.bank_country || "GB",
+          wallet_id: wallet_id,
+          url: `${getApiUrl()}/api/webhook/flw-transfer`,
+        },
+      ];
+    } else if (primaryAccount.type === "us") {
+      payload.beneficiary_name = primaryAccount.account_name;
+      payload.meta = [
+        {
+          account_number: primaryAccount.account_number,
+          routing_number: primaryAccount.routing_number,
+          bank_name: primaryAccount.bank_name || "US Bank",
+          beneficiary_name: primaryAccount.account_name,
+          beneficiary_country: "US",
           wallet_id: wallet_id,
           url: `${getApiUrl()}/api/webhook/flw-transfer`,
         },

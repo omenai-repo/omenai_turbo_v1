@@ -123,8 +123,9 @@ export default function AccountForm() {
   const { user, csrf } = useAuth({ requiredRole: "artist" });
 
   // --- Determine Region Type ---
-  const regionType = useMemo<"africa" | "uk" | "eu">(() => {
+  const regionType = useMemo<"africa" | "uk" | "eu" | "us">(() => {
     const code = user.address.countryCode?.toUpperCase() || "";
+    if (code === "US") return "us";
     if (code === "GB") return "uk";
     if (SEPA_COUNTRY_CODES.includes(code)) return "eu";
     if (AFRICAN_COUNTRIES.includes(code)) return "africa";
@@ -150,8 +151,9 @@ export default function AccountForm() {
     account_number: string;
   } | null>(null);
 
-  // --- UK State ---
+  // --- UK / US State ---
   const [sortCode, setSortCode] = useState("");
+  const [routingNumber, setRoutingNumber] = useState("");
 
   // --- EU State ---
   const [iban, setIban] = useState("");
@@ -174,6 +176,7 @@ export default function AccountForm() {
     setSelectedBranch(null);
     setAccountNumber("");
     setSortCode("");
+    setRoutingNumber("");
     setIban("");
     setSwiftCode("");
     setManualAccountName("");
@@ -242,6 +245,17 @@ export default function AccountForm() {
       return;
     }
 
+    if (
+      regionType === "us" &&
+      (!accountNumber || !routingNumber || !manualAccountName)
+    ) {
+      toast_notif(
+        "Please fill in all required fields for your US account.",
+        "error",
+      );
+      return;
+    }
+
     if (regionType === "eu" && (!iban || !swiftCode || !manualAccountName)) {
       toast_notif(
         "Please fill in all required fields for your account.",
@@ -253,6 +267,13 @@ export default function AccountForm() {
     if (regionType === "uk") {
       if (!ValidationUtils.isValidUKBankDetails(accountNumber, sortCode)) {
         toast_notif("Invalid UK Account Number or Sort Code", "error");
+        return;
+      }
+    }
+
+    if (regionType === "us") {
+      if (!/^\d{9}$/.test(routingNumber)) {
+        toast_notif("US Routing Number must be exactly 9 digits.", "error");
         return;
       }
     }
@@ -291,6 +312,15 @@ export default function AccountForm() {
           bank_name: manualBankName || "UK Bank",
           account_name: manualAccountName,
           bank_country: user.address.countryCode,
+        };
+      } else if (regionType === "us") {
+        account_details = {
+          type: "us",
+          account_number: accountNumber,
+          routing_number: routingNumber,
+          bank_name: manualBankName || "US Bank",
+          account_name: manualAccountName,
+          bank_country: "US",
         };
       } else if (regionType === "eu") {
         account_details = {
@@ -458,10 +488,10 @@ export default function AccountForm() {
                 <TextInput
                   label="Bank Name"
                   placeholder="e.g. Barclays, Monzo"
+                  description="Optional"
                   value={manualBankName}
                   onChange={(e) => setManualBankName(e.currentTarget.value)}
                   size="sm"
-                  withAsterisk
                 />
                 <TextInput
                   label="Account Number"
@@ -482,6 +512,45 @@ export default function AccountForm() {
               </>
             )}
 
+            {/* --- US SPECIFIC FIELDS --- */}
+            {regionType === "us" && (
+              <>
+                <TextInput
+                  label="Account Holder Name"
+                  placeholder="Jane Doe"
+                  value={manualAccountName}
+                  onChange={(e) => setManualAccountName(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="Bank Name"
+                  placeholder="e.g. Chase, Bank of America"
+                  description="Optional"
+                  value={manualBankName}
+                  onChange={(e) => setManualBankName(e.currentTarget.value)}
+                  size="sm"
+                />
+                <TextInput
+                  label="Account Number"
+                  placeholder="Bank Account Number"
+                  value={accountNumber}
+                  onChange={(e) => setAccountNumber(e.currentTarget.value)}
+                  size="sm"
+                  withAsterisk
+                />
+                <TextInput
+                  label="Routing Number (ABA)"
+                  placeholder="9-Digit Routing Number"
+                  value={routingNumber}
+                  onChange={(e) => setRoutingNumber(e.currentTarget.value)}
+                  maxLength={9}
+                  size="sm"
+                  withAsterisk
+                />
+              </>
+            )}
+
             {/* --- EU / SEPA SPECIFIC FIELDS --- */}
             {regionType === "eu" && (
               <>
@@ -496,10 +565,10 @@ export default function AccountForm() {
                 <TextInput
                   label="Bank Name"
                   placeholder="e.g. Santander, BNP Paribas"
+                  description="Optional"
                   value={manualBankName}
                   onChange={(e) => setManualBankName(e.currentTarget.value)}
                   size="sm"
-                  withAsterisk
                 />
                 <TextInput
                   label="IBAN"
@@ -550,6 +619,10 @@ export default function AccountForm() {
                   disabled={
                     (regionType === "uk" &&
                       (!accountNumber || !sortCode || !manualAccountName)) ||
+                    (regionType === "us" &&
+                      (!accountNumber ||
+                        !routingNumber ||
+                        !manualAccountName)) ||
                     (regionType === "eu" &&
                       (!iban || !swiftCode || !manualAccountName))
                   }

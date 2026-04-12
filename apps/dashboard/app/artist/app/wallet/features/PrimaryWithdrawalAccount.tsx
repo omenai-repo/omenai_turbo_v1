@@ -33,12 +33,35 @@ export default function PrimaryWithdrawalAccount({
 
   // Dynamic variable resolution based on the region type
   const isEU = withdrawal_account?.type === "eu";
-  const label = isEU ? "IBAN" : "Account Number";
+  const primaryLabel = isEU ? "IBAN" : "Account Number";
 
-  // Safely extract the correct identifier based on the discriminated union
-  const rawIdentifier = isEU
-    ? withdrawal_account.iban
-    : withdrawal_account?.account_number || "";
+  // Safely extract the primary identifier based on the discriminated union
+  let rawIdentifier = "";
+  if (withdrawal_account) {
+    if (withdrawal_account.type === "eu") {
+      rawIdentifier = withdrawal_account.iban;
+    } else {
+      rawIdentifier = withdrawal_account.account_number;
+    }
+  }
+
+  // Safely extract secondary routing details (Routing Number, Sort Code, SWIFT)
+  const getSecondaryDetails = (acc: WithdrawalAccount) => {
+    switch (acc.type) {
+      case "us":
+        return { label: "Routing Number (ABA)", value: acc.routing_number };
+      case "uk":
+        return { label: "Sort Code", value: acc.sort_code };
+      case "eu":
+        return { label: "SWIFT / BIC", value: acc.swift_code };
+      default:
+        return null; // Africa doesn't need a secondary identifier displayed
+    }
+  };
+
+  const secondaryDetails = withdrawal_account
+    ? getSecondaryDetails(withdrawal_account)
+    : null;
 
   // Determine the display string based on region and reveal state
   const displayValue = isRevealed
@@ -49,12 +72,16 @@ export default function PrimaryWithdrawalAccount({
       ? maskIBAN(rawIdentifier)
       : maskStandardAccount(rawIdentifier);
 
-  // Determine fallback bank name if optional in UK/EU
+  // Determine fallback bank name dynamically
   const displayBankName = withdrawal_account?.bank_name
     ? withdrawal_account.bank_name.toUpperCase()
-    : isEU
+    : withdrawal_account?.type === "eu"
       ? "EUROPEAN BANK"
-      : "BANK";
+      : withdrawal_account?.type === "us"
+        ? "US BANK"
+        : withdrawal_account?.type === "uk"
+          ? "UK BANK"
+          : "BANK";
 
   return (
     <>
@@ -161,7 +188,9 @@ export default function PrimaryWithdrawalAccount({
 
               {/* Dynamic Account Number / IBAN */}
               <div className="flex items-center justify-between py-2 group">
-                <span className="text-fluid-xxs text-slate-600">{label}</span>
+                <span className="text-fluid-xxs text-slate-600">
+                  {primaryLabel}
+                </span>
                 <div className="flex items-center gap-2">
                   <span className="text-fluid-xxs font-medium text-slate-900 font-mono tracking-wider">
                     {displayValue}
@@ -215,7 +244,7 @@ export default function PrimaryWithdrawalAccount({
                       navigator.clipboard.writeText(String(rawIdentifier))
                     }
                     className="p-1 rounded hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-600"
-                    title={`Copy ${label}`}
+                    title={`Copy ${primaryLabel}`}
                   >
                     <svg
                       className="w-4 h-4"
@@ -233,6 +262,46 @@ export default function PrimaryWithdrawalAccount({
                   </button>
                 </div>
               </div>
+
+              {/* Dynamic Secondary Routing Information (US/UK/EU) */}
+              {secondaryDetails && (
+                <>
+                  <div className="border-b border-slate-100"></div>
+                  <div className="flex items-center justify-between py-2 group">
+                    <span className="text-fluid-xxs text-slate-600">
+                      {secondaryDetails.label}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-fluid-xxs font-medium text-slate-900 font-mono tracking-wider">
+                        {secondaryDetails.value}
+                      </span>
+                      <button
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            String(secondaryDetails.value),
+                          )
+                        }
+                        className="p-1 rounded hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-600"
+                        title={`Copy ${secondaryDetails.label}`}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="border-b border-slate-100"></div>
 

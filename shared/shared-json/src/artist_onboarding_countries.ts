@@ -1,5 +1,4 @@
 export const artist_countries_codes_currency = [
-  // --- Original List ---
   {
     name: "Cameroon",
     alpha2: "CM",
@@ -141,6 +140,13 @@ export const artist_countries_codes_currency = [
     alpha3: "USA",
     currency: "USD",
     symbol: "$",
+  },
+  {
+    name: "United Kingdom",
+    alpha2: "GB",
+    alpha3: "GBR",
+    currency: "GBP",
+    symbol: "£",
   },
 
   // --- SEPA Countries (Euro Currency) ---
@@ -305,13 +311,7 @@ export const artist_countries_codes_currency = [
     currency: "EUR",
     symbol: "€",
   },
-  {
-    name: "Vatican City",
-    alpha2: "VA",
-    alpha3: "VAT",
-    currency: "EUR",
-    symbol: "€",
-  },
+
   // --- Non-Euro SEPA Countries (Routes via EU / IBAN Form) ---
   {
     name: "Bulgaria",

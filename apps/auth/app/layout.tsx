@@ -44,8 +44,7 @@ export default async function AuthDashboardRootLayout({
       <LowRiskProvider>
         <html lang="en">
           <head>
-            <meta name="color-scheme" content="light" />
-            <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
+            <meta name="color-scheme" content="light" nonce={nonce} />
 
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" href="/favicon.ico" />

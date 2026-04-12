@@ -672,7 +672,14 @@ interface BaseWithdrawalAccount {
   beneficiary_id: number;
   flutterwave_recipient_id?: string;
 }
-
+export interface USWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "us";
+  account_number: string;
+  routing_number: string;
+  bank_name?: string;
+  account_name: string;
+  bank_country: string;
+}
 // 1. Africa Variant
 export interface AfricanWithdrawalAccount extends BaseWithdrawalAccount {
   type: "africa";
@@ -703,7 +710,8 @@ export interface EUWithdrawalAccount extends BaseWithdrawalAccount {
 export type WithdrawalAccount =
   | AfricanWithdrawalAccount
   | UKWithdrawalAccount
-  | EUWithdrawalAccount;
+  | EUWithdrawalAccount
+  | USWithdrawalAccount;
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;
