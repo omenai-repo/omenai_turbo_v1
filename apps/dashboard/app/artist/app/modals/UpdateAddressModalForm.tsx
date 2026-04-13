@@ -33,10 +33,9 @@ export const artist_signup_step_two = [
   },
   {
     label: "City",
-    type: "select",
-    placeholder: "Select option",
+    type: "text",
+    placeholder: "Provide your city of residence",
     labelText: "city",
-    items: [],
   },
   {
     label: "Address line",
@@ -163,10 +162,12 @@ export default function UpdateAddressModalForm() {
         })}
       </div>
       <AlertComponent title="Please note:">
-        Changing your address will only apply to future orders. Any orders that
-        are currently being processed will be picked up from your current
-        Address.
+        Address changes apply only to future orders, current orders will still
+        use your existing address. If your country has changed, your wallet
+        primary withdrawal account will be reset. Please set up a new one with
+        updated details to avoid payout disruptions.
       </AlertComponent>
+
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}

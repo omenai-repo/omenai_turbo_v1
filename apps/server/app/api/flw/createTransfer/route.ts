@@ -248,11 +248,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         $setOnInsert: {
           wallet_id,
-          trans_amount: amount, // Logs the GBP/EUR amount FLW processed
+          trans_amount: amount,
           trans_status: "PENDING",
           trans_date: date_obj,
           trans_flw_ref_id: result.data.id,
           reference: transaction_ref,
+          beneficiary_details: primaryAccount,
         },
       },
       { upsert: true },

@@ -9,7 +9,6 @@ export const useCampaignTracker = () => {
   const searchParams = useSearchParams();
   const [visitorId, setVisitorId] = useState<string>("");
 
-  // Ref to prevent double-firing in React Strict Mode (Dev environment)
   const hasRecordedVisit = useRef(false);
 
   useEffect(() => {

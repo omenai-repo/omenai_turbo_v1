@@ -657,6 +657,7 @@ export type WalletTransactionModelSchemaTypes = {
   trans_date: { year: number; month: number; day: number };
   trans_id: string;
   trans_flw_ref_id: string;
+  beneficiary_details: WithdrawalAccount; // TODO: Define a more specific type for beneficiary details based on the expected structure from Flutterwave. This can help with data integrity and make it easier to work with these details in the future.
 };
 
 export type WalletTransactionStatusTypes =
