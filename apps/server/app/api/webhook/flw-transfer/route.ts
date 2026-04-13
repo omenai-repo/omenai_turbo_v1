@@ -303,10 +303,7 @@ export const POST = async function POST(request: Request): Promise<Response> {
       session.endSession();
     }
 
-    return NextResponse.json(
-      { status: result?.isOk ? 200 : 400 },
-      { status: result?.isOk ? 200 : 400 },
-    );
+    return NextResponse.json({ status: result?.isOk ? 200 : 400 });
   } catch (error) {
     createErrorRollbarReport(
       "Flutterwave Transfer webhook processing - fatal error",
@@ -314,6 +311,9 @@ export const POST = async function POST(request: Request): Promise<Response> {
       500,
     );
 
-    return NextResponse.json({ status: 200 });
+    return NextResponse.json(
+      { error: "Internal server error during webhook processing" },
+      { status: 500 },
+    );
   }
 };

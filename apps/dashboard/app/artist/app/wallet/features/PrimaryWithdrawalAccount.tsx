@@ -1,13 +1,88 @@
-import { Divider, Paper } from "@mantine/core";
+"use client";
+
 import { WithdrawalAccount } from "@omenai/shared-types";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 export default function PrimaryWithdrawalAccount({
   withdrawal_account,
 }: {
   withdrawal_account: WithdrawalAccount | null;
 }) {
+  const [isRevealed, setIsRevealed] = useState(false);
+
+  // Helper to format IBAN into readable chunks (e.g., DE89 3704 ...)
+  const formatIBAN = (iban: string) => {
+    if (!iban) return "";
+    return iban.replace(/(.{4})/g, "$1 ").trim();
+  };
+
+  // Helper to mask IBAN (shows first 4 and last 4)
+  const maskIBAN = (iban: string) => {
+    if (!iban || iban.length < 8) return iban;
+    const start = iban.slice(0, 4);
+    const end = iban.slice(-4);
+    return `${start} •••• •••• •••• ${end}`;
+  };
+
+  // Helper to mask standard account numbers (shows only last 4)
+  const maskStandardAccount = (accNum: string) => {
+    if (!accNum || accNum.length < 4) return accNum;
+    return `•••• •••• ${accNum.slice(-4)}`;
+  };
+
+  // Dynamic variable resolution based on the region type
+  const isEU = withdrawal_account?.type === "eu";
+  const primaryLabel = isEU ? "IBAN" : "Account Number";
+
+  // Safely extract the primary identifier based on the discriminated union
+  let rawIdentifier = "";
+  if (withdrawal_account) {
+    if (withdrawal_account.type === "eu") {
+      rawIdentifier = withdrawal_account.iban;
+    } else {
+      rawIdentifier = withdrawal_account.account_number;
+    }
+  }
+
+  // Safely extract secondary routing details (Routing Number, Sort Code, SWIFT)
+  const getSecondaryDetails = (acc: WithdrawalAccount) => {
+    switch (acc.type) {
+      case "us":
+        return { label: "Routing Number (ABA)", value: acc.routing_number };
+      case "uk":
+        return { label: "Sort Code", value: acc.sort_code };
+      case "eu":
+        return { label: "SWIFT / BIC", value: acc.swift_code };
+      default:
+        return null; // Africa doesn't need a secondary identifier displayed
+    }
+  };
+
+  const secondaryDetails = withdrawal_account
+    ? getSecondaryDetails(withdrawal_account)
+    : null;
+
+  // Determine the display string based on region and reveal state
+  const displayValue = isRevealed
+    ? isEU
+      ? formatIBAN(rawIdentifier)
+      : rawIdentifier
+    : isEU
+      ? maskIBAN(rawIdentifier)
+      : maskStandardAccount(rawIdentifier);
+
+  // Determine fallback bank name dynamically
+  const displayBankName = withdrawal_account?.bank_name
+    ? withdrawal_account.bank_name.toUpperCase()
+    : withdrawal_account?.type === "eu"
+      ? "EUROPEAN BANK"
+      : withdrawal_account?.type === "us"
+        ? "US BANK"
+        : withdrawal_account?.type === "uk"
+          ? "UK BANK"
+          : "BANK";
+
   return (
     <>
       {withdrawal_account === null ? (
@@ -105,32 +180,74 @@ export default function PrimaryWithdrawalAccount({
               <div className="flex items-center justify-between py-2 group">
                 <span className="text-fluid-xxs text-slate-600">Bank Name</span>
                 <span className="text-fluid-xxs font-medium text-slate-900">
-                  {withdrawal_account.bank_name.toUpperCase()}
+                  {displayBankName}
                 </span>
               </div>
 
               <div className="border-b border-slate-100"></div>
 
-              {/* Account Number */}
+              {/* Dynamic Account Number / IBAN */}
               <div className="flex items-center justify-between py-2 group">
                 <span className="text-fluid-xxs text-slate-600">
-                  Account Number
+                  {primaryLabel}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-fluid-xxs font-medium text-slate-900 font-mono">
-                    {withdrawal_account.account_number}
+                  <span className="text-fluid-xxs font-medium text-slate-900 font-mono tracking-wider">
+                    {displayValue}
                   </span>
+
+                  {/* Reveal Toggle Button */}
+                  <button
+                    onClick={() => setIsRevealed(!isRevealed)}
+                    className="p-1 rounded hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-600"
+                    title={isRevealed ? "Hide details" : "Reveal details"}
+                  >
+                    {isRevealed ? (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+
+                  {/* Copy Button */}
                   <button
                     onClick={() =>
-                      navigator.clipboard.writeText(
-                        String(withdrawal_account.account_number),
-                      )
+                      navigator.clipboard.writeText(String(rawIdentifier))
                     }
-                    className=" p-1 rounded hover:bg-slate-100 transition-all"
-                    title="Copy account number"
+                    className="p-1 rounded hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-600"
+                    title={`Copy ${primaryLabel}`}
                   >
                     <svg
-                      className="w-4 h-4 text-slate-400"
+                      className="w-4 h-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -145,6 +262,46 @@ export default function PrimaryWithdrawalAccount({
                   </button>
                 </div>
               </div>
+
+              {/* Dynamic Secondary Routing Information (US/UK/EU) */}
+              {secondaryDetails && (
+                <>
+                  <div className="border-b border-slate-100"></div>
+                  <div className="flex items-center justify-between py-2 group">
+                    <span className="text-fluid-xxs text-slate-600">
+                      {secondaryDetails.label}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-fluid-xxs font-medium text-slate-900 font-mono tracking-wider">
+                        {secondaryDetails.value}
+                      </span>
+                      <button
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            String(secondaryDetails.value),
+                          )
+                        }
+                        className="p-1 rounded hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-600"
+                        title={`Copy ${secondaryDetails.label}`}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="border-b border-slate-100"></div>
 

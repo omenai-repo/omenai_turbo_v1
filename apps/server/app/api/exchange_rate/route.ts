@@ -5,6 +5,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { createErrorRollbarReport, validateRequestBody } from "../util";
 import z from "zod";
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 const config: CombinedConfig = {
   ...lenientRateLimit,
   allowedRoles: ["artist", "gallery"],
@@ -13,7 +14,7 @@ const ExchangeRateSchema = z.object({
   currency: z.string(),
   amount: z.number(),
 });
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+export const POST = withRateLimit(config)(async function POST(
   request: Request,
 ) {
   try {
@@ -30,7 +31,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const result = await data.json();
 
-    return NextResponse.json({ data: result.conversion_result });
+    return NextResponse.json({
+      data: result.conversion_result,
+      rate: result.conversion_rate,
+    });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
     createErrorRollbarReport("exchange rate", error, error_response.status);

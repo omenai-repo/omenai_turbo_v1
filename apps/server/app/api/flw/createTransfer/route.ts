@@ -29,7 +29,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 ): Promise<Response> {
   await connectMongoDB();
 
-  // 1. Capture payload early
   let body;
   try {
     body = await request.json();
@@ -40,7 +39,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
   const { amount, wallet_id, wallet_pin } = body;
 
   try {
-    // 2. Feature Flag Check
     const isWalletWithdrawalEnabled =
       (await fetchConfigCatValue("wallet_withdrawal_enabled", "high")) ?? false;
     if (!isWalletWithdrawalEnabled) {
@@ -52,7 +50,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!amount || !wallet_id || !wallet_pin)
       throw new BadRequestError("Invalid body parameters");
 
-    // 3. FETCH WALLET (Read-Only for Verification)
     const get_wallet = await Wallet.findOne(
       { wallet_id },
       "available_balance wallet_pin primary_withdrawal_account base_currency",
@@ -60,13 +57,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!get_wallet)
       throw new NotFoundError("No wallet with the given ID found");
 
-    // 4. VERIFY PIN
     const isPinMatch = bcrypt.compareSync(wallet_pin, get_wallet.wallet_pin);
     if (!isPinMatch) throw new ForbiddenError("Incorrect wallet pin");
 
-    // 5. ️ ATOMIC DEDUCTION (The "Reservation" Pattern)
-    // We try to deduct money FIRST. If this fails, we know they don't have funds.
-    // This prevents the Race Condition.
+    // 1. Atomic Deduction from Omenai DB (in USD)
     const reservedWallet = await Wallet.findOneAndUpdate(
       {
         wallet_id,
@@ -77,8 +71,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     );
 
     if (!reservedWallet) {
-      // If we are here, it means either wallet doesn't exist OR balance was too low
-      // Check the original fetch to give a better error message
       if (get_wallet.available_balance < amount) {
         throw new ForbiddenError(
           "Insufficient wallet balance for this transaction",
@@ -87,48 +79,143 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new ForbiddenError("Transaction failed. Please try again.");
     }
 
-    // --- MONEY IS NOW DEDUCTED. WE PROCEED TO FLUTTERWAVE ---
-
     const transaction_ref = `OMENAI_TRANSFER_${generateAlphaDigit(12)}`;
+    const primaryAccount = get_wallet.primary_withdrawal_account;
 
-    const payload = {
-      account_bank: get_wallet.primary_withdrawal_account.bank_code,
-      account_number: get_wallet.primary_withdrawal_account.account_number,
-      amount,
-      currency: get_wallet.base_currency,
-      beneficiary: get_wallet.primary_withdrawal_account.beneficiary_id,
-      beneficiary_name: get_wallet.primary_withdrawal_account.account_name,
+    // 2. STRICT CURRENCY ROUTING
+    let DESTINATION_CURRENCY = "USD";
+    let SOURCE_CURRENCY = get_wallet.base_currency;
+
+    if (primaryAccount.type === "uk") SOURCE_CURRENCY = "GBP";
+    if (primaryAccount.type === "eu") SOURCE_CURRENCY = "EUR";
+    if (primaryAccount.type === "us") SOURCE_CURRENCY = "USD";
+
+    // 3. DYNAMIC FX CONVERSION (USD -> LOCAL)
+    let final_transfer_amount = amount;
+
+    if (DESTINATION_CURRENCY !== SOURCE_CURRENCY) {
+      try {
+        // We ask FLW: "I have {amount} USD. How much {DESTINATION_CURRENCY} will that buy?"
+        const rateResponse = await fetch(
+          `https://api.flutterwave.com/v3/transfers/rates?amount=${amount}&destination_currency=${DESTINATION_CURRENCY}&source_currency=${SOURCE_CURRENCY}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
+
+        const rateData = await rateResponse.json();
+        console.log(rateData);
+
+        if (!rateResponse.ok || rateData.status === "error") {
+          // Rollback deduction if FX lookup fails
+          await Wallet.updateOne(
+            { wallet_id },
+            { $inc: { available_balance: amount } },
+          );
+          throw new ServerError(
+            "Exchange rate provider unavailable. Please try again.",
+          );
+        }
+
+        // FLW returns the exact local currency equivalent
+        final_transfer_amount = rateData.data.source.amount;
+      } catch (err) {
+        await Wallet.updateOne(
+          { wallet_id },
+          { $inc: { available_balance: amount } },
+        );
+        throw new ServerError(
+          "Network error fetching exchange rate. Funds refunded.",
+        );
+      }
+    }
+
+    // 4. BUILD THE TRANSFER PAYLOAD
+    let payload: Record<string, any> = {
+      amount: final_transfer_amount,
+      debit_currency: DESTINATION_CURRENCY,
+      currency: SOURCE_CURRENCY,
       reference: transaction_ref,
-      debit_currency: "USD",
-      destination_branch_code:
-        get_wallet.primary_withdrawal_account.branch?.branch_code,
       callback_url: `${getApiUrl()}/api/webhook/flw-transfer`,
       narration: `Omenai wallet transfer`,
-      meta: {
+    };
+
+    // Append routing details based on region type
+    if (primaryAccount.type === "africa") {
+      payload.beneficiary = primaryAccount.beneficiary_id;
+      payload.beneficiary_name = primaryAccount.account_name;
+      payload.account_bank = primaryAccount.bank_code;
+      payload.account_number = primaryAccount.account_number;
+      payload.meta = {
         wallet_id,
         url: `${getApiUrl()}/api/webhook/flw-transfer`,
-      },
-    };
+      };
 
-    const options = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    };
+      if (primaryAccount.branch?.branch_code) {
+        payload.destination_branch_code = primaryAccount.branch.branch_code;
+      }
+    } else if (primaryAccount.type === "uk") {
+      payload.beneficiary_name = primaryAccount.account_name;
+      payload.meta = [
+        {
+          account_number: primaryAccount.account_number,
+          routing_number: primaryAccount.sort_code,
+          bank_name: primaryAccount.bank_name || "UK Bank",
+          beneficiary_name: primaryAccount.account_name,
+          beneficiary_country: primaryAccount.bank_country || "GB",
+          wallet_id: wallet_id,
+          url: `${getApiUrl()}/api/webhook/flw-transfer`,
+        },
+      ];
+    } else if (primaryAccount.type === "us") {
+      payload.beneficiary_name = primaryAccount.account_name;
+      payload.meta = [
+        {
+          account_number: primaryAccount.account_number,
+          routing_number: primaryAccount.routing_number,
+          bank_name: primaryAccount.bank_name || "US Bank",
+          beneficiary_name: primaryAccount.account_name,
+          beneficiary_country: "US",
+          wallet_id: wallet_id,
+          url: `${getApiUrl()}/api/webhook/flw-transfer`,
+        },
+      ];
+    } else if (primaryAccount.type === "eu") {
+      payload.beneficiary_name = primaryAccount.account_name;
+      payload.meta = [
+        {
+          account_number: primaryAccount.iban,
+          routing_number: primaryAccount.swift_code,
+          swift_code: primaryAccount.swift_code,
+          bank_name: primaryAccount.bank_name || "EU Bank",
+          beneficiary_name: primaryAccount.account_name,
+          beneficiary_country: primaryAccount.bank_country,
+          wallet_id: wallet_id,
+          url: `${getApiUrl()}/api/webhook/flw-transfer`,
+        },
+      ];
+    }
 
+    // 5. FIRE TRANSFER API
     let response;
     try {
-      response = await fetch(
-        "https://api.flutterwave.com/v3/transfers",
-        options,
-      );
+      response = await fetch("https://api.flutterwave.com/v3/transfers", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
     } catch (networkError) {
-      // NETWORK FAILURE: We don't know if FLW got the request.
-      // DANGER ZONE: If we refund, they might get double money. If we don't, they lose money.
-
+      await Wallet.updateOne(
+        { wallet_id },
+        { $inc: { available_balance: amount } },
+      );
       throw new ServerError(
         "Network error contacting payment provider. Funds refunded.",
       );
@@ -136,22 +223,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const result = await response.json();
 
-    // 6. HANDLE FLUTTERWAVE FAILURE -> REFUND
+    // 6. HANDLE API REJECTIONS -> REFUND
     if (!response.ok || result.status === "error") {
-      // The transfer failed on FLW side. We must give the money back.
       await Wallet.updateOne(
         { wallet_id },
-        { $inc: { available_balance: amount } }, // Add the money back
+        { $inc: { available_balance: amount } },
       );
-
       return NextResponse.json(
         { message: result.message || "Transfer failed", result },
         { status: 400 },
       );
     }
 
-    // 7. SUCCESS
-    // Money is already deducted. We just log the transaction now.
+    // 7. SUCCESS LOGGING
     const now = new Date();
     const date_obj = {
       year: now.getFullYear(),
@@ -159,17 +243,17 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       day: now.getDate(),
     };
 
-    // We use updateOne with upsert to log the transaction
     await WalletTransaction.updateOne(
       { wallet_id, trans_flw_ref_id: result.data.id },
       {
         $setOnInsert: {
           wallet_id,
-          trans_amount: result.data.amount,
-          trans_status: "PENDING", // Webhook will update this to SUCCESS/FAILED
+          trans_amount: amount,
+          trans_status: "PENDING",
           trans_date: date_obj,
           trans_flw_ref_id: result.data.id,
           reference: transaction_ref,
+          beneficiary_details: primaryAccount,
         },
       },
       { upsert: true },
@@ -186,7 +270,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       error,
       error_response.status,
     );
-    console.error(error);
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status },

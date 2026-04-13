@@ -34,10 +34,9 @@ export const artist_signup_step_two = [
   },
   {
     label: "City",
-    type: "select",
-    placeholder: "Select option",
+    type: "text",
+    placeholder: "Provide your city of residence",
     labelText: "city",
-    items: [],
   },
   {
     label: "Address line",

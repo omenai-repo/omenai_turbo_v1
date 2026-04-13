@@ -29,4 +29,4 @@ const securityHeaders = [
   },
 ];
 
-module.exports = { securityHeaders };
+export { securityHeaders };

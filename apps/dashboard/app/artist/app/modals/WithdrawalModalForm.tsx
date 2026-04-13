@@ -1,19 +1,57 @@
 "use client";
 import { Loader, PinInput } from "@mantine/core";
-import { AlertCircle, RefreshCcwDot } from "lucide-react";
+import {
+  AlertCircle,
+  RefreshCcwDot,
+  Wallet,
+  ArrowRightLeft,
+  ShieldCheck,
+} from "lucide-react";
 import Link from "next/link";
 import React, { ChangeEvent, useState } from "react";
 import { getTransferRate } from "@omenai/shared-services/wallet/getTransferRate";
 import { createTransfer } from "@omenai/shared-services/wallet/createTransfer";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import WithdrawalSuccessScreen from "./WithdrawalSuccessScreen";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { artistActionStore } from "@omenai/shared-state-store/src/artist/actions/ActionStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
-import AlertComponent from "@omenai/shared-ui-components/components/modal/AlertComponent";
+import { fetchUser } from "@omenai/shared-services/auth/session/fetchUser";
+
+// --- Skeleton Loader Component ---
+const FormSkeleton = () => (
+  <div className="max-w-md w-full max-h-[95vh] rounded-xl overflow-hidden m-auto bg-white shadow-2xl border border-slate-100 animate-pulse">
+    <div className="bg-slate-900 px-6 py-5 flex items-center gap-4">
+      <div className="w-10 h-10 bg-slate-700/50 rounded-lg"></div>
+      <div className="space-y-2">
+        <div className="h-5 w-32 bg-slate-700/50 rounded"></div>
+        <div className="h-3 w-48 bg-slate-700/50 rounded"></div>
+      </div>
+    </div>
+    <div className="p-6 space-y-5">
+      <div className="space-y-3">
+        <div className="h-4 w-32 bg-slate-200 rounded"></div>
+        <div className="h-20 w-full bg-slate-100 rounded-lg border border-slate-200"></div>
+      </div>
+      <div className="flex justify-center -my-2 relative z-10">
+        <div className="h-10 w-10 bg-slate-200 rounded-full border-4 border-white"></div>
+      </div>
+      <div className="space-y-3">
+        <div className="h-20 w-full bg-slate-100 rounded-lg border border-slate-200"></div>
+      </div>
+      <div className="space-y-3 pt-2">
+        <div className="h-4 w-24 bg-slate-200 rounded"></div>
+        <div className="h-24 w-full bg-slate-100 rounded-lg border border-slate-200"></div>
+      </div>
+      <div className="h-12 w-full bg-slate-800 rounded-lg mt-6"></div>
+    </div>
+  </div>
+);
+
 export default function WithdrawalModalForm() {
+  // 1. ALL HOOKS MUST BE CALLED AT THE TOP LEVEL
   const [amount_data, set_amount_data] = useState<{
     amount: number;
     currency_amount: number;
@@ -22,29 +60,54 @@ export default function WithdrawalModalForm() {
 
   const { toggleWithdrawalFormPopup } = artistActionStore();
   const queryClient = useQueryClient();
-  const { user, csrf } = useAuth({ requiredRole: "artist" });
+  const { user: artist, csrf } = useAuth({ requiredRole: "artist" });
   const [wallet_pin, set_wallet_pin] = useState("");
   const [wallet_pin_error, set_wallet_pin_error] = useState<boolean>(false);
   const rollbar = useRollbar();
-
-  const handlePinChange = (value: string) => {
-    set_wallet_pin(value);
-    if (value.length < 4) {
-      set_wallet_pin_error(true);
-    } else {
-      set_wallet_pin_error(false);
-    }
-  };
-  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    set_amount_data({ currency_amount: 0, amount: Number(value), rate: null });
-  };
 
   const [transferRateLoading, setTransferRateLoading] =
     useState<boolean>(false);
   const [withdrawalLoading, setWithdrawalLoading] = useState<boolean>(false);
   const [isWithdrawalSuccessful, setIsWithdrawalSuccessful] =
     useState<boolean>(false);
+
+  // 2. RUN QUERY
+  const { data: fetchedData, isLoading: isFetchingUser } = useQuery({
+    queryKey: ["artist_profile", artist?.artist_id],
+    queryFn: async () => {
+      const response = await fetchUser({
+        id: artist.artist_id,
+        route: "artist",
+        token: csrf || "",
+      });
+
+      if (!response.isOk) throw new Error("Failed to fetch user data");
+
+      return response.artist;
+    },
+    enabled: !!artist?.artist_id,
+    refetchOnWindowFocus: false,
+  });
+
+  // 3. HANDLE EARLY RETURN AFTER HOOKS
+  if (isFetchingUser) {
+    return <FormSkeleton />;
+  }
+
+  // 4. DERIVED STATE
+  const user = fetchedData?.base_currency ? fetchedData : artist;
+
+  // 5. HANDLERS
+  const handlePinChange = (value: string) => {
+    set_wallet_pin(value);
+    set_wallet_pin_error(value.length < 4);
+  };
+
+  const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    set_amount_data({ currency_amount: 0, amount: Number(value), rate: null });
+  };
+
   const handleAmountConvert = async () => {
     try {
       setTransferRateLoading(true);
@@ -59,23 +122,16 @@ export default function WithdrawalModalForm() {
           "Something went wrong while fetching the transfer rate. Please try again later.",
           "error",
         );
-
         return;
       }
 
-      set_amount_data((prev) => {
-        return {
-          ...prev,
-          currency_amount: rate_response.data.source.amount,
-          rate: rate_response.data.rate,
-        };
-      });
+      set_amount_data((prev) => ({
+        ...prev,
+        currency_amount: rate_response.data.source.amount,
+        rate: rate_response.data.rate,
+      }));
     } catch (error) {
-      if (error instanceof Error) {
-        rollbar.error(error);
-      } else {
-        rollbar.error(new Error(String(error)));
-      }
+      rollbar.error(error instanceof Error ? error : new Error(String(error)));
       toast_notif(
         "Something went wrong while fetching the transfer rate. Please try again later.",
         "error",
@@ -94,7 +150,7 @@ export default function WithdrawalModalForm() {
       setWithdrawalLoading(true);
       const withdrawal_response = await createTransfer({
         amount: amount_data.amount,
-        wallet_id: user.wallet_id as string,
+        wallet_id: artist.wallet_id as string,
         wallet_pin,
         token: csrf || "",
       });
@@ -105,7 +161,6 @@ export default function WithdrawalModalForm() {
             "Something went wrong while processing your withdrawal. Please try again later.",
           "error",
         );
-
         return;
       }
       await queryClient.invalidateQueries({
@@ -113,11 +168,7 @@ export default function WithdrawalModalForm() {
       });
       setIsWithdrawalSuccessful(withdrawal_response.isOk);
     } catch (error) {
-      if (error instanceof Error) {
-        rollbar.error(error);
-      } else {
-        rollbar.error(new Error(String(error)));
-      }
+      rollbar.error(error instanceof Error ? error : new Error(String(error)));
       toast_notif(
         "Something went wrong while processing your withdrawal. Please try again later.",
         "error",
@@ -126,37 +177,25 @@ export default function WithdrawalModalForm() {
       setWithdrawalLoading(false);
     }
   };
+
   return (
-    // Beautiful Withdrawal Form Component
     <>
       {isWithdrawalSuccessful ? (
         <WithdrawalSuccessScreen />
       ) : (
-        <div className="max-w-lg w-full max-h-[95vh] rounded overflow-y-auto m-auto">
-          <div className="bg-white rounded shadow-lg overflow-hidden">
+        <div className="max-w-md w-full max-h-[95vh] rounded-xl overflow-y-auto m-auto shadow-2xl bg-white border border-slate-100">
+          <div className="flex flex-col">
             {/* Header */}
-            <div className="bg-dark text-white px-6 py-3">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/10 rounded backdrop-blur-sm">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M7 11l5-5m0 0l5 5m-5-5v12"
-                    />
-                  </svg>
+            <div className="bg-slate-900 text-white px-6 py-5 sticky top-0 z-10">
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 bg-white/10 rounded-xl backdrop-blur-sm shadow-inner">
+                  <Wallet className="w-6 h-6 text-slate-100" />
                 </div>
                 <div>
-                  <h2 className="text-fluid-base font-semibold">
+                  <h2 className="text-lg font-semibold tracking-tight">
                     Withdraw Funds
                   </h2>
-                  <p className="text-fluid-xxs text-slate-300 mt-0.5">
+                  <p className="text-sm text-slate-400 mt-0.5">
                     Transfer to your bank account
                   </p>
                 </div>
@@ -164,229 +203,166 @@ export default function WithdrawalModalForm() {
             </div>
 
             {/* Form Content */}
-            <div className="p-4 space-y-4">
-              {/* Amount Input Section */}
-              <div className="space-y-3">
-                <label
-                  htmlFor="amount"
-                  className="block text-fluid-xxs font-light text-slate-700"
-                >
-                  Withdrawal Amount
-                </label>
-
+            <div className="p-6 space-y-6">
+              {/* Conversion Section */}
+              <div className="space-y-0 relative">
                 {/* Send Amount */}
-                <div className="bg-slate-50 rounded p-4 border border-slate-200">
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-fluid-xxs text-slate-600">
-                        You Send
-                      </span>
-                      <span className="text-fluid-xxs font-light text-slate-700">
-                        USD
-                      </span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                        $
-                      </span>
-                      <input
-                        name="amount"
-                        type="number"
-                        placeholder="0.00"
-                        onChange={handleAmountChange}
-                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-300 rounded text-fluid-xxs font-semibold text-dark placeholder:text-slate-400 focus:border-dark focus:ring-0 focus:outline-none transition-colors"
-                      />
-                    </div>
+                <div className="bg-slate-50/80 rounded-t-xl p-4 border border-slate-200 border-b-0 pb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium text-slate-700">
+                      Withdrawal Amount
+                    </label>
+                    <span className="text-xs font-semibold text-slate-500 bg-slate-200/50 px-2 py-1 rounded">
+                      USD
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium text-lg">
+                      $
+                    </span>
+                    <input
+                      name="amount"
+                      type="number"
+                      placeholder="0.00"
+                      onChange={handleAmountChange}
+                      className="w-full pl-9 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-lg font-semibold text-slate-900 placeholder:text-slate-300 focus:border-slate-800 focus:ring-1 focus:ring-slate-800 focus:outline-none transition-all shadow-sm"
+                    />
                   </div>
                 </div>
 
-                {/* Convert Button */}
-                <div className="flex justify-center">
+                {/* Convert Button Connector */}
+                <div className="mt-4 py-4 flex items-center justify-center relative">
                   <button
                     disabled={transferRateLoading || amount_data.amount === 0}
                     onClick={handleAmountConvert}
-                    className="group relative p-2 bg-slate-100 rounded transition-all transform active:scale-95 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 grid place-items-center"
+                    className="p-2.5 bg-white border border-slate-200 rounded-full shadow-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 hover:shadow disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 group"
                     aria-label="Convert currency"
                   >
                     {transferRateLoading ? (
-                      <Loader color="rgba(71, 85, 105, 1)" size="sm" />
+                      <Loader color="#0f172a" size={18} />
                     ) : (
-                      <RefreshCcwDot
-                        size={20}
-                        strokeWidth={1.5}
-                        className="text-slate-600 transition-transform group-hover:rotate-180 duration-500"
+                      <ArrowRightLeft
+                        size={18}
+                        strokeWidth={2}
+                        className="transition-transform group-hover:rotate-180 duration-500"
                       />
                     )}
                   </button>
                 </div>
 
                 {/* Receive Amount */}
-                <div className="bg-green-50 rounded p-4 border border-green-200">
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-fluid-xxs text-green-700">
-                        You Receive
-                      </span>
-                      <span className="text-fluid-xxs font-light text-green-800">
-                        {user.base_currency}
-                      </span>
-                    </div>
-                    <div className="bg-white rounded px-4 py-3 border border-green-300">
-                      <p className="text-fluid-xxs font-semibold text-green-800">
-                        {formatPrice(
-                          amount_data.currency_amount,
-                          user.base_currency,
-                        )}
-                      </p>
-                    </div>
+                <div className="bg-emerald-50/50 rounded-b-xl p-4 border border-emerald-100 pt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-emerald-800">
+                      You Receive
+                    </span>
+                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-100 px-2 py-1 rounded">
+                      {user.base_currency}
+                    </span>
                   </div>
-                </div>
-              </div>
-
-              {/* PIN Section */}
-              <div className="space-y-2">
-                <label
-                  htmlFor="pin"
-                  className="block text-fluid-xxs font-light text-slate-700"
-                >
-                  Security PIN
-                </label>
-                <div className="bg-slate-50 rounded p-3 border border-slate-200">
-                  <div className="space-y-2">
-                    <p className="text-center text-fluid-xxs text-slate-600 mb-2">
-                      Enter your 4-digit wallet PIN
+                  <div className="bg-white rounded-lg px-4 py-3 border border-emerald-200 shadow-sm flex items-center">
+                    <p className="text-lg font-semibold text-emerald-900">
+                      {amount_data.currency_amount > 0
+                        ? formatPrice(
+                            amount_data.currency_amount,
+                            user.base_currency,
+                          )
+                        : "0.00"}
                     </p>
-                    <div className="flex justify-center">
-                      <PinInput
-                        size="sm"
-                        name="pin"
-                        mask
-                        placeholder="○"
-                        onChange={(e) => handlePinChange(e)}
-                        type="number"
-                        error={wallet_pin_error}
-                        styles={{
-                          input: {
-                            borderColor: wallet_pin_error
-                              ? "#ef4444"
-                              : "#94a3b8",
-                            backgroundColor: "#ffffff",
-                            fontSize: "16px",
-                            fontWeight: "semibold",
-                            "&:focus": {
-                              borderColor: "#1e293b",
-                              boxShadow: "0 0 0 2px rgba(30, 41, 59, 0.1)",
-                            },
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className="text-center mt-4">
-                      <Link
-                        onClick={() => toggleWithdrawalFormPopup(false)}
-                        href="/artist/app/wallet/pin_recovery"
-                        className="text-fluid-xxs text-red-600 underline hover:text-dark transition-colors"
-                      >
-                        Forgot your PIN?
-                      </Link>
-                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Exchange Rate Info */}
               {amount_data.amount > 0 && amount_data.currency_amount > 0 && (
-                <div className="bg-blue-50 rounded p-2 border border-blue-200">
-                  <div className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-blue-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <p className="text-fluid-xxs font-semibold text-blue-700">
-                      Exchange rate: 1 USD ={" "}
-                      {(
-                        amount_data.currency_amount / amount_data.amount
-                      ).toFixed(2)}{" "}
-                      {user.base_currency}
-                    </p>
-                  </div>
+                <div className="bg-blue-50/80 rounded-lg p-3 border border-blue-100 flex items-center gap-2.5">
+                  <RefreshCcwDot className="w-4 h-4 text-blue-600" />
+                  <p className="text-sm font-medium text-blue-800">
+                    Rate: 1 USD ={" "}
+                    {(amount_data.currency_amount / amount_data.amount).toFixed(
+                      2,
+                    )}{" "}
+                    {user.base_currency}
+                  </p>
                 </div>
               )}
-              <div
-                className={
-                  "mt-6 p-4 bg-green-200/50 rounded border border-slate-200"
-                }
-              >
-                <div className="flex gap-3">
-                  <AlertCircle className="w-4 h-4 text-neutral-400 mt-0.5 flex-shrink-0" />
-                  <div className="text-xs text-neutral-800 space-y-1">
-                    <p className="font-light">Tip:</p>
-                    <p>
-                      Once a withdrawal has been successfully initiated,
-                      settlement time may vary depending on your financial
-                      institution's processing time
-                    </p>
+
+              <hr className="border-slate-100" />
+
+              {/* PIN Section */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-slate-700">
+                  Security PIN
+                </label>
+                <div className="bg-slate-50 rounded-xl p-5 border border-slate-200 text-center">
+                  <p className="text-sm text-slate-500 mb-4">
+                    Enter your 4-digit wallet PIN to authorize
+                  </p>
+                  <div className="flex justify-center">
+                    <PinInput
+                      size="md"
+                      name="pin"
+                      mask
+                      placeholder="○"
+                      onChange={handlePinChange}
+                      type="number"
+                      error={wallet_pin_error}
+                      styles={{
+                        input: {
+                          borderColor: wallet_pin_error ? "#ef4444" : "#cbd5e1",
+                          backgroundColor: "#ffffff",
+                          fontSize: "18px",
+                          fontWeight: "600",
+                          borderRadius: "8px",
+                          "&:focus": {
+                            borderColor: "#0f172a",
+                          },
+                        },
+                      }}
+                    />
                   </div>
+                  <Link
+                    onClick={() => toggleWithdrawalFormPopup(false)}
+                    href="/artist/app/wallet/pin_recovery"
+                    className="inline-block mt-4 text-xs font-medium text-slate-500 hover:text-slate-900 underline transition-colors"
+                  >
+                    Forgot your PIN?
+                  </Link>
                 </div>
               </div>
-              {/* Submit Button */}
-              <button
-                onClick={handleWithdrawal}
-                disabled={withdrawalLoading || amount_data.amount === 0}
-                className="w-full py-2 bg-dark text-white font-medium rounded shadow-sm transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2 text-fluid-xxs"
-              >
-                {withdrawalLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader color="rgba(255, 255, 255, 1)" size="sm" />
-                    Processing...
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Confirm Withdrawal
-                  </span>
-                )}
-              </button>
 
-              {/* Security Notice */}
-              <div className="text-center">
-                <p className="text-fluid-xxs text-slate-500 flex items-center justify-center">
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                  Secured transaction
+              {/* Settlement Tip */}
+              <div className="bg-amber-50/50 p-4 rounded-xl border border-amber-100 flex gap-3 items-start">
+                <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-800 leading-relaxed font-medium">
+                  Once successfully initiated, settlement times vary based on
+                  your financial institution's processing hours.
                 </p>
+              </div>
+
+              {/* Submit Action */}
+              <div className="space-y-4 pt-2">
+                <button
+                  onClick={handleWithdrawal}
+                  disabled={withdrawalLoading || amount_data.amount === 0}
+                  className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl shadow-md transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 flex items-center justify-center gap-2"
+                >
+                  {withdrawalLoading ? (
+                    <>
+                      <Loader color="rgba(255, 255, 255, 0.8)" size="sm" />
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Confirm Withdrawal</span>
+                    </>
+                  )}
+                </button>
+
+                <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-slate-400">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Secured & Encrypted Transaction</span>
+                </div>
               </div>
             </div>
           </div>

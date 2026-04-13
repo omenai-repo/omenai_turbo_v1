@@ -657,6 +657,7 @@ export type WalletTransactionModelSchemaTypes = {
   trans_date: { year: number; month: number; day: number };
   trans_id: string;
   trans_flw_ref_id: string;
+  beneficiary_details: WithdrawalAccount; // TODO: Define a more specific type for beneficiary details based on the expected structure from Flutterwave. This can help with data integrity and make it easier to work with these details in the future.
 };
 
 export type WalletTransactionStatusTypes =
@@ -665,16 +666,53 @@ export type WalletTransactionStatusTypes =
   | "FAILED"
   | "NEW";
 
-export type WithdrawalAccount = {
-  account_number: string;
-  bank_name: string;
+// Shared fields that every account must have
+interface BaseWithdrawalAccount {
   account_name: string;
-  bank_id: string;
-  bank_code: string;
-  branch: BankBranchType | null;
   bank_country: string;
   beneficiary_id: number;
-};
+  flutterwave_recipient_id?: string;
+}
+export interface USWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "us";
+  account_number: string;
+  routing_number: string;
+  bank_name?: string;
+  account_name: string;
+  bank_country: string;
+}
+// 1. Africa Variant
+export interface AfricanWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "africa";
+  account_number: string;
+  bank_name: string;
+  bank_code: string;
+  bank_id?: string;
+  branch?: BankBranchType | null;
+}
+
+// 2. UK Variant
+export interface UKWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "uk";
+  account_number: string;
+  sort_code: string;
+  bank_name?: string; // Usually optional for UK if you have sort code
+}
+
+// 3. Europe / SEPA Variant
+export interface EUWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "eu";
+  iban: string;
+  swift_code: string;
+  bank_name?: string;
+}
+
+// The exported type your app will actually use
+export type WithdrawalAccount =
+  | AfricanWithdrawalAccount
+  | UKWithdrawalAccount
+  | EUWithdrawalAccount
+  | USWithdrawalAccount;
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;

@@ -3,12 +3,7 @@ import { useArtistAuthStore } from "@omenai/shared-state-store/src/auth/register
 import { AddressTypes, ArtistSignupData } from "@omenai/shared-types";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ChangeEvent,
-  HTMLInputTypeAttribute,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, HTMLInputTypeAttribute, useState } from "react";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 import { validatePasswordFields } from "@omenai/shared-lib/validations/validatePasswordFields";
 
@@ -40,71 +35,62 @@ export default function Input({
   } = useArtistAuthStore();
 
   const [errorList, setErrorList] = useState<string[]>([]);
-
   const [show, setShow] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    updateArtistSignupData(e.target.name, e.target.value);
-    setErrorList([]);
+    const val = e.target.value;
+    const name = e.target.name;
 
+    // 1. Update Zustand State
+    updateArtistSignupData(name, val);
+
+    // 2. Execute parent onChange prop (Previously swallowed)
+    if (onChange) {
+      onChange(e);
+    }
+
+    // 3. Base Validation
+    let currentErrors: string[] = [];
     const { success, errors }: { success: boolean; errors: string[] | [] } =
       validate(
-        e.target.value,
-        e.target.name,
-        e.target.name === "confirmPassword"
-          ? artistSignupData.password
-          : undefined,
+        val,
+        name,
+        name === "confirmPassword" ? artistSignupData.password : undefined,
       );
+
     if (!success) {
-      setIsFieldDirty(
-        e.target.name as keyof ArtistSignupData & AddressTypes,
-        true,
-      );
-      setErrorList(errors);
+      currentErrors = errors;
+      setIsFieldDirty(name as keyof ArtistSignupData & AddressTypes, true);
     } else {
-      setErrorList([]);
-      setIsFieldDirty(
-        e.target.name as keyof ArtistSignupData & AddressTypes,
-        false,
-      );
+      setIsFieldDirty(name as keyof ArtistSignupData & AddressTypes, false);
     }
+
+    // 4. Synchronous Password Validation (Replaces the useEffect)
+    if (name === "password" || name === "confirmPassword") {
+      const pwErrors = validatePasswordFields({
+        password: name === "password" ? val : artistSignupData.password,
+        confirmPassword:
+          name === "confirmPassword" ? val : artistSignupData.confirmPassword,
+      });
+
+      if (name === "password") {
+        currentErrors = pwErrors.filter(
+          (err) =>
+            err.toLowerCase().includes("password") &&
+            !err.toLowerCase().includes("confirm"),
+        );
+      } else if (name === "confirmPassword") {
+        currentErrors = pwErrors.filter(
+          (err) =>
+            err.toLowerCase().includes("match") ||
+            err.toLowerCase().includes("confirm"),
+        );
+      }
+    }
+
+    // 5. Update error state exactly once per keystroke
+    setErrorList(currentErrors);
   };
-  useEffect(() => {
-    // Only run validation for password-related fields
-    if (labelText !== "password" && labelText !== "confirmPassword") return;
-
-    const errors = validatePasswordFields({
-      password: artistSignupData.password,
-      confirmPassword: artistSignupData.confirmPassword,
-    });
-
-    // Only show errors for the current field
-    if (labelText === "password" && artistSignupData.password) {
-      const passwordErrors = errors.filter(
-        (err) =>
-          err.toLowerCase().includes("password") &&
-          !err.toLowerCase().includes("confirm"),
-      );
-      if (passwordErrors.length > 0) {
-        setErrorList(passwordErrors);
-      } else {
-        setErrorList([]);
-      }
-    }
-
-    if (labelText === "confirmPassword" && artistSignupData.confirmPassword) {
-      const confirmErrors = errors.filter(
-        (err) =>
-          err.toLowerCase().includes("match") ||
-          err.toLowerCase().includes("confirm"),
-      );
-      if (confirmErrors.length > 0) {
-        setErrorList(confirmErrors);
-      } else {
-        setErrorList([]);
-      }
-    }
-  }, [artistSignupData.password, artistSignupData.confirmPassword, labelText]);
 
   return (
     <AnimatePresence key={`${currentArtistSignupFormIndex}-artist`}>
@@ -127,7 +113,7 @@ export default function Input({
           {/* Input Container */}
           <div className="relative group">
             <input
-              type={type === "password" ? (show ? "text" : type) : type}
+              type={type === "password" ? (show ? "text" : "password") : type}
               className={`w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed   
                 ${
                   errorList.length > 0
@@ -141,7 +127,7 @@ export default function Input({
               onKeyDown={handleKeyPress}
               name={labelText}
               required={true}
-              value={(artistSignupData as Record<string, any>)[labelText]}
+              value={(artistSignupData as Record<string, any>)[labelText] || ""} // Added empty string fallback to prevent uncontrolled input warnings
             />
 
             {/* Password Toggle */}

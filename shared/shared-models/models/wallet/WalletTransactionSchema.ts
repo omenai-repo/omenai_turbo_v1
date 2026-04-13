@@ -15,8 +15,9 @@ const walletTransaction = new Schema<WalletTransactionModelSchemaTypes>(
       unique: true,
     },
     trans_flw_ref_id: { type: String, required: true },
+    beneficiary_details: { type: Schema.Types.Mixed, required: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const WalletTransaction =
