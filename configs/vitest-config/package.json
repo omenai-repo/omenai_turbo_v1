@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./base": "./base.ts",
-    "./react": "./react.ts"
+    "./base": "./base.js",
+    "./react": "./react.js"
   },
   "devDependencies": {
     "@omenai/typescript-config": "*",
