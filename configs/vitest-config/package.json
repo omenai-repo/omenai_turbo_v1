@@ -1,0 +1,19 @@
+{
+  "name": "@omenai/vitest-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.ts",
+    "./react": "./react.ts"
+  },
+  "devDependencies": {
+    "@omenai/typescript-config": "*",
+    "@testing-library/jest-dom": "*",
+    "@testing-library/react": "*",
+    "@vitejs/plugin-react": "*",
+    "@vitest/ui": "*",
+    "jsdom": "*",
+    "vitest": "*"
+  }
+}

@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
+  },
   "dependencies": {
     "country-timezone": "^1.0.8",
     "crypto-random-string": "^5.0.0",
@@ -10,6 +15,9 @@
   },
   "devDependencies": {
     "@omenai/shared-json": "*",
-    "crypto-random-string": "^5.0.0"
+    "@omenai/typescript-config": "*",
+    "@omenai/vitest-config": "*",
+    "crypto-random-string": "^5.0.0",
+    "vitest": "*"
   }
 }
