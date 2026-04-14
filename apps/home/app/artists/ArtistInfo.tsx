@@ -2,7 +2,6 @@
 import { getOptimizedImage } from "@omenai/shared-lib/storage/getImageFileView";
 import Image from "next/image";
 import { useState } from "react";
-import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 import { HiCheckBadge } from "react-icons/hi2";
 
 export default function ArtistInfo({

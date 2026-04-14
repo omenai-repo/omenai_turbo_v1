@@ -5,13 +5,10 @@ import React from "react";
 import ArtworkPricing from "./ArtworkPricing";
 import PriceSetup from "./ArtworkPricingAlternate";
 
-const self_price_eligibility: Omit<ArtistCategory, "Emerging">[] = [
-  "Early Mid-Career",
-  "Mid-Career",
-  "Late Mid-Career",
-  "Established",
-  "Elite",
-];
+const self_price_eligibility: Omit<
+  ArtistCategory,
+  "Emerging" | "Early Mid-Career"
+>[] = ["Mid-Career", "Late Mid-Career", "Established", "Elite"];
 
 export default function ArtworkPricingWrapper() {
   const { user } = useAuth({ requiredRole: "artist" });

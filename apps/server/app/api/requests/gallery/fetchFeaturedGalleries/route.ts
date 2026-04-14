@@ -12,8 +12,10 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       await connectMongoDB();
       const galleries = await AccountGallery.find(
         {},
-        "logo name gallery_id",
-      ).limit(10);
+        "logo name gallery_id address",
+      )
+        .limit(15)
+        .sort({ createdAt: -1 });
 
       return NextResponse.json({
         message: "Featured galleries fetched",

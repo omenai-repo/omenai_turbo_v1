@@ -1,0 +1,24 @@
+{
+  "name": "@omenai/redirect",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 5001 --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "devDependencies": {
+    "@omenai/tailwind-config": "*",
+    "@omenai/typescript-config": "*",
+    "@omenai/next-security-headers": "*",
+    "@omenai/url-config": "*",
+    "@omenai/shared-utils": "*",
+    "eslint": "^9",
+    "eslint-config-next": "15.0.4"
+  },
+  "dependencies": {
+    "lottie-react": "^2.4.0",
+    "nextjs-toploader": "^3.7.15"
+  }
+}

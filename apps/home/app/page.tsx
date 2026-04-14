@@ -16,6 +16,7 @@ import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import TrendingArtistWrapper from "./features/trendingArtists/TrendingArtistWrapper";
 import Newsletter from "./Newsletter";
+import FeaturedgalleryWrapper from "./features/featuredGalleries/FeaturedGalleryWrapper";
 
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
@@ -52,9 +53,7 @@ export default function Home() {
           sessionId={user && user.role === "user" ? user.id : undefined}
         />
         <Collections />
-        <TrendingArtworkWrapper
-          sessionId={user && user.role === "user" ? user.id : undefined}
-        />
+        {/* <FeaturedgalleryWrapper /> */}
         <Editorials />
         {/* <TrendingArtistWrapper /> */}
         {user && user.role === "user" && (

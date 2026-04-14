@@ -26,6 +26,10 @@ const bucketId =
   process.env.APPWRITE_BUCKET_ID ||
   (process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID as string);
 
+const logoBucketId =
+  process.env.APPWRITE_LOGO_BUCKET_ID ||
+  (process.env.NEXT_PUBLIC_APPWRITE_LOGO_BUCKET_ID as string);
+
 export const getImageFileView = (
   fileId: string,
   width: number,
@@ -63,6 +67,28 @@ export const getOptimizedImage = (
   const quality = customQuality || qualityMap[preset];
 
   return getImageFileView(fileId, size.width, undefined, quality);
+};
+
+export const getOptimizedLogoImage = (
+  fileId: string,
+  preset: "thumbnail" | "small" | "medium" | "large" = "medium",
+  customQuality?: number,
+) => {
+  const size = SIZE_PRESETS[preset];
+  const qualityMap = {
+    thumbnail: QUALITY_PRESETS.thumbnail,
+    small: QUALITY_PRESETS.low,
+    medium: QUALITY_PRESETS.medium,
+    large: QUALITY_PRESETS.high,
+  };
+  const quality = customQuality || qualityMap[preset];
+  return storage.getFilePreview({
+    bucketId: logoBucketId,
+    fileId,
+    ...size,
+    quality,
+    output: appwrite_image_format.Webp,
+  });
 };
 
 // For responsive images with different qualities based on context
