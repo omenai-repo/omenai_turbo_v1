@@ -30,7 +30,7 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
   // Base price ranges by artist category
   const categoryRanges: Record<ArtistCategory, [number, number]> = {
     Emerging: [500, 2500],
-    "Early Mid-Career": [1000, 5000],
+    "Early Mid-Career": [1000, 3500],
     "Mid-Career": [2000, 8500],
     "Late Mid-Career": [3000, 9000],
     Established: [7000, 15000],

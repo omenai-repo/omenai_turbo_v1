@@ -1891,3 +1891,10 @@ export interface EngagementTrendItem {
   views: number;
   uniqueCollectors: number;
 }
+
+export interface DeepLinkPayload {
+  role: "user" | "artist" | "gallery";
+  route: string;
+  payload: Record<string, any>;
+  params: Record<string, string>;
+}
