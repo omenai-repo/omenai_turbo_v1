@@ -22,9 +22,10 @@ const C = {
 
 const REGION_LABELS: Record<RegionType, string> = {
   africa: "African Transfer",
-  uk: "UK — Faster Payments",
+  uk: "UK — Sort Code",
   us: "US — ACH / Wire",
   eu: "SEPA / SWIFT",
+  international: "International Transfer",
 };
 
 interface RegionBadgeProps {
