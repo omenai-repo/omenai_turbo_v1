@@ -92,7 +92,7 @@ export const SEPA_COUNTRY_CODES = [
   "VA",
 ];
 
-export type RegionType = "africa" | "uk" | "eu" | "us";
+export type RegionType = "africa" | "uk" | "eu" | "us" | "international";
 
 export interface ValidatedAccount {
   isValidated: boolean;
@@ -145,6 +145,12 @@ function resolveStepLabel(
       { label: "Review", description: "Check your details" },
       { label: "Link Account", description: "Securely connect your account" },
     ],
+    international: [
+      { label: "Region", description: "Automatically detected" },
+      { label: "Enter Details", description: "IBAN & SWIFT/BIC code" },
+      { label: "Review", description: "Check your details" },
+      { label: "Link Account", description: "Securely connect your account" },
+    ],
   };
   return labels[regionType][stepIndex] ?? { label: "", description: "" };
 }
@@ -192,7 +198,7 @@ export function useAccountForm() {
     if (code === "GB") return "uk";
     if (SEPA_COUNTRY_CODES.includes(code)) return "eu";
     if (AFRICAN_COUNTRIES.includes(code)) return "africa";
-    return "eu"; // international fallback
+    return "international"; // international fallback
   }, [user?.address?.countryCode]);
 
   // --- Shared ---

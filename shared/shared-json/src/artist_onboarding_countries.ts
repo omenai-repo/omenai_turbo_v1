@@ -91,6 +91,13 @@ export const artist_countries_codes_currency = [
     symbol: "Kč",
   },
   {
+    name: "Democratic Republic of the Congo",
+    alpha2: "CD",
+    alpha3: "COD",
+    currency: "CDF",
+    symbol: "FC",
+  },
+  {
     name: "Denmark",
     alpha2: "DK",
     alpha3: "DNK",

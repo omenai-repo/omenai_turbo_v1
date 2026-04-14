@@ -93,6 +93,17 @@ accountPath.discriminator(
     { _id: false },
   ),
 );
+accountPath.discriminator(
+  "international",
+  new Schema(
+    {
+      iban: { type: String, required: true },
+      swift_code: { type: String, required: true },
+      bank_name: { type: String },
+    },
+    { _id: false },
+  ),
+);
 
 // 4. Export the strictly typed Wallet model
 export const Wallet =

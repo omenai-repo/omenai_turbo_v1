@@ -273,7 +273,7 @@ export default function AccountForm() {
               />
             )}
 
-            {regionType === "eu" && (
+            {(regionType === "eu" || regionType === "international") && (
               <EUFields
                 accountName={manualAccountName}
                 onAccountNameChange={setManualAccountName}
