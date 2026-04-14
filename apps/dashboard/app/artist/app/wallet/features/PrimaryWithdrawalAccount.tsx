@@ -38,7 +38,10 @@ export default function PrimaryWithdrawalAccount({
   // Safely extract the primary identifier based on the discriminated union
   let rawIdentifier = "";
   if (withdrawal_account) {
-    if (withdrawal_account.type === "eu") {
+    if (
+      withdrawal_account.type === "eu" ||
+      withdrawal_account.type === "international"
+    ) {
       rawIdentifier = withdrawal_account.iban;
     } else {
       rawIdentifier = withdrawal_account.account_number;
@@ -53,6 +56,8 @@ export default function PrimaryWithdrawalAccount({
       case "uk":
         return { label: "Sort Code", value: acc.sort_code };
       case "eu":
+        return { label: "SWIFT / BIC", value: acc.swift_code };
+      case "international":
         return { label: "SWIFT / BIC", value: acc.swift_code };
       default:
         return null; // Africa doesn't need a secondary identifier displayed
@@ -77,11 +82,13 @@ export default function PrimaryWithdrawalAccount({
     ? withdrawal_account.bank_name.toUpperCase()
     : withdrawal_account?.type === "eu"
       ? "EUROPEAN BANK"
-      : withdrawal_account?.type === "us"
-        ? "US BANK"
-        : withdrawal_account?.type === "uk"
-          ? "UK BANK"
-          : "BANK";
+      : withdrawal_account?.type === "international"
+        ? "INTERNATIONAL BANK"
+        : withdrawal_account?.type === "us"
+          ? "US BANK"
+          : withdrawal_account?.type === "uk"
+            ? "UK BANK"
+            : "BANK";
 
   return (
     <>
