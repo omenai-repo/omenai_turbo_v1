@@ -59,6 +59,14 @@ const Schema = z.object({
       account_name: z.string(),
       bank_country: z.string(),
     }),
+    z.object({
+      type: z.literal("international"),
+      iban: z.string(),
+      swift_code: z.string(),
+      bank_name: z.string().optional(),
+      account_name: z.string(),
+      bank_country: z.string(),
+    }),
   ]),
 });
 
@@ -115,8 +123,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         account_details.type === "eu" &&
         existingAccount.iban === account_details.iban &&
         existingAccount.swift_code === account_details.swift_code;
+      const isSameInternational =
+        existingAccount.type === "international" &&
+        account_details.type === "international" &&
+        existingAccount.iban === account_details.iban &&
+        existingAccount.swift_code === account_details.swift_code;
 
-      if (isSameAfrica || isSameUK || isSameUS || isSameEU) {
+      if (
+        isSameAfrica ||
+        isSameUK ||
+        isSameUS ||
+        isSameEU ||
+        isSameInternational
+      ) {
         throw new BadRequestError("Primary withdrawal account already exists");
       }
     }

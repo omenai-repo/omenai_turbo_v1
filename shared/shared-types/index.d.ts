@@ -706,13 +706,20 @@ export interface EUWithdrawalAccount extends BaseWithdrawalAccount {
   swift_code: string;
   bank_name?: string;
 }
+export interface InternationalWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "international";
+  iban: string;
+  swift_code: string;
+  bank_name?: string;
+}
 
 // The exported type your app will actually use
 export type WithdrawalAccount =
   | AfricanWithdrawalAccount
   | UKWithdrawalAccount
   | EUWithdrawalAccount
-  | USWithdrawalAccount;
+  | USWithdrawalAccount
+  | InternationalWithdrawalAccount;
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;
