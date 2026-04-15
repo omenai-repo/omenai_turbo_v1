@@ -9,24 +9,24 @@ import Footer from "@omenai/shared-ui-components/components/footer/Footer";
 import JournalCard from "./components/JournalCard";
 import FeaturedJournalEntry from "./components/FeaturedJournalEntry";
 import { Models } from "appwrite";
+import { editorial_database } from "@omenai/appwrite-config/appwrite";
 
 export default function ArticleWrapper() {
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["fetch_admin_editorials"],
+  const { data, isLoading } = useQuery({
+    queryKey: ["fetch_editorials"],
     queryFn: async () => {
-      const response = await listEditorials();
-      if (!response.isOk) {
-        toast_notif(
-          "Error fetching editorial list, please refresh or contact IT support",
-          "error",
-        );
-        return [];
-      }
-      return response.data;
+      const response = await editorial_database.listRows({
+        databaseId: process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_DATABASE_ID!,
+        tableId: process.env.NEXT_PUBLIC_APPWRITE_EDITORIAL_COLLECTION_ID!,
+      });
+
+      if (response?.rows) {
+        return response.rows;
+      } else throw new Error("Something went wrong");
     },
+    refetchOnWindowFocus: false,
     staleTime: 30 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
 
@@ -35,9 +35,12 @@ export default function ArticleWrapper() {
   // Cast to ensure type safety
   const editorials = (Array.isArray(data) ? data : []) as Models.DefaultRow[];
 
-  // LOGIC: Separate the newest story from the rest
-  const featuredStory = editorials[0];
-  const recentStories = editorials.slice(1);
+  // LOGIC: Sort by creation date descending, then separate latest from the rest
+  const sorted = [...editorials].sort(
+    (a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime(),
+  );
+  const featuredStory = sorted[0];
+  const recentStories = sorted.slice(1);
 
   if (editorials.length === 0)
     return (
