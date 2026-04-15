@@ -60,21 +60,25 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       const planType = active_subscription.plan_details.type?.toLowerCase();
 
       const rateMap: Record<string, number> = {
-        premium: 0.15,
-        pro: 0.2,
-        basic: 0.25,
+        principal: 0.15,
+        gallery: 0.2,
+        foundation: 0.25,
       };
-      const commissionRate = rateMap[planType] ?? rateMap.basic;
+      const commissionRate =
+        Number(meta.unit_price) >= 10000
+          ? 0.1
+          : (rateMap[planType] ?? rateMap.foundation);
 
+      const baseAmountCents = Math.round(amount * 100);
       const commissionCents = Math.round(
-        (meta.unit_price * commissionRate +
-          meta.shipping_cost +
-          meta.tax_fees) *
+        (Number(meta.unit_price) * commissionRate +
+          Number(meta.shipping_cost) +
+          Number(meta.tax_fees)) *
           100,
       );
 
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100),
+        amount: baseAmountCents,
         currency: "usd",
         metadata: {
           ...meta,

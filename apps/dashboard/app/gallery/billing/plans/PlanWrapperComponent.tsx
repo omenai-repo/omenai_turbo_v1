@@ -43,36 +43,44 @@ export default function Plans() {
     refetchOnWindowFocus: false,
   });
 
-  // Early return happens AFTER all hooks
+  // Early return AFTER all hooks (original ordering preserved)
   if (!isSubscriptionBillingEnabled) {
     return <SubscriptionBillingBlocker />;
   }
+  // ── END ORIGINAL LOGIC ──────────────────────────────────────────
 
   const { data, isLoading } = query;
 
   return (
-    <div>
+    <div className="min-h-screen w-full flex flex-col">
       <PageTitle title="Pricing plans" />
+
       {isLoading ? (
-        <div className="h-[75vh] w-full grid place-items-center">
+        <div className="flex-1 w-full grid place-items-center">
           <Load />
         </div>
       ) : (
-        <>
-          <div className=" text-center">
-            <p className="text-fluid-base leading-4 text-[#858585] ">
-              Choose your plan
-            </p>
-            <h1 className="text-fluid-xl font-bold leading-10 mt-3 text-dark">
-              Our pricing plans
-            </h1>
+        <div className="flex flex-col flex-1 w-full">
+          {/* ── Page header ──────────────────────────────────────── */}
+          <div className="px-4 py-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+            <div>
+              <p className="text-[10px] tracking-[0.25em] uppercase text-[#A8A09A] mb-2">
+                Subscription
+              </p>
+              {/* Original text: "Choose your plan" / "Our pricing plans" */}
+              <h1 className="text-3xl sm:text-4xl font-light text-dark leading-snug">
+                Choose your plan
+              </h1>
+            </div>
           </div>
+
+          {/* ── Plan wrapper ─────────────────────────────────────── */}
           <PlanWrapper
             plans={data?.plans}
             sub_data={data?.sub}
             discount={data?.discount}
           />
-        </>
+        </div>
       )}
     </div>
   );

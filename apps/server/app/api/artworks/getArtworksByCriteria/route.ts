@@ -29,7 +29,6 @@ export const POST = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       );
       const skip = (page - 1) * PAGE_SIZE;
 
-      // Fetch gallery IDs for basic and pro/premium plans
       const galleries = await getCachedGalleryIds();
 
       // Build filters for artworks

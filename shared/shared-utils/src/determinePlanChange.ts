@@ -6,9 +6,9 @@ type PlanChangeResult = {
 };
 
 const planTiers = {
-  premium: { monthlyPrice: 250, yearlyPrice: 2400 },
-  pro: { monthlyPrice: 150, yearlyPrice: 1440 },
-  basic: { monthlyPrice: 75, yearlyPrice: 720 },
+  principal: { monthlyPrice: 500, yearlyPrice: 5100 },
+  gallery: { monthlyPrice: 250, yearlyPrice: 2550 },
+  foundation: { monthlyPrice: 150, yearlyPrice: 1530 },
 };
 
 export function determinePlanChange(
@@ -21,7 +21,7 @@ export function determinePlanChange(
   const currentPlanData = planTiers[currentPlan as keyof typeof planTiers];
   const currentPrice = currentPlanData[`${currentInterval}Price`];
 
-  const planOrder = ["basic", "pro", "premium"];
+  const planOrder = ["foundation", "gallery", "principal"];
   const currentPlanIndex = planOrder.indexOf(currentPlan);
   const newPlanIndex = planOrder.findIndex(
     (plan) =>

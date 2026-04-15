@@ -70,7 +70,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
           active: false,
           discount: {
             active: true,
-            plan: "pro",
+            plan: "gallery",
           },
         };
       },

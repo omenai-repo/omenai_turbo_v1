@@ -1,28 +1,27 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { ObjectId } from "mongoose";
-import { determinePlanChange } from "@omenai/shared-utils/src/determinePlanChange";
 import { useSearchParams } from "next/navigation";
+import { determinePlanChange } from "@omenai/shared-utils/src/determinePlanChange";
 import {
-  SubscriptionPlanDataTypes,
   SubscriptionModelSchemaTypes,
-  WaitListTypes,
+  SubscriptionPlanDataTypes,
 } from "@omenai/shared-types";
-import React from "react";
 
-/* ----------------------------- CONFIG (unchanged) ----------------------------- */
+/* ----------------------------- CONFIG & HELPERS ----------------------------- */
 
-const PLAN_DESCRIPTIONS = {
-  Basic: "Essential features to get started",
-  Pro: "Perfect for growing businesses",
-  Premium: "Advanced features for scale",
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  USD: "$",
+  GBP: "£",
+  EUR: "€",
+  NGN: "₦",
 };
 
+// RESTORED: Yearly savings calculator
 const calculateYearlySavings = (monthlyPrice: string, annualPrice: string) =>
   (Number(monthlyPrice) * 12 - Number(annualPrice)).toFixed(0);
-
-/* ----------------------------- HELPERS (unchanged) ----------------------------- */
 
 const getPlanChangeParams = (
   subData: SubscriptionModelSchemaTypes | null,
@@ -83,28 +82,27 @@ const isButtonDisabled = (
 
 /* ----------------------------- UI ATOMS ----------------------------- */
 
-const PlanBadge = ({ planName }: { planName: string }) =>
-  planName === "Pro" ? (
-    <div className="absolute top-5 right-5 rounded bg-emerald-600 px-3 py-1 text-xs font-medium text-white">
-      Most popular
-    </div>
-  ) : null;
-
-/*  UPDATED Forfeit Warning — Reflects the 2-month offer */
 const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
-  <div className="mb-4 rounded bg-amber-50 border border-amber-200 p-3">
+  <div className="mb-8 rounded bg-amber-50 border border-amber-200 p-3">
     <div className="flex gap-2">
       <span className="text-amber-600">⚠️</span>
       <p className="text-[11px] leading-relaxed font-medium text-amber-800">
         Selecting this plan will <span className="font-bold">forfeit</span> your
-        one-time <span className="font-bold">2-month free trial</span> on the
+        one-time <span className="font-bold">1-month free trial</span> on the
         monthly <span className="capitalize font-bold">{targetPlan}</span> plan.
       </p>
     </div>
   </div>
 );
 
-/* ----------------------------- COMPONENT ----------------------------- */
+/* ----------------------------- MAIN COMPONENT ----------------------------- */
+
+interface PlanProps extends SubscriptionPlanDataTypes {
+  tab: "monthly" | "yearly";
+  id: ObjectId;
+  sub_data: SubscriptionModelSchemaTypes;
+  discount: boolean;
+}
 
 export default function Plan({
   name,
@@ -115,122 +113,202 @@ export default function Plan({
   id,
   sub_data,
   discount,
-}: SubscriptionPlanDataTypes & {
-  tab: "monthly" | "yearly";
-  id: ObjectId;
-  sub_data: SubscriptionModelSchemaTypes;
-  discount: boolean;
-}) {
+  currency = "USD",
+}: PlanProps) {
   const searchParams = useSearchParams();
   const plan_action = searchParams.get("plan_action");
 
+  // Routing and button logic
   const plan_change_params = getPlanChangeParams(sub_data, tab, pricing);
   const buttonText = getButtonText(sub_data, plan_action, name, tab);
   const isDisabled = isButtonDisabled(sub_data, name, tab, plan_action);
 
-  const isFeatured = name === "Pro";
+  // Link styling prop correctly
+  const dark = name === "Gallery";
 
-  /* -------------------- DISCOUNT CHECK -------------------- */
-  // Logic remains the same, but the UI presentation changes below
+  // Discount logic
   const isEligibleForDiscount =
-    discount && name.toLowerCase() === "pro" && tab === "monthly";
-
+    discount && name.toLowerCase() === "gallery" && tab === "monthly";
   const showForfeitWarning = discount && !isEligibleForDiscount;
-
-  //  UPDATED: CTA text specific to the 2-month offer
   const finalButtonText =
-    isEligibleForDiscount && !isDisabled ? "Claim 2 months free" : buttonText;
+    isEligibleForDiscount && !isDisabled ? "Claim 1 month free" : buttonText;
+
+  // Correct pricing parsing
+  const basePrice = isEligibleForDiscount
+    ? 0
+    : tab === "monthly"
+      ? Number(pricing.monthly_price)
+      : Number(pricing.annual_price);
+
+  const symbol = CURRENCY_SYMBOLS[currency] ?? currency;
+  const formattedPrice = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(basePrice);
+
+  // Correct benefits parsing
+  const benefitList = tab === "monthly" ? benefits.monthly : benefits.annual;
 
   return (
-    <div className="relative mx-auto w-full max-w-sm">
+    <div
+      className={`
+        relative flex flex-col h-full px-8 py-10 lg:px-10 xl:px-14 xl:py-14
+        transition-colors duration-200
+        ${dark ? "bg-dark text-white" : "bg-white text-dark hover:bg-[#FAFAF8]"}
+      `}
+    >
+      {/* ── Label row ── */}
+      <div className="flex-none flex items-center justify-between mb-8">
+        <span
+          className={`text-[10px] tracking-[0.25em] uppercase ${
+            dark ? "text-white/40" : "text-[#A8A09A]"
+          }`}
+        >
+          {name}
+        </span>
+
+        {dark && (
+          <span
+            className={`text-[9px] tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border ${
+              dark
+                ? "border-white/15 text-white/45"
+                : "border-[#C8C2BB] text-[#A8A09A]"
+            }`}
+          >
+            Popular
+          </span>
+        )}
+      </div>
+
+      {/* ── Thin rule ── */}
       <div
-        className={`relative rounded bg-white p-8 transition ${
-          isFeatured
-            ? `shadow-xl ring-2  ${isEligibleForDiscount ? "ring-emerald-600" : "ring-slate-900"}`
-            : "shadow-sm ring-1 ring-slate-200"
-        }`}
-      >
-        <div className="w-full flex justify-between items-center">
-          <PlanBadge planName={name} />
+        className={`flex-none h-px mb-8 ${dark ? "bg-white/10" : "bg-[#EBE7E2]"}`}
+      />
+
+      {/* ── Price block ── */}
+      <div className="flex-none mb-8">
+        <div className="flex items-baseline leading-none gap-0.5">
+          <span
+            className={`text-[11px] tracking-wider mr-0.5 ${
+              dark ? "text-white/40" : "text-[#B0A898]"
+            }`}
+          >
+            {symbol}
+          </span>
+          <span
+            className={`text-6xl xl:text-7xl font-extralight tracking-tight ${
+              dark ? "text-white" : "text-dark"
+            }`}
+            style={{ lineHeight: 1 }}
+          >
+            {formattedPrice}
+          </span>
         </div>
 
-        {/* Header */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
-          <p className="mt-1 text-sm text-slate-500">
-            {PLAN_DESCRIPTIONS[name as keyof typeof PLAN_DESCRIPTIONS]}
+        <div className="flex items-center gap-2 mt-3">
+          <p
+            className={`text-xs tracking-wide ${
+              dark ? "text-white/30" : "text-[#B8B0A8]"
+            }`}
+          >
+            {isEligibleForDiscount
+              ? "for 1 month"
+              : `per ${tab === "monthly" ? "month" : "year"}`}
           </p>
+
+          {(discount || isEligibleForDiscount) && (
+            <span
+              className={`text-[9px] tracking-[0.15em] uppercase px-2 py-0.5 rounded ${
+                dark
+                  ? "bg-white/8 text-white/40"
+                  : "bg-[#F0EDE8] text-[#9C8E7A]"
+              }`}
+            >
+              {isEligibleForDiscount ? "One-time offer" : "Discount applied"}
+            </span>
+          )}
+
+          {/* RESTORED: Yearly Savings Badge */}
+          {!isEligibleForDiscount && tab === "yearly" && (
+            <span
+              className={`text-[9px] tracking-[0.15em] uppercase px-2 py-0.5 rounded ${
+                dark
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "bg-emerald-50 text-emerald-600"
+              }`}
+            >
+              Save {symbol}
+              {calculateYearlySavings(
+                pricing.monthly_price,
+                pricing.annual_price,
+              )}
+            </span>
+          )}
         </div>
 
-        {/* Pricing */}
-        <div className="mb-8">
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-semibold text-slate-900">
-              $
-              {isEligibleForDiscount
-                ? "0"
-                : tab === "monthly"
-                  ? pricing.monthly_price
-                  : pricing.annual_price}
-            </span>
+        {/* RESTORED: Post-discount monthly price text */}
+        {isEligibleForDiscount && (
+          <p
+            className={`mt-3 text-[10px] tracking-wider uppercase ${dark ? "text-emerald-400" : "text-emerald-600"}`}
+          >
+            Then {symbol}
+            {pricing.monthly_price}/mo
+          </p>
+        )}
+      </div>
 
-            {/*  UPDATED: Sub-text for pricing unit */}
-            <span className="text-sm text-slate-500">
-              {isEligibleForDiscount
-                ? "/mo for 2 months"
-                : `/${tab === "monthly" ? "month" : "year"}`}
+      {/* ── Thin rule ── */}
+      <div
+        className={`flex-none h-px mb-8 ${dark ? "bg-white/10" : "bg-[#EBE7E2]"}`}
+      />
+
+      {/* ── Benefits list ── */}
+      <div className="flex-1 space-y-[18px] mb-8">
+        {benefitList.map((benefit, i) => (
+          <div key={i} className="flex items-start gap-3.5">
+            <span
+              className={`flex-none mt-[5px] w-1 h-1 rounded-full ${
+                dark ? "bg-white/30" : "bg-[#C0B8B0]"
+              }`}
+            />
+            <span
+              className={`text-[13px] leading-relaxed ${
+                dark ? "text-white/55" : "text-[#6E6760]"
+              }`}
+            >
+              {benefit}
             </span>
           </div>
+        ))}
+      </div>
 
-          {/*  UPDATED: Green Pricing Benefits Text */}
-          {isEligibleForDiscount ? (
-            <p className="mt-1 text-xs font-medium text-emerald-600">
-              Then ${pricing.monthly_price}/mo · One-time offer
-            </p>
-          ) : (
-            tab === "yearly" && (
-              <p className="mt-1 text-xs font-medium text-emerald-600">
-                Save $
-                {calculateYearlySavings(
-                  pricing.monthly_price,
-                  pricing.annual_price,
-                )}{" "}
-                yearly
-              </p>
-            )
-          )}
-        </div>
+      {/* Forfeit Warning UI */}
+      {showForfeitWarning && <ForfeitWarning targetPlan={"gallery"} />}
 
-        {/* Features */}
-        <div className="mb-8 space-y-3">
-          {(tab === "monthly" ? benefits.monthly : benefits.annual).map(
-            (benefit) => (
-              <div key={benefit} className="flex gap-3 text-sm text-slate-600">
-                <span className="mt-1 h-1.5 w-1.5 rounded bg-slate-900" />
-                {benefit}
-              </div>
-            ),
-          )}
-        </div>
-
-        {/* Forfeit Warning UI */}
-        {showForfeitWarning && <ForfeitWarning targetPlan={"pro"} />}
-
-        {/* CTA */}
+      {/* ── CTA ── */}
+      <div className="flex-none mt-auto">
         <Link
           href={`/gallery/billing/plans/checkout?plan_id=${plan_id}&interval=${tab}&id=${id}&action=${
             sub_data === null ? null : plan_change_params.action
           }&plan_action=${plan_action}`}
+          className={isDisabled ? "pointer-events-none" : ""}
         >
           <button
+            type="button"
             disabled={isDisabled}
-            className={`w-full rounded py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 
+            className={`
+              w-full py-4 text-[11px] tracking-[0.2em] uppercase
+              transition-all duration-200 active:scale-[0.98]
               ${
-                isFeatured
-                  ? `text-white ${isEligibleForDiscount ? "ring-emerald-600 bg-emerald-600 hover:bg-emerald-500 focus:ring-slate-600" : "bg-slate-900 hover:bg-slate-800 focus:ring-slate-900"}`
-                  : "bg-slate-900 text-white hover:bg-slate-700 focus:ring-slate-700"
+                isDisabled
+                  ? dark
+                    ? "bg-white/6 text-white/25 cursor-not-allowed"
+                    : "bg-dark/5 text-dark/20 cursor-not-allowed border border-dark/8"
+                  : dark
+                    ? "bg-white text-dark hover:bg-white/90"
+                    : "border border-dark text-dark hover:bg-dark hover:text-white"
               }
-              disabled:cursor-not-allowed disabled:opacity-50`}
+            `}
           >
             {finalButtonText}
           </button>

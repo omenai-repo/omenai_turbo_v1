@@ -174,7 +174,7 @@ async function processSubscriptionSuccess(
         );
       }
 
-      const expiryDate = getSubscriptionExpiryDate("monthly", 2);
+      const expiryDate = getSubscriptionExpiryDate("monthly", 1);
       const payment_ref = `discount:${stripeCustomerId}:${planId}`;
 
       const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> =

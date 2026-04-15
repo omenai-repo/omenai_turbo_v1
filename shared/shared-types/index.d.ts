@@ -145,11 +145,11 @@ export type GallerySchemaTypes = {
 };
 
 type SubscriptionStatus = {
-  type: "basic" | "premium" | "pro" | null;
+  type: "foundation" | "principal" | "gallery" | null;
   active: boolean;
   discount: {
     active: boolean;
-    plan: "pro";
+    plan: "gallery";
   };
 };
 
