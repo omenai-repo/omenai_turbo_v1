@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(yarn workspace:*)"
+      "Bash(yarn workspace:*)",
+      "Bash(npx vitest:*)"
     ]
   }
 }

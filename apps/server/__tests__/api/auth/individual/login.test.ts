@@ -1,11 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// ─── Mocks must be declared before the route import ───────────────────────────
+// mocks must be declared before the route import
 
-/**
- * Strip the middleware wrapper so POST is just the raw async handler.
- * withRateLimitHighlightAndCsrf(rateLimit)(handler) → handler
- */
 vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
   withRateLimitHighlightAndCsrf: () => (fn: any) => fn,
 }));
@@ -14,7 +10,6 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   strictRateLimit: {},
 }));
 
-/** Replace NextResponse.json with a standard Response so we can call .json() */
 vi.mock("next/server", () => ({
   NextResponse: {
     json: (body: unknown, init?: ResponseInit) =>
@@ -25,29 +20,24 @@ vi.mock("next/server", () => ({
   },
 }));
 
-/** cookies() returns a minimal cookie store – we don't inspect cookies in tests */
 vi.mock("next/headers", () => ({
   cookies: vi.fn().mockResolvedValue({}),
 }));
 
-/** No real DB connections */
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
 
-/** Mock the Mongoose model – we control what findOne() returns per test */
 vi.mock("@omenai/shared-models/models/auth/IndividualSchema", () => ({
   AccountIndividual: {
     findOne: vi.fn(),
   },
 }));
 
-/** bcrypt default export – compareSync is the only method the route uses */
 vi.mock("bcrypt", () => ({
   default: { compareSync: vi.fn() },
 }));
 
-/** Session helpers */
 vi.mock("@omenai/shared-lib/auth/session", () => ({
   createSession: vi.fn().mockResolvedValue("mock-session-id"),
   getSessionFromCookie: vi.fn().mockResolvedValue({
@@ -56,14 +46,12 @@ vi.mock("@omenai/shared-lib/auth/session", () => ({
   }),
 }));
 
-/** Soft-delete cleanup – not the focus of login tests */
 vi.mock("@omenai/shared-models/models/deletion/DeletionRequestSchema", () => ({
   DeletionRequestModel: {
     deleteOne: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
-/** Push-token persistence – only exercised in mobile tests */
 vi.mock(
   "@omenai/shared-models/models/device_management/DeviceManagementSchema",
   () => ({
@@ -73,25 +61,15 @@ vi.mock(
   }),
 );
 
-/** Analytics enrichment – side-effect we don't need to assert on */
 vi.mock("@omenai/shared-lib/analytics/extractTrackingData", () => ({
   enrichRegistrationTracking: vi.fn(),
 }));
 
-/** Suppress Rollbar error reporting in tests */
 vi.mock("@omenai/rollbar-config", () => ({
   rollbarServerInstance: { error: vi.fn() },
 }));
 
-/**
- * Mock the api/util barrel:
- *  - validateRequestBody: re-implement the real zod-parsing logic so that
- *    invalid-body tests still return 400 without importing the full util module
- *    (which depends on Stripe, DHL, Rollbar, etc.)
- *  - createErrorRollbarReport: no-op
- */
 vi.mock("../../../../app/api/util", () => {
-  // Inline BadRequestError so the errorHandler can map it to 400
   class BadRequestError extends Error {
     constructor(message: string) {
       super(message);
@@ -125,8 +103,6 @@ vi.mock("../../../../app/api/util", () => {
   };
 });
 
-// ─── Route import (after all mocks are registered) ────────────────────────────
-
 import { POST } from "../../../../app/api/auth/individual/login/route";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import bcrypt from "bcrypt";
@@ -134,8 +110,6 @@ import {
   createSession,
   getSessionFromCookie,
 } from "@omenai/shared-lib/auth/session";
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function makeRequest(
   body: object,
@@ -148,7 +122,6 @@ function makeRequest(
   });
 }
 
-/** A realistic user document returned by Mongoose */
 const mockUser = {
   user_id: "user-abc-123",
   name: "Test User",
@@ -161,9 +134,6 @@ const mockUser = {
   registration_tracking: {},
 };
 
-/**
- * Helper: wire up AccountIndividual.findOne so .select().exec() resolves to `value`.
- */
 function mockFindOne(value: typeof mockUser | null) {
   const chain = {
     select: vi.fn().mockReturnThis(),
@@ -172,25 +142,19 @@ function mockFindOne(value: typeof mockUser | null) {
   vi.mocked(AccountIndividual.findOne).mockReturnValue(chain as any);
 }
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
-
 describe("POST /api/auth/individual/login", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  // ── Web (browser) login ────────────────────────────────────────────────────
-
-  describe("web login (browser client)", () => {
+  describe("web login", () => {
     it("returns 200 with session data for valid credentials", async () => {
       mockFindOne(mockUser);
       vi.mocked(bcrypt.compareSync).mockReturnValue(true as never);
 
-      const request = makeRequest({
-        email: "test@example.com",
-        password: "password123",
-      });
-      const response = await POST(request);
+      const response = await POST(
+        makeRequest({ email: "test@example.com", password: "password123" }),
+      );
       const body = await response.json();
 
       expect(response.status).toBe(200);
@@ -215,8 +179,8 @@ describe("POST /api/auth/individual/login", () => {
       expect(mockSave).toHaveBeenCalledOnce();
     });
 
-    it("returns 409 when user is not found in the database", async () => {
-      mockFindOne(null); // simulate no user record
+    it("returns 409 when user is not found", async () => {
+      mockFindOne(null);
       vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
 
       const response = await POST(
@@ -228,9 +192,9 @@ describe("POST /api/auth/individual/login", () => {
       expect(body.message).toBe("Invalid credentials");
     });
 
-    it("returns 409 when the password does not match", async () => {
+    it("returns 409 when password does not match", async () => {
       mockFindOne(mockUser);
-      vi.mocked(bcrypt.compareSync).mockReturnValue(false as never); // wrong password
+      vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
 
       const response = await POST(
         makeRequest({ email: "test@example.com", password: "wrongpassword" }),
@@ -241,10 +205,8 @@ describe("POST /api/auth/individual/login", () => {
       expect(body.message).toBe("Invalid credentials");
     });
 
-    it("returns 400 when email is missing from the request body", async () => {
-      const response = await POST(
-        makeRequest({ password: "password123" }), // no email
-      );
+    it("returns 400 when email is missing", async () => {
+      const response = await POST(makeRequest({ password: "password123" }));
       const body = await response.json();
 
       expect(response.status).toBe(400);
@@ -261,9 +223,9 @@ describe("POST /api/auth/individual/login", () => {
       expect(body.message).toMatch(/Validation Failed/i);
     });
 
-    it("returns 400 when password is missing from the request body", async () => {
+    it("returns 400 when password is missing", async () => {
       const response = await POST(
-        makeRequest({ email: "test@example.com" }), // no password
+        makeRequest({ email: "test@example.com" }),
       );
       const body = await response.json();
 
@@ -272,9 +234,7 @@ describe("POST /api/auth/individual/login", () => {
     });
   });
 
-  // ── Mobile app login ───────────────────────────────────────────────────────
-
-  describe("mobile login (mobile app client)", () => {
+  describe("mobile login", () => {
     const MOBILE_USER_AGENT = "OmenaiApp/1.0";
     const MOBILE_ACCESS_KEY = "test-mobile-key";
 
@@ -283,7 +243,7 @@ describe("POST /api/auth/individual/login", () => {
       process.env.MOBILE_ACCESS_KEY = MOBILE_ACCESS_KEY;
     });
 
-    it("returns access_token in response body instead of setting a cookie", async () => {
+    it("returns access_token in response body instead of a cookie", async () => {
       mockFindOne(mockUser);
       vi.mocked(bcrypt.compareSync).mockReturnValue(true as never);
       vi.mocked(createSession).mockResolvedValue("mobile-session-token");
@@ -303,7 +263,7 @@ describe("POST /api/auth/individual/login", () => {
       expect(body.data.access_token).toBe("mobile-session-token");
     });
 
-    it("does NOT call getSessionFromCookie for mobile logins", async () => {
+    it("does not call getSessionFromCookie for mobile logins", async () => {
       mockFindOne(mockUser);
       vi.mocked(bcrypt.compareSync).mockReturnValue(true as never);
 
@@ -346,10 +306,9 @@ describe("POST /api/auth/individual/login", () => {
       const response = await POST(
         makeRequest(
           { email: "test@example.com", password: "password123" },
-          { "User-Agent": MOBILE_USER_AGENT }, // no X-Access-Key
+          { "User-Agent": MOBILE_USER_AGENT },
         ),
       );
-      const body = await response.json();
 
       expect(response.status).toBe(403);
     });
