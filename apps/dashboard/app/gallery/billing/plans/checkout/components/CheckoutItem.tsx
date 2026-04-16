@@ -28,11 +28,8 @@ export default function CheckoutItem({
       ? Number(plan.pricing.monthly_price)
       : Number(plan.pricing.annual_price);
 
-  // If discount is eligible (and it's the 2-month specific offer),
-  // we calculate the "Display Value" as 2 months worth of cost.
-  // Otherwise, we just show the standard single interval cost.
   const displayBasePrice = discountEligible
-    ? singleIntervalPrice * 2
+    ? singleIntervalPrice
     : singleIntervalPrice;
 
   const displayDiscountAmount = discountEligible ? displayBasePrice : 0;
@@ -55,7 +52,7 @@ export default function CheckoutItem({
           <div className="space-y-4">
             {discountEligible && (
               <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded">
-                2 Months Free
+                1 Month Free
               </span>
             )}
             <h1 className="text-xl md:text-2xl lg:text-2xl font-bold leading-[1.1]">
@@ -103,7 +100,7 @@ export default function CheckoutItem({
             <div className="flex justify-between text-sm text-gray-400">
               <span>
                 {plan.name} Plan{" "}
-                {discountEligible ? "(2 Months Value)" : `(${interval})`}
+                {discountEligible ? "(1 Month Value)" : `(${interval})`}
               </span>
               <span>{formatPrice(displayBasePrice, currency)}</span>
             </div>
@@ -112,7 +109,7 @@ export default function CheckoutItem({
             {discountEligible && (
               <div className="flex justify-between text-emerald-400 font-medium">
                 <div className="flex text-fluid-xxs gap-x-2 items-center">
-                  <span>2 Months Free</span>
+                  <span>1 Month Free</span>
                   <span className="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded uppercase tracking-tighter">
                     100% OFF
                   </span>
@@ -129,7 +126,7 @@ export default function CheckoutItem({
                 </p>
                 {discountEligible ? (
                   <p className="text-xs text-emerald-400 mt-1">
-                    First 2 months free, then{" "}
+                    First month free, then{" "}
                     {formatPrice(singleIntervalPrice, currency)}/mo
                   </p>
                 ) : (
@@ -177,7 +174,7 @@ export default function CheckoutItem({
               Provide your payment details to activate your gallery
               subscription.{" "}
               {discountEligible
-                ? "You won't be charged for the first 2 months."
+                ? "You won't be charged for the first month."
                 : ""}
             </p>
           </header>

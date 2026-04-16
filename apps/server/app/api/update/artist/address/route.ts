@@ -48,6 +48,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       Schema,
     );
 
+    const artist = await AccountArtist.findOne({ artist_id }, "address");
+
+    if (!artist) {
+      throw new BadRequestError("Artist not found");
+    }
+
+    const isCountryChange = artist.address.countryCode !== address.countryCode;
+
     const payload: ShipmentAddressValidationType = {
       type: "pickup",
       countryCode: address.countryCode,
@@ -56,16 +64,24 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       countyName: address.city,
       country: address.country,
     };
+
     await validateDHLAddress(payload);
 
     const updatedData = await AccountArtist.updateOne(
       { artist_id },
-      { $set: { address, base_currency } },
+      { $set: { address, ...(isCountryChange && { base_currency }) } },
     );
 
     await Wallet.updateOne(
       { owner_id: artist_id },
-      { $set: { base_currency } },
+      {
+        $set: {
+          ...(isCountryChange && {
+            primary_withdrawal_account: null,
+            base_currency,
+          }),
+        },
+      },
     );
 
     if (!updatedData) throw new ServerError("An unexpected error has occured.");

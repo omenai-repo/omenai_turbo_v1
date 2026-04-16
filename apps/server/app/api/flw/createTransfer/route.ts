@@ -88,13 +88,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     if (primaryAccount.type === "uk") SOURCE_CURRENCY = "GBP";
     if (primaryAccount.type === "eu") SOURCE_CURRENCY = "EUR";
+    if (primaryAccount.type === "us") SOURCE_CURRENCY = "USD";
+    if (primaryAccount.type === "international") SOURCE_CURRENCY = "USD";
 
     // 3. DYNAMIC FX CONVERSION (USD -> LOCAL)
     let final_transfer_amount = amount;
 
     if (DESTINATION_CURRENCY !== SOURCE_CURRENCY) {
       try {
-        // We ask FLW: "I have {amount} USD. How much {DESTINATION_CURRENCY} will that buy?"
         const rateResponse = await fetch(
           `https://api.flutterwave.com/v3/transfers/rates?amount=${amount}&destination_currency=${DESTINATION_CURRENCY}&source_currency=${SOURCE_CURRENCY}`,
           {
@@ -170,7 +171,23 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
           url: `${getApiUrl()}/api/webhook/flw-transfer`,
         },
       ];
-    } else if (primaryAccount.type === "eu") {
+    } else if (primaryAccount.type === "us") {
+      payload.beneficiary_name = primaryAccount.account_name;
+      payload.meta = [
+        {
+          account_number: primaryAccount.account_number,
+          routing_number: primaryAccount.routing_number,
+          bank_name: primaryAccount.bank_name || "US Bank",
+          beneficiary_name: primaryAccount.account_name,
+          beneficiary_country: "US",
+          wallet_id: wallet_id,
+          url: `${getApiUrl()}/api/webhook/flw-transfer`,
+        },
+      ];
+    } else if (
+      primaryAccount.type === "eu" ||
+      primaryAccount.type === "international"
+    ) {
       payload.beneficiary_name = primaryAccount.account_name;
       payload.meta = [
         {
@@ -234,11 +251,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       {
         $setOnInsert: {
           wallet_id,
-          trans_amount: amount, // Logs the GBP/EUR amount FLW processed
+          trans_amount: amount,
           trans_status: "PENDING",
           trans_date: date_obj,
           trans_flw_ref_id: result.data.id,
           reference: transaction_ref,
+          beneficiary_details: primaryAccount,
         },
       },
       { upsert: true },

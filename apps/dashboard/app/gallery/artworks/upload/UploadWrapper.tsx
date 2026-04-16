@@ -3,20 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import NoSubscriptionBlock from "../../components/NoSubscriptionBlock";
 import NoVerificationBlock from "../../components/NoVerificationBlock";
 import UploadArtworkDetails from "./features/UploadArtworkDetails";
-
 import { useRouter } from "next/navigation";
 import { checkIsStripeOnboarded } from "@omenai/shared-services/stripe/checkIsStripeOnboarded";
 import { getAccountId } from "@omenai/shared-services/stripe/getAccountId";
 import { retrieveSubscriptionData } from "@omenai/shared-services/subscriptions/retrieveSubscriptionData";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { handleError } from "@omenai/shared-utils/src/handleQueryError";
-import { auth_uri } from "@omenai/url-config/src/config";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { useRollbar } from "@rollbar/react";
 
 export default function UploadArtwork() {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const rollbar = useRollbar();
+  const porEligible = ["gallery", "principal"];
 
   const router = useRouter();
 
@@ -43,9 +42,9 @@ export default function UploadArtwork() {
           isSubmitted: response.details_submitted,
           id: acc.data.connected_account_id,
           isSubActive: sub_check?.data?.status === "active",
-          isPremium:
-            sub_check?.data?.plan_details.type.toLowerCase() === "premium" ||
-            false,
+          isPremium: porEligible.includes(
+            sub_check?.data?.plan_details.type.toLowerCase(),
+          ),
         };
       } catch (error) {
         if (error instanceof Error) {

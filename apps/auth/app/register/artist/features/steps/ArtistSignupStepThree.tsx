@@ -24,10 +24,6 @@ export default function ArtistSignUpStepThree() {
               buttonText="Continue"
               labelText={form_step.labelText}
               onChange={handleChange}
-              disabled={
-                form_step.labelText === "confirmPassword" &&
-                isFieldDirty.password
-              }
             />
           </div>
         );

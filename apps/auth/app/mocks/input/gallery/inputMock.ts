@@ -41,8 +41,8 @@ export const gallery_signup_step_two = [
   },
   {
     label: "City",
-    type: "select",
-    placeholder: "Select option",
+    type: "text",
+    placeholder: "Provide your city of operation",
     labelText: "city",
   },
   {

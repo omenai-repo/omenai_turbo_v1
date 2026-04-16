@@ -168,13 +168,13 @@ export default function GalleriesTerms() {
             </p>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li className="text-gray-700">
-                <strong>Basic Tier:</strong> 25% commission per sale
+                <strong>Foundation Tier:</strong> 25% commission per sale
               </li>
               <li className="text-gray-700">
-                <strong>Pro Tier:</strong> 20% commission per sale
+                <strong>Gallery Tier:</strong> 20% commission per sale
               </li>
               <li className="text-gray-700">
-                <strong>Premium Tier:</strong> 15% commission per sale
+                <strong>Principal Tier:</strong> 15% commission per sale
               </li>
             </ul>
             <p className="text-gray-700 mb-2">

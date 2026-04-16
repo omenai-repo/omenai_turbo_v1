@@ -145,11 +145,11 @@ export type GallerySchemaTypes = {
 };
 
 type SubscriptionStatus = {
-  type: "basic" | "premium" | "pro" | null;
+  type: "foundation" | "principal" | "gallery" | null;
   active: boolean;
   discount: {
     active: boolean;
-    plan: "pro";
+    plan: "gallery";
   };
 };
 
@@ -657,6 +657,7 @@ export type WalletTransactionModelSchemaTypes = {
   trans_date: { year: number; month: number; day: number };
   trans_id: string;
   trans_flw_ref_id: string;
+  beneficiary_details: WithdrawalAccount; // TODO: Define a more specific type for beneficiary details based on the expected structure from Flutterwave. This can help with data integrity and make it easier to work with these details in the future.
 };
 
 export type WalletTransactionStatusTypes =
@@ -672,7 +673,14 @@ interface BaseWithdrawalAccount {
   beneficiary_id: number;
   flutterwave_recipient_id?: string;
 }
-
+export interface USWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "us";
+  account_number: string;
+  routing_number: string;
+  bank_name?: string;
+  account_name: string;
+  bank_country: string;
+}
 // 1. Africa Variant
 export interface AfricanWithdrawalAccount extends BaseWithdrawalAccount {
   type: "africa";
@@ -698,12 +706,20 @@ export interface EUWithdrawalAccount extends BaseWithdrawalAccount {
   swift_code: string;
   bank_name?: string;
 }
+export interface InternationalWithdrawalAccount extends BaseWithdrawalAccount {
+  type: "international";
+  iban: string;
+  swift_code: string;
+  bank_name?: string;
+}
 
 // The exported type your app will actually use
 export type WithdrawalAccount =
   | AfricanWithdrawalAccount
   | UKWithdrawalAccount
-  | EUWithdrawalAccount;
+  | EUWithdrawalAccount
+  | USWithdrawalAccount
+  | InternationalWithdrawalAccount;
 
 export type PurchaseTransactionModelSchemaTypes = {
   trans_id: string;
@@ -1881,4 +1897,11 @@ export interface EngagementTrendItem {
   requests: number;
   views: number;
   uniqueCollectors: number;
+}
+
+export interface DeepLinkPayload {
+  role: "user" | "artist" | "gallery";
+  route: string;
+  payload: Record<string, any>;
+  params: Record<string, string>;
 }

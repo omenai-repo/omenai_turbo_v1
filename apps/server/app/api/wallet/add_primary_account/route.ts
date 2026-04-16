@@ -20,6 +20,7 @@ const config: CombinedConfig = {
   allowedRoles: ["artist"],
 };
 
+// 1. Updated Zod Schema with the "us" union
 const Schema = z.object({
   owner_id: z.string(),
   base_currency: z.string(),
@@ -43,7 +44,23 @@ const Schema = z.object({
       bank_country: z.string(),
     }),
     z.object({
+      type: z.literal("us"),
+      account_number: z.string(),
+      routing_number: z.string(),
+      bank_name: z.string().optional(),
+      account_name: z.string(),
+      bank_country: z.string(),
+    }),
+    z.object({
       type: z.literal("eu"),
+      iban: z.string(),
+      swift_code: z.string(),
+      bank_name: z.string().optional(),
+      account_name: z.string(),
+      bank_country: z.string(),
+    }),
+    z.object({
+      type: z.literal("international"),
       iban: z.string(),
       swift_code: z.string(),
       bank_name: z.string().optional(),
@@ -68,7 +85,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const { owner_id, account_details, base_currency } =
       await validateRequestBody(request, Schema);
 
-    // 1. Fetch Existing Wallet
+    // 2. Fetch Existing Wallet
     const wallet_exists = (await Wallet.findOne({
       owner_id,
     })) as WalletModelSchemaTypes;
@@ -79,7 +96,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       );
     }
 
-    // 2. Deduplication Logic
+    // 3. Updated Deduplication Logic
     const existingAccount = wallet_exists.primary_withdrawal_account;
 
     if (existingAccount && existingAccount.type === account_details.type) {
@@ -95,20 +112,37 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         existingAccount.account_number === account_details.account_number &&
         existingAccount.sort_code === account_details.sort_code;
 
+      const isSameUS =
+        existingAccount.type === "us" &&
+        account_details.type === "us" &&
+        existingAccount.account_number === account_details.account_number &&
+        existingAccount.routing_number === account_details.routing_number;
+
       const isSameEU =
         existingAccount.type === "eu" &&
         account_details.type === "eu" &&
         existingAccount.iban === account_details.iban &&
         existingAccount.swift_code === account_details.swift_code;
+      const isSameInternational =
+        existingAccount.type === "international" &&
+        account_details.type === "international" &&
+        existingAccount.iban === account_details.iban &&
+        existingAccount.swift_code === account_details.swift_code;
 
-      if (isSameAfrica || isSameUK || isSameEU) {
+      if (
+        isSameAfrica ||
+        isSameUK ||
+        isSameUS ||
+        isSameEU ||
+        isSameInternational
+      ) {
         throw new BadRequestError("Primary withdrawal account already exists");
       }
     }
 
     let updated_account_data: any = { ...account_details };
 
-    // 3. Conditional Flutterwave API Call (v3)
+    // 4. Conditional Flutterwave API Call (v3)
     if (account_details.type === "africa") {
       const payload = {
         account_bank: account_details.bank_code,
@@ -148,11 +182,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       const result = await response.json();
       updated_account_data.beneficiary_id = result.data.id;
     } else {
-      // v3 International Routing: Save directly to DB, bypass API
+      // v3 International Routing (UK, EU, US): Save directly to DB, bypass API
       updated_account_data.beneficiary_id = 0;
     }
 
-    // 4. Clean up Old African Beneficiary
+    // 5. Clean up Old African Beneficiary
     if (
       existingAccount &&
       existingAccount.type === "africa" &&
@@ -174,7 +208,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       }
     }
 
-    // 5. Update MongoDB
+    // 6. Update MongoDB
     const add_primary_account = await Wallet.updateOne(
       { owner_id },
       { $set: { primary_withdrawal_account: updated_account_data } },

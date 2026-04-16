@@ -32,7 +32,7 @@ import { getUploadLimitLookup } from "@omenai/shared-utils/src/uploadLimitUtilit
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
 /* -------------------------------------------------------------------------- */
-type PlanName = "Basic" | "Pro" | "Premium";
+type PlanName = "Foundation" | "Gallery" | "Principal";
 type PlanInterval = "monthly" | "yearly";
 type UploadTracker = {
   limit: number;

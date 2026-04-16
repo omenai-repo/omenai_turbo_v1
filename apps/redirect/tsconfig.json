@@ -1,0 +1,17 @@
+{
+  "extends": "@omenai/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "tailwind.config.js",
+    "../../arc.d.ts",
+    "app/test/page.tsx",
+    "next.config.mjs"
+  ],
+  "exclude": ["node_modules"]
+}

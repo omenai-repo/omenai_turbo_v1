@@ -5,14 +5,17 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { createErrorRollbarReport } from "../../../util";
+
 export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
   async function GET() {
     try {
       await connectMongoDB();
       const galleries = await AccountGallery.find(
         {},
-        "logo name gallery_id"
-      ).limit(10);
+        "logo name gallery_id address",
+      )
+        .limit(15)
+        .sort({ createdAt: -1 });
 
       return NextResponse.json({
         message: "Featured galleries fetched",
@@ -23,12 +26,12 @@ export const GET = withRateLimitHighlightAndCsrf(lenientRateLimit)(
       createErrorRollbarReport(
         "gallery: fetch featured galleries",
         error,
-        error_response.status
+        error_response.status,
       );
       return NextResponse.json(
         { message: error_response?.message },
-        { status: error_response?.status }
+        { status: error_response?.status },
       );
     }
-  }
+  },
 );

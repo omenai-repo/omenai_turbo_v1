@@ -44,7 +44,7 @@ export default function SubscriptionCheckout() {
   });
 
   const isEligibleForDiscount = (data?.discount &&
-    data?.plan.name.toLowerCase() === "pro") as boolean;
+    data?.plan.name.toLowerCase() === "gallery") as boolean;
 
   return (
     <div>
