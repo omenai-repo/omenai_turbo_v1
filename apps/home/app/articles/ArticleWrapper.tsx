@@ -1,8 +1,6 @@
 "use client";
 
-import { listEditorials } from "@omenai/shared-lib/editorials/getEditorials";
 import { useQuery } from "@tanstack/react-query";
-import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { EditorialSkeleton } from "@omenai/shared-ui-components/components/skeletons/EditorialSkeleton";
 import DesktopNavbar from "@omenai/shared-ui-components/components/navbar/desktop/DesktopNavbar";
 import Footer from "@omenai/shared-ui-components/components/footer/Footer";
