@@ -9,7 +9,9 @@ export default function EditorialsGrid({
   if (!editorials || editorials.length === 0) return null;
 
   // Ensure latest is first
-  const sortedEditorials = editorials.slice().reverse();
+  const sortedEditorials = [...editorials].sort(
+    (a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime(),
+  );
 
   return (
     <div className="w-full">
