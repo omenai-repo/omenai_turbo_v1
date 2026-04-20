@@ -280,9 +280,10 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
               {formatPrice(order.artwork_data.pricing.usd_price)}
             </p>
             <div
+              data-testid="user-order-card"
               className={`h-8 w-8 rounded flex items-center justify-center bg-slate-50 text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180 bg-slate-100 text-slate-600" : ""}`}
             >
-              <ChevronDown size={18} />
+              <ChevronDown data-test-id="user-order-card-icon" size={18} />
             </div>
           </div>
         </div>
