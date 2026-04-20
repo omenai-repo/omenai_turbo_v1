@@ -96,6 +96,10 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
         referrer: "direct",
       }),
     },
+    represented_artists: {
+      type: [String],
+      default: () => [],
+    },
   },
   { timestamps: true },
 );

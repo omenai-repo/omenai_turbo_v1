@@ -347,7 +347,7 @@ export function AiChatWindow({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: "100%" }}
           transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-          className="fixed inset-0 md:inset-auto md:bottom-6 md:right-6 w-full md:w-[440px] h-[100dvh] md:h-[700px] max-h-none md:max-h-[85vh] bg-[#FDFDFD] md:rounded -2xl shadow-2xl border-0 md:border border-slate-200 overflow-hidden flex flex-col z-[9999] font-sans"
+          className="fixed inset-0 md:inset-auto md:bottom-6 md:right-6 w-full md:w-[440px] h-[100dvh] md:h-[700px] max-h-none md:max-h-[85vh] bg-[#FDFDFD] md:rounded shadow-2xl border-0 md:border border-slate-200 overflow-hidden flex flex-col z-[9999] font-sans"
         >
           {/* BACKGROUND */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50/50">
@@ -385,7 +385,7 @@ export function AiChatWindow({
                 className={`relative group cursor-default transition-all ${!isGuest && isChatView ? "ml-6" : ""}`}
               >
                 <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded -full blur opacity-20 group-hover:opacity-40 transition duration-500" />
-                <div className="relative w-10 h-10 bg-slate-900 rounded -xl flex items-center justify-center shadow-lg ring-1 ring-white/50">
+                <div className="relative w-10 h-10 bg-slate-900 rounded flex items-center justify-center shadow-lg ring-1 ring-white/50">
                   <Sparkles
                     size={18}
                     className="text-indigo-200"
@@ -401,7 +401,7 @@ export function AiChatWindow({
               <div className="flex flex-col justify-center">
                 <h3 className="text-[17px] text-slate-900 leading-none font-bold tracking-tight">
                   Omenai{" "}
-                  <span className="font-sans font-light text-slate-400">
+                  <span className="font-sans font-normal text-slate-400">
                     Advisor
                   </span>
                 </h3>
@@ -414,7 +414,7 @@ export function AiChatWindow({
 
             <button
               onClick={onClose}
-              className="relative z-10 group p-2 rounded -xl transition-all duration-300 text-slate-300 backdrop-blur-sm border border-neutral-300 hover:border-neutral-200"
+              className="relative z-10 group p-2 rounded transition-all duration-300 text-slate-300 backdrop-blur-sm border border-neutral-300 hover:border-neutral-200"
             >
               <X
                 size={20}
@@ -438,7 +438,7 @@ export function AiChatWindow({
                 transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
                 className="flex flex-col h-full relative"
               >
-                <h4 className="font-serif text-2xl text-slate-800 mb-2 tracking-tight">
+                <h4 className="font -serif text-2xl text-slate-800 mb-2 tracking-tight">
                   Good{" "}
                   {new Date().getHours() < 12
                     ? "morning"
@@ -447,13 +447,13 @@ export function AiChatWindow({
                       : "evening"}{" "}
                   {`${user ? user.name.split(" ")[0] : ""}`},
                 </h4>
-                <p className="text-slate-400 font-light text-sm leading-relaxed max-w-[280px] mb-8">
+                <p className="text-slate-400 font-normal text-sm leading-relaxed max-w-[280px] mb-8">
                   Access your chat history or start a new inquiry.
                 </p>
 
                 <button
                   onClick={() => onCreateSession()}
-                  className="w-full py-3 bg-slate-900 text-white rounded -xl shadow-lg shadow-slate-300/20 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all text-[15px] font-medium mb-8"
+                  className="w-full py-3 bg-slate-900 text-white rounded shadow-lg shadow-slate-300/20 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all text-[15px] font-medium mb-8"
                 >
                   <MessageSquarePlus size={18} />
                   Start New Conversation
@@ -468,7 +468,7 @@ export function AiChatWindow({
                       <button
                         key={sess.id}
                         onClick={() => onSelectSession(sess.id)}
-                        className="text-left bg-white border border-slate-200 p-3.5 rounded -xl hover:border-indigo-300 transition-all group"
+                        className="text-left bg-white border border-slate-200 p-3.5 rounded hover:border-indigo-300 transition-all group"
                       >
                         <div className="flex justify-between items-start mb-1">
                           <span className="font-medium text-slate-700 text-[13px] truncate w-[70%]">
@@ -519,7 +519,7 @@ export function AiChatWindow({
                       <button
                         key={i}
                         onClick={() => handleSend(text)}
-                        className="text-left bg-white/60 hover:bg-white backdrop-blur-sm border border-slate-200/60 hover:border-indigo-200 p-3.5 rounded -xl text-slate-700 text-[13px] transition-all hover:shadow-md hover:-translate-y-0.5 flex items-center justify-between group"
+                        className="text-left bg-white/60 hover:bg-white backdrop-blur-sm border border-slate-200/60 hover:border-indigo-200 p-3.5 rounded text-slate-700 text-[13px] transition-all hover:shadow-md hover:-translate-y-0.5 flex items-center justify-between group"
                       >
                         {text}
                         <ArrowRight
@@ -537,7 +537,7 @@ export function AiChatWindow({
                     className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-slideIn`}
                   >
                     {m.role === "user" && (
-                      <div className="max-w-[85%] bg-slate-900 text-white px-5 py-2 rounded -2xl rounded -tr-sm text-[12px] leading-relaxed shadow-lg shadow-slate-300/20">
+                      <div className="max-w-[85%] bg-slate-900 text-white px-5 py-2 rounded rounded -tr-sm text-[12px] leading-relaxed shadow-lg shadow-slate-300/20">
                         {m.content}
                       </div>
                     )}
@@ -545,7 +545,7 @@ export function AiChatWindow({
                       <div className="max-w-[95%] group">
                         <div className="flex gap-4">
                           <div className="w-[2px] bg-gradient-to-b from-indigo-400/50 to-transparent min-h-[24px] shrink-0" />
-                          <div className="prose prose-slate prose-p:text-[12px] prose-p:leading-7 prose-p:text-slate-700 prose-headings:font-serif prose-headings:font-light prose-strong:font-medium prose-strong:text-slate-900 prose-li:text-slate-600 text-[13.5px]">
+                          <div className="prose prose-slate prose-p:text-[12px] prose-p:leading-7 prose-p:text-slate-700 prose-headings:font -serif prose-headings:font-normal prose-strong:font-medium prose-strong:text-slate-900 prose-li:text-slate-600 text-[13.5px]">
                             {/* ERROR MESSAGE STYLING */}
                             {m.isError ? (
                               <div className="flex items-start gap-2 text-rose-600 bg-rose-50 p-3 rounded -lg border border-rose-100">
@@ -582,7 +582,7 @@ export function AiChatWindow({
           {/* --- INPUT AREA --- */}
           {isChatView && (
             <div className="p-4 bg-white/80 backdrop-blur-xl border-t border-slate-100 shrink-0 z-20">
-              <div className="relative group shadow-sm rounded -xl">
+              <div className="relative group shadow-sm rounded">
                 <textarea
                   ref={textareaRef}
                   value={input}
@@ -591,7 +591,7 @@ export function AiChatWindow({
                   placeholder="Ask Omenai Advisor..."
                   rows={1}
                   maxLength={500}
-                  className="w-full bg-slate-50 hover:bg-white focus:bg-white transition-all border border-slate-200 focus:border-indigo-200 rounded -xl px-4 py-3.5 pr-12 text-[15px] focus:outline-none focus:ring-4 focus:ring-indigo-50/50 resize-none max-h-[120px] placeholder:text-slate-400 font-light"
+                  className="w-full bg-slate-50 hover:bg-white focus:bg-white transition-all border border-slate-200 focus:border-indigo-200 rounded px-4 py-3.5 pr-12 text-[15px] focus:outline-none focus:ring-4 focus:ring-indigo-50/50 resize-none max-h-[120px] placeholder:text-slate-400 font-normal"
                   style={{ scrollbarWidth: "none" }}
                 />
 

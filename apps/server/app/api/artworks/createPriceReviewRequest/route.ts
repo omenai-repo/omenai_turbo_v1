@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { uploadArtworkLogic } from "../../uploadArtwork.service";
 import { sendPriceReviewRequest } from "@omenai/shared-emails/src/models/artist/sendPriceReviewRequest";
 import { sendArtworkPriceReviewEmail } from "@omenai/shared-emails/src/models/admin/sendArtworkPriceReviewEmail";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { uploadArtworkLogic } from "../../services/uploadArtwork.service";
 
 const config: CombinedConfig = {
   ...strictRateLimit,

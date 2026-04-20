@@ -171,7 +171,7 @@ export default function UpdateAddressModalForm() {
       <div className="flex space-x-3 pt-2 mt-4">
         <button
           onClick={() => updateAddressModalPopup(false)}
-          className="flex h-10 w-full items-center justify-center gap-3 bg-white text-dark font-light text-fluid-xs transition-all duration-300 hover:bg-slate-800 hover:text-white disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
+          className="flex h-10 w-full items-center justify-center gap-3 bg-white text-dark font-normal text-fluid-xs transition-all duration-300 hover:bg-slate-800 hover:text-white disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
         >
           Cancel
         </button>

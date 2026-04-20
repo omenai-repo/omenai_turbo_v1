@@ -82,7 +82,7 @@ export default function UploadArtwork() {
         <NoVerificationBlock gallery_name={user.name as string} />
       )}
       {(user.gallery_verified as boolean) && isConfirmed?.isSubActive && (
-        <div className="pb-5">
+        <div className="">
           <UploadArtworkDetails isPremium={isConfirmed.isPremium} />
         </div>
       )}

@@ -63,7 +63,7 @@ const LoadingState = () => (
 );
 
 const ErrorState = () => (
-  <div className="bg-white/80 backdrop-blur-xl rounded -3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
+  <div className="bg-white/80 backdrop-blur-xl rounded p-8 shadow-2xl border border-white/20 transform transition-all duration-700 hover:scale-105">
     <div className="flex flex-col items-center justify-center space-y-8">
       <h2 className="text-fluid-base font-semibold bg-gradient-to-r from-red-600 to-red-600 bg-clip-text text-transparent">
         Error occurred while verifying transaction
@@ -144,7 +144,7 @@ const SuccessState = ({
 
   return (
     <div
-      className={`bg-white/90 backdrop-blur-xl rounded -3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
+      className={`bg-white/90 backdrop-blur-xl rounded p-8 shadow-2xl border border-white/20 transform transition-all duration-1000 ${
         showContent ? "scale-100 opacity-100" : "scale-95 opacity-0"
       }`}
     >

@@ -92,7 +92,7 @@ function CheckboxCard({
 }) {
   return (
     <label
-      className={`flex items-start gap-3 p-3 rounded -xl border transition-all cursor-pointer select-none ${
+      className={`flex items-start gap-3 p-3 rounded border transition-all cursor-pointer select-none ${
         checked
           ? "bg-neutral-50 border-dark"
           : "bg-white border-neutral-200 hover:border-neutral-300"
@@ -106,7 +106,7 @@ function CheckboxCard({
           className="sr-only"
         />
         <div
-          className={`h-5 w-5 rounded -md border flex items-center justify-center transition-all ${
+          className={`h-5 w-5 rounded border flex items-center justify-center transition-all ${
             checked
               ? "bg-dark border-dark text-white"
               : "bg-white border-neutral-300 text-transparent"

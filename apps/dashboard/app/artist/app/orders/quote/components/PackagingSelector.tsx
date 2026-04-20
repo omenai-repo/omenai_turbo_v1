@@ -180,12 +180,12 @@ export default function PackagingSelector({
   return (
     <div ref={containerRef} className="space-y-6">
       {/* Header */}
-      <div className="bg-white border border-slate-200 shadow-sm rounded -xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all">
+      <div className="bg-white border border-slate-200 shadow-sm rounded p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 transition-all">
         <div className="flex items-start gap-4">
           <div className="shrink-0 mt-0.5">
             <div
               className={`
-              w-10 h-10 rounded -xl flex items-center justify-center border shadow-sm
+              w-10 h-10 rounded flex items-center justify-center border shadow-sm
               ${
                 packagingType === "rolled"
                   ? "bg-indigo-50 border-indigo-100 text-indigo-600"
@@ -218,7 +218,7 @@ export default function PackagingSelector({
               )}
               <p className="text-xs text-slate-500 leading-relaxed flex flex-wrap items-center gap-1.5">
                 Based on your artwork size
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded -md bg-slate-100 border border-slate-200 text-slate-700 font-mono font-semibold text-[10px] tracking-wider">
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700 font-mono font-semibold text-[10px] tracking-wider">
                   {artDimensions.length}" × {artDimensions.height}"
                 </span>
                 we recommend the best fit below.
@@ -288,7 +288,7 @@ export default function PackagingSelector({
             <div
               key={preset.id}
               onClick={() => isClickable && handleSelect(preset)}
-              className={`relative border rounded -xl overflow-hidden transition-all duration-300 ${isClickable ? "cursor-pointer" : "cursor-not-allowed"} ${cardStyle}`}
+              className={`relative border rounded overflow-hidden transition-all duration-300 ${isClickable ? "cursor-pointer" : "cursor-not-allowed"} ${cardStyle}`}
             >
               {isRecommended && isCompatible && (
                 <div className="absolute top-0 left-0 z-30">
@@ -384,7 +384,7 @@ export default function PackagingSelector({
         {/* Custom Option Box */}
         <div
           onClick={handleSwitchToCustom}
-          className={`flex flex-col items-center col-span-1 sm:col-span-2 w-full justify-center text-center p-6 border rounded -xl cursor-pointer min-h-[120px] transition-all duration-200 ${isCustom ? "border-dark ring-2 ring-dark ring-offset-2 bg-slate-50 shadow-md" : "border-dashed border-slate-300 hover:bg-slate-50 hover:border-slate-400"}`}
+          className={`flex flex-col items-center col-span-1 sm:col-span-2 w-full justify-center text-center p-6 border rounded cursor-pointer min-h-[120px] transition-all duration-200 ${isCustom ? "border-dark ring-2 ring-dark ring-offset-2 bg-slate-50 shadow-md" : "border-dashed border-slate-300 hover:bg-slate-50 hover:border-slate-400"}`}
         >
           <div className="flex items-center gap-3">
             <div
@@ -421,7 +421,7 @@ export default function PackagingSelector({
       {isCustom && (
         <div
           ref={customInputRef}
-          className="mt-4 p-5 bg-slate-50 rounded -xl border border-slate-200 animate-in fade-in slide-in-from-top-2 shadow-inner"
+          className="mt-4 p-5 bg-slate-50 rounded border border-slate-200 animate-in fade-in slide-in-from-top-2 shadow-inner"
         >
           <div className="flex items-center gap-2 mb-4">
             <span className="w-1.5 h-4 bg-dark rounded -full"></span>

@@ -32,7 +32,7 @@ export default function SearchInput({ setIsMobileMenuOpen }: any) {
         placeholder="Search artists, artworks, styles..."
         className="
             w-full pl-10 pr-4 py-2.5 
-            bg-slate-100 border border-transparent rounded -md 
+            bg-slate-100 border border-transparent rounded 
             text-sm font-sans text-slate-900 placeholder:text-slate-500 
             focus:outline-none focus:bg-white focus:border-slate-200 focus:ring-0 focus:border-dark
             transition-all duration-200

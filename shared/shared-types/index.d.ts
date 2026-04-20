@@ -5,7 +5,7 @@ import z from "zod";
 export type SessionDataType = (
   | ({ role: "gallery" } & Omit<
       GallerySchemaTypes,
-      "password" | "phone" | "registeration_tracking"
+      "password" | "phone" | "registeration_tracking" | "represented_artists"
     >)
   | ({ role: "user" } & Omit<
       IndividualSchemaTypes,
@@ -24,6 +24,8 @@ export type SessionDataType = (
       | "exclusivity_uphold_status"
       | "pricing_allowances"
       | "registeration_tracking"
+      | "birthyear"
+      | "country_of_origin"
     >)
 ) & { id: string };
 
@@ -49,17 +51,22 @@ export type CombinedConfig = {
 };
 
 export type AccessRoleTypes = "gallery" | "user" | "admin" | "artist";
+// @omenai/shared-types
+
 export type ArtistSchemaTypes = {
   name: string;
-  email: string;
-  password: string;
+  profile_status: "claimed" | "ghost"; // The master switch
+  email: string; // Optional for ghosts
+  password?: string; // Optional for ghosts
   artist_id: string;
   verified: boolean;
   artist_verified: boolean;
-  logo: string;
+  logo?: string; // Optional for ghosts
   bio?: string;
+  birthyear: string;
   address: AddressTypes;
   phone: string;
+  country_of_origin: string;
   bio_video_link?: string | null;
   algo_data_id?: string | null;
   role: AccessRoleTypes;
@@ -69,7 +76,6 @@ export type ArtistSchemaTypes = {
   art_style: string | string[];
   documentation?: ArtistDocumentationTypes;
   isOnboardingCompleted: boolean;
-  clerkUserId?: string;
   exclusivity_uphold_status: Pick<
     ExclusivityUpholdStatus,
     "isBreached" | "incident_count"
@@ -79,6 +85,16 @@ export type ArtistSchemaTypes = {
     last_reset_date: Date;
   };
   registeration_tracking: Registeration_Tracking;
+};
+
+export type RosterArtist = {
+  artist_id: string;
+  name: string;
+  profile_status: "claimed" | "ghost";
+  artist_verified: boolean;
+  logo: string | null;
+  birthyear?: string;
+  country_of_origin?: string;
 };
 
 export type Registeration_Tracking = {
@@ -142,6 +158,7 @@ export type GallerySchemaTypes = {
   connected_account_id: string | null;
   stripe_customer_id: string | null;
   registeration_tracking: Registeration_Tracking;
+  represented_artists: string[];
 };
 
 type SubscriptionStatus = {
@@ -267,6 +284,7 @@ export type ArtworkSchemaTypes = {
   availability: boolean;
   packaging_type: ArtworkPackagingType;
   role_access: RoleAccess;
+  artist_id: string;
   exclusivity_status: {
     exclusivity_type: "exclusive" | "non-exclusive" | null;
     exclusivity_end_date: Date | null;
@@ -276,7 +294,14 @@ export type ArtworkSchemaTypes = {
     ratio: string;
     orientation: "landscape" | "portrait" | "square";
   };
+  exhibition_status?: ArtworkExhibitionStatus | null;
 };
+
+export interface ArtworkExhibitionStatus {
+  status: "pending" | "active" | "completed" | null;
+  event_id: string | null;
+  event_name: string;
+}
 
 export type RoleAccess = {
   role: "artist" | "gallery";
@@ -338,6 +363,8 @@ export type ArtworkResultTypes = ArtworkSchemaTypes & {
 
 export type ArtworkUploadStateTypes = {
   artist: string;
+  artist_id?: string;
+  newGhostArtistName?: string;
   year: number;
   title: string;
   medium: ArtworkMediumTypes | "";
@@ -1905,3 +1932,48 @@ export interface DeepLinkPayload {
   payload: Record<string, any>;
   params: Record<string, string>;
 }
+
+export type GalleryEventType = "exhibition" | "art_fair" | "viewing_room";
+
+export type GalleryEventLocation = {
+  venue?: string;
+  city?: string;
+  country?: string;
+};
+
+export type GalleryEvent = {
+  event_id: string;
+  gallery_id: string;
+  event_type: GalleryEventType;
+
+  // Universal Details
+  title: string;
+  description: string;
+  cover_image: string;
+  installation_views?: string[]; // For exhibitions, optional for fairs and viewing rooms
+
+  // Chronology
+  start_date: Date;
+  end_date: Date;
+  is_archived: boolean;
+
+  // Relational Data (Using your string IDs)
+  participating_artists: string[];
+  featured_artworks: string[];
+
+  // Modular Data
+  location?: GalleryEventLocation; // Fairs & Exhibitions
+  booth_number?: string; // Art Fairs only
+  vip_preview_date?: Date; // Art Fairs only
+  external_url?: string; // Viewing Rooms or Fairs
+  is_published: boolean; // To control visibility on the frontend
+  vip_access_token: string;
+};
+
+export type GalleryEventAnalytics = {
+  event_id: string;
+  views: number;
+  view_in_room: number;
+  shares: number;
+  daily_stats: any;
+};

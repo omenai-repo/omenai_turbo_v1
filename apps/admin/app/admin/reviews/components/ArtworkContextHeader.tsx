@@ -45,14 +45,14 @@ export default function ArtworkContextHeader({
           </div>
           <button
             onClick={onOpenDrawer}
-            className="shrink-0 flex items-center gap-2 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-semibold rounded -md transition-colors"
+            className="shrink-0 flex items-center gap-2 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-semibold rounded transition-colors"
           >
             <Info size={14} /> Full Artwork Metadata
           </button>
         </div>
 
         {/* Price Math Comparison */}
-        <div className="flex flex-col sm:flex-row gap-4 p-5 bg-neutral-50 rounded -xl border border-neutral-200">
+        <div className="flex flex-col sm:flex-row gap-4 p-5 bg-neutral-50 rounded border border-neutral-200">
           <div className="flex-1">
             <p className="text-xs font-semibold text-neutral-400 uppercase">
               Algorithm Recommendation

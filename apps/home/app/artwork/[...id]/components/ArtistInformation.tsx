@@ -35,7 +35,7 @@ export function ArtistInformation({
       <h3 className="mb-6 font-sans text-[10px] uppercase tracking-widest text-neutral-400">
         About the Artist
       </h3>
-      <h4 className="mb-8 font-serif text-3xl">{name}</h4>
+      <h4 className="mb-8 font -serif text-3xl">{name}</h4>
 
       <div className="grid grid-cols-2 gap-8 border-t border-white/20 pt-8">
         <div>

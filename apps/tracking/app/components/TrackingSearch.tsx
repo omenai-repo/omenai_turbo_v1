@@ -27,8 +27,8 @@ export default function TrackingSearch({
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-10 space-y-4">
-        <div className="inline-flex justify-center items-center p-3 bg-white rounded -2xl shadow-sm mb-2">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-950 p-2.5 rounded -xl">
+        <div className="inline-flex justify-center items-center p-3 bg-white rounded shadow-sm mb-2">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-950 p-2.5 rounded">
             <Package className="w-6 h-6 text-white" />
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function TrackingSearch({
         <div className="relative group">
           {/* Glow Effect */}
 
-          <div className="relative flex items-center ring-slate-400 focus:ring-dark ring-1 outline-none bg-white rounded -xl transition-all duration-300 overflow-hidden p-1.5">
+          <div className="relative flex items-center ring-slate-400 focus:ring-dark ring-1 outline-none bg-white rounded transition-all duration-300 overflow-hidden p-1.5">
             <div className="pl-4 pr-3 text-slate-400">
               <Search className="w-5 h-5" />
             </div>

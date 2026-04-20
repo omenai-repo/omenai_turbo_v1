@@ -13,7 +13,7 @@ export const getPromotionalFileView = (
   fileId: string,
   width: number,
   quality: number,
-  height?: number
+  height?: number,
 ) => {
   const fileData = storage.getFilePreview({
     bucketId: process.env.NEXT_PUBLIC_APPWRITE_PROMOTIONAL_BUCKET_ID!,
@@ -33,7 +33,7 @@ export const getPromotionalOptimizedImage = (
   fileId: string,
   preset: "thumbnail" | "small" | "medium" | "large" | "xlarge" = "small",
   customQuality?: number,
-  height?: number
+  height?: number,
 ) => {
   const size = SIZE_PRESETS[preset];
 

@@ -68,7 +68,7 @@ export default function Plans() {
                 Subscription
               </p>
               {/* Original text: "Choose your plan" / "Our pricing plans" */}
-              <h1 className="text-3xl sm:text-4xl font-light text-dark leading-snug">
+              <h1 className="text-3xl sm:text-4xl font-normal text-dark leading-snug">
                 Choose your plan
               </h1>
             </div>

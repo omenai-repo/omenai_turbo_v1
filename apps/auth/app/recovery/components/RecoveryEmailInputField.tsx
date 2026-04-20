@@ -26,7 +26,7 @@ export default function RecoveryEmailInputField() {
         {
           email,
         },
-        csrf || ""
+        csrf || "",
       );
       if (data.isOk) {
         toast_notif(data.body.message, "success");

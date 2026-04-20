@@ -18,7 +18,7 @@ export default function ArtistExclusivityCountdown({
 
   const expiryDate = useMemo(
     () => (typeof expiresAt === "string" ? new Date(expiresAt) : expiresAt),
-    [expiresAt]
+    [expiresAt],
   );
 
   const { seconds, minutes, hours, days, isRunning } = useTimer({

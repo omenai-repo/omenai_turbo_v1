@@ -18,7 +18,7 @@ export default function AppStoreAd() {
                 Omenai Mobile
               </span>
             </div>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-6">
+            <h2 className="font -serif text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-6">
               Discover and collect Contemporary African Art,{" "}
               <span className="text-yellow-400">Anywhere</span>
             </h2>

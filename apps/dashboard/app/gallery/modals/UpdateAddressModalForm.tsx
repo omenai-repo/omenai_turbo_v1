@@ -121,7 +121,7 @@ export default function UpdateAddressModalForm() {
   };
 
   return (
-    <div className="bg-white rounded max-w-lg w-full p-6 shadow-2xl animate-slideUp max-h-[85vh] h-auto overflow-y-auto">
+    <div className="bg-white rounded-sm  max-w-lg w-full p-6 shadow-2xl animate-slideUp max-h-[85vh] h-auto overflow-y-auto">
       <h3 className="text-fluid-sm font-semibold text-dark mb-6">
         Update Address
       </h3>
@@ -169,7 +169,7 @@ export default function UpdateAddressModalForm() {
         <button
           onClick={() => updateAddressModalPopup(false)}
           className={
-            "flex h-10 w-full items-center justify-center gap-3 bg-white text-dark font-light text-fluid-xs transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
+            "flex h-10 w-full items-center justify-center gap-3 bg-white text-dark font-normal text-fluid-xs transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded-sm "
           }
         >
           Cancel
@@ -178,7 +178,7 @@ export default function UpdateAddressModalForm() {
           onClick={handleAddressUpdate}
           disabled={loading || allKeysEmpty({ ...address })}
           className={
-            "flex h-10 w-full items-center justify-center gap-3 bg-dark text-white font-light text-fluid-xs transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded"
+            "flex h-10 w-full items-center justify-center gap-3 bg-dark text-white font-normal text-fluid-xs transition-all duration-300 hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded-sm "
           }
         >
           {loading ? (

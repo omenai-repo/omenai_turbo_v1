@@ -24,7 +24,7 @@ export default function ImageBlock() {
           <p className="text-xs uppercase tracking-widest opacity-80 mb-1">
             Featured Collection
           </p>
-          <p className="text-fluid-base font-light">Tolu&apos;s Dream, 2023</p>
+          <p className="text-fluid-base font-normal">Tolu&apos;s Dream, 2023</p>
         </div>
       </div>
 

@@ -80,7 +80,7 @@ export const UserMenu = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center px-4 py-2.5 text-sm font-sans font-medium text-neutral-600 rounded -md hover:bg-neutral-50 hover:text-dark  transition-colors"
+                  className="flex items-center px-4 py-2.5 text-sm font-sans font-medium text-neutral-600 rounded hover:bg-neutral-50 hover:text-dark  transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   <Icon className="mr-3 h-4 w-4 text-neutral-400 group-hover:text-dark " />
@@ -93,7 +93,7 @@ export const UserMenu = () => {
           <div className="p-2 border-t border-neutral-100">
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center px-4 py-2.5 text-sm font-sans font-medium text-red-600 rounded -md hover:bg-red-50 transition-colors"
+              className="w-full flex items-center px-4 py-2.5 text-sm font-sans font-medium text-red-600 rounded hover:bg-red-50 transition-colors"
             >
               <icons.LogOut className="mr-3 h-4 w-4" />
               Sign Out

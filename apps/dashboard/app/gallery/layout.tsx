@@ -16,6 +16,7 @@ import NoMobileView from "../artist/components/NoMobileView";
 import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
+import { GlobalCommandMenu } from "./features/GlobalCommandMenu";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -53,14 +54,14 @@ export default function GalleryDashboardLayout({
           <NextTopLoader color="#0f172a" height={6} />
 
           <DesktopSidebar />
+          <GlobalCommandMenu />
 
-          <div className="flex flex-1 flex-col md:ml-16">
+          <div className="flex flex-1 flex-col md:ml-64">
             {/* Mobile header */}
             <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
               <MobileSidebar />
               <span className="text-sm font-medium">Dashboard</span>
             </header>
-
             <MainContent>
               {val ? (
                 <GetStartedWithStripe />

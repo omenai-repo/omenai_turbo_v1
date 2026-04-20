@@ -1,154 +1,105 @@
-import { ResponsiveLine } from "@nivo/line";
+import { AreaChart, Card, Title, Text, Flex } from "@tremor/react";
 import Dropdown from "../../../components/Dropdown";
-import { SalesTooltip } from "./Tooltip";
 
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
+// Helper to convert Nivo's nested data structure to Tremor's flat structure
+const formatDataForTremor = (
+  nivoData: { id: string; data: { x: string; y: number }[] }[],
+) => {
+  if (!nivoData || nivoData.length === 0) return [];
 
-// Calculate Y-axis ticks dynamically based on min and max values
-// Calculate Y-axis ticks dynamically based on min and max values
-function calculateYTicks(min: number, max: number, maxTicks = 6) {
-  // Handle case where min and/or max is 0
-  if (min === 0 && max === 0) {
-    return [0]; // Return single tick instead of empty to prevent graph collapse
-  }
+  const tremorDataMap = new Map<string, any>();
 
-  // If only one of min or max is 0, set it to a small value to avoid division by 0
-  if (min === 0 && max > 0) {
-    min = 0; // Keep min at 0 for charts usually
-  }
+  nivoData.forEach((serie) => {
+    serie.data.forEach((point) => {
+      if (!tremorDataMap.has(point.x)) {
+        tremorDataMap.set(point.x, { month: point.x });
+      }
+      const existing = tremorDataMap.get(point.x);
+      existing[serie.id] = point.y;
+    });
+  });
 
-  const range = max - min;
-  const step = range / maxTicks; // Don't round step yet to maintain precision
+  return Array.from(tremorDataMap.values());
+};
 
-  const ticks: number[] = [];
+// Custom Tooltip with a Dark Theme
+const DarkTremorTooltip = ({ payload, active, label }: any) => {
+  if (!active || !payload || payload.length === 0) return null;
 
-  // Calculate the ticks
-  for (let i = min; i <= max; i += step) {
-    // Only round to 1000 if the numbers are actually large (> 1000)
-    // Otherwise, just round to nearest integer
-    const val = max > 1000 ? Math.round(i / 1000) * 1000 : Math.round(i);
-
-    ticks.push(val);
-  }
-
-  // Ensure we include the max value if missed
-  if (ticks[ticks.length - 1] < max) {
-    const lastVal =
-      max > 1000 ? Math.round(max / 1000) * 1000 : Math.round(max);
-    ticks.push(lastVal);
-  }
-
-  // ️ CRITICAL FIX: Remove Duplicates and Sort
-  // This prevents the "same key" error
-  const uniqueTicks = [...new Set(ticks)].sort((a, b) => a - b);
-
-  // Limit to maxTicks
-  return uniqueTicks.slice(0, maxTicks);
-}
+  return (
+    <div className="rounded-sm -lg border border-neutral-800 bg-neutral-950/95 p-4 shadow-xl backdrop-blur-sm">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+        {label}
+      </p>
+      <div className="space-y-2">
+        {payload.map((category: any, index: number) => (
+          <div
+            key={index}
+            className="flex items-center justify-between space-x-10"
+          >
+            <div className="flex items-center space-x-2">
+              <span
+                className="h-2.5 w-2.5 rounded-sm -full"
+                style={{ backgroundColor: category.color }}
+              />
+              <p className="text-sm font-medium text-neutral-300">
+                {category.dataKey}
+              </p>
+            </div>
+            <p className="text-sm font-bold text-white">
+              ${category.value.toLocaleString()}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const SalesActivityChart = ({
-  data /* see data tab */,
+  data,
   year,
 }: {
   data: { id: string; data: { x: string; y: number }[] }[];
   year: string;
 }) => {
-  const allYValues = data.flatMap((serie) => serie.data.map((item) => item.y));
-  const minYValue = Math.min(...allYValues);
-  const maxYValue = Math.max(...allYValues);
+  const chartData = formatDataForTremor(data);
+  const categories = data.map((serie) => serie.id);
 
-  // Calculate Y-axis ticks
-  const yTicks = calculateYTicks(minYValue, maxYValue);
   return (
-    <div className="h-[450px] rounded bg-white p-6 shadow-sm w-full">
-      <div className="flex justify-between items-center">
+    <Card className="h-[450px] w-full rounded-sm  bg-white p-6 shadow-sm ring-1 ring-neutral-200">
+      <Flex justifyContent="between" alignItems="center">
         <div>
-          <h3 className="text-fluid-base font-medium">Sales Activity</h3>
-          <p className="text-fluid-xxs text-neutral-500">
-            Annual revenue performance
-          </p>
+          <Title className="text-md font-semibold text-neutral-900">
+            Sales Activity
+          </Title>
+          <Text className="text-xs text-neutral-500">
+            Annual revenue performance for {year}
+          </Text>
         </div>
         <Dropdown />
+      </Flex>
+
+      <div className="mt-6 h-72">
+        <AreaChart
+          key={year}
+          data={chartData}
+          index="month"
+          categories={categories}
+          colors={["indigo", "cyan", "fuchsia", "emerald", "amber"]}
+          valueFormatter={(number) =>
+            `$${Intl.NumberFormat("us").format(number).toString()}`
+          }
+          showAnimation={true}
+          curveType="monotone"
+          showGridLines={false}
+          showLegend={false}
+          showYAxis={false} // Hiding Y-axis makes it even cleaner, rely on tooltip
+          // Applied the new dark tooltip
+          customTooltip={DarkTremorTooltip}
+          className="text-sm font-medium text-neutral-400"
+        />
       </div>
-      <ResponsiveLine
-        key={year}
-        data={data}
-        margin={{ top: 10, right: 70, bottom: 90, left: 70 }}
-        xScale={{ type: "point" }}
-        yScale={{
-          type: "linear",
-          min: "auto",
-          max: "auto",
-          stacked: false,
-        }}
-        yFormat=" >-$0,.0f"
-        /* AXES — CLEAN & QUIET */
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          tickSize: 0,
-          tickPadding: 14,
-          legend: "Month",
-          legendOffset: 42,
-          legendPosition: "middle",
-          format: (value) => value.substring(0, 3),
-        }}
-        axisLeft={{
-          tickSize: 0,
-          tickPadding: 14,
-          legendOffset: -46,
-          legendPosition: "middle",
-          tickValues: yTicks,
-          format: (v) => `$${v.toLocaleString()}`,
-        }}
-        /* GRID — SUBTLE */
-        enableGridX={false}
-        enableGridY={true}
-        gridYValues={yTicks}
-        /* VISUAL STYLE */
-        curve="monotoneX"
-        colors={["#0f172a"]}
-        lineWidth={0.7}
-        /* AREA */
-        enableArea={true}
-        areaOpacity={0.8}
-        areaBaselineValue={minYValue}
-        defs={[
-          {
-            id: "areaGradient",
-            type: "linearGradient",
-            colors: [
-              { offset: 0, color: "#0f172a", opacity: 0.18 },
-              { offset: 60, color: "#0f172a", opacity: 0.08 },
-              { offset: 100, color: "#0f172a", opacity: 0.02 },
-            ],
-          },
-        ]}
-        fill={[{ match: "*", id: "areaGradient" }]}
-        /* POINTS — HIDDEN (HOVER ONLY) */
-        enablePoints={false}
-        useMesh={true}
-        enableCrosshair={true}
-        crosshairType="x"
-        tooltip={({ point }) => <SalesTooltip point={point} />}
-        theme={{
-          text: {
-            fill: "#475569",
-            fontSize: 12,
-          },
-          grid: {
-            line: {
-              stroke: "#e5e7eb",
-              strokeDasharray: "3 6",
-            },
-          },
-        }}
-        motionConfig="gentle"
-      />
-    </div>
+    </Card>
   );
 };

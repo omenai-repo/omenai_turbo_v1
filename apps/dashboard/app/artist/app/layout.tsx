@@ -49,7 +49,7 @@ export default function ArtistDashboardLayout({
             Origin: base_url(),
           },
           credentials: "include",
-        }
+        },
       );
       if (!res.ok) {
         console.error("Failed to Artist onboarding status:");

@@ -32,7 +32,7 @@ import {
 } from "../../util";
 import z from "zod";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
-import { getUPSRates } from "../../ups_service";
+import { getUPSRates } from "../../services/ups_service";
 
 // --------------------------------------------------------------------------
 // STRIPE TAX CALCULATION

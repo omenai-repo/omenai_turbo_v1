@@ -144,7 +144,7 @@ const ThresholdStatus = ({
           Exceeded threshold by {difference}
         </span>
       ) : (
-        <span className="text-dark font-light">
+        <span className="text-dark font-normal">
           Will exceed threshold after {difference} transactions
         </span>
       )}

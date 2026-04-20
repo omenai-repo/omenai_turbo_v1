@@ -67,7 +67,7 @@ export const CountdownTimer = () => {
   }) => (
     <div className="flex items-center">
       <div className="flex flex-col items-center px-4 md:px-6">
-        <span className="font-sans text-3xl md:text-4xl lg:text-5xl font-light tracking-tighter text-dark">
+        <span className="font-sans text-3xl md:text-4xl lg:text-5xl font-normal tracking-tighter text-dark">
           {String(value).padStart(2, "0")}
         </span>
         <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-emerald-700 mt-2 font-bold">
@@ -123,7 +123,7 @@ export const CountdownTimer = () => {
 
       <div className="ml-auto hidden md:flex items-center gap-3">
         <div className="h-2 w-2 rounded -full bg-emerald-500 animate-pulse" />
-        <span className="font-serif text-[10px] uppercase tracking-widest text-neutral-400">
+        <span className="font -serif text-[10px] uppercase tracking-widest text-neutral-400">
           Until Launch
         </span>
       </div>

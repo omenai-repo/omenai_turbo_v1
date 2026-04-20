@@ -8,6 +8,7 @@ type ArtworkSelectInputProps = {
   items?: string[] | undefined;
   currency_items?: CurrencyItems[] | undefined;
   name: string;
+  value?: string | undefined;
   required: boolean;
   disabled?: boolean;
 };
@@ -40,12 +41,11 @@ export default function ArtworkSelectInput({
   // Decide which value to read from store based on the name prop
   // (Assuming your store has a shape that matches `name`)
   const currentValue =
-    // @ts-ignore - Dynamic access to store data
-    artworkUploadData[name] || "";
+    (artworkUploadData as unknown as Record<string, string>)[name] || "";
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
-      <label htmlFor={name} className="text-dark font-medium text-xs ml-1">
+      <label htmlFor={name} className="text-dark font-normal text-xs ml-1">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>

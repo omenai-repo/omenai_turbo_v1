@@ -37,7 +37,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
       await connectMongoDB();
 
       // 1. Authenticate Artist
-      const artist = await AccountArtist.findOne<ArtistSchemaTypes>({
+      const artist = await AccountArtist.findOne({
         email: email.toLowerCase(),
       }).exec();
 
@@ -61,6 +61,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         wallet_id,
         address,
         categorization,
+        profile_status,
       } = artist;
 
       const sessionPayload = {
@@ -77,6 +78,7 @@ export const POST = withRateLimitHighlightAndCsrf(strictRateLimit)(
         wallet_id,
         address,
         categorization,
+        profile_status,
       };
 
       const userAgent: string | null =

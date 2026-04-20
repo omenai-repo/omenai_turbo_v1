@@ -27,9 +27,9 @@ export default function CarrierInterventionCard({
 }: CarrierInterventionCardProps) {
   if (hasDeclined) {
     return (
-      <div className="bg-slate-50 border border-slate-200 rounded -2xl p-6 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="bg-slate-50 border border-slate-200 rounded-sm  p-6 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex items-start gap-4">
-          <div className="bg-white p-3 rounded -full shadow-sm border border-slate-100 shrink-0">
+          <div className="bg-white p-3 rounded-sm  -full shadow-sm border border-slate-100 shrink-0">
             <AlertCircle className="w-6 h-6 text-slate-700" />
           </div>
           <div>
@@ -44,7 +44,7 @@ export default function CarrierInterventionCard({
             </p>
             <a
               href={`mailto:support@omenai.com?subject=Freight Assistance Needed: Order ${orderId}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded -lg transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-sm  -lg transition-colors shadow-sm"
             >
               <Mail className="w-4 h-4" />
               Contact Support for manual assistance
@@ -57,7 +57,7 @@ export default function CarrierInterventionCard({
 
   // THE HEADS UP PATH
   return (
-    <div className="bg-amber-50/50 border border-amber-200 rounded -2xl p-6 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 shadow-sm">
+    <div className="bg-amber-50/50 border border-amber-200 rounded-sm  p-6 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 shadow-sm">
       <div className="mb-6 flex items-start gap-3">
         <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
         <div>
@@ -78,10 +78,10 @@ export default function CarrierInterventionCard({
           <button
             type="button"
             onClick={onSwitchToRolled}
-            className="w-full flex items-center justify-between p-4 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 rounded -xl transition-all group text-left"
+            className="w-full flex items-center justify-between p-4 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 rounded-sm  transition-all group text-left"
           >
             <div className="flex items-center gap-3">
-              <div className="bg-emerald-100 text-emerald-600 p-2 rounded -lg group-hover:scale-110 transition-transform">
+              <div className="bg-emerald-100 text-emerald-600 p-2 rounded-sm  -lg group-hover:scale-110 transition-transform">
                 <PackageCheck className="w-5 h-5" />
               </div>
               <div>
@@ -101,10 +101,10 @@ export default function CarrierInterventionCard({
         <button
           type="button"
           onClick={onTryCustomCrate}
-          className="w-full flex items-center justify-between p-4 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded -xl transition-all group text-left"
+          className="w-full flex items-center justify-between p-4 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-sm  transition-all group text-left"
         >
           <div className="flex items-center gap-3">
-            <div className="bg-blue-100 text-blue-600 p-2 rounded -lg group-hover:scale-110 transition-transform">
+            <div className="bg-blue-100 text-blue-600 p-2 rounded-sm  -lg group-hover:scale-110 transition-transform">
               <Ruler className="w-5 h-5" />
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function CarrierInterventionCard({
         <button
           type="button"
           onClick={onDecline}
-          className="w-full text-center py-3 text-xs font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100/50 rounded -lg transition-colors mt-2"
+          className="w-full text-center py-3 text-xs font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100/50 rounded-sm  -lg transition-colors mt-2"
         >
           I cannot reduce the size (Requires manual assistance)
         </button>

@@ -215,7 +215,7 @@ const WaitlistTracker = ({ waitlist }: { waitlist: any }) => {
           <div>
             <p className="text-sm font-normal text-neutral-800 tabular-nums">
               {fmt(waitlist.converted)}{" "}
-              <span className="text-neutral-300 mx-1 font-light">/</span>{" "}
+              <span className="text-neutral-300 mx-1 font-normal">/</span>{" "}
               {fmt(waitlist.total)}
             </p>
             <p className="text-[9px] uppercase tracking-widest font-normal text-neutral-400 mt-1">

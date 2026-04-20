@@ -60,7 +60,7 @@ export default function ArticleWrapper() {
             <span className="font-sans text-xs font-bold uppercase tracking-wider text-dark  mb-3 block">
               Omenai Editorial
             </span>
-            <h1 className="font-serif text-xl md:text-3xl text-dark  leading-tight">
+            <h1 className="font -serif text-xl md:text-3xl text-dark  leading-tight">
               Perspectives
             </h1>
             <p className="mt-4 font-sans text-sm text-neutral-500 max-w-xl leading-relaxed">

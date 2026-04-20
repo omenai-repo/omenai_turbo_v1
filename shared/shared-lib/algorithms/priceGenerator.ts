@@ -79,7 +79,7 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
   // Calculate base price within the category range
   const priceRange = baseMax - baseMin;
   const basePrice = baseMin + priceRange * combinedFactor;
-  const baseRounded = Math.round(basePrice);
+  const baserounded = Math.round(basePrice);
 
   // Generate 5 price points with ±20% spread
   const spreadPercentage = 0.1;
@@ -87,7 +87,7 @@ function calculateArtworkPrice(artwork: ArtworkDetails): ArtworkPricing {
   const pricePoints: number[] = [];
   for (let i = 0; i < 5; i++) {
     const factor = -totalSpread + (i * (totalSpread * 2)) / 4;
-    const pricePoint = Math.round(baseRounded * (1 + factor));
+    const pricePoint = Math.round(baserounded * (1 + factor));
     const boundedPrice = Math.max(Math.min(pricePoint, baseMax), baseMin);
     pricePoints.push(boundedPrice);
   }

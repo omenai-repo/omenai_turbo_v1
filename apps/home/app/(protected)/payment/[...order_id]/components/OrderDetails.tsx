@@ -116,7 +116,7 @@ export default function OrderDetails({
                 <h3 className="text-fluid-sm font-semibold text-dark leading-tight">
                   {order.artwork_data.title}
                 </h3>
-                <p className="text-fluid-xs text-slate-500 font-light">
+                <p className="text-fluid-xs text-slate-500 font-normal">
                   {order.artwork_data.artist}
                 </p>
               </div>

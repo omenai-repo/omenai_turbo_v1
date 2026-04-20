@@ -87,7 +87,7 @@ function construct_status({
   order_decline_reason?: string;
 }) {
   const base =
-    "inline-flex items-center gap-x-1 rounded px-3 py-1 text-fluid-xxs font-light";
+    "inline-flex items-center gap-x-1 rounded px-3 py-1 text-fluid-xxs font-normal";
 
   if (order_accepted === "declined") {
     return (
@@ -304,7 +304,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
             <MetaBlock icon={<MapPin size={14} />} label="Destination">
               {order.shipping_details.addresses.destination.state},{" "}
               {order.shipping_details.addresses.destination.country}
-              <span className="block text-xs text-slate-400 font-light mt-0.5"></span>
+              <span className="block text-xs text-slate-400 font-normal mt-0.5"></span>
             </MetaBlock>
 
             <MetaBlock icon={<Info size={14} />} label="Status Note">
@@ -332,7 +332,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                   target="_blank"
                   href={`${tracking_url()}?tracking_id=${order.order_id}&courier_tracking_id=${order.shipping_details.shipment_information.tracking.id}&courier=${order.shipping_details.shipment_information.carrier.split(" ")[0]}`}
                 >
-                  <button className="w-fit rounded bg-dark px-5 py-2 text-fluid-xxs font-light text-white hover:opacity-90 transition">
+                  <button className="w-fit rounded bg-dark px-5 py-2 text-fluid-xxs font-normal text-white hover:opacity-90 transition">
                     Track shipment
                   </button>
                 </Link>
@@ -366,7 +366,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
                   onClick={() => setIsDrawerOpen(true)}
                   className="flex items-center gap-x-2 hover:underline bg-slate-100 px-4 py-2 rounded"
                 >
-                  <span className="w-fit text-fluid-xs font-light text-dark hover:opacity-90 transition">
+                  <span className="w-fit text-fluid-xs font-normal text-dark hover:opacity-90 transition">
                     View receipt invoice
                   </span>
                   <ExternalLink size={14} strokeWidth={1.75} />

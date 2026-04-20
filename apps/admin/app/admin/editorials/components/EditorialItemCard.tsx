@@ -62,7 +62,7 @@ export default function EditorialItemCard({ editorial }: { editorial: any }) {
           <Link
             href={`${admin_url()}/admin/editorials/${editorial.slug}?id=${editorial.$id}`}
           >
-            <button className="bg-white/90 backdrop-blur-sm text-dark rounded -md px-4 py-1 text-fluid-xxs font-light shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white">
+            <button className="bg-white/90 backdrop-blur-sm text-dark rounded px-4 py-1 text-fluid-xxs font-normal shadow-sm border border-slate-200 transition-colors duration-200 hover:bg-white disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] disabled:bg-white">
               Edit editorial
             </button>
           </Link>

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createUPSShipment } from "../../ups_service";
+import { createUPSShipment } from "../../services/ups_service";
 import { createErrorRollbarReport } from "../../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";

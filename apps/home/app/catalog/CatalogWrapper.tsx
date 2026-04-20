@@ -26,7 +26,7 @@ export default function CatalogWrapper() {
                 All works
               </span>
             </div>
-            <h1 className="text-xl md:text-3xl font-serif leading-[1.1] text-dark">
+            <h1 className="text-xl md:text-3xl font -serif leading-[1.1] text-dark">
               Discover works <br /> from artist across Africa & it's diaspora.
             </h1>
           </div>

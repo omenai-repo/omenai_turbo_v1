@@ -71,7 +71,7 @@ export default function Saves() {
     <div className="pb-5">
       <>
         <div className="my-5">
-          <h1 className="text-2xl font-light text-slate-900">
+          <h1 className="text-2xl font-normal text-slate-900">
             Your Favorite Artworks
           </h1>
           <p className="text-sm text-slate-500 mt-1">

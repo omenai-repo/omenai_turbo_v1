@@ -36,7 +36,7 @@ export default function RecentViewedCard({
 
         {/* METADATA: Simple & Clean */}
         <div className="flex flex-col px-1">
-          <h3 className="font-serif text-sm font-medium text-dark  truncate group-hover:underline underline-offset-4 decoration-neutral-300">
+          <h3 className="font -serif text-sm font-medium text-dark  truncate group-hover:underline underline-offset-4 decoration-neutral-300">
             {name}
           </h3>
           <p className="font-sans text-xs text-neutral-500 truncate">

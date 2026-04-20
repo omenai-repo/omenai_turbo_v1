@@ -52,7 +52,7 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <MdHistory className="text-dark  text-xl" />
-            <h2 className="text-xl md:text-2xl font-serif text-dark ">
+            <h2 className="text-xl md:text-2xl font -serif text-dark ">
               Recently Viewed
             </h2>
           </div>

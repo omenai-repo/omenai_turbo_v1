@@ -111,7 +111,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 const FilterButton = ({ label, count, active, onClick }: any) => (
   <button
     onClick={onClick}
-    className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded -md transition-all capitalize ${
+    className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded transition-all capitalize ${
       active
         ? "bg-blue-600 text-white shadow-md transform scale-[1.02]"
         : "text-slate-600 hover:bg-slate-100"

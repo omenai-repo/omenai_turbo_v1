@@ -32,7 +32,7 @@ export default function TrendingArtworkCard({
   return (
     <div className="group flex flex-col gap-3 w-full">
       {/* 1. IMAGE AREA - FIXED RATIO */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden rounded -md bg-neutral-100">
+      <div className="relative w-full aspect-[4/5] overflow-hidden rounded bg-neutral-100">
         <Link
           href={`/artwork/${encodeURIComponent(art_id)}`}
           className="block h-full w-full"
@@ -40,7 +40,7 @@ export default function TrendingArtworkCard({
           {/* BADGE LOGIC: Show 'Acquired' if sold */}
           {!availability && (
             <div className="absolute top-2 left-2 z-20">
-              <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded -sm text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
+              <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
                 Sold
               </span>
             </div>
@@ -70,7 +70,7 @@ export default function TrendingArtworkCard({
 
       {/* 2. DATA AREA */}
       <div className="flex flex-col gap-1 px-1">
-        <h3 className="font-serif text-md text-dark  leading-snug truncate">
+        <h3 className="font -serif text-md text-dark  leading-snug truncate">
           <Link href={`/artwork/${encodeURIComponent(art_id)}`}>{name}</Link>
         </h3>
 

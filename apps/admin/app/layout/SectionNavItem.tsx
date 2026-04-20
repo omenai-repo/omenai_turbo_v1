@@ -22,7 +22,7 @@ export function SectionNavItem({
   const isSingleItem = items.length === 1;
   const isActive = items.some((item) => pathname.startsWith(item.href));
 
-  // THE SLEEK TRIGGER: Rounded floating boxes, dark theme colors
+  // THE SLEEK TRIGGER: rounded floating boxes, dark theme colors
   const TriggerContent = (
     <div
       className={clsx(

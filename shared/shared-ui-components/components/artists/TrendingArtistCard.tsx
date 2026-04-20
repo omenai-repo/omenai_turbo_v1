@@ -30,7 +30,7 @@ export function TrendingArtistCard({
     >
       <article className="flex flex-col gap-4">
         {/* IMAGE FRAME: Removed grayscale, added rounding */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded -md bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md">
           <Image
             src={image_href}
             alt={artist}
@@ -48,7 +48,7 @@ export function TrendingArtistCard({
         <div className="flex flex-col gap-1">
           {/* Name & Arrow */}
           <div className="flex items-center justify-between">
-            <h3 className="font-serif text-lg text-dark  leading-tight group-hover:underline decoration-neutral-300 underline-offset-4">
+            <h3 className="font -serif text-lg text-dark  leading-tight group-hover:underline decoration-neutral-300 underline-offset-4">
               {artist}
             </h3>
             <MdNorthEast className="text-neutral-300 transition-colors group-hover:text-dark " />

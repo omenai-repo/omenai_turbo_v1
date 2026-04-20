@@ -45,7 +45,7 @@ export default function Editorials() {
                     Omenai Editorial
                   </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+                <h2 className="text-2xl md:text-3xl font -serif text-dark ">
                   Stories & Insights
                 </h2>
                 <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
@@ -72,7 +72,7 @@ export default function Editorials() {
             <div className="mt-10 flex md:hidden justify-center">
               <Link
                 href="/articles"
-                className="w-full py-3 text-center rounded -md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
+                className="w-full py-3 text-center rounded border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
               >
                 Read All Articles
               </Link>

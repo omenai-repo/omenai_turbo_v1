@@ -30,10 +30,10 @@ function Page() {
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 mb-4">
               Onboarding
             </p>
-            <h1 className="text-fluid-xl md:text-fluid-2xl font-light tracking-tight text-slate-900 mb-6 leading-tight">
+            <h1 className="text-fluid-xl md:text-fluid-2xl font-normal tracking-tight text-slate-900 mb-6 leading-tight">
               Login to your portal
             </h1>
-            <p className="text-slate-500 text-sm tracking-wide font-light">
+            <p className="text-slate-500 text-sm tracking-wide font-normal">
               Select your account type to access your personalized workspace.
             </p>
           </div>

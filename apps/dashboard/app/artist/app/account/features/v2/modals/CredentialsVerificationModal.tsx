@@ -23,7 +23,7 @@ export default function CredentialsVerificationModal() {
             <button
               onClick={() => setShowVerificationModal(false)}
               className="flex-1 px-4 py-2.5 bg-gray-300 text-dark rounded hover:bg-gray-400 
-                       transition-all duration-300 text-fluid-xs font-light"
+                       transition-all duration-300 text-fluid-xs font-normal"
             >
               Cancel
             </button>
@@ -34,7 +34,7 @@ export default function CredentialsVerificationModal() {
                 setTimeout(() => setShowCredentialsModal(false), 2000);
               }}
               className="flex-1 px-4 py-2.5 bg-dark text-white rounded hover:bg-dark/90 
-                       transition-all duration-300 text-fluid-xs font-light"
+                       transition-all duration-300 text-fluid-xs font-normal"
             >
               Confirm Update
             </button>

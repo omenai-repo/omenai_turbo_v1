@@ -53,7 +53,7 @@ export default function CollectionWrapper({ id }: { id: string }) {
                 <span className="text-dark ">{page_title}</span>
               </div>
 
-              <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl text-dark  leading-none tracking-tight">
+              <h1 className="font -serif text-2xl md:text-3xl lg:text-4xl text-dark  leading-none tracking-tight">
                 {page_title}
               </h1>
             </div>

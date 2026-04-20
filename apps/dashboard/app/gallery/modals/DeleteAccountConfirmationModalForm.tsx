@@ -90,11 +90,11 @@ export default function DeleteAccountConfirmationModalForm() {
           onClick={() => updateDeleteGalleryAccountModalPopup(false)}
         />
 
-        <div className="relative bg-white dark:bg-slate-800 rounded shadow-2xl w-full max-w-3xl mx-auto p-6 md:p-8 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+        <div className="relative bg-white dark:bg-slate-800 rounded-sm  shadow-2xl w-full max-w-3xl mx-auto p-6 md:p-8 z-10 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
           <div className="flex gap-4 items-start">
             <div className="flex-shrink-0">
               {/* Sad icon */}
-              <div className="w-14 h-14 rounded bg-red-50 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-sm  bg-red-50 flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-red-600"
                   fill="none"
@@ -140,7 +140,7 @@ export default function DeleteAccountConfirmationModalForm() {
                         type="checkbox"
                         checked={reason === selectReason}
                         onChange={() => setReason(selectReason)}
-                        className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                        className="h-4 w-4 rounded-sm  border-slate-300 text-indigo-600 focus:ring-indigo-500"
                       />
                       <span className="capitalize text-slate-700 dark:text-slate-200">
                         {selectReason}
@@ -153,7 +153,7 @@ export default function DeleteAccountConfirmationModalForm() {
                       placeholder="Tell us briefly"
                       value={otherText}
                       onChange={(e) => setOtherText(e.target.value)}
-                      className="w-full max-w-[300px] bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed"
+                      className="w-full max-w-[300px] bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded-sm  transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed"
                     />
                   )}
                 </div>
@@ -192,14 +192,14 @@ export default function DeleteAccountConfirmationModalForm() {
                 <button
                   disabled={loading}
                   onClick={() => updateDeleteGalleryAccountModalPopup(false)}
-                  className="px-4 py-2 rounded border border-slate-200 disabled:opacity-60 disabled:cursor-not-allowed text-fluid-xs text-slate-700 bg-white hover:bg-slate-50"
+                  className="px-4 py-2 rounded-sm  border border-slate-200 disabled:opacity-60 disabled:cursor-not-allowed text-fluid-xs text-slate-700 bg-white hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={confirmDeletion}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 disabled:cursor-not-allowed text-white rounded text-fluid-xs hover:bg-red-700 disabled:opacity-60"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 disabled:cursor-not-allowed text-white rounded-sm  text-fluid-xs hover:bg-red-700 disabled:opacity-60"
                 >
                   {loading ? (
                     <svg

@@ -8,15 +8,16 @@ import { getPromotionalData } from "@omenai/shared-services/promotionals/getProm
 import Hero from "./features/hero/Hero";
 import { useQuery } from "@tanstack/react-query";
 import LatestArtworkWrapper from "./features/latest/LatestArtworkWrapper";
-import TrendingArtworkWrapper from "./features/trending/TrendingrtworksWrapper";
 import RecentViewWrapper from "./features/recentViews/RecentViewWrapper";
 
 import AppStoreAd from "./features/appStoreAd/AppStoreAd";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import TrendingArtistWrapper from "./features/trendingArtists/TrendingArtistWrapper";
 import Newsletter from "./Newsletter";
-import FeaturedgalleryWrapper from "./features/featuredGalleries/FeaturedGalleryWrapper";
+import { FeaturedShowsSection } from "./features/featuredShows/FeaturedShowsSection";
+import TrendingArtworkWrapper from "./features/trending/TrendingrtworksWrapper";
+import { FairsAndEventsSection } from "./features/events/FairsAndEventSection";
+import { FeaturedGalleriesSection } from "./features/featuredGalleries/FeaturedGalleryWrapper";
 
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
@@ -49,11 +50,18 @@ export default function Home() {
 
         {promotionals && <Hero promotionals={promotionals} />}
 
+        <FairsAndEventsSection />
+
         <LatestArtworkWrapper
           sessionId={user && user.role === "user" ? user.id : undefined}
         />
+
+        <FeaturedShowsSection />
         <Collections />
-        {/* <FeaturedgalleryWrapper /> */}
+        <TrendingArtworkWrapper
+          sessionId={user && user.role === "user" ? user.id : undefined}
+        />
+        <FeaturedGalleriesSection />
         <Editorials />
         {/* <TrendingArtistWrapper /> */}
         {user && user.role === "user" && (

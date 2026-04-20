@@ -227,7 +227,7 @@ export default function UserProfile({
                 <div className="w-full grid place-items-center">
                   <button
                     onClick={() => updateAddressModalPopup(true)}
-                    className="rounded bg-dark p-4 text-xs font-light w-full text-white hover:bg-slate-800"
+                    className="rounded bg-dark p-4 text-xs font-normal w-full text-white hover:bg-slate-800"
                   >
                     Edit Address information
                   </button>
@@ -256,7 +256,7 @@ export default function UserProfile({
               <div className="relative z-10 flex justify-between items-center">
                 <div>
                   <h4 className="text-lg font-medium mb-1">Account Security</h4>
-                  <p className="text-slate-300 text-sm font-light">
+                  <p className="text-slate-300 text-sm font-normal">
                     Your account is safe and secure.
                   </p>
                 </div>

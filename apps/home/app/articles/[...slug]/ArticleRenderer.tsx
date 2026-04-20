@@ -27,7 +27,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         </div>
 
         {/* Headline */}
-        <h1 className="font-serif text-5xl md:text-7xl italic leading-[1.1] text-dark tracking-tight mb-8">
+        <h1 className="font -serif text-5xl md:text-7xl italic leading-[1.1] text-dark tracking-tight mb-8">
           {article.headline}
         </h1>
       </header>
@@ -50,7 +50,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         {/* Abstract / Summary (The "Dek") */}
         {article.summary && (
           <div className="mb-16 text-center">
-            <p className="font-serif text-xl md:text-2xl leading-relaxed text-neutral-600 italic">
+            <p className="font -serif text-xl md:text-2xl leading-relaxed text-neutral-600 italic">
               {article.summary}
             </p>
             <div className="mx-auto mt-12 h-[1px] w-24 bg-dark"></div>
@@ -61,11 +61,11 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
         <div
           className={`
             prose prose-lg max-w-none 
-            prose-headings:font-serif prose-headings:font-light prose-headings:italic prose-headings:text-dark
+            prose-headings:font -serif prose-headings:font-normal prose-headings:italic prose-headings:text-dark
             prose-p:font-sans prose-p:text-base prose-p:leading-8 prose-p:text-neutral-800
             prose-a:text-dark prose-a:underline prose-a:underline-offset-4 prose-a:decoration-1 hover:prose-a:decoration-2
             prose-strong:font-bold prose-strong:text-dark
-            prose-blockquote:border-l-2 prose-blockquote:border-dark prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-2xl prose-blockquote:font-serif prose-blockquote:not-italic prose-blockquote:text-neutral-900
+            prose-blockquote:border-l-2 prose-blockquote:border-dark prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-2xl prose-blockquote:font -serif prose-blockquote:not-italic prose-blockquote:text-neutral-900
             prose-img:my-12 prose-img:w-full prose-img:shadow-none
             prose-ul:list-disc prose-ul:pl-6
             prose-ol:list-decimal prose-ol:pl-6
@@ -75,7 +75,7 @@ const ArticleRenderer = ({ article }: { article: EditorialSchemaTypes }) => {
 
         {/* 4. FOOTER SIGN-OFF */}
         <div className="mt-24 mb-12 flex justify-center">
-          <span className="font-serif text-3xl italic text-neutral-300">
+          <span className="font -serif text-3xl italic text-neutral-300">
             Fin.
           </span>
         </div>

@@ -60,7 +60,7 @@ export default function DashboardIndicator({
   return (
     <div className="w-full flex justify-between items-center">
       <div className="space-y-1">
-        <p className="text-fluid-xxs text-dark font-light">
+        <p className="text-fluid-xxs text-dark font-normal">
           {greeting}, <strong>{admin_name}</strong>
         </p>
 
@@ -68,7 +68,7 @@ export default function DashboardIndicator({
       </div>
 
       <div className="flex gap-2 items-center">
-        <RiAdminLine className="text-fluid-xxs font-light text-dark" />
+        <RiAdminLine className="text-fluid-xxs font-normal text-dark" />
         <div>
           <p className="text-dark text-fluid-xxs font-bold">{admin_name}</p>
           <p className="text-dark text-fluid-xxs font-semibold">

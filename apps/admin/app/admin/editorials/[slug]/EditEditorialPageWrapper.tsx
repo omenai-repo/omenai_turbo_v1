@@ -53,7 +53,7 @@ export default function EditEditorialPageWrapper({
           <h1 className="text-xl font-medium tracking-normal text-neutral-900">
             Editorial Workspace
           </h1>
-          <p className="text-sm text-neutral-500 font-light mt-0.5">
+          <p className="text-sm text-neutral-500 font-normal mt-0.5">
             Edit an existing editorial
           </p>
         </div>

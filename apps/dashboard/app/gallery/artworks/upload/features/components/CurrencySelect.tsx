@@ -66,7 +66,7 @@ export const CurrencySelect = ({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between px-3 py-3.5 bg-white  rounded -md text-sm transition-all duration-200 border border-slate-300 focus:border-dark outline-none focus:ring-0
+        className={`w-full flex items-center justify-between px-3 py-3.5 bg-white  rounded-sm  text-sm transition-all duration-200 border border-slate-300 focus:border-dark outline-none focus:ring-0
           ${disabled ? "bg-slate-100 text-slate-400 cursor-not-allowed" : ""}
         `}
       >
@@ -76,7 +76,7 @@ export const CurrencySelect = ({
               <img
                 src={`https://flagcdn.com/w40/${getCountryCode(selectedItem.code)}.png`}
                 alt={selectedItem.code}
-                className="w-5 h-auto object-cover rounded -sm shadow-sm"
+                className="w-5 h-auto object-cover rounded-sm  shadow-sm"
                 loading="lazy"
               />
               <span className="truncate font-medium">{selectedItem.code}</span>
@@ -97,7 +97,7 @@ export const CurrencySelect = ({
       {/* The Dropdown Menu - Positioned Above */}
       {isOpen && (
         // MODIFIED LINE BELOW: Changed mt-1 to bottom-full and mb-1
-        <div className="absolute z-50 bottom-full mb-1 w-[300px] bg-white border border-slate-100 rounded -lg shadow-xl max-h-96 overflow-y-auto animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute z-50 bottom-full mb-1 w-[300px] bg-white border border-slate-100 rounded-sm  -lg shadow-xl max-h-96 overflow-y-auto animate-in fade-in zoom-in-95 duration-100">
           <ul className="py-1">
             {items.map((item) => {
               const countryCode = getCountryCode(item.code);
@@ -118,7 +118,7 @@ export const CurrencySelect = ({
                     <img
                       src={`https://flagcdn.com/w40/${countryCode}.png`}
                       alt={countryCode}
-                      className="w-5 h-auto object-cover rounded -sm shadow-sm"
+                      className="w-5 h-auto object-cover rounded-sm  shadow-sm"
                       loading="lazy"
                     />
                     <div className="flex flex-col">
