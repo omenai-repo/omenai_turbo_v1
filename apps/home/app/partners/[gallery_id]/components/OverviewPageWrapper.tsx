@@ -28,17 +28,6 @@ export default function GalleryOverviewPage({
 
   const [emblaRef] = useEmblaCarousel({ align: "start", dragFree: true });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-[50vh] flex items-center justify-center font-sans text-neutral-400 uppercase tracking-widest text-xs animate-pulse">
-        Loading Profile...
-      </div>
-    );
-  }
-
-  if (isError || !data) return null;
-  // app/gallery/[gallery_id]/page.tsx (Inside the component, before the return statement)
-
   const { highlightEvent, historyEvents, status } = useMemo(() => {
     const events = data?.events || [];
 
@@ -50,7 +39,6 @@ export default function GalleryOverviewPage({
     const upcoming: any[] = [];
     const past: any[] = [];
 
-    // 1. Classify all events
     events.forEach((event: any) => {
       const eventStatus = getEventStatus(event.start_date, event.end_date);
       if (eventStatus === "Active") active.push(event);
@@ -58,19 +46,16 @@ export default function GalleryOverviewPage({
       else past.push(event);
     });
 
-    // 2. Find the immediate next upcoming event (closest to today)
     const immediateUpcoming = [...upcoming].sort(
       (a, b) =>
         new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
     );
 
-    // 3. Find the most recent past event
     const recentPast = [...past].sort(
       (a, b) =>
         new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
     );
 
-    // 4. Assign the headliner based on priority
     let headliner = null;
     let currentStatus = null;
 
@@ -85,7 +70,6 @@ export default function GalleryOverviewPage({
       currentStatus = "Closed";
     }
 
-    // 5. The rest go to the history carousel
     const history = events.filter(
       (e: any) => e.event_id !== headliner?.event_id,
     );
@@ -96,6 +80,17 @@ export default function GalleryOverviewPage({
       status: currentStatus,
     };
   }, [data?.events]);
+
+  // ✅ Now safe to conditionally return
+  if (isLoading) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center font-sans text-neutral-400 uppercase tracking-widest text-xs animate-pulse">
+        Loading Profile...
+      </div>
+    );
+  }
+
+  if (isError || !data) return null;
 
   return (
     <div className="w-full pb-32">
