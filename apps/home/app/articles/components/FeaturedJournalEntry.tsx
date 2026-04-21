@@ -37,7 +37,7 @@ export default function FeaturedJournalEntry({
               {article.date ? formatISODate(article.date) : "Today"}
             </span>
 
-            <h2 className="font -serif text-3xl md:text-4xl lg:text-5xl text-dark  leading-[1.1] mb-6 group-hover:underline decoration-neutral-300 underline-offset-8">
+            <h2 className="font -serif text-3xl md:text-4xl lg:text-5xl text-dark  leading-[1.1] mb-6 group-hover:underline decoration-dark underline-offset-8">
               {article.headline}
             </h2>
 

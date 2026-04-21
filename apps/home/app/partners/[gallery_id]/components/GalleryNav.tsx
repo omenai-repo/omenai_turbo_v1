@@ -1,3 +1,4 @@
+// GalleryNav.tsx
 "use client";
 
 import React from "react";
@@ -8,19 +9,18 @@ export const GalleryNav = ({ galleryId }: { galleryId: string }) => {
   const pathname = usePathname();
 
   const tabs = [
-    { name: "Overview", path: `/partners/${galleryId}` }, // Root path
+    { name: "Overview", path: `/partners/${galleryId}` },
     { name: "Works", path: `/partners/${galleryId}/works` },
-    { name: "Shows & Fairs", path: `/partners/${galleryId}/shows` },
+    { name: "Shows, Events & Fairs", path: `/partners/${galleryId}/shows` },
     { name: "Artists", path: `/partners/${galleryId}/artists` },
     { name: "Contact", path: `/partners/${galleryId}/contact` },
   ];
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-neutral-200 transition-all duration-300">
-      <div className="max-w-[1600px] mx-auto px-4">
+    <nav className="sticky top-[66px] z-40 w-full bg-white/80 backdrop-blur-md border-b border-neutral-200 transition-all duration-300">
+      <div className="max-w-[1600px] w-full px-4">
         <ul className="flex items-center gap-8 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => {
-            // Check if active. Exact match for Overview, partial match for nested routes.
             const isActive =
               tab.name === "Overview"
                 ? pathname === tab.path
@@ -35,7 +35,6 @@ export const GalleryNav = ({ galleryId }: { galleryId: string }) => {
                   }`}
                 >
                   {tab.name}
-                  {/* Active Indicator Underline */}
                   {isActive && (
                     <span className="absolute bottom-0 left-0 w-full h-[2px] bg-dark" />
                   )}

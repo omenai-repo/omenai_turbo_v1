@@ -54,7 +54,7 @@ export default function LatestArtworks({
         <div className="flex gap-5 items-end pb-4">
           {artworks.map((art: ArtworkSchemaTypes) => (
             // Embla Slides: Fixed width, shrink-0 ensures they don't crush together
-            <div key={art.art_id} className="flex-[0_0_240px] min-w-0">
+            <div key={art.art_id} className="flex-[0_0_200px] min-w-0">
               <ArtworkCard
                 key={art.art_id}
                 image={art.url}

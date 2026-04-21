@@ -51,9 +51,7 @@ export default function ArticleWrapper() {
 
   return (
     <div className="min-h-screen bg-white text-dark ">
-      <DesktopNavbar />
-
-      <main className="container mx-auto pb-4">
+      <main className=" mx-auto p-4 lg:p-8">
         {/* 1. MASTHEAD */}
         <header className="mb-16 border-b border-neutral-100  flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl">

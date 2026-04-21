@@ -1,7 +1,6 @@
-// app/gallery/[gallery_id]/page.tsx
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
@@ -38,14 +37,65 @@ export default function GalleryOverviewPage({
   }
 
   if (isError || !data) return null;
+  // app/gallery/[gallery_id]/page.tsx (Inside the component, before the return statement)
 
-  const highlightEvent =
-    data.events && data.events.length > 0 ? data.events[0] : null;
-  const historyEvents =
-    data.events && data.events.length > 1 ? data.events.slice(1) : [];
-  const status = highlightEvent
-    ? getEventStatus(highlightEvent.start_date, highlightEvent.end_date)
-    : null;
+  const { highlightEvent, historyEvents, status } = useMemo(() => {
+    const events = data?.events || [];
+
+    if (events.length === 0) {
+      return { highlightEvent: null, historyEvents: [], status: null };
+    }
+
+    const active: any[] = [];
+    const upcoming: any[] = [];
+    const past: any[] = [];
+
+    // 1. Classify all events
+    events.forEach((event: any) => {
+      const eventStatus = getEventStatus(event.start_date, event.end_date);
+      if (eventStatus === "Active") active.push(event);
+      else if (eventStatus === "Upcoming") upcoming.push(event);
+      else past.push(event);
+    });
+
+    // 2. Find the immediate next upcoming event (closest to today)
+    const immediateUpcoming = [...upcoming].sort(
+      (a, b) =>
+        new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
+    );
+
+    // 3. Find the most recent past event
+    const recentPast = [...past].sort(
+      (a, b) =>
+        new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
+    );
+
+    // 4. Assign the headliner based on priority
+    let headliner = null;
+    let currentStatus = null;
+
+    if (active.length > 0) {
+      headliner = active[0];
+      currentStatus = "Active";
+    } else if (immediateUpcoming.length > 0) {
+      headliner = immediateUpcoming[0];
+      currentStatus = "Upcoming";
+    } else if (recentPast.length > 0) {
+      headliner = recentPast[0];
+      currentStatus = "Closed";
+    }
+
+    // 5. The rest go to the history carousel
+    const history = events.filter(
+      (e: any) => e.event_id !== headliner?.event_id,
+    );
+
+    return {
+      highlightEvent: headliner,
+      historyEvents: history,
+      status: currentStatus,
+    };
+  }, [data?.events]);
 
   return (
     <div className="w-full pb-32">
@@ -175,8 +225,20 @@ export default function GalleryOverviewPage({
                       <h4 className="font-serif text-xl text-dark group-hover:text-neutral-600 transition-colors line-clamp-1">
                         {event.title}
                       </h4>
+                      {/* <p className="font-sans text-[11px] text-neutral-400 tracking-wide uppercase pt-1">
+                        {event.location.city}, {event.location.country}
+                      </p> */}
                       <p className="font-sans text-[11px] text-neutral-400 tracking-wide uppercase pt-1">
-                        {new Date(event.start_date).getFullYear()}
+                        {new Date(event.start_date).toLocaleDateString(
+                          "en-US",
+                          { month: "short", day: "numeric" },
+                        )}{" "}
+                        —{" "}
+                        {new Date(event.end_date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </p>
                     </div>
                   </Link>

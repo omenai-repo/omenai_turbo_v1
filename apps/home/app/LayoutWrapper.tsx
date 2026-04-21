@@ -34,7 +34,7 @@ export const LayoutWrapper = ({
             <LoginModal />
             <RecoveryModal />
             <OrderReceivedModal />
-            <div className="2xl:px-12 xl:px-8 px-4">
+            <div className="">
               {children}
               <Suspense fallback={null}>
                 <SupportWidget />

@@ -38,14 +38,14 @@ const DesktopNavbar = () => {
   return (
     <>
       <nav
-        className={`fixed z-[30] top-0 left-0 right-0 transition-all duration-300 ease-in-out border-b
+        className={`fixed z-[30] px-4 py-4 md:px-8 top-0 left-0 right-0 transition-all duration-300 ease-in-out border-b
           ${
             isScrolled
               ? "py-3 bg-white/95 backdrop-blur-md border-neutral-200 shadow-sm"
               : "py-5 bg-white border-neutral-100"
           }`}
       >
-        <div className="max-w-full mx-auto px-6 md:px-12 flex items-center justify-between">
+        <div className="max-w-full mx-auto flex items-center justify-between">
           {/* LEFT: Logo & Nav */}
           <div className="flex items-center gap-10">
             <IndividualLogo />

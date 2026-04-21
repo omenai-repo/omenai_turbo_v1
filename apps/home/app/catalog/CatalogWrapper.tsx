@@ -13,7 +13,10 @@ import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkSto
 export default function CatalogWrapper() {
   const { artwork_total } = artworkStore();
   return (
-    <main className="relative bg-white min-h-screen" suppressHydrationWarning>
+    <main
+      className="relative p-4 md:p-8 bg-white min-h-screen"
+      suppressHydrationWarning
+    >
       <DesktopNavbar />
 
       {/* 1. THE ARCHIVE HEADER */}

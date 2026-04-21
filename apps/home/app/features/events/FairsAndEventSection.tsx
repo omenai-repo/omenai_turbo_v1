@@ -63,10 +63,10 @@ export const FairsAndEventsSection = () => {
   if (isError || (events && events.length === 0)) return null;
 
   return (
-    <section className="w-full p-8 bg-neutral-50 border-y border-neutral-100">
+    <section className="w-full">
       <div className="max-w-[1600px] mx-auto">
         {/* Header Strip */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-neutral-200 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4">
           <div>
             {/* font-serif for the elegant section header */}
             <h2 className="text-3xl font-serif font-light text-dark">

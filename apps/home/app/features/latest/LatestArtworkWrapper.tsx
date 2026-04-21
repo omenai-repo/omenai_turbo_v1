@@ -30,31 +30,28 @@ export default function LatestArtworkWrapper({
     return <SectionLoaderContainers title="Loading New Arrivals" />;
 
   return (
-    <section className="w-full bg-white p-8 overflow-hidden">
+    <section className="w-full bg-whiteoverflow-hidden">
       <div className="max-w-[1800px] mx-auto">
         {/* 1. MARKETPLACE HEADER */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-              </span>
-              <span className="font-sans text-[10px] text-black tracking-[0.2em] uppercase font-bold">
-                Recently Added
+            <h2 className="font-serif text-3xl font-light text-black leading-none tracking-tight">
+              Curator&apos;s Picks
+            </h2>
+            <div className="flex items-center mt-4">
+              <span className=" text-[16px] text-neutral-500 font-normal">
+                Handpicked by our chief curators—distinct pieces that reflect
+                our taste, standards, and vision.
               </span>
             </div>
-            <h2 className="font-serif text-3xl font-light text-black leading-none tracking-tight">
-              New Arrivals
-            </h2>
           </div>
 
           <div className="hidden md:flex items-center">
             <Link
               href="/catalog"
-              className="group flex items-center gap-2 font-sans text-[11px] uppercase tracking-widest font-bold text-black border-b border-transparent hover:border-black transition-all pb-1"
+              className="group flex items-center gap-2 font-sans text-[11px] uppercase tracking-widest font-bold text-neutral-500 border-b border-transparent hover:border-black transition-all pb-1"
             >
-              View All Arrivals
+              View All Works
               <IoArrowForward
                 className="transition-transform duration-300 group-hover:translate-x-1"
                 size={14}
@@ -84,7 +81,7 @@ export default function LatestArtworkWrapper({
             href="/catalog"
             className="w-full text-center py-4 border border-black font-sans text-[10px] uppercase tracking-widest font-bold text-black hover:bg-black hover:text-white transition-colors duration-300"
           >
-            View Full Archive
+            View all works
           </Link>
         </div>
       </div>

@@ -18,6 +18,8 @@ const fetchWorks = async ({ pageParam = 1, queryKey }: any) => {
     page: pageParam.toString(),
     id: galleryId,
     limit: "20",
+    ...(filters.artist &&
+      filters.artist !== "All" && { artist: filters.artist }),
     ...(filters.medium &&
       filters.medium !== "All" && { medium: filters.medium }),
     ...(filters.price && filters.price !== "All" && { price: filters.price }),
@@ -193,9 +195,16 @@ export default function GalleryWorksPage({ galleryId }: { galleryId: string }) {
         </div>
       ) : (
         <>
-          <p className="text-[11px] text-neutral-500 my-5">
-            {allArtworks.length} works
-          </p>
+          {artistParam && allArtworks.length > 0 ? (
+            <p className="text-[11px] text-neutral-500 my-5">
+              Works by {allArtworks[0].artist} ({allArtworks.length})
+            </p>
+          ) : (
+            <p className="text-[11px] text-neutral-500 my-5">
+              {allArtworks.length} works
+            </p>
+          )}
+
           <MasonryGrid>
             {allArtworks.map((art: any) => (
               <div key={art.art_id} className="break-inside-avoid">

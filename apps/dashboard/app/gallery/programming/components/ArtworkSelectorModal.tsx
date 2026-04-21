@@ -305,10 +305,10 @@ export const ArtworkSelectorModal = ({
           >
             {isSubmitting
               ? validatedPayload
-                ? "Publishing Event..."
+                ? "Publishing Draft..."
                 : "Adding Works..."
               : validatedPayload
-                ? "Publish Event"
+                ? "Publish Draft"
                 : "Add Works"}
           </button>
         </div>

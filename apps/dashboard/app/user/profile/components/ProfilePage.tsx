@@ -105,7 +105,7 @@ export default function UserProfile({
 
   return (
     <div className="min-h-screen w-full text-dark ">
-      <div className="max-w-7xl mx-auto py-4">
+      <div className="max-w-full mx-auto py-4">
         {/* --- Header Section --- */}
         <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
           <ProfileAvatar name={formData.name} verified={user.verified} />

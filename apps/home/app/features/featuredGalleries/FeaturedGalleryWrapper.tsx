@@ -63,15 +63,17 @@ export const FeaturedGalleriesSection = () => {
   if (isError || (galleries?.data && galleries.data.length === 0)) return null;
 
   return (
-    <section className="w-full py-12 bg-white">
-      <div className="max-w-[1600px] mx-auto py-12 px-4">
+    <section className="w-full bg-white">
+      <div className="max-w-[1600px] mx-auto">
         {/* Header Strip */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-neutral-200 pb-4">
           <div>
             <h2 className="text-3xl font-serif font-light text-dark">
               {/* Uses the total from pagination to show the true number of galleries */}
-              Featured Galleries (
-              {galleries?.pagination?.total || galleries?.data.length || 0})
+              Featured Galleries{" "}
+              <sup className="text-blue-600 text-lg font-sans">
+                ({galleries?.pagination?.total || galleries?.data.length || 0})
+              </sup>
             </h2>
           </div>
 

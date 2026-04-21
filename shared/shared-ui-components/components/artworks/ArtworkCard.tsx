@@ -97,19 +97,7 @@ export default function ArtworkCard({
   return (
     <FadeUpCard>
       <div className="group/card relative w-full flex flex-col">
-        {/* ══════════════════════════════════════════════════════════════════
-            IMAGE BLOCK
-            • `relative` so overlay children can be absolutely positioned
-            • NO aspect-ratio class — height comes from the image itself
-            • `overflow-hidden` clips the scale-up hover on the image
-        ══════════════════════════════════════════════════════════════════ */}
         <div className="relative w-full overflow-hidden bg-neutral-100 rounded-sm">
-          {/*
-           * The image is a normal block element (not fill).
-           * width/height props tell Next.js the intrinsic size for the
-           * layout-shift hint. CSS then sets width:100% height:auto so it
-           * scales to the column width while preserving the exact ratio.
-           */}
           <Image
             src={image_href}
             alt={name}
@@ -237,7 +225,7 @@ export default function ArtworkCard({
           >
             <h3
               className="
-              font-serif italic text-[14px] font-normal text-black
+              font-serif italic text-[16px] font-normal text-black
               leading-snug line-clamp-2
               group-hover/title:opacity-50 transition-opacity duration-200
             "
@@ -248,7 +236,7 @@ export default function ArtworkCard({
 
           {/* Medium */}
           {medium && (
-            <p className="text-[10px] font-sans text-neutral-400 tracking-wide leading-none">
+            <p className="text-[11px] font-sans font-light text-neutral-400 tracking-wide leading-none">
               {medium}
             </p>
           )}

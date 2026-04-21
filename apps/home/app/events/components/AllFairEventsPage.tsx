@@ -11,7 +11,7 @@ export default function AllFairsEventsPage() {
   return (
     <>
       <DesktopNavbar />
-      <main className="min-h-screen bg-white py-8">
+      <main className="min-h-screen bg-white py-8 p-4 md:p-8">
         <div className="max-w-[1600px] mx-auto">
           {/* High-level Page Header */}
           <div className="mb-16">

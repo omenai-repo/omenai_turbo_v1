@@ -56,15 +56,15 @@ export default function Collections({
 
   // HOMEPAGE MODE
   return (
-    <section className="w-full bg-[#f5f5f5] py-8 border-t border-neutral-200">
-      <div className="px-6 lg:px-12">
+    <section className="w-full">
+      <div className="">
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div>
             <span className="block mb-3 text-[9px] font-mono text-dark  tracking-wide uppercase">
               Featured Collections
             </span>
-            <h2 className="text-2xl md:text-3xl font -serif text-dark ">
+            <h2 className="text-3xl font-serif font-light text-dark">
               Browse by medium
             </h2>
           </div>

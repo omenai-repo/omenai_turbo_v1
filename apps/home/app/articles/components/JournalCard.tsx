@@ -27,7 +27,7 @@ export default function JournalCard({
             src={image_href}
             alt={article.headline}
             fill
-            className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
+            className="object-cover object-top transition-all duration-700 ease-out group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
         </div>

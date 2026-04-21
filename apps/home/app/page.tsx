@@ -45,11 +45,9 @@ export default function Home() {
 
   return (
     <main>
-      <div>
-        <DesktopNavbar />
-
-        {promotionals && <Hero promotionals={promotionals} />}
-
+      <DesktopNavbar />
+      {promotionals && <Hero promotionals={promotionals} />}
+      <div className="p-4 md:p-8  space-y-16">
         <FairsAndEventsSection />
 
         <LatestArtworkWrapper
@@ -75,12 +73,8 @@ export default function Home() {
           />
         )}
       </div>
-      <div className="my-6">
-        <AppStoreAd />
-      </div>
-      <div className="my-6">
-        <Newsletter />
-      </div>
+      <AppStoreAd />
+      <Newsletter />
       <Footer />
     </main>
   );

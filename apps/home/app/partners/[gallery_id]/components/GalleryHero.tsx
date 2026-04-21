@@ -1,4 +1,3 @@
-// app/gallery/[gallery_id]/GalleryHero.tsx
 import React from "react";
 import { getOptimizedLogoImage } from "@omenai/shared-lib/storage/getImageFileView";
 import { GallerySchemaTypes } from "@omenai/shared-types";

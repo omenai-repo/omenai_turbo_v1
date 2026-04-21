@@ -10,8 +10,8 @@ export default function AllShowsPage() {
   return (
     <section>
       <DesktopNavbar />
-      <main className="min-h-screen bg-white py-12">
-        <div className="max-w-[1600px] mx-auto">
+      <main className="min-h-screen bg-white pb-12">
+        <div className="max-w-[1600px] mx-auto p-4 md:p-8">
           <AllShowsClient />
         </div>
       </main>

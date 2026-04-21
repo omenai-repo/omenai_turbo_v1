@@ -64,12 +64,12 @@ export const FeaturedShowsSection = () => {
   if (isError || (shows && shows.length === 0)) return null;
 
   return (
-    <section className="w-full p-8 bg-white overflow-hidden">
+    <section className="w-full bg-white overflow-hidden">
       <div className=" max-w-[1800px] mx-auto">
         {/* Responsive Header Strip */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-neutral-200 pb-6">
           <div>
-            <h2 className="font-serif text-xl md:text-2xl font-light text-black tracking-tight">
+            <h2 className="text-3xl font-serif font-light text-dark">
               Featured Shows
             </h2>
             <p className="font-sans text-sm text-neutral-500 mt-2">

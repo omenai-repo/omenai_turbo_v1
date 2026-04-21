@@ -8,13 +8,12 @@ import { GalleryHero } from "./GalleryHero";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 
 export default function GalleryWrapper({ galleryId }: { galleryId: string }) {
-  // Direct server-side DB call to get the layout data
   const { data: gallery, isLoading } = useQuery({
     queryKey: ["galleryProfile", galleryId],
     queryFn: async () => {
       const response = await getGalleryProfile(galleryId);
       if (!response.isOk || !response.data) {
-        notFound(); // Bails out to the 404 page if the gallery doesn't exist
+        notFound();
       }
       return response.data;
     },
@@ -23,9 +22,9 @@ export default function GalleryWrapper({ galleryId }: { galleryId: string }) {
   if (isLoading) return <Load />;
 
   return (
-    <div className="relative">
+    <>
       <GalleryHero gallery={gallery} />
       <GalleryNav galleryId={galleryId} />
-    </div>
+    </>
   );
 }

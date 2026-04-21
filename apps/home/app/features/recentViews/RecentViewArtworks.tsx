@@ -3,11 +3,11 @@
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
+  MdHistory,
 } from "react-icons/md";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import RecentViewedCard from "@omenai/shared-ui-components/components/artworks/RecentViewedCard";
-import { MdHistory } from "react-icons/md";
 
 export default function RecentViewArtworks({ artworks }: { artworks: any }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -46,58 +46,60 @@ export default function RecentViewArtworks({ artworks }: { artworks: any }) {
   if (!artworks || artworks.length === 0) return null;
 
   return (
-    <section className="w-full bg-[#FAFAFA] py-12 md:py-16 border-t border-neutral-200">
-      <div className="px-4">
+    <section className="w-full">
+      <div className="w-full">
         {/* 1. HEADER: Utility Style (Smaller, Functional) */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <MdHistory className="text-dark  text-xl" />
-            <h2 className="text-xl md:text-2xl font -serif text-dark ">
-              Recently Viewed
-            </h2>
-          </div>
-
-          {/* Controls */}
-          <div className="flex gap-2">
-            <button
-              onClick={scrollPrev}
-              disabled={!canScrollPrev}
-              className="flex h-8 w-8 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
-            >
-              <MdOutlineKeyboardArrowLeft className="text-lg" />
-            </button>
-            <button
-              onClick={scrollNext}
-              disabled={!canScrollNext}
-              className="flex h-8 w-8 items-center justify-center rounded -full border border-neutral-300 bg-white text-dark  hover:bg-[#091830] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-dark  transition-colors"
-            >
-              <MdOutlineKeyboardArrowRight className="text-lg" />
-            </button>
-          </div>
+        <div className="flex items-center gap-3 mb-6">
+          <MdHistory className="text-dark text-xl" />
+          <h2 className="text-3xl font-serif text-dark">Recently Viewed</h2>
         </div>
 
-        {/* 2. CAROUSEL */}
-        <div className="embla overflow-hidden" ref={emblaRef}>
-          <div className="embla__container flex gap-4 md:gap-6">
-            {artworks.map((artwork: any, index: number) => {
-              return (
-                <div
-                  className="embla__slide min-w-0 flex-[0_0_auto]"
-                  key={index + artwork.art_id}
-                >
-                  {/* Compact Card Width */}
-                  <div className="w-[200px] md:w-[240px]">
-                    <RecentViewedCard
-                      image={artwork.url}
-                      artist={artwork.artist}
-                      name={artwork.artwork}
-                      art_id={artwork.art_id}
-                    />
+        {/* 2. CAROUSEL WRAPPER */}
+        {/* Added a relative wrapper here to contain the absolutely positioned buttons */}
+        <div className="relative group">
+          {/* Previous Button (Left Side) */}
+          <button
+            onClick={scrollPrev}
+            disabled={!canScrollPrev}
+            className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-200 bg-white shadow-md text-dark hover:bg-[#091830] hover:text-white disabled:opacity-0 disabled:pointer-events-none transition-all duration-300"
+            aria-label="Previous slide"
+          >
+            <MdOutlineKeyboardArrowLeft className="text-xl" />
+          </button>
+
+          {/* Embla Container */}
+          <div className="embla overflow-hidden" ref={emblaRef}>
+            <div className="embla__container flex">
+              {artworks.map((artwork: any, index: number) => {
+                return (
+                  <div
+                    className="embla__slide min-w-0 flex-[0_0_auto]"
+                    key={index + artwork.art_id}
+                  >
+                    {/* Compact Card Width */}
+                    <div className="w-[200px] md:w-[240px]">
+                      <RecentViewedCard
+                        image={artwork.url}
+                        artist={artwork.artist}
+                        name={artwork.artwork}
+                        art_id={artwork.art_id}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
+          {/* Next Button (Right Side) */}
+          <button
+            onClick={scrollNext}
+            disabled={!canScrollNext}
+            className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-neutral-200 bg-white shadow-md text-dark hover:bg-[#091830] hover:text-white disabled:opacity-0 disabled:pointer-events-none transition-all duration-300"
+            aria-label="Next slide"
+          >
+            <MdOutlineKeyboardArrowRight className="text-xl" />
+          </button>
         </div>
       </div>
     </section>
