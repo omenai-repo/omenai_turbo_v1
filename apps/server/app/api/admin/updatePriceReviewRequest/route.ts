@@ -3,7 +3,6 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { PriceReview } from "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema";
 import { CombinedConfig } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
-import { uploadArtworkLogic } from "../../uploadArtwork.service";
 import { createErrorRollbarReport } from "../../util";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { NotFoundError } from "../../../../custom/errors/dictionary/errorDictionary";
@@ -11,6 +10,7 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { sendPriceReviewApproved } from "@omenai/shared-emails/src/models/artist/sendPriceReviewApproved";
 import { sendPriceReviewCompleted } from "@omenai/shared-emails/src/models/artist/sendPriceReviewCompleted";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { uploadArtworkLogic } from "../../services/uploadArtwork.service";
 
 const config: CombinedConfig = {
   ...strictRateLimit,

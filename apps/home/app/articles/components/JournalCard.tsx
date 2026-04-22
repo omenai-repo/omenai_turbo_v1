@@ -22,12 +22,12 @@ export default function JournalCard({
     >
       <article className="flex h-full flex-col gap-4">
         {/* 1. IMAGE */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded -sm bg-neutral-100 shadow-sm transition-all duration-300 group-hover:shadow-md">
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded bg-neutral-100 shadow-sm transition-all duration-300 group-hover:shadow-md">
           <Image
             src={image_href}
             alt={article.headline}
             fill
-            className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
+            className="object-cover object-top transition-all duration-700 ease-out group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
         </div>
@@ -43,7 +43,7 @@ export default function JournalCard({
             </span>
           </div>
 
-          <h3 className="font-serif text-xl text-dark  leading-tight group-hover:underline decoration-neutral-300 underline-offset-4 line-clamp-2">
+          <h3 className="font -serif text-xl text-dark  leading-tight group-hover:underline decoration-neutral-300 underline-offset-4 line-clamp-2">
             {article.headline}
           </h3>
 

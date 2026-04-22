@@ -32,8 +32,8 @@ export default function Editorials() {
   return (
     <>
       {editorials && editorials?.length === 0 ? null : (
-        <section className="w-full bg-[#f5f5f5] py-16 md:py-24 border-t border-neutral-200">
-          <div className="px-4 lg:px-12">
+        <section className="w-full">
+          <div className="">
             {/* 1. MARKETPLACE HEADER */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
               <div>
@@ -41,14 +41,14 @@ export default function Editorials() {
                   <span className="flex items-center justify-center h-6 w-6 rounded -full bg-[#091830]/10 text-dark ">
                     <Newspaper />
                   </span>
-                  <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
+                  <span className="text-xs font-sans text-neutral-500 font-normal  tracking-normal uppercase">
                     Omenai Editorial
                   </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+                <h2 className="text-3xl font-serif font-light text-dark">
                   Stories & Insights
                 </h2>
-                <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
+                <p className="mt-2 font-sans text-[16px] text-neutral-500 max-w-lg">
                   In-depth features, market analysis, and conversations with
                   artists.
                 </p>
@@ -72,7 +72,7 @@ export default function Editorials() {
             <div className="mt-10 flex md:hidden justify-center">
               <Link
                 href="/articles"
-                className="w-full py-3 text-center rounded -md border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
+                className="w-full py-3 text-center rounded border border-neutral-200 text-sm font-sans font-medium text-neutral-800"
               >
                 Read All Articles
               </Link>

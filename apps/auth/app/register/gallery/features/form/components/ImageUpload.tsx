@@ -72,7 +72,7 @@ export default function ImageUpload() {
       >
         <label
           htmlFor="logo"
-          className="text-dark text-fluid-xxs text-left font-light sm:text-fluid-xs"
+          className="text-dark text-fluid-xxs text-left font-normal sm:text-fluid-xs"
         >
           Upload a logo of your gallery
         </label>

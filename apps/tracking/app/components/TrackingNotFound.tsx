@@ -13,7 +13,7 @@ export default function TrackingNotFound({
 }: TrackingNotFoundProps) {
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-12">
-      <div className="bg-white rounded -2xl shadow-lg border border-slate-100 p-8 md:p-12 text-center">
+      <div className="bg-white rounded shadow-lg border border-slate-100 p-8 md:p-12 text-center">
         {/* Icon */}
         <div className="w-20 h-20 bg-amber-50 rounded -full flex items-center justify-center mx-auto mb-6">
           <PackageX className="w-10 h-10 text-amber-500" />
@@ -34,7 +34,7 @@ export default function TrackingNotFound({
         )}
 
         {/* Reasons */}
-        <div className="bg-slate-50 rounded -xl p-6 text-left mb-8 border border-slate-100">
+        <div className="bg-slate-50 rounded p-6 text-left mb-8 border border-slate-100">
           <h4 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
             <HelpCircle className="w-4 h-4 text-blue-500" /> Possible Reasons:
           </h4>

@@ -13,7 +13,7 @@ export default function NotFoundSearchResult() {
     <div className="flex flex-col items-center justify-center py-20 min-h-[50vh]">
       {/* Text Content */}
       <div className="text-center max-w-md space-y-4">
-        <h1 className="font-serif text-2xl md:text-3xl text-dark ">
+        <h1 className="font -serif text-2xl md:text-3xl text-dark ">
           No results for{" "}
           <span className="italic text-neutral-500">“{searchTerm}”</span>
         </h1>

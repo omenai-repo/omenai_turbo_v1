@@ -97,7 +97,7 @@ export function MetricCard({
       </div>
       <div className="mt-auto">
         <p
-          className={`font-serif text-2xl font-normal tracking-tight leading-none ${
+          className={`font -serif text-2xl font-normal tracking-tight leading-none ${
             isColored && variant ? valueStyles[variant] : "text-[#0E1B2E]"
           }`}
         >
@@ -105,7 +105,7 @@ export function MetricCard({
         </p>
         {sub && (
           <p
-            className={`text-[10px] mt-2 font-light ${
+            className={`text-[10px] mt-2 font-normal ${
               isColored && variant ? subStyles[variant] : "text-[#8A96A3]"
             }`}
           >
@@ -173,7 +173,7 @@ export function ErrorState({ message }: { message: string }) {
         <p className="text-[11px] tracking-[0.15em] uppercase text-rose-400 font-medium">
           Data Unavailable
         </p>
-        <p className="text-sm text-rose-400/70 font-light">{message}</p>
+        <p className="text-sm text-rose-400/70 font-normal">{message}</p>
       </div>
     </div>
   );
@@ -236,7 +236,7 @@ export function ChartTooltip({
                 {entry.dataKey ?? entry.name}
               </span>
             </div>
-            <span className="font-serif text-sm text-[#0E1B2E]">
+            <span className="font -serif text-sm text-[#0E1B2E]">
               {fmt(entry.value, entry.dataKey)}
             </span>
           </div>
@@ -273,7 +273,7 @@ export function DonutTooltip({
           {item.payload?.name ?? item.name}
         </p>
       </div>
-      <p className="font-serif text-base text-[#0E1B2E]">{fmt(item.value)}</p>
+      <p className="font -serif text-base text-[#0E1B2E]">{fmt(item.value)}</p>
     </div>
   );
 }

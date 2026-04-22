@@ -9,7 +9,7 @@ export default function Newsletter() {
               Market Intelligence
             </span>
 
-            <h2 className="font-serif text-4xl text-neutral-900 md:text-5xl">
+            <h2 className="font -serif text-4xl text-neutral-900 md:text-5xl">
               Join the{" "}
               <span className="italic text-neutral-500">Inner Circle.</span>
             </h2>

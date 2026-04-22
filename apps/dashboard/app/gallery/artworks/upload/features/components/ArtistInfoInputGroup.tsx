@@ -1,8 +1,11 @@
+import { galleryArtworkUploadStore } from "@omenai/shared-state-store/src/gallery/gallery_artwork_upload/GalleryArtworkUpload";
 import { uploadArtistDetailsInputMocks } from "../mocks";
+import { ArtistSelect } from "./ArtistSelect";
 import ArtworkSelectInput from "./ArtworkSelectInput";
 import ArtworkTextInput from "./ArtworkTextInput";
 
 export default function ArtistInfoInputGroup() {
+  const { artworkUploadData } = galleryArtworkUploadStore();
   return (
     <div className="my-10 w-full">
       {/* Header Section */}
@@ -14,12 +17,14 @@ export default function ArtistInfoInputGroup() {
       </div>
 
       {/* Main Card Container */}
-      <div className="bg-white border border-slate-200 rounded -xl p-6 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-sm  p-6 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {uploadArtistDetailsInputMocks.map((input, index) => {
             return (
               <div key={input.name} className="col-span-1">
-                {input.type === "text" ? (
+                {input.name === "artist" ? (
+                  <ArtistSelect />
+                ) : input.type === "text" ? (
                   <ArtworkTextInput
                     label={input.label}
                     placeholder={input.placeholder}

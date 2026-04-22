@@ -32,7 +32,7 @@ export default function ExhibitionStatusSection({
   };
 
   return (
-    <div className="bg-white rounded shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-slate-100 p-6 md:p-8 space-y-8">
+    <div className="bg-white rounded-sm  shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-slate-100 p-6 md:p-8 space-y-8">
       {/* Selection Area */}
       <div>
         <div className="mb-4">
@@ -49,7 +49,7 @@ export default function ExhibitionStatusSection({
           <button
             type="button"
             onClick={() => handleToggle(false)}
-            className={`relative flex items-center gap-3 p-4 rounded -xl border transition-all text-left ${
+            className={`relative flex items-center gap-3 p-4 rounded-sm  border transition-all text-left ${
               !isExhibition
                 ? "bg-slate-50 border-dark ring-1 ring-dark"
                 : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
@@ -75,7 +75,7 @@ export default function ExhibitionStatusSection({
           <button
             type="button"
             onClick={() => handleToggle(true)}
-            className={`relative flex items-center gap-3 p-4 rounded -xl border transition-all text-left ${
+            className={`relative flex items-center gap-3 p-4 rounded-sm  border transition-all text-left ${
               isExhibition
                 ? "bg-amber-50/30 border-amber-500 ring-1 ring-amber-500"
                 : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"

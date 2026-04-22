@@ -36,7 +36,7 @@ export default function ArtCatalog() {
 
   const arts = catalogChunk(
     reversedArtworks,
-    width <= 640 ? 1 : width <= 1280 ? 2 : width <= 1440 ? 3 : 4,
+    width <= 640 ? 1 : width <= 1280 ? 3 : width <= 1440 ? 4 : 5,
   );
   return (
     <div className="py-4 my-4 w-full">

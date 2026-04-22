@@ -6,8 +6,8 @@ export async function uploadArtworkData(
   data: Omit<
     ArtworkSchemaTypes,
     "art_id" | "availability" | "exclusivity_status"
-  >,
-  token: string
+  > & { artist_id?: string; newGhostArtistName?: string },
+  token: string,
 ) {
   try {
     const url = getApiUrl();

@@ -14,7 +14,7 @@ type GalleryArtworkUploadTypes = {
   image: File | null;
   setImage: (img: File | null) => void;
   artworkUploadData: ArtworkUploadStateTypes;
-  updateArtworkUploadData: (label: string, value: string | number) => void;
+  updateArtworkUploadData: (label: string, value: any) => void;
   clearData: () => void;
   errorFields: ErrorFields;
   updateErrorField: (label: string, value: string) => void;
@@ -26,6 +26,8 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
     setImage: (image: File | null) => set({ image }),
     artworkUploadData: {
       artist: "",
+      artist_id: "",
+      newGhostArtistName: "",
       year: 0,
       title: "",
       medium: "",
@@ -45,7 +47,7 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       currency: "",
       packaging_type: "rolled",
     },
-    updateArtworkUploadData: (label: string, value: string | number) => {
+    updateArtworkUploadData: (label: string, value: any) => {
       const data: Record<string, any> = get().artworkUploadData;
 
       if (label in data) {
@@ -60,6 +62,8 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       set({
         artworkUploadData: {
           artist: "",
+          artist_id: "",
+          newGhostArtistName: "",
           year: 0,
           title: "",
           medium: "",
@@ -91,8 +95,6 @@ export const galleryArtworkUploadStore = create<GalleryArtworkUploadTypes>(
       price: "",
       width: "",
       weight: "",
-      artist_birthyear: "",
-      artwork_description: "",
     },
     updateErrorField: (label: string, value: string) => {
       const data: Record<string, any> = get().errorFields;

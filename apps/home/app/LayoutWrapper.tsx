@@ -34,14 +34,12 @@ export const LayoutWrapper = ({
             <LoginModal />
             <RecoveryModal />
             <OrderReceivedModal />
-            <LenisProvider>
-              <div className="2xl:px-12 xl:px-8 px-4">
-                {children}
-                <Suspense fallback={null}>
-                  <SupportWidget />
-                </Suspense>
-              </div>
-            </LenisProvider>
+            <div className="">
+              {children}
+              <Suspense fallback={null}>
+                <SupportWidget />
+              </Suspense>
+            </div>
             <Analytics />
           </MantineProvider>
         </QueryProvider>

@@ -87,7 +87,7 @@ export default function PayoutDashboard() {
         <div className="">
           {/* Header */}
           <div className="mb-4">
-            <h1 className="text-fluid-sm font-semibold text-slate-900">
+            <h1 className="text-2xl font-normal tracking-tight text-dark">
               Payouts
             </h1>
             <p className="mt-1 text-sm text-slate-500">

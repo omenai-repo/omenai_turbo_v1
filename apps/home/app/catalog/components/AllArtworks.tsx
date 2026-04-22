@@ -12,6 +12,7 @@ import ArtworkCard from "@omenai/shared-ui-components/components/artworks/Artwor
 import Pagination from "@omenai/shared-ui-components/components/pagination/Pagination";
 import { filterStore } from "@omenai/shared-state-store/src/artworks/FilterStore";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
+import MasonryGrid from "@omenai/shared-ui-components/components/artworks/MasonryGrid";
 
 export default function AllArtworks() {
   const { currentPage, setCurrentPage } = artworkActionStore();
@@ -64,39 +65,28 @@ export default function AllArtworks() {
     );
   }
 
-  const arts = catalogChunk(
-    artworks,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
-  );
-
   return (
     <div className="w-full my-3">
-      <div className="flex flex-wrap gap-x-4 justify-center">
-        {arts.map((artworks: any[], index) => {
+      <MasonryGrid>
+        {artworks.map((art: any) => {
           return (
-            <div className="flex-1 gap-2 space-y-6" key={index}>
-              {artworks.map((art: any) => {
-                return (
-                  <ArtworkCard
-                    key={art.art_id}
-                    image={art.url}
-                    name={art.title}
-                    artist={art.artist}
-                    art_id={art.art_id}
-                    pricing={art.pricing}
-                    impressions={art.impressions as number}
-                    likeIds={art.like_IDs as string[]}
-                    sessionId={user ? user.id : undefined}
-                    availability={art.availability}
-                    medium={art.medium}
-                    author_id={art.author_id}
-                  />
-                );
-              })}
-            </div>
+            <ArtworkCard
+              key={art.art_id}
+              image={art.url}
+              name={art.title}
+              artist={art.artist}
+              art_id={art.art_id}
+              pricing={art.pricing}
+              impressions={art.impressions as number}
+              likeIds={art.like_IDs as string[]}
+              sessionId={user ? user.id : undefined}
+              availability={art.availability}
+              medium={art.medium}
+              author_id={art.author_id}
+            />
           );
         })}
-      </div>
+      </MasonryGrid>
 
       <Pagination
         total={pageCount}

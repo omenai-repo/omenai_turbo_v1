@@ -1,7 +1,7 @@
 // apps/web/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
-import { PT_Serif, Work_Sans } from "next/font/google";
+import { PT_Serif, Work_Sans, DM_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import { Provider as RollbarProvider } from "@rollbar/react";
@@ -32,9 +32,10 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-const work_sans = Work_Sans({
+const work_sans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-work_sans",
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 const pt_serif = PT_Serif({

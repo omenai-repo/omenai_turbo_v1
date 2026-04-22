@@ -255,7 +255,7 @@ export default function FinancialView() {
                   <span className="text-[9px] text-[#B0B8C1] tracking-[0.2em] uppercase text-center">
                     Total Demand
                   </span>
-                  <span className="font-serif text-lg text-[#0E1B2E] mt-1">
+                  <span className="font -serif text-lg text-[#0E1B2E] mt-1">
                     {fmt(totalDemand)}
                   </span>
                 </div>
@@ -282,7 +282,7 @@ export default function FinancialView() {
                           {item.name}
                         </span>
                       </div>
-                      <span className="font-serif text-xs text-[#0E1B2E]">
+                      <span className="font -serif text-xs text-[#0E1B2E]">
                         {fmt(item.amount)}
                       </span>
                     </div>
@@ -350,7 +350,7 @@ export default function FinancialView() {
                         {item.name}
                       </span>
                     </div>
-                    <span className="font-serif text-xs text-[#0E1B2E]">
+                    <span className="font -serif text-xs text-[#0E1B2E]">
                       {fmt(item.value)}
                     </span>
                   </div>
@@ -402,7 +402,7 @@ export default function FinancialView() {
                           {item.name}
                         </span>
                       </div>
-                      <span className="font-serif text-xs text-[#0E1B2E]">
+                      <span className="font -serif text-xs text-[#0E1B2E]">
                         {fmt(item.value as number)}
                       </span>
                     </div>

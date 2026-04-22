@@ -8,15 +8,16 @@ import { getPromotionalData } from "@omenai/shared-services/promotionals/getProm
 import Hero from "./features/hero/Hero";
 import { useQuery } from "@tanstack/react-query";
 import LatestArtworkWrapper from "./features/latest/LatestArtworkWrapper";
-import TrendingArtworkWrapper from "./features/trending/TrendingrtworksWrapper";
 import RecentViewWrapper from "./features/recentViews/RecentViewWrapper";
 
 import AppStoreAd from "./features/appStoreAd/AppStoreAd";
 import Load from "@omenai/shared-ui-components/components/loader/Load";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
-import TrendingArtistWrapper from "./features/trendingArtists/TrendingArtistWrapper";
 import Newsletter from "./Newsletter";
-import FeaturedgalleryWrapper from "./features/featuredGalleries/FeaturedGalleryWrapper";
+import { FeaturedShowsSection } from "./features/featuredShows/FeaturedShowsSection";
+import TrendingArtworkWrapper from "./features/trending/TrendingrtworksWrapper";
+import { FairsAndEventsSection } from "./features/events/FairsAndEventSection";
+import { FeaturedGalleriesSection } from "./features/featuredGalleries/FeaturedGalleryWrapper";
 
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
@@ -44,16 +45,21 @@ export default function Home() {
 
   return (
     <main>
-      <div>
-        <DesktopNavbar />
-
-        {promotionals && <Hero promotionals={promotionals} />}
+      <DesktopNavbar />
+      {promotionals && <Hero promotionals={promotionals} />}
+      <div className="p-4 md:p-8  space-y-16">
+        <FairsAndEventsSection />
 
         <LatestArtworkWrapper
           sessionId={user && user.role === "user" ? user.id : undefined}
         />
+
+        <FeaturedShowsSection />
         <Collections />
-        {/* <FeaturedgalleryWrapper /> */}
+        <TrendingArtworkWrapper
+          sessionId={user && user.role === "user" ? user.id : undefined}
+        />
+        <FeaturedGalleriesSection />
         <Editorials />
         {/* <TrendingArtistWrapper /> */}
         {user && user.role === "user" && (
@@ -67,12 +73,8 @@ export default function Home() {
           />
         )}
       </div>
-      <div className="my-6">
-        <AppStoreAd />
-      </div>
-      <div className="my-6">
-        <Newsletter />
-      </div>
+      <AppStoreAd />
+      <Newsletter />
       <Footer />
     </main>
   );

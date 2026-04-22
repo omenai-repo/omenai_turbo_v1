@@ -8,10 +8,13 @@ import {
   BadRequestError,
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
-import { UnifiedTrackingResponse, getDHLTracking } from "../../dhl_service";
-import { getUPSTracking } from "../../ups_service";
+import { getUPSTracking } from "../../services/ups_service";
 import { getLatLng } from "../resources";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
+import {
+  UnifiedTrackingResponse,
+  getDHLTracking,
+} from "../../services/dhl_service";
 
 // 1. IMPORT YOUR GEOCODER
 

@@ -18,6 +18,8 @@ import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehav
 export const navigation = [
   { name: "Collect", href: "/catalog" },
   { name: "Editorials", href: "/articles" },
+  { name: "Shows", href: "/shows" },
+  { name: "Fairs & Events", href: "/events" },
 ];
 
 const loggedInRouteMap = {
@@ -36,14 +38,14 @@ const DesktopNavbar = () => {
   return (
     <>
       <nav
-        className={`fixed z-[30] top-0 left-0 right-0 transition-all duration-300 ease-in-out border-b
+        className={`fixed z-[30] px-4 py-4 md:px-8 top-0 left-0 right-0 transition-all duration-300 ease-in-out border-b
           ${
             isScrolled
               ? "py-3 bg-white/95 backdrop-blur-md border-neutral-200 shadow-sm"
               : "py-5 bg-white border-neutral-100"
           }`}
       >
-        <div className="max-w-full mx-auto px-6 md:px-12 flex items-center justify-between">
+        <div className="max-w-full mx-auto flex items-center justify-between">
           {/* LEFT: Logo & Nav */}
           <div className="flex items-center gap-10">
             <IndividualLogo />
@@ -82,13 +84,13 @@ const DesktopNavbar = () => {
               <div className="hidden lg:flex items-center gap-6">
                 <Link
                   href={`${login_base_url}/register?redirect=${encodeURIComponent(getCurrentUrl())}`}
-                  className="bg-[#091830] text-white px-5 py-2.5 rounded -md text-sm font-sans font-light hover:bg-[#0F2342] transition-all shadow-sm"
+                  className="bg-[#091830] text-white px-5 py-2.5 rounded text-sm font-sans font-normal hover:bg-[#0F2342] transition-all shadow-sm"
                 >
                   Create Account
                 </Link>
                 <Link
                   href={`${login_base_url}/login/user?redirect=${encodeURIComponent(getCurrentUrl())}`}
-                  className="text-sm font-sans font-light text-neutral-600 hover:text-dark  transition-colors"
+                  className="text-sm font-sans font-normal text-neutral-600 hover:text-dark  transition-colors"
                 >
                   Log in
                 </Link>
@@ -98,7 +100,7 @@ const DesktopNavbar = () => {
             {/* Hamburger - Only visible on Mobile/Tablet */}
             <button
               onClick={() => updateOpenSideNav(true)}
-              className="lg:hidden p-2 text-dark  hover:bg-neutral-100 rounded -md transition-colors"
+              className="lg:hidden p-2 text-dark  hover:bg-neutral-100 rounded transition-colors"
             >
               <icons.Menu strokeWidth={2} size={24} />
             </button>

@@ -16,7 +16,7 @@ export default function ArtworkDimensionsInputGroup() {
       </div>
 
       {/* Main Card Container */}
-      <div className="bg-white border border-slate-200 rounded -xl p-6 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-sm  p-6 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {uploadArtworkDimensionInputMocks.map((input, index) => {
             return (

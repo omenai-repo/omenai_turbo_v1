@@ -30,7 +30,7 @@ function Page() {
             <p className="text-xs uppercase tracking-widest opacity-80 mb-1">
               Featured Collection
             </p>
-            <p className="text-fluid-base font-light">
+            <p className="text-fluid-base font-normal">
               Sister Journeying, 2023
             </p>
           </div>

@@ -78,7 +78,7 @@ export default function ArtworkListing() {
         <div className="flex bg-slate-100 p-1 rounded -lg border border-slate-200">
           <button
             onClick={() => setViewMode("gallery")}
-            className={`px-4 py-1.5 text-sm font-medium rounded -md transition-all ${
+            className={`px-4 py-1.5 text-sm font-medium rounded transition-all ${
               viewMode === "gallery"
                 ? "bg-white shadow-sm text-slate-900"
                 : "text-slate-500 hover:text-slate-700"
@@ -88,7 +88,7 @@ export default function ArtworkListing() {
           </button>
           <button
             onClick={() => setViewMode("artist")}
-            className={`px-4 py-1.5 text-sm font-medium rounded -md transition-all ${
+            className={`px-4 py-1.5 text-sm font-medium rounded transition-all ${
               viewMode === "artist"
                 ? "bg-white shadow-sm text-slate-900"
                 : "text-slate-500 hover:text-slate-700"

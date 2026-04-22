@@ -51,16 +51,14 @@ export default function ArticleWrapper() {
 
   return (
     <div className="min-h-screen bg-white text-dark ">
-      <DesktopNavbar />
-
-      <main className="container mx-auto pb-4">
+      <main className=" mx-auto p-4 lg:p-8">
         {/* 1. MASTHEAD */}
         <header className="mb-16 border-b border-neutral-100  flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl">
             <span className="font-sans text-xs font-bold uppercase tracking-wider text-dark  mb-3 block">
               Omenai Editorial
             </span>
-            <h1 className="font-serif text-xl md:text-3xl text-dark  leading-tight">
+            <h1 className="font -serif text-xl md:text-3xl text-dark  leading-tight">
               Perspectives
             </h1>
             <p className="mt-4 font-sans text-sm text-neutral-500 max-w-xl leading-relaxed">

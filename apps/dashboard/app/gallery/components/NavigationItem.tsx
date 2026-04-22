@@ -21,7 +21,7 @@ export default function NavigationItem({
     <>
       {title === "Sign out" ? (
         <li
-          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded cursor-pointer`}
+          className={`p-2 group flex items-center w-full hover:bg-dark hover:text-white rounded-sm  cursor-pointer`}
         >
           <button
             onClick={onClick}
@@ -30,7 +30,7 @@ export default function NavigationItem({
             className="flex items-center"
           >
             <IconWrapper className=" hover:text-dark group">{icon}</IconWrapper>
-            <p className={`text-fluid-xxs p-2 font-light`}>{title}</p>
+            <p className={`text-fluid-xxs p-2 font-normal`}>{title}</p>
           </button>
         </li>
       ) : (
@@ -47,14 +47,16 @@ export default function NavigationItem({
             pathname.startsWith(url)
               ? "bg-dark text-white"
               : "bg-white text-dark"
-          } group flex items-center w-full hover:bg-dark rounded`}
+          } group flex items-center w-full hover:bg-dark rounded-sm `}
         >
           <IconWrapper
             className={` ${pathname.startsWith(url) ? "bg-white text-white" : "group"}`}
           >
             {icon}
           </IconWrapper>
-          <p className={`text-fluid-xxs p-2 font-light group-hover:text-white`}>
+          <p
+            className={`text-fluid-xxs p-2 font-normal group-hover:text-white`}
+          >
             {title}
           </p>
         </Link>

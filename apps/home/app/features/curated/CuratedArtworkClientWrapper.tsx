@@ -31,8 +31,8 @@ export default function CuratedArtworkClientWrapper({
   if (isLoading) return <SectionLoaderContainers title="Personalizing Feed" />;
 
   return (
-    <section className="w-full bg-[#f5f5f5] py-8 border-t border-neutral-200">
-      <div className="px-4 lg:px-12">
+    <section className="w-full ">
+      <div className="">
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
@@ -44,7 +44,7 @@ export default function CuratedArtworkClientWrapper({
                 For You
               </span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+            <h2 className="text-3xl font-serif text-dark ">
               Your Personal Edits
             </h2>
             <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
@@ -81,7 +81,7 @@ export default function CuratedArtworkClientWrapper({
         <div className="mt-12 flex md:hidden justify-center">
           <Link
             href="/catalog"
-            className="w-full py-3 text-center rounded -md border border-neutral-200 text-sm font-sans font-medium text-neutral-800 bg-white shadow-sm"
+            className="w-full py-3 text-center rounded border border-neutral-200 text-sm font-sans font-medium text-neutral-800 bg-white shadow-sm"
           >
             Browse Full Catalog
           </Link>

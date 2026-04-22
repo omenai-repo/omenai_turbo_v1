@@ -36,14 +36,14 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-light text-slate-900">
+          <h1 className="text-2xl font-normal tracking-tight text-dark">
             Order Management
           </h1>
           <p className="text-sm text-slate-500 mt-1">
             Overview of your sales pipeline
           </p>
         </div>
-        <div className="flex items-center gap-x-3 px-4 py-2 bg-white border border-slate-200 rounded shadow-sm">
+        <div className="flex items-center gap-x-3 px-4 py-2 bg-white border border-slate-200 rounded-sm  shadow-sm">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
             Total Orders
           </span>
@@ -58,11 +58,11 @@ export function OrdersTab({ orders }: { orders: CreateOrderModelTypes[] }) {
       <Tabs
         defaultValue="pending"
         variant="pills"
-        radius="md"
+        radius={0}
         classNames={{
           root: "w-full",
           list: "flex flex-wrap gap-2 mb-8",
-          tab: "data-[active]:bg-dark data-[active]:text-white bg-white border border-slate-200 text-slate-600 font-light px-5 h-10 hover:bg-slate-50 transition-all",
+          tab: "data-[active]:bg-dark data-[active]:text-white bg-white border border-slate-200 text-slate-600 font-normal px-5 h-10 hover:bg-slate-50 transition-all",
         }}
       >
         <Tabs.List>
@@ -136,7 +136,7 @@ function TabLabel({
       <span>{label}</span>
       {count > 0 && (
         <span
-          className={`ml-1 flex h-5 min-w-[20px] items-center justify-center rounded px-1.5 text-[10px] font-bold ring-1 ring-inset ${
+          className={`ml-1 flex h-5 min-w-[20px] items-center justify-center rounded-sm  px-1.5 text-[10px] font-bold ring-1 ring-inset ${
             color === "amber"
               ? "bg-amber-50 text-amber-700 ring-amber-600/20"
               : color === "blue"

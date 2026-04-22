@@ -87,35 +87,39 @@ export default function DashboardIndicator({
   }, []);
 
   return (
-    <div className="w-full flex justify-between items-center">
-      <div className="space-y-1">
-        <p className="text-fluid-xxs text-dark font-light">
-          {greeting}, <strong>{gallery_name}</strong>
-        </p>
-
-        <p className="text-fluid-xxs font-medium text-dark/70">{currentTime}</p>
-      </div>
+    <div className="">
       {!gallery_verified ? (
         <div className="space-y-1" id="gallery-verification">
           <button
             disabled={loading}
             onClick={handleRequestGalleryVerification}
-            className=" h-[35px] p-5 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light"
+            className=" h-[35px] p-5 rounded-sm  w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-normal"
           >
             {loading ? <LoadSmall /> : "Send Verification Reminder"}
           </button>
-          <p className="text-fluid-xxs text-dark font-light">
+          <p className="text-fluid-xxs text-dark font-normal">
             Account currently under review
           </p>
         </div>
       ) : (
-        <div className="flex gap-2 items-center">
-          <RiAdminLine className="text-fluid-xxs font-light text-dark" />
-          <div>
-            <p className="text-dark text-fluid-xxs font-light">
-              {admin_name} (Admin)
+        <div className="flex flex-col gap-2 items-center">
+          <div className="space-y-1">
+            <p className="text-fluid-xxs text-dark font-normal">
+              {greeting}, <strong>{gallery_name}</strong>
+            </p>
+
+            <p className="text-fluid-xxs font-medium text-dark/70">
+              {currentTime}
             </p>
           </div>
+          {/* <div className="flex gap-x-2 items-center">
+            <RiAdminLine className="text-fluid-xxs font-normal text-dark" />
+            <div>
+              <p className="text-dark text-fluid-xxs font-normal">
+                {admin_name} (Admin)
+              </p>
+            </div>
+          </div> */}
         </div>
       )}
     </div>

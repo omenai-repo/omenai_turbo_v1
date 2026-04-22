@@ -94,12 +94,12 @@ export default function UserSupportHistory({ id }: { id: string }) {
   return (
     <div className="space-y-6">
       {/* 1. Header & Filters */}
-      <div className="bg-white p-5 rounded -xl border border-slate-200 shadow-sm space-y-5">
+      <div className="bg-white p-5 rounded border border-slate-200 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h3 className="text-base font-semibold text-slate-900">
+            <h1 className="text-2xl font-normal tracking-tight text-dark">
               Support History
-            </h3>
+            </h1>
             <p className="text-sm text-slate-500 mt-0.5">
               Track your past inquiries.
             </p>
@@ -192,7 +192,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white border border-slate-100 rounded -xl p-6 animate-pulse flex flex-col gap-3"
+                className="bg-white border border-slate-100 rounded p-6 animate-pulse flex flex-col gap-3"
               >
                 <div className="h-4 w-1/3 bg-slate-100 rounded"></div>
                 <div className="h-3 w-full bg-slate-50 rounded"></div>
@@ -200,7 +200,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
             ))}
           </div>
         ) : tickets.length === 0 ? (
-          <div className="bg-white border border-dashed border-slate-200 rounded -xl p-12 flex flex-col items-center justify-center text-center">
+          <div className="bg-white border border-dashed border-slate-200 rounded p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 bg-slate-50 rounded -full flex items-center justify-center mb-3 text-slate-300 text-xl">
               ?
             </div>
@@ -232,7 +232,7 @@ export default function UserSupportHistory({ id }: { id: string }) {
             </div>
 
             {/* VIEW B: Desktop Table (Visible on Medium+ Screens) */}
-            <div className="hidden md:block border border-slate-200 rounded -xl overflow-hidden bg-white shadow-sm">
+            <div className="hidden md:block border border-slate-200 rounded overflow-hidden bg-white shadow-sm">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-100">
                   <thead className="bg-slate-50/50">

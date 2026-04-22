@@ -32,7 +32,7 @@ export function MobileSidebar() {
             </button>
 
             {/*  Mobile is ALWAYS expanded */}
-            <SidebarContent expanded />
+            <SidebarContent />
           </aside>
         </div>
       )}

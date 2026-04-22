@@ -65,7 +65,7 @@ function Pagination<T extends any[]>({
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }, 300),
-    [fn, fnArgs]
+    [fn, fnArgs],
   );
 
   const handleClickPage = async (page: number) => {
@@ -108,7 +108,7 @@ function Pagination<T extends any[]>({
             <li key={index} className="px-3 py-1 text-slate-700">
               {page}
             </li>
-          )
+          ),
         )}
 
         {/* Next */}

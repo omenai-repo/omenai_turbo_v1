@@ -66,11 +66,11 @@ export default function CancelSubscriptionModal({
               className="w-full max-w-md"
             >
               {/* Design 1: Clean Warning Modal */}
-              <div className="bg-white rounded shadow-2xl overflow-hidden">
+              <div className="bg-white rounded-sm  shadow-2xl overflow-hidden">
                 {/* Header */}
                 <div className="bg-red-50 px-6 py-5 border-b border-red-100">
                   <div className="flex items-start gap-4">
-                    <div className="p-2 bg-red-100 rounded">
+                    <div className="p-2 bg-red-100 rounded-sm ">
                       <svg
                         className="w-6 h-6 text-red-600"
                         fill="none"
@@ -102,7 +102,7 @@ export default function CancelSubscriptionModal({
                     <p className="text-sm text-slate-700">
                       Your subscription will remain active until:
                     </p>
-                    <div className="bg-slate-100 rounded px-4 py-3">
+                    <div className="bg-slate-100 rounded-sm  px-4 py-3">
                       <p className="font-semibold text-slate-900">
                         {formatIntlDateTime(sub_end)}
                       </p>
@@ -110,7 +110,7 @@ export default function CancelSubscriptionModal({
                   </div>
 
                   {/* Warning Box */}
-                  <div className="bg-amber-50 border border-amber-200 rounded p-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-sm  p-4">
                     <div className="flex gap-3">
                       <IoWarning className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                       <div className="space-y-2">
@@ -142,14 +142,14 @@ export default function CancelSubscriptionModal({
                     <button
                       onClick={() => updateOpenModal()}
                       disabled={loading}
-                      className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-sm  hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Keep Subscription
                     </button>
                     <button
                       onClick={cancel_subscription}
                       disabled={loading}
-                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-sm  hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                       {loading ? <LoadSmall /> : "Yes, Cancel"}
                     </button>

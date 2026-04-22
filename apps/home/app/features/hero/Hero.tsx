@@ -3,25 +3,20 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import {
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
-import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
 import { EmblaCarouselType, EmblaEventType } from "embla-carousel";
-import { HiArrowLongLeft, HiArrowLongRight } from "react-icons/hi2";
 import { MoveLeft, MoveRight } from "lucide-react";
+import PromotionalCard from "@omenai/shared-ui-components/components/promotionals/PromotionalCard";
 
-const TWEEN_FACTOR_BASE = 0.5;
+const TWEEN_FACTOR_BASE = 0.52;
 
 export default function Hero({ promotionals }: any) {
-  // 1. DATA PREP
+  // ── 1. DATA ──────────────────────────────────────────────────────────
   const slides =
     promotionals.length < 5
       ? [...promotionals, ...promotionals, ...promotionals]
       : promotionals;
 
-  // 2. EMBLA SETUP
+  // ── 2. EMBLA SETUP ───────────────────────────────────────────────────
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: true,
@@ -38,17 +33,21 @@ export default function Hero({ promotionals }: any) {
   const slideNodes = useRef<HTMLElement[]>([]);
   const overlayNodes = useRef<HTMLElement[]>([]);
 
-  // 3. REF SELECTION
+  // ── 3. TWEEN NODE REFS ───────────────────────────────────────────────
   const setTweenNodes = useCallback((emblaApi: EmblaCarouselType) => {
-    slideNodes.current = emblaApi.slideNodes().map((slideNode) => {
-      return slideNode.querySelector(".slide_inner") as HTMLElement;
-    });
-    overlayNodes.current = emblaApi.slideNodes().map((slideNode) => {
-      return slideNode.querySelector(".slide_overlay") as HTMLElement;
-    });
+    slideNodes.current = emblaApi
+      .slideNodes()
+      .map(
+        (slideNode) => slideNode.querySelector(".slide_inner") as HTMLElement,
+      );
+    overlayNodes.current = emblaApi
+      .slideNodes()
+      .map(
+        (slideNode) => slideNode.querySelector(".slide_overlay") as HTMLElement,
+      );
   }, []);
 
-  // 4. TWEEN LOGIC
+  // ── 4. TWEEN SCALE/BLUR LOGIC ────────────────────────────────────────
   const tweenScale = useCallback(
     (emblaApi: EmblaCarouselType, eventName?: EmblaEventType) => {
       const engine = emblaApi.internalEngine();
@@ -78,11 +77,11 @@ export default function Hero({ promotionals }: any) {
 
           const tweenValue = 1 - Math.abs(diffToTarget * TWEEN_FACTOR_BASE);
 
-          // SCALE: Center = 1.0, Sides = 0.75
-          const scale = Math.max(Math.min(tweenValue, 1), 0.75).toString();
+          // Scale: centre card = 1.0, flanking cards = 0.8
+          const scale = Math.max(Math.min(tweenValue, 1), 0.8).toString();
 
-          // BLUR & MIST
-          const blurIntensity = (1 - Math.max(Math.min(tweenValue, 1), 0)) * 20;
+          // Blur & mist
+          const blurIntensity = (1 - Math.max(Math.min(tweenValue, 1), 0)) * 18;
           const blur = `blur(${Math.max(0, blurIntensity)}px)`;
           const overlayOpacity = (
             1 - Math.max(Math.min(tweenValue, 1), 0.5)
@@ -107,6 +106,7 @@ export default function Hero({ promotionals }: any) {
     [],
   );
 
+  // ── 5. EFFECTS ───────────────────────────────────────────────────────
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -130,34 +130,48 @@ export default function Hero({ promotionals }: any) {
     };
   }, [emblaApi, setTweenNodes, tweenScale]);
 
-  const onSelect = (api: EmblaCarouselType) => {
+  const onSelect = (api: EmblaCarouselType) =>
     setSelectedIndex(api.selectedScrollSnap());
-  };
 
-  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
-  const scrollNext = () => emblaApi && emblaApi.scrollNext();
+  const scrollPrev = () => emblaApi?.scrollPrev();
+  const scrollNext = () => emblaApi?.scrollNext();
 
+  // ── 6. RENDER ────────────────────────────────────────────────────────
   return (
     <section className="relative w-full overflow-hidden">
       <div className="w-full" ref={emblaRef}>
-        {/* CHANGED: items-center ensures the flex container centers items vertically */}
-        <div className="flex touch-pan-y py-4 items-center">
+        <div className="flex touch-pan-y py-0 md:py-4 items-center">
           {slides.map((promotional: any, index: number) => (
             <div
               key={`${promotional.id}-${index}`}
-              className="flex-[0_0_85%] md:flex-[0_0_60%] min-w-0 px-2 md:px-4 relative"
+              className={[
+                // ── MOBILE: 100% width, zero padding → true edge-to-edge ──
+                // ── DESKTOP: 60% width, gap padding → peek/scale carousel ──
+                "flex-[0_0_100%] md:flex-[0_0_60%]",
+                "min-w-0",
+                "px-0 md:px-4",
+                "relative",
+              ].join(" ")}
               style={{ perspective: "1000px" }}
             >
               <div
                 className="slide_inner w-full h-full relative transition-shadow duration-300"
-                // CHANGED: transformOrigin is now 'center center' to shrink towards the middle
                 style={{ transformOrigin: "center center" }}
               >
-                <div className="rounded -lg shadow-2xl shadow-dark/5 bg-dark overflow-hidden relative">
+                {/*
+                  Card wrapper:
+                  • No border-radius on mobile → true flush/edge-to-edge
+                  • rounded-lg on md+ → cards look lifted within the carousel peek
+                */}
+                <div className="rounded-sm overflow-hidden relative ">
                   <PromotionalCard {...promotional} />
 
-                  {/* WHITE MIST OVERLAY */}
-                  <div className="slide_overlay absolute inset-0 bg-white pointer-events-none z-50 transition-opacity duration-50" />
+                  {/*
+                    White mist overlay (tween-driven opacity).
+                    On mobile with 100% slides, the active card is always
+                    tweenValue ≈ 1, so overlayOpacity ≈ 0 — essentially invisible.
+                  */}
+                  <div className="slide_overlay absolute inset-0 bg-[#F5EFE7] pointer-events-none z-50 transition-opacity duration-75" />
                 </div>
               </div>
             </div>
@@ -165,43 +179,47 @@ export default function Hero({ promotionals }: any) {
         </div>
       </div>
 
-      {/* 2. DESKTOP CONTROLS (Minimalist Long Arrows) */}
-      <div className="hidden md:flex justify-end items-center gap-8 px-6 lg:px-12">
+      {/* ── DESKTOP: Minimalist long-arrow navigation ── */}
+      <div className="hidden md:flex justify-end items-center gap-8 px-6 lg:px-12 mt-2">
         <button
           onClick={scrollPrev}
-          className="group flex items-center justify-center text-dark transition-colors hover:text-neutral-500"
-          aria-label="Previous Slide"
+          className="group flex items-center justify-center text-stone-700 transition-colors hover:text-stone-400"
+          aria-label="Previous slide"
         >
           <MoveLeft
-            size={20}
+            size={18}
             strokeWidth={1}
             absoluteStrokeWidth
-            className="text-3xl transition-transform duration-300 group-hover:-translate-x-1"
-          />{" "}
+            className="transition-transform duration-300 group-hover:-translate-x-1"
+          />
         </button>
-
         <button
           onClick={scrollNext}
-          className="group flex items-center justify-center text-dark transition-colors hover:text-neutral-500"
-          aria-label="Next Slide"
+          className="group flex items-center justify-center text-stone-700 transition-colors hover:text-stone-400"
+          aria-label="Next slide"
         >
           <MoveRight
-            size={20}
+            size={18}
             strokeWidth={1}
             absoluteStrokeWidth
-            className="text-3xl transition-transform duration-300 group-hover:translate-x-1"
+            className="transition-transform duration-300 group-hover:translate-x-1"
           />
         </button>
       </div>
 
-      <div className="flex md:hidden justify-center gap-2 mb-8 px-6">
+      {/* ── MOBILE: Dot indicators (elongated active pill) ── */}
+      <div className="flex md:hidden justify-center items-center gap-[6px] py-5">
         {scrollSnaps.map((_, index) => (
           <button
             key={index}
-            className={`h-1.5 rounded -full transition-all duration-300 ${
-              index === selectedIndex ? "w-8 bg-dark" : "w-1.5 bg-neutral-200"
-            }`}
-            onClick={() => emblaApi && emblaApi.scrollTo(index)}
+            className={[
+              "h-[3px] rounded-full transition-all duration-400",
+              index === selectedIndex
+                ? "w-7 bg-stone-700"
+                : "w-[6px] bg-stone-300",
+            ].join(" ")}
+            onClick={() => emblaApi?.scrollTo(index)}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>

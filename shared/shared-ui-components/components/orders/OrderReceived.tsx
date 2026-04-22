@@ -48,7 +48,7 @@ export default function OrderReceived() {
           </span>
         </motion.div>
 
-        <h2 className="font-serif text-3xl italic text-dark">
+        <h2 className="font -serif text-3xl italic text-dark">
           Request Initiated.
         </h2>
         <p className="mx-auto mt-2 max-w-xs font-sans text-xs text-neutral-500">

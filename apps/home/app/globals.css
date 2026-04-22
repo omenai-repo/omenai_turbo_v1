@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 /* width */
+
+body {
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
 ::-webkit-scrollbar {
   width: 3px;
   height: 5px;
@@ -43,7 +48,7 @@
   width: 100%; /* Full width */
   height: 2px; /* Track height */
   background: #e0e0e0; /* Light gray background */
-  border-radius: 3px; /* Rounded track edges */
+  border-radius: 3px; /* rounded track edges */
   outline: none; /* Remove the outline */
   transition: background 0.3s; /* Smooth background transition */
 }

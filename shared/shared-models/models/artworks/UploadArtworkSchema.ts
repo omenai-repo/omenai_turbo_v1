@@ -2,6 +2,25 @@ import mongoose, { Schema, models } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
+
+const ExhibitionStatusSchema = new Schema(
+  {
+    status: {
+      type: String,
+      enum: ["pending", "active", "completed", null],
+      default: null,
+    },
+    event_id: {
+      type: String,
+      default: null,
+    },
+    event_name: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false },
+);
 const artworkUpload = new Schema<ArtworkSchemaTypes>(
   {
     artist: { type: String, required: true },
@@ -28,6 +47,7 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
       unique: true,
       index: true,
     },
+    artist_id: { type: String, required: false },
     author_id: { type: String, required: true, index: true },
     url: { type: String, required: true, unique: true },
     impressions: { type: Number, default: 0 },
@@ -58,6 +78,10 @@ const artworkUpload = new Schema<ArtworkSchemaTypes>(
         type: String,
         enum: ["portrait", "landscape", "square"],
       },
+    },
+    exhibition_status: {
+      type: ExhibitionStatusSchema,
+      default: null,
     },
   },
   { timestamps: true },

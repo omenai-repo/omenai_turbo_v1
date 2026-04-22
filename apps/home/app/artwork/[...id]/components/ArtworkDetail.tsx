@@ -66,7 +66,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
     <div className="flex flex-col gap-8">
       {/* 1. HEADER: Title & Artist */}
       <div className="space-y-4">
-        <h1 className="font-serif text-2xl sm:text-2xl md:text-3xl lg:text-5xl leading-[0.95] md:leading-[0.9] tracking-tight text-slate-900 text-balance break-words hyphens-auto">
+        <h1 className="font -serif text-2xl sm:text-2xl md:text-3xl lg:text-5xl leading-[0.95] md:leading-[0.9] tracking-tight text-slate-900 text-balance break-words hyphens-auto">
           {data.title}
         </h1>
         <h2 className="font-sans text-lg font-medium text-slate-600">
@@ -102,7 +102,7 @@ export default function ArtworkDetail({ data, sessionId }: ArtworkDetailTypes) {
             Sold
           </span>
         ) : (
-          <div className="text-3xl font-light text-dark">
+          <div className="text-3xl font-normal text-dark">
             {isPriceHidden
               ? "Price on Request"
               : formatPrice(data.pricing.usd_price)}

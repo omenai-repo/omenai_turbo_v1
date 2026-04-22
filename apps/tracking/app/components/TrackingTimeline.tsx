@@ -54,7 +54,7 @@ export default function TrackingTimeline({
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 pb-12">
-      <div className="bg-white rounded -2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
         {/* Status Header */}
         <div className="bg-slate-900 p-8 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded -full mix-blend-overlay filter blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>

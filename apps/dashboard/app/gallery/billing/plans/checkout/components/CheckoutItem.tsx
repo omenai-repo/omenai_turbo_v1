@@ -42,7 +42,7 @@ export default function CheckoutItem({
         <div className="space-y-4 p-8">
           {/* Brand Identity */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-600 rounded flex items-center justify-center font-bold text-xl shadow-lg shadow-emerald-900/20">
+            <div className="w-10 h-10 bg-emerald-600 rounded-sm  flex items-center justify-center font-bold text-xl shadow-lg shadow-emerald-900/20">
               O
             </div>
             <span className="text-xl font-bold tracking-tighter">OMENAI</span>
@@ -51,7 +51,7 @@ export default function CheckoutItem({
           {/* Welcome Messaging */}
           <div className="space-y-4">
             {discountEligible && (
-              <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded">
+              <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded-sm ">
                 1 Month Free
               </span>
             )}
@@ -95,7 +95,7 @@ export default function CheckoutItem({
           </ul>
 
           {/* Receipt Breakdown */}
-          <div className="bg-white/5 border border-white/10 rounded p-6 space-y-4">
+          <div className="bg-white/5 border border-white/10 rounded-sm  p-6 space-y-4">
             {/* Line Item: Base Cost */}
             <div className="flex justify-between text-sm text-gray-400">
               <span>
@@ -110,7 +110,7 @@ export default function CheckoutItem({
               <div className="flex justify-between text-emerald-400 font-medium">
                 <div className="flex text-fluid-xxs gap-x-2 items-center">
                   <span>1 Month Free</span>
-                  <span className="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded uppercase tracking-tighter">
+                  <span className="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded-sm  uppercase tracking-tighter">
                     100% OFF
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function CheckoutItem({
 
         {/* Global Reassurances */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-8">
-          <div className="p-4 bg-white border border-gray-100 rounded shadow-sm space-y-2">
+          <div className="p-4 bg-white border border-gray-100 rounded-sm  shadow-sm space-y-2">
             <p className="text-xs font-bold text-gray-900 uppercase">
               PCI Compliance
             </p>
@@ -151,7 +151,7 @@ export default function CheckoutItem({
               touches our servers.
             </p>
           </div>
-          <div className="p-4 bg-white border border-gray-100 rounded shadow-sm space-y-2">
+          <div className="p-4 bg-white border border-gray-100 rounded-sm  shadow-sm space-y-2">
             <p className="text-xs font-bold text-gray-900 uppercase">
               Auto-Renewal
             </p>
@@ -170,7 +170,7 @@ export default function CheckoutItem({
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
               Complete your setup
             </h2>
-            <p className="text-gray-500 font-light text-fluid-xs leading-relaxed">
+            <p className="text-gray-500 font-normal text-fluid-xs leading-relaxed">
               Provide your payment details to activate your gallery
               subscription.{" "}
               {discountEligible

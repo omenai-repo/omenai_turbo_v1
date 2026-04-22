@@ -45,7 +45,7 @@ export default function PlanWrapper({
             border border-[#E5E1DA]
             divide-y divide-[#E5E1DA]
             lg:divide-y-0 lg:divide-x lg:divide-[#E5E1DA]
-            rounded-2xl lg:rounded-3xl
+            rounded-sm lg:rounded-sm
             overflow-hidden
           "
           style={{ gridAutoRows: "1fr" }}

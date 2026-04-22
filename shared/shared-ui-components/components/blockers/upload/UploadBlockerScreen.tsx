@@ -39,7 +39,7 @@ export default function ArtworkUploadBlocker({
       }
 
       const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
       );
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -122,7 +122,7 @@ export default function ArtworkUploadBlocker({
               {/* Hours */}
               <div className="flex flex-col items-center">
                 <div className="relative bg-[#0f172a]/50 border border-[#47748E]/20 rounded w-full h-20 md:h-24 flex items-center justify-center overflow-hidden">
-                  <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-light text-white tabular-nums">
+                  <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-normal text-white tabular-nums">
                     {timeLeft.hours}
                   </span>
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#2A9EDF]/30"></div>
@@ -135,7 +135,7 @@ export default function ArtworkUploadBlocker({
               {/* Minutes */}
               <div className="flex flex-col items-center">
                 <div className="relative bg-[#0f172a]/50 border border-[#47748E]/20 rounded w-full h-20 md:h-24 flex items-center justify-center overflow-hidden">
-                  <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-light text-white tabular-nums">
+                  <span className="text-[clamp(1.602rem,1.5vw+1.3rem,1.802rem)] font-normal text-white tabular-nums">
                     {timeLeft.minutes}
                   </span>
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#2A9EDF]/60"></div>

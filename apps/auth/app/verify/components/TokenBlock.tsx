@@ -173,7 +173,7 @@ export default function TokenBlock({ token, route }: TokenProps) {
           Feel free to contact us should you have any issues on{" "}
           <Link
             href={"mailto:support@omenai.app"}
-            className="text-dark font-light underline"
+            className="text-dark font-normal underline"
           >
             support@omenai.app
           </Link>

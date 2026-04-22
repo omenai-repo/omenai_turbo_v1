@@ -43,7 +43,7 @@ function Blocker({
       </div>
 
       {/* --- Content --- */}
-      <h2 className="text-white text-[clamp(1.422rem,1.2vw+1.2rem,1.602rem)] font-light mb-3">
+      <h2 className="text-white text-[clamp(1.422rem,1.2vw+1.2rem,1.602rem)] font-normal mb-3">
         Payment Transaction System{" "}
         <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#2A9EDF] to-[#FCFCFC]">
           Paused
@@ -61,7 +61,7 @@ function Blocker({
       {/* --- Timer Display --- */}
       {/* {expiryTimestamp && !time.isExpired && (
         <div className="flex flex-col items-center">
-          <div className="flex gap-4 text-white font-light text-2xl">
+          <div className="flex gap-4 text-white font-normal text-2xl">
             <div className="flex flex-col items-center">
               <span>{time.hours}</span>
               <span className="text-[9px] text-[#47748E] uppercase tracking-wider mt-1">

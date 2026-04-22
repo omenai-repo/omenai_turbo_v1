@@ -44,14 +44,6 @@ export default function PageTitle({ title }: { title: string }) {
       <div className="w-full flex flex-col gap-y-1">
         <p className="text-fluid-xxs flex">{breadcrumbs}</p>
       </div>
-      {title === "My Artworks" && (
-        <Link href={"/gallery/artworks/upload"} className="w-fit">
-          <button className="h-[35px] p-4 rounded w-full flex items-center justify-center gap-3 disabled:cursor-not-allowed disabled:bg-dark/10 disabled:text-[#A1A1A1] bg-dark text-white text-fluid-xxs font-light whitespace-nowrap">
-            <span>Upload Artwork</span>
-            <IoAdd className="text-fluid-sm" />
-          </button>
-        </Link>
-      )}
     </div>
   );
 }

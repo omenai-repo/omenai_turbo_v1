@@ -40,7 +40,7 @@ export default function TrackingMap({
   return (
     <div className="w-full max-w-5xl mx-auto px-4 mb-8">
       {/* Main Card */}
-      <div className="bg-white rounded -2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded shadow-sm border border-slate-200 overflow-hidden">
         {/* Header / Delivery Estimate */}
         <div className="bg-white border-b border-slate-100 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -92,7 +92,7 @@ export default function TrackingMap({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             {/* Origin */}
             <div className="group">
-              <div className="flex flex-col md:items-start text-left bg-white p-4 md:p-0 rounded -xl border md:border-0 border-slate-100 hover:bg-slate-50 md:hover:bg-transparent transition-colors">
+              <div className="flex flex-col md:items-start text-left bg-white p-4 md:p-0 rounded border md:border-0 border-slate-100 hover:bg-slate-50 md:hover:bg-transparent transition-colors">
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                   <span className="w-2 h-2 rounded -full bg-blue-500"></span>
                   Origin
@@ -119,7 +119,7 @@ export default function TrackingMap({
 
             {/* Destination */}
             <div className="group">
-              <div className="flex flex-col md:items-end md:text-right bg-white p-4 md:p-0 rounded -xl border md:border-0 border-slate-100 hover:bg-slate-50 md:hover:bg-transparent transition-colors">
+              <div className="flex flex-col md:items-end md:text-right bg-white p-4 md:p-0 rounded border md:border-0 border-slate-100 hover:bg-slate-50 md:hover:bg-transparent transition-colors">
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center md:justify-end gap-2">
                   Destination
                   <span className="w-2 h-2 rounded -full bg-emerald-500"></span>

@@ -23,7 +23,7 @@ export function PaymentMethodCard({ card }: { card: PaymentMethod.Card }) {
         </div>
       </div>
 
-      <div className="bg-slate-100 p-3 rounded">
+      <div className="bg-slate-100 p-3 rounded-sm ">
         <img
           src={`/icons/${card.brand}.png`}
           alt={`${card.brand} card`}

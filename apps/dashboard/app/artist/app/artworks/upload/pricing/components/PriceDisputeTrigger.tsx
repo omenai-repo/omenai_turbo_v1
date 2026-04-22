@@ -32,7 +32,7 @@ export default function PriceDisputeTrigger({
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-dark border border-neutral-200 text-white text-fluid-xxs font-normal rounded -md hover:border-neutral-800 hover:shadow-sm transition-all"
+          className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-dark border border-neutral-200 text-white text-fluid-xxs font-normal rounded hover:border-neutral-800 hover:shadow-sm transition-all"
         >
           <Settings2 size={16} className="text-white" />
           Propose price

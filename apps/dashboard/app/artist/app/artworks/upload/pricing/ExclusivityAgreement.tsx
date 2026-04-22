@@ -27,7 +27,7 @@ export default function ExclusivityAgreementGroup({
 
   return (
     <div className="w-full mt-2 mb-2">
-      <div className="bg-amber-50/50 border border-amber-200 rounded -xl overflow-hidden shadow-sm">
+      <div className="bg-amber-50/50 border border-amber-200 rounded overflow-hidden shadow-sm">
         {/* Compact Header */}
         <div className="bg-amber-100/60 px-4 py-2.5 border-b border-amber-200 flex items-center gap-2">
           <TriangleAlert

@@ -106,7 +106,9 @@ export default async function proxy(req: NextRequest) {
     https://checkout.flutterwave.com
     https://www.omenaiinsider.com
     https://*.substack.com
-    https://substack.com;
+    https://substack.com
+    https://maps.google.com/
+    https://www.google.com/;
 
   object-src 'none';
   base-uri 'self';

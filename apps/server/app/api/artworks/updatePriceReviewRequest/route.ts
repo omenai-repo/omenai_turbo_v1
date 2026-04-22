@@ -1,10 +1,10 @@
 import { PriceReview } from "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { uploadArtworkLogic } from "../../uploadArtwork.service";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport } from "../../util";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
+import { uploadArtworkLogic } from "../../services/uploadArtwork.service";
 
 const artistPatchSchema = z.object({
   artist_id: z.string(),

@@ -43,7 +43,7 @@ export default function Collections({
     return (
       <div className="w-full bg-white border-b border-neutral-100">
         <div className="px-6 lg:px-12 py-16">
-          <h1 className="font-serif text-4xl text-dark  mb-2">
+          <h1 className="font -serif text-4xl text-dark  mb-2">
             Browse Collections
           </h1>
           <p className="font-sans text-sm text-neutral-500">
@@ -56,15 +56,15 @@ export default function Collections({
 
   // HOMEPAGE MODE
   return (
-    <section className="w-full bg-[#f5f5f5] py-8 border-t border-neutral-200">
-      <div className="px-6 lg:px-12">
+    <section className="w-full">
+      <div className="">
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div>
             <span className="block mb-3 text-[9px] font-mono text-dark  tracking-wide uppercase">
               Featured Collections
             </span>
-            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+            <h2 className="text-3xl font-serif font-light text-dark">
               Browse by medium
             </h2>
           </div>
@@ -106,7 +106,7 @@ export default function Collections({
             {/* <div className="flex-[0_0_auto] flex items-center">
               <Link
                 href="/catalog"
-                className="group flex h-[400px] w-[200px] flex-col items-center justify-center gap-4 rounded -md border-2 border-dashed border-neutral-300 bg-white p-6 text-center transition-colors hover:border-[#091830]"
+                className="group flex h-[400px] w-[200px] flex-col items-center justify-center gap-4 rounded border-2 border-dashed border-neutral-300 bg-white p-6 text-center transition-colors hover:border-[#091830]"
               >
                 <span className="h-12 w-12 rounded -full bg-neutral-100 flex items-center justify-center group-hover:bg-[#091830] group-hover:text-white transition-colors">
                   <IoArrowForward className="text-xl" />

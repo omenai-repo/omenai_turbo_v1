@@ -10,7 +10,7 @@ import { useLowRiskFeatureFlag } from "@omenai/shared-hooks/hooks/useConfigCatFe
 export default function WaitlistSuccessContent() {
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
-    true
+    true,
   );
   if (!waitlistActivated) redirect("/regiter");
   return (

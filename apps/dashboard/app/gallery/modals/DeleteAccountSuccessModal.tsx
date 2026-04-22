@@ -24,10 +24,10 @@ export default function DeleteAccountSuccessModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-dark/70">
-      <div className="relative bg-white dark:bg-slate-800 rounded shadow-2xl w-full max-w-md px-6 py-8 z-10">
+      <div className="relative bg-white dark:bg-slate-800 rounded-sm  shadow-2xl w-full max-w-md px-6 py-8 z-10">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded bg-red-100 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-sm  bg-red-100 flex items-center justify-center">
               <svg
                 className="w-6 h-6 text-red-600"
                 viewBox="0 0 24 24"
@@ -57,7 +57,7 @@ export default function DeleteAccountSuccessModal() {
               — Logging in during this period will automatically reactivate your
               account.
             </p>
-            <p className="mt-4 text-fluid-xs font-light text-slate-600 dark:text-slate-400">
+            <p className="mt-4 text-fluid-xs font-normal text-slate-600 dark:text-slate-400">
               Redirecting you to login page in{" "}
               <span className="text-slate-900 dark:text-white">
                 {countdown}s

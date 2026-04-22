@@ -106,7 +106,7 @@ export default function SelectInput({
   return (
     <div className="flex flex-col gap-y-1">
       <div className="flex flex-col gap-1">
-        <label htmlFor={name} className="text-dark font-light text-fluid-xxs">
+        <label htmlFor={name} className="text-dark font-normal text-fluid-xxs">
           {label}
         </label>
 
@@ -134,7 +134,7 @@ export default function SelectInput({
                   value={item.name}
                   data-code={itemCode}
                   data-currency={item.currency}
-                  className="px-3 py-5 my-5 text-fluid-xxs font-light text-dark"
+                  className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
                 >
                   {item.name}
                 </option>
@@ -147,7 +147,7 @@ export default function SelectInput({
                 key={state.isoCode}
                 value={state.name}
                 data-code={state.isoCode}
-                className="px-3 py-5 my-5 text-fluid-xxs font-light text-dark"
+                className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
               >
                 {state.name}
               </option>
@@ -159,7 +159,7 @@ export default function SelectInput({
                 key={city.name}
                 value={city.name}
                 data-code={city.name}
-                className="px-3 py-5 my-5 text-fluid-xxs font-light text-dark"
+                className="px-3 py-5 my-5 text-fluid-xxs font-normal text-dark"
               >
                 {city.name}
               </option>

@@ -73,7 +73,7 @@ export default function ImageUpload() {
       >
         <label
           htmlFor="logo"
-          className="text-dark text-fluid-xxs font-light sm:text-fluid-xs"
+          className="text-dark text-fluid-xxs font-normal sm:text-fluid-xs"
         >
           Upload a logo or a picture of yourself
         </label>

@@ -39,9 +39,9 @@ export default function BalanceBox({
   const currency = getCurrencySymbol(balance.available[0].currency);
 
   return (
-    <div className="transition-all duration-500 ease-out animate-[fadeUp_0.6s] relative w-full max-w-md rounded bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
+    <div className="transition-all duration-500 ease-out animate-[fadeUp_0.6s] relative w-full max-w-md rounded-sm  bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
       {/* Subtle texture */}
-      <div className="absolute inset-0 rounded opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
+      <div className="absolute inset-0 rounded-sm  opacity-10 bg-[radial-gradient(circle_at_top_right,white,transparent_60%)]" />
 
       <div className="relative flex flex-col gap-8">
         {/* Header */}
@@ -55,7 +55,7 @@ export default function BalanceBox({
             </h1>
           </div>
 
-          <div className="h-10 w-10 rounded bg-white/10 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-sm  bg-white/10 flex items-center justify-center">
             <svg
               className="w-5 h-5 text-white"
               viewBox="0 0 24 24"
@@ -67,7 +67,7 @@ export default function BalanceBox({
         </div>
 
         {/* Info */}
-        <div className="rounded bg-white/5 p-4 text-sm text-white/80">
+        <div className="rounded-sm  bg-white/5 p-4 text-sm text-white/80">
           Balance on Stripe is automatically transferred to your connected bank
           account.
         </div>
@@ -76,7 +76,7 @@ export default function BalanceBox({
         <button
           onClick={generateLoginLink}
           disabled={generatingLoginLink}
-          className={`flex h-12 w-full items-center justify-center gap-3 bg-white text-dark font-light text-fluid-xs transition-all duration-300 hover:bg-white/80 hover:text-dark disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded`}
+          className={`flex h-12 w-full items-center justify-center gap-3 bg-white text-dark font-normal text-fluid-xs transition-all duration-300 hover:bg-white/80 hover:text-dark disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 rounded-sm `}
         >
           {generatingLoginLink ? <LoadSmall /> : "Open Stripe dashboard"}
         </button>

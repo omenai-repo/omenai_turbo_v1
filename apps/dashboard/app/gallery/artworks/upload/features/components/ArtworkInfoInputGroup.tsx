@@ -4,7 +4,7 @@ import ArtworkTextInput from "./ArtworkTextInput";
 import { Ruler } from "lucide-react";
 export default function ArtworkInfoInputGroup() {
   return (
-    <div className="my-10 w-full">
+    <div className="my-4 w-full">
       {/* Header Section */}
 
       <div className="flex flex-col gap-2 mb-4">
@@ -14,7 +14,7 @@ export default function ArtworkInfoInputGroup() {
         </p>
       </div>
       {/* Main Card Container */}
-      <div className="bg-white border border-slate-200 rounded -xl p-4 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-sm  p-4 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {uploadArtworkDetailInputMocks.map((input, index) => {
             // Dynamic span: Description/Textareas should take up the full width

@@ -56,7 +56,7 @@ export default function ArtistWorks({
       {/* HEADER & CONTROLS */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h3 className="font-serif text-3xl md:text-4xl text-dark">
+          <h3 className="font -serif text-3xl md:text-4xl text-dark">
             The Archive
           </h3>
           <p className="mt-2 font-sans text-sm text-neutral-500">
@@ -74,7 +74,7 @@ export default function ArtistWorks({
             <select
               value={filterOption}
               onChange={(e) => setFilterOption(e.target.value as FilterOption)}
-              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-light uppercase tracking-wider pl-4 pr-10 py-2.5 rounded -sm focus:outline-none focus:border-[#091830] cursor-pointer"
+              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-normal uppercase tracking-wider pl-4 pr-10 py-2.5 rounded focus:outline-none focus:border-[#091830] cursor-pointer"
             >
               <option value="all">All Works</option>
               <option value="available">Available Only</option>
@@ -87,7 +87,7 @@ export default function ArtistWorks({
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value as SortOption)}
-              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-light uppercase tracking-wider pl-4 pr-10 py-2.5 rounded -sm focus:outline-none focus:border-[#091830] cursor-pointer"
+              className="w-full sm:w-auto appearance-none focus:ring-0 outline-none bg-neutral-50 border border-neutral-200 text-dark text-fluid-xxs font-normal uppercase tracking-wider pl-4 pr-10 py-2.5 rounded focus:outline-none focus:border-[#091830] cursor-pointer"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>

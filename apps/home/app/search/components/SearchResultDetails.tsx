@@ -46,7 +46,7 @@ export default function SearchResultDetails({
             Search Results
           </span>
         </div>
-        <h1 className="font-serif text-3xl md:text-4xl text-dark ">
+        <h1 className="font -serif text-3xl md:text-4xl text-dark ">
           Found {data.length} {data.length === 1 ? "work" : "works"} for{" "}
           <span className="italic text-neutral-500">“{searchTerm}”</span>
         </h1>

@@ -13,7 +13,10 @@ import { artworkStore } from "@omenai/shared-state-store/src/artworks/ArtworkSto
 export default function CatalogWrapper() {
   const { artwork_total } = artworkStore();
   return (
-    <main className="relative bg-white min-h-screen" suppressHydrationWarning>
+    <main
+      className="relative p-4 md:p-8 bg-white min-h-screen"
+      suppressHydrationWarning
+    >
       <DesktopNavbar />
 
       {/* 1. THE ARCHIVE HEADER */}
@@ -26,7 +29,7 @@ export default function CatalogWrapper() {
                 All works
               </span>
             </div>
-            <h1 className="text-xl md:text-3xl font-serif leading-[1.1] text-dark">
+            <h1 className="text-xl md:text-3xl font -serif leading-[1.1] text-dark">
               Discover works <br /> from artist across Africa & it's diaspora.
             </h1>
           </div>

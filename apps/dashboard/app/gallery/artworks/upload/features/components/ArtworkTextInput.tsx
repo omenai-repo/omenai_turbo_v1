@@ -24,24 +24,32 @@ export default function ArtworkTextInput({
   value,
   type = "text",
 }: ArtworkTextInputProps) {
-  const { updateArtworkUploadData, updateErrorField } =
+  const { updateArtworkUploadData, updateErrorField, artworkUploadData } =
     galleryArtworkUploadStore();
+  const currentValue =
+    (artworkUploadData as unknown as Record<string, string>)[name] || "";
 
   const [errorList, setErrorList] = useState<string[]>([]);
 
-  const handleChange = async (value: string, label: string) => {
+  const handleChange = (value: string, label: string) => {
+    updateArtworkUploadData(label, value);
+
     const trimmedValue = trimWhiteSpace(value);
 
-    setErrorList([]);
-    if (trimmedValue === "") return;
-    const { success, errors }: { success: boolean; errors: string[] | [] } =
-      validate(label, trimmedValue);
+    if (trimmedValue === "") {
+      setErrorList([]);
+      updateErrorField(label, "");
+      return;
+    }
+
+    const { success, errors } = validate(label, trimmedValue);
+
     if (!success) {
       setErrorList(errors);
       updateErrorField(label, trimmedValue);
     } else {
-      updateArtworkUploadData(label, trimmedValue);
-      updateArtworkUploadData("usd_price", 0);
+      setErrorList([]);
+      name === "price" && updateArtworkUploadData("usd_price", 0);
       updateErrorField(label, "");
     }
   };
@@ -54,7 +62,7 @@ export default function ArtworkTextInput({
     >
       <label
         htmlFor={name}
-        className="text-dark whitespace-nowrap font-light text-fluid-xxs"
+        className="text-dark whitespace-nowrap font-normal text-fluid-xxs"
       >
         {label}
       </label>
@@ -63,14 +71,16 @@ export default function ArtworkTextInput({
           name={name}
           required={required}
           type={
-            ["price", "year", "birth_year"].includes(name) ? "number" : "text"
+            ["price", "year", "artist_birthyear"].includes(name)
+              ? "number"
+              : "text"
           }
           disabled={disabled}
           placeholder={placeholder}
-          value={value}
+          value={currentValue}
           onChange={(e) => handleChange(e.target.value, name)}
           className={`${errorList.length > 0 ? "ring-red-600 focus:ring-red-600" : " focus:ring-dark ring-dark/20"} 
-          w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 text-fluid-xxs font-light text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed`}
+          w-full bg-transparent border border-dark/30 focus:border-dark outline-none focus:ring-0 rounded-sm  transition-all duration-300 text-fluid-xxs font-normal text-dark disabled:bg-dark/10 p-3 disabled:bg-gray-50 disabled:border-dark/20 disabled:text-slate-700 disabled:cursor-not-allowed`}
         />
       )}
       {type === "textarea" && (

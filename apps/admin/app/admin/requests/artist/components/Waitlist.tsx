@@ -95,14 +95,14 @@ export default function ArtistWaitlist() {
   const filteredArtists = artists.filter(
     (a) =>
       a.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      a.name.toLowerCase().includes(searchQuery.toLowerCase())
+      a.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleSelectAll = () => {
     setSelectedIds(
       selectedIds.size === filteredArtists.length
         ? new Set()
-        : new Set(filteredArtists.map((a) => a.waitlistId))
+        : new Set(filteredArtists.map((a) => a.waitlistId)),
     );
   };
 
@@ -136,7 +136,7 @@ export default function ArtistWaitlist() {
       setModalOpened(false);
       toast_notif(
         `Invitations sent — ${response.modifiedCount} invited`,
-        "success"
+        "success",
       );
     } else {
       toast_notif(response.message, "error");

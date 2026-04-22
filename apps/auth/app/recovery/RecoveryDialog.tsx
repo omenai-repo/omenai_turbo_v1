@@ -24,7 +24,7 @@ export default function Recovery() {
               />
             </div>
             <div className="">
-              <h1 className="text-fluid-sm font-light">Let us help</h1>
+              <h1 className="text-fluid-sm font-normal">Let us help</h1>
               <p className="text-fluid-xxs font-semibold">
                 Enter your email so we can help recover your account
               </p>
@@ -33,7 +33,7 @@ export default function Recovery() {
               <RecoveryEmailInputField />
             </div>
             <div>
-              <p className="text-fluid-xxs font-light text-red-600">
+              <p className="text-fluid-xxs font-normal text-red-600">
                 Kindly note that a link will be sent to your email address.
                 Click the link to complete this process.
               </p>

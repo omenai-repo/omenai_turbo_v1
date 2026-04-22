@@ -33,7 +33,7 @@ export default function Waitlist() {
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [discountToggles, setDiscountToggles] = useState<Map<string, boolean>>(
-    new Map()
+    new Map(),
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isInviting, setIsInviting] = useState(false);
@@ -57,14 +57,14 @@ export default function Waitlist() {
   const filteredGalleries = galleries.filter(
     (g) =>
       g.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      g.name.toLowerCase().includes(searchQuery.toLowerCase())
+      g.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleSelectAll = () => {
     setSelectedIds(
       selectedIds.size === filteredGalleries.length
         ? new Set()
-        : new Set(filteredGalleries.map((g) => g.waitlistId))
+        : new Set(filteredGalleries.map((g) => g.waitlistId)),
     );
   };
 
@@ -113,7 +113,7 @@ export default function Waitlist() {
       setModalOpened(false);
       toast_notif(
         `Invitations sent — ${response.modifiedCount} invited`,
-        "success"
+        "success",
       );
     } else {
       toast_notif(response.message, "error");

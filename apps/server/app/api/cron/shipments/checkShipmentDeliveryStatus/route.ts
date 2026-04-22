@@ -10,8 +10,11 @@ import { createErrorRollbarReport } from "../../../util";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { verifyAuthVercel } from "../../utils";
-import { UnifiedTrackingResponse, getDHLTracking } from "../../../dhl_service";
-import { getUPSTracking } from "../../../ups_service";
+import { getUPSTracking } from "../../../services/ups_service";
+import {
+  getDHLTracking,
+  UnifiedTrackingResponse,
+} from "../../../services/dhl_service";
 
 // TODO: Check 2 days past and In transit
 /**

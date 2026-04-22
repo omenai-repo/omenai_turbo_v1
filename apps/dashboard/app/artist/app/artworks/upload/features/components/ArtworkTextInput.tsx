@@ -80,7 +80,7 @@ export default function ArtworkTextInput({
     >
       <label
         htmlFor={name}
-        className="text-dark whitespace-nowrap font-light text-fluid-xxs"
+        className="text-dark whitespace-nowrap font-normal text-fluid-xxs"
       >
         {label}
       </label>

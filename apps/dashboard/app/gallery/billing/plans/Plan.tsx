@@ -83,7 +83,7 @@ const isButtonDisabled = (
 /* ----------------------------- UI ATOMS ----------------------------- */
 
 const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
-  <div className="mb-8 rounded bg-amber-50 border border-amber-200 p-3">
+  <div className="mb-8 rounded-sm  bg-amber-50 border border-amber-200 p-3">
     <div className="flex gap-2">
       <span className="text-amber-600">⚠️</span>
       <p className="text-[11px] leading-relaxed font-medium text-amber-800">
@@ -169,7 +169,7 @@ export default function Plan({
 
         {dark && (
           <span
-            className={`text-[9px] tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border ${
+            className={`text-[9px] tracking-[0.18em] uppercase px-2.5 py-1 rounded-sm -full border ${
               dark
                 ? "border-white/15 text-white/45"
                 : "border-[#C8C2BB] text-[#A8A09A]"
@@ -218,7 +218,7 @@ export default function Plan({
 
           {(discount || isEligibleForDiscount) && (
             <span
-              className={`text-[9px] tracking-[0.15em] uppercase px-2 py-0.5 rounded ${
+              className={`text-[9px] tracking-[0.15em] uppercase px-2 py-0.5 rounded-sm  ${
                 dark
                   ? "bg-white/8 text-white/40"
                   : "bg-[#F0EDE8] text-[#9C8E7A]"
@@ -231,7 +231,7 @@ export default function Plan({
           {/* RESTORED: Yearly Savings Badge */}
           {!isEligibleForDiscount && tab === "yearly" && (
             <span
-              className={`text-[9px] tracking-[0.15em] uppercase px-2 py-0.5 rounded ${
+              className={`text-[9px] tracking-[0.15em] uppercase px-2 py-0.5 rounded-sm  ${
                 dark
                   ? "bg-emerald-500/10 text-emerald-400"
                   : "bg-emerald-50 text-emerald-600"
@@ -267,7 +267,7 @@ export default function Plan({
         {benefitList.map((benefit, i) => (
           <div key={i} className="flex items-start gap-3.5">
             <span
-              className={`flex-none mt-[5px] w-1 h-1 rounded-full ${
+              className={`flex-none mt-[5px] w-1 h-1 rounded-sm -full ${
                 dark ? "bg-white/30" : "bg-[#C0B8B0]"
               }`}
             />
