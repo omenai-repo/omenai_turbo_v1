@@ -14,8 +14,6 @@ export async function getGalleryArtistsService(
   singleArtistId?: string,
 ) {
   try {
-    await connectMongoDB();
-
     // 1. Get the official represented list
     const gallery = (await AccountGallery.findOne(
       { gallery_id },

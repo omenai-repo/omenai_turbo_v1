@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAllFairsAndEventsService } from "../../services/events/getEvents.service";
 import { getGalleryWorksService } from "../../services/events/getGalleryWorks.service";
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -16,6 +17,7 @@ export async function GET(request: Request) {
   };
   try {
     if (!gallery_id) throw new BadRequestError("Missing id parameter");
+    await connectMongoDB();
     const response = await getGalleryWorksService(
       gallery_id,
       page,

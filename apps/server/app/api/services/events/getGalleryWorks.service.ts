@@ -11,7 +11,6 @@ export async function getGalleryWorksService(
   filters: { artist?: string; medium?: string; price?: string } = {},
 ) {
   try {
-    await connectMongoDB();
     const skip = (page - 1) * limit;
 
     // 1. Build the dynamic query object

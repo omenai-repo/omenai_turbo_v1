@@ -12,8 +12,6 @@ export async function fetchGalleryRosterLogic(gallery_id: string | null) {
     throw new BadRequestError("Gallery ID is required to fetch roster.");
   }
 
-  await connectMongoDB();
-
   // 1. Get the gallery's array of IDs
   const gallery = await AccountGallery.findOne(
     { gallery_id: gallery_id },

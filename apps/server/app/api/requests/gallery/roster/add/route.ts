@@ -5,6 +5,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { handleErrorEdgeCases } from "../../../../../../custom/errors/handler/errorHandler";
 import { addArtistToRosterLogic } from "../../../../services/gallery/events/addArtistToRoster.service";
 import { createErrorRollbarReport } from "../../../../util";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -19,7 +20,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     // Extract gallery_id from the body (or from your session middleware if you attach it to the request)
     const { gallery_id, ...rawData } = body;
-
+    await connectMongoDB();
     const result = await addArtistToRosterLogic(rawData, gallery_id);
 
     return NextResponse.json(

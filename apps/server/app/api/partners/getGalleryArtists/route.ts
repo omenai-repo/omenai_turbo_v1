@@ -3,6 +3,7 @@ import { getGalleryArtistsService } from "../../services/gallery/partners/getGal
 import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
@@ -15,6 +16,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   try {
     if (!galleryId) throw new BadRequestError("Invalid ID provided");
 
+    await connectMongoDB();
     const response = await getGalleryArtistsService(
       galleryId,
       page,
@@ -25,8 +27,6 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     if (!response.isOk) {
       return NextResponse.json({ error: response.message }, { status: 500 });
     }
-
-    console.log(response.data?.length);
 
     return NextResponse.json(
       {

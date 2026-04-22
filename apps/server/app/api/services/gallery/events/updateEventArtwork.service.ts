@@ -1,4 +1,3 @@
-import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { GalleryEvent } from "@omenai/shared-models/models/events/GalleryEventSchema";
 import { redis } from "@omenai/upstash-config";
@@ -51,8 +50,6 @@ export async function addArtworksToEvent(
   }
 
   try {
-    await connectMongoDB();
-
     // 1. Verify Event Ownership & Add IDs to the array
     // $addToSet ensures we don't accidentally create duplicate IDs in the array
     const eventUpdate = await GalleryEvent.findOneAndUpdate(

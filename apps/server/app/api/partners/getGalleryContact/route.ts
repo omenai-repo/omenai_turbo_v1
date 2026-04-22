@@ -34,6 +34,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   const gallery_id = searchParams.get("id");
   try {
     if (!gallery_id) throw new BadRequestError("Missing gallery_id parameter");
+    await connectMongoDB();
     const result = await getGalleryContactService(gallery_id);
     if (!result.isOk) {
       return new Response(JSON.stringify({ message: result.message }), {

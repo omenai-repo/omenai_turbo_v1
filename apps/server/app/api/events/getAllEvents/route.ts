@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAllFairsAndEventsService } from "../../services/events/getEvents.service";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 export async function GET(request: Request) {
   try {
@@ -7,6 +8,7 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "12", 10);
     const filter = searchParams.get("filter") || "All";
+    await connectMongoDB();
 
     const response = await getAllFairsAndEventsService(page, limit, filter);
 

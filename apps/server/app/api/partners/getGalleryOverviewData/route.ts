@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport } from "../../util";
 import { getGalleryOverviewService } from "../../services/gallery/partners/getGalleryOverview.service";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
@@ -13,6 +14,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   const gallery_id = searchParams.get("id");
   try {
     if (!gallery_id) throw new BadRequestError("Missing gallery_id parameter");
+    await connectMongoDB();
     const result = await getGalleryOverviewService(gallery_id);
     if (!result.isOk) {
       return new Response(JSON.stringify({ message: result.message }), {

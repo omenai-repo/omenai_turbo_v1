@@ -1,4 +1,3 @@
-import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { GalleryEvent } from "@omenai/shared-models/models/events/GalleryEventSchema";
 import { fetchArtworksFromCache } from "../../../artworks/utils";
 import {
@@ -12,8 +11,6 @@ export async function fetchEventDashboardData(
   galleryId: string,
 ) {
   try {
-    await connectMongoDB();
-
     // Fetch the core event
     const event = (await GalleryEvent.findOne({
       event_id: eventId,

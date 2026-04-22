@@ -6,6 +6,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { fetchGalleryRosterLogic } from "../../../services/gallery/events/fetchGalleryRoster.service";
 import { createErrorRollbarReport } from "../../../util";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -21,6 +22,7 @@ export const GET = withRateLimitHighlightAndCsrf(config)(async function GET(
     const { searchParams } = new URL(request.url);
     const gallery_id = searchParams.get("gallery_id");
 
+    await connectMongoDB();
     const result = await fetchGalleryRosterLogic(gallery_id);
 
     return NextResponse.json(

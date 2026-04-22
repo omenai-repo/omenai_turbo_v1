@@ -14,8 +14,6 @@ export async function removeArtistFromRosterLogic(
     throw new BadRequestError("Artist ID is required to remove from roster.");
   }
 
-  await connectMongoDB();
-
   // $pull removes the specific ID from the represented_artists array
   const updatedGallery = await AccountGallery.findOneAndUpdate(
     { gallery_id: gallery_id },

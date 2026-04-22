@@ -7,6 +7,7 @@ import {
   addArtworksToEvent,
   removeArtworkFromEvent,
 } from "../../../../services/gallery/events/updateEventArtwork.service";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 const config: CombinedConfig = {
   ...standardRateLimit,
   allowedRoles: ["gallery"],
@@ -27,7 +28,7 @@ export const PATCH = withRateLimitHighlightAndCsrf(config)(async function PATCH(
       validateUpdateSchema.parse(body);
 
     let result = { isOk: false, message: "Invalid operation type" };
-
+    await connectMongoDB();
     if (type === "remove") {
       // Call the service to remove artwork from event and unlock mutex
       const data = await removeArtworkFromEvent(

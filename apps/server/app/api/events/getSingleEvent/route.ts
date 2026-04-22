@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getIndividualFairOrEventService } from "../../services/events/getEvents.service";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -11,6 +12,8 @@ export async function GET(request: Request) {
         { status: 400 },
       );
     }
+
+    await connectMongoDB();
 
     const response = await getIndividualFairOrEventService(eventId);
 
