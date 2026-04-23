@@ -18,6 +18,13 @@ import { FeaturedShowsSection } from "./features/featuredShows/FeaturedShowsSect
 import TrendingArtworkWrapper from "./features/trending/TrendingrtworksWrapper";
 import { FairsAndEventsSection } from "./features/events/FairsAndEventSection";
 import { FeaturedGalleriesSection } from "./features/featuredGalleries/FeaturedGalleryWrapper";
+import { Suspense } from "react";
+import CuratorsPicksSection from "./features/curatorPicks/CuratorPicksSelection";
+import {
+  CuratorsPicksSkeleton,
+  FeaturedFeedSkeleton,
+} from "./features/curatorPicks/CuratorPicksSkeleton";
+import FeaturedFeedSection from "./features/featuredFeed/FeaturedFeedSection";
 
 export default function Home() {
   const { user } = useAuth({ requiredRole: "user" });
@@ -48,18 +55,18 @@ export default function Home() {
       <DesktopNavbar />
       {promotionals && <Hero promotionals={promotionals} />}
       <div className="p-4 md:p-8  space-y-16">
+        <FeaturedFeedSection />
+        <CuratorsPicksSection />
         <FairsAndEventsSection />
-
+        <FeaturedGalleriesSection />
         <LatestArtworkWrapper
           sessionId={user && user.role === "user" ? user.id : undefined}
         />
-
         <FeaturedShowsSection />
         <Collections />
         <TrendingArtworkWrapper
           sessionId={user && user.role === "user" ? user.id : undefined}
         />
-        <FeaturedGalleriesSection />
         <Editorials />
         {/* <TrendingArtistWrapper /> */}
         {user && user.role === "user" && (

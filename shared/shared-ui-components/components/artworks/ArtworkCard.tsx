@@ -225,7 +225,7 @@ export default function ArtworkCard({
           >
             <h3
               className="
-              font-serif italic text-[16px] font-normal text-black
+              font-serif  text-[16px] font-normal text-black
               leading-snug line-clamp-2
               group-hover/title:opacity-50 transition-opacity duration-200
             "

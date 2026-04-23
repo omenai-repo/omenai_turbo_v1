@@ -39,12 +39,13 @@ export default function TrendingArtworkWrapper({
               <span className="flex items-center justify-center h-6 w-6 rounded -full bg-[#091830]/10 text-dark ">
                 <HiArrowTrendingUp size={14} />
               </span>
-              <span className="text-3xl font-serif font-light text-dark">
+              <span className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
                 Trending works
               </span>
             </div>
 
-            <p className="mt-4 text-[16px] text-neutral-500 max-w-lg">
+            <div className="w-[60px] h-[3px] bg-[#C9A96E] my-5"></div>
+            <p className="mt-4 text-sm text-neutral-500 max-w-lg">
               Works capturing collector attention this week.
             </p>
           </div>

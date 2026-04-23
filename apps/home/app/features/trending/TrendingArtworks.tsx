@@ -5,6 +5,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import ArtworkCard from "@omenai/shared-ui-components/components/artworks/ArtworkCard";
 import TrendingArtworkCard from "./TrendingArtCard";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function TrendingArtworks({
   artworks,
@@ -74,50 +75,20 @@ export default function TrendingArtworks({
         </div>
       </div>
 
-      {/* ─── Previous Button ─── */}
       <button
         onClick={scrollPrev}
-        disabled={prevBtnDisabled}
-        className="absolute left-0 top-1/2 z-10 -ml-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md border border-neutral-100 text-neutral-800 transition-all duration-300 hover:scale-105 disabled:opacity-0 disabled:pointer-events-none md:-ml-5"
-        aria-label="Previous artwork"
+        className="absolute left-6 top-[35%] -translate-y-1/2 w-12 h-12 bg-[#FAF8F5] border border-[#E8E4DF] rounded-full shadow-[0_8px_30px_rgba(28,25,23,0.12)] flex items-center justify-center z-10 text-[#1C1917] transition-all hover:bg-[#1C1917] hover:text-[#FAF8F5] opacity-0 group-hover:opacity-100"
+        aria-label="Previous slide"
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15.75 19.5L8.25 12l7.5-7.5"
-          />
-        </svg>
+        <ChevronLeft size={32} strokeWidth={1.5} className="ml-[-2px]" />
       </button>
 
-      {/* ─── Next Button ─── */}
       <button
         onClick={scrollNext}
-        disabled={nextBtnDisabled}
-        className="absolute right-0 top-1/2 z-10 -mr-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md border border-neutral-100 text-neutral-800 transition-all duration-300 hover:scale-105 disabled:opacity-0 disabled:pointer-events-none md:-mr-5"
-        aria-label="Next artwork"
+        className="absolute right-6 md top-[35%] -translate-y-1/2 w-12 h-12 bg-[#FAF8F5] border border-[#E8E4DF] rounded-full shadow-[0_8px_30px_rgba(28,25,23,0.12)] flex items-center justify-center z-10 text-[#1C1917] transition-all hover:bg-[#1C1917] hover:text-[#FAF8F5] opacity-0 group-hover:opacity-100"
+        aria-label="Next slide"
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M8.25 4.5l7.5 7.5-7.5 7.5"
-          />
-        </svg>
+        <ChevronRight size={32} strokeWidth={1.5} className="mr-[-2px]" />
       </button>
     </div>
   );

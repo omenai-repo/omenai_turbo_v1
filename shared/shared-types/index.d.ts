@@ -1,3 +1,4 @@
+import { identifier } from "@omenai/appwrite-config";
 import { InvoiceLineItemsData } from "./../../node_modules/@omenai/shared-types/index.d";
 import { Stripe } from "stripe";
 import z from "zod";
@@ -1991,6 +1992,29 @@ export type GalleryEventAnalytics = {
 export type FollowTypes = {
   follower: string;
   followingId: string;
-  followingType: "artist" | "gallery"; // Discriminator to know which collection to look in
+  followingType: "artist" | "gallery";
   createdAt: Date;
+};
+
+// Curation types
+export type CurationTypes = {
+  curation_type: "curator_picks" | "featured_feed";
+  draft_items: CuratedItemTypes[];
+  published_items: CuratedItemTypes[];
+  last_published_at?: Date;
+  last_published_by?: string;
+};
+
+export type CuratedItemTypes = {
+  type: string;
+  identifier: string;
+  identifier: string;
+  data?: any;
+  isMissingData?: boolean;
+};
+
+export type CurationHistoryTypes = {
+  curation_type: "curator_picks" | "featured_feed";
+  published_items: CuratedItemTypes[];
+  published_by: string;
 };

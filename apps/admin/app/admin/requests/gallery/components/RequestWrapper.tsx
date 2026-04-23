@@ -30,7 +30,7 @@ export type GalleryType = Pick<
 export function GalleryRequestWrapper() {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  if (!canAccessRoute(user.access_role, "requests")) {
+  if (!canAccessRoute(user.access_role, "management_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
 

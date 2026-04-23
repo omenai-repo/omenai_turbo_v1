@@ -12,7 +12,7 @@ import PromotionalCard from "./PromotionalCard";
 export default function PromotionalList() {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  if (!canAccessRoute(user.access_role, "editorials")) {
+  if (!canAccessRoute(user.access_role, "mid_level_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
 
@@ -22,7 +22,7 @@ export default function PromotionalList() {
       const response = await getPromotionalData();
       if (!response.isOk) {
         throw new Error(
-          "Something went wrong. Please try again later or contact support"
+          "Something went wrong. Please try again later or contact support",
         );
       }
       return response.data;

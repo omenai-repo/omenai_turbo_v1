@@ -64,7 +64,7 @@ export default function Collections({
             <span className="block mb-3 text-[9px] font-mono text-dark  tracking-wide uppercase">
               Featured Collections
             </span>
-            <h2 className="text-3xl font-serif font-light text-dark">
+            <h2 className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
               Browse by medium
             </h2>
           </div>

@@ -45,10 +45,10 @@ export default function Editorials() {
                     Omenai Editorial
                   </span>
                 </div>
-                <h2 className="text-3xl font-serif font-light text-dark">
+                <h2 className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
                   Stories & Insights
                 </h2>
-                <p className="mt-2 font-sans text-[16px] text-neutral-500 max-w-lg">
+                <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
                   In-depth features, market analysis, and conversations with
                   artists.
                 </p>

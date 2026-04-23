@@ -9,7 +9,7 @@ export default function TaxWrapper() {
   const { user } = useAuth({ requiredRole: "admin" });
 
   // Check permissions
-  if (!canAccessRoute(user.access_role, "taxes")) {
+  if (!canAccessRoute(user.access_role, "owner_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
 

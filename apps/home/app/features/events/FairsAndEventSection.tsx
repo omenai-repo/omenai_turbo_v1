@@ -10,6 +10,7 @@ import { getEventStatus } from "@omenai/shared-utils/src/getEventStatus";
 import { FairsCarouselSkeleton } from "./FairsCarouselSkeleton";
 import { getAllEvents } from "@omenai/shared-services/events/getAllEvents";
 import { getPromotionalOptimizedImage } from "@omenai/shared-lib/storage/getPromotionalsFileView";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 const fetchRecentFairsAndEvents = async () => {
   const response = await getAllEvents("1", "10", "All");
   if (!response.isOk) {
@@ -69,9 +70,11 @@ export const FairsAndEventsSection = () => {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4">
           <div>
             {/* font-serif for the elegant section header */}
-            <h2 className="text-3xl font-serif font-light text-dark">
+            <h2 className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
               Fairs & Events
             </h2>
+            <div className="w-[60px] h-[3px] bg-[#C9A96E] my-5"></div>
+
             {/* font-sans for the UI description */}
             <p className="text-sm font-sans text-neutral-500 mt-2 font-light">
               Explore time-sensitive global art fairs and exclusive digital
@@ -144,9 +147,9 @@ export const FairsAndEventsSection = () => {
                           </span>
 
                           {/* font-serif for the artistic title of the fair/room */}
-                          <h3 className="text-xl font-serif font-light text-dark leading-tight line-clamp-2 group-hover/card:text-neutral-600 transition-colors">
+                          <h1 className="text-md font-serif font-light text-dark leading-tight line-clamp-2 group-hover/card:text-neutral-600 transition-colors">
                             {event.title}
-                          </h3>
+                          </h1>
 
                           {/* font-sans for utility details */}
                           <div className="text-[11px] font-sans text-neutral-400 tracking-wide uppercase pt-1 flex flex-col gap-0.5">
@@ -187,44 +190,28 @@ export const FairsAndEventsSection = () => {
             {prevBtnEnabled && (
               <button
                 onClick={scrollPrev}
-                className="absolute left-2 sm:-left-4 md:-left-6 top-[30%] -translate-y-1/2 p-3 sm:p-4 bg-white/90 backdrop-blur-md border border-neutral-200 text-neutral-500 rounded-full shadow-sm hover:text-dark hover:border-neutral-300 hover:bg-white transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
-                aria-label="Previous events"
+                className="absolute left-6 top-[35%] -translate-y-1/2 w-12 h-12 bg-[#FAF8F5] border border-[#E8E4DF] rounded-full shadow-[0_8px_30px_rgba(28,25,23,0.12)] flex items-center justify-center z-10 text-[#1C1917] transition-all hover:bg-[#1C1917] hover:text-[#FAF8F5] opacity-0 group-hover:opacity-100"
+                aria-label="Previous slide"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+                <ChevronLeft
+                  size={32}
+                  strokeWidth={1.5}
+                  className="ml-[-2px]"
+                />
               </button>
             )}
 
             {nextBtnEnabled && (
               <button
                 onClick={scrollNext}
-                className="absolute right-2 sm:-right-4 md:-right-6 top-[30%] -translate-y-1/2 p-3 sm:p-4 bg-white/90 backdrop-blur-md border border-neutral-200 text-neutral-500 rounded-full shadow-sm hover:text-dark hover:border-neutral-300 hover:bg-white transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
-                aria-label="Next events"
+                className="absolute right-6 md top-[35%] -translate-y-1/2 w-12 h-12 bg-[#FAF8F5] border border-[#E8E4DF] rounded-full shadow-[0_8px_30px_rgba(28,25,23,0.12)] flex items-center justify-center z-10 text-[#1C1917] transition-all hover:bg-[#1C1917] hover:text-[#FAF8F5] opacity-0 group-hover:opacity-100"
+                aria-label="Next slide"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
+                <ChevronRight
+                  size={32}
+                  strokeWidth={1.5}
+                  className="mr-[-2px]"
+                />
               </button>
             )}
           </div>

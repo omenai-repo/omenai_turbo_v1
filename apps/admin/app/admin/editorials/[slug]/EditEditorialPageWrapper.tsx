@@ -18,7 +18,7 @@ export default function EditEditorialPageWrapper({
 }>) {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  if (!canAccessRoute(user.access_role, "editorials")) {
+  if (!canAccessRoute(user.access_role, "mid_level_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
   const { data: editorial, isLoading: loading } = useQuery({
