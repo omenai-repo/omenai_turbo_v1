@@ -100,6 +100,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
       type: [String],
       default: () => [],
     },
+    followerCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

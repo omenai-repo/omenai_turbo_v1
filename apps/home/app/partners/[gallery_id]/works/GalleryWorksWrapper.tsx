@@ -121,7 +121,7 @@ export default function GalleryWorksPage({ galleryId }: { galleryId: string }) {
   }, [artistParam]);
 
   return (
-    <div className="w-full pb-32 pt-12 max-w-[1600px] mx-auto px-4 ">
+    <div className="w-full pb-32 pt-12 max-w-[1600px] mx-auto px-4 md:px-8">
       {/* 1. FILTER STRIP & IMMERSIVE TOGGLE */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-neutral-100 pb-6">
         {/* Left: Native Select Filters */}

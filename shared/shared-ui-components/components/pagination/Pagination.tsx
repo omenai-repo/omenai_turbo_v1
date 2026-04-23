@@ -49,6 +49,7 @@ function Pagination<T extends any[]>({
     debounce(async (page: number) => {
       try {
         setIsLoading(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
         const response = await fn(page, ...fnArgs);
 
         if (response?.isOk && response.data) {
@@ -62,7 +63,6 @@ function Pagination<T extends any[]>({
         }
       } finally {
         setIsLoading(false);
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }, 300),
     [fn, fnArgs],

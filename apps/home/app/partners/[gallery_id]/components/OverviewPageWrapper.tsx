@@ -35,51 +35,56 @@ export default function GalleryOverviewPage({
       return { highlightEvent: null, historyEvents: [], status: null };
     }
 
-    const active: any[] = [];
-    const upcoming: any[] = [];
-    const past: any[] = [];
+    let active: any[] = [];
+    let earliestUpcoming: any = null;
+    let latestPast: any = null;
 
-    events.forEach((event: any) => {
-      const eventStatus = getEventStatus(event.start_date, event.end_date);
-      if (eventStatus === "Active") active.push(event);
-      else if (eventStatus === "Upcoming") upcoming.push(event);
-      else past.push(event);
-    });
+    let earliestUpcomingTime = Infinity;
+    let latestPastTime = -Infinity;
 
-    const immediateUpcoming = [...upcoming].sort(
-      (a, b) =>
-        new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
-    );
+    for (const event of events) {
+      const startTime = new Date(event.start_date).getTime();
+      const status = getEventStatus(event.start_date, event.end_date);
 
-    const recentPast = [...past].sort(
-      (a, b) =>
-        new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
-    );
+      if (status === "Active") {
+        active.push(event);
+      } else if (status === "Upcoming") {
+        if (startTime < earliestUpcomingTime) {
+          earliestUpcomingTime = startTime;
+          earliestUpcoming = event;
+        }
+      } else {
+        if (startTime > latestPastTime) {
+          latestPastTime = startTime;
+          latestPast = event;
+        }
+      }
+    }
 
     let headliner = null;
     let currentStatus = null;
 
     if (active.length > 0) {
-      headliner = active[0];
+      headliner = active[0]; // assuming order doesn't matter
       currentStatus = "Active";
-    } else if (immediateUpcoming.length > 0) {
-      headliner = immediateUpcoming[0];
+    } else if (earliestUpcoming) {
+      headliner = earliestUpcoming;
       currentStatus = "Upcoming";
-    } else if (recentPast.length > 0) {
-      headliner = recentPast[0];
+    } else if (latestPast) {
+      headliner = latestPast;
       currentStatus = "Closed";
     }
 
-    const history = events.filter(
-      (e: any) => e.event_id !== headliner?.event_id,
-    );
+    const historyEvents = headliner
+      ? events.filter((e: any) => e.event_id !== headliner.event_id)
+      : events;
 
     return {
       highlightEvent: headliner,
-      historyEvents: history,
+      historyEvents,
       status: currentStatus,
     };
-  }, [data?.events]);
+  }, [data]);
 
   // ✅ Now safe to conditionally return
   if (isLoading) {
@@ -93,11 +98,11 @@ export default function GalleryOverviewPage({
   if (isError || !data) return null;
 
   return (
-    <div className="w-full pb-32">
+    <div className="w-full pb-32 px-4 md:px-8">
       {/* =========================================
           SECTION 1: THE HIGHLIGHT & BIO BLOCK
       ========================================= */}
-      <section className="max-w-[1600px] mx-auto px-4 py-16 md:py-24 border-b border-neutral-100">
+      <section className="max-w-[1600px] mx-auto py-16 md:py-24 border-b border-neutral-100">
         {highlightEvent ? (
           /* ASYMMETRICAL SPLIT (Has Events) */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
@@ -179,9 +184,9 @@ export default function GalleryOverviewPage({
           SECTION 2: EVENT HISTORY CAROUSEL
       ========================================= */}
       {historyEvents.length > 0 && (
-        <section className="max-w-[1600px] mx-auto py-20 border-b border-neutral-100 pl-4">
+        <section className="max-w-[1600px] mx-auto py-20 border-b border-neutral-100">
           <div className="pr-4 md:pr-8 lg:pr-12 flex justify-between items-end mb-10">
-            <h3 className="font-serif text-3xl font-light text-dark">
+            <h3 className="font-serif text-2xl font-light text-dark">
               All Shows & Events
             </h3>
             <Link
@@ -249,7 +254,7 @@ export default function GalleryOverviewPage({
       ========================================= */}
       {(data.represented_artists.length > 0 ||
         data.available_artists.length > 0) && (
-        <section className="max-w-[1600px] mx-auto p-4 flex flex-col gap-16">
+        <section className="max-w-[1600px] mx-auto py-4 flex flex-col gap-16">
           {/* Represented Artists */}
           {data.represented_artists.length > 0 && (
             <div>

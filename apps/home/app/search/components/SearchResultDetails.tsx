@@ -5,6 +5,7 @@ import ArtworkCard from "@omenai/shared-ui-components/components/artworks/Artwor
 import { catalogChunk } from "@omenai/shared-utils/src/createCatalogChunks";
 import { useWindowSize } from "usehooks-ts";
 import { HiSearch } from "react-icons/hi";
+import MasonryGrid from "@omenai/shared-ui-components/components/artworks/MasonryGrid";
 
 type SearchResultDetailsProps = {
   data: (Pick<
@@ -31,11 +32,6 @@ export default function SearchResultDetails({
 }: SearchResultDetailsProps) {
   const { width } = useWindowSize();
 
-  const arts = catalogChunk(
-    data,
-    width <= 640 ? 1 : width <= 990 ? 2 : width <= 1440 ? 3 : 4,
-  );
-
   return (
     <div className="w-full">
       {/* HEADER */}
@@ -46,39 +42,32 @@ export default function SearchResultDetails({
             Search Results
           </span>
         </div>
-        <h1 className="font -serif text-3xl md:text-4xl text-dark ">
+        <h1 className="font-serif text-2xl md:text-3xl text-dark ">
           Found {data.length} {data.length === 1 ? "work" : "works"} for{" "}
           <span className="italic text-neutral-500">“{searchTerm}”</span>
         </h1>
       </div>
 
-      {/* RESULTS GRID */}
-      <div className="flex flex-wrap justify-center gap-x-8">
-        {arts.map((artworks: any[], index) => {
+      <MasonryGrid>
+        {data.map((art: any) => {
           return (
-            <div className="flex-1 flex flex-col gap-12" key={index}>
-              {artworks.map((art: any) => {
-                return (
-                  <ArtworkCard
-                    key={art.art_id}
-                    image={art.url}
-                    name={art.title}
-                    artist={art.artist}
-                    art_id={art.art_id}
-                    pricing={art.pricing}
-                    impressions={art.impressions as number}
-                    likeIds={art.like_IDs as string[]}
-                    sessionId={sessionId}
-                    availability={art.availability}
-                    medium={art.medium}
-                    author_id={art.author_id}
-                  />
-                );
-              })}
-            </div>
+            <ArtworkCard
+              key={art.art_id}
+              image={art.url}
+              name={art.title}
+              artist={art.artist}
+              art_id={art.art_id}
+              pricing={art.pricing}
+              impressions={art.impressions as number}
+              likeIds={art.like_IDs as string[]}
+              sessionId={sessionId}
+              availability={art.availability}
+              medium={art.medium}
+              author_id={art.author_id}
+            />
           );
         })}
-      </div>
+      </MasonryGrid>
     </div>
   );
 }

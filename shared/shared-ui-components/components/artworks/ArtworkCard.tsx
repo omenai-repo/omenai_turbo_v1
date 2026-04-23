@@ -265,7 +265,7 @@ export default function ArtworkCard({
                   </span>
                 ) : (
                   <span className="font-sans text-[10px] font-light italic text-neutral-400 leading-none">
-                    Inquire price
+                    Request Price
                   </span>
                 )}
               </div>

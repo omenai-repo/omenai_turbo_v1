@@ -1,4 +1,4 @@
-import { serverStorage } from "@omenai/appwrite-config";
+import { serverStorage } from "@omenai/appwrite-config/serverAppwrite";
 import { ID } from "node-appwrite";
 
 export async function uploadInvoicePdf({

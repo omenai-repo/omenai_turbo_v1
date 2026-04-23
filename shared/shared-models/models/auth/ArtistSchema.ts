@@ -139,6 +139,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
         referrer: "direct",
       }),
     },
+    followerCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

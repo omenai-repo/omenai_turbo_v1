@@ -35,7 +35,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
           gallery_verified: true,
           "subscription_status.active": true,
         },
-        "logo name gallery_id address",
+        "logo name gallery_id address followerCount",
       )
         .sort({ createdAt: -1 })
         .skip(skip)

@@ -7,9 +7,6 @@ import {
   TablesDB,
 } from "appwrite";
 
-// -----------------------------------------------------------------------------
-// 1. CLIENT-SIDE SETUP
-// -----------------------------------------------------------------------------
 const client = new Client();
 
 if (process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT) {
@@ -23,24 +20,3 @@ export const editorial_database = new TablesDB(client);
 export const appwrite_image_format = ImageFormat;
 export const appwrite_image_gravity = ImageGravity;
 export const identifier = ID;
-
-// -----------------------------------------------------------------------------
-// 2. SERVER-SIDE SETUP
-// -----------------------------------------------------------------------------
-
-let sStorage: any = null;
-
-if (typeof window === "undefined") {
-  const { Client: NodeClient, Storage: NodeStorage } = require("node-appwrite");
-
-  const internalClient = new NodeClient();
-
-  internalClient
-    .setEndpoint(process.env.APPWRITE_ENDPOINT!)
-    .setProject(process.env.APPWRITE_CLIENT_ID!)
-    .setKey(process.env.APPWRITE_STORAGE_API_KEY!);
-
-  sStorage = new NodeStorage(internalClient);
-}
-
-export const serverStorage = sStorage;

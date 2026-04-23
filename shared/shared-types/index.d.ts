@@ -5,11 +5,15 @@ import z from "zod";
 export type SessionDataType = (
   | ({ role: "gallery" } & Omit<
       GallerySchemaTypes,
-      "password" | "phone" | "registeration_tracking" | "represented_artists"
+      | "password"
+      | "phone"
+      | "registeration_tracking"
+      | "represented_artists"
+      | "followerCount"
     >)
   | ({ role: "user" } & Omit<
       IndividualSchemaTypes,
-      "password" | "phone" | "registeration_tracking"
+      "password" | "phone" | "registeration_tracking" | "followingCount"
     >)
   | ({ role: "admin" } & Omit<
       AccountAdminSchemaTypes,
@@ -26,6 +30,7 @@ export type SessionDataType = (
       | "registeration_tracking"
       | "birthyear"
       | "country_of_origin"
+      | "followerCount"
     >)
 ) & { id: string };
 
@@ -85,6 +90,7 @@ export type ArtistSchemaTypes = {
     last_reset_date: Date;
   };
   registeration_tracking: Registeration_Tracking;
+  followerCount: number;
 };
 
 export type RosterArtist = {
@@ -159,6 +165,7 @@ export type GallerySchemaTypes = {
   stripe_customer_id: string | null;
   registeration_tracking: Registeration_Tracking;
   represented_artists: string[];
+  followerCount: number;
 };
 
 type SubscriptionStatus = {
@@ -181,6 +188,7 @@ export type IndividualSchemaTypes = {
   role: AccessRoleTypes;
   address: AddressTypes;
   registeration_tracking: Registeration_Tracking;
+  followingCount: number;
 };
 
 export type InputProps = {
@@ -1976,4 +1984,13 @@ export type GalleryEventAnalytics = {
   view_in_room: number;
   shares: number;
   daily_stats: any;
+};
+
+// Follow feature
+
+export type FollowTypes = {
+  follower: string;
+  followingId: string;
+  followingType: "artist" | "gallery"; // Discriminator to know which collection to look in
+  createdAt: Date;
 };
