@@ -22,7 +22,7 @@ export function getUploadLimitLookup(
 
   // If count is provided and the limit is not "Unlimited", multiply the limit
   if (free_trial && limit !== Number.MAX_SAFE_INTEGER) {
-    return 60; // If free, trial, users get 160 uploads for free for the first 2 months
+    return 60;
   }
 
   return limit;

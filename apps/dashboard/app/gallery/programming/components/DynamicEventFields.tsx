@@ -72,7 +72,7 @@ export const DynamicEventFields = ({
             </label>
             <PremiumCountrySelect
               value={formData.country || ""}
-              onChange={(e: string) => onChange("country", e)}
+              onChange={(e: string) => onChange("location.country", e)}
               error={errors["location.country"]}
             />
           </div>

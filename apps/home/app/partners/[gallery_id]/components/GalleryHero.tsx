@@ -1,12 +1,13 @@
 import React from "react";
 import { getOptimizedLogoImage } from "@omenai/shared-lib/storage/getImageFileView";
 import { GallerySchemaTypes } from "@omenai/shared-types";
+import FollowComponent from "@omenai/shared-ui-components/components/likes/FollowComponent";
 
 export const GalleryHero = ({ gallery }: { gallery: GallerySchemaTypes }) => {
   return (
     <section className="w-full bg-white">
       {/* ── Main identity block ── */}
-      <div className="w-full px-4 pt-14 pb-10">
+      <div className="w-full px-4 md:px-8 pt-14 pb-10">
         <div className="flex items-start justify-between gap-8">
           {/* Left: logo mark + name + location */}
           <div className="flex items-start gap-5 min-w-0">
@@ -39,9 +40,11 @@ export const GalleryHero = ({ gallery }: { gallery: GallerySchemaTypes }) => {
 
           {/* Right: Follow button */}
           <div className="shrink-0 pt-1">
-            <button className="font-sans text-[11px] font-medium text-dark border border-dark px-8 py-3 hover:bg-dark hover:text-white transition-all duration-200 leading-none tracking-wide rounded-sm">
-              Follow
-            </button>
+            <FollowComponent
+              followerCount={gallery.followerCount}
+              entityId={gallery.gallery_id}
+              entityType="gallery"
+            />
           </div>
         </div>
       </div>

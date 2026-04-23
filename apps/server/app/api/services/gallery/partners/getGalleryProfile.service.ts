@@ -9,12 +9,13 @@ export async function getGalleryProfile(gallery_id: string) {
     // Fetch only the lightweight fields needed for the Hero and Navigation
     const gallery = (await AccountGallery.findOne(
       { gallery_id },
-      "gallery_id name logo address",
+      "gallery_id name logo address followerCount",
     ).lean()) as {
       gallery_id: string;
       name: string;
       logo: string;
       address: AddressTypes;
+      followerCount: number;
     } | null;
 
     if (!gallery) {

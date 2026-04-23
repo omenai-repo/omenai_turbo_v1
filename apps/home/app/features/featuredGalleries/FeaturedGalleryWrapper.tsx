@@ -9,7 +9,7 @@ import { getOptimizedLogoImage } from "@omenai/shared-lib/storage/getImageFileVi
 import { FeaturedGalleriesSkeleton } from "./FeaturedGalleriesSkeleton";
 import { fetchGalleries } from "@omenai/shared-services/gallery/fetchGalleries";
 import { GallerySchemaTypes } from "@omenai/shared-types";
-
+import FollowComponent from "@omenai/shared-ui-components/components/likes/FollowComponent";
 const fetchFeaturedGalleries = async () => {
   const response = await fetchGalleries(1, 15);
   if (!response.isOk) {
@@ -139,12 +139,11 @@ export const FeaturedGalleriesSection = () => {
                         </Link>
 
                         {/* Follow Button (Isolated outside the Link) */}
-                        <button
-                          type="button"
-                          className="shrink-0 font-sans text-[10px] uppercase tracking-widest font-medium border border-neutral-200 px-4 py-2 rounded-sm text-dark hover:bg-dark hover:text-white transition-colors"
-                        >
-                          Follow
-                        </button>
+                        <FollowComponent
+                          followerCount={gallery.followerCount}
+                          entityId={gallery.gallery_id}
+                          entityType="gallery"
+                        />
                       </div>
                     </div>
                   </div>

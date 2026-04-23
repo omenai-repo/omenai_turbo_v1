@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { UserMenu } from "../ui/UserMenu";
-import { icons } from "../ui/icons";
 import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import Link from "next/link";
 import { IndividualLogo } from "../../logo/Logo";
@@ -15,11 +14,14 @@ import {
 import { actionStore } from "@omenai/shared-state-store/src/actions/ActionStore";
 import MobileNavbar from "../mobile/MobileNavbar";
 import { useRedirectBehavior } from "@omenai/shared-hooks/hooks/useRedirectBehaviour";
+import { Menu } from "lucide-react";
+
 export const navigation = [
   { name: "Collect", href: "/catalog" },
   { name: "Editorials", href: "/articles" },
   { name: "Shows", href: "/shows" },
   { name: "Fairs & Events", href: "/events" },
+  { name: "Galleries", href: "/partners" },
 ];
 
 const loggedInRouteMap = {
@@ -30,27 +32,26 @@ const loggedInRouteMap = {
 
 const DesktopNavbar = () => {
   const { updateOpenSideNav } = actionStore();
-  const { getCurrentUrl, isScrolled } = useRedirectBehavior();
+  const { getCurrentUrl } = useRedirectBehavior();
   const { user } = useAuth({ requiredRole: "user" });
-
   const login_base_url = auth_uri();
 
   return (
     <>
       <nav
-        className={`fixed z-[30] px-4 py-4 md:px-8 top-0 left-0 right-0 transition-all duration-300 ease-in-out border-b
-          ${
-            isScrolled
-              ? "py-3 bg-white/95 backdrop-blur-md border-neutral-200 shadow-sm"
-              : "py-5 bg-white border-neutral-100"
-          }`}
+        className="
+          fixed z-[30] top-0 left-0 right-0
+          px-4 py-2 md:px-8
+          bg-white/75 backdrop-blur-xl
+          border-b border-neutral-200/60
+          supports-[backdrop-filter]:bg-white/90
+        "
       >
         <div className="max-w-full mx-auto flex items-center justify-between">
-          {/* LEFT: Logo & Nav */}
+          {/* LEFT: Logo + Nav links */}
           <div className="flex items-center gap-10">
             <IndividualLogo />
 
-            {/* Desktop Navigation - Clean Sans Serif */}
             <ul className="hidden lg:flex items-center gap-8">
               {navigation.map((item) => (
                 <NavbarLink
@@ -72,37 +73,60 @@ const DesktopNavbar = () => {
             </ul>
           </div>
 
-          {/* RIGHT: Search & Actions */}
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="hidden md:block w-64">
+          {/* RIGHT: Search + Auth */}
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Search — hidden on mobile */}
+            <div className="hidden md:block w-60">
               <SearchInput setIsMobileMenuOpen={updateOpenSideNav} />
             </div>
 
+            {/* Divider */}
+            <div className="hidden lg:block w-px h-5 bg-neutral-200 mx-1" />
+
+            {/* Auth area */}
             {user && user.role === "user" ? (
               <UserMenu />
             ) : (
-              <div className="hidden lg:flex items-center gap-6">
-                <Link
-                  href={`${login_base_url}/register?redirect=${encodeURIComponent(getCurrentUrl())}`}
-                  className="bg-[#091830] text-white px-5 py-2.5 rounded text-sm font-sans font-normal hover:bg-[#0F2342] transition-all shadow-sm"
-                >
-                  Create Account
-                </Link>
+              <div className="hidden lg:flex items-center gap-1">
                 <Link
                   href={`${login_base_url}/login/user?redirect=${encodeURIComponent(getCurrentUrl())}`}
-                  className="text-sm font-sans font-normal text-neutral-600 hover:text-dark  transition-colors"
+                  className="
+                    px-4 py-2 rounded-sm
+                    text-[13px] tracking-wide font-normal
+                    text-neutral-400 hover:text-neutral-900 hover:font-medium
+                    transition-all duration-200
+                  "
                 >
                   Log in
+                </Link>
+                <Link
+                  href={`${login_base_url}/register?redirect=${encodeURIComponent(getCurrentUrl())}`}
+                  className="
+                    px-4 py-2 rounded-sm
+                    text-[13px] tracking-wide font-medium
+                    bg-neutral-900 text-white
+                    hover:bg-neutral-800
+                    transition-colors duration-200
+                    shadow-sm
+                  "
+                >
+                  Register
                 </Link>
               </div>
             )}
 
-            {/* Hamburger - Only visible on Mobile/Tablet */}
+            {/* Hamburger — mobile/tablet only */}
             <button
               onClick={() => updateOpenSideNav(true)}
-              className="lg:hidden p-2 text-dark  hover:bg-neutral-100 rounded transition-colors"
+              className="
+                lg:hidden p-2 rounded-sm
+                text-neutral-500 hover:text-neutral-900
+                hover:bg-neutral-100
+                transition-all duration-200
+              "
+              aria-label="Open menu"
             >
-              <icons.Menu strokeWidth={2} size={24} />
+              <Menu size={20} strokeWidth={1.5} />
             </button>
           </div>
         </div>
@@ -110,10 +134,8 @@ const DesktopNavbar = () => {
 
       <MobileNavbar />
 
-      {/* Spacer to prevent content overlap */}
-      <div
-        className={`transition-all duration-300 ${isScrolled ? "h-16" : "h-20"}`}
-      />
+      {/* Spacer */}
+      <div className="h-[65px]" />
     </>
   );
 };

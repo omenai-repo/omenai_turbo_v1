@@ -215,3 +215,32 @@ input[type="date"]::-moz-focus-inner {
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background-color: rgba(163, 163, 163, 0.8);
 }
+
+/* Ultra thin horizontal scrollbar */
+.thin-scrollbar::-webkit-scrollbar {
+  height: 1px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+/* Firefox */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2);
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

@@ -52,7 +52,7 @@ export default function CheckoutItem({
           <div className="space-y-4">
             {discountEligible && (
               <span className="inline-block px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest rounded-sm ">
-                1 Month Free
+                14 days Free
               </span>
             )}
             <h1 className="text-xl md:text-2xl lg:text-2xl font-bold leading-[1.1]">
@@ -100,7 +100,7 @@ export default function CheckoutItem({
             <div className="flex justify-between text-sm text-gray-400">
               <span>
                 {plan.name} Plan{" "}
-                {discountEligible ? "(1 Month Value)" : `(${interval})`}
+                {discountEligible ? "(14 days Value)" : `(${interval})`}
               </span>
               <span>{formatPrice(displayBasePrice, currency)}</span>
             </div>
@@ -109,7 +109,7 @@ export default function CheckoutItem({
             {discountEligible && (
               <div className="flex justify-between text-emerald-400 font-medium">
                 <div className="flex text-fluid-xxs gap-x-2 items-center">
-                  <span>1 Month Free</span>
+                  <span>14 days Free</span>
                   <span className="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded-sm  uppercase tracking-tighter">
                     100% OFF
                   </span>
@@ -126,7 +126,7 @@ export default function CheckoutItem({
                 </p>
                 {discountEligible ? (
                   <p className="text-xs text-emerald-400 mt-1">
-                    First month free, then{" "}
+                    14 days free, then{" "}
                     {formatPrice(singleIntervalPrice, currency)}/mo
                   </p>
                 ) : (

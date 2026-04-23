@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedJob } from "@omenai/shared-models/models/crons/FailedJob";
-import { serverStorage, storage } from "@omenai/appwrite-config";
+import { serverStorage } from "@omenai/appwrite-config/serverAppwrite";
 import { createErrorRollbarReport } from "../../../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";

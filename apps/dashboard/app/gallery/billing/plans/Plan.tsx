@@ -131,7 +131,7 @@ export default function Plan({
     discount && name.toLowerCase() === "gallery" && tab === "monthly";
   const showForfeitWarning = discount && !isEligibleForDiscount;
   const finalButtonText =
-    isEligibleForDiscount && !isDisabled ? "Claim 1 month free" : buttonText;
+    isEligibleForDiscount && !isDisabled ? "Claim 14 days free" : buttonText;
 
   // Correct pricing parsing
   const basePrice = isEligibleForDiscount
@@ -212,7 +212,7 @@ export default function Plan({
             }`}
           >
             {isEligibleForDiscount
-              ? "for 1 month"
+              ? "for 14 days"
               : `per ${tab === "monthly" ? "month" : "year"}`}
           </p>
 

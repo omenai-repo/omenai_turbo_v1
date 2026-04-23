@@ -8,7 +8,7 @@ import {
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { AccessRoleTypes } from "@omenai/shared-types";
-import { serverStorage, storage } from "@omenai/appwrite-config";
+import { serverStorage } from "@omenai/appwrite-config/serverAppwrite";
 
 type AccountType = Exclude<AccessRoleTypes, "admin">;
 

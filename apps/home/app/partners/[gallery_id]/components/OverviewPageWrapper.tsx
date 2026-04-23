@@ -35,51 +35,56 @@ export default function GalleryOverviewPage({
       return { highlightEvent: null, historyEvents: [], status: null };
     }
 
-    const active: any[] = [];
-    const upcoming: any[] = [];
-    const past: any[] = [];
+    let active: any[] = [];
+    let earliestUpcoming: any = null;
+    let latestPast: any = null;
 
-    events.forEach((event: any) => {
-      const eventStatus = getEventStatus(event.start_date, event.end_date);
-      if (eventStatus === "Active") active.push(event);
-      else if (eventStatus === "Upcoming") upcoming.push(event);
-      else past.push(event);
-    });
+    let earliestUpcomingTime = Infinity;
+    let latestPastTime = -Infinity;
 
-    const immediateUpcoming = [...upcoming].sort(
-      (a, b) =>
-        new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
-    );
+    for (const event of events) {
+      const startTime = new Date(event.start_date).getTime();
+      const status = getEventStatus(event.start_date, event.end_date);
 
-    const recentPast = [...past].sort(
-      (a, b) =>
-        new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
-    );
+      if (status === "Active") {
+        active.push(event);
+      } else if (status === "Upcoming") {
+        if (startTime < earliestUpcomingTime) {
+          earliestUpcomingTime = startTime;
+          earliestUpcoming = event;
+        }
+      } else {
+        if (startTime > latestPastTime) {
+          latestPastTime = startTime;
+          latestPast = event;
+        }
+      }
+    }
 
     let headliner = null;
     let currentStatus = null;
 
     if (active.length > 0) {
-      headliner = active[0];
+      headliner = active[0]; // assuming order doesn't matter
       currentStatus = "Active";
-    } else if (immediateUpcoming.length > 0) {
-      headliner = immediateUpcoming[0];
+    } else if (earliestUpcoming) {
+      headliner = earliestUpcoming;
       currentStatus = "Upcoming";
-    } else if (recentPast.length > 0) {
-      headliner = recentPast[0];
+    } else if (latestPast) {
+      headliner = latestPast;
       currentStatus = "Closed";
     }
 
-    const history = events.filter(
-      (e: any) => e.event_id !== headliner?.event_id,
-    );
+    const historyEvents = headliner
+      ? events.filter((e: any) => e.event_id !== headliner.event_id)
+      : events;
 
     return {
       highlightEvent: headliner,
-      historyEvents: history,
+      historyEvents,
       status: currentStatus,
     };
-  }, [data?.events]);
+  }, [data]);
 
   // ✅ Now safe to conditionally return
   if (isLoading) {
@@ -93,7 +98,7 @@ export default function GalleryOverviewPage({
   if (isError || !data) return null;
 
   return (
-    <div className="w-full pb-32">
+    <div className="w-full pb-32 px-4 md:px-8">
       {/* =========================================
           SECTION 1: THE HIGHLIGHT & BIO BLOCK
       ========================================= */}

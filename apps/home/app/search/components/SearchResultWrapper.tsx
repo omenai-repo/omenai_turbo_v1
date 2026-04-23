@@ -31,7 +31,7 @@ export default function SearchResultWrapper() {
     <div className="min-h-screen bg-white flex flex-col justify-between">
       <DesktopNavbar />
 
-      <main className="container mx-auto px-4 pb-20 flex-grow">
+      <main className=" px-4 md:px-8 mx-auto pb-10 flex-grow">
         {isLoading ? (
           <ArtworksListingSkeletonLoader />
         ) : !artworks || artworks.length === 0 ? (
@@ -44,8 +44,6 @@ export default function SearchResultWrapper() {
           />
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }

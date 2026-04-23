@@ -61,6 +61,7 @@ const individualSignupSchema = new Schema<IndividualSchemaTypes>(
         referrer: "direct",
       }),
     },
+    followingCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

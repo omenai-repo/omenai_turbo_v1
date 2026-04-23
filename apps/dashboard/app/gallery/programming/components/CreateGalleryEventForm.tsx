@@ -44,7 +44,7 @@ export const CreateGalleryEventForm = () => {
     cover_image: "",
     start_date: "",
     end_date: "",
-    location: { venue: "", city: "", country: "USA" },
+    location: { venue: "", city: "", country: "" },
     vip_preview_date: null,
     booth_number: "",
     featured_artworks: [],
