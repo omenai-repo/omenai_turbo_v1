@@ -17,7 +17,7 @@ export const GalleryNav = ({ galleryId }: { galleryId: string }) => {
   ];
 
   return (
-    <nav className="sticky top-[66px] z-40 w-full bg-white/80 backdrop-blur-md border-b border-neutral-200 transition-all duration-300">
+    <nav className="sticky top-[50px] lg:top-[66px] z-40 w-full bg-white/80 backdrop-blur-md border-b border-neutral-200 transition-all duration-300">
       <div className="max-w-[1600px] w-full px-4 md:px-8">
         <ul className="flex items-center gap-8 overflow-x-auto no-scrollbar pr-6">
           {tabs.map((tab) => {

@@ -49,12 +49,12 @@ export default function GalleryContactPage({
   const mapQueryString = encodeURIComponent(queryParts.join(", "));
 
   return (
-    <div className="w-full pb-32 pt-16 max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
+    <div className="w-full py-8 max-w-[1600px] mx-auto p-4 md:p-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 lg:gap-32 items-start">
         {/* LEFT COLUMN: THE INFO */}
         <div className="flex flex-col pt-8">
-          <h2 className="font-serif text-3xl md:text-4xl text-dark mb-12">
-            Location
+          <h2 className="font-serif text-2xl md:text-3xl text-dark mb-12">
+            Gallery Location
           </h2>
 
           <div className="flex flex-col space-y-8">
@@ -63,7 +63,7 @@ export default function GalleryContactPage({
                 Gallery Address
               </h3>
               <div className="font-sans text-sm text-dark font-medium leading-relaxed uppercase tracking-wide">
-                <p>{data.name}</p>
+                <p className="font-semibold">{data.name}</p>
                 {addressLine && (
                   <p className="text-neutral-500">{addressLine}</p>
                 )}
@@ -76,7 +76,7 @@ export default function GalleryContactPage({
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-medium mb-4">
                 Visiting Hours
               </h3>
@@ -85,12 +85,12 @@ export default function GalleryContactPage({
                 <p>11:00 AM — 6:00 PM</p>
                 <p>Closed Sunday & Monday</p>
               </div>
-            </div>
+            </div> */}
 
             <div className="pt-8 mt-8 border-t border-neutral-100">
               <p className="font-sans text-xs text-neutral-400 leading-relaxed max-w-sm">
                 To inquire about purchasing artworks, please navigate to the
-                specific artwork page and select "Inquire to Purchase". All
+                specific artwork page and select "Request Price". All
                 transactions are securely managed through Omenai.
               </p>
             </div>

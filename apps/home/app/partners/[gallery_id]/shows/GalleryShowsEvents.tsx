@@ -101,7 +101,7 @@ export default function GalleryShowsPage({ galleryId }: { galleryId: string }) {
   }, [data, activeFilter]);
 
   return (
-    <div className="w-full pb-32 pt-12 max-w-[1600px] mx-auto px-4 ">
+    <div className="w-full pb-32 pt-12 max-w-[1600px] mx-auto px-4 md:px-8">
       {/* 1. FILTER STRIP */}
       <div className="flex gap-8 border-b border-neutral-100 mb-12 overflow-x-auto no-scrollbar">
         {(["All", "Active", "Upcoming", "Past"] as FilterType[]).map(

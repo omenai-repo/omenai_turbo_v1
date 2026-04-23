@@ -92,10 +92,10 @@ export default function GalleryArtistsPage({
   const available = indexData?.available_artists || [];
 
   return (
-    <div className="w-full pb-32">
+    <div className="w-full py-8">
       {/* SECTION 1: THE INDEX */}
-      <section className="bg-neutral-50/50 border-b border-neutral-100 py-8">
-        <div className="max-w-[1600px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+      <section className="bg-neutral-50/50 border-b border-neutral-100 p-4 md:p-8">
+        <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
           {represented.length > 0 && (
             <div>
               <h2 className="font-serif text-xl font-light text-dark mb-10 italic">

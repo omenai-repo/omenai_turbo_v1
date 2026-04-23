@@ -7,13 +7,13 @@ export const GalleryHero = ({ gallery }: { gallery: GallerySchemaTypes }) => {
   return (
     <section className="w-full bg-white">
       {/* ── Main identity block ── */}
-      <div className="w-full px-4 md:px-8 pt-14 pb-10">
+      <div className="w-full px-4 md:px-8 py-8">
         <div className="flex items-start justify-between gap-8">
           {/* Left: logo mark + name + location */}
           <div className="flex items-start gap-5 min-w-0">
             {/* Logo mark — only rendered if logo exists */}
             {gallery.logo && (
-              <div className="shrink-0 w-20 h-20 border border-neutral-200 flex items-center justify-center p-2 overflow-hidden">
+              <div className="shrink-0 w-20 h-20 flex items-center justify-center p-2 overflow-hidden">
                 <img
                   src={getOptimizedLogoImage(gallery.logo, "medium")}
                   alt={`${gallery.name} logo`}
@@ -24,7 +24,7 @@ export const GalleryHero = ({ gallery }: { gallery: GallerySchemaTypes }) => {
 
             {/* Name + location */}
             <div className="flex flex-col gap-2 min-w-0">
-              <h1 className="font-serif text-[clamp(2rem,4vw,3.5rem)] font-light text-dark leading-[1] tracking-tight">
+              <h1 className="font-serif text-[clamp(2rem,3vw,3rem)] font-light text-dark leading-[1] tracking-tight">
                 {gallery.name}
               </h1>
               {gallery.address?.city && (

@@ -102,7 +102,7 @@ export default function GalleryOverviewPage({
       {/* =========================================
           SECTION 1: THE HIGHLIGHT & BIO BLOCK
       ========================================= */}
-      <section className="max-w-[1600px] mx-auto px-4 py-16 md:py-24 border-b border-neutral-100">
+      <section className="max-w-[1600px] mx-auto py-16 md:py-24 border-b border-neutral-100">
         {highlightEvent ? (
           /* ASYMMETRICAL SPLIT (Has Events) */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
@@ -184,9 +184,9 @@ export default function GalleryOverviewPage({
           SECTION 2: EVENT HISTORY CAROUSEL
       ========================================= */}
       {historyEvents.length > 0 && (
-        <section className="max-w-[1600px] mx-auto py-20 border-b border-neutral-100 pl-4">
+        <section className="max-w-[1600px] mx-auto py-20 border-b border-neutral-100">
           <div className="pr-4 md:pr-8 lg:pr-12 flex justify-between items-end mb-10">
-            <h3 className="font-serif text-3xl font-light text-dark">
+            <h3 className="font-serif text-2xl font-light text-dark">
               All Shows & Events
             </h3>
             <Link
@@ -254,7 +254,7 @@ export default function GalleryOverviewPage({
       ========================================= */}
       {(data.represented_artists.length > 0 ||
         data.available_artists.length > 0) && (
-        <section className="max-w-[1600px] mx-auto p-4 flex flex-col gap-16">
+        <section className="max-w-[1600px] mx-auto py-4 flex flex-col gap-16">
           {/* Represented Artists */}
           {data.represented_artists.length > 0 && (
             <div>
