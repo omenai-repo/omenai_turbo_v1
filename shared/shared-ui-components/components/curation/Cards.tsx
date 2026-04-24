@@ -9,96 +9,130 @@ import {
 } from "@omenai/shared-lib/storage/getImageFileView";
 import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCoverFileView";
 import { getPromotionalOptimizedImage } from "@omenai/shared-lib/storage/getPromotionalsFileView";
-import { BUTTON_CLASS } from "../styles/inputClasses";
-import { ArtworkSchemaTypes } from "@omenai/shared-types";
+
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 const safeImage = (url: string | undefined | null) =>
   url || "/images/placeholder-omenai.jpg";
 
-/* =====================================================================
-   DESIGN TOKENS
-   Primary:   #091830  — Deep Navy
-   Accent:    #C9A96E  — Warm Gold
-   Surface:   #F4F6FA  — Cool Off-White
-   Card:      #FFFFFF
-   Border:    #D6DEEA
-   Text-1:    #091830
-   Text-2:    #3D5068
-   Text-3:    #7A8FA6
-   ===================================================================== */
-
-/* =====================================================================
-   1. CURATOR'S PICKS CARD
-   — Image maintains natural aspect ratio
-   — Text block is pushed to the bottom via mt-auto so titles/prices
-     align at the same baseline across a row of varying-height cards
-   ===================================================================== */
+import { base_url } from "@omenai/url-config/src/config";
+import FadeUpCard from "../animations/FadeUpCard";
 
 export function PublicArtworkCard({
-  artwork,
+  image,
+  artist,
+  name,
+  pricing,
+  art_id,
+  availability,
+  medium,
 }: {
-  artwork: ArtworkSchemaTypes;
+  image: string;
+  artist: string;
+  name: string;
+  art_id: string;
+  pricing?: {
+    price: number;
+    usd_price: number;
+    shouldShowPrice: "Yes" | "No" | string;
+  };
+  availability: boolean;
+  medium: string;
 }) {
-  if (!artwork) return null;
+  const image_href = getOptimizedImage(image, "small");
+  const base_uri = base_url();
+  const encoded_url = encodeURIComponent(art_id).replaceAll(/\//g, "%2F");
+  const isAvailable = Boolean(availability);
 
-  const optimizedUrl = artwork.url
-    ? getOptimizedImage(artwork.url, "medium")
-    : null;
-  const isAvailable = Boolean(artwork.availability);
+  const imgW = 600;
+  const imgH = 800;
 
   return (
-    <Link
-      href={`/artwork/${artwork.art_id}`}
-      className="group/card flex flex-col w-full transition-all duration-300"
-      // No h-full — height is dictated entirely by the image's natural aspect ratio
-    >
-      {/* Image — renders at its intrinsic aspect ratio, never cropped */}
-      <div className="w-full  overflow-hidden rounded-sm bg-[#F4F6FA]">
-        <img
-          src={safeImage(optimizedUrl)}
-          alt={artwork.title}
-          className="w-full h-auto block object-contain transition-transform duration-700 group-hover/card:scale-[1.03]"
-        />
-      </div>
+    <FadeUpCard>
+      <div className="group/card relative w-full flex flex-col">
+        <div className="relative w-full overflow-hidden bg-neutral-100 rounded-sm">
+          <Image
+            src={image_href}
+            alt={name}
+            width={imgW}
+            height={imgH}
+            className="
+              w-full h-auto block
+              transition-transform duration-700 ease-out
+              group-hover/card:scale-[1.03] rounded-sm 
+            "
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
 
-      {/* Text block — sits flush below the image, no mt-auto */}
-      <div className="pt-4 flex flex-col gap-[0.2rem]">
-        <span className="font-sans text-[0.72rem] font-normal tracking-wide text-dark ">
-          {artwork.artist}
-        </span>
+          {/* ── Full-card click target (sits above image, below other UI) ── */}
+          <Link
+            href={`${base_uri}/artwork/${encoded_url}`}
+            className="absolute inset-0 z-10"
+            aria-label={`View ${name} by ${artist}`}
+          />
 
-        <span className="font-serif text-[1.15em] font-medium text-dark leading-snug line-clamp-2">
-          {artwork.title}
-          {artwork.year ? `, ${artwork.year}` : ""}
-        </span>
-
-        <div className="flex justify-between items-center mt-2">
-          <span className="font-sans uppercase text-[0.62rem] text-[#7A8FA6] font-light tracking-[0.1em]">
-            {artwork.medium}
-          </span>
+          {/* ── Hover scrim + "Quick View" label ── */}
+          <div className="absolute inset-0 z-20 pointer-events-none">
+            <div className="absolute inset-0 bg-black/0 group-hover/card:bg-black/35 transition-colors duration-500" />
+            <div className="absolute inset-0 flex items-end justify-center pb-5">
+              <span
+                className="
+                translate-y-2 opacity-0
+                group-hover/card:translate-y-0 group-hover/card:opacity-100
+                transition-all duration-300 delay-75
+                border border-white text-white
+                text-[9px] uppercase tracking-[0.3em] font-medium font-sans
+                px-5 py-2.5 leading-none
+              "
+              >
+                Quick View
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2 pt-0.5">
+        {/* ══════════════════════════════════════════════════════════════════
+            METADATA
+        ══════════════════════════════════════════════════════════════════ */}
+        <div className="flex flex-col gap-1.5 pt-3 h-[90px]">
+          <p className="text-[10px] uppercase tracking-[0.22em] font-medium font-sans text-neutral-500 leading-none truncate">
+            {artist}
+          </p>
+          <Link
+            href={`${base_uri}/artwork/${encoded_url}`}
+            className="group/title block"
+          >
+            <h3 className="font-serif text-[16px] font-normal text-black leading-snug line-clamp-2 group-hover/title:opacity-50 transition-opacity duration-200">
+              {name}
+            </h3>
+          </Link>
+          {medium && (
+            <p className="text-[11px] font-sans font-light text-neutral-400 tracking-wide leading-none truncate">
+              {medium}
+            </p>
+          )}
+        </div>
+        {/* Price / status row */}
+        <div className="flex items-center justify-between gap-2 pt-1.5">
           <span
             className={`
-                      text-[9px] uppercase tracking-[0.18em] font-medium font-sans
-                      px-2 py-1 border leading-none shrink-0
-                      ${
-                        isAvailable
-                          ? "border-black text-black"
-                          : "border-neutral-300 text-neutral-400"
-                      }
-                    `}
+              text-[9px] uppercase tracking-[0.18em] font-medium font-sans
+              px-2 py-1 border leading-none shrink-0
+              ${
+                isAvailable
+                  ? "border-black text-black"
+                  : "border-neutral-300 text-neutral-400"
+              }
+            `}
           >
             {isAvailable ? "Available" : "Sold"}
           </span>
 
           {isAvailable && (
             <div className="text-right min-w-0">
-              {artwork.pricing.shouldShowPrice === "Yes" ? (
+              {pricing?.shouldShowPrice === "Yes" ? (
                 <span className="font-sans text-[12px] font-medium text-black leading-none">
-                  {formatPrice(artwork.pricing.usd_price)}
+                  {formatPrice(pricing.usd_price)}
                 </span>
               ) : (
                 <span className="font-sans text-[10px] font-light italic text-neutral-400 leading-none">
@@ -109,7 +143,7 @@ export function PublicArtworkCard({
           )}
         </div>
       </div>
-    </Link>
+    </FadeUpCard>
   );
 }
 

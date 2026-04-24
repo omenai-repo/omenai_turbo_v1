@@ -7,6 +7,7 @@ import { PublicArtworkCard } from "@omenai/shared-ui-components/components/curat
 import { CuratorsPicksSkeleton } from "./CuratorPicksSkeleton";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArtworkSchemaTypes } from "@omenai/shared-types";
 
 const fetchCuratorPicks = async () => {
   const response = await fetchCurationData("curator_picks");
@@ -77,15 +78,23 @@ export default function CuratorsPicksSection() {
           </button>
 
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex items-end touch-pan-y -ml-6">
+            <div className="flex gap-5 items-end pb-4">
               {curatorPicks.map((item: any, index: number) => {
                 if (item.type !== "artwork") return null;
+                const artwork: ArtworkSchemaTypes = item.data;
                 return (
                   <div
                     key={item.identifier || index}
-                    className="min-w-0 pl-6 shrink-0 flex-[0_0_85%] sm:flex-[0_0_45%] md:flex-[0_0_30%] lg:flex-[0_0_22%]"
+                    className="flex-[0_0_200px] min-w-0"
                   >
-                    <PublicArtworkCard artwork={item.data} />
+                    <PublicArtworkCard
+                      image={artwork.url}
+                      artist={artwork.artist}
+                      name={artwork.title}
+                      art_id={artwork.art_id}
+                      availability={artwork.availability}
+                      medium={artwork.medium}
+                    />
                   </div>
                 );
               })}
