@@ -6,6 +6,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 
 const config: CombinedConfig = {
   ...standardRateLimit,

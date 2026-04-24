@@ -17,6 +17,7 @@ import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
 import { GlobalCommandMenu } from "./features/GlobalCommandMenu";
+import VerificationBlockerModal from "./components/VerificationBlocker";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -52,32 +53,39 @@ export default function GalleryDashboardLayout({
       ) : (
         <div className="flex h-full overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
+          {!isGalleryVerified ? (
+            <VerificationBlockerModal
+              open={user && user.role === "gallery" && !isGalleryVerified}
+            />
+          ) : (
+            <main>
+              <DesktopSidebar />
+              <GlobalCommandMenu />
 
-          <DesktopSidebar />
-          <GlobalCommandMenu />
+              <div className="flex flex-1 flex-col md:ml-64">
+                {/* Mobile header */}
+                <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
+                  <MobileSidebar />
+                  <span className="text-sm font-medium">Dashboard</span>
+                </header>
+                <MainContent>
+                  {val ? (
+                    <GetStartedWithStripe />
+                  ) : (
+                    <>
+                      <UploadOrderRejectionReason />
+                      <UpdatePasswordModal />
+                      <DeleteAccountConfirmationModal />
+                      <UpdateAddressModal />
+                      <UpdateLogoModal />
 
-          <div className="flex flex-1 flex-col md:ml-64">
-            {/* Mobile header */}
-            <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
-              <MobileSidebar />
-              <span className="text-sm font-medium">Dashboard</span>
-            </header>
-            <MainContent>
-              {val ? (
-                <GetStartedWithStripe />
-              ) : (
-                <>
-                  <UploadOrderRejectionReason />
-                  <UpdatePasswordModal />
-                  <DeleteAccountConfirmationModal />
-                  <UpdateAddressModal />
-                  <UpdateLogoModal />
-
-                  {children}
-                </>
-              )}
-            </MainContent>
-          </div>
+                      {children}
+                    </>
+                  )}
+                </MainContent>
+              </div>
+            </main>
+          )}
         </div>
       )}
     </>

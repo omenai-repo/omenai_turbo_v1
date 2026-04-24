@@ -30,7 +30,7 @@ export const ArtistRow = ({
             <h3
               className={`text-dark group-hover:text-neutral-500 transition-colors ${
                 artist.isRepresented
-                  ? "font-serif text-3xl md:text-4xl leading-none"
+                  ? "font-serif text-xl md:text-2xl leading-none"
                   : "font-sans text-xl md:text-2xl font-medium"
               }`}
             >

@@ -55,7 +55,6 @@ export default async function DashboardRootLayout({
   children: React.ReactNode;
 }) {
   const initialSessionData = await getServerSession();
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <RollbarProvider config={clientConfig}>
