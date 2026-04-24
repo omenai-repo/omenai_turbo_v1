@@ -9,6 +9,7 @@ import { ShowsCarouselSkeleton } from "./ShowsCarouselSkeleton";
 import { getFeaturedShows } from "@omenai/shared-services/events/getFeaturedShows";
 import { getPromotionalOptimizedImage } from "@omenai/shared-lib/storage/getPromotionalsFileView";
 import { IoArrowForward } from "react-icons/io5";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // The Fetcher Function for React Query
 const fetchFeaturedShows = async () => {
@@ -69,9 +70,11 @@ export const FeaturedShowsSection = () => {
         {/* Responsive Header Strip */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-neutral-200 pb-6">
           <div>
-            <h2 className="text-3xl font-serif font-light text-dark">
+            <h2 className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
               Featured Shows
             </h2>
+            <div className="w-[60px] h-[3px] bg-[#C9A96E] my-5"></div>
+
             <p className="font-sans text-sm text-neutral-500 mt-2">
               Explore current and upcoming exhibitions from our gallery network.
             </p>
@@ -138,15 +141,15 @@ export const FeaturedShowsSection = () => {
                         </div>
 
                         <div className="flex flex-col space-y-2 pr-4">
-                          <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold">
+                          <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-500">
                             {show.gallery?.name || "Gallery"}
                           </span>
-                          <h3 className="font-serif text-lg md:text-xl font-normal text-black leading-snug line-clamp-2 group-hover/card:text-neutral-500 transition-colors ">
+                          <h3 className="font-serif text-sm md:text-lg font-normal text-black leading-snug line-clamp-2 group-hover/card:text-neutral-500 transition-colors ">
                             {show.title}
                           </h3>
                           <div className="flex gap-x-2 items-center">
                             {show.location && (
-                              <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-medium">
+                              <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400">
                                 {show.location.city}, {show.location.country} -
                               </p>
                             )}
@@ -175,50 +178,20 @@ export const FeaturedShowsSection = () => {
               </div>
             </div>
 
-            {/* Left Navigation Button */}
             <button
               onClick={scrollPrev}
-              disabled={!prevBtnEnabled}
-              className="absolute left-0 top-[35%] z-10 -ml-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md border border-neutral-100 text-black transition-all duration-300 hover:scale-105 disabled:opacity-0disabled:pointer-events-none md:-ml-5 opacity-0 group-hover/carousel:opacity-100"
-              aria-label="Previous shows"
+              className="absolute left-6 top-[35%] -translate-y-1/2 w-12 h-12 bg-[#FAF8F5] border border-[#E8E4DF] rounded-full shadow-[0_8px_30px_rgba(28,25,23,0.12)] flex items-center justify-center z-10 text-[#1C1917] transition-all hover:bg-[#1C1917] hover:text-[#FAF8F5] opacity-0 group-hover:opacity-100"
+              aria-label="Previous slide"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
+              <ChevronLeft size={32} strokeWidth={1.5} className="ml-[-2px]" />
             </button>
 
-            {/* Right Navigation Button */}
             <button
               onClick={scrollNext}
-              disabled={!nextBtnEnabled}
-              className="absolute right-0 top-[35%] z-10 -mr-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md border border-neutral-100 text-black transition-all duration-300 hover:scale-105 disabled:opacity-0 disabled:pointer-events-none md:-mr-5 opacity-0 group-hover/carousel:opacity-100"
-              aria-label="Next shows"
+              className="absolute right-6 md top-[35%] -translate-y-1/2 w-12 h-12 bg-[#FAF8F5] border border-[#E8E4DF] rounded-full shadow-[0_8px_30px_rgba(28,25,23,0.12)] flex items-center justify-center z-10 text-[#1C1917] transition-all hover:bg-[#1C1917] hover:text-[#FAF8F5] opacity-0 group-hover:opacity-100"
+              aria-label="Next slide"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
+              <ChevronRight size={32} strokeWidth={1.5} className="mr-[-2px]" />
             </button>
           </div>
         )}

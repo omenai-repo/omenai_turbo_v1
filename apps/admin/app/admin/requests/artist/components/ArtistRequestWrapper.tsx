@@ -21,7 +21,7 @@ export function ArtistRequestWrapper() {
   const { user } = useAuth({ requiredRole: "admin" });
 
   // Check permissions
-  if (!canAccessRoute(user.access_role, "requests")) {
+  if (!canAccessRoute(user.access_role, "management_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
   const { data: artists, isLoading: loading } = useQuery({

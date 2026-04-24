@@ -86,8 +86,8 @@ export default function EditorialItemCard({
             {/* Headline - Larger for Featured */}
             <h3
               className={`
-                font -serif font-medium text-white leading-[1.1] transition-colors
-                ${isFeatured ? "text-3xl md:text-5xl" : "text-xl md:text-2xl"}
+                font-serif font-medium text-white leading-[1.1] transition-colors
+                ${isFeatured ? "text-2xl md:text-4xl" : "text-xl md:text-2xl"}
               `}
             >
               {editorial.headline}

@@ -35,15 +35,10 @@ export default function LatestArtworkWrapper({
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <h2 className="font-serif text-3xl font-light text-black leading-none tracking-tight">
-              Curator&apos;s Picks
+            <h2 className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
+              Latest Arrivals
             </h2>
-            <div className="flex items-center mt-4">
-              <span className=" text-[16px] text-neutral-500 font-normal">
-                Handpicked by our chief curators—distinct pieces that reflect
-                our taste, standards, and vision.
-              </span>
-            </div>
+            <div className="w-[60px] h-[3px] bg-[#C9A96E] my-5"></div>
           </div>
 
           <div className="hidden md:flex items-center">

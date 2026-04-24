@@ -68,13 +68,14 @@ export const FeaturedGalleriesSection = () => {
         {/* Header Strip */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-neutral-200 pb-4">
           <div>
-            <h2 className="text-3xl font-serif font-light text-dark">
+            <h2 className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
               {/* Uses the total from pagination to show the true number of galleries */}
               Featured Galleries{" "}
               <sup className="text-blue-600 text-lg font-sans">
                 ({galleries?.pagination?.total || galleries?.data.length || 0})
               </sup>
             </h2>
+            <div className="w-[60px] h-[3px] bg-[#C9A96E] my-5"></div>
           </div>
 
           <Link
@@ -111,7 +112,7 @@ export const FeaturedGalleriesSection = () => {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-neutral-100">
-                            <span className="font-serif text-4xl text-neutral-300 uppercase">
+                            <span className="font-serif text-sm text-neutral-300 uppercase">
                               {gallery.name.charAt(0)}
                             </span>
                           </div>

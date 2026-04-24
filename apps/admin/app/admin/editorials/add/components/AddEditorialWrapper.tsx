@@ -8,7 +8,7 @@ import ForbiddenPage from "../../../components/ForbiddenPage";
 export default function AddEditorialWrapper() {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  if (!canAccessRoute(user.access_role, "editorials")) {
+  if (!canAccessRoute(user.access_role, "mid_level_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
 
