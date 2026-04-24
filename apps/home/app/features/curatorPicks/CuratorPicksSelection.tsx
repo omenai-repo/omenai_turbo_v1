@@ -94,6 +94,7 @@ export default function CuratorsPicksSection() {
                       art_id={artwork.art_id}
                       availability={artwork.availability}
                       medium={artwork.medium}
+                      pricing={artwork.pricing}
                     />
                   </div>
                 );

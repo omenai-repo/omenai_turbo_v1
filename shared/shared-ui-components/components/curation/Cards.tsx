@@ -31,7 +31,7 @@ export function PublicArtworkCard({
   artist: string;
   name: string;
   art_id: string;
-  pricing?: {
+  pricing: {
     price: number;
     usd_price: number;
     shouldShowPrice: "Yes" | "No" | string;
